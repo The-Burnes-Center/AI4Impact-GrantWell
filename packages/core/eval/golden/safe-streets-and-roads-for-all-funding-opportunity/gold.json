@@ -1,0 +1,406 @@
+{
+  "schemaVersion": 1,
+  "status": "confirmed",
+  "family": "DOT",
+  "deadlines": [
+    {
+      "kind": "preapp",
+      "label": "Implementation Grant pre-application eligibility review request (Self-Certification Eligibility Worksheet and plans) emailed to SS4A@dot.gov; optional, encouraged",
+      "date": "2026-04-24",
+      "time": "17:00",
+      "tzAsWritten": "EDT",
+      "fromBrokenTable": false,
+      "quote": "Pre-application submissions must be received at or before 5:00 PM (EDT) on April 24, 2026, by emailing SS4A@dot.gov with the subject \"Implementation Grant Eligibility Review: Applicant"
+    },
+    {
+      "kind": "other",
+      "label": "Technical questions due",
+      "date": "2026-04-24",
+      "time": "17:00",
+      "tzAsWritten": "EDT",
+      "fromBrokenTable": false,
+      "quote": "Technical questions must be submitted by 5:00 PM (EDT) on April 24, 2026."
+    },
+    {
+      "kind": "application",
+      "label": "Planning and Demonstration Grant and Implementation Grant applications due in Valid Eval",
+      "date": "2026-05-26",
+      "time": "17:00",
+      "tzAsWritten": "EDT",
+      "fromBrokenTable": false,
+      "quote": "This NOFO has a single application deadline for both Planning and Demonstration and Implementation Grant applicants. All applications must be submitted by 5:00 PM (EDT) on Tuesday, May 26, 2026."
+    },
+    {
+      "kind": "other",
+      "label": "Contact Valid Eval about a system technical issue (required for late-application consideration)",
+      "date": "2026-05-26",
+      "time": "13:00",
+      "tzAsWritten": "EDT",
+      "fromBrokenTable": false,
+      "quote": "the applicant contacts Valid Eval at support@valideval.com describing the technical issue no later than 1:00 PM (EDT) on Tuesday, May 26, 2026."
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": null,
+    "periodMonths": 60,
+    "expectedAwards": null,
+    "range": {
+      "min": 100000,
+      "max": 25000000,
+      "quote": "Expected funding range: $2,500,000 to $25,000,000 $305,678,320 is available for Planning and Demonstration Grants Expected number of awards: 400 to 700 Expected funding range: $100,000 to $5,000,000"
+    },
+    "caps": [],
+    "match": {
+      "required": true,
+      "ratio": "0.2",
+      "appliesTo": "All SS4A grants (Planning and Demonstration and Implementation); waived for listed insular areas when required match is under $200,000",
+      "quote": "The Federal share of an SS4A grant may not exceed 80 percent of total eligible SS4A project costs. Recipients are required to contribute a local matching share of no less than 20 percent of total eligible project costs."
+    },
+    "quote": "$687,809,874 is available for Implementation Grants Expected number of awards: 40 to 70 Expected funding range: $2,500,000 to $25,000,000 $305,678,320 is available for Planning and Demonstration Grants Expected number of awards: 400 to 700 Expected funding range: $100,000 to $5,000,000"
+  },
+  "sections": [
+    {
+      "name": "Project Goal/Description",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": "Key Information Questions (Valid Eval)",
+      "quote": "Project Goal/Description A short description of the proposed activities and how they will address the safety problem(s) in the applicant's jurisdiction."
+    },
+    {
+      "name": "Description of Supplemental Planning and Demonstration Activities",
+      "order": 2,
+      "limit": null,
+      "conditional": "Planning and Demonstration Grant applicants proposing supplemental planning or demonstration activities",
+      "component": "Key Information Questions (Valid Eval)",
+      "quote": "Description of Supplemental Planning and See Section D.5.i: Planning and Demonstration Grants Demonstration Activities (if relevant)"
+    },
+    {
+      "name": "Planning and Demonstration Grant Narrative (Safety Context)",
+      "order": 3,
+      "limit": {
+        "type": "pages",
+        "value": 2
+      },
+      "conditional": "Planning and Demonstration Grant applicants; 3 pages if requesting $1,000,000 or more",
+      "component": "Narrative",
+      "quote": "The narrative should include a brief description of the proposed activities. The narrative should also respond to the Planning and Demonstration Grant Safety Context merit criteria described in Section G.1.i"
+    },
+    {
+      "name": "Overview",
+      "order": 4,
+      "limit": null,
+      "conditional": "Implementation Grant applicants",
+      "component": "Implementation Grant Narrative",
+      "quote": "1. Overview This section should provide an introduction and describe the proposed activities, safety context, jurisdiction, and any high-level background information that would be useful to understand the rest of the application."
+    },
+    {
+      "name": "Location",
+      "order": 5,
+      "limit": null,
+      "conditional": "Implementation Grant applicants",
+      "component": "Implementation Grant Narrative",
+      "quote": "2. Location This section of the application should describe the jurisdiction's location, the jurisdiction's high-"
+    },
+    {
+      "name": "Safety Need",
+      "order": 6,
+      "limit": null,
+      "conditional": "Implementation Grant applicants",
+      "component": "Implementation Grant Narrative: Response to Merit Criteria",
+      "quote": "include a compelling narrative to highlight how the application aligns with four required merit criteria: #1 Safety Need; #2 Safety Impact; #3 Implementation Costs; and #4 Engagement and Collaboration."
+    },
+    {
+      "name": "Safety Impact",
+      "order": 7,
+      "limit": null,
+      "conditional": "Implementation Grant applicants",
+      "component": "Implementation Grant Narrative: Response to Merit Criteria",
+      "quote": "include a compelling narrative to highlight how the application aligns with four required merit criteria: #1 Safety Need; #2 Safety Impact; #3 Implementation Costs; and #4 Engagement and Collaboration."
+    },
+    {
+      "name": "Implementation Costs",
+      "order": 8,
+      "limit": null,
+      "conditional": "Implementation Grant applicants",
+      "component": "Implementation Grant Narrative: Response to Merit Criteria",
+      "quote": "include a compelling narrative to highlight how the application aligns with four required merit criteria: #1 Safety Need; #2 Safety Impact; #3 Implementation Costs; and #4 Engagement and Collaboration."
+    },
+    {
+      "name": "Engagement and Collaboration",
+      "order": 9,
+      "limit": null,
+      "conditional": "Implementation Grant applicants",
+      "component": "Implementation Grant Narrative: Response to Merit Criteria",
+      "quote": "include a compelling narrative to highlight how the application aligns with four required merit criteria: #1 Safety Need; #2 Safety Impact; #3 Implementation Costs; and #4 Engagement and Collaboration."
+    },
+    {
+      "name": "Supplemental Planning and Demonstration Activities",
+      "order": 10,
+      "limit": {
+        "type": "pages",
+        "value": 2
+      },
+      "conditional": "Implementation Grant applicants bundling supplemental planning and/or demonstration activities",
+      "component": "Implementation Grant Narrative: Response to Merit Criteria",
+      "quote": "If the application is bundling supplemental planning and/or demonstration activities, it also must include narrative responding to criterion #5 Supplemental Planning and Demonstration Activities."
+    },
+    {
+      "name": "Project Readiness",
+      "order": 11,
+      "limit": null,
+      "conditional": "Implementation Grant applicants",
+      "component": "Implementation Grant Narrative",
+      "quote": "4. Project Readiness The applicant must provide information to demonstrate the applicant's ability to complete the full scope of work in the application proposal within five years of when the grant agreement is executed"
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Planning and Demonstration: #1 Safety Context",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": "High, Medium, Low, or Non-Responsive rating per component, rolled up into a Highly Recommended, Recommended, Acceptable, or Not Recommended Safety Context rating",
+      "sections": [
+        "Planning and Demonstration Grant Narrative (Safety Context)"
+      ],
+      "quote": "DOT will evaluate each application narrative against merit criteria #1 Safety Context using the rubric table provided below."
+    },
+    {
+      "name": "Planning and Demonstration: #2 Safety Impact",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "DOT will also evaluate quantitative data in two criteria: #2 Safety Impact; and #3 Underserved Communities. The adequacy and reasonableness of costs will also be considered."
+    },
+    {
+      "name": "Planning and Demonstration: #3 Underserved Communities",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "DOT will assess the Underserved Communities merit criterion using one quantitative rating that DOT will calculate using the definition of Underserved Community in this NOFO and the mapped jurisdictions included in the application"
+    },
+    {
+      "name": "Implementation: #1 Safety Need",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": "High, Medium, Low, or Non-Responsive rating, rolled up into an overall rating of Highly Recommended, Recommended, Acceptable, or Not Recommended; merit criteria weighted according to importance",
+      "sections": [
+        "Safety Need"
+      ],
+      "quote": "Implementation Grants have four required merit criteria: #1 Safety Need; #2 Safety Impact; #3 Implementation Costs, and #4 Engagement and Collaboration."
+    },
+    {
+      "name": "Implementation: #2 Safety Impact",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": "High, Medium, Low, or Non-Responsive rating, rolled up into an overall rating of Highly Recommended, Recommended, Acceptable, or Not Recommended; merit criteria weighted according to importance",
+      "sections": [
+        "Safety Impact"
+      ],
+      "quote": "Implementation Grants have four required merit criteria: #1 Safety Need; #2 Safety Impact; #3 Implementation Costs, and #4 Engagement and Collaboration."
+    },
+    {
+      "name": "Implementation: #3 Implementation Costs",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": "High, Medium, Low, or Non-Responsive rating, rolled up into an overall rating of Highly Recommended, Recommended, Acceptable, or Not Recommended; merit criteria weighted according to importance",
+      "sections": [
+        "Implementation Costs"
+      ],
+      "quote": "Implementation Grants have four required merit criteria: #1 Safety Need; #2 Safety Impact; #3 Implementation Costs, and #4 Engagement and Collaboration."
+    },
+    {
+      "name": "Implementation: #4 Engagement and Collaboration",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": "High, Medium, Low, or Non-Responsive rating, rolled up into an overall rating of Highly Recommended, Recommended, Acceptable, or Not Recommended; merit criteria weighted according to importance",
+      "sections": [
+        "Engagement and Collaboration"
+      ],
+      "quote": "Implementation Grants have four required merit criteria: #1 Safety Need; #2 Safety Impact; #3 Implementation Costs, and #4 Engagement and Collaboration."
+    },
+    {
+      "name": "Implementation: #5 Supplemental Planning and Demonstration Activities (does not affect overall rating)",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Supplemental Planning and Demonstration Activities"
+      ],
+      "quote": "An additional optional merit criterion #5 Supplemental Planning and Demonstration Activities is only required for Implementation Grant applicants requesting funds to conduct supplemental planning and/or carry out demonstration activities."
+    },
+    {
+      "name": "Implementation: Project Readiness (Likely/Unlikely)",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": "Likely or Unlikely",
+      "sections": [
+        "Project Readiness"
+      ],
+      "quote": "The reviewers will use the application materials to assess the applicant's Project Readiness and will provide a rating of either \"Likely\" or \"Unlikely\" based on the table below."
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": "minimum of one inch on all sides",
+    "font": "Times New Roman",
+    "fontSizePt": 12,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Narrative in PDF format with page numbers",
+      "Planning and Demonstration narrative: no longer than two pages if requesting less than $1,000,000 in Federal funds; no longer than three pages if requesting $1,000,000 or more",
+      "Implementation narrative may not exceed 12 pages excluding cover page and table of contents; up to 14 pages if the extra 2 pages respond solely to the Supplemental Planning and Demonstration Activities criterion",
+      "Self-Certification Eligibility Worksheet, budget and appendices do not count toward the Implementation page limit",
+      "Implementation narrative should clearly identify the portions associated with each merit criterion",
+      "Letters of support submitted as one consolidated set in one supporting attachment on Valid Eval",
+      "Map submitted in both PDF and spatial format (e.g., Shapefile, .KML)",
+      "Funding requests in whole numbers (no cents); budgets in whole dollars",
+      "Provide website links to supporting documentation rather than copies where possible",
+      "Submit electronically via Valid Eval; applications cannot be submitted after the deadline"
+    ],
+    "quote": "The narrative should be in PDF format, with font size no less than 12-point Times New Roman, margins a minimum of one inch on all sides, and include page numbers."
+  },
+  "eligibility": [
+    {
+      "item": "Eligible applicants: metropolitan planning organizations; political subdivisions of a State or territory; federally recognized Tribal governments; multijurisdictional groups of these entities (with a lead applicant)",
+      "quote": "1. a metropolitan planning organization (MPO); 2. a political subdivision of a State or territory; 3. a federally recognized Tribal government; and 4. a multijurisdictional group of entities made up of any of the aforementioned three types of entities."
+    },
+    {
+      "item": "Non-profits are not eligible unless created under State law with roadway safety and/or planning responsibilities equivalent to a political subdivision; States and territories are not eligible and cannot be co-applicants",
+      "quote": "Non-profits are not eligible applicants unless created under State law with roadway safety and/or planning responsibilities equivalent to a political subdivision of a State. States and territories are not eligible applicants."
+    },
+    {
+      "item": "Implementation Grant applicants must have roadway ownership/maintenance responsibilities, safety responsibilities affecting roadways, or a signed agreement with the roadway owner",
+      "quote": "An eligible applicant for an Implementation Grant must also meet at least one of the following conditions: have ownership and/or maintenance responsibilities over a roadway network; have safety responsibilities that affect roadways; or"
+    },
+    {
+      "item": "One application only per applicant; if eligible for both, choose Planning and Demonstration or Implementation; the last application submitted is reviewed",
+      "quote": "Eligible applicants may submit one application only to the FY 2026 funding opportunity. If multiple applications are received from the same political subdivision of a State and/or applicant, the last application submitted will be reviewed."
+    },
+    {
+      "item": "Implementation Grant applicants must certify an existing plan substantially similar to an Action Plan, finalized and/or last updated between 2021 and May 26, 2026 (up to three plans combined, or a covering jurisdiction's plan)",
+      "quote": "the applicant must certify that they have an existing plan that is substantially similar to an Action Plan as defined in Section B and Table 1: Action Plan Components and has been finalized and/or last updated between 2021 and May 26, 2026."
+    },
+    {
+      "item": "State-level plans (SHSP, State Highway Safety Plans, Commercial Vehicle Safety Plans, PTASPs) cannot qualify for an Implementation Grant",
+      "quote": "State-level Action Plans (e.g., a Strategic Highway Safety Plan required under 23 U.S.C. § 148, State Highway Safety Plans required under 23 U.S.C. § 402, Commercial Vehicle Safety Plans"
+    },
+    {
+      "item": "Implementation Grant applicants with a \"no\" on the Self-Certification Worksheet or a plan not covering all road users must update their Action Plan during the period of performance",
+      "quote": "Implementation Grant applicants who meet any of the following conditions must update their Action Plan during the period of performance for the grant agreement to align with all Action Plan components"
+    },
+    {
+      "item": "Planning and Demonstration applicants requesting only supplemental planning/demonstration must have an existing eligible Action Plan, an SS4A-funded plan in progress, or a covering higher-level jurisdiction's plan (with coordination)",
+      "quote": "Applicants requesting Federal funding to conduct supplemental planning and/or demonstration activities only, without developing or updating an Action Plan must either a) have an existing Action Plan"
+    },
+    {
+      "item": "A new Action Plan must cover all road users and the applicant's entire jurisdiction; corridor-level or site-specific studies are supplemental planning",
+      "quote": "The development of an Action Plan must include all relevant road users and be at a broad, systemwide geography (i.e., the eligible applicant's entire jurisdiction, not a few road segments within a jurisdiction)."
+    },
+    {
+      "item": "Requests to develop a new Action Plan duplicating another SS4A-funded or FY26-requested plan in the same area may be ineligible",
+      "quote": "An application may be deemed duplicative, and therefore ineligible, if it requests funds to develop a new Action Plan when another jurisdiction is already preparing an Action Plan in the same area using SS4A funding"
+    },
+    {
+      "item": "Applications including Action Plan development or updates must affirm coordination with geographically overlapping SS4A-funded or FY26-applying jurisdictions",
+      "quote": "the applicant agency must affirm that they will coordinate with any jurisdictions that geographically overlap with the applicant jurisdiction and have received SS4A funding to develop or update an Action Plan"
+    },
+    {
+      "item": "Implementation Grant activities must include carrying out projects and strategies identified in an Action Plan (element C)",
+      "quote": "For Implementation Grants, activities must include element (C) and may include element (B)."
+    },
+    {
+      "item": "Ineligible project activities include those whose primary purpose is not roadway safety, non-roadway modes, new motor-vehicle roadways, capacity expansion without a safety nexus, state-of-good-repair maintenance, and PTASPs",
+      "quote": "The following activities are not eligible for element (C) \"projects and strategies\" nor demonstration activity funding: Projects and strategies whose primary purpose is not roadway safety."
+    },
+    {
+      "item": "Must be registered in SAM before submitting, provide an active UEI, and maintain active SAM registration",
+      "quote": "Be registered in SAM (https://sam.gov/content/home) before submitting its application; b. Provide an active unique entity identifier in its application; and"
+    },
+    {
+      "item": "Pre-award costs (incurred before DOT obligates funds) are ineligible for reimbursement and cannot be used as match, unless DOT authorizes them in writing",
+      "quote": "any costs incurred prior to DOT's obligation of funds for activities (\"pre-award costs\") are ineligible for reimbursement and may not be used as matching funds."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "Application for Federal Assistance (SF-424)",
+      "userWrites": false,
+      "quote": "All applicants must submit the following Standard Forms: Application for Federal Assistance (SF-424),"
+    },
+    {
+      "item": "Planning and Demonstration: Budget Information for Non-Construction Programs (SF-424A) and Assurances for Non-Construction Programs (SF-424B)",
+      "userWrites": false,
+      "quote": "Budget Information for Non-Construction Programs (SF-424A), Assurances for Non-Construction Programs (SF-424B), and Disclosure of Lobbying Activities (SF-LLL)."
+    },
+    {
+      "item": "Implementation: Budget Information for Construction Programs (SF-424C) and Assurances for Construction Programs (SF-424D)",
+      "userWrites": false,
+      "quote": "Budget Information for Construction Programs (SF-424C), Assurances for Construction Programs (SF-424D), and"
+    },
+    {
+      "item": "Disclosure of Lobbying Activities (SF-LLL)",
+      "userWrites": false,
+      "quote": "Assurances for Non-Construction Programs (SF-424B), and Disclosure of Lobbying Activities (SF-LLL)."
+    },
+    {
+      "item": "Key Information Questions answered in Valid Eval (applicant, UEI, entity type, population, FARS fatality data, underserved communities, funding amounts)",
+      "userWrites": false,
+      "quote": "Key Information Questions The following questions are asked in the SS4A application on Valid Eval"
+    },
+    {
+      "item": "Planning and Demonstration Grant Supplemental Estimated Budget (template), in whole dollars by activity and funding source",
+      "userWrites": true,
+      "quote": "Applicants are required to show how different funding sources will contribute to each activity and present the data in whole dollars in a table similar to Table 3: Planning and Demonstration Grant Supplemental Estimated Budget"
+    },
+    {
+      "item": "Implementation Grant Supplemental Estimated Budget (template), itemized by location/project and activity element (A), (B), (C)",
+      "userWrites": true,
+      "quote": "Applicants are required to submit an Implementation Grant Supplemental Estimated Budget that provides an overview of estimated activity costs, organized by all major cost elements."
+    },
+    {
+      "item": "Map in PDF and spatial format showing the jurisdiction and its roadway network (plus high-injury network and project locations for Implementation; demonstration pilot locations if known)",
+      "userWrites": false,
+      "quote": "The applicant must submit a map in both PDF and spatial format (e.g., Shapefile, .KML) that shows the location of the jurisdiction and highlights the roadway network under the applicant's jurisdiction."
+    },
+    {
+      "item": "Self-Certification Eligibility Worksheet (Implementation applicants; Planning and Demonstration applicants doing only supplemental planning/demonstration from an existing plan)",
+      "userWrites": false,
+      "quote": "Submit a completed Self-Certification Eligibility Worksheet demonstrating that the jurisdiction has an Action Plan that meets the requirements described in Table 1: Action Plan Components."
+    },
+    {
+      "item": "Existing Action Plan(s) (up to three) as attachments or public web links (Implementation applicants)",
+      "userWrites": false,
+      "quote": "The plan, or a combination of up to three plans, must be uploaded as an attachment to the application or provided as web links to publicly available sites."
+    },
+    {
+      "item": "Proof of coordination (letter, email) from all geographically overlapping SS4A entities (applications including Action Plan development or updates)",
+      "userWrites": false,
+      "quote": "Proof of coordination (e.g., letter, email) from ALL such geographically overlapping entities affirming they are aware of your application and the need for coordination to avoid duplication of efforts must be provided as an attachment to the application."
+    },
+    {
+      "item": "Signed letter, MOU or other agreement from the roadway owner/maintainer (Implementation applicants relying on an agreement)",
+      "userWrites": false,
+      "quote": "have an agreement in the form of a signed letter, MOU, or other documentation from the agency that has ownership and/or maintenance responsibilities for the roadway within the applicant's jurisdiction."
+    },
+    {
+      "item": "Detailed activity schedule of all major project and strategy milestones, including NEPA, utility relocation and right-of-way disposition (Implementation, in Project Readiness)",
+      "userWrites": true,
+      "quote": "As part of this portion of the narrative, the applicant must include a detailed activity schedule that identifies all major project and strategy milestones."
+    }
+  ],
+  "libraryRequired": []
+}

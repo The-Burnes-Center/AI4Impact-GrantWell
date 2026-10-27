@@ -5,7 +5,7 @@ import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { updateProcessingStatus } from "../shared/status.mjs";
 import { hasQuestions } from "../shared/questions.mjs";
-import { withSectionIds } from "grantwell-shared";
+import { artifactsBucket, withSectionIds } from "grantwell-shared";
 
 // scope/state are written by upload-nofos / scraper; publish reads them so
 // the late-stage sidecar overwrite doesn't drop these fields.
@@ -79,9 +79,9 @@ export const handler = async (event) => {
   }
 
   // Upload summary.json
-  await uploadJson(bucket, `${folderPath}summary.json`, finalSummary);
+  await uploadJson(artifactsBucket(), `${folderPath}summary.json`, finalSummary);
 
-  await uploadJson(bucket, `${folderPath}questions.json`, questionsData);
+  await uploadJson(artifactsBucket(), `${folderPath}questions.json`, questionsData);
 
   const docKey = documentKey || `${nofoName}/NOFO-File-PDF`;
   const { scope: ddbScope, state: ddbState } = await readScopeFromMetadataTable(nofoName);

@@ -1,0 +1,1451 @@
+{
+ "136fb311f6f9ace4": {
+  "query": "maps of project area required attachments",
+  "filter": "9ecd50bc4fde11af",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If data layers or assistance with mapping is needed, please reach out to the Service contact listed in this Notice.\n\n Stakeholder Coordination/Involvement: As applicable, describe how your organization has coordinated with and involved other relevant organizations or individuals in planning the project, and detail if and how they will be involved in conducting project activities.\n\n Description of Entities Undertaking the Project: Provide a brief description of the applicant organization and all participating entities and individuals. Provide complete contact information for the individual within the organization that will oversee and manage the project activities.\n\n In addition, please submit project information as it relates to the Merit Review section of this Notice.\n\n Budget Narrative Applicants must describe and justify items and costs listed in their budget. The budget narrative must identify the following cost items: total estimated costs, non-Federal cost share, third-party contributions, and any pre-award costs. Total project cost is the sum of all allowable costs, including required and voluntary cost share and third-party contributions.\n\n Budget items must be:\n\n • Reasonable, allowable, allocable, and necessaryPage 8 of 15\n\n • Compliant with 2 CFR §200 Subpart E cost principles\n\n Indirect Costs: Applicants must indicate in their budget narrative how they will charge indirect costs, including the rate to be applied:\n\n • De Minimis Rate: If eligible, state if your organization is opting to use the de minimis rate of up to 15% of total modified direct costs. Entities that do not have a current Federal negotiated indirect cost rate (including provisional rate) may propose to use the de minimis rate. For more information, refer to 2 CFR 200.414(f).\n\n • Negotiated Rate: State if you will negotiate with your cognizant agency. If your organization has previously negotiated a rate, attach a copy of the most recently negotiated rate agreement (active or expired).\n\n Provide a breakdown of costs for acquiring each property. The breakdown must show the estimated costs of each acquisition, including itemized list of transaction costs and estimates, as well as the total Federal funding requested and the proposed match contribution.\n\n Eligible costs include the acquisition cost of the fee or conservation easement, and certain typical land transaction costs, including: appraisal to Uniform Appraisal Standards for Federal Land Acquisition (UASFLA/Yellow Book), UASFLA review appraisal, survey, title work as well as title insurance or title certificate, baseline documentation report, staff time related to activities specific to the individual acquisition, environmental assessment, and closing costs."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4202315,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AIrVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "A map showing this information can be accessed here: https://northeast-sa-fws.hub.arcgis.com/pages/c6fc33bde7d049728d47f67925c2ea5a. If spatial data to determine parcel eligibility are needed, contact the Service representative provided in this Notice.\n\n 2. 1:1 cost share.\n\n Additional Criteria:\n\n 3. Each project must show that at least one of the following resources (identified in the HCA program authorizing legislation) is of “high conservation value” and will be conserved, protected, or enhanced because of the land acquisition project: water, forest, agricultural, wildlife, recreational, or cultural resource. A resource of “high conservation value” could be demonstrated in several ways in the Project Narrative, including but not limited to 1) referencing local/regional/state/national plans, reports, or GIS information that highlight the resource found in the project area, 2) a description by an expert or other professional attesting to the high conservation value of the resource, or 3) other information that the applicant uses to demonstrate meeting this criteria. The merit review panel will evaluate based on the following rating system:\n\n a) Project Narrative clearly demonstrates the project has high conservation value. 25-50 points.\n\n b) Project Narrative does not demonstrate that the project has high conservation value. 0-24 points."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3960906,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AKbVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "A State Conservation Agency, or a County or Municipality through a subaward agreement, may hold the interest in the land acquired. For conservation easements (CE), a State Agency may co-hold the CE with a County, Municipality, or a non-profit land conservation organization.\n\n Applicants may propose to purchase one or multiple parcels with Base funds. If multiple parcels are being proposed, applicants may write their need, purpose, objectives, and expected results and benefits section in a manner that applies to all parcels. In addition, if the approach for each parcel is the same, applicants may write one approach section outlining the process to be followed for all proposed acquisitions. However, location and cost information must include details on each parcel individually.\n\n \n\n \n  https://www.grants.gov/forms/forms-repository.html\n \n\n \n  https://www.grants.gov/forms/forms-repository.htmlPage 7 of 15\n\n Use the following format for the Project Narrative:\n\n Need: Describe why the proposed land acquisition is needed. Describe how the proposed land acquisition fulfills the purposes of the Highlands Conservation Act and meets the Department of the Interior priorities (see Program Description section).\n\n Purpose: Explain what is to be accomplished during the period of the project pursuant to the stated need. The purpose should state the desired outcome of the proposed project in general terms.\n\n Objective: Specify the type of interest and acres to be acquired. Specify the target acquisition date.\n\n Expected Results or Benefits: Each parcel must show that at least one of the following resources (identified in the HCA program authorizing legislation) is of “high conservation value” and will be conserved, protected, or enhanced because of the land acquisition project: water, forest, agricultural, wildlife, recreational, or cultural resource. See Merit Review section for more details. Provide quantifiable or verifiable resource benefits when possible. If the property will be open to the public, list the allowed activities and describe how the property can be accessed.\n\n Approach: Explain how the objective(s) will be attained. Include specific procedures, schedules, key cooperators, and respective roles. Describe any subaward relationships.\n\n Location: Describe and show the parcel(s) proposed for acquisition. Proposals must include at minimum an aerial map of the proposed properties and a map showing the location of proposed properties in relation to the Highlands Region boundary. Include the name of the Municipality and County, and the name of the Congressional District in which the property is located."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3927083,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AIbVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Alternatively, you may wait to submit the SF-429 form until the event\n\n \n\n \n  https://www.whitehouse.gov/presidential-actions/\n \n\n \n  https://www.doi.gov/document-library/secretary-order\n \n\n \n  https://www.grants.gov/forms/forms-repository.html\n \n\n \n  https://www.ecfr.gov/current/title-43/subtitle-A/part-18#Appendix-A-to-Part-18\n \n\n \n  https://www.ecfr.gov/current/title-43/subtitle-A/part-18#Appendix-A-to-Part-18Page 6 of 15\n\n Forms/Assurances/Certifications Submission Requirement Note: The SF-429 forms are only available in the Grants.gov Forms Repository. Applicants must download the form and include the completed form as an application attachment.\n\n you receive notification of a grant award and are provided more instructions from the Service at that time.\n\n SF-LLL, Disclosure of Lobbying Activities\n\n Required if requesting more than $100,000 in Federal funds and the applicant has used or plans to use funds other than Federal appropriated funds for lobbying related to the proposed project.\n\n Project Abstract Summary (OMB 4040-0019). Must include, in plain language: • Award purpose, • Activities to be performed, • Expected deliverables or outcomes, • Intended beneficiaries, Subrecipient activities (if known or specified at time of award)\n\n Required from all applicants\n\n Project Narrative\n\n To be eligible for Highlands Conservation Act Grant funding, a parcel must be either 1) in the Highlands Region as defined in the NY-NJ Highlands Regional Study: 2002 Update or the Highlands Regional Study: Connecticut and Pennsylvania 2010 Update, or 2) in a Municipality within the Highlands Expansion Opportunity Area that has been submitted by the Lead State Agency - with Municipal concurrence - and approved by the Service. A map showing this information can be accessed here: https://northeast-sa- fws.hub.arcgis.com/pages/c6fc33bde7d049728d47f67925c2ea5a\n\n The Applicants may request the GIS layer of the eligible area from the Service contact listed in this Notice.\n\n The total Federal funding request cannot exceed 50% of the total project cost.\n\n The HCA Grant Program funds only land acquisition projects and associated administrative costs. The Lead State Conservation Agency is the only entity eligible to apply for this grant."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3310783,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AILVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Appraisal and Appraisal Review must be completed to UASFLA standards.\n\n A State may use up to five percent of a grant award to administer the HCA program.\n\n Pre-award eligible land transaction costs – costs incurred before the start date of a grant award – are allowed but are incurred at the applicant’s own risk as there is no guarantee those costs will be approved. Applicants must specify in the Budget Narrative if they are seeking approval for pre-award costs.\n\n Appraisals are not required to be submitted with grant proposals, but market value must be determined prior to the expenditure of funds if the project is funded. If a determination of market value that meets UASFLA is not provided with the grant application and the market value is different than estimated, the Federal contribution may be modified in keeping with Federal regulations and requirements.\n\n Conflict of Interest and Unresolved Matters Disclosures:\n\n If any actual or potential conflict of interest exists related to this project at the time of application, the applicant must provide sufficient information to support a program determination of significance per 2 CFR 1402.112. Refer to 2 CFR 200.112 Conflict of Interest and 2 CFR 200.113.\n\n Overlap or Duplication of Effort Statement:\n\n Applicants must state in their application if the activities, costs, or time commitment of key personnel proposed in this application overlap with those in any other Federal proposal or award or not. If no overlap exists, include a statement to that effect. If any overlap exists, provide:\n\n • Activities: Description any overlapping activities. • Costs: Description of any overlapping costs."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.287196,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AI7VaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "This assessment includes the applicant's financial management capabilities, project delivery experience, staffing resources, past award performance, administration and reporting compliance records, and overall project complexity and potential for challenges. If an award will be made, special conditions may be applied to the award corresponding to the assessed risk. For awards over the simplified acquisition threshold (currently $350,000), a review of the applicant's eligibility and financial integrity information in the applicant's SAM.gov records will also be performed per 2 CFR 200.206.\n\n AWARD NOTICES Notices of Federal Award are sent electronically via GrantSolutions or e-mail. These notices outline the terms, conditions, and payment instructions per 2 CFR 200.211. The Notice of Federal Award signed by an authorized Grants Officer is the legal instrument obligating financial assistance to a recipient. Any other prior notice is not an authorization to begin work. If the program allows pre-award costs per 2 CFR 200.458, beginning performance before receiving a Notice of Federal Award is at the applicant’s own risk.\n\n Anticipated Project Start Date: 01/01/2027\n\n Anticipated Project End Date: 12/31/2032\n\n An initial determination of eligibility of proposed acquisitions will be made based on the information provided in the proposal package. Prior to acquiring any interest in land, Federal award recipients must provide the Service’s Office of Conservation Investment with the items listed on the “Land Acquisition Grant Document Checklist” which is included in the grant award letter. The documents on the list are required and must be completed in sufficient detail to enable Service staff to determine if acquisitions are consistent with the purpose of the Highlands Conservation Act and are compliant with the National Environmental Policy Act, Section 7 of the Endangered Species Act, Section 106 of the National Historic Preservation Act, and other Federal regulations. Grants will be conditionally approved with these additional documentation requirements included in the grant award letter. Federal award recipients may not acquire an interest in land until they have received an additional written final approval from the US Fish and Wildlife Service.\n\n A project begins and ends on the specified date noted on the grant award document between the Federal award recipient and an authorized representative of the U.S. Government. The Highlands Conservation Act-funded acquisition must occur within this period."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2594188,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ALLVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 14,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "See Submission Instructions.\n\n PROGRAM OVERVIEW\n\n Program Goals • The Highlands Conservation Act authorizes a grant program to Connecticut, New Jersey,\n\n New York, and Pennsylvania to conserve land and protect natural resources in the Highlands Region, a nationally-important landscape distinguished by Appalachian ridges, hills, and plateaus that provides outdoor recreational opportunities for millions of people living in and visiting the Northeast. Land acquired under the program may only be held by a State Conservation Agency, County, or Municipality. The general purpose of the program is to support State and local government initiatives to identify and conserve land that implements State and local goals to increase recreation opportunities for the benefit of the public and the economy, to secure agricultural and forest resources, to protect drinking water supplies and other water resources, and to conserve wildlife habitat. Performance will be measured by comparing the proposed acres for land conservation and the land's associated benefits to the public with the final results of the project.\n\n Program Description The general purpose of the program is to support State and local government initiatives to identify and conserve land that implements State and local goals to increase outdoor recreation opportunities for the benefit of the public and the economy, to secure agricultural and forest resources, to protect drinking water supplies, and to conserve wildlife habitat.\n\n The Highlands Conservation Act Program advances the goals and objectives of the Department of Interior’s (draft) 2026-2030 Strategic Plan, including 1) DOI Strategic Plan “Objective 3.1: Lands and waters provide opportunities for recreation” and implementing the associated strategies of expanding recreational opportunities, increasing trails, and increasing efficiency through public-private partnerships and volunteers; and 2) DOI Strategic Plan “Objective 4.2 Work Collaboratively with states, partners, and governments” and implementing the associated key strategies of supporting public-private partnerships, and empower states and local communities in decision-making.\n\n Performance will be measured by comparing the proposed amount of acres of land for conservation and the land’s associated benefits for the public with the final results of the project.\n\n Eligible and non-eligible costs are described in the Project Narrative Section.\n\n \n\n \n  https://sam.gov/content/help\n \n\n \n  https://sam.gov/content/helpPage 5 of 15\n\n Legislative Authority Highlands Conservation Act, Pub."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2449707,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AHrVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "16c634bf7ddad441": {
+  "query": "Highlands Conservation Act base funding round key dates closing date",
+  "filter": "c135593677bc2362",
+  "retrievalResults": []
+ },
+ "2ad5126e157f843a": {
+  "query": "award ceiling maximum amount a state can request",
+  "filter": "c135593677bc2362",
+  "retrievalResults": []
+ },
+ "52f1ad30587615f4": {
+  "query": "total funding available and number of awards",
+  "filter": "9ecd50bc4fde11af",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "U.S. Fish and Wildlife Service\n\n Notice of Funding Opportunity\n\n F25AS00379 Highlands Conservation Act - Base Funding Round\n\n Funding Opportunity Number\n\n F25AS00379Page 1 of 15\n\n Table of Contents BASIC INFORMATION .................................................................................................................1\n\n ELIGIBILITY ..................................................................................................................................2\n\n Cost Sharing Requirement ...........................................................................................................3\n\n GET READY TO APPLY ...............................................................................................................3\n\n Required System Registrations ....................................................................................................3\n\n PROGRAM OVERVIEW ...............................................................................................................4\n\n Program Goals ..............................................................................................................................4\n\n Program Description ....................................................................................................................4\n\n Legislative Authority ...................................................................................................................5\n\n Type of Award .............................................................................................................................5\n\n PREPARE YOUR APPLICATION ................................................................................................5\n\n Application Content and Format ..................................................................................................5\n\n Application Documents ................................................................................................................5\n\n SUBMISSION REQUIREMENTS AND DEADLINES ................................................................9\n\n Address to Request Application Package ....................................................................................9\n\n Submission Dates and Times .......................................................................................................9\n\n Submission Instructions ...............................................................................................................9\n\n APPLICATION REVIEW INFORMATION ................................................................................10\n\n Eligibility Review ......................................................................................................................10\n\n Merit Review ..............................................................................................................................11\n\n Review and Selection Process ....................................................................................................12\n\n Risk Review ...............................................................................................................................13\n\n AWARD NOTICES ......................................................................................................................13\n\n POST AWARD REQUIREMENTS AND ADMINISTRATION ................................................14\n\n Administration and National Policy Requirements ...................................................................14\n\n Reporting ....................................................................................................................................14\n\n \n\n BASIC INFORMATION Announcement Type: Initial\n\n Funding Opportunity Number: F25AS00379\n\n Assistance Listing Number(s): 15.667Page 2 of 15\n\n Estimated Total Program Funding: $9,173,450\n\n Expected Number of Awards: 4\n\n Award Ceiling: $2,293,362\n\n Award Floor: $25,000\n\n Cost Sharing Required? Yes Closing Date Explanation\n\n Electronically submitted applications must be submitted no later than 11:59 PM, ET, on the listed application due date."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3260828,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AFrVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Each State may request up to $2,293,362 in Base funding. The earliest anticipated project start date is January 1, 2026. Project periods will be no longer than 4 years from the date the grantee is notified of an award. Period of performance extensions may be considered under extenuating circumstances. If the funds are unspent when a grant closes and the HCA grant program is still actively funded, unspent funds will be returned to the program to be redistributed through the next Competitive Grant Notice of Funding Opportunity. If each of the four eligible States does not request the full $2,293,362 available, remaining funds will be distributed through either the concurrent or the next Competitive Grant Round Notice of Funding Opportunity.\n\n Cost Sharing Requirement Cost Sharing Required? Yes 50 percent non-Federal cost share required.\n\n GET READY TO APPLY\n\n Required System Registrations Unique Entity Identifier and SAM.gov Registration\n\n Before applying, all applicants except individuals applying as a natural person must be registered in SAM.gov."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3158033,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AGrVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 4,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "https://www.ecfr.gov/current/title-2/part-200/subpart-E\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-E/subject-group-ECFRd93f2a98b1f6455/section-200.414\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-B/chapter-XIV/part-1402#1402.112\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-B/section-200.112\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-B/section-200.113\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-B/section-200.113Page 9 of 15\n\n • Time: Description of any overlapping key personnel time. • A copy of any overlapping or duplicative proposal submitted to any other potential\n\n funding entity. • Details on when any overlapping proposal was submitted, to whom, and the expected\n\n date of the funding decision.\n\n Other Required Information\n\n SUBMISSION REQUIREMENTS AND DEADLINES\n\n Address to Request Application Package This Notice of Funding Opportunity contains all the information necessary to complete the application requirements. For questions contact Shelley DiBona Shelley_DiBona@ios.doi.gov 1-413-253-8509\n\n Submission Dates and Times Closing Date for Applications: 10/31/2026\n\n Closing Date Explanation\n\n Electronically submitted applications must be submitted no later than 11:59 PM, ET, on the listed application due date.\n\n Submission Instructions Apply Through Grants.gov To apply through Grants.gov, please follow the instructions in the Quick Start Guide for Applicants. Before applying, ensure that at least one person at your organization is registered and has the Authorized Organization Representative (AOR). Only the AOR can submit the application. If you need more users, they must create their own Grants.gov account. Follow these steps below to apply:\n\n • Create a Workspace: Creating a workspace allows you to complete it online and route it through your organization for review before submitting.\n\n • Complete a Workspace: Invite participants to the workspace so you can collaborate on the application. Required applications forms are included in the Grants.gov Funding Opportunity Package and can be completed in the Workspace, unless noted otherwise in the Required Forms table above."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2885467,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AJLVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "This assessment includes the applicant's financial management capabilities, project delivery experience, staffing resources, past award performance, administration and reporting compliance records, and overall project complexity and potential for challenges. If an award will be made, special conditions may be applied to the award corresponding to the assessed risk. For awards over the simplified acquisition threshold (currently $350,000), a review of the applicant's eligibility and financial integrity information in the applicant's SAM.gov records will also be performed per 2 CFR 200.206.\n\n AWARD NOTICES Notices of Federal Award are sent electronically via GrantSolutions or e-mail. These notices outline the terms, conditions, and payment instructions per 2 CFR 200.211. The Notice of Federal Award signed by an authorized Grants Officer is the legal instrument obligating financial assistance to a recipient. Any other prior notice is not an authorization to begin work. If the program allows pre-award costs per 2 CFR 200.458, beginning performance before receiving a Notice of Federal Award is at the applicant’s own risk.\n\n Anticipated Project Start Date: 01/01/2027\n\n Anticipated Project End Date: 12/31/2032\n\n An initial determination of eligibility of proposed acquisitions will be made based on the information provided in the proposal package. Prior to acquiring any interest in land, Federal award recipients must provide the Service’s Office of Conservation Investment with the items listed on the “Land Acquisition Grant Document Checklist” which is included in the grant award letter. The documents on the list are required and must be completed in sufficient detail to enable Service staff to determine if acquisitions are consistent with the purpose of the Highlands Conservation Act and are compliant with the National Environmental Policy Act, Section 7 of the Endangered Species Act, Section 106 of the National Historic Preservation Act, and other Federal regulations. Grants will be conditionally approved with these additional documentation requirements included in the grant award letter. Federal award recipients may not acquire an interest in land until they have received an additional written final approval from the US Fish and Wildlife Service.\n\n A project begins and ends on the specified date noted on the grant award document between the Federal award recipient and an authorized representative of the U.S. Government. The Highlands Conservation Act-funded acquisition must occur within this period."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2686071,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ALLVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 14,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "After logging in, click on either the “Begin an application” link (first time applicants) or the “Funding Opportunity” link to go to the “Competing Announcements-Application Kits” list screen. Search the list for this Funding Opportunity’s title and number. Click on the associated “Apply” link. Follow the prompts from there. Required applications forms are provided with the Funding Opportunity in GrantSolutions unless otherwise indicated on the Required Forms table above.\n\n 5. For detailed instructions, see the GrantSolutions Training Resources web page. 6. Need help?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2584362,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AJrVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 11,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "L. 108-421, Nov. 30, 2004, 118 Stat. 2375 [As Amended Through P.L. 117–328, December 29, 2022]; and Emergency Wetlands Resources Act - National Wetlands Inventory, 16 U.S.C. §3901 and §§3931-3932\n\n Type of Award Projects will be funded through G (Grant).\n\n PREPARE YOUR APPLICATION\n\n Application Content and Format Pre-Application Requirements\n\n Prior to applying, applicants should review presidential actions found at: https://www.whitehouse.gov/presidential-actions/ and DOI Secretary’s Orders found at: https://www.doi.gov/document-library/secretary-order. By applying in response to this Notice of Funding Opportunity, the applicant certifies awareness and compliance with all currently effective and applicable executive orders and secretary’s orders, including but not limited to the Executive Order titled Ending Radical and Wasteful Government DEI Programs and Preferencing as well as the Executive Order and Secretary’s order titled Restoring Truth and Sanity to American History. Applicants are responsible for ensuring their proposed activities are consistent with the intent and requirements of these directives.\n\n Application Documents Applicants must submit the following forms with their application as specified below. Instructions for accessing and submitting application forms are provided in the Submission Instructions section of this document below. For instructions on completing form fields, see the form instructions on the Grants.gov Forms Repository.\n\n Forms/Assurances/Certifications Submission Requirement SF-424, Application for Federal Assistance\n\n Note: For applicants requesting more than $100,000 in Federal funds, the Authorized Representative’s signature (or electronic equivalent) on the Application for Federal Assistance form also represents their certification of the statements in Appendix A to 43 CFR 18-Certification Regarding Lobbying\n\n Required from all applicants\n\n SF-424A, Budget Information – Non-Construction Programs Required for non-construction projects\n\n SF-424C: Budget Information – Construction Programs Required for construction projects\n\n SF-429 (Cover Page & Attachment B), Request to Acquire, Improve, or Furnish Real Property\n\n Required if requesting to acquire, improve, or furnish real property."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2526993,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AH7VaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "https://www.doi.gov/grants/doi-standard-terms-and-conditions\n \n\n \n  https://www.doi.gov/grants/doi-standard-terms-and-conditions\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-I/part-184\n \n\n \n  https://www.fws.gov/library/collections/financial-assistance-general-award-terms-and-conditions\n \n\n \n  https://grants.gov/forms/forms-repository/post-award-reporting-forms\n \n\n \n  https://www.ecfr.gov/current/title-2/section-200.329\n \n\n \n  https://www.ecfr.gov/current/title-2/section-200.329\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-B/chapter-XIV/part-1402/subpart-B/section-1402.112\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/subject-group-ECFR36520e4111dce32/section-200.330\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-B/section-200.113\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200#Appendix-XII-to-Part-200\n \n\n \n  https://www.ecfr.gov/current/title-43/subtitle-A/part-18Page 15 of 15\n\n Other Information"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2300754,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AL7VaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "644c9221df316d76": {
+  "query": "map boundary location parcel land to be conserved application requirements",
+  "filter": "c135593677bc2362",
+  "retrievalResults": []
+ },
+ "67dda07abd104766": {
+  "query": "map boundary location parcel land to be conserved application requirements",
+  "filter": "9ecd50bc4fde11af",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "A map showing this information can be accessed here: https://northeast-sa-fws.hub.arcgis.com/pages/c6fc33bde7d049728d47f67925c2ea5a. If spatial data to determine parcel eligibility are needed, contact the Service representative provided in this Notice.\n\n 2. 1:1 cost share.\n\n Additional Criteria:\n\n 3. Each project must show that at least one of the following resources (identified in the HCA program authorizing legislation) is of “high conservation value” and will be conserved, protected, or enhanced because of the land acquisition project: water, forest, agricultural, wildlife, recreational, or cultural resource. A resource of “high conservation value” could be demonstrated in several ways in the Project Narrative, including but not limited to 1) referencing local/regional/state/national plans, reports, or GIS information that highlight the resource found in the project area, 2) a description by an expert or other professional attesting to the high conservation value of the resource, or 3) other information that the applicant uses to demonstrate meeting this criteria. The merit review panel will evaluate based on the following rating system:\n\n a) Project Narrative clearly demonstrates the project has high conservation value. 25-50 points.\n\n b) Project Narrative does not demonstrate that the project has high conservation value. 0-24 points."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.5190084,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AKbVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "A State Conservation Agency, or a County or Municipality through a subaward agreement, may hold the interest in the land acquired. For conservation easements (CE), a State Agency may co-hold the CE with a County, Municipality, or a non-profit land conservation organization.\n\n Applicants may propose to purchase one or multiple parcels with Base funds. If multiple parcels are being proposed, applicants may write their need, purpose, objectives, and expected results and benefits section in a manner that applies to all parcels. In addition, if the approach for each parcel is the same, applicants may write one approach section outlining the process to be followed for all proposed acquisitions. However, location and cost information must include details on each parcel individually.\n\n \n\n \n  https://www.grants.gov/forms/forms-repository.html\n \n\n \n  https://www.grants.gov/forms/forms-repository.htmlPage 7 of 15\n\n Use the following format for the Project Narrative:\n\n Need: Describe why the proposed land acquisition is needed. Describe how the proposed land acquisition fulfills the purposes of the Highlands Conservation Act and meets the Department of the Interior priorities (see Program Description section).\n\n Purpose: Explain what is to be accomplished during the period of the project pursuant to the stated need. The purpose should state the desired outcome of the proposed project in general terms.\n\n Objective: Specify the type of interest and acres to be acquired. Specify the target acquisition date.\n\n Expected Results or Benefits: Each parcel must show that at least one of the following resources (identified in the HCA program authorizing legislation) is of “high conservation value” and will be conserved, protected, or enhanced because of the land acquisition project: water, forest, agricultural, wildlife, recreational, or cultural resource. See Merit Review section for more details. Provide quantifiable or verifiable resource benefits when possible. If the property will be open to the public, list the allowed activities and describe how the property can be accessed.\n\n Approach: Explain how the objective(s) will be attained. Include specific procedures, schedules, key cooperators, and respective roles. Describe any subaward relationships.\n\n Location: Describe and show the parcel(s) proposed for acquisition. Proposals must include at minimum an aerial map of the proposed properties and a map showing the location of proposed properties in relation to the Highlands Region boundary. Include the name of the Municipality and County, and the name of the Congressional District in which the property is located."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.483383,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AIbVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If data layers or assistance with mapping is needed, please reach out to the Service contact listed in this Notice.\n\n Stakeholder Coordination/Involvement: As applicable, describe how your organization has coordinated with and involved other relevant organizations or individuals in planning the project, and detail if and how they will be involved in conducting project activities.\n\n Description of Entities Undertaking the Project: Provide a brief description of the applicant organization and all participating entities and individuals. Provide complete contact information for the individual within the organization that will oversee and manage the project activities.\n\n In addition, please submit project information as it relates to the Merit Review section of this Notice.\n\n Budget Narrative Applicants must describe and justify items and costs listed in their budget. The budget narrative must identify the following cost items: total estimated costs, non-Federal cost share, third-party contributions, and any pre-award costs. Total project cost is the sum of all allowable costs, including required and voluntary cost share and third-party contributions.\n\n Budget items must be:\n\n • Reasonable, allowable, allocable, and necessaryPage 8 of 15\n\n • Compliant with 2 CFR §200 Subpart E cost principles\n\n Indirect Costs: Applicants must indicate in their budget narrative how they will charge indirect costs, including the rate to be applied:\n\n • De Minimis Rate: If eligible, state if your organization is opting to use the de minimis rate of up to 15% of total modified direct costs. Entities that do not have a current Federal negotiated indirect cost rate (including provisional rate) may propose to use the de minimis rate. For more information, refer to 2 CFR 200.414(f).\n\n • Negotiated Rate: State if you will negotiate with your cognizant agency. If your organization has previously negotiated a rate, attach a copy of the most recently negotiated rate agreement (active or expired).\n\n Provide a breakdown of costs for acquiring each property. The breakdown must show the estimated costs of each acquisition, including itemized list of transaction costs and estimates, as well as the total Federal funding requested and the proposed match contribution.\n\n Eligible costs include the acquisition cost of the fee or conservation easement, and certain typical land transaction costs, including: appraisal to Uniform Appraisal Standards for Federal Land Acquisition (UASFLA/Yellow Book), UASFLA review appraisal, survey, title work as well as title insurance or title certificate, baseline documentation report, staff time related to activities specific to the individual acquisition, environmental assessment, and closing costs."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4088653,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AIrVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "See Submission Instructions.\n\n PROGRAM OVERVIEW\n\n Program Goals • The Highlands Conservation Act authorizes a grant program to Connecticut, New Jersey,\n\n New York, and Pennsylvania to conserve land and protect natural resources in the Highlands Region, a nationally-important landscape distinguished by Appalachian ridges, hills, and plateaus that provides outdoor recreational opportunities for millions of people living in and visiting the Northeast. Land acquired under the program may only be held by a State Conservation Agency, County, or Municipality. The general purpose of the program is to support State and local government initiatives to identify and conserve land that implements State and local goals to increase recreation opportunities for the benefit of the public and the economy, to secure agricultural and forest resources, to protect drinking water supplies and other water resources, and to conserve wildlife habitat. Performance will be measured by comparing the proposed acres for land conservation and the land's associated benefits to the public with the final results of the project.\n\n Program Description The general purpose of the program is to support State and local government initiatives to identify and conserve land that implements State and local goals to increase outdoor recreation opportunities for the benefit of the public and the economy, to secure agricultural and forest resources, to protect drinking water supplies, and to conserve wildlife habitat.\n\n The Highlands Conservation Act Program advances the goals and objectives of the Department of Interior’s (draft) 2026-2030 Strategic Plan, including 1) DOI Strategic Plan “Objective 3.1: Lands and waters provide opportunities for recreation” and implementing the associated strategies of expanding recreational opportunities, increasing trails, and increasing efficiency through public-private partnerships and volunteers; and 2) DOI Strategic Plan “Objective 4.2 Work Collaboratively with states, partners, and governments” and implementing the associated key strategies of supporting public-private partnerships, and empower states and local communities in decision-making.\n\n Performance will be measured by comparing the proposed amount of acres of land for conservation and the land’s associated benefits for the public with the final results of the project.\n\n Eligible and non-eligible costs are described in the Project Narrative Section.\n\n \n\n \n  https://sam.gov/content/help\n \n\n \n  https://sam.gov/content/helpPage 5 of 15\n\n Legislative Authority Highlands Conservation Act, Pub."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3997957,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AHrVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Alternatively, you may wait to submit the SF-429 form until the event\n\n \n\n \n  https://www.whitehouse.gov/presidential-actions/\n \n\n \n  https://www.doi.gov/document-library/secretary-order\n \n\n \n  https://www.grants.gov/forms/forms-repository.html\n \n\n \n  https://www.ecfr.gov/current/title-43/subtitle-A/part-18#Appendix-A-to-Part-18\n \n\n \n  https://www.ecfr.gov/current/title-43/subtitle-A/part-18#Appendix-A-to-Part-18Page 6 of 15\n\n Forms/Assurances/Certifications Submission Requirement Note: The SF-429 forms are only available in the Grants.gov Forms Repository. Applicants must download the form and include the completed form as an application attachment.\n\n you receive notification of a grant award and are provided more instructions from the Service at that time.\n\n SF-LLL, Disclosure of Lobbying Activities\n\n Required if requesting more than $100,000 in Federal funds and the applicant has used or plans to use funds other than Federal appropriated funds for lobbying related to the proposed project.\n\n Project Abstract Summary (OMB 4040-0019). Must include, in plain language: • Award purpose, • Activities to be performed, • Expected deliverables or outcomes, • Intended beneficiaries, Subrecipient activities (if known or specified at time of award)\n\n Required from all applicants\n\n Project Narrative\n\n To be eligible for Highlands Conservation Act Grant funding, a parcel must be either 1) in the Highlands Region as defined in the NY-NJ Highlands Regional Study: 2002 Update or the Highlands Regional Study: Connecticut and Pennsylvania 2010 Update, or 2) in a Municipality within the Highlands Expansion Opportunity Area that has been submitted by the Lead State Agency - with Municipal concurrence - and approved by the Service. A map showing this information can be accessed here: https://northeast-sa- fws.hub.arcgis.com/pages/c6fc33bde7d049728d47f67925c2ea5a\n\n The Applicants may request the GIS layer of the eligible area from the Service contact listed in this Notice.\n\n The total Federal funding request cannot exceed 50% of the total project cost.\n\n The HCA Grant Program funds only land acquisition projects and associated administrative costs. The Lead State Conservation Agency is the only entity eligible to apply for this grant."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3431685,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AILVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "This assessment includes the applicant's financial management capabilities, project delivery experience, staffing resources, past award performance, administration and reporting compliance records, and overall project complexity and potential for challenges. If an award will be made, special conditions may be applied to the award corresponding to the assessed risk. For awards over the simplified acquisition threshold (currently $350,000), a review of the applicant's eligibility and financial integrity information in the applicant's SAM.gov records will also be performed per 2 CFR 200.206.\n\n AWARD NOTICES Notices of Federal Award are sent electronically via GrantSolutions or e-mail. These notices outline the terms, conditions, and payment instructions per 2 CFR 200.211. The Notice of Federal Award signed by an authorized Grants Officer is the legal instrument obligating financial assistance to a recipient. Any other prior notice is not an authorization to begin work. If the program allows pre-award costs per 2 CFR 200.458, beginning performance before receiving a Notice of Federal Award is at the applicant’s own risk.\n\n Anticipated Project Start Date: 01/01/2027\n\n Anticipated Project End Date: 12/31/2032\n\n An initial determination of eligibility of proposed acquisitions will be made based on the information provided in the proposal package. Prior to acquiring any interest in land, Federal award recipients must provide the Service’s Office of Conservation Investment with the items listed on the “Land Acquisition Grant Document Checklist” which is included in the grant award letter. The documents on the list are required and must be completed in sufficient detail to enable Service staff to determine if acquisitions are consistent with the purpose of the Highlands Conservation Act and are compliant with the National Environmental Policy Act, Section 7 of the Endangered Species Act, Section 106 of the National Historic Preservation Act, and other Federal regulations. Grants will be conditionally approved with these additional documentation requirements included in the grant award letter. Federal award recipients may not acquire an interest in land until they have received an additional written final approval from the US Fish and Wildlife Service.\n\n A project begins and ends on the specified date noted on the grant award document between the Federal award recipient and an authorized representative of the U.S. Government. The Highlands Conservation Act-funded acquisition must occur within this period."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3033671,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ALLVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 14,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "OMB Control Number: 1018-0100\n\n Have Questions? Contact: Shelley DiBona- Shelley_DiBona@ios.doi.gov 1-413-253-8509\n\n Executive Summary The Highlands Conservation Act Program (HCA) is administered by the US Fish and Wildlife Service (Service) to assist Connecticut, New Jersey, New York, and Pennsylvania in the protection of land and natural resources in the Highlands Region. HCA grants support land conservation projects in which a State, County, or Municipal entity acquires land or an interest in land from a willing seller to conserve resources of high conservation value.\n\n Governors of the four Highlands States may submit proposals for up to 50% of the total cost of land conservation projects in the Highlands Region.\n\n Funding appropriated under the HCA is typically divided into two separate categories – Base and Competitive. Eligible applicants may submit requests for the Base Funding Round in response to this Notice of Funding Opportunity. A separate Notice of Funding Opportunity will be posted for Competitive Funds."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2942007,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AGLVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "6dae30483b6972d2": {
+  "query": "application submission deadline due date",
+  "filter": "c135593677bc2362",
+  "retrievalResults": []
+ },
+ "711839f2d2be2565": {
+  "query": "maps of project area required attachments",
+  "filter": "c135593677bc2362",
+  "retrievalResults": []
+ },
+ "8b9d0d0925728796": {
+  "query": "Highlands Conservation Act base funding round key dates closing date",
+  "filter": "9ecd50bc4fde11af",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "https://www.ecfr.gov/current/title-2/section-200.206\n \n\n \n  https://www.ecfr.gov/current/title-2/section-200.206\n \n\n \n  https://www.ecfr.gov/current/title-2/section-200.206\n \n\n \n  https://www.ecfr.gov/current/title-2/section-200.211\n \n\n \n  https://www.ecfr.gov/current/title-2/section-200.458Page 14 of 15\n\n Lands purchased under the Highlands Conservation Act must be managed using best management practices that are consistent with the goals of Highlands Conservation Act “to protect nationally significant natural resources in the Highlands region”.\n\n Highlands Conservation Act Base Funds must be used within four years from the date of a signed award document from the Service. Period of performance extensions may be requested under extenuating circumstances with a clear justification of the need for the extension, and must be made in advance of the grant end date.\n\n Award notices are planned for September 2026.\n\n POST AWARD REQUIREMENTS AND ADMINISTRATION\n\n Administration and National Policy Requirements For award administration and national policy requirements, see the DOI General Terms and Conditions. Infrastructure projects require the use of American iron, steel, manufacture products, and construction materials per 2 CFR 184.\n\n See the FWS General Award Terms and Conditions for national policy requirements for FWS awards."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.6331801,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ALbVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 14,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "U.S. Fish and Wildlife Service\n\n Notice of Funding Opportunity\n\n F25AS00379 Highlands Conservation Act - Base Funding Round\n\n Funding Opportunity Number\n\n F25AS00379Page 1 of 15\n\n Table of Contents BASIC INFORMATION .................................................................................................................1\n\n ELIGIBILITY ..................................................................................................................................2\n\n Cost Sharing Requirement ...........................................................................................................3\n\n GET READY TO APPLY ...............................................................................................................3\n\n Required System Registrations ....................................................................................................3\n\n PROGRAM OVERVIEW ...............................................................................................................4\n\n Program Goals ..............................................................................................................................4\n\n Program Description ....................................................................................................................4\n\n Legislative Authority ...................................................................................................................5\n\n Type of Award .............................................................................................................................5\n\n PREPARE YOUR APPLICATION ................................................................................................5\n\n Application Content and Format ..................................................................................................5\n\n Application Documents ................................................................................................................5\n\n SUBMISSION REQUIREMENTS AND DEADLINES ................................................................9\n\n Address to Request Application Package ....................................................................................9\n\n Submission Dates and Times .......................................................................................................9\n\n Submission Instructions ...............................................................................................................9\n\n APPLICATION REVIEW INFORMATION ................................................................................10\n\n Eligibility Review ......................................................................................................................10\n\n Merit Review ..............................................................................................................................11\n\n Review and Selection Process ....................................................................................................12\n\n Risk Review ...............................................................................................................................13\n\n AWARD NOTICES ......................................................................................................................13\n\n POST AWARD REQUIREMENTS AND ADMINISTRATION ................................................14\n\n Administration and National Policy Requirements ...................................................................14\n\n Reporting ....................................................................................................................................14\n\n \n\n BASIC INFORMATION Announcement Type: Initial\n\n Funding Opportunity Number: F25AS00379\n\n Assistance Listing Number(s): 15.667Page 2 of 15\n\n Estimated Total Program Funding: $9,173,450\n\n Expected Number of Awards: 4\n\n Award Ceiling: $2,293,362\n\n Award Floor: $25,000\n\n Cost Sharing Required? Yes Closing Date Explanation\n\n Electronically submitted applications must be submitted no later than 11:59 PM, ET, on the listed application due date."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.5733515,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AFrVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "A project may not be proposed for funding in both funding opportunities.\n\n More information on the HCA program is available at www.fws.gov/program/highlands- conservation-act-grant\n\n ELIGIBILITY Eligible Applicants State governments\n\n Additional Information on Eligibility Only the Lead State Agency (or Agencies) as determined by the Governor of each Highlands State may be the applicant for funding under the Highlands Conservation Act Grant Program. If the Governor assigns multiple Lead Agencies, those Agencies must coordinate on funding requests prior to submission and ensure no more than the maximum allowable amount is requested through this funding opportunity. All or part of the funds received by the Lead State\n\n \n\n \n  https://www.archives.gov/federal-register/codification/executive-order/12372.html\n \n\n \n  https://www.archives.gov/federal-register/codification/executive-order/12372.html\n \n\n \n  https://bidenwhitehouse.archives.gov/wp-content/uploads/2024/08/SPOC-list-as-of-August-2024.pdf\n \n\n \n  https://bidenwhitehouse.archives.gov/wp-content/uploads/2024/08/SPOC-list-as-of-August-2024.pdf\n \n\n \n  https://www.fws.gov/media/required-notices-and-burden-statement-omb-control-no-1018-0100\n \n\n \n  mailto:Shelley_DiBona@ios.doi.gov\n \n\n \n  https://www.fws.gov/program/highlands-conservation-act-grant\n \n\n \n  https://www.fws.gov/program/highlands-conservation-act-grantPage 3 of 15\n\n Agency may be subawarded to a County or Municipality within the Highlands Region, or to another State Conservation Agency.\n\n The current Lead State Agencies are:\n\n • Connecticut Department of Energy and Environmental Protection. Contact Matt Starr: matthew.starr@ct.gov\n\n • New York State Office of Parks, Recreation, and Historic Preservation. Contact Lynn Kovach: lynn.kovach@parks.ny.gov\n\n • New Jersey Highlands Water Protection and Planning Council. Contact Liz Ward: elizabeth.ward@highlands.nj.gov\n\n • Pennsylvania Department of Conservation and Natural Resources. Contact Dan Pierce: danipierce@pa.gov\n\n In FY 2026, $9,173,450 in Base funding is available for grants to Connecticut, New Jersey, New York, and Pennsylvania."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.5377921,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AGbVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "This assessment includes the applicant's financial management capabilities, project delivery experience, staffing resources, past award performance, administration and reporting compliance records, and overall project complexity and potential for challenges. If an award will be made, special conditions may be applied to the award corresponding to the assessed risk. For awards over the simplified acquisition threshold (currently $350,000), a review of the applicant's eligibility and financial integrity information in the applicant's SAM.gov records will also be performed per 2 CFR 200.206.\n\n AWARD NOTICES Notices of Federal Award are sent electronically via GrantSolutions or e-mail. These notices outline the terms, conditions, and payment instructions per 2 CFR 200.211. The Notice of Federal Award signed by an authorized Grants Officer is the legal instrument obligating financial assistance to a recipient. Any other prior notice is not an authorization to begin work. If the program allows pre-award costs per 2 CFR 200.458, beginning performance before receiving a Notice of Federal Award is at the applicant’s own risk.\n\n Anticipated Project Start Date: 01/01/2027\n\n Anticipated Project End Date: 12/31/2032\n\n An initial determination of eligibility of proposed acquisitions will be made based on the information provided in the proposal package. Prior to acquiring any interest in land, Federal award recipients must provide the Service’s Office of Conservation Investment with the items listed on the “Land Acquisition Grant Document Checklist” which is included in the grant award letter. The documents on the list are required and must be completed in sufficient detail to enable Service staff to determine if acquisitions are consistent with the purpose of the Highlands Conservation Act and are compliant with the National Environmental Policy Act, Section 7 of the Endangered Species Act, Section 106 of the National Historic Preservation Act, and other Federal regulations. Grants will be conditionally approved with these additional documentation requirements included in the grant award letter. Federal award recipients may not acquire an interest in land until they have received an additional written final approval from the US Fish and Wildlife Service.\n\n A project begins and ends on the specified date noted on the grant award document between the Federal award recipient and an authorized representative of the U.S. Government. The Highlands Conservation Act-funded acquisition must occur within this period."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.5377595,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ALLVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 14,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Alternatively, you may wait to submit the SF-429 form until the event\n\n \n\n \n  https://www.whitehouse.gov/presidential-actions/\n \n\n \n  https://www.doi.gov/document-library/secretary-order\n \n\n \n  https://www.grants.gov/forms/forms-repository.html\n \n\n \n  https://www.ecfr.gov/current/title-43/subtitle-A/part-18#Appendix-A-to-Part-18\n \n\n \n  https://www.ecfr.gov/current/title-43/subtitle-A/part-18#Appendix-A-to-Part-18Page 6 of 15\n\n Forms/Assurances/Certifications Submission Requirement Note: The SF-429 forms are only available in the Grants.gov Forms Repository. Applicants must download the form and include the completed form as an application attachment.\n\n you receive notification of a grant award and are provided more instructions from the Service at that time.\n\n SF-LLL, Disclosure of Lobbying Activities\n\n Required if requesting more than $100,000 in Federal funds and the applicant has used or plans to use funds other than Federal appropriated funds for lobbying related to the proposed project.\n\n Project Abstract Summary (OMB 4040-0019). Must include, in plain language: • Award purpose, • Activities to be performed, • Expected deliverables or outcomes, • Intended beneficiaries, Subrecipient activities (if known or specified at time of award)\n\n Required from all applicants\n\n Project Narrative\n\n To be eligible for Highlands Conservation Act Grant funding, a parcel must be either 1) in the Highlands Region as defined in the NY-NJ Highlands Regional Study: 2002 Update or the Highlands Regional Study: Connecticut and Pennsylvania 2010 Update, or 2) in a Municipality within the Highlands Expansion Opportunity Area that has been submitted by the Lead State Agency - with Municipal concurrence - and approved by the Service. A map showing this information can be accessed here: https://northeast-sa- fws.hub.arcgis.com/pages/c6fc33bde7d049728d47f67925c2ea5a\n\n The Applicants may request the GIS layer of the eligible area from the Service contact listed in this Notice.\n\n The total Federal funding request cannot exceed 50% of the total project cost.\n\n The HCA Grant Program funds only land acquisition projects and associated administrative costs. The Lead State Conservation Agency is the only entity eligible to apply for this grant."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.5288416,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AILVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "See Submission Instructions.\n\n PROGRAM OVERVIEW\n\n Program Goals • The Highlands Conservation Act authorizes a grant program to Connecticut, New Jersey,\n\n New York, and Pennsylvania to conserve land and protect natural resources in the Highlands Region, a nationally-important landscape distinguished by Appalachian ridges, hills, and plateaus that provides outdoor recreational opportunities for millions of people living in and visiting the Northeast. Land acquired under the program may only be held by a State Conservation Agency, County, or Municipality. The general purpose of the program is to support State and local government initiatives to identify and conserve land that implements State and local goals to increase recreation opportunities for the benefit of the public and the economy, to secure agricultural and forest resources, to protect drinking water supplies and other water resources, and to conserve wildlife habitat. Performance will be measured by comparing the proposed acres for land conservation and the land's associated benefits to the public with the final results of the project.\n\n Program Description The general purpose of the program is to support State and local government initiatives to identify and conserve land that implements State and local goals to increase outdoor recreation opportunities for the benefit of the public and the economy, to secure agricultural and forest resources, to protect drinking water supplies, and to conserve wildlife habitat.\n\n The Highlands Conservation Act Program advances the goals and objectives of the Department of Interior’s (draft) 2026-2030 Strategic Plan, including 1) DOI Strategic Plan “Objective 3.1: Lands and waters provide opportunities for recreation” and implementing the associated strategies of expanding recreational opportunities, increasing trails, and increasing efficiency through public-private partnerships and volunteers; and 2) DOI Strategic Plan “Objective 4.2 Work Collaboratively with states, partners, and governments” and implementing the associated key strategies of supporting public-private partnerships, and empower states and local communities in decision-making.\n\n Performance will be measured by comparing the proposed amount of acres of land for conservation and the land’s associated benefits for the public with the final results of the project.\n\n Eligible and non-eligible costs are described in the Project Narrative Section.\n\n \n\n \n  https://sam.gov/content/help\n \n\n \n  https://sam.gov/content/helpPage 5 of 15\n\n Legislative Authority Highlands Conservation Act, Pub."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.487395,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AHrVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "OMB Control Number: 1018-0100\n\n Have Questions? Contact: Shelley DiBona- Shelley_DiBona@ios.doi.gov 1-413-253-8509\n\n Executive Summary The Highlands Conservation Act Program (HCA) is administered by the US Fish and Wildlife Service (Service) to assist Connecticut, New Jersey, New York, and Pennsylvania in the protection of land and natural resources in the Highlands Region. HCA grants support land conservation projects in which a State, County, or Municipal entity acquires land or an interest in land from a willing seller to conserve resources of high conservation value.\n\n Governors of the four Highlands States may submit proposals for up to 50% of the total cost of land conservation projects in the Highlands Region.\n\n Funding appropriated under the HCA is typically divided into two separate categories – Base and Competitive. Eligible applicants may submit requests for the Base Funding Round in response to this Notice of Funding Opportunity. A separate Notice of Funding Opportunity will be posted for Competitive Funds."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4362422,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AGLVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "a41aae292df7dd71": {
+  "query": "cost share matching requirement non-federal match",
+  "filter": "9ecd50bc4fde11af",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Each State may request up to $2,293,362 in Base funding. The earliest anticipated project start date is January 1, 2026. Project periods will be no longer than 4 years from the date the grantee is notified of an award. Period of performance extensions may be considered under extenuating circumstances. If the funds are unspent when a grant closes and the HCA grant program is still actively funded, unspent funds will be returned to the program to be redistributed through the next Competitive Grant Notice of Funding Opportunity. If each of the four eligible States does not request the full $2,293,362 available, remaining funds will be distributed through either the concurrent or the next Competitive Grant Round Notice of Funding Opportunity.\n\n Cost Sharing Requirement Cost Sharing Required? Yes 50 percent non-Federal cost share required.\n\n GET READY TO APPLY\n\n Required System Registrations Unique Entity Identifier and SAM.gov Registration\n\n Before applying, all applicants except individuals applying as a natural person must be registered in SAM.gov."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3427777,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AGrVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 4,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Appraisal and Appraisal Review must be completed to UASFLA standards.\n\n A State may use up to five percent of a grant award to administer the HCA program.\n\n Pre-award eligible land transaction costs – costs incurred before the start date of a grant award – are allowed but are incurred at the applicant’s own risk as there is no guarantee those costs will be approved. Applicants must specify in the Budget Narrative if they are seeking approval for pre-award costs.\n\n Appraisals are not required to be submitted with grant proposals, but market value must be determined prior to the expenditure of funds if the project is funded. If a determination of market value that meets UASFLA is not provided with the grant application and the market value is different than estimated, the Federal contribution may be modified in keeping with Federal regulations and requirements.\n\n Conflict of Interest and Unresolved Matters Disclosures:\n\n If any actual or potential conflict of interest exists related to this project at the time of application, the applicant must provide sufficient information to support a program determination of significance per 2 CFR 1402.112. Refer to 2 CFR 200.112 Conflict of Interest and 2 CFR 200.113.\n\n Overlap or Duplication of Effort Statement:\n\n Applicants must state in their application if the activities, costs, or time commitment of key personnel proposed in this application overlap with those in any other Federal proposal or award or not. If no overlap exists, include a statement to that effect. If any overlap exists, provide:\n\n • Activities: Description any overlapping activities. • Costs: Description of any overlapping costs."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2650574,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AI7VaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Special terms and conditions will be detailed in award notices.\n\n Reporting The recipient’s Notice of Award will detail all reporting requirements, including frequency, due dates, and instructions for requesting extensions. In general, but not limited to, recipients must:\n\n • Submit Federal Financial reports and Program Performance reports. • Use the Federal Financial Report (SF-425) form for financial reporting, • Monitor award activities and report on program performance per 2 CFR 200.329, • Promptly notify the awarding program in writing of any issues, delays, or conditions\n\n impairing award objectives per 2 CFR 200.329(e), • Disclose any conflicts of interest related to their award that arise during the award period\n\n per 2 CFR 1402.112, • Report on the status of real property acquired under the award in which the Federal\n\n government retains an interest per 2 CFR 200.330, and • Report all violations of Federal criminal law involving fraud, bribery, or gratuity\n\n violations potentially affecting the Federal award per 2 CFR 200.113. • Report any matters related to recipient integrity and performance to SAM.gov per\n\n Appendix XII to 2 CFR 200. • If the Federal share of the award is more than $100,000 and the recipient makes or agrees\n\n to make any payment using non-appropriated funds for lobbying in connection to the award, disclose those activities using the Disclosure of Lobbying (SF-LLL) form per 43 CFR 18.100.\n\n • Federal Funding Accountability and Transparency Act of 2006 (FFATA) and 2 CFR 170 requires certain recipients to report information on executive compensation, and information on all sub-awards, subcontracts and consortiums equal to or over $30,000 to SAM.gov."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2423748,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ALrVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "A map showing this information can be accessed here: https://northeast-sa-fws.hub.arcgis.com/pages/c6fc33bde7d049728d47f67925c2ea5a. If spatial data to determine parcel eligibility are needed, contact the Service representative provided in this Notice.\n\n 2. 1:1 cost share.\n\n Additional Criteria:\n\n 3. Each project must show that at least one of the following resources (identified in the HCA program authorizing legislation) is of “high conservation value” and will be conserved, protected, or enhanced because of the land acquisition project: water, forest, agricultural, wildlife, recreational, or cultural resource. A resource of “high conservation value” could be demonstrated in several ways in the Project Narrative, including but not limited to 1) referencing local/regional/state/national plans, reports, or GIS information that highlight the resource found in the project area, 2) a description by an expert or other professional attesting to the high conservation value of the resource, or 3) other information that the applicant uses to demonstrate meeting this criteria. The merit review panel will evaluate based on the following rating system:\n\n a) Project Narrative clearly demonstrates the project has high conservation value. 25-50 points.\n\n b) Project Narrative does not demonstrate that the project has high conservation value. 0-24 points."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2159117,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AKbVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If data layers or assistance with mapping is needed, please reach out to the Service contact listed in this Notice.\n\n Stakeholder Coordination/Involvement: As applicable, describe how your organization has coordinated with and involved other relevant organizations or individuals in planning the project, and detail if and how they will be involved in conducting project activities.\n\n Description of Entities Undertaking the Project: Provide a brief description of the applicant organization and all participating entities and individuals. Provide complete contact information for the individual within the organization that will oversee and manage the project activities.\n\n In addition, please submit project information as it relates to the Merit Review section of this Notice.\n\n Budget Narrative Applicants must describe and justify items and costs listed in their budget. The budget narrative must identify the following cost items: total estimated costs, non-Federal cost share, third-party contributions, and any pre-award costs. Total project cost is the sum of all allowable costs, including required and voluntary cost share and third-party contributions.\n\n Budget items must be:\n\n • Reasonable, allowable, allocable, and necessaryPage 8 of 15\n\n • Compliant with 2 CFR §200 Subpart E cost principles\n\n Indirect Costs: Applicants must indicate in their budget narrative how they will charge indirect costs, including the rate to be applied:\n\n • De Minimis Rate: If eligible, state if your organization is opting to use the de minimis rate of up to 15% of total modified direct costs. Entities that do not have a current Federal negotiated indirect cost rate (including provisional rate) may propose to use the de minimis rate. For more information, refer to 2 CFR 200.414(f).\n\n • Negotiated Rate: State if you will negotiate with your cognizant agency. If your organization has previously negotiated a rate, attach a copy of the most recently negotiated rate agreement (active or expired).\n\n Provide a breakdown of costs for acquiring each property. The breakdown must show the estimated costs of each acquisition, including itemized list of transaction costs and estimates, as well as the total Federal funding requested and the proposed match contribution.\n\n Eligible costs include the acquisition cost of the fee or conservation easement, and certain typical land transaction costs, including: appraisal to Uniform Appraisal Standards for Federal Land Acquisition (UASFLA/Yellow Book), UASFLA review appraisal, survey, title work as well as title insurance or title certificate, baseline documentation report, staff time related to activities specific to the individual acquisition, environmental assessment, and closing costs."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2055852,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AIrVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "U.S. Fish and Wildlife Service\n\n Notice of Funding Opportunity\n\n F25AS00379 Highlands Conservation Act - Base Funding Round\n\n Funding Opportunity Number\n\n F25AS00379Page 1 of 15\n\n Table of Contents BASIC INFORMATION .................................................................................................................1\n\n ELIGIBILITY ..................................................................................................................................2\n\n Cost Sharing Requirement ...........................................................................................................3\n\n GET READY TO APPLY ...............................................................................................................3\n\n Required System Registrations ....................................................................................................3\n\n PROGRAM OVERVIEW ...............................................................................................................4\n\n Program Goals ..............................................................................................................................4\n\n Program Description ....................................................................................................................4\n\n Legislative Authority ...................................................................................................................5\n\n Type of Award .............................................................................................................................5\n\n PREPARE YOUR APPLICATION ................................................................................................5\n\n Application Content and Format ..................................................................................................5\n\n Application Documents ................................................................................................................5\n\n SUBMISSION REQUIREMENTS AND DEADLINES ................................................................9\n\n Address to Request Application Package ....................................................................................9\n\n Submission Dates and Times .......................................................................................................9\n\n Submission Instructions ...............................................................................................................9\n\n APPLICATION REVIEW INFORMATION ................................................................................10\n\n Eligibility Review ......................................................................................................................10\n\n Merit Review ..............................................................................................................................11\n\n Review and Selection Process ....................................................................................................12\n\n Risk Review ...............................................................................................................................13\n\n AWARD NOTICES ......................................................................................................................13\n\n POST AWARD REQUIREMENTS AND ADMINISTRATION ................................................14\n\n Administration and National Policy Requirements ...................................................................14\n\n Reporting ....................................................................................................................................14\n\n \n\n BASIC INFORMATION Announcement Type: Initial\n\n Funding Opportunity Number: F25AS00379\n\n Assistance Listing Number(s): 15.667Page 2 of 15\n\n Estimated Total Program Funding: $9,173,450\n\n Expected Number of Awards: 4\n\n Award Ceiling: $2,293,362\n\n Award Floor: $25,000\n\n Cost Sharing Required? Yes Closing Date Explanation\n\n Electronically submitted applications must be submitted no later than 11:59 PM, ET, on the listed application due date."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1612576,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AFrVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "All priorities will be given equal consideration. A project will not necessarily receive more points simply because multiple priorities are addressed. Points will be allocated based on the degree to which the project supports, advances, or otherwise demonstrates an enhancement of one or more of the priorities identified, and whether the connection to the stated priority (or priorities) is (are) well supported.\n\n Projects that meet Criteria 1 and 2 and score 35 points or higher in Criteria 3 as determined by the Merit Review Panel will be eligible for funding.\n\n Review and Selection Process This program reviews proposed budgets to ensure:\n\n • figures are correct • estimated costs are necessary and reasonable and clearly linked to project narratives • avoid obviously unallowable costs • identify costs requiring prior approval • ensure indirect cost rates are applied correctly • confirm cost sharing requirements are reflected in the budget.\n\n This program reviews applications for potential overlap or duplication between the proposed project and any other funded or proposed project. Depending on the circumstances, DOI may choose to not make an award.\n\n Prior to conducting the comprehensive merit review, an initial review will be performed to determine whether: (1) the applicant is eligible for an award; (2) the information required by the NOFO has been submitted; (3) all mandatory requirements of the NOFO are satisfied; (4) the proposed project is responsive to the program objectives of the NOFO (program determination); and (5) the proposed project is in compliance with all applicable executive and secretary orders, including the President’s executive order on Ending Radical and Wasteful Government DEI Programs and Preferencing as well as the executive order and Secretary order on Restoring Truth and Sanity to American History. If an applicant fails to meet the requirements or objectives ofPage 13 of 15\n\n the NOFO, or does not provide sufficient information for review, the applicant will be considered nonresponsive and eliminated from further review.\n\n The Merit Review Panel will include subject matter experts from the U.S. Fish and Wildlife Service (Service) and the U.S. Forest Service. At least three reviewers will evaluate each proposal on the criteria listed above. Additional subject matter experts may be requested to provide reviews of projects if deemed necessary by the review panel. All elements of review will be maintained electronically by the Service’s Highlands Conservation Act program administrator. The Service will evaluate recommendations from the review panel and seek consensus. The Service is responsible for all final decisions.\n\n Risk Review Prior to making an award, the applicant will be assessed for their level of risk per 2 CFR 200.206."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1454465,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AK7VaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 13,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "e26a93391992daa2": {
+  "query": "total funding available and number of awards",
+  "filter": "c135593677bc2362",
+  "retrievalResults": []
+ },
+ "ed35353e706339fa": {
+  "query": "cost share matching requirement non-federal match",
+  "filter": "c135593677bc2362",
+  "retrievalResults": []
+ },
+ "ee5e6ec5d7f30daf": {
+  "query": "application submission deadline due date",
+  "filter": "9ecd50bc4fde11af",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "https://www.ecfr.gov/current/title-2/part-200/subpart-E\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-E/subject-group-ECFRd93f2a98b1f6455/section-200.414\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-B/chapter-XIV/part-1402#1402.112\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-B/section-200.112\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-B/section-200.113\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-B/section-200.113Page 9 of 15\n\n • Time: Description of any overlapping key personnel time. • A copy of any overlapping or duplicative proposal submitted to any other potential\n\n funding entity. • Details on when any overlapping proposal was submitted, to whom, and the expected\n\n date of the funding decision.\n\n Other Required Information\n\n SUBMISSION REQUIREMENTS AND DEADLINES\n\n Address to Request Application Package This Notice of Funding Opportunity contains all the information necessary to complete the application requirements. For questions contact Shelley DiBona Shelley_DiBona@ios.doi.gov 1-413-253-8509\n\n Submission Dates and Times Closing Date for Applications: 10/31/2026\n\n Closing Date Explanation\n\n Electronically submitted applications must be submitted no later than 11:59 PM, ET, on the listed application due date.\n\n Submission Instructions Apply Through Grants.gov To apply through Grants.gov, please follow the instructions in the Quick Start Guide for Applicants. Before applying, ensure that at least one person at your organization is registered and has the Authorized Organization Representative (AOR). Only the AOR can submit the application. If you need more users, they must create their own Grants.gov account. Follow these steps below to apply:\n\n • Create a Workspace: Creating a workspace allows you to complete it online and route it through your organization for review before submitting.\n\n • Complete a Workspace: Invite participants to the workspace so you can collaborate on the application. Required applications forms are included in the Grants.gov Funding Opportunity Package and can be completed in the Workspace, unless noted otherwise in the Required Forms table above."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2516251,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AJLVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Check for errors before submission.\n\n • Submit a Workspace: An application may be submitted through workspace by clicking the Sign and Submit button on the Manage Workspace page, under the Forms tab\n\n • Track a Workspace Submission: After successfully submitting a workspace application, a Grants.gov Tracking Number (GRANTXXXXXXXX) is automatically assigned to the application.\n\n The system generates a date and time stamp and sends it to the applicant’s AOR via email as proof of submission. Make sure your application passes the Grants.gov validation checks. Do not encrypt, zip, or password-protect any files. Only registered individuals in SAM as both a user and an AOR can submit applications. Please allow 30 days to register in Grants.gov.\n\n \n\n \n  mailto:Shelley_DiBona@ios.doi.gov\n \n\n \n  https://grants.gov/register\n \n\n \n  https://www.grants.gov/quick-start-guide/applicants\n \n\n \n  http://www.grants.gov/quick-start-guide/applicantsPage 10 of 15\n\n Application System Technical Support: For Grants.gov technical registration and submission, downloading forms, and application packages, contact Grants.gov Customer Support at 1-800- 518-4726 or by email at Support@grants.gov.\n\n Apply Through GrantSolutions To apply through GrantSolutions, follow these steps:\n\n 1. Register your organization. Send an e-mail to help@grantsolutions.gov with: • Subject: New Organization Request • Entity name (organization or individual applying as a natural person) • Entity type • SAM.gov Unique Entity Identifier (not required for individuals) • Employer Identification Number (individuals, do not include your SSN) • Address • Contact details (First and last name, e-mail, phone)\n\n This information should be the same as entered on the entity’s SAM.gov profile.\n\n 2. Assign system user roles. Follow the GrantSolutions “Recipient user” registration instructions. Submit a separate Recipient User Account Request form for each official to be assigned a system role. At minimum, the Authorizing Official (ADO) and Principal Investigator/Program Director (PI/PD) must be assigned.\n\n 3. Log in. GrantSolutions requires users to log in through Login.gov. Each user must create a Login.gov account. For instructions, see the GrantSolutions Training Resources web page.\n\n 4. Find and apply to this Funding Opportunity."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2354875,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AJbVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "After logging in, click on either the “Begin an application” link (first time applicants) or the “Funding Opportunity” link to go to the “Competing Announcements-Application Kits” list screen. Search the list for this Funding Opportunity’s title and number. Click on the associated “Apply” link. Follow the prompts from there. Required applications forms are provided with the Funding Opportunity in GrantSolutions unless otherwise indicated on the Required Forms table above.\n\n 5. For detailed instructions, see the GrantSolutions Training Resources web page. 6. Need help?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2286386,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AJrVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 11,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "This assessment includes the applicant's financial management capabilities, project delivery experience, staffing resources, past award performance, administration and reporting compliance records, and overall project complexity and potential for challenges. If an award will be made, special conditions may be applied to the award corresponding to the assessed risk. For awards over the simplified acquisition threshold (currently $350,000), a review of the applicant's eligibility and financial integrity information in the applicant's SAM.gov records will also be performed per 2 CFR 200.206.\n\n AWARD NOTICES Notices of Federal Award are sent electronically via GrantSolutions or e-mail. These notices outline the terms, conditions, and payment instructions per 2 CFR 200.211. The Notice of Federal Award signed by an authorized Grants Officer is the legal instrument obligating financial assistance to a recipient. Any other prior notice is not an authorization to begin work. If the program allows pre-award costs per 2 CFR 200.458, beginning performance before receiving a Notice of Federal Award is at the applicant’s own risk.\n\n Anticipated Project Start Date: 01/01/2027\n\n Anticipated Project End Date: 12/31/2032\n\n An initial determination of eligibility of proposed acquisitions will be made based on the information provided in the proposal package. Prior to acquiring any interest in land, Federal award recipients must provide the Service’s Office of Conservation Investment with the items listed on the “Land Acquisition Grant Document Checklist” which is included in the grant award letter. The documents on the list are required and must be completed in sufficient detail to enable Service staff to determine if acquisitions are consistent with the purpose of the Highlands Conservation Act and are compliant with the National Environmental Policy Act, Section 7 of the Endangered Species Act, Section 106 of the National Historic Preservation Act, and other Federal regulations. Grants will be conditionally approved with these additional documentation requirements included in the grant award letter. Federal award recipients may not acquire an interest in land until they have received an additional written final approval from the US Fish and Wildlife Service.\n\n A project begins and ends on the specified date noted on the grant award document between the Federal award recipient and an authorized representative of the U.S. Government. The Highlands Conservation Act-funded acquisition must occur within this period."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1951213,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ALLVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 14,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "L. 108-421, Nov. 30, 2004, 118 Stat. 2375 [As Amended Through P.L. 117–328, December 29, 2022]; and Emergency Wetlands Resources Act - National Wetlands Inventory, 16 U.S.C. §3901 and §§3931-3932\n\n Type of Award Projects will be funded through G (Grant).\n\n PREPARE YOUR APPLICATION\n\n Application Content and Format Pre-Application Requirements\n\n Prior to applying, applicants should review presidential actions found at: https://www.whitehouse.gov/presidential-actions/ and DOI Secretary’s Orders found at: https://www.doi.gov/document-library/secretary-order. By applying in response to this Notice of Funding Opportunity, the applicant certifies awareness and compliance with all currently effective and applicable executive orders and secretary’s orders, including but not limited to the Executive Order titled Ending Radical and Wasteful Government DEI Programs and Preferencing as well as the Executive Order and Secretary’s order titled Restoring Truth and Sanity to American History. Applicants are responsible for ensuring their proposed activities are consistent with the intent and requirements of these directives.\n\n Application Documents Applicants must submit the following forms with their application as specified below. Instructions for accessing and submitting application forms are provided in the Submission Instructions section of this document below. For instructions on completing form fields, see the form instructions on the Grants.gov Forms Repository.\n\n Forms/Assurances/Certifications Submission Requirement SF-424, Application for Federal Assistance\n\n Note: For applicants requesting more than $100,000 in Federal funds, the Authorized Representative’s signature (or electronic equivalent) on the Application for Federal Assistance form also represents their certification of the statements in Appendix A to 43 CFR 18-Certification Regarding Lobbying\n\n Required from all applicants\n\n SF-424A, Budget Information – Non-Construction Programs Required for non-construction projects\n\n SF-424C: Budget Information – Construction Programs Required for construction projects\n\n SF-429 (Cover Page & Attachment B), Request to Acquire, Improve, or Furnish Real Property\n\n Required if requesting to acquire, improve, or furnish real property."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1949685,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AH7VaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Alternatively, you may wait to submit the SF-429 form until the event\n\n \n\n \n  https://www.whitehouse.gov/presidential-actions/\n \n\n \n  https://www.doi.gov/document-library/secretary-order\n \n\n \n  https://www.grants.gov/forms/forms-repository.html\n \n\n \n  https://www.ecfr.gov/current/title-43/subtitle-A/part-18#Appendix-A-to-Part-18\n \n\n \n  https://www.ecfr.gov/current/title-43/subtitle-A/part-18#Appendix-A-to-Part-18Page 6 of 15\n\n Forms/Assurances/Certifications Submission Requirement Note: The SF-429 forms are only available in the Grants.gov Forms Repository. Applicants must download the form and include the completed form as an application attachment.\n\n you receive notification of a grant award and are provided more instructions from the Service at that time.\n\n SF-LLL, Disclosure of Lobbying Activities\n\n Required if requesting more than $100,000 in Federal funds and the applicant has used or plans to use funds other than Federal appropriated funds for lobbying related to the proposed project.\n\n Project Abstract Summary (OMB 4040-0019). Must include, in plain language: • Award purpose, • Activities to be performed, • Expected deliverables or outcomes, • Intended beneficiaries, Subrecipient activities (if known or specified at time of award)\n\n Required from all applicants\n\n Project Narrative\n\n To be eligible for Highlands Conservation Act Grant funding, a parcel must be either 1) in the Highlands Region as defined in the NY-NJ Highlands Regional Study: 2002 Update or the Highlands Regional Study: Connecticut and Pennsylvania 2010 Update, or 2) in a Municipality within the Highlands Expansion Opportunity Area that has been submitted by the Lead State Agency - with Municipal concurrence - and approved by the Service. A map showing this information can be accessed here: https://northeast-sa- fws.hub.arcgis.com/pages/c6fc33bde7d049728d47f67925c2ea5a\n\n The Applicants may request the GIS layer of the eligible area from the Service contact listed in this Notice.\n\n The total Federal funding request cannot exceed 50% of the total project cost.\n\n The HCA Grant Program funds only land acquisition projects and associated administrative costs. The Lead State Conservation Agency is the only entity eligible to apply for this grant."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1918803,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AILVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Need help? For additional information and contact information on the SAM.gov Help page.\n\n GRANTSOLUTIONS\n\n This program accepts applications through GrantSolutions.gov. You must register with GrantSolutions."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1873045,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AHbVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "fce48d74abbff181": {
+  "query": "award ceiling maximum amount a state can request",
+  "filter": "9ecd50bc4fde11af",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Each State may request up to $2,293,362 in Base funding. The earliest anticipated project start date is January 1, 2026. Project periods will be no longer than 4 years from the date the grantee is notified of an award. Period of performance extensions may be considered under extenuating circumstances. If the funds are unspent when a grant closes and the HCA grant program is still actively funded, unspent funds will be returned to the program to be redistributed through the next Competitive Grant Notice of Funding Opportunity. If each of the four eligible States does not request the full $2,293,362 available, remaining funds will be distributed through either the concurrent or the next Competitive Grant Round Notice of Funding Opportunity.\n\n Cost Sharing Requirement Cost Sharing Required? Yes 50 percent non-Federal cost share required.\n\n GET READY TO APPLY\n\n Required System Registrations Unique Entity Identifier and SAM.gov Registration\n\n Before applying, all applicants except individuals applying as a natural person must be registered in SAM.gov."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4010811,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AGrVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 4,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Special terms and conditions will be detailed in award notices.\n\n Reporting The recipient’s Notice of Award will detail all reporting requirements, including frequency, due dates, and instructions for requesting extensions. In general, but not limited to, recipients must:\n\n • Submit Federal Financial reports and Program Performance reports. • Use the Federal Financial Report (SF-425) form for financial reporting, • Monitor award activities and report on program performance per 2 CFR 200.329, • Promptly notify the awarding program in writing of any issues, delays, or conditions\n\n impairing award objectives per 2 CFR 200.329(e), • Disclose any conflicts of interest related to their award that arise during the award period\n\n per 2 CFR 1402.112, • Report on the status of real property acquired under the award in which the Federal\n\n government retains an interest per 2 CFR 200.330, and • Report all violations of Federal criminal law involving fraud, bribery, or gratuity\n\n violations potentially affecting the Federal award per 2 CFR 200.113. • Report any matters related to recipient integrity and performance to SAM.gov per\n\n Appendix XII to 2 CFR 200. • If the Federal share of the award is more than $100,000 and the recipient makes or agrees\n\n to make any payment using non-appropriated funds for lobbying in connection to the award, disclose those activities using the Disclosure of Lobbying (SF-LLL) form per 43 CFR 18.100.\n\n • Federal Funding Accountability and Transparency Act of 2006 (FFATA) and 2 CFR 170 requires certain recipients to report information on executive compensation, and information on all sub-awards, subcontracts and consortiums equal to or over $30,000 to SAM.gov."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3232819,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ALrVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "A project may not be proposed for funding in both funding opportunities.\n\n More information on the HCA program is available at www.fws.gov/program/highlands- conservation-act-grant\n\n ELIGIBILITY Eligible Applicants State governments\n\n Additional Information on Eligibility Only the Lead State Agency (or Agencies) as determined by the Governor of each Highlands State may be the applicant for funding under the Highlands Conservation Act Grant Program. If the Governor assigns multiple Lead Agencies, those Agencies must coordinate on funding requests prior to submission and ensure no more than the maximum allowable amount is requested through this funding opportunity. All or part of the funds received by the Lead State\n\n \n\n \n  https://www.archives.gov/federal-register/codification/executive-order/12372.html\n \n\n \n  https://www.archives.gov/federal-register/codification/executive-order/12372.html\n \n\n \n  https://bidenwhitehouse.archives.gov/wp-content/uploads/2024/08/SPOC-list-as-of-August-2024.pdf\n \n\n \n  https://bidenwhitehouse.archives.gov/wp-content/uploads/2024/08/SPOC-list-as-of-August-2024.pdf\n \n\n \n  https://www.fws.gov/media/required-notices-and-burden-statement-omb-control-no-1018-0100\n \n\n \n  mailto:Shelley_DiBona@ios.doi.gov\n \n\n \n  https://www.fws.gov/program/highlands-conservation-act-grant\n \n\n \n  https://www.fws.gov/program/highlands-conservation-act-grantPage 3 of 15\n\n Agency may be subawarded to a County or Municipality within the Highlands Region, or to another State Conservation Agency.\n\n The current Lead State Agencies are:\n\n • Connecticut Department of Energy and Environmental Protection. Contact Matt Starr: matthew.starr@ct.gov\n\n • New York State Office of Parks, Recreation, and Historic Preservation. Contact Lynn Kovach: lynn.kovach@parks.ny.gov\n\n • New Jersey Highlands Water Protection and Planning Council. Contact Liz Ward: elizabeth.ward@highlands.nj.gov\n\n • Pennsylvania Department of Conservation and Natural Resources. Contact Dan Pierce: danipierce@pa.gov\n\n In FY 2026, $9,173,450 in Base funding is available for grants to Connecticut, New Jersey, New York, and Pennsylvania."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3090123,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AGbVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Appraisal and Appraisal Review must be completed to UASFLA standards.\n\n A State may use up to five percent of a grant award to administer the HCA program.\n\n Pre-award eligible land transaction costs – costs incurred before the start date of a grant award – are allowed but are incurred at the applicant’s own risk as there is no guarantee those costs will be approved. Applicants must specify in the Budget Narrative if they are seeking approval for pre-award costs.\n\n Appraisals are not required to be submitted with grant proposals, but market value must be determined prior to the expenditure of funds if the project is funded. If a determination of market value that meets UASFLA is not provided with the grant application and the market value is different than estimated, the Federal contribution may be modified in keeping with Federal regulations and requirements.\n\n Conflict of Interest and Unresolved Matters Disclosures:\n\n If any actual or potential conflict of interest exists related to this project at the time of application, the applicant must provide sufficient information to support a program determination of significance per 2 CFR 1402.112. Refer to 2 CFR 200.112 Conflict of Interest and 2 CFR 200.113.\n\n Overlap or Duplication of Effort Statement:\n\n Applicants must state in their application if the activities, costs, or time commitment of key personnel proposed in this application overlap with those in any other Federal proposal or award or not. If no overlap exists, include a statement to that effect. If any overlap exists, provide:\n\n • Activities: Description any overlapping activities. • Costs: Description of any overlapping costs."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2967285,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AI7VaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "This assessment includes the applicant's financial management capabilities, project delivery experience, staffing resources, past award performance, administration and reporting compliance records, and overall project complexity and potential for challenges. If an award will be made, special conditions may be applied to the award corresponding to the assessed risk. For awards over the simplified acquisition threshold (currently $350,000), a review of the applicant's eligibility and financial integrity information in the applicant's SAM.gov records will also be performed per 2 CFR 200.206.\n\n AWARD NOTICES Notices of Federal Award are sent electronically via GrantSolutions or e-mail. These notices outline the terms, conditions, and payment instructions per 2 CFR 200.211. The Notice of Federal Award signed by an authorized Grants Officer is the legal instrument obligating financial assistance to a recipient. Any other prior notice is not an authorization to begin work. If the program allows pre-award costs per 2 CFR 200.458, beginning performance before receiving a Notice of Federal Award is at the applicant’s own risk.\n\n Anticipated Project Start Date: 01/01/2027\n\n Anticipated Project End Date: 12/31/2032\n\n An initial determination of eligibility of proposed acquisitions will be made based on the information provided in the proposal package. Prior to acquiring any interest in land, Federal award recipients must provide the Service’s Office of Conservation Investment with the items listed on the “Land Acquisition Grant Document Checklist” which is included in the grant award letter. The documents on the list are required and must be completed in sufficient detail to enable Service staff to determine if acquisitions are consistent with the purpose of the Highlands Conservation Act and are compliant with the National Environmental Policy Act, Section 7 of the Endangered Species Act, Section 106 of the National Historic Preservation Act, and other Federal regulations. Grants will be conditionally approved with these additional documentation requirements included in the grant award letter. Federal award recipients may not acquire an interest in land until they have received an additional written final approval from the US Fish and Wildlife Service.\n\n A project begins and ends on the specified date noted on the grant award document between the Federal award recipient and an authorized representative of the U.S. Government. The Highlands Conservation Act-funded acquisition must occur within this period."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2789025,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ALLVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 14,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "U.S. Fish and Wildlife Service\n\n Notice of Funding Opportunity\n\n F25AS00379 Highlands Conservation Act - Base Funding Round\n\n Funding Opportunity Number\n\n F25AS00379Page 1 of 15\n\n Table of Contents BASIC INFORMATION .................................................................................................................1\n\n ELIGIBILITY ..................................................................................................................................2\n\n Cost Sharing Requirement ...........................................................................................................3\n\n GET READY TO APPLY ...............................................................................................................3\n\n Required System Registrations ....................................................................................................3\n\n PROGRAM OVERVIEW ...............................................................................................................4\n\n Program Goals ..............................................................................................................................4\n\n Program Description ....................................................................................................................4\n\n Legislative Authority ...................................................................................................................5\n\n Type of Award .............................................................................................................................5\n\n PREPARE YOUR APPLICATION ................................................................................................5\n\n Application Content and Format ..................................................................................................5\n\n Application Documents ................................................................................................................5\n\n SUBMISSION REQUIREMENTS AND DEADLINES ................................................................9\n\n Address to Request Application Package ....................................................................................9\n\n Submission Dates and Times .......................................................................................................9\n\n Submission Instructions ...............................................................................................................9\n\n APPLICATION REVIEW INFORMATION ................................................................................10\n\n Eligibility Review ......................................................................................................................10\n\n Merit Review ..............................................................................................................................11\n\n Review and Selection Process ....................................................................................................12\n\n Risk Review ...............................................................................................................................13\n\n AWARD NOTICES ......................................................................................................................13\n\n POST AWARD REQUIREMENTS AND ADMINISTRATION ................................................14\n\n Administration and National Policy Requirements ...................................................................14\n\n Reporting ....................................................................................................................................14\n\n \n\n BASIC INFORMATION Announcement Type: Initial\n\n Funding Opportunity Number: F25AS00379\n\n Assistance Listing Number(s): 15.667Page 2 of 15\n\n Estimated Total Program Funding: $9,173,450\n\n Expected Number of Awards: 4\n\n Award Ceiling: $2,293,362\n\n Award Floor: $25,000\n\n Cost Sharing Required? Yes Closing Date Explanation\n\n Electronically submitted applications must be submitted no later than 11:59 PM, ET, on the listed application due date."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2281514,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AFrVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Alternatively, you may wait to submit the SF-429 form until the event\n\n \n\n \n  https://www.whitehouse.gov/presidential-actions/\n \n\n \n  https://www.doi.gov/document-library/secretary-order\n \n\n \n  https://www.grants.gov/forms/forms-repository.html\n \n\n \n  https://www.ecfr.gov/current/title-43/subtitle-A/part-18#Appendix-A-to-Part-18\n \n\n \n  https://www.ecfr.gov/current/title-43/subtitle-A/part-18#Appendix-A-to-Part-18Page 6 of 15\n\n Forms/Assurances/Certifications Submission Requirement Note: The SF-429 forms are only available in the Grants.gov Forms Repository. Applicants must download the form and include the completed form as an application attachment.\n\n you receive notification of a grant award and are provided more instructions from the Service at that time.\n\n SF-LLL, Disclosure of Lobbying Activities\n\n Required if requesting more than $100,000 in Federal funds and the applicant has used or plans to use funds other than Federal appropriated funds for lobbying related to the proposed project.\n\n Project Abstract Summary (OMB 4040-0019). Must include, in plain language: • Award purpose, • Activities to be performed, • Expected deliverables or outcomes, • Intended beneficiaries, Subrecipient activities (if known or specified at time of award)\n\n Required from all applicants\n\n Project Narrative\n\n To be eligible for Highlands Conservation Act Grant funding, a parcel must be either 1) in the Highlands Region as defined in the NY-NJ Highlands Regional Study: 2002 Update or the Highlands Regional Study: Connecticut and Pennsylvania 2010 Update, or 2) in a Municipality within the Highlands Expansion Opportunity Area that has been submitted by the Lead State Agency - with Municipal concurrence - and approved by the Service. A map showing this information can be accessed here: https://northeast-sa- fws.hub.arcgis.com/pages/c6fc33bde7d049728d47f67925c2ea5a\n\n The Applicants may request the GIS layer of the eligible area from the Service contact listed in this Notice.\n\n The total Federal funding request cannot exceed 50% of the total project cost.\n\n The HCA Grant Program funds only land acquisition projects and associated administrative costs. The Lead State Conservation Agency is the only entity eligible to apply for this grant."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2181551,
+    "metadata": {
+     "documentIdentifier": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "agency": "Fish and Wildlife Service",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AILVaYKEBbayybwJO4-0k",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/F25AS00379 Highlands Conservation Act - Base Funding Round/NOFO-File-PDF",
+     "nofoName": "F25AS00379 Highlands Conservation Act - Base Funding Round",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:26.218Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ }
+}

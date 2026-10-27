@@ -5,7 +5,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { ENVS, appDir, outDir } from "../scripts/synth-ci.mjs";
 import { validateInstanceConfig, type InstanceConfig } from "../lib/config/instance-config";
 import { seoFiles, writeSeoFiles } from "../lib/user-interface/seo-files";
-import { SPA_ROUTING_CODE } from "../lib/user-interface/spa-routing";
+import { SPA_ROUTING_CODE, spaRoutingCode } from "../lib/user-interface/spa-routing";
 
 let prod: InstanceConfig;
 let dev: InstanceConfig;
@@ -71,13 +71,28 @@ describe("generated site files", () => {
   it("rejects indexable on a dev deployment", () => {
     expect(() => validateInstanceConfig({ ...dev, seo: { indexable: true } })).toThrow(/seo\.indexable/);
   });
+
+  it.each([["grantwell.us"], ["WWW.grantwell.us"], ["https://www.grantwell.us"]])(
+    "rejects redirect domain %s",
+    (bad) => {
+      const customDomain = { ...prod.customDomain!, redirectDomains: [bad] };
+      expect(() => validateInstanceConfig({ ...prod, customDomain })).toThrow(/redirectDomains/);
+    }
+  );
 });
 
 describe("SPA routing function", () => {
-  const handler = new Function(`${SPA_ROUTING_CODE}; return handler;`)() as (e: { request: { uri: string } }) => {
-    uri: string;
+  type Request = { uri: string; headers: Record<string, { value: string }>; querystring: Record<string, unknown> };
+  const load = (code: string) => new Function(`${code}; return handler;`)() as (e: { request: Request }) => {
+    uri?: string;
+    statusCode?: number;
+    headers: { location?: { value: string } };
   };
-  const routed = (uri: string) => handler({ request: { uri } }).uri;
+  const handler = load(SPA_ROUTING_CODE);
+  const request = (uri: string, host = "grants.example.gov", querystring = {}) => ({
+    request: { uri, headers: { host: { value: host } }, querystring },
+  });
+  const routed = (uri: string) => handler(request(uri)).uri;
 
   it.each([
     "/",
@@ -136,6 +151,32 @@ describe("SPA routing function", () => {
     "/.well-known/security.txt",
   ])("leaves file %s alone", (uri) => {
     expect(routed(uri)).toBe(uri);
+  });
+
+  describe("with redirect hosts", () => {
+    const redirecting = load(spaRoutingCode({ from: ["www.grants.example.gov"], to: "grants.example.gov" }));
+
+    it("sends a redirect host to the same path and query on the canonical host", () => {
+      const response = redirecting(
+        request("/requirements/U.S.%20Grants", "WWW.grants.example.gov", {
+          utm_source: { value: "mail" },
+          tag: { value: "a", multiValue: [{ value: "a" }, { value: "b" }] },
+          flag: { value: "" },
+        })
+      );
+      expect(response.statusCode).toBe(301);
+      expect(response.headers.location?.value).toBe(
+        "https://grants.example.gov/requirements/U.S.%20Grants?utm_source=mail&tag=a&tag=b&flag"
+      );
+    });
+
+    it("routes the canonical host as usual", () => {
+      expect(redirecting(request("/home")).uri).toBe("/index.html");
+    });
+
+    it("never redirects without redirect hosts", () => {
+      expect(handler(request("/home", "www.grants.example.gov")).uri).toBe("/index.html");
+    });
   });
 
   it("fits CloudFront Functions' 10 KB code limit", () => {

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When is the EIA application due?",
+    "expected": "New applications are due February 19, 2025, February 19, 2026 and February 19, 2027, by 5:00 PM local time of the applicant organization. A letter of intent is requested 30 days before the due date but is not required.",
+    "quote": "All applications are due by 5:00 PM local time of applicant organization.",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "award",
+    "question": "What's the max budget per year?",
+    "expected": "Applications may request up to $700,000 in direct costs per year, for a project period of up to seven years; NHLBI sets the final amount commensurate with the PD/PI's current NHLBI support.",
+    "quote": "Applications may request up to $700,000 direct costs per year.",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "documents",
+    "question": "Do I need a letter from my institution?",
+    "expected": "Yes. The application must include a Letter of Support from the institution's Authorized Organization Representative (AOR), no longer than 2 pages; applications missing it will not be reviewed.",
+    "quote": "Applications that are missing a Letter of Support will not be reviewed. The Letter of Support must not exceed 2 pages in length.",
+    "confirmed": false
+  }
+]

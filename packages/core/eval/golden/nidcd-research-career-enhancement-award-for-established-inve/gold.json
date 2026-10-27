@@ -1,0 +1,569 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "NIH",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "New and Resubmission applications due June 10, 2024",
+      "date": "2024-06-10",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New and Resubmission applications due October 08, 2024",
+      "date": "2024-10-08",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New and Resubmission applications due February 10, 2025",
+      "date": "2025-02-10",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New and Resubmission applications due June 09, 2025",
+      "date": "2025-06-09",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New and Resubmission applications due October 08, 2025",
+      "date": "2025-10-08",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New and Resubmission applications due February 09, 2026",
+      "date": "2026-02-09",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New and Resubmission applications due June 08, 2026",
+      "date": "2026-06-08",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New and Resubmission applications due October 08, 2026",
+      "date": "2026-10-08",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New applications due February 08, 2027",
+      "date": "2027-02-08",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Resubmission applications due March 08, 2027",
+      "date": "2027-03-08",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "other",
+      "label": "Expiration Date",
+      "date": "2027-05-08",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Expiration Date May 08, 2027"
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": null,
+    "periodMonths": 24,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [
+      {
+        "what": "research development costs per year (NIDCD contribution)",
+        "value": 40000
+      },
+      {
+        "what": "indirect (F&A) cost rate, percent of modified total direct costs",
+        "value": 8
+      }
+    ],
+    "match": {
+      "required": false,
+      "ratio": null,
+      "appliesTo": null,
+      "quote": "This NOFO does not require cost sharing as defined in the NIH Grants Policy Statement Section 1.2 Definition of"
+    },
+    "quote": "NIDCD will contribute $40,000 per year toward the research development costs of the award recipient, which must be justified and consistent with the stage of development of the candidate"
+  },
+  "sections": [
+    {
+      "name": "Project Summary/Abstract",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": "SF424(R&R) Other Project Information",
+      "quote": "Project Summary/Abstract Include a description of your current research and the research you propose to continue in the independent phase."
+    },
+    {
+      "name": "Candidate's Background",
+      "order": 2,
+      "limit": null,
+      "conditional": null,
+      "component": "PHS 398 Career Development Award Supplemental Form: Candidate Section (Candidate Information and Goals for Career Development)",
+      "quote": "Describe the candidate's commitment to a career as a health related research scientist. Describe the candidate's research efforts and accomplishments in health related research to date as an independent investigator,"
+    },
+    {
+      "name": "Career Goals and Objectives",
+      "order": 3,
+      "limit": null,
+      "conditional": null,
+      "component": "PHS 398 Career Development Award Supplemental Form: Candidate Section (Candidate Information and Goals for Career Development)",
+      "quote": "Describe the candidate's research career trajectory to date and future career goals and objectives and explain how these relate to the proposed research career development enhancement program."
+    },
+    {
+      "name": "Candidate's Plan for Career Development/Training Activities During Award Period",
+      "order": 4,
+      "limit": null,
+      "conditional": null,
+      "component": "PHS 398 Career Development Award Supplemental Form: Candidate Section (Candidate Information and Goals for Career Development)",
+      "quote": "Describe the career development plan, tailoring it to the candidate's goals, prior experience and career level, as well as to the intent of the K18 program."
+    },
+    {
+      "name": "Research Strategy",
+      "order": 5,
+      "limit": null,
+      "conditional": null,
+      "component": "PHS 398 Career Development Award Supplemental Form: Research Plan Section",
+      "quote": "A sound research project that is consistent with the candidate's level of research development and objectives of their career development plan must be provided."
+    },
+    {
+      "name": "Description of Institutional Environment",
+      "order": 6,
+      "limit": null,
+      "conditional": null,
+      "component": "PHS 398 Career Development Award Supplemental Form: Environmental and Institutional Commitment to the Candidate",
+      "quote": "Describe how the institutional research environment is particularly suited for the development of the candidate's research career and the pursuit of the proposed research plan."
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Candidate",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Candidate's Background"
+      ],
+      "quote": "Has the candidate provided evidence of excellence as an independent investigator, including a record of research support and peer-reviewed publications?"
+    },
+    {
+      "name": "Career Development Plan/Career Goals and Objectives/Plan to Provide Mentoring",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Career Goals and Objectives",
+        "Candidate's Plan for Career Development/Training Activities During Award Period"
+      ],
+      "quote": "Is the career development plan appropriate in its content, scope, duration, and phasing for the candidate's stated career development goals?"
+    },
+    {
+      "name": "Research Plan",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy"
+      ],
+      "quote": "Is the proposed research project appropriate for the candidate's stage of research development and as a vehicle for developing the research skills described in the career development plan?"
+    },
+    {
+      "name": "Mentor(s), Co-Mentor(s), Consultant(s), Collaborator(s)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Are the mentor(s) research qualifications, scientific stature, experience, and mentoring track record appropriate for the candidate's research career development needs?"
+    },
+    {
+      "name": "Environment & Institutional Commitment to the Candidate",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Description of Institutional Environment"
+      ],
+      "quote": "Are the research facilities, resources and training opportunities, including faculty capable of productive collaboration, available to the candidate?"
+    },
+    {
+      "name": "Study Timeline for Clinical Trials",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Study Timeline for Clinical Trials Protections for Human Subjects"
+    },
+    {
+      "name": "Protections for Human Subjects",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For research that involves human subjects but does not involve one of the categories of research that are exempt under 45 CFR Part 46, the committee will evaluate the justification"
+    },
+    {
+      "name": "Inclusion of Women, Minorities, and Individuals Across the Lifespan",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "When the proposed project involves human subjects and/or NIH-defined clinical research, the committee will evaluate the proposed plans for the inclusion (or exclusion) of individuals"
+    },
+    {
+      "name": "Vertebrate Animals",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "The committee will evaluate the involvement of live vertebrate animals as part of the scientific assessment according to the following three points"
+    },
+    {
+      "name": "Biohazards",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Reviewers will assess whether materials or procedures proposed are potentially hazardous to research personnel and/or the environment"
+    },
+    {
+      "name": "Resubmissions",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For Resubmissions, the committee will evaluate the application as now presented, taking into consideration the responses to comments from the previous scientific review group"
+    },
+    {
+      "name": "Training in the Responsible Conduct of Research (rated Acceptable/Unacceptable)",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": "Acceptable/Unacceptable rating",
+      "sections": [
+        "Training in the Responsible Conduct of Research"
+      ],
+      "quote": "the reviewers will evaluate the adequacy of the proposed RCR training in relation to the following five required components"
+    },
+    {
+      "name": "Select Agent Research",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Reviewers will assess the information provided in this section of the application, including (1) the Select Agent(s) to be used in the proposed research,"
+    },
+    {
+      "name": "Resource Sharing Plans",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Reviewers will comment on whether the Resource Sharing Plan(s) (e.g., Sharing Model Organisms"
+    },
+    {
+      "name": "Authentication of Key Biological and/or Chemical Resources",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For projects involving key biological and/or chemical resources, reviewers will comment on the brief plans proposed for identifying and ensuring the validity of those resources."
+    },
+    {
+      "name": "Budget and Period of Support",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Reviewers will consider whether the budget and the requested period of support are fully justified and reasonable in relation to the proposed research."
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Follow the Career Development (K) Instructions in the How to Apply - Application Guide; page limits per the Application Guide and the Table of Page Limits",
+      "Limited items are allowed in the Appendix, per the Application Guide",
+      "Study Record: do not complete Section 4 (Protocol Synopsis) or Section 5 (Other Clinical Trial-related Attachments)",
+      "Applications must be submitted electronically; paper applications will not be accepted"
+    ],
+    "quote": "It is critical that applicants follow the instructions in the Career Development (K) Instructions in the How to Apply - Application Guide"
+  },
+  "eligibility": [
+    {
+      "item": "Eligible organizations: domestic higher education institutions; nonprofits; for-profit organizations including small businesses; state, county, city/township, special district and tribal governments; U.S. territories; independent school districts; public/Indian housing authorities; tribal organizations; faith- or community-based organizations; and regional organizations",
+      "quote": "Higher Education Institutions Public/State Controlled Institutions of Higher Education Private Institutions of Higher Education"
+    },
+    {
+      "item": "Non-domestic (foreign) entities and non-domestic components of U.S. organizations are not eligible; foreign components are allowed",
+      "quote": "Non-domestic (non-U.S.) Entities (Foreign Organizations) are not eligible to apply. Non-domestic (non-U.S.) components of U.S. Organizations are not eligible to apply."
+    },
+    {
+      "item": "A single candidate PD/PI works with their mentor and organization; multiple PDs/PIs are not allowed",
+      "quote": "Any candidate with the skills, knowledge, and resources necessary to carry out the proposed research as the Program Director/Principal Investigator (PD/PI) is invited to work with their mentor and organization to develop an application for support. Multiple PDs/PIs are not allowed."
+    },
+    {
+      "item": "By the time of award, the candidate must be a U.S. citizen, non-citizen national, or lawful permanent resident",
+      "quote": "By the time of award, the individual must be a citizen or a non-citizen national of the United States or have been lawfully admitted for permanent residence"
+    },
+    {
+      "item": "Candidate must have a research or health-professional doctoral degree",
+      "quote": "Candidates for the K18 award must have a research or health-professional doctoral degree."
+    },
+    {
+      "item": "Candidate must be a well-established investigator with a record of independent, peer-reviewed Federal or private research grant funding; active grant support at application is not required",
+      "quote": "This award is intended for well-established investigators who have established records of independent, peer-reviewed Federal or private research grant funding."
+    },
+    {
+      "item": "Program focuses on established investigators at the rank of Associate Professor or Professor, or equivalent in non-academic research settings",
+      "quote": "It focuses on established investigators holding the academic rank of Associate Professor or Professor, or the equivalent in non-academic research settings,"
+    },
+    {
+      "item": "At the time of award, the candidate must have a full-time appointment at the applicant academic institution; VA effort may not count toward the full-time requirement",
+      "quote": "At the time of award, the candidate must have a \"full-time\" appointment at the academic institution that is the applicant organization."
+    },
+    {
+      "item": "Candidate must devote at least 6 calendar months (50% of full-time professional effort) to the K18 program, up to 12 calendar months",
+      "quote": "The candidate is required to devote at least 6 calendar months (50% of full-time professional effort) to the K18 program, but may devote their full-time (12 calendar months) effort to it."
+    },
+    {
+      "item": "The research experience generally spans a contiguous six months to two years; a six-month experience may be split over two successive full-time summer semesters",
+      "quote": "However, a six-month research experience may be apportioned over two successive summer semesters (of three months each), provided the experience is pursued on a full-time (100%) basis during these periods."
+    },
+    {
+      "item": "Before submitting, the candidate must identify a mentor who will supervise the career development and research experience",
+      "quote": "Before submitting the application, the candidate must identify a mentor who will supervise the proposed career development and research experience."
+    },
+    {
+      "item": "Applicant institution must have a strong, well-established record of research and career development activities and qualified mentor faculty",
+      "quote": "The applicant institution must have a strong, well-established record of research and career development activities and faculty qualified to serve as mentors"
+    },
+    {
+      "item": "Applications must not propose leading a clinical trial; candidates may gain experience in a clinical trial led by a mentor/co-mentor",
+      "quote": "Not Allowed: Only accepting applications that do not propose clinical trials. Note: Applicants may propose to gain experience in a clinical trial led by a mentor/co-mentor"
+    },
+    {
+      "item": "Only New and Resubmission application types are allowed",
+      "quote": "Application Types Allowed New Resubmission"
+    },
+    {
+      "item": "Organizations may submit more than one application only if each is scientifically distinct and from a different candidate",
+      "quote": "Applicant organizations may submit more than one application, provided that each application is scientifically distinct, and each is from a different candidate."
+    },
+    {
+      "item": "An individual may not have two or more competing NIH career development applications pending review concurrently",
+      "quote": "An individual may not have two or more competing NIH career development applications pending review concurrently."
+    },
+    {
+      "item": "A new (A0) application is not accepted before the summary statement issues for an overlapping A0 or A1 application",
+      "quote": "A new (A0) application that is submitted before issuance of the summary statement from the review of an overlapping new (A0) or resubmission (A1) application."
+    },
+    {
+      "item": "A resubmission (A1) is not accepted before the summary statement issues for the previous A0 application",
+      "quote": "A resubmission (A1) application that is submitted before issuance of the summary statement from the review of the previous new (A0) application."
+    },
+    {
+      "item": "An application substantially overlapping another application pending appeal of initial peer review is not accepted",
+      "quote": "An application that has substantial overlap with another application pending appeal of initial peer review."
+    },
+    {
+      "item": "All organizational registrations (SAM, UEI, eRA Commons, Grants.gov) must be completed before the application is submitted (allow 6 weeks or more)",
+      "quote": "All registrations must be completed prior to the application being submitted. Registration can take 6 weeks or more"
+    },
+    {
+      "item": "Maintain an active SAM registration, renewed at least annually",
+      "quote": "Applicants must complete and maintain an active registration, which requires renewal at least annually."
+    },
+    {
+      "item": "Use the same UEI for all registrations and on the grant application",
+      "quote": "The same UEI must be used for all registrations, as well as on the grant application."
+    },
+    {
+      "item": "Organization must register in eRA Commons with at least one Signing Official and one PD/PI account",
+      "quote": "Commons requires organizations to identify at least one Signing Official (SO) and at least one Program Director/Principal Investigator (PD/PI) account in order to submit an application."
+    },
+    {
+      "item": "Organization must complete Grants.gov registration (requires active SAM registration)",
+      "quote": "Applicants must have an active SAM registration in order to complete the Grants.gov registration."
+    },
+    {
+      "item": "All PD(s)/PI(s) must have an eRA Commons account affiliated with the applicant organization",
+      "quote": "All PD(s)/PI(s) must have an eRA Commons account. PD(s)/PI(s) should work with their organizational officials to either create a new account or to affiliate their existing account"
+    },
+    {
+      "item": "A PD/PI who is also the organizational Signing Official must have two distinct eRA Commons accounts",
+      "quote": "If the PD/PI is also the organizational Signing Official, they must have two distinct eRA Commons accounts, one for each role."
+    },
+    {
+      "item": "All PD(s)/PI(s) must enter their eRA Commons ID in the Credential field of the Senior/Key Person Profile form",
+      "quote": "All PD(s)/PI(s) must include their eRA Commons ID in the Credential"
+    },
+    {
+      "item": "All PD(s)/PI(s) must be registered with ORCID and link the ORCID ID to their eRA Commons profile",
+      "quote": "All PD(s)/PI(s) must be registered with ORCID"
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "SF424(R&R) Cover form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Cover"
+    },
+    {
+      "item": "SF424(R&R) Project/Performance Site Locations form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Project/Performance Site Locations"
+    },
+    {
+      "item": "SF424(R&R) Other Project Information form",
+      "userWrites": false,
+      "quote": "Other Project Information All instructions in the SF424 (R&R) Application Guide must be followed."
+    },
+    {
+      "item": "SF424(R&R) Senior/Key Person Profile Expanded form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Senior/Key Person Profile Expanded"
+    },
+    {
+      "item": "R&R Budget, with participant support in the Participant/Trainee Support Costs section",
+      "userWrites": true,
+      "quote": "Use the section on Participant/Trainee Support Costs to include all allowable categories of funds requested to support participants in the program."
+    },
+    {
+      "item": "PHS 398 Cover Page Supplement form",
+      "userWrites": false,
+      "quote": "PHS 398 Cover Page Supplement"
+    },
+    {
+      "item": "PHS 398 Career Development Award Supplemental Form",
+      "userWrites": true,
+      "quote": "The PHS 398 Career Development Award Supplemental Form is comprised of the following sections:"
+    },
+    {
+      "item": "Plans and Statements of Mentor and Co-mentor(s), including the statement that the candidate will commit at least 6 person months (50%) effort",
+      "userWrites": false,
+      "quote": "The application must include a statement from the mentor providing: 1) information on their research qualifications and previous experience as a research supervisor;"
+    },
+    {
+      "item": "Mentor/co-mentor statement documenting leadership of the clinical trial, if the candidate will gain clinical trial experience",
+      "userWrites": false,
+      "quote": "the mentor or co-mentor of the mentoring team must include a statement to document leadership of the clinical trial,"
+    },
+    {
+      "item": "Signed Letters of Support from all collaborators and/or consultants describing their roles",
+      "userWrites": false,
+      "quote": "Signed statements must be provided by all collaborators and/or consultants confirming their participation in the project and describing their specific roles."
+    },
+    {
+      "item": "Signed statements from each advisory committee member (if applicable)",
+      "userWrites": false,
+      "quote": "Advisory committee members (if applicable): Signed statements must be provided by each member of the proposed advisory committee."
+    },
+    {
+      "item": "Institutional Commitment to the Candidate's Research Career Development statement from the sponsoring institution",
+      "userWrites": false,
+      "quote": "The sponsoring institution must provide a statement of commitment to the candidate's development into a productive, independent investigator and to meeting the requirements of this award."
+    },
+    {
+      "item": "At least one human subjects study record (or Delayed Onset Study record) on the PHS Human Subjects and Clinical Trials Information form if human subjects are involved",
+      "userWrites": true,
+      "quote": "you must include at least one human subjects study record using the Study Record: PHS Human Subjects and Clinical Trials Information form or Delayed Onset Study record."
+    },
+    {
+      "item": "PHS Assignment Request Form",
+      "userWrites": false,
+      "quote": "PHS Assignment Request Form"
+    },
+    {
+      "item": "Reference letters, submitted by referees through the eRA Commons Submit Referee Information link (applications lacking them are not reviewed)",
+      "userWrites": false,
+      "quote": "Applications lacking the appropriate required reference letters will not be reviewed."
+    },
+    {
+      "item": "Bibliography & References Cited",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Facilities & Other Resources",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Equipment",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Biographical Sketch",
+      "userWrites": true,
+      "quote": null
+    }
+  ],
+  "libraryRequired": [
+    "Specific Aims",
+    "Project Narrative",
+    "Training in the Responsible Conduct of Research",
+    "Data Management and Sharing Plan"
+  ]
+}

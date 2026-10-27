@@ -195,29 +195,31 @@ async function deleteDocuments(env, username) {
   return documents.size;
 }
 
+// DynamoDB rejects a FilterExpression that names a key attribute, so the PROFILE row
+// can't share the search query's filter and is deleted by its key instead.
 async function deleteProfile(env, sub) {
-  let profile = false;
+  const pk = `USER#${sub}`;
   let searchTextsErased = 0;
-  for await (const items of queryPages({
+  for await (const searches of queryPages({
     TableName: env.analytics,
     KeyConditionExpression: "pk = :pk",
-    FilterExpression: "sk = :profile OR attribute_exists(query_text)",
-    ExpressionAttributeValues: marshall({ ":pk": `USER#${sub}`, ":profile": "PROFILE" }),
+    FilterExpression: "attribute_exists(query_text)",
+    ExpressionAttributeValues: marshall({ ":pk": pk }),
     ProjectionExpression: "pk, sk",
   })) {
-    const searches = items.filter((item) => item.sk !== "PROFILE");
     for (let i = 0; i < searches.length; i += BATCH_SIZE) {
       const erased = await Promise.all(searches.slice(i, i + BATCH_SIZE).map((key) => eraseQueryText(env, key)));
       searchTextsErased += erased.filter(Boolean).length;
     }
-    if (searches.length < items.length) {
-      await dynamo.send(
-        new DeleteItemCommand({ TableName: env.analytics, Key: marshall({ pk: `USER#${sub}`, sk: "PROFILE" }) })
-      );
-      profile = true;
-    }
   }
-  return { profile, searchTextsErased };
+  const result = await dynamo.send(
+    new DeleteItemCommand({
+      TableName: env.analytics,
+      Key: marshall({ pk, sk: "PROFILE" }),
+      ReturnValues: "ALL_OLD",
+    })
+  );
+  return { profile: Boolean(result.Attributes), searchTextsErased };
 }
 
 // The condition keeps an event that expired since the query from coming back as a bare key.

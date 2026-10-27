@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When is the LWCF application due?",
+    "expected": "Applications must be submitted via GMS by Tuesday, January 5, 2027 at 11:59 pm (no time zone stated), and a hard copy must also be postmarked by that same deadline.",
+    "quote": "GMS by Tuesday, January 5, 2027 at 11:59 pm. Any application received after the deadline will",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "award",
+    "question": "What's the most we can get from LWCF?",
+    "expected": "The maximum grant award is $1,000,000 and the minimum is $50,000, with reimbursement capped at 50% of the total project cost (the Secretary may exceed $1,000,000 only in rare circumstances).",
+    "quote": "grant award is $1,000,000. The minimum grant award is $50,000. In rare circumstances, at the",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "limits",
+    "question": "How long can the project description be?",
+    "expected": "The project description is limited to two attached pages, no smaller than single spaced, 11-point font, with 3/4\" margins.",
+    "quote": "Briefly describe the project on TWO attached pages (writing should be no smaller than single spaced,",
+    "confirmed": false
+  }
+]

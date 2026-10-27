@@ -1,0 +1,478 @@
+{
+  "schemaVersion": 1,
+  "status": "confirmed",
+  "family": "NIH",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "New applications due February 16, 2025",
+      "date": "2025-02-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Renewal/Resubmission/Revision (as allowed) applications due March 16, 2025",
+      "date": "2025-03-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New applications due June 16, 2025",
+      "date": "2025-06-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Renewal/Resubmission/Revision (as allowed) applications due July 16, 2025",
+      "date": "2025-07-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New applications due October 16, 2025",
+      "date": "2025-10-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Renewal/Resubmission/Revision (as allowed) applications due November 16, 2025",
+      "date": "2025-11-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New applications due February 16, 2026",
+      "date": "2026-02-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Renewal/Resubmission/Revision (as allowed) applications due March 16, 2026",
+      "date": "2026-03-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New applications due June 16, 2026",
+      "date": "2026-06-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Renewal/Resubmission/Revision (as allowed) applications due July 16, 2026",
+      "date": "2026-07-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New applications due October 16, 2026",
+      "date": "2026-10-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Renewal/Resubmission/Revision (as allowed) applications due November 16, 2026",
+      "date": "2026-11-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New applications due February 16, 2027",
+      "date": "2027-02-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Renewal/Resubmission/Revision (as allowed) applications due March 16, 2027",
+      "date": "2027-03-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New applications due June 16, 2027",
+      "date": "2027-06-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Renewal/Resubmission/Revision (as allowed) applications due July 16, 2027",
+      "date": "2027-07-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New applications due October 16, 2027",
+      "date": "2027-10-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Renewal/Resubmission/Revision (as allowed) applications due November 16, 2027",
+      "date": "2027-11-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "other",
+      "label": "Expiration Date",
+      "date": "2028-01-08",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Expiration Date January 08, 2028"
+    }
+  ],
+  "award": {
+    "ceiling": 275000,
+    "floor": null,
+    "periodMonths": 24,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [
+      {
+        "what": "direct costs in any single year",
+        "value": 200000
+      }
+    ],
+    "match": {
+      "required": false,
+      "ratio": null,
+      "appliesTo": null,
+      "quote": "This NOFO does not require cost sharing as defined in the NIH Grants Policy Statement Section 1.2 Definition of Terms"
+    },
+    "quote": "The combined budget for direct costs for the two-year project period may not exceed $275,000. No more than $200,000 may be requested in any single year. Award Project Period The total project period may not exceed 2 years."
+  },
+  "sections": [],
+  "criteria": [
+    {
+      "name": "Factor 1. Importance of the Research (Significance and Innovation)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy"
+      ],
+      "quote": "Factor 1. Importance of the Research (Significance and Innovation) Significance Evaluate the importance of the proposed research in the context of current scientific challenges and opportunities"
+    },
+    {
+      "name": "Factor 2. Rigor and Feasibility (Approach)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy"
+      ],
+      "quote": "Factor 2. Rigor and Feasibility (Approach) Approach Evaluate the scientific quality of the proposed work. Evaluate the likelihood that compelling, reproducible findings will result (rigor)"
+    },
+    {
+      "name": "Factor 3. Expertise and Resources (Investigator(s) and Environment)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Factor 3. Expertise and Resources (Investigator(s) and Environment) Investigator(s) Evaluate whether the investigator(s) have demonstrated background, training, and expertise"
+    },
+    {
+      "name": "Protections for Human Subjects",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For research that involves human subjects but does not involve one of the categories of research that are exempt under 45 CFR Part 46, evaluate the justification for involvement of human subjects"
+    },
+    {
+      "name": "Vertebrate Animals",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "When the proposed research includes Vertebrate Animals, evaluate the involvement of live vertebrate animals according to the following criteria"
+    },
+    {
+      "name": "Biohazards",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "When the proposed research includes Biohazards, evaluate whether specific materials or procedures that will be used are significantly hazardous to research personnel and/or the environment"
+    },
+    {
+      "name": "Resubmissions",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Resubmissions As applicable, evaluate the full application as now presented."
+    },
+    {
+      "name": "Renewals",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Renewals As applicable, evaluate the progress made in the last funding period."
+    },
+    {
+      "name": "Revisions",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Revisions As applicable, evaluate the appropriateness of the proposed expansion of the scope of the project."
+    },
+    {
+      "name": "Authentication of Key Biological and/or Chemical Resources",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For projects involving key biological and/or chemical resources, evaluate the brief plans proposed for identifying and ensuring the validity of those resources."
+    },
+    {
+      "name": "Budget and Period of Support",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Evaluate whether the budget and the requested period of support are fully justified and reasonable in relation to the proposed research."
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Only limited Appendix materials are allowed: no publications or other material except blank questionnaires or blank surveys"
+    ],
+    "quote": "Appendix: Only limited Appendix materials are allowed. Follow all instructions for the Appendix as described in the How to Apply-Application Guide (https://grants.nih.gov/grants/guide/url redirect.php?id=82400). No publications or other material, with the exception of blank questionnaires or blank surveys, may be included in the Appendix."
+  },
+  "eligibility": [
+    {
+      "item": "Eligible organizations: higher education institutions (public/state controlled and private); nonprofits with or without 501(c)(3) status; for-profit organizations including small businesses; state, county, city/township and special district governments; Indian/Native American tribal governments (federally recognized or not); eligible federal agencies; U.S. territories or possessions; independent school districts; public/Indian housing authorities; Native American tribal organizations; faith-based or community-based organizations; regional organizations; and non-domestic (non-U.S.) entities (foreign organizations)",
+      "quote": "Eligible Organizations Higher Education Institutions Public/State Controlled Institutions of Higher Education Private Institutions of Higher Education Nonprofits Other Than Institutions of Higher Education"
+    },
+    {
+      "item": "Non-domestic (non-U.S.) components of U.S. organizations are eligible to apply",
+      "quote": "Non-domestic (non-U.S.) Entities (Foreign Organizations) are eligible to apply. Non-domestic (non-U.S.) components of U.S. Organizations are eligible to apply."
+    },
+    {
+      "item": "Foreign components, as defined in the NIH Grants Policy Statement, are allowed",
+      "quote": "Foreign components, as defined in the NIH Grants Policy Statement(//grants.nih.gov/grants/guide/url redirect.php? id=11118), are allowed."
+    },
+    {
+      "item": "Any individual with the skills, knowledge, and resources to carry out the research may serve as PD/PI with their organization",
+      "quote": "Any individual(s) with the skills, knowledge, and resources necessary to carry out the proposed research as the Program Director(s)/Principal Investigator(s) (PD(s)/PI(s)) is invited to work with their organization to develop an application for support."
+    },
+    {
+      "item": "Applications must not propose clinical trials",
+      "quote": "Clinical Trial? Not Allowed: Only accepting applications that do not propose clinical trials."
+    },
+    {
+      "item": "Applications must fall within the mission of a participating Institute/Center; non-participating ICs will not consider applications",
+      "quote": "ICs that do not participate in this announcement will not consider applications for funding."
+    },
+    {
+      "item": "Only New, Resubmission, or Revision application types are allowed",
+      "quote": "Application Types Allowed New Resubmission Revision"
+    },
+    {
+      "item": "Organizations may submit more than one application only if each is scientifically distinct",
+      "quote": "Applicant organizations may submit more than one application, provided that each application is scientifically distinct."
+    },
+    {
+      "item": "A new (A0) application is not accepted before the summary statement issues for an overlapping A0 or A1 application",
+      "quote": "A new (A0) application that is submitted before issuance of the summary statement from the review of an overlapping new (A0) or resubmission (A1) application."
+    },
+    {
+      "item": "A resubmission (A1) is not accepted before the summary statement issues for the previous A0 application",
+      "quote": "A resubmission (A1) application that is submitted before issuance of the summary statement from the review of the previous new (A0) application."
+    },
+    {
+      "item": "An application substantially overlapping another application pending appeal of initial peer review is not accepted",
+      "quote": "An application that has substantial overlap with another application pending appeal of initial peer review"
+    },
+    {
+      "item": "All organizational registrations (SAM, UEI, eRA Commons, Grants.gov) must be completed before the application is submitted",
+      "quote": "All registrations must be completed prior to the application being submitted. Registration can take 6 weeks or more, so applicants should begin the registration process as soon as possible."
+    },
+    {
+      "item": "Maintain an active SAM registration, renewed at least annually",
+      "quote": "System for Award Management (SAM) - (https://grants.nih.gov/grants/guide/url redirect.php?id=82390) Applicants must complete and maintain an active registration, which requires renewal at least annually."
+    },
+    {
+      "item": "Foreign organizations must obtain an NCAGE code to register in SAM",
+      "quote": "Foreign organizations must obtain an NCAGE code (in lieu of a CAGE code) in order to register in SAM."
+    },
+    {
+      "item": "Use the same UEI for all registrations and on the grant application",
+      "quote": "A UEI is issued as part of the SAM.gov registration process. The same UEI must be used for all registrations, as well as on the grant application."
+    },
+    {
+      "item": "Organization must register in eRA Commons with at least one Signing Official and one PD/PI account",
+      "quote": "eRA Commons requires organizations to identify at least one Signing Official (SO) and at least one Program Director/Principal Investigator (PD/PI) account in order to submit an application."
+    },
+    {
+      "item": "Organization must complete Grants.gov registration (requires active SAM registration)",
+      "quote": "Grants.gov(//grants.nih.gov/grants/guide/url redirect.php?id=82300) - Applicants must have an active SAM registration in order to complete the Grants.gov registration."
+    },
+    {
+      "item": "All PD(s)/PI(s) must have an eRA Commons account affiliated with the applicant organization",
+      "quote": "All PD(s)/PI(s) must have an eRA Commons account. PD(s)/PI(s) should work with their organizational officials to either create a new account or to affiliate their existing account with the applicant organization in eRA Commons."
+    },
+    {
+      "item": "A PD/PI who is also the organizational Signing Official must have two distinct eRA Commons accounts",
+      "quote": "If the PD/PI is also the organizational Signing Official, they must have two distinct eRA Commons accounts, one for each role."
+    },
+    {
+      "item": "All PD(s)/PI(s) must enter their eRA Commons ID in the Credential field of the Senior/Key Person Profile form",
+      "quote": "All PD(s)/PI(s) must include their eRA Commons ID in the Credential field of the Senior/Key Person Profile form."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "SF424(R&R) Cover form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Cover All instructions in the How to Apply - Application Guide"
+    },
+    {
+      "item": "SF424(R&R) Project/Performance Site Locations form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Project/Performance Site Locations All instructions in the How to Apply-Application Guide"
+    },
+    {
+      "item": "SF424(R&R) Other Project Information form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Other Project Information All instructions in the How to Apply-Application Guide"
+    },
+    {
+      "item": "SF424(R&R) Senior/Key Person Profile form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Senior/Key Person Profile All instructions in the How to Apply-Application Guide"
+    },
+    {
+      "item": "R&R or Modular Budget",
+      "userWrites": true,
+      "quote": "R&R or Modular Budget All instructions in the How to Apply- Application Guide"
+    },
+    {
+      "item": "R&R Subaward Budget",
+      "userWrites": true,
+      "quote": "R&R Subaward Budget All instructions in the How to Apply-Application"
+    },
+    {
+      "item": "PHS 398 Cover Page Supplement form",
+      "userWrites": false,
+      "quote": "PHS 398 Cover Page Supplement All instructions in the How to Apply-Application Guide"
+    },
+    {
+      "item": "PHS 398 Research Plan form",
+      "userWrites": true,
+      "quote": "PHS 398 Research Plan All instructions in the How to Apply- Application Guide"
+    },
+    {
+      "item": "PHS Human Subjects and Clinical Trials Information form, with at least one human subjects study record (or Delayed Onset Study record) if human subjects are involved",
+      "userWrites": true,
+      "quote": "you must include at least one human subjects study record using the Study Record: PHS Human Subjects and Clinical Trials Information form or Delayed Onset Study record."
+    },
+    {
+      "item": "PHS Assignment Request Form",
+      "userWrites": false,
+      "quote": "PHS Assignment Request Form All instructions in the How to Apply- Application uide"
+    },
+    {
+      "item": "Bibliography & References Cited",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Facilities & Other Resources",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Equipment",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Biographical Sketch",
+      "userWrites": true,
+      "quote": null
+    }
+  ],
+  "libraryRequired": [
+    "Project Summary/Abstract",
+    "Project Narrative",
+    "Specific Aims",
+    "Research Strategy",
+    "Resource Sharing Plan",
+    "Data Management and Sharing Plan"
+  ]
+}

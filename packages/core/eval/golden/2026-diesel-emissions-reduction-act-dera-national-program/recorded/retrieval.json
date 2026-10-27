@@ -1,0 +1,2072 @@
+{
+ "01aba8dee07a9afc": {
+  "query": "all-electric truck replacement eligible vehicles and ineligible costs",
+  "filter": "c58cfb4db44023f4",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Replacement vehicles must resemble the replaced vehicle in form and function. The cost of optional components or “add-ons” that significantly increase the cost of the vehicle may not be eligible for funding under the grant.\n\n d. Grid Electric Powered Replacement Projects: i. Grant funds cannot be used for the purchase and installation of certain\n\n equipment required for power delivery directly related to the replacement\n\n \n\n \n  http://www.epa.gov/compliance-and-fuel-economy-data/annual-certification-data-vehicles-engines-and-equipment\n \n\n \n  https://www.epa.gov/emission-standards-reference-guide/all-epa-emission-standards\n \n\n \n  https://ww2.arb.ca.gov/applications/new-vehicle-and-engine-certification-executive-orders-compression-ignition-and-heavy-016\n\n technology; design and engineering; electrical panels; upgrades to existing electrical panels or electrical service; and wiring/conduit.\n\n e. Engine Replacement Projects: i. To be eligible for funding, replacement highway, nonroad, marine, and\n\n locomotive engines must be certified to meet EPA or CARB emission standards, unless the replacement is a zero-emission powertrain. Please reference the EPA’s Annual Certification Data for Vehicles, Engines, and Equipment, the EPA’s mobile source Emission Standards, and the CARB’s Executive Orders for Heavy-duty Engines and Vehicles.\n\n ii. Eligible costs include equipment and parts included in the certified engine configuration that are necessary to ensure the effective installation and functioning of the new technology such as design and engineering, parts and materials, and installation.\n\n iii. For engine replacement with battery, fuel cell, or grid electric, eligible costs include electric motors, electric inverters, battery assemblies, direct drive transmission/gearboxes, regenerative braking systems, vehicle control/central processing units, vehicle instrument clusters, hydrogen storage tanks, hydrogen management systems, and fuel cell stack assemblies.\n\n iv."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.552445,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Aj7VeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 18,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "toc=1\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/section-200.306\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/section-200.306\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-E/subject-group-ECFRea20080eff2ea53/section-200.403\n \n\n \n  https://www.ecfr.gov/current/title-40/chapter-I/subchapter-C/part-86/subpart-A/section-86.007-117\n\n Eligible Technologies EPA Funding Limit Recipient Cost Share\n\n 0.10-0.036 g NOx/bhp-hr emission limit2 35% 65% 0.035 g NOx/bhp-hr or lower emission limit3 45% 55% Highway Engine Replacement with certified engine meeting: 0.20-0.11 g NOx/bhp-hr emission limit 40% 60% 0.10-0.036 g NOx/bhp-hr emission limit 50% 50% 0.035 g NOx/bhp-hr or lower emission limit 60% 40% Nonroad/Locomotive/Marine Replacement Nonroad equipment, locomotive or vessel replacement with certified engine 25% 75%\n\n Engine replacement with certified engine or zero emission power source 35% 65%\n\n Nonroad, with unregulated or Tier 1 engine, equipment replacement with current (Tier 4) certified engine or zero emission power source\n\n 40% 60%\n\n EPA certified remanufacture systems 80% 20% Idle Reduction EPA Verified Highway Vehicle Idle Reduction Technologies when combined with new or previously installed exhaust after- treatment retrofit\n\n 100% 0%\n\n EPA Verified Locomotive Idle Reduction Technologies 40% 60% EPA Verified Electrified Parking Space Technologies 30% 70% EPA Verified Highway Idle Reduction Technologies without new exhaust after-treatment retrofit 25% 75%\n\n EPA Verified Marine shore connection systems 25% 75% Verified Retrofit Technologies EPA or CARB Verified Exhaust After-treatment Retrofits 100% 0% EPA Verified Engine Upgrade Retrofits 100% 0% EPA Verified Aerodynamics and Low Rolling Resistance Tires when combined with new exhaust after-treatment retrofit 100%"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4538969,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AgrVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "For more detailed instructions, reference the guidance on identifying a certified highway engine’s certified Nitrogen Oxides (NOx) emissions limit on the DERA National website.\n\n 3. Program Description A. Purpose, Priorities, and Activities\n\n (1) Diesel Emissions Reduction Solutions\n\n The EPA is seeking applications that propose projects that upgrade existing eligible diesel vehicles and equipment using the diesel emissions reduction solutions defined in Table 4. Any ineligible costs, tasks, or activities included in an application will render that portion ineligible for funding and may disqualify the entire application, depending on the extent to which the ineligible costs impact the application.\n\n 1. Diesel Vehicles, Engines, and Equipment: Projects may include in-use medium- and heavy-duty diesel-powered highway vehicles and diesel-powered nonroad equipment, as defined below in Table 3.\n\n Table 3: Eligible Diesel Vehicles, Engines, and Equipment School Buses A “school bus” is defined as a diesel-powered passenger motor vehicle designed\n\n to carry a driver and more than 10 passengers, that the Secretary of Transportation decides is likely to be used significantly to transport preprimary, primary, and secondary school students to or from school or an event related to school.\n\n Transit Buses Includes diesel-powered medium-duty and heavy-duty transit buses (refer to the definition of eligible Class 5-8 vehicles below).\n\n \n\n \n  https://ww2.arb.ca.gov/applications/new-vehicle-and-engine-certification-executive-orders-compression-ignition-and-heavy-0\n \n\n \n  https://www.epa.gov/compliance-and-fuel-economy-data/annual-certification-data-vehicles-engines-and-equipment#Ct\n \n\n \n  https://www.epa.gov/compliance-and-fuel-economy-data/annual-certification-data-vehicles-engines-and-equipment#Ct\n \n\n \n  https://www.epa.gov/dera/national9\n\n Medium-Duty or Heavy-Duty Trucks\n\n Includes diesel-powered medium-duty and heavy-duty highway vehicles with Gross Vehicle Weight Ratings (GVWRs) as defined below:\n\n • Class 5 (16,001 -19,500 lb. GVWR); • Class 6 (19,501 – 26,000 lb."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4210863,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AhbVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 11,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "technology analysis. Over 803 horsepower (HP), Tier 3 engines are not eligible technologies for full vessel replacement projects.13\n\n Table 8: Locomotive Engine Project Eligibility\n\n Current Locomotive Tier\n\n Engine & Locomotive Replacement Verified Retrofit\n\n Technologies\n\n Idle- Reduction14 Technology\n\n Certified Remanufacture\n\n System15 Tier 0–2+ Tier 3 Tier 4 Zero-\n\n Emission16 Unregulated -\n\n Tier 2+ No Yes17 Yes Yes Yes Yes Yes\n\n Tier 3 No No Yes Yes Yes Yes Yes\n\n Tier 4 No No No No No Yes No\n\n 5. Best Achievable Technology (BAT): Please refer to the Diesel Emissions Reduction Act best\n\n achievable technology analysis guidance found on the DERA National website for more information on how to conduct a BAT analysis.\n\n 6. Ownership, Usage, and Remaining Life Requirements: To be eligible for funding, vehicles and equipment targeted for upgrades must meet certain ownership, usage, and remaining life requirements. Applicants should demonstrate in their application that all funded vehicles and equipment will meet the criteria defined below in a.– f.\n\n If selected for funding, participating fleet owners must attest to each criterion in a.– f. in a signed eligibility statement which includes each vehicle make, model, year, vehicle identification number, odometer/usage meter reading, engine make, model, year, horsepower, engine ID or serial number, and vehicle/equipment registration/licensing number, and State. Grant recipients must submit this documentation as part of the award’s programmatic reporting to the EPA to verify the eligible use of grant funds. The DERA eligibility statement, also known as the burden statement for EPA form 5900-687, may be found on the DERA National website. The signed eligibility statement is not required at the time of application submittal.\n\n a."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4112711,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ai7VeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "GVWR); • Class 7 (26,001 – 33,000 lb. GVWR); • Class 8 (33,001 lb. GVWR and over).\n\n Marine Engines Includes diesel-powered commercial Category 1, 2, and 3 marine engines and vessels.\n\n Locomotives Includes diesel-powered line-haul, passenger, and switcher locomotives.\n\n Nonroad Engines and Equipment\n\n Diesel-powered nonroad engines and equipment including, but not limited to, those used in construction, handling of cargo (including at ports and airports), agriculture, mining, or energy production (including stationary generators and pumps).\n\n \n\n 2. Drayage Trucks: Eligible heavy-duty trucks include drayage trucks. A “drayage truck” means any Class 8 highway vehicle operating on or transgressing through port or intermodal rail yard property for the purpose of loading, unloading, or transporting cargo, such as containerized, bulk, or break-bulk goods. If an application for the replacement of drayage trucks is selected for funding, the grant recipient will be required to establish guidelines to ensure that any existing truck replaced with grant funds has a history of operating on a frequent basis over the prior year as a drayage truck, and to ensure any new truck purchased with grant funds is operated in a manner consistent with the definition of a drayage truck, as defined above. Sample drayage guidelines can be found on the DERA National website.\n\n 3. Transport Refrigeration Units: Eligible nonroad equipment includes transport refrigeration units (TRUs). Please refer to the Diesel Emissions Reduction Act transport refrigeration unit (TRU) factsheet found on the DERA National website for information on TRUs and eligible TRU projects.\n\n 4. Diesel Emission Reduction Solutions: Projects may upgrade existing diesel vehicles and equipment using the diesel emissions reduction solutions defined below in Table 4.\n\n Table 4. Diesel Emission Reduction Solutions\n\n Certified Vehicle and Equipment Replacements\n\n Highway diesel vehicles and nonroad equipment, locomotives, and marine vessels can be replaced with newer, cleaner vehicles and equipment. Eligible replacement highway vehicles include those certified by the EPA or CARB to run on diesel or clean alternative fuel engines (including gasoline), electric generators (gensets), hybrid engines, and zero-emission power sources (i.e., grid, battery, or fuel cell)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4111056,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AhrVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Similarly, these funds cannot be used for on-site power generation systems, like solar or wind power equipment, and their installation.15\n\n c. Vehicle and Equipment Replacement Projects: i. Certification: Prior to being legal for sale in the United States, regulated mobile\n\n sources must be certified by the EPA (or CARB). This requirement to be certified applies to the following internal combustion mobile sources: highway vehicles and highway, nonroad, marine, and locomotive engines. The only type of zero- emission mobile technology requiring certification is zero-emission highway vehicles. There are no certification requirements for zero-emission nonroad, marine, and locomotive engines.\n\n As a result of these regulatory requirements, to be eligible for DERA funding, all replacement highway vehicles must be certified by the EPA (or CARB) to meet applicable emission standards. This means for projects where the replacement highway vehicle is powered using an internal combustion engine, both the vehicle and the engine must have been certified. For projects where the replacement highway vehicle is powered by a zero-emission powertrain, only the vehicle must be certified.\n\n Similarly, all projects involving the replacement of nonroad equipment, locomotives, or marine vessels must be powered by engines certified to meet EPA (or CARB) emission standards unless the engine on the replacement nonroad equipment, locomotive, or marine vessel is a zero-emission engine.\n\n Certification data for highway vehicles and engines can be found on the EPA’s Annual Certification Data for Vehicles, Engines, and Equipment website. More information on the EPA’s engine emission standards for mobile sources may be found on the EPA’s All EPA Emission Standards website. Engines certified by the CARB may be found by searching the CARB’s Executive Orders for Heavy-duty Engines and Vehicles, found on CARB’s New Vehicle and Engine Certification website.\n\n ii. To be eligible for funding, replacements must be of similar types, including similar gross vehicle weight rating or horsepower as the existing vehicle or equipment.\n\n 1) Nonroad/Locomotive/Marine Projects: Horsepower increases of more than 40% require specific approval by the EPA prior to purchase, and the applicant may be required to pay the additional costs associated with the higher horsepower equipment.\n\n 2) Highway Vehicles: The replacement vehicle must not be in a larger weight class than the existing vehicle. Exceptions may be granted for vocational purposes and require specific EPA approval prior to purchase.\n\n iii. Replacement vehicles and equipment must continue to perform similar functions and operations of the existing vehicles and equipment.\n\n iv."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4058224,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AjrVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 17,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "To be considered verified, the aerodynamic device or low resistance tires must be on SmartWay’s Verified Lists for Aerodynamic Devices or LRR New and Retread Tire Technologies.\n\n \n\n Table 5: Medium- and Heavy-Duty Truck, Transit Bus, and School Bus Project Eligibility\n\n Current Engine Model\n\n Year (EMY)\n\n Verified Retrofit Technologies\n\n Verified Idle\n\n Reduction, Tires, or\n\n Aero- dynamics\n\n Vehicle or Engine\n\n Replacement: EMY 2024+ (2019+ for Drayage)\n\n Zero- Emission4 or\n\n Low-NOx 5\n\n \n\n Vehicle or Engine\n\n Replacement: EMY 2024+\n\n Clean Alternative\n\n Fuel Conversion\n\n DOC +/- CCV\n\n DPF SCR\n\n Older - 2006 Yes Yes Yes Yes Yes Yes Yes\n\n 2007 - 2009 No No Yes Yes6 Yes Yes Yes\n\n 2010 - newer No No No Yes6 No Yes Yes\n\n Acronyms: DOC = Diesel Oxidation Catalyst; CCV = Closed Crankcase Ventilation; DPF = Diesel Particulate Filter; EMY = Engine Model Year; SCR = Selective Catalytic Reduction\n\n \n\n Table 6: Nonroad Engine Project Eligibility\n\n Current Engine Tier\n\n Nonroad Equipment Replacement Verified Retrofit\n\n Technologies Compression Ignition Spark\n\n Ignition Zero-\n\n Emission 7 Tier 0-2 Tier 3-4i Tier 4 Tier 2\n\n Unregulated – Tier 2 No No Yes Yes Yes Yes Tier 3 No No Yes Yes Yes Yes Tier 4 No No No No Yes No\n\n 4 Eligible zero-emission projects utilizing fuel cell technology are limited to vehicle replacement projects for eligible transit buses, shuttle buses, and drayage trucks. 5 Engines are Low-NOx if they are certified to 0.10g NOx/bhp-hr or lower. Refer to the guidance on identifying a certified highway engine’s certified nitrogen oxides (NOx) emissions limit on the DERA National website 6 Auxiliary power units and generators are not eligible technologies for vehicles with EMY 2007 or newer. 7 Eligible zero emission projects utilizing fuel cell technology are limited to nonroad equipment replacements for eligible terminal tractors/yard hostlers, stationary generators, and forklifts."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3902602,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AibVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 14,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   }
+  ]
+ },
+ "0889d51e322880f0": {
+  "query": "electric vehicle charging infrastructure eligible costs",
+  "filter": "c58cfb4db44023f4",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "https://www.epa.gov/verified-diesel-tech/smartway-technology\n \n\n \n  https://www.epa.gov/verified-diesel-tech/smartway-technology\n \n\n \n  https://www.iso.org/standard/84592.html\n \n\n \n  https://www.iso.org/standard/72114.html18\n\n 7) Eligible costs include the purchase and installation of the shore side equipment and certain equipment required for power delivery directly related to the new equipment such as design and engineering, cables, cable management systems, shore power coupler systems, distribution control systems, grounding switches, service breakers, capacitor banks, electrical panels, upgrades to existing electrical panels or electrical service, wiring/conduit, and installation. Funding under this NOFO cannot be used for modifications to marine vessels to accept shore- based electrical power."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3798004,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlLVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 20,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "h. Electrified Parking Space Projects:\n\n i. To address long duration idling and engine operation, eligible costs include the purchase and installation of certain equipment required for power delivery directly with a verified technology; design and engineering; electrical panels; upgrades to existing electrical panels or electrical service; wiring/conduit; and installation.\n\n i. Locomotive Shore Power Connection Projects: i. Eligible costs include purchase and installation of certain equipment required for\n\n power delivery directly related to the installation of a verified technology; design and engineering; electrical panels; upgrades to existing electrical panels or electrical service; wiring/conduit; and installation.\n\n j. Marine Shore Power Connection Projects: i. Funding may support new installations or expansions of existing marine shore\n\n power systems. ii. To be eligible for funding, marine shore power projects must meet the following\n\n criteria:\n\n 1) Due to the unique nature and custom design of marine shore power connection systems, the EPA must review and approve marine shore power connection systems on a case-by-case basis. If the EPA selects the project application for funding, the final design of the marine shore power connection system requires specific EPA approval prior to purchase and installation.\n\n 2) Applicants must commit to reporting usage information to the EPA for five years after the system is operational.\n\n 3) Applicants must attest to compliance with international shore power design standards (IEC/ISO/IEEE 80005-1:2019/AMD 2:2023 High Voltage Shore Connection (HVSC) Systems or the IEC/IEEE 80005-3:2025 Low Voltage Shore Connection (LVSC) Systems).\n\n 4) Shore power connection systems must be supplied with electricity from the local utility grid.\n\n 5) Demonstration that the proposed system has the capacity, demand, and commitment necessary to be used for more than 1,000 megawatt hours per year. Smaller projects will be considered if the applicant can demonstrate cost effectiveness.\n\n 6) Shore power capable vessels docked at a berth where shore power is available must be required to turn off the vessel’s engines and use the shore power system, with limited exceptions for extreme circumstances."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.368967,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ak7VeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 20,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Replacement vehicles must resemble the replaced vehicle in form and function. The cost of optional components or “add-ons” that significantly increase the cost of the vehicle may not be eligible for funding under the grant.\n\n d. Grid Electric Powered Replacement Projects: i. Grant funds cannot be used for the purchase and installation of certain\n\n equipment required for power delivery directly related to the replacement\n\n \n\n \n  http://www.epa.gov/compliance-and-fuel-economy-data/annual-certification-data-vehicles-engines-and-equipment\n \n\n \n  https://www.epa.gov/emission-standards-reference-guide/all-epa-emission-standards\n \n\n \n  https://ww2.arb.ca.gov/applications/new-vehicle-and-engine-certification-executive-orders-compression-ignition-and-heavy-016\n\n technology; design and engineering; electrical panels; upgrades to existing electrical panels or electrical service; and wiring/conduit.\n\n e. Engine Replacement Projects: i. To be eligible for funding, replacement highway, nonroad, marine, and\n\n locomotive engines must be certified to meet EPA or CARB emission standards, unless the replacement is a zero-emission powertrain. Please reference the EPA’s Annual Certification Data for Vehicles, Engines, and Equipment, the EPA’s mobile source Emission Standards, and the CARB’s Executive Orders for Heavy-duty Engines and Vehicles.\n\n ii. Eligible costs include equipment and parts included in the certified engine configuration that are necessary to ensure the effective installation and functioning of the new technology such as design and engineering, parts and materials, and installation.\n\n iii. For engine replacement with battery, fuel cell, or grid electric, eligible costs include electric motors, electric inverters, battery assemblies, direct drive transmission/gearboxes, regenerative braking systems, vehicle control/central processing units, vehicle instrument clusters, hydrogen storage tanks, hydrogen management systems, and fuel cell stack assemblies.\n\n iv."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3349389,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Aj7VeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 18,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "https://www.epa.gov/grants/rain-2018-g02-r2\n \n\n \n  https://www.epa.gov/grants/rain-2018-g02-r237\n\n Line Item & Itemized Costs: EPA Funding:18 Mandatory Cost Share:19\n\n Voluntary Cost Share:\n\n Total Project Costs:\n\n Equipment\n\n N/A\n\n TOTAL EQUIPMENT: $0 $0 $0 $0\n\n Construction\n\n N/A\n\n TOTAL CONSTRUCTION: $0 $0 $0 $0\n\n Supplies\n\n Office supplies $500 $0 $0 $500\n\n TOTAL SUPPLIES: $500 $0 $0 $500\n\n Contractual\n\n N/A\n\n TOTAL CONTRACTUAL: $0 $0 $0 $0\n\n Other\n\n Participant Support Costs (rebates) – Drayage Truck Replacements.\n\n A total of 40 vehicles at $45,000/each.\n\n (Cost Share Requirements: Vehicle replacement, with certified engine meeting 0.035 g NOx/bhp-hr or lower emission limit).\n\n $810,000 (45%) $990,000 (55%) $0 $1,800,000\n\n Subaward for Application Coordinator to provide application services $0 $0 $85,0000 $85,000\n\n TOTAL OTHER: $810,000 $990,000 $85,000 $1,885,000\n\n TOTAL DIRECT COSTS: $49,610 $0 $0 $49,610\n\n Indirect Costs\n\n De minimis indirect cost rate (15%) [substitute with an approved Negotiated Indirect Cost Rate, if applicable]\n\n $7,442 $0 $0 $7,442\n\n TOTAL INDIRECT COSTS: $7,442 $0 $0 $7,44238\n\n Line Item & Itemized Costs: EPA Funding:18 Mandatory Cost Share:19\n\n Voluntary Cost Share:\n\n Total Project Costs:\n\n TOTAL PROJECT COSTS: $867,052 $990,000 $85,000 $1,942,052\n\n Note on Management Fees: When formulating budgets for applications, applicants must not include management fees or similar charges more than the direct costs and indirect costs at the rate approved by the applicant’s cognizant federal audit agency, or at the rate provided for by the terms of the agreement negotiated with the EPA. The term \"management fees or similar charges\" refers to expenses added to the direct costs to accumulate and reserve funds for ongoing business expenses, unforeseen liabilities, or for other similar costs that are not allowable under EPA grants."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3344401,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Au7VeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 39,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "toc=1\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/section-200.306\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/section-200.306\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-E/subject-group-ECFRea20080eff2ea53/section-200.403\n \n\n \n  https://www.ecfr.gov/current/title-40/chapter-I/subchapter-C/part-86/subpart-A/section-86.007-117\n\n Eligible Technologies EPA Funding Limit Recipient Cost Share\n\n 0.10-0.036 g NOx/bhp-hr emission limit2 35% 65% 0.035 g NOx/bhp-hr or lower emission limit3 45% 55% Highway Engine Replacement with certified engine meeting: 0.20-0.11 g NOx/bhp-hr emission limit 40% 60% 0.10-0.036 g NOx/bhp-hr emission limit 50% 50% 0.035 g NOx/bhp-hr or lower emission limit 60% 40% Nonroad/Locomotive/Marine Replacement Nonroad equipment, locomotive or vessel replacement with certified engine 25% 75%\n\n Engine replacement with certified engine or zero emission power source 35% 65%\n\n Nonroad, with unregulated or Tier 1 engine, equipment replacement with current (Tier 4) certified engine or zero emission power source\n\n 40% 60%\n\n EPA certified remanufacture systems 80% 20% Idle Reduction EPA Verified Highway Vehicle Idle Reduction Technologies when combined with new or previously installed exhaust after- treatment retrofit\n\n 100% 0%\n\n EPA Verified Locomotive Idle Reduction Technologies 40% 60% EPA Verified Electrified Parking Space Technologies 30% 70% EPA Verified Highway Idle Reduction Technologies without new exhaust after-treatment retrofit 25% 75%\n\n EPA Verified Marine shore connection systems 25% 75% Verified Retrofit Technologies EPA or CARB Verified Exhaust After-treatment Retrofits 100% 0% EPA Verified Engine Upgrade Retrofits 100% 0% EPA Verified Aerodynamics and Low Rolling Resistance Tires when combined with new exhaust after-treatment retrofit 100%"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3334663,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AgrVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Eligible project costs include those costs directly related to the implementation, management, and oversight of the project, including but not limited to: recipient and subrecipient personnel and benefits; equipment; scrappage; contractual; travel; supplies; subgrants and rebates; and indirect costs.\n\n 7. Ineligible Content: Any ineligible projects, activities, or costs will be excluded and may render the\n\n entire application ineligible, depending on how integral they are. Ineligible costs include:\n\n a. Leasing: Funding under this NOFO cannot be used for leasing vehicles, engines, or equipment.\n\n b."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3154211,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AfbVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Retrofit Projects: i. Eligible costs include the associated labor costs for installation of the system,\n\n design, and engineering, DPF cleaning machines, extra DPFs for maintenance rotation, replacement CCV filters, and filter cleaning contracts during the grant open period.\n\n ii. To be eligible for funding, verified retrofit technologies must be on the EPA’s or CARB’s Verified Technologies lists at the time of acquisition, must be used only for the vehicle/engine application specified on the lists, and must meet any applicable verification criteria.\n\n iii."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3041245,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlrVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 21,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   }
+  ]
+ },
+ "0b8bc260d86acd24": {
+  "query": "ineligible applicants",
+  "filter": "c58cfb4db44023f4",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Eligible project costs include those costs directly related to the implementation, management, and oversight of the project, including but not limited to: recipient and subrecipient personnel and benefits; equipment; scrappage; contractual; travel; supplies; subgrants and rebates; and indirect costs.\n\n 7. Ineligible Content: Any ineligible projects, activities, or costs will be excluded and may render the\n\n entire application ineligible, depending on how integral they are. Ineligible costs include:\n\n a. Leasing: Funding under this NOFO cannot be used for leasing vehicles, engines, or equipment.\n\n b."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3813648,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AfbVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "E. Intergovernmental Review The application is not subject to Intergovernmental Review.\n\n 6. Application Review Information\n\n A. Responsiveness Review Applications must meet the eligibility requirements described in Section 2 to be evaluated. Applicants not meeting these requirements will be deemed ineligible and will be notified within 15 calendar days of the determination"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3700311,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AxbVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 45,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• For-profit organizations are not an eligible entity for this funding opportunity. Additionally, non- profit organizations described in Section 501(c)(4) of the Internal Revenue Code that engage in lobbying activities as defined in Section 3 of the Lobbying Disclosure Act of 1995 are not eligible to apply.\n\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-A/subject-group-ECFR2a6a0087862fd2c/section-200.1\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200?toc=1\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-A/subject-group-ECFR2a6a0087862fd2c/section-200.1\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-A/subject-group-ECFR2a6a0087862fd2c/section-200.1\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-A/subject-group-ECFR2a6a0087862fd2c/section-200.1\n \n\n \n  https://www.irs.gov/charities-non-profits/other-non-profits/types-of-organizations-exempt-under-section-501c4\n \n\n \n  https://lobbyingdisclosure.house.gov/lda.html4\n\n (1) Other Eligibility Requirements\n\n Applications must meet the following additional criteria to be considered eligible.\n\n 1. Funding Request Limits: Applications must not request more than the regional funding cap in individual applications which request EPA grant funds above the applicable regional amounts specified in Section 1.D. (refer to Table 1). Applications over the cap are ineligible and will not be reviewed.\n\n Each application must request funds from only one EPA regional office, based on the project location (where the affected vehicles/engines operate). Refer to the regional boundaries below.\n\n For applications with long distance fleets, pick the single region that best fits (e.g., where the fleet is based or operates most) and briefly explain why. Each application must clearly identify the chosen EPA region on the cover page of the Project Narrative.\n\n A map showing Regional Collaboratives and EPA Regions is available on the EPA website."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2875526,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ae7VeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "More information concerning specific ineligible equipment activities can be found in Section 3.A."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2733996,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AfrVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Applicant Information:\n\n o Applicant organization o Address o Primary contact name, phone number, and email address o Unique Entity Identifier (UEI) number\n\n • Type of Eligible Applicant: Applicants must list their applicant type and how they meet the eligibility criteria.\n\n o A regional, State (including the District of Columbia), local agency, Tribal agency, or port authority, which has jurisdiction over transportation or air quality. School districts, municipalities, metropolitan planning organizations (MPOs), cities, and counties are all generally eligible entities under this grant program to the extent that they fall within this definition.\n\n o A non-profit organization or institution that: ▪ Represents or provides pollution reduction or educational services to people or\n\n organizations that own or operate diesel fleets; or ▪ Has, as its principal purpose, the promotion of transportation or air quality."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2565887,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ApbVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 27,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If the applicant does not provide any response for these items, a score of zero for these factors may be received."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2129494,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AsrVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 35,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "https://sam.gov/content/entity-registration\n \n\n \n  https://www.grants.gov/\n \n\n \n  https://www.grants.gov/quick-start-guide/applicants\n \n\n \n  https://www.epa.gov/grants/how-apply-grants\n \n\n \n  mailto:support@grants.gov\n \n\n \n  mailto:dera@epa.gov?subject=EPA-OAR-OTAQ-26-01\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov42\n\n Applicants with limited or no access to the internet may request an exception by following the procedures outlined here. The request must be received at least 15 calendar days before the application due date to allow enough time to negotiate alternative submission methods."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2071984,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AxLVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 44,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   }
+  ]
+ },
+ "0f30d430266dea64": {
+  "query": "electric vehicle charging infrastructure eligible costs",
+  "filter": "ccad550c2130f412",
+  "retrievalResults": []
+ },
+ "16452cadae3b0fc6": {
+  "query": "project narrative page limit",
+  "filter": "c58cfb4db44023f4",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applicants are not required to use the project narrative format below.\n\n The Cover Page and Workplan combined are limited to 14 pages. Attachments are not included in the page limitation."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.5737908,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ao7VeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 27,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Statutory Authority ......................................................................................................................... 23 D. Funding Type................................................................................................................................... 23\n\n 4. Application Contents and Format ....................................................................................................... 23\n\n A. Application Forms ........................................................................................................................... 23 B. Project Narrative Description.......................................................................................................... 24\n\n (1) Cover Page: .......................................................................................................................... 24 (2) Workplan: ............................................................................................................................. 27 (3) Required Attachments (not included in 14-page limit) – use “Other Attachments”\n\n form to submit ..................................................................................................................... 38 (4) Optional Attachments .......................................................................................................... 39\n\n C. Applicants Using Contractors .......................................................................................................... 40 D. Coalition Coverage .......................................................................................................................... 40\n\n 5. Submission Requirements and Deadlines ........................................................................................... 40\n\n A. Submission Dates and Times .......................................................................................................... 40 B. Unique Entity Identifier (UEI) and System for Award Management (SAM.gov) ............................. 40 C. Submission Instructions .................................................................................................................. 41 D."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2924944,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AdLVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "(1) Cover Page:\n\n The cover page should not exceed one page. The cover page should include the following information:\n\n • EPA Region: Applicants must request funding from the single EPA regional office that covers the geographic project location. Refer to Section 1.D. of the NOFO"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2734497,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ApLVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 27,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application Contents and Format A. Application Forms The following forms and documents are required under this announcement:\n\n Mandatory Documents:\n\n • Application for Federal Assistance (SF-424) • Budget Information for Non-Construction Programs (SF-424A) • EPA Form 5700-54 Key Contacts • EPA Form 4700-4 Pre-award Compliance Review Report • Project Narrative Attachment Form: use this to submit the Cover Page and Workplan as\n\n described in Section 4.B.(1) and (2)\n\n \n\n \n  https://www.epa.gov/newsreleases/epa-administrator-lee-zeldin-announces-epas-powering-great-american-comeback\n \n\n \n  https://www.ecfr.gov/current/title-2/section-200.317\n \n\n \n  https://www.ecfr.gov/current/title-2/section-200.31824\n\n • “Other Attachments” Form: use this form to submit the following documents as described in Section 4.B.(3):\n\n o Applicant Fleet Description information including the DERA Supplemental Application Template (xlsx) also known as the Burden Statement for EPA Form: 5900-681\n\n o Partnership Letters, if applicable o Mandated Measures Justification Supporting Information, if applicable\n\n Optional Documents:\n\n • “Other Attachments” Form: use this form to submit the following documents as described in 4.B.(4). Applicants should note that while these forms are optional, the “Other Attachments” Form will be listed in the Mandatory Documents section of the Workspace:\n\n o Negotiated Indirect Cost Rate Agreement, if applicable o Maps o Resumes\n\n B. Project Narrative Description\n\n The EPA is providing the following optional project narrative format for convenience to assist applicants in ensuring they provide all information needed for a competitive application."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2628422,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AorVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 26,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "c. Staff Expertise: The applicant should include information on the applicant’s organizational experience and plan for timely and successfully achieving the objectives of the proposed project, and staff expertise/qualifications, staff knowledge, and resources or the ability to obtain them, to successfully achieve the goals of the proposed project. Only employees of the applicant organization, not contractors, can be listed as staff. Biographical sketches, including resumes or curriculum vitae for key staff, managers, and any other key personnel, can be included as an optional resume attachment, as listed in Section 4.A. of the NOFO.\n\n Section 7 – Budget:\n\n This section of the project narrative is a detailed description of the budget the applicant provides in the SF-424A and must include a discussion of the applicant’s approach to ensuring proper management of grant/cooperative agreement funds, a detailed budget narrative, as well as an itemized budget table. An applicant’s budget table and budget narrative must account for federal funds, non-federal mandatory cost share, and any non-federal voluntary cost share, if applicable. Applicants should note that recipients charging a negotiated indirect cost rate must submit a copy of their current indirect cost rate agreement that has been negotiated with a federal cognizant agency prior to drawing down indirect costs (IDCs). Additional guidance for developing the applicant’s budget is available in RAIN-2019-G02-R2, General Budget Development Guidance for Applicants and Recipients of EPA Financial Assistance.\n\n Mandatory Cost Share: Applications that include projects with mandatory cost share requirements must demonstrate on the SF-424 Application for Federal Assistance, on the SF-424A Budget Information for Non-Construction Programs, and in the project narrative how the applicant will be able to meet these minimum mandatory cost share requirements if the EPA selects the application for an award. If a named project partner provides a proposed cost share, a partnership letter demonstrating commitment must be attached to the application as described in Section 4.A. of the NOFO.\n\n Voluntary Cost Sharing: Applicants should be aware that voluntary cost sharing is not required under this NOFO and will not be evaluated. However, applicants may propose to provide voluntary cost share.\n\n Applicants who propose to use a voluntary cost share must include the costs or contributions for the voluntary cost share in the project budget on the SF-424, SF-424A, and budget detail described later in this section."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2547278,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3As7VeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 35,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Management fees or similar charges cannot be used to improve or expand the project funded under this agreement, except to the extent authorized as a direct cost of carrying out the workplan.\n\n b. Expenditure of Awarded Funds: Applicants should provide a detailed written description of the applicant’s approach, procedures, and controls for ensuring that awarded grant funds will be expended in a timely and efficient manner.\n\n c. Reasonableness of Costs: The EPA will evaluate the reasonableness of the applicant’s budget based on the applicant’s narrative description of the budget and detailed breakout of requested funding for each work component or task. Provide a detailed description of every itemized cost, including how every cost relates to the project narrative and specific emission reduction activities. Instructions for what to include in the budget detail are described above in Section 7.1. of the workplan.\n\n Applicants must itemize the cost categories as listed below and the SF-424A: personnel, fringe benefits, contractual costs, travel, equipment, supplies, contractional costs, other direct costs (subawards, participant support costs), indirect costs, and total costs. Round up to the nearest dollar and do not use any cents.\n\n For applicants that provide a mandatory or voluntary cost share as described in Section 2.B. of the NOFO, the budget narrative must include a detailed description of how the applicant will obtain the cost share and how the cost share funding will be used. Proposed mandatory or voluntary cost share included in the budget detail must also be included on the SF-424 and SF-424A.\n\n Recipients may issue subawards, contracts, or participant support costs to implement projects. Please refer to Section 9.B. for detailed guidance on these funding options and how to correctly categorize these costs in the workplan budget.\n\n (3) Required Attachments (not included in 14-page limit) – use “Other Attachments” form to submit\n\n 1. Applicant Fleet Description\n\n Applicants must use the “Other Attachments” form in Grants.gov to upload their Applicant Fleet Description. The Applicant Fleet Description is a single file: the DERA Supplemental Application Template (excel), also known as the Burden Statement for EPA Form 5900-681. This can be found on the DERA National website."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2329599,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AvLVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 41,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If not, the extent to which the application demonstrates a commitment to establish both the above before the end of the project period.\n\n 20\n\n 5. Environmental Results – Outputs, Outcomes and Performance Measures: Under this criterion, the EPA will evaluate: 3044\n\n Criteria Name and Description Points\n\n a. Expected Project Outputs and Outcomes (10 points) The extent and quality to which the applicant identifies and quantifies expected project outputs and outcomes, including those identified in Section 3.A.\n\n b. Performance Measures and Plan (10 points) The quality of the proposed performance measures and effectiveness of the applicant’s plan for tracking and measuring their progress toward achieving the expected project outputs and outcomes, including those identified in Section 3.A.\n\n c. Timeline and Milestones (10 points) The reasonableness of the proposed timeline including key milestones for specific tasks and the likelihood of completion of the project’s goals and objectives by project end.\n\n 6. Programmatic Capability and Past Performance: Under this criterion, the EPA will evaluate applicants based on their ability to successfully complete and manage the proposed project considering their:\n\n a. Past Performance (5 points) Past performance in successfully completing and managing the grants identified in the project narrative as described in Section 4.B. of the NOFO.\n\n b. Reporting Requirements (5 points) History of meeting the reporting requirements under the grants identified in the project narrative, including whether the applicant submitted acceptable final technical reports under those agreements and the extent to which the applicant adequately and timely reported on their progress towards achieving the expected outputs and outcomes under those agreements and if such progress was not being made, whether the applicant adequately reported why not.\n\n c. Staff Expertise (5 points) Organizational experience and plan for timely and successfully achieving the objectives of the proposed project, and staff expertise/qualifications, staff knowledge, and resources or the ability to obtain them, to successfully achieve the goals of the proposed project.\n\n Note: In evaluating applicants under items a. and b. of this criterion, the agency will consider the information provided by the applicant and may also consider relevant information from other sources including agency files and prior/current grantors (i.e., to verify or supplement the information supplied by the applicant)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2068436,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AybVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 46,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   }
+  ]
+ },
+ "16ef5452417b2cd1": {
+  "query": "closing date applications due date and time",
+  "filter": "ccad550c2130f412",
+  "retrievalResults": []
+ },
+ "1fdb36977b987275": {
+  "query": "narrative format requirements maximum pages font spacing",
+  "filter": "ccad550c2130f412",
+  "retrievalResults": []
+ },
+ "33ccd8ebf0f1b9c5": {
+  "query": "application submission deadline",
+  "filter": "c58cfb4db44023f4",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Applications must adhere to the page limit requirements. Any pages over the limit(s) in Section 4 will not be reviewed.\n\n • Initial applications must be submitted on or before the application deadline through Grants.gov or through limited circumstances as expressed in Section 5. The EPA will not evaluate applications that are not submitted on time.\n\n • Technical difficulties applying: Applicants having technical difficulties applying must contact the Grants.gov hotline at 1-800-518-4726 and then must email a PDF of the full application to the EPA contact listed in Section 1.E. The submission must be received prior to the application deadline for consideration."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4137144,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AxrVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 45,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "https://sam.gov/content/entity-registration\n \n\n \n  https://www.grants.gov/\n \n\n \n  https://www.grants.gov/quick-start-guide/applicants\n \n\n \n  https://www.epa.gov/grants/how-apply-grants\n \n\n \n  mailto:support@grants.gov\n \n\n \n  mailto:dera@epa.gov?subject=EPA-OAR-OTAQ-26-01\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov42\n\n Applicants with limited or no access to the internet may request an exception by following the procedures outlined here. The request must be received at least 15 calendar days before the application due date to allow enough time to negotiate alternative submission methods."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3346748,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AxLVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 44,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Maps c. Resumes, if applicable\n\n ▪ Provide resumes as described in Section 4.B.(2).\n\n \n\n \n  https://www.epa.gov/dera/national\n \n\n \n  https://www.epa.gov/dera/national\n \n\n \n  https://www.epa.gov/dera/national40\n\n C. Applicants Using Contractors Applicants must compete contracts for services and products, including consultant contracts, and conduct cost and price analyses, to the extent required by the procurement provisions of the regulations at 2 CFR Part 200.\n\n Do not name a procurement contractor (including a consultant) as a “partner” or otherwise in your application unless the contractor has been selected in compliance with competitive procurement requirements. If an applicant selected for award has named a specific subrecipient, contractor, or consultant in the application, it does not relieve the applicant of its obligations to comply with subaward and/or competitive procurement requirements.\n\n The EPA will not consider the qualifications, experience, and expertise of named subrecipients or named contractor(s) during the application evaluation process unless the applicant provides documentation that it has complied with these requirements.\n\n For additional guidance, applicants should review the EPA’s Best Practice Guide for Procuring Services, Supplies, and Equipment Under EPA Assistance Agreements, the EPA’s Subaward Policy, and the EPA’s Subaward Policy Frequent Questions. The EPA expects recipients of funding to comply with competitive procurement contracting requirements in 2 CFR Parts 200 and 1500, as well as the requirements in 2 CFR 200.321 and 40 CFR Part 33 Subpart C.\n\n D. Coalition Coverage A coalition is formed when two or more eligible applicants coordinate to submit a single application. Coalitions must identify which single eligible organization will be the recipient of the grant and which eligible organization(s) will receive subawards from the recipient (the “pass-through entity”). The pass- through entity that administers the grant and subawards will be accountable to the EPA for proper expenditure of the funds and reporting and will be the point of contact for the coalition. Subawards must be consistent with the definition of that term in 2 CFR §200.1 and comply with the EPA’s Subaward Policy.\n\n 5. Submission Requirements and Deadlines\n\n A. Submission Dates and Times January 22, 2027 11:59 pm ET Application Submission Deadline\n\n Grants.gov creates a date and time record when it receives the application. If you submit the same application more than once, we will accept the last on-time submission."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2969013,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Av7VeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 42,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Begin that process today.\n\n Grants.gov You must also have an active account with Grants.gov. You can refer to step-by-step instructions at the Grants.gov Quick Start Guide for Applicants.\n\n Please visit How to Register to Apply for Grants for additional information.\n\n C. Submission Instructions You must submit your application through Grants.gov. Refer to Section 5.B. above for information on getting registered.\n\n Important tips:\n\n • To begin the application process under this grant announcement, go to Grants.gov and click the red “Apply” button at the top of the view grant opportunity page associated with this opportunity.\n\n • Refer to the Quick Start Guide for Applicants for instructions on how to submit. • Make sure your application passes the Grants.gov validation checks. • Do not encrypt, zip, or password protect any files. • Your application must be submitted by an official representative of your organization who is\n\n registered with Grants.gov and is authorized to sign applications for Federal financial assistance. • If you receive an error or the button is grayed out, it may be because you do not have the\n\n appropriate role to submit in your organization. Contact your organization’s EBiz point of contact or contact Grants.gov for assistance at 1-800-518-4726 or support@grants.gov.\n\n • Refer to Grants.gov Errors for information on other Grants.gov errors. • The UEI listed on the application must be registered to the applicant organization's SAM.gov\n\n account. If not, the application may be deemed ineligible.\n\n D. Technical Issues with Submission If applicants experience technical issues during the submission of an application that they are unable to resolve, follow these procedures before the application deadline date:\n\n • Contact Grants.gov Support Center before the application deadline date. • Document the Grants.gov ticket/case number. • Send an email with Funding Opportunity Number (FON):EPA-OAR-OTAQ-26-01 in the subject line\n\n to dera@epa.gov before the application deadline time and date and must include the following: o Grants.gov ticket/case number(s) o Description of the issue o The entire application package in PDF format.\n\n Without this information, the EPA may not be able to consider applications submitted outside of Grants.gov. Any application submitted after the application deadline time and date deadline will be deemed ineligible and not be considered.\n\n Please note that successful submission through Grants.gov or email does not necessarily mean your application is eligible for award."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2759401,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Aw7VeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 44,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Statutory Authority ......................................................................................................................... 23 D. Funding Type................................................................................................................................... 23\n\n 4. Application Contents and Format ....................................................................................................... 23\n\n A. Application Forms ........................................................................................................................... 23 B. Project Narrative Description.......................................................................................................... 24\n\n (1) Cover Page: .......................................................................................................................... 24 (2) Workplan: ............................................................................................................................. 27 (3) Required Attachments (not included in 14-page limit) – use “Other Attachments”\n\n form to submit ..................................................................................................................... 38 (4) Optional Attachments .......................................................................................................... 39\n\n C. Applicants Using Contractors .......................................................................................................... 40 D. Coalition Coverage .......................................................................................................................... 40\n\n 5. Submission Requirements and Deadlines ........................................................................................... 40\n\n A. Submission Dates and Times .......................................................................................................... 40 B. Unique Entity Identifier (UEI) and System for Award Management (SAM.gov) ............................. 40 C. Submission Instructions .................................................................................................................. 41 D."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2759101,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AdLVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Deadlines: Email questions by Tuesday, November 24, 2026, 11:59 p.m. ET. The final FAQ update will be posted on Friday, January 8, 2026.\n\n All applicants should review the question and answers document posted on the DERA National website for further clarification of this NOFO.\n\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-E/subject-group-ECFRed1f39f9b3d4e72/section-200.458\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-E/subject-group-ECFRed1f39f9b3d4e72/section-200.458\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/section-200.309\n \n\n \n  https://www.ecfr.gov/current/title-2/section-1500.9\n \n\n \n  mailto:dera@epa.gov\n \n\n \n  https://www.epa.gov/dera/national\n \n\n \n  https://www.epa.gov/dera/national\n \n\n \n  https://www.epa.gov/dera/national\n \n\n \n  mailto:dera@epa.gov\n \n\n \n  https://www.epa.gov/dera/national3\n\n 2. Eligibility A. Eligible Applicants Only these types of organizations may apply:\n\n • A regional, State (including the District of Columbia), local agency, Tribal agency, or port authority, which has jurisdiction over transportation or air quality. School districts, municipalities, metropolitan planning organizations (MPOs), cities, and counties are all generally eligible entities under this grant program to the extent that they fall within this definition.\n\n • A non-profit organization or institution that:\n\n o Represents or provides pollution reduction or educational services to people or organizations that own or operate diesel fleets; or\n\n o Has, as its principal purpose, the promotion of transportation or air quality."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2688885,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AebVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "E. Intergovernmental Review The application is not subject to Intergovernmental Review.\n\n 6. Application Review Information\n\n A. Responsiveness Review Applications must meet the eligibility requirements described in Section 2 to be evaluated. Applicants not meeting these requirements will be deemed ineligible and will be notified within 15 calendar days of the determination"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2405531,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AxbVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 45,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   }
+  ]
+ },
+ "62e8e6c860344504": {
+  "query": "electric charging stations installation funding limits",
+  "filter": "c58cfb4db44023f4",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "h. Electrified Parking Space Projects:\n\n i. To address long duration idling and engine operation, eligible costs include the purchase and installation of certain equipment required for power delivery directly with a verified technology; design and engineering; electrical panels; upgrades to existing electrical panels or electrical service; wiring/conduit; and installation.\n\n i. Locomotive Shore Power Connection Projects: i. Eligible costs include purchase and installation of certain equipment required for\n\n power delivery directly related to the installation of a verified technology; design and engineering; electrical panels; upgrades to existing electrical panels or electrical service; wiring/conduit; and installation.\n\n j. Marine Shore Power Connection Projects: i. Funding may support new installations or expansions of existing marine shore\n\n power systems. ii. To be eligible for funding, marine shore power projects must meet the following\n\n criteria:\n\n 1) Due to the unique nature and custom design of marine shore power connection systems, the EPA must review and approve marine shore power connection systems on a case-by-case basis. If the EPA selects the project application for funding, the final design of the marine shore power connection system requires specific EPA approval prior to purchase and installation.\n\n 2) Applicants must commit to reporting usage information to the EPA for five years after the system is operational.\n\n 3) Applicants must attest to compliance with international shore power design standards (IEC/ISO/IEEE 80005-1:2019/AMD 2:2023 High Voltage Shore Connection (HVSC) Systems or the IEC/IEEE 80005-3:2025 Low Voltage Shore Connection (LVSC) Systems).\n\n 4) Shore power connection systems must be supplied with electricity from the local utility grid.\n\n 5) Demonstration that the proposed system has the capacity, demand, and commitment necessary to be used for more than 1,000 megawatt hours per year. Smaller projects will be considered if the applicant can demonstrate cost effectiveness.\n\n 6) Shore power capable vessels docked at a berth where shore power is available must be required to turn off the vessel’s engines and use the shore power system, with limited exceptions for extreme circumstances."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3790927,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ak7VeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 20,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Table 1: EPA Regional Funding Allocations\n\n \n\n 2. Substantial Compliance: Applications that do not substantially comply with the application submission instructions and requirements set forth in Section 4 of this funding opportunity will be rejected.\n\n 3. Application Submission Limit: Under this funding opportunity, applicants may submit up to two applications per EPA region, not exceeding 10 total applications. The EPA will accept the most recent applications submitted (regardless of region), up to the permitted amount.\n\n 4. Multiple Application Submission: If the applicant submits multiple applications, each application must include a different project(s) and must be submitted separately. Applicants cannot include the same project(s) in multiple applications. For example, an applicant cannot list the same piece of equipment in an application to both EPA Regions 1 and 2.\n\n If an applicant submits more than one application that requests funding for projects that appear the same, the EPA will contact the applicant before reviewing the applications to confirm\n\n Region Total Anticipated Funding per Region\n\n Maximum Federal Funding Request per Application\n\n 1 $8,200,000 $3,000,000 2 $18,300,000 $4,000,000 3 $18,300,000 $5,000,000 4 $17,800,000 $4,000,000 5 $18,200,000 $8,000,000 6 $24,400,000 $3,500,000 7 $11,200,000 $5,600,000 8 $12,100,000 $3,500,000 9 $42,600,000 $12,000,000\n\n 10 $8,900,000 $4,500,000 TOTAL $180,000,000\n\n \n\n \n  https://www.epa.gov/dera/regional-collaboratives-epa-regions5\n\n whether the projects are the same. If they are, the EPA will ask the applicant to identify which application(s) should be withdrawn from consideration. If the applicant does not respond in a timely manner to either EPA request, the EPA will review only the last timely submitted application.\n\n 5. Multiple Regions: Applicants cannot include multiple regions in a single application.\n\n 6. Eligible Projects: Applications must include one or more eligible projects listed in Section 3.A."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3559418,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AfLVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• For-profit organizations are not an eligible entity for this funding opportunity. Additionally, non- profit organizations described in Section 501(c)(4) of the Internal Revenue Code that engage in lobbying activities as defined in Section 3 of the Lobbying Disclosure Act of 1995 are not eligible to apply.\n\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-A/subject-group-ECFR2a6a0087862fd2c/section-200.1\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200?toc=1\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-A/subject-group-ECFR2a6a0087862fd2c/section-200.1\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-A/subject-group-ECFR2a6a0087862fd2c/section-200.1\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-A/subject-group-ECFR2a6a0087862fd2c/section-200.1\n \n\n \n  https://www.irs.gov/charities-non-profits/other-non-profits/types-of-organizations-exempt-under-section-501c4\n \n\n \n  https://lobbyingdisclosure.house.gov/lda.html4\n\n (1) Other Eligibility Requirements\n\n Applications must meet the following additional criteria to be considered eligible.\n\n 1. Funding Request Limits: Applications must not request more than the regional funding cap in individual applications which request EPA grant funds above the applicable regional amounts specified in Section 1.D. (refer to Table 1). Applications over the cap are ineligible and will not be reviewed.\n\n Each application must request funds from only one EPA regional office, based on the project location (where the affected vehicles/engines operate). Refer to the regional boundaries below.\n\n For applications with long distance fleets, pick the single region that best fits (e.g., where the fleet is based or operates most) and briefly explain why. Each application must clearly identify the chosen EPA region on the cover page of the Project Narrative.\n\n A map showing Regional Collaboratives and EPA Regions is available on the EPA website."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3059583,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ae7VeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Key Information: Opportunity Number:\n\n EPA-OAR-OTAQ-26-01\n\n Assistance Listing:\n\n 66.039\n\n Announcement Type:\n\n Initial\n\n Funding Available:\n\n Approximately $180 million\n\n Number of Awards:\n\n 4-12 awards per EPA Region\n\n \n\n \n  https://www.epa.gov/dera/national\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-C/section-200.204\n \n\n \n  https://www.epa.gov/dera/tribal-and-territory\n \n\n \n  https://www.epa.gov/cleanschoolbus\n \n\n \n  https://www.epa.gov/dera/state2\n\n July 2027 Anticipated Award Notification\n\n D. Funding Details: The amount of funding is expected to be $180,000,000, depending on agency funding levels, the quality of applications received, agency priorities, and other applicable considerations. It is anticipated that 4-12 awards per EPA Region will be made under this announcement. Awards funded under this opportunity are expected to have a 2-4 year project period.\n\n Under this announcement the EPA is combining approximately $65 million in FY 2024 funding; $62 million in FY 2025 funding; and $53 million in FY 2026 funding into one competition for a total of approximately $180 million of available funding. Amount of potential funding according to applicant region can be found in Section 2.A.(1).1.\n\n Expenses Incurred Prior to the Project Period: Funding awarded under this NOFO cannot be used to cover expenses incurred prior to the award date, except for eligible pre-award costs as defined in 2 CFR §200.458 and as authorized by 2 CFR §200.309 and 2 CFR §1500.9.\n\n E."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3032732,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ad7VeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 4,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "toc=1\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/section-200.306\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/section-200.306\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-E/subject-group-ECFRea20080eff2ea53/section-200.403\n \n\n \n  https://www.ecfr.gov/current/title-40/chapter-I/subchapter-C/part-86/subpart-A/section-86.007-117\n\n Eligible Technologies EPA Funding Limit Recipient Cost Share\n\n 0.10-0.036 g NOx/bhp-hr emission limit2 35% 65% 0.035 g NOx/bhp-hr or lower emission limit3 45% 55% Highway Engine Replacement with certified engine meeting: 0.20-0.11 g NOx/bhp-hr emission limit 40% 60% 0.10-0.036 g NOx/bhp-hr emission limit 50% 50% 0.035 g NOx/bhp-hr or lower emission limit 60% 40% Nonroad/Locomotive/Marine Replacement Nonroad equipment, locomotive or vessel replacement with certified engine 25% 75%\n\n Engine replacement with certified engine or zero emission power source 35% 65%\n\n Nonroad, with unregulated or Tier 1 engine, equipment replacement with current (Tier 4) certified engine or zero emission power source\n\n 40% 60%\n\n EPA certified remanufacture systems 80% 20% Idle Reduction EPA Verified Highway Vehicle Idle Reduction Technologies when combined with new or previously installed exhaust after- treatment retrofit\n\n 100% 0%\n\n EPA Verified Locomotive Idle Reduction Technologies 40% 60% EPA Verified Electrified Parking Space Technologies 30% 70% EPA Verified Highway Idle Reduction Technologies without new exhaust after-treatment retrofit 25% 75%\n\n EPA Verified Marine shore connection systems 25% 75% Verified Retrofit Technologies EPA or CARB Verified Exhaust After-treatment Retrofits 100% 0% EPA Verified Engine Upgrade Retrofits 100% 0% EPA Verified Aerodynamics and Low Rolling Resistance Tires when combined with new exhaust after-treatment retrofit 100%"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2997968,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AgrVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "d. Highway Usage: The mileage of two or more units may be combined to reach the\n\n threshold below if those units are scrapped and replaced with a single unit. i. To be eligible for funding, the existing certified highway engine/vehicle must\n\n have accumulated at least 7,000 miles/year during the two years prior to upgrade.\n\n 1) Exception: If an applicant can demonstrate that a certified highway engine/vehicle is being used in a predominately nonroad manner (e.g., firetrucks or utility trucks which require the vehicle’s engine to idle for long periods to power an auxiliary apparatus), engine operating hours as defined below in “nonroad usage” may be used for application eligibility purposes. If selected for award, the EPA will review and approve eligibility on a case-by-case basis.\n\n e. Nonroad Usage: The engine operating hours of two or more units may be combined to\n\n reach the thresholds below if those units are scrapped and replaced with a single unit. i. Agricultural Pumps: To be eligible for funding, nonroad agricultural pumps must\n\n operate at least 250 hours/year during the two years prior to upgrade. ii. All Other Nonroad Engines: To be eligible for funding, nonroad engines should\n\n operate at least 500 hours/year during the two years prior to upgrade. iii. Exception: If an applicant can demonstrate that a nonroad engine/piece of\n\n equipment is being used in a predominately highway manner, mileage as defined above in “highway usage” may be used for application eligibility purposes. If selected for award, the EPA will review and approve eligibility on a case-by-case basis.\n\n f. Locomotive and Marine Usage: The engine operating hours of two or more units may be\n\n combined to reach the thresholds below if those units are scrapped and replaced with a single unit.\n\n i. To be eligible for funding, the existing locomotive and marine engines must operate at least 1,000 hours/year during the two years prior to upgrade.\n\n 7. Vehicle and Equipment Costs:\n\n a. Vehicles, Engines, and Equipment: Eligible project costs include the purchase price of\n\n eligible vehicles, engines and equipment as defined in Section 2.A.1. above.\n\n b. Ineligible Expenses for All Zero-Emission Projects: Grant funds (including cost share) cannot be used for charging infrastructure; power distribution to the property line; electricity; operation and maintenance of electrical systems; or stationary energy storage systems such as batteries and their installation."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2977583,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AjbVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 17,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "https://www.epa.gov/verified-diesel-tech/smartway-technology\n \n\n \n  https://www.epa.gov/verified-diesel-tech/smartway-technology\n \n\n \n  https://www.iso.org/standard/84592.html\n \n\n \n  https://www.iso.org/standard/72114.html18\n\n 7) Eligible costs include the purchase and installation of the shore side equipment and certain equipment required for power delivery directly related to the new equipment such as design and engineering, cables, cable management systems, shore power coupler systems, distribution control systems, grounding switches, service breakers, capacitor banks, electrical panels, upgrades to existing electrical panels or electrical service, wiring/conduit, and installation. Funding under this NOFO cannot be used for modifications to marine vessels to accept shore- based electrical power."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2775536,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlLVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 20,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   }
+  ]
+ },
+ "811c244d0274a0ac": {
+  "query": "narrative format requirements maximum pages font spacing",
+  "filter": "c58cfb4db44023f4",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applicants are not required to use the project narrative format below.\n\n The Cover Page and Workplan combined are limited to 14 pages. Attachments are not included in the page limitation."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4064934,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ao7VeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 27,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "(1) Cover Page:\n\n The cover page should not exceed one page. The cover page should include the following information:\n\n • EPA Region: Applicants must request funding from the single EPA regional office that covers the geographic project location. Refer to Section 1.D. of the NOFO"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2213581,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ApLVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 27,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application Contents and Format A. Application Forms The following forms and documents are required under this announcement:\n\n Mandatory Documents:\n\n • Application for Federal Assistance (SF-424) • Budget Information for Non-Construction Programs (SF-424A) • EPA Form 5700-54 Key Contacts • EPA Form 4700-4 Pre-award Compliance Review Report • Project Narrative Attachment Form: use this to submit the Cover Page and Workplan as\n\n described in Section 4.B.(1) and (2)\n\n \n\n \n  https://www.epa.gov/newsreleases/epa-administrator-lee-zeldin-announces-epas-powering-great-american-comeback\n \n\n \n  https://www.ecfr.gov/current/title-2/section-200.317\n \n\n \n  https://www.ecfr.gov/current/title-2/section-200.31824\n\n • “Other Attachments” Form: use this form to submit the following documents as described in Section 4.B.(3):\n\n o Applicant Fleet Description information including the DERA Supplemental Application Template (xlsx) also known as the Burden Statement for EPA Form: 5900-681\n\n o Partnership Letters, if applicable o Mandated Measures Justification Supporting Information, if applicable\n\n Optional Documents:\n\n • “Other Attachments” Form: use this form to submit the following documents as described in 4.B.(4). Applicants should note that while these forms are optional, the “Other Attachments” Form will be listed in the Mandatory Documents section of the Workspace:\n\n o Negotiated Indirect Cost Rate Agreement, if applicable o Maps o Resumes\n\n B. Project Narrative Description\n\n The EPA is providing the following optional project narrative format for convenience to assist applicants in ensuring they provide all information needed for a competitive application."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2079821,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AorVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 26,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "c. Staff Expertise: The applicant should include information on the applicant’s organizational experience and plan for timely and successfully achieving the objectives of the proposed project, and staff expertise/qualifications, staff knowledge, and resources or the ability to obtain them, to successfully achieve the goals of the proposed project. Only employees of the applicant organization, not contractors, can be listed as staff. Biographical sketches, including resumes or curriculum vitae for key staff, managers, and any other key personnel, can be included as an optional resume attachment, as listed in Section 4.A. of the NOFO.\n\n Section 7 – Budget:\n\n This section of the project narrative is a detailed description of the budget the applicant provides in the SF-424A and must include a discussion of the applicant’s approach to ensuring proper management of grant/cooperative agreement funds, a detailed budget narrative, as well as an itemized budget table. An applicant’s budget table and budget narrative must account for federal funds, non-federal mandatory cost share, and any non-federal voluntary cost share, if applicable. Applicants should note that recipients charging a negotiated indirect cost rate must submit a copy of their current indirect cost rate agreement that has been negotiated with a federal cognizant agency prior to drawing down indirect costs (IDCs). Additional guidance for developing the applicant’s budget is available in RAIN-2019-G02-R2, General Budget Development Guidance for Applicants and Recipients of EPA Financial Assistance.\n\n Mandatory Cost Share: Applications that include projects with mandatory cost share requirements must demonstrate on the SF-424 Application for Federal Assistance, on the SF-424A Budget Information for Non-Construction Programs, and in the project narrative how the applicant will be able to meet these minimum mandatory cost share requirements if the EPA selects the application for an award. If a named project partner provides a proposed cost share, a partnership letter demonstrating commitment must be attached to the application as described in Section 4.A. of the NOFO.\n\n Voluntary Cost Sharing: Applicants should be aware that voluntary cost sharing is not required under this NOFO and will not be evaluated. However, applicants may propose to provide voluntary cost share.\n\n Applicants who propose to use a voluntary cost share must include the costs or contributions for the voluntary cost share in the project budget on the SF-424, SF-424A, and budget detail described later in this section."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1990002,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3As7VeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 35,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Statutory Authority ......................................................................................................................... 23 D. Funding Type................................................................................................................................... 23\n\n 4. Application Contents and Format ....................................................................................................... 23\n\n A. Application Forms ........................................................................................................................... 23 B. Project Narrative Description.......................................................................................................... 24\n\n (1) Cover Page: .......................................................................................................................... 24 (2) Workplan: ............................................................................................................................. 27 (3) Required Attachments (not included in 14-page limit) – use “Other Attachments”\n\n form to submit ..................................................................................................................... 38 (4) Optional Attachments .......................................................................................................... 39\n\n C. Applicants Using Contractors .......................................................................................................... 40 D. Coalition Coverage .......................................................................................................................... 40\n\n 5. Submission Requirements and Deadlines ........................................................................................... 40\n\n A. Submission Dates and Times .......................................................................................................... 40 B. Unique Entity Identifier (UEI) and System for Award Management (SAM.gov) ............................. 40 C. Submission Instructions .................................................................................................................. 41 D."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1980445,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AdLVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Management fees or similar charges cannot be used to improve or expand the project funded under this agreement, except to the extent authorized as a direct cost of carrying out the workplan.\n\n b. Expenditure of Awarded Funds: Applicants should provide a detailed written description of the applicant’s approach, procedures, and controls for ensuring that awarded grant funds will be expended in a timely and efficient manner.\n\n c. Reasonableness of Costs: The EPA will evaluate the reasonableness of the applicant’s budget based on the applicant’s narrative description of the budget and detailed breakout of requested funding for each work component or task. Provide a detailed description of every itemized cost, including how every cost relates to the project narrative and specific emission reduction activities. Instructions for what to include in the budget detail are described above in Section 7.1. of the workplan.\n\n Applicants must itemize the cost categories as listed below and the SF-424A: personnel, fringe benefits, contractual costs, travel, equipment, supplies, contractional costs, other direct costs (subawards, participant support costs), indirect costs, and total costs. Round up to the nearest dollar and do not use any cents.\n\n For applicants that provide a mandatory or voluntary cost share as described in Section 2.B. of the NOFO, the budget narrative must include a detailed description of how the applicant will obtain the cost share and how the cost share funding will be used. Proposed mandatory or voluntary cost share included in the budget detail must also be included on the SF-424 and SF-424A.\n\n Recipients may issue subawards, contracts, or participant support costs to implement projects. Please refer to Section 9.B. for detailed guidance on these funding options and how to correctly categorize these costs in the workplan budget.\n\n (3) Required Attachments (not included in 14-page limit) – use “Other Attachments” form to submit\n\n 1. Applicant Fleet Description\n\n Applicants must use the “Other Attachments” form in Grants.gov to upload their Applicant Fleet Description. The Applicant Fleet Description is a single file: the DERA Supplemental Application Template (excel), also known as the Burden Statement for EPA Form 5900-681. This can be found on the DERA National website."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1793683,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AvLVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 41,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If a named project partner provides a proposed cost share, a partnership letter demonstrating commitment must be attached to the application as described in Section 4.A. of the NOFO. The budget detail described under this section must clearly specify the amount of federal funding and the cost share amount for each category of total project costs. The recipient is legally obligated to meet any proposed voluntary cost share that is included in the approved project budget. If the proposed voluntary cost sharing does not materialize during grant performance, the EPA may reconsider the legitimacy of the award or take other appropriate action authorized under 2 CFR Part 200.\n\n a. Budget Detail: Proposed budgets should provide a detailed breakout by funding type included in\n\n \n\n \n  https://www.epa.gov/grants/rain-2019-g02\n \n\n \n  https://www.epa.gov/grants/rain-2019-g02\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200?toc=133\n\n the proper budget category for each activity requesting funds. Applicants should consult the EPA’s General Budget Development Guidance for Applicants and Recipients of EPA Financial Assistance.\n\n Applicants should provide a detailed breakout by funding type included in the proper budget category for each activity requesting funds. Applicants should use the instructions, budget line-item descriptions, and example table below to complete the detailed budget section of the project narrative. The application should include the budget detail and the budget table in the project narrative which counts towards the 14-page limit. Applicants should include applicable rows of costs for each budget category in their budget table to accurately reflect the proposed project budget. Applicants must itemize costs related to personnel, fringe benefits, travel, equipment, construction, installation or labor supplies, contractual, other direct costs (i.e., subawards, participant support costs), indirect costs, and total costs. If providing a mandatory or voluntary cost share, the budget detail must clearly specify the amount of federal funding and the cost share amount for each category. For applicants proposing to implement a participant support cost or rebate program, the rebates are appropriately listed under the Other budget category as “Participant Support Costs.”. Refer to Section 9.B. of the NOFO for more information on participant support costs and EPA Guidance on Participant Support Costs.\n\n Personnel - List all staff positions by title. Provide hourly wage and number of hours or provide annual salary and percentage of time assigned to the project, and the total cost for the budget period."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1518462,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AtLVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 35,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   }
+  ]
+ },
+ "825f7a14e8159796": {
+  "query": "ineligible applicants",
+  "filter": "ccad550c2130f412",
+  "retrievalResults": []
+ },
+ "964967a6a2b89259": {
+  "query": "electric charging stations installation funding limits",
+  "filter": "ccad550c2130f412",
+  "retrievalResults": []
+ },
+ "b464fd6661264762": {
+  "query": "for-profit private company eligibility",
+  "filter": "c58cfb4db44023f4",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• For-profit organizations are not an eligible entity for this funding opportunity. Additionally, non- profit organizations described in Section 501(c)(4) of the Internal Revenue Code that engage in lobbying activities as defined in Section 3 of the Lobbying Disclosure Act of 1995 are not eligible to apply.\n\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-A/subject-group-ECFR2a6a0087862fd2c/section-200.1\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200?toc=1\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-A/subject-group-ECFR2a6a0087862fd2c/section-200.1\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-A/subject-group-ECFR2a6a0087862fd2c/section-200.1\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-A/subject-group-ECFR2a6a0087862fd2c/section-200.1\n \n\n \n  https://www.irs.gov/charities-non-profits/other-non-profits/types-of-organizations-exempt-under-section-501c4\n \n\n \n  https://lobbyingdisclosure.house.gov/lda.html4\n\n (1) Other Eligibility Requirements\n\n Applications must meet the following additional criteria to be considered eligible.\n\n 1. Funding Request Limits: Applications must not request more than the regional funding cap in individual applications which request EPA grant funds above the applicable regional amounts specified in Section 1.D. (refer to Table 1). Applications over the cap are ineligible and will not be reviewed.\n\n Each application must request funds from only one EPA regional office, based on the project location (where the affected vehicles/engines operate). Refer to the regional boundaries below.\n\n For applications with long distance fleets, pick the single region that best fits (e.g., where the fleet is based or operates most) and briefly explain why. Each application must clearly identify the chosen EPA region on the cover page of the Project Narrative.\n\n A map showing Regional Collaboratives and EPA Regions is available on the EPA website."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4504225,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ae7VeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Non-profit organization, as defined by 2 CFR §200.1, means any corporation, trust, association, cooperative, or other organization that: (1) is operated primarily for scientific, educational, service, charitable, or similar purposes in the public interest; (2) is not organized primarily for profit; and (3) uses its net proceeds to maintain, improve, or expand its operations.\n\n Note that 2 CFR Part 200 specifically excludes the following types of organizations from the definition of “non-profit organization” because they are separately defined in the regulation: (1) Institutions of Higher Education; and (2) State, local, and federally recognized Indian Tribal governments. While not considered to be a “non-profit organization(s)” as defined by 2 CFR §200.1, Institutions of Higher Education are, nevertheless, eligible to submit applications under this NOFO to the extent they fall within the definition in the eligibility requirements above. Hospitals operated by State, Tribal, or local governments or that meet the definition of nonprofit at 2 CFR §200.1 are also eligible to apply. For-profit colleges, universities, trade schools, and hospitals are not eligible to apply.\n\n • Eligible Tribal agencies are defined as federally recognized Indian Tribal governments, which are any Indian Tribe, band, nation, or other organized group or community (including Alaska Native Villages) certified by the Secretary of the Interior as eligible for the special programs and services provided through the Bureau of Indian Affairs, as well as any organization or intertribal consortium that represents federally recognized Tribes.\n\n • For the purposes of this NOFO, “intertribal consortium” is defined as a partnership between two or more eligible Tribal agencies as defined above, that is authorized by the governing bodies of those Tribes to apply for and receive assistance under this program. Intertribal consortia are eligible to receive assistance under this program only if the consortium demonstrates that all members of the consortium meet the eligibility requirements for the program and authorize the consortium to apply for and receive assistance by submitting to the EPA documentation of (1) the existence of the partnership between Indian Tribal governments, and (2) authorization of the consortium by all its members to apply for and receive the assistance."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3427727,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AerVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Eligible project costs include those costs directly related to the implementation, management, and oversight of the project, including but not limited to: recipient and subrecipient personnel and benefits; equipment; scrappage; contractual; travel; supplies; subgrants and rebates; and indirect costs.\n\n 7. Ineligible Content: Any ineligible projects, activities, or costs will be excluded and may render the\n\n entire application ineligible, depending on how integral they are. Ineligible costs include:\n\n a. Leasing: Funding under this NOFO cannot be used for leasing vehicles, engines, or equipment.\n\n b."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2846446,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AfbVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Applicant Information:\n\n o Applicant organization o Address o Primary contact name, phone number, and email address o Unique Entity Identifier (UEI) number\n\n • Type of Eligible Applicant: Applicants must list their applicant type and how they meet the eligibility criteria.\n\n o A regional, State (including the District of Columbia), local agency, Tribal agency, or port authority, which has jurisdiction over transportation or air quality. School districts, municipalities, metropolitan planning organizations (MPOs), cities, and counties are all generally eligible entities under this grant program to the extent that they fall within this definition.\n\n o A non-profit organization or institution that: ▪ Represents or provides pollution reduction or educational services to people or\n\n organizations that own or operate diesel fleets; or ▪ Has, as its principal purpose, the promotion of transportation or air quality."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2799969,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ApbVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 27,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Deadlines: Email questions by Tuesday, November 24, 2026, 11:59 p.m. ET. The final FAQ update will be posted on Friday, January 8, 2026.\n\n All applicants should review the question and answers document posted on the DERA National website for further clarification of this NOFO.\n\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-E/subject-group-ECFRed1f39f9b3d4e72/section-200.458\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-E/subject-group-ECFRed1f39f9b3d4e72/section-200.458\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/section-200.309\n \n\n \n  https://www.ecfr.gov/current/title-2/section-1500.9\n \n\n \n  mailto:dera@epa.gov\n \n\n \n  https://www.epa.gov/dera/national\n \n\n \n  https://www.epa.gov/dera/national\n \n\n \n  https://www.epa.gov/dera/national\n \n\n \n  mailto:dera@epa.gov\n \n\n \n  https://www.epa.gov/dera/national3\n\n 2. Eligibility A. Eligible Applicants Only these types of organizations may apply:\n\n • A regional, State (including the District of Columbia), local agency, Tribal agency, or port authority, which has jurisdiction over transportation or air quality. School districts, municipalities, metropolitan planning organizations (MPOs), cities, and counties are all generally eligible entities under this grant program to the extent that they fall within this definition.\n\n • A non-profit organization or institution that:\n\n o Represents or provides pollution reduction or educational services to people or organizations that own or operate diesel fleets; or\n\n o Has, as its principal purpose, the promotion of transportation or air quality."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2622932,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AebVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "While there may be some situations in which a subaward to an individual may be appropriate, those situations are rare.\n\n Subrecipients only receive reimbursement for their actual direct or approved indirect costs and do not profit from the transaction. For-profit entities participating in grant activities are typically contractors rather than subrecipients.\n\n The EPA’s Award Official must approve subawards to for-profit entities and individuals based on either a precise description of the subaward in the EPA approved budget and project narrative, or on a transaction-by-transaction basis.\n\n The applicant’s project narrative and budget narrative should include detailed descriptions of any proposed subawards and include cost estimates for subawards as line items under the “Other” budget category in the SF-424A; refer to Section 9 in Section 4.A. Should a recipient decide to make a subaward that was not described in the approved project narrative and budget, the recipient must obtain prior written approval from the EPA’s Award Official for the subaward.\n\n If a recipient chooses to pass funds from its grant to other entities through subawards, the recipient must comply with applicable subaward provisions of 2 CFR Part 200, the EPA Subaward Policy, and the EPA’s National Term and Condition for Subawards. Note that under 2 CFR §200.331 through §200.333, there are extensive requirements for subrecipient monitoring and management that apply to pass- through entities.\n\n Many of the federal administrative grant regulations in 2 CFR Part 200 and 2 CFR Part 1500, as well as the grant terms and conditions, “flow down” to subrecipients receiving a subaward. The written subaward agreement between the recipient and the subrecipient needs to identify such requirements. Additionally, if a subrecipient intends to procure goods or services using DERA grant funds, the subrecipient must comply with the applicable federal procurement standards in 2 CFR Part 200 and 2 CFR Part 1500."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.256817,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A0rVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 52,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "technology analysis. Over 803 horsepower (HP), Tier 3 engines are not eligible technologies for full vessel replacement projects.13\n\n Table 8: Locomotive Engine Project Eligibility\n\n Current Locomotive Tier\n\n Engine & Locomotive Replacement Verified Retrofit\n\n Technologies\n\n Idle- Reduction14 Technology\n\n Certified Remanufacture\n\n System15 Tier 0–2+ Tier 3 Tier 4 Zero-\n\n Emission16 Unregulated -\n\n Tier 2+ No Yes17 Yes Yes Yes Yes Yes\n\n Tier 3 No No Yes Yes Yes Yes Yes\n\n Tier 4 No No No No No Yes No\n\n 5. Best Achievable Technology (BAT): Please refer to the Diesel Emissions Reduction Act best\n\n achievable technology analysis guidance found on the DERA National website for more information on how to conduct a BAT analysis.\n\n 6. Ownership, Usage, and Remaining Life Requirements: To be eligible for funding, vehicles and equipment targeted for upgrades must meet certain ownership, usage, and remaining life requirements. Applicants should demonstrate in their application that all funded vehicles and equipment will meet the criteria defined below in a.– f.\n\n If selected for funding, participating fleet owners must attest to each criterion in a.– f. in a signed eligibility statement which includes each vehicle make, model, year, vehicle identification number, odometer/usage meter reading, engine make, model, year, horsepower, engine ID or serial number, and vehicle/equipment registration/licensing number, and State. Grant recipients must submit this documentation as part of the award’s programmatic reporting to the EPA to verify the eligible use of grant funds. The DERA eligibility statement, also known as the burden statement for EPA form 5900-687, may be found on the DERA National website. The signed eligibility statement is not required at the time of application submittal.\n\n a."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2506887,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ai7VeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   }
+  ]
+ },
+ "b5b8b22a3d883904": {
+  "query": "eligible applicants",
+  "filter": "c58cfb4db44023f4",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "E. Intergovernmental Review The application is not subject to Intergovernmental Review.\n\n 6. Application Review Information\n\n A. Responsiveness Review Applications must meet the eligibility requirements described in Section 2 to be evaluated. Applicants not meeting these requirements will be deemed ineligible and will be notified within 15 calendar days of the determination"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3548064,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AxbVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 45,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Applicant Information:\n\n o Applicant organization o Address o Primary contact name, phone number, and email address o Unique Entity Identifier (UEI) number\n\n • Type of Eligible Applicant: Applicants must list their applicant type and how they meet the eligibility criteria.\n\n o A regional, State (including the District of Columbia), local agency, Tribal agency, or port authority, which has jurisdiction over transportation or air quality. School districts, municipalities, metropolitan planning organizations (MPOs), cities, and counties are all generally eligible entities under this grant program to the extent that they fall within this definition.\n\n o A non-profit organization or institution that: ▪ Represents or provides pollution reduction or educational services to people or\n\n organizations that own or operate diesel fleets; or ▪ Has, as its principal purpose, the promotion of transportation or air quality."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3304232,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ApbVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 27,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• For-profit organizations are not an eligible entity for this funding opportunity. Additionally, non- profit organizations described in Section 501(c)(4) of the Internal Revenue Code that engage in lobbying activities as defined in Section 3 of the Lobbying Disclosure Act of 1995 are not eligible to apply.\n\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-A/subject-group-ECFR2a6a0087862fd2c/section-200.1\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200?toc=1\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-A/subject-group-ECFR2a6a0087862fd2c/section-200.1\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-A/subject-group-ECFR2a6a0087862fd2c/section-200.1\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-A/subject-group-ECFR2a6a0087862fd2c/section-200.1\n \n\n \n  https://www.irs.gov/charities-non-profits/other-non-profits/types-of-organizations-exempt-under-section-501c4\n \n\n \n  https://lobbyingdisclosure.house.gov/lda.html4\n\n (1) Other Eligibility Requirements\n\n Applications must meet the following additional criteria to be considered eligible.\n\n 1. Funding Request Limits: Applications must not request more than the regional funding cap in individual applications which request EPA grant funds above the applicable regional amounts specified in Section 1.D. (refer to Table 1). Applications over the cap are ineligible and will not be reviewed.\n\n Each application must request funds from only one EPA regional office, based on the project location (where the affected vehicles/engines operate). Refer to the regional boundaries below.\n\n For applications with long distance fleets, pick the single region that best fits (e.g., where the fleet is based or operates most) and briefly explain why. Each application must clearly identify the chosen EPA region on the cover page of the Project Narrative.\n\n A map showing Regional Collaboratives and EPA Regions is available on the EPA website."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3039949,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ae7VeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Eligible project costs include those costs directly related to the implementation, management, and oversight of the project, including but not limited to: recipient and subrecipient personnel and benefits; equipment; scrappage; contractual; travel; supplies; subgrants and rebates; and indirect costs.\n\n 7. Ineligible Content: Any ineligible projects, activities, or costs will be excluded and may render the\n\n entire application ineligible, depending on how integral they are. Ineligible costs include:\n\n a. Leasing: Funding under this NOFO cannot be used for leasing vehicles, engines, or equipment.\n\n b."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.296417,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AfbVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If the applicant does not have any relevant or available past performance or reporting information, please indicate this in the application and the applicant will receive a neutral score for these subfactors (items a. and b. above). A neutral score is half of the total points available in a subset of possible points). If the applicant does not provide any response for these items, a score of zero for these subfactors may be received.\n\n 15\n\n 7. Budget: Under this criterion, the EPA will evaluate applicants based on the extent and quality to which:\n\n a. Budget Detail (5 points) The proposed budget provides a detailed breakout by funding type in the proper budget category for each activity the applicant is requesting funding.\n\n 1545\n\n Criteria Name and Description Points\n\n b. Expenditure of Awarded Funds (5 points) The applicant’s approach, procedures, and controls will ensure that awarded grant funds will be expended in a timely and efficient manner.\n\n c. Reasonableness of Costs (5 points) The proposed costs are reasonable to accomplish the proposed goals, objectives, and measurable environmental outcomes, including consideration of indirect/administrative costs.\n\n 8. Applicant Fleet Description: Under this criterion, the EPA will evaluate applicants on the extent and quality of the detailed information provided in the applicant fleet description via the DERA Supplemental Application Template (excel), also known as the Burden Statement for EPA Form: 5900-681, of all required target fleet fields (vessel(s), vehicle(s), engine(s), and equipment) as described in Section 4.B. and completed with sufficient detail and provided with accuracy and consistency, with no significant errors or omissions.\n\n 10\n\n Total Possible Points 130\n\n \n\n Applicants will be evaluated based on the extent and quality to which they demonstrate that they have the capability to successfully perform the project as described in Section 3 of this funding opportunity.\n\n Only eligible entities whose applications meet the threshold criteria in Section 2 of this announcement will be evaluated. Applicants should explicitly address these criteria as part of their application package submittal in the project narrative. Each application will be rated using a point system. Applications will be evaluated based on a total of 130 possible points.\n\n C. Review and Selection Process Eligibility Review: The EPA will evaluate applications against the threshold criteria in Section 2. Only those applications which meet all threshold criteria will be deemed eligible.\n\n Merit Evaluation: All eligible applications will be evaluated by regional review panels using the evaluation criteria in Section 6.B."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2399267,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AyrVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 47,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Deadlines: Email questions by Tuesday, November 24, 2026, 11:59 p.m. ET. The final FAQ update will be posted on Friday, January 8, 2026.\n\n All applicants should review the question and answers document posted on the DERA National website for further clarification of this NOFO.\n\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-E/subject-group-ECFRed1f39f9b3d4e72/section-200.458\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-E/subject-group-ECFRed1f39f9b3d4e72/section-200.458\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/section-200.309\n \n\n \n  https://www.ecfr.gov/current/title-2/section-1500.9\n \n\n \n  mailto:dera@epa.gov\n \n\n \n  https://www.epa.gov/dera/national\n \n\n \n  https://www.epa.gov/dera/national\n \n\n \n  https://www.epa.gov/dera/national\n \n\n \n  mailto:dera@epa.gov\n \n\n \n  https://www.epa.gov/dera/national3\n\n 2. Eligibility A. Eligible Applicants Only these types of organizations may apply:\n\n • A regional, State (including the District of Columbia), local agency, Tribal agency, or port authority, which has jurisdiction over transportation or air quality. School districts, municipalities, metropolitan planning organizations (MPOs), cities, and counties are all generally eligible entities under this grant program to the extent that they fall within this definition.\n\n • A non-profit organization or institution that:\n\n o Represents or provides pollution reduction or educational services to people or organizations that own or operate diesel fleets; or\n\n o Has, as its principal purpose, the promotion of transportation or air quality."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2311592,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AebVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Executive Summary .......................................................................................................................... 1 B. Key Information: ............................................................................................................................... 1 C. Key Dates: ......................................................................................................................................... 1 D. Funding Details: ................................................................................................................................ 2 E. Agency Contact Information: ............................................................................................................ 2 F. Information Sessions ......................................................................................................................... 2 G. Question and Answer Process .......................................................................................................... 2\n\n 2. Eligibility ................................................................................................................................................ 3\n\n A. Eligible Applicants ............................................................................................................................. 3\n\n (1) Other Eligibility Requirements ............................................................................................... 4\n\n B. Cost Sharing ...................................................................................................................................... 5\n\n 3. Program Description ............................................................................................................................. 8\n\n A. Purpose, Priorities, and Activities ..................................................................................................... 8\n\n (1) Diesel Emissions Reduction Solutions .................................................................................... 8 (2) Outputs and Outcomes ........................................................................................................ 21 (3) Performance Measures ........................................................................................................ 22\n\n B. Program Goals and Objectives ........................................................................................................ 23 C."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2197307,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ac7VeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   }
+  ]
+ },
+ "bcdef3c3ac2e0913": {
+  "query": "application submission deadline",
+  "filter": "ccad550c2130f412",
+  "retrievalResults": []
+ },
+ "c35d9db33b8482cc": {
+  "query": "for-profit private company eligibility",
+  "filter": "ccad550c2130f412",
+  "retrievalResults": []
+ },
+ "e6051997ae25598d": {
+  "query": "all-electric truck replacement eligible vehicles and ineligible costs",
+  "filter": "ccad550c2130f412",
+  "retrievalResults": []
+ },
+ "e828e8178e6b644a": {
+  "query": "closing date applications due date and time",
+  "filter": "c58cfb4db44023f4",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Applications must adhere to the page limit requirements. Any pages over the limit(s) in Section 4 will not be reviewed.\n\n • Initial applications must be submitted on or before the application deadline through Grants.gov or through limited circumstances as expressed in Section 5. The EPA will not evaluate applications that are not submitted on time.\n\n • Technical difficulties applying: Applicants having technical difficulties applying must contact the Grants.gov hotline at 1-800-518-4726 and then must email a PDF of the full application to the EPA contact listed in Section 1.E. The submission must be received prior to the application deadline for consideration."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3273455,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AxrVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 45,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Deadlines: Email questions by Tuesday, November 24, 2026, 11:59 p.m. ET. The final FAQ update will be posted on Friday, January 8, 2026.\n\n All applicants should review the question and answers document posted on the DERA National website for further clarification of this NOFO.\n\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-E/subject-group-ECFRed1f39f9b3d4e72/section-200.458\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-E/subject-group-ECFRed1f39f9b3d4e72/section-200.458\n \n\n \n  https://www.ecfr.gov/current/title-2/subtitle-A/chapter-II/part-200/subpart-D/section-200.309\n \n\n \n  https://www.ecfr.gov/current/title-2/section-1500.9\n \n\n \n  mailto:dera@epa.gov\n \n\n \n  https://www.epa.gov/dera/national\n \n\n \n  https://www.epa.gov/dera/national\n \n\n \n  https://www.epa.gov/dera/national\n \n\n \n  mailto:dera@epa.gov\n \n\n \n  https://www.epa.gov/dera/national3\n\n 2. Eligibility A. Eligible Applicants Only these types of organizations may apply:\n\n • A regional, State (including the District of Columbia), local agency, Tribal agency, or port authority, which has jurisdiction over transportation or air quality. School districts, municipalities, metropolitan planning organizations (MPOs), cities, and counties are all generally eligible entities under this grant program to the extent that they fall within this definition.\n\n • A non-profit organization or institution that:\n\n o Represents or provides pollution reduction or educational services to people or organizations that own or operate diesel fleets; or\n\n o Has, as its principal purpose, the promotion of transportation or air quality."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2846153,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AebVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "https://sam.gov/content/entity-registration\n \n\n \n  https://www.grants.gov/\n \n\n \n  https://www.grants.gov/quick-start-guide/applicants\n \n\n \n  https://www.epa.gov/grants/how-apply-grants\n \n\n \n  mailto:support@grants.gov\n \n\n \n  mailto:dera@epa.gov?subject=EPA-OAR-OTAQ-26-01\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov\n \n\n \n  https://Grants.gov42\n\n Applicants with limited or no access to the internet may request an exception by following the procedures outlined here. The request must be received at least 15 calendar days before the application due date to allow enough time to negotiate alternative submission methods."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2733246,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AxLVeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 44,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Maps c. Resumes, if applicable\n\n ▪ Provide resumes as described in Section 4.B.(2).\n\n \n\n \n  https://www.epa.gov/dera/national\n \n\n \n  https://www.epa.gov/dera/national\n \n\n \n  https://www.epa.gov/dera/national40\n\n C. Applicants Using Contractors Applicants must compete contracts for services and products, including consultant contracts, and conduct cost and price analyses, to the extent required by the procurement provisions of the regulations at 2 CFR Part 200.\n\n Do not name a procurement contractor (including a consultant) as a “partner” or otherwise in your application unless the contractor has been selected in compliance with competitive procurement requirements. If an applicant selected for award has named a specific subrecipient, contractor, or consultant in the application, it does not relieve the applicant of its obligations to comply with subaward and/or competitive procurement requirements.\n\n The EPA will not consider the qualifications, experience, and expertise of named subrecipients or named contractor(s) during the application evaluation process unless the applicant provides documentation that it has complied with these requirements.\n\n For additional guidance, applicants should review the EPA’s Best Practice Guide for Procuring Services, Supplies, and Equipment Under EPA Assistance Agreements, the EPA’s Subaward Policy, and the EPA’s Subaward Policy Frequent Questions. The EPA expects recipients of funding to comply with competitive procurement contracting requirements in 2 CFR Parts 200 and 1500, as well as the requirements in 2 CFR 200.321 and 40 CFR Part 33 Subpart C.\n\n D. Coalition Coverage A coalition is formed when two or more eligible applicants coordinate to submit a single application. Coalitions must identify which single eligible organization will be the recipient of the grant and which eligible organization(s) will receive subawards from the recipient (the “pass-through entity”). The pass- through entity that administers the grant and subawards will be accountable to the EPA for proper expenditure of the funds and reporting and will be the point of contact for the coalition. Subawards must be consistent with the definition of that term in 2 CFR §200.1 and comply with the EPA’s Subaward Policy.\n\n 5. Submission Requirements and Deadlines\n\n A. Submission Dates and Times January 22, 2027 11:59 pm ET Application Submission Deadline\n\n Grants.gov creates a date and time record when it receives the application. If you submit the same application more than once, we will accept the last on-time submission."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2595501,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Av7VeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 42,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Technical Issues with Submission ................................................................................................... 41 E. Intergovernmental Review .............................................................................................................. 42\n\n 6. Application Review Information.......................................................................................................... 42\n\n A. Responsiveness Review .................................................................................................................. 42ii\n\n B. Review Criteria ................................................................................................................................ 42 C. Review and Selection Process ......................................................................................................... 45\n\n (1) Other Evaluation Factors ..................................................................................................... 45\n\n D. Risk Review ..................................................................................................................................... 46\n\n 7. Award Notices ..................................................................................................................................... 46\n\n 8. Post-Award Requirements and Administration .................................................................................. 46\n\n A. Administrative and National Policy Requirements ......................................................................... 46 B. Reporting ........................................................................................................................................ 46 C. Subaward and Executive Compensation Reporting ........................................................................ 47 D. Post Award Project Requirements .................................................................................................. 47\n\n 9. Other Information ............................................................................................................................... 48\n\n A. Additional Provisions for Applicants ............................................................................................... 48 B. Further information Regarding Contracts, Subawards, Participant Support Costs ......................... 481\n\n 1."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2020183,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AdbVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Statutory Authority ......................................................................................................................... 23 D. Funding Type................................................................................................................................... 23\n\n 4. Application Contents and Format ....................................................................................................... 23\n\n A. Application Forms ........................................................................................................................... 23 B. Project Narrative Description.......................................................................................................... 24\n\n (1) Cover Page: .......................................................................................................................... 24 (2) Workplan: ............................................................................................................................. 27 (3) Required Attachments (not included in 14-page limit) – use “Other Attachments”\n\n form to submit ..................................................................................................................... 38 (4) Optional Attachments .......................................................................................................... 39\n\n C. Applicants Using Contractors .......................................................................................................... 40 D. Coalition Coverage .......................................................................................................................... 40\n\n 5. Submission Requirements and Deadlines ........................................................................................... 40\n\n A. Submission Dates and Times .......................................................................................................... 40 B. Unique Entity Identifier (UEI) and System for Award Management (SAM.gov) ............................. 40 C. Submission Instructions .................................................................................................................. 41 D."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1975979,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AdLVeYKEBbayybwJO7PG1",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The regional review panels will score and rank applications.\n\n Preliminary funding recommendations will be provided to the EPA regional selection officials based on these reviews and rankings.\n\n The EPA anticipates funding the top 4-12 ranked proposals for each region, contingent on the quality of the proposals and funding availability.\n\n (1) Other Evaluation Factors\n\n The selection official in each region will make final funding decisions. In making the final funding decisions, the selection officials may also consider the following factors: sector (fleet type) diversity, technology diversity, geographic diversity, number and size of awards, and agency and programmatic priorities.46\n\n D. Risk Review The EPA will conduct a risk review of selected applications before making awards, as required by 2 CFR 200.206. As part of this review, the EPA may consider the following:\n\n • information available in the responsibility/qualification records in SAM.gov, including any comments made by the applicant.\n\n • if the applicant is a new recipient, whether they have completed the mandatory training requirement outlined in RAIN-2024-G01 New Recipient Training Requirement\n\n • any unresolved administrative findings in EPA records\n\n • reported issues related to financial stability and/or management systems\n\n • past performance or audit issues.\n\n 7. Award Notices The EPA anticipates notification to successful applicants will be made by the applicable Regional Grants Management Office. The notification will be sent to the original signer of the application or the project contact listed in the application. This notification is not an authorization to begin work. The official notification of an award will be made by the applicable Regional Grants Management Office. Selection does not guarantee an award will be made. Statutory authorization, funding, or other issues during the award process may affect the ability of the EPA to make an award. The award notice, signed by an EPA grants officer, is the authorizing document and will be provided through electronic or postal mail. The successful applicant may need to prepare and submit additional documents and forms, which must be approved by the EPA, before the grant can officially be awarded. The time between notification of selection and award of a grant can take up to 90 days or longer.\n\n 8. Post-Award Requirements and Administration\n\n A."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1954331,
+    "metadata": {
+     "documentIdentifier": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "agency": "Environmental Protection Agency",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ay7VeYKEBbayybwJO7PG2",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/2026 Diesel Emissions Reduction Act (DERA) National Program/NOFO-File-PDF",
+     "nofoName": "2026 Diesel Emissions Reduction Act (DERA) National Program",
+     "x-amz-bedrock-kb-document-page-number": 48,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:25.354Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Environment"
+    }
+   }
+  ]
+ },
+ "ecb9269e03c477ae": {
+  "query": "project narrative page limit",
+  "filter": "ccad550c2130f412",
+  "retrievalResults": []
+ },
+ "f7be61bd73fac696": {
+  "query": "eligible applicants",
+  "filter": "ccad550c2130f412",
+  "retrievalResults": []
+ }
+}

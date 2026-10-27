@@ -8,10 +8,10 @@
  * application. Updates the DDB job with sectionNames and totalSections.
  */
 
-import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client } from '@aws-sdk/client-s3';
 import { DynamoDBClient, UpdateItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
-import { withSectionIds } from 'grantwell-shared';
+import { getArtifact, withSectionIds } from 'grantwell-shared';
 
 const s3Client = new S3Client({ region: process.env.AWS_REGION || 'us-east-1' });
 const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION || 'us-east-1' });
@@ -73,11 +73,7 @@ export const handler = async (event) => {
 
 async function getSummaryFile(documentIdentifier) {
   try {
-    const command = new GetObjectCommand({
-      Bucket: process.env.BUCKET,
-      Key: `${documentIdentifier}summary.json`,
-    });
-    const response = await s3Client.send(command);
+    const response = await getArtifact(s3Client, `${documentIdentifier}summary.json`);
     const content = await response.Body.transformToString();
     return JSON.parse(content);
   } catch (error) {

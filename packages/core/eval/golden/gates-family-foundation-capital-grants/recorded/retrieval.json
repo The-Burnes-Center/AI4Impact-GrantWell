@@ -1,0 +1,1451 @@
+{
+ "0124d801636c34c0": {
+  "query": "ineligible applicants or projects not funded",
+  "filter": "019a2171efa96c9b",
+  "retrievalResults": []
+ },
+ "066f96ae29b6d83e": {
+  "query": "eligibility who is eligible to apply",
+  "filter": "019a2171efa96c9b",
+  "retrievalResults": []
+ },
+ "0763b748239b4c38": {
+  "query": "eligible organizations nonprofit applicant requirements",
+  "filter": "27be6b8cdc409378",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Program: Capital Grants\nFunder: Gates Family Foundation\nSource: https://gatesfamilyfoundation.org/types-of-support/capital-grants/ | https://gatesfamilyfoundation.org/engage/how-to-apply/\nRetrieved: 2026-10-20\nApplication deadline: March 15, 2027, 5:00 p.m. (annual deadlines March 15 and September 1; applications accepted any time)\n---\nCAPITAL GRANT OPPORTUNITIES FOR COLORADO\nLand, facilities, and civic infrastructure are long-term assets that can transform the ability of nonprofit and community organizations to serve Colorado communities. For this reason, the Gates Family Foundation invests in capital projects across the state, in both rural and urban areas. We strive to be responsive to each community’s unique needs and opportunities.\nOur capital grants are generally limited to comprehensive capital campaigns, which are typically for building purchases, construction, expansion, renovation, and/or land acquisition. Only nonprofit organizations with capital projects that benefit Colorado and its residents are qualified to apply. When making funding decisions, we prioritize:\nProjects that address root problems with substantive solutions\nProjects with evidence of community involvement in setting project priorities\nProjects in rural and low-income areas across Colorado where there are fewer individuals and institutions providing support for capital projects\nProjects that serve individuals and communities of color who have faced historic inequities and lack of access to funding\nProjects with strong engagement and financial support from the organization’s governing board\nProjects that reinforce the foundation’s\nstrategic priorities\nin K-12 public education, natural resources, community development, and informed communities\nProjects that address climate change, and/or incorporate green building and sustainable development practices\nWe fund capital projects within five categories that overlap somewhat with the Foundation’s strategic priorities, but are broader in scope in order to be more responsive to community needs:\nArts & Culture\nCommunity Development\nEducation\nNatural Resources\nParks & Recreation\nWell-Being of Children, Youth & Families\nArts and Culture\nArtistic expression arouses the imagination, stimulates creativity, and prompts self-discovery. Organizations dedicated to art and culture enrich the spirit and enhance economic vitality."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2724419,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ak7UeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Provide services benefiting the state of Colorado and its citizens.\nHave commitments for approximately 30% of the funds needed to complete the project in place prior to submission, unless a waiver of this requirement has been granted.\nWhen making funding decisions, we prioritize:\nProjects that address root problems with substantive solutions\nProjects with strong evidence of support from the community and the organization’s board\nProjects in rural communities that face greater challenges in accessing funds for capital projects\nProjects that reinforce the foundation’s strategic priorities in K-12 public education, natural resources, and community development\nProjects that incorporate green building and sustainable development practices\nOrganizations with sound management practices, effective executive leaders, and engaged board members\nAlthough the Gates Family Foundation reviews each proposal separately, it generally does not:\nGrant funds for general operating or program expenses unless initiated by the Foundation.\nProvide loans, grants, scholarships, or camperships to individuals.\nGrant funds for projects that have been substantially completed prior to the next trustees’ meeting.\nGrant funds for conferences, meetings, or studies that are not initiated by the Foundation.\nConsider more than one proposal from an organization in a calendar year unless initiated by the Foundation, and does not reconsider previously denied proposals.\nGrant funds to other private foundations or organizations engaged in grant making.\nGrant funds to retire operating or construction debt.\nGrant funds for the purchase of vehicles.\nGrant funds to purchase office or computer equipment unless they are part of a comprehensive capital campaign.\nGrant funds directly to individual public schools or public school districts unless initiated by the Foundation.\nGrant funds for medical research or grant funds for the construction of major medical facilities.\nPurchase tickets for fundraising dinners, parties, benefits, balls, or other social fundraising events.\nSupport religious organizations or activities.\nSchedule interviews with the Foundation trustees unless the trustees initiate the meeting.\nGrant funds for political or lobbying activities.\nGrant funds to supporting organizations described in section 509(a)(3), other than a Type I, Type II or functionally-integrated Type III supporting organization of which is not (and the supported organization of which is not) directly or indirectly controlled by a disqualified person of either the Foundation or a family fund.\nGrant funds to foreign organizations.\nThe Foundation uses a two-step process to review capital grant requests. After each application deadline, staff members review submissions and identify proposals that are eligible for funding but unlikely to be recommended or approved by the board of trustees."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2659938,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AmLUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "(for a mid-June decision)\nSeptember 1\nat 5:00 p.m. (for a mid-December decision;\nNOTE this is changed from previous deadline of Sept. 15)\nPlease note: If the application deadline falls on a weekend or holiday, the due date will move to the next business day. Additionally, applicants must have at least 30% of their project budget secured before being considered.\nInquiries\nPrior to submitting a proposal, many applicants find it useful to contact\nLisa Rucker\nto review the substance of the proposed project. We also accept inquiries that follow the Narrative Section III of the\nColorado Common Application for Capital Grants\n.\nHow to Apply\nHave questions about requirements, restrictions, and how to submit?\nLearn More and Apply\n\nHow to apply (Colorado Grant Guide: Applying for a Grant)\nResources and Guidance for Capital Grant Applicants\nThe Gates Family Foundation accepts the\nColorado Common Capital Grant Application\nfor all capital grant requests.\nPlease send completed grant applications by email to\ngrants@gatesfamilyfoundation.org,\nor by mail or delivery to\n1390 Lawrence Street, Suite 400, Denver, CO 80204.\nWe accept capital grant applications at any time throughout the year; however, funding decisions are made at regular meetings of the Gates Family Foundation board of trustees. In order for each proposal to be thoughtfully studied, it is important for applicants to submit proposals to Foundation staff\nat least 12 weeks prior to the trustees’ meeting\n. Annual submission deadlines are:\nMarch 15\n(for a decision at our mid-June board meeting)\nSeptember 1\n(for a decision at our mid-December board meeting)\nIf the application deadline falls on a weekend or holiday, the due date will move to the next business day.\nTo be eligible for a capital grant from the Gates Family Foundation, applicants must:\nBe classified by the Internal Revenue Service as tax-exempt under section 501(c)(3) of the Internal Revenue Code (the “Code”), classified as a public charity under section 509(a)(1) or 509(a)(2) of the Code, and be able to provide documentation of tax-exempt status issued within the last five years. In limited circumstances, the Foundation also considers grant requests from governmental entities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2481422,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Al7UeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We prioritize capital projects that:\ndevelop greater self-sufficiency, including the well-being and independence of disadvantaged families and the elderly\nincrease leadership and life skills\npromote good health and well-being rather than cure disease\nFunding examples and limitations:\nWe support job training centers, family resource centers, and transitional housing facilities\nWe support youth mentoring organizations, community centers and senior centers\nWe rarely support medical and dental facilities, though in rare occasions will prioritize those in remote rural areas with service to low-income populations\nWe do not fund mental and behavioral treatment facilities for adults; senior care facilities; or hospice facilities\nWe only fund faith-based organizations that serve and welcome all individuals, and do not require participation in religious activities\nWe do not fund animal service or animal welfare organizations\nSee our recent capital grants supporting the Well-Being of Children, Youth, and Families\nIf the application deadline falls on a weekend or holiday, the due date will move to the next business day. Applicants must have at least 30% of their project budget secured before being considered.Deadlines\nGates reviews capital grant applications TWICE each year. Annual deadlines are:\nMarch 15\nat 5:00 p.m."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2354643,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlrUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "A staff report is sent to the board via email for review, and if there is unanimous agreement among the trustees, the requests in that group are eliminated from consideration and the applicants are notified of this decision.\nThe balance of eligible applications are assigned to Foundation staff members for further review, who will reach out to applicants for further conversation and, in most cases, in-person site visits.\nThe Foundation sends letters outlining all trustee decisions on capital grants within two weeks following each quarterly meeting.\nPlanning a capital campaign can be daunting. There are many things to consider before embarking, and proper planning can be invaluable.\nFor these reasons, we’ve put together a handy guide to help organizations think about and plan for a capital campaign.\nCapital Projects Guide\n\nColorado Common Capital Grant Application: https://gatesfamilyfoundation.org/wp-content/uploads/2018/06/Colorado_Common_Grant_Application_Capital.doc\nSubmit to grants@gatesfamilyfoundation.org or 1390 Lawrence Street, Suite 400, Denver, CO 80204."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2174548,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AmbUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We support capital projects that:\nserve a majority of students from low-income families (who qualify for free or reduced-price lunch)\nbuild or improve education facilities that will be heavily used by a majority of the community\nincrease access to education in rural areas\nprovide life-long learning to a broad audience\nFunding examples and limitations:\nWe prioritize facilities for high-performing charter schools and other autonomous schools, particularly those seeking matching funds for a BEST grant\nOther examples include: rural schools improving facilities for community use; licensed early childhood education centers, particularly in underserved rural communities; and GED, literacy, or vocational training centers\nWe generally do not support P-12 private schools or district-owned facilities, or higher education facilities or capital campaigns\nSee our recent capital grants supporting Education\nNatural Resources\nWe are committed to the conservation, management, and protection\nof Colorado’s natural resources.\nProjects that qualify for capital grants include:\nland conservation\npublic recreation facilities\noutdoor spaces\ncommunity gardens\nprojects that acquire, construct, and improve parks, greenways, and trail systems\nParks and Recreation\nAppreciation and conservation of Colorado’s natural beauty, resources, and opportunities for outdoor recreation are fundamental to the quality of life and the economy of the state.\nWe support capital projects that:\nprotect and steward land and water resources, habitat, and the health of natural systems\npreserve the state’s agricultural legacy\nconstruct and improve parks, trail systems, and open space for public recreation and access\nprovide environmental education and leadership opportunities for young people\nFunding examples and limitations:\nWe prioritize park and recreation facilities in smaller, rural and/or low-income communities\nLand conservation and easement purchases outside of our two “focused landscapes” (\nSoutheast Colorado\nand the\nSan Luis Valley\n) are eligible for support from our capital grants program\nOther examples include: greenways and trail systems; urban public spaces and community gardens; and outdoor/indoor recreation facilities\nWe only consider school athletic or recreation facilities when they will be widely used by the community, in addition to the school\nSee our recent capital grants supporting Parks and Recreation\nWell-Being of Children, Youth, and Families\nEnergy Resource Center\nHealthy individuals have greater opportunities to be productive members of society who contribute to the economic, social and cultural life of their communities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1739988,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlbUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We support capital projects that:\nenhance the cultural quality of community life while also strengthening the economy\nlink a community with its heritage and contribute to usable community infrastructure\nserve as an educational resource for children, youth, and adults\nFunding examples and limitations:\nWe prioritize capital projects that support libraries and museums; community theaters; performing arts organizations; and historic preservation\nWhen funding historic preservation, we prioritize projects that contribute to community revitalization and/or will result in opportunities for significant community use, over those purely for the sake of preservation\nSee our recent capital grants supporting Arts and Culture\nCommunity Development\nColorado’s economic health is dependent on the vitality of all of the state’s communities — large and small, urban and rural.\nWe support capital projects that:\ncreate economic opportunity, add to the quality of life, and enhance stability for the residents of a community\nhave the potential to reinforce and enhance the economic vitality of a community\ninvolve partnerships between public and private sector organizations that seek to improve the economic and cultural health of communities\nFunding examples and limitations:\nWe prioritize capital projects that restore historically significant architecture, revitalize main streets, and/or support heritage tourism that contributes to community revitalization, particularly in rural areas\nWe look for opportunities that leverage public-private partnerships to stimulate economic development\nWe support a range of affordable housing – including emergency shelters and transitional housing – through our capital grants program\nWe support permanently affordable housing through our impact investment in\nElevation Community Land Trust\n, but are unlikely to support this need through our capital grants program\nSee our recent capital grants supporting Community Development\nEducation\nClosing the achievement gap for children from low-income families and increasing access to high-quality, life-long learning for all Coloradans enhances the economic, social and civic life of our communities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.0982374,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlLUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   }
+  ]
+ },
+ "171e81fa71486193": {
+  "query": "maximum grant award amount request limit",
+  "filter": "019a2171efa96c9b",
+  "retrievalResults": []
+ },
+ "2c117df1be0eff07": {
+  "query": "ineligible applicants or projects not funded",
+  "filter": "27be6b8cdc409378",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We prioritize capital projects that:\ndevelop greater self-sufficiency, including the well-being and independence of disadvantaged families and the elderly\nincrease leadership and life skills\npromote good health and well-being rather than cure disease\nFunding examples and limitations:\nWe support job training centers, family resource centers, and transitional housing facilities\nWe support youth mentoring organizations, community centers and senior centers\nWe rarely support medical and dental facilities, though in rare occasions will prioritize those in remote rural areas with service to low-income populations\nWe do not fund mental and behavioral treatment facilities for adults; senior care facilities; or hospice facilities\nWe only fund faith-based organizations that serve and welcome all individuals, and do not require participation in religious activities\nWe do not fund animal service or animal welfare organizations\nSee our recent capital grants supporting the Well-Being of Children, Youth, and Families\nIf the application deadline falls on a weekend or holiday, the due date will move to the next business day. Applicants must have at least 30% of their project budget secured before being considered.Deadlines\nGates reviews capital grant applications TWICE each year. Annual deadlines are:\nMarch 15\nat 5:00 p.m."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3125069,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlrUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Provide services benefiting the state of Colorado and its citizens.\nHave commitments for approximately 30% of the funds needed to complete the project in place prior to submission, unless a waiver of this requirement has been granted.\nWhen making funding decisions, we prioritize:\nProjects that address root problems with substantive solutions\nProjects with strong evidence of support from the community and the organization’s board\nProjects in rural communities that face greater challenges in accessing funds for capital projects\nProjects that reinforce the foundation’s strategic priorities in K-12 public education, natural resources, and community development\nProjects that incorporate green building and sustainable development practices\nOrganizations with sound management practices, effective executive leaders, and engaged board members\nAlthough the Gates Family Foundation reviews each proposal separately, it generally does not:\nGrant funds for general operating or program expenses unless initiated by the Foundation.\nProvide loans, grants, scholarships, or camperships to individuals.\nGrant funds for projects that have been substantially completed prior to the next trustees’ meeting.\nGrant funds for conferences, meetings, or studies that are not initiated by the Foundation.\nConsider more than one proposal from an organization in a calendar year unless initiated by the Foundation, and does not reconsider previously denied proposals.\nGrant funds to other private foundations or organizations engaged in grant making.\nGrant funds to retire operating or construction debt.\nGrant funds for the purchase of vehicles.\nGrant funds to purchase office or computer equipment unless they are part of a comprehensive capital campaign.\nGrant funds directly to individual public schools or public school districts unless initiated by the Foundation.\nGrant funds for medical research or grant funds for the construction of major medical facilities.\nPurchase tickets for fundraising dinners, parties, benefits, balls, or other social fundraising events.\nSupport religious organizations or activities.\nSchedule interviews with the Foundation trustees unless the trustees initiate the meeting.\nGrant funds for political or lobbying activities.\nGrant funds to supporting organizations described in section 509(a)(3), other than a Type I, Type II or functionally-integrated Type III supporting organization of which is not (and the supported organization of which is not) directly or indirectly controlled by a disqualified person of either the Foundation or a family fund.\nGrant funds to foreign organizations.\nThe Foundation uses a two-step process to review capital grant requests. After each application deadline, staff members review submissions and identify proposals that are eligible for funding but unlikely to be recommended or approved by the board of trustees."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2961915,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AmLUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Program: Capital Grants\nFunder: Gates Family Foundation\nSource: https://gatesfamilyfoundation.org/types-of-support/capital-grants/ | https://gatesfamilyfoundation.org/engage/how-to-apply/\nRetrieved: 2026-10-20\nApplication deadline: March 15, 2027, 5:00 p.m. (annual deadlines March 15 and September 1; applications accepted any time)\n---\nCAPITAL GRANT OPPORTUNITIES FOR COLORADO\nLand, facilities, and civic infrastructure are long-term assets that can transform the ability of nonprofit and community organizations to serve Colorado communities. For this reason, the Gates Family Foundation invests in capital projects across the state, in both rural and urban areas. We strive to be responsive to each community’s unique needs and opportunities.\nOur capital grants are generally limited to comprehensive capital campaigns, which are typically for building purchases, construction, expansion, renovation, and/or land acquisition. Only nonprofit organizations with capital projects that benefit Colorado and its residents are qualified to apply. When making funding decisions, we prioritize:\nProjects that address root problems with substantive solutions\nProjects with evidence of community involvement in setting project priorities\nProjects in rural and low-income areas across Colorado where there are fewer individuals and institutions providing support for capital projects\nProjects that serve individuals and communities of color who have faced historic inequities and lack of access to funding\nProjects with strong engagement and financial support from the organization’s governing board\nProjects that reinforce the foundation’s\nstrategic priorities\nin K-12 public education, natural resources, community development, and informed communities\nProjects that address climate change, and/or incorporate green building and sustainable development practices\nWe fund capital projects within five categories that overlap somewhat with the Foundation’s strategic priorities, but are broader in scope in order to be more responsive to community needs:\nArts & Culture\nCommunity Development\nEducation\nNatural Resources\nParks & Recreation\nWell-Being of Children, Youth & Families\nArts and Culture\nArtistic expression arouses the imagination, stimulates creativity, and prompts self-discovery. Organizations dedicated to art and culture enrich the spirit and enhance economic vitality."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2552052,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ak7UeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "(for a mid-June decision)\nSeptember 1\nat 5:00 p.m. (for a mid-December decision;\nNOTE this is changed from previous deadline of Sept. 15)\nPlease note: If the application deadline falls on a weekend or holiday, the due date will move to the next business day. Additionally, applicants must have at least 30% of their project budget secured before being considered.\nInquiries\nPrior to submitting a proposal, many applicants find it useful to contact\nLisa Rucker\nto review the substance of the proposed project. We also accept inquiries that follow the Narrative Section III of the\nColorado Common Application for Capital Grants\n.\nHow to Apply\nHave questions about requirements, restrictions, and how to submit?\nLearn More and Apply\n\nHow to apply (Colorado Grant Guide: Applying for a Grant)\nResources and Guidance for Capital Grant Applicants\nThe Gates Family Foundation accepts the\nColorado Common Capital Grant Application\nfor all capital grant requests.\nPlease send completed grant applications by email to\ngrants@gatesfamilyfoundation.org,\nor by mail or delivery to\n1390 Lawrence Street, Suite 400, Denver, CO 80204.\nWe accept capital grant applications at any time throughout the year; however, funding decisions are made at regular meetings of the Gates Family Foundation board of trustees. In order for each proposal to be thoughtfully studied, it is important for applicants to submit proposals to Foundation staff\nat least 12 weeks prior to the trustees’ meeting\n. Annual submission deadlines are:\nMarch 15\n(for a decision at our mid-June board meeting)\nSeptember 1\n(for a decision at our mid-December board meeting)\nIf the application deadline falls on a weekend or holiday, the due date will move to the next business day.\nTo be eligible for a capital grant from the Gates Family Foundation, applicants must:\nBe classified by the Internal Revenue Service as tax-exempt under section 501(c)(3) of the Internal Revenue Code (the “Code”), classified as a public charity under section 509(a)(1) or 509(a)(2) of the Code, and be able to provide documentation of tax-exempt status issued within the last five years. In limited circumstances, the Foundation also considers grant requests from governmental entities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2468834,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Al7UeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "A staff report is sent to the board via email for review, and if there is unanimous agreement among the trustees, the requests in that group are eliminated from consideration and the applicants are notified of this decision.\nThe balance of eligible applications are assigned to Foundation staff members for further review, who will reach out to applicants for further conversation and, in most cases, in-person site visits.\nThe Foundation sends letters outlining all trustee decisions on capital grants within two weeks following each quarterly meeting.\nPlanning a capital campaign can be daunting. There are many things to consider before embarking, and proper planning can be invaluable.\nFor these reasons, we’ve put together a handy guide to help organizations think about and plan for a capital campaign.\nCapital Projects Guide\n\nColorado Common Capital Grant Application: https://gatesfamilyfoundation.org/wp-content/uploads/2018/06/Colorado_Common_Grant_Application_Capital.doc\nSubmit to grants@gatesfamilyfoundation.org or 1390 Lawrence Street, Suite 400, Denver, CO 80204."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2301291,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AmbUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We support capital projects that:\nserve a majority of students from low-income families (who qualify for free or reduced-price lunch)\nbuild or improve education facilities that will be heavily used by a majority of the community\nincrease access to education in rural areas\nprovide life-long learning to a broad audience\nFunding examples and limitations:\nWe prioritize facilities for high-performing charter schools and other autonomous schools, particularly those seeking matching funds for a BEST grant\nOther examples include: rural schools improving facilities for community use; licensed early childhood education centers, particularly in underserved rural communities; and GED, literacy, or vocational training centers\nWe generally do not support P-12 private schools or district-owned facilities, or higher education facilities or capital campaigns\nSee our recent capital grants supporting Education\nNatural Resources\nWe are committed to the conservation, management, and protection\nof Colorado’s natural resources.\nProjects that qualify for capital grants include:\nland conservation\npublic recreation facilities\noutdoor spaces\ncommunity gardens\nprojects that acquire, construct, and improve parks, greenways, and trail systems\nParks and Recreation\nAppreciation and conservation of Colorado’s natural beauty, resources, and opportunities for outdoor recreation are fundamental to the quality of life and the economy of the state.\nWe support capital projects that:\nprotect and steward land and water resources, habitat, and the health of natural systems\npreserve the state’s agricultural legacy\nconstruct and improve parks, trail systems, and open space for public recreation and access\nprovide environmental education and leadership opportunities for young people\nFunding examples and limitations:\nWe prioritize park and recreation facilities in smaller, rural and/or low-income communities\nLand conservation and easement purchases outside of our two “focused landscapes” (\nSoutheast Colorado\nand the\nSan Luis Valley\n) are eligible for support from our capital grants program\nOther examples include: greenways and trail systems; urban public spaces and community gardens; and outdoor/indoor recreation facilities\nWe only consider school athletic or recreation facilities when they will be widely used by the community, in addition to the school\nSee our recent capital grants supporting Parks and Recreation\nWell-Being of Children, Youth, and Families\nEnergy Resource Center\nHealthy individuals have greater opportunities to be productive members of society who contribute to the economic, social and cultural life of their communities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2196792,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlbUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We support capital projects that:\nenhance the cultural quality of community life while also strengthening the economy\nlink a community with its heritage and contribute to usable community infrastructure\nserve as an educational resource for children, youth, and adults\nFunding examples and limitations:\nWe prioritize capital projects that support libraries and museums; community theaters; performing arts organizations; and historic preservation\nWhen funding historic preservation, we prioritize projects that contribute to community revitalization and/or will result in opportunities for significant community use, over those purely for the sake of preservation\nSee our recent capital grants supporting Arts and Culture\nCommunity Development\nColorado’s economic health is dependent on the vitality of all of the state’s communities — large and small, urban and rural.\nWe support capital projects that:\ncreate economic opportunity, add to the quality of life, and enhance stability for the residents of a community\nhave the potential to reinforce and enhance the economic vitality of a community\ninvolve partnerships between public and private sector organizations that seek to improve the economic and cultural health of communities\nFunding examples and limitations:\nWe prioritize capital projects that restore historically significant architecture, revitalize main streets, and/or support heritage tourism that contributes to community revitalization, particularly in rural areas\nWe look for opportunities that leverage public-private partnerships to stimulate economic development\nWe support a range of affordable housing – including emergency shelters and transitional housing – through our capital grants program\nWe support permanently affordable housing through our impact investment in\nElevation Community Land Trust\n, but are unlikely to support this need through our capital grants program\nSee our recent capital grants supporting Community Development\nEducation\nClosing the achievement gap for children from low-income families and increasing access to high-quality, life-long learning for all Coloradans enhances the economic, social and civic life of our communities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1790383,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlLUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   }
+  ]
+ },
+ "349ff529058191b3": {
+  "query": "eligible organizations nonprofit applicant requirements",
+  "filter": "019a2171efa96c9b",
+  "retrievalResults": []
+ },
+ "442eb745ac1ccc30": {
+  "query": "funding range typical grant size percentage of project cost",
+  "filter": "27be6b8cdc409378",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We prioritize capital projects that:\ndevelop greater self-sufficiency, including the well-being and independence of disadvantaged families and the elderly\nincrease leadership and life skills\npromote good health and well-being rather than cure disease\nFunding examples and limitations:\nWe support job training centers, family resource centers, and transitional housing facilities\nWe support youth mentoring organizations, community centers and senior centers\nWe rarely support medical and dental facilities, though in rare occasions will prioritize those in remote rural areas with service to low-income populations\nWe do not fund mental and behavioral treatment facilities for adults; senior care facilities; or hospice facilities\nWe only fund faith-based organizations that serve and welcome all individuals, and do not require participation in religious activities\nWe do not fund animal service or animal welfare organizations\nSee our recent capital grants supporting the Well-Being of Children, Youth, and Families\nIf the application deadline falls on a weekend or holiday, the due date will move to the next business day. Applicants must have at least 30% of their project budget secured before being considered.Deadlines\nGates reviews capital grant applications TWICE each year. Annual deadlines are:\nMarch 15\nat 5:00 p.m."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3054106,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlrUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Program: Capital Grants\nFunder: Gates Family Foundation\nSource: https://gatesfamilyfoundation.org/types-of-support/capital-grants/ | https://gatesfamilyfoundation.org/engage/how-to-apply/\nRetrieved: 2026-10-20\nApplication deadline: March 15, 2027, 5:00 p.m. (annual deadlines March 15 and September 1; applications accepted any time)\n---\nCAPITAL GRANT OPPORTUNITIES FOR COLORADO\nLand, facilities, and civic infrastructure are long-term assets that can transform the ability of nonprofit and community organizations to serve Colorado communities. For this reason, the Gates Family Foundation invests in capital projects across the state, in both rural and urban areas. We strive to be responsive to each community’s unique needs and opportunities.\nOur capital grants are generally limited to comprehensive capital campaigns, which are typically for building purchases, construction, expansion, renovation, and/or land acquisition. Only nonprofit organizations with capital projects that benefit Colorado and its residents are qualified to apply. When making funding decisions, we prioritize:\nProjects that address root problems with substantive solutions\nProjects with evidence of community involvement in setting project priorities\nProjects in rural and low-income areas across Colorado where there are fewer individuals and institutions providing support for capital projects\nProjects that serve individuals and communities of color who have faced historic inequities and lack of access to funding\nProjects with strong engagement and financial support from the organization’s governing board\nProjects that reinforce the foundation’s\nstrategic priorities\nin K-12 public education, natural resources, community development, and informed communities\nProjects that address climate change, and/or incorporate green building and sustainable development practices\nWe fund capital projects within five categories that overlap somewhat with the Foundation’s strategic priorities, but are broader in scope in order to be more responsive to community needs:\nArts & Culture\nCommunity Development\nEducation\nNatural Resources\nParks & Recreation\nWell-Being of Children, Youth & Families\nArts and Culture\nArtistic expression arouses the imagination, stimulates creativity, and prompts self-discovery. Organizations dedicated to art and culture enrich the spirit and enhance economic vitality."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2904183,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ak7UeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Provide services benefiting the state of Colorado and its citizens.\nHave commitments for approximately 30% of the funds needed to complete the project in place prior to submission, unless a waiver of this requirement has been granted.\nWhen making funding decisions, we prioritize:\nProjects that address root problems with substantive solutions\nProjects with strong evidence of support from the community and the organization’s board\nProjects in rural communities that face greater challenges in accessing funds for capital projects\nProjects that reinforce the foundation’s strategic priorities in K-12 public education, natural resources, and community development\nProjects that incorporate green building and sustainable development practices\nOrganizations with sound management practices, effective executive leaders, and engaged board members\nAlthough the Gates Family Foundation reviews each proposal separately, it generally does not:\nGrant funds for general operating or program expenses unless initiated by the Foundation.\nProvide loans, grants, scholarships, or camperships to individuals.\nGrant funds for projects that have been substantially completed prior to the next trustees’ meeting.\nGrant funds for conferences, meetings, or studies that are not initiated by the Foundation.\nConsider more than one proposal from an organization in a calendar year unless initiated by the Foundation, and does not reconsider previously denied proposals.\nGrant funds to other private foundations or organizations engaged in grant making.\nGrant funds to retire operating or construction debt.\nGrant funds for the purchase of vehicles.\nGrant funds to purchase office or computer equipment unless they are part of a comprehensive capital campaign.\nGrant funds directly to individual public schools or public school districts unless initiated by the Foundation.\nGrant funds for medical research or grant funds for the construction of major medical facilities.\nPurchase tickets for fundraising dinners, parties, benefits, balls, or other social fundraising events.\nSupport religious organizations or activities.\nSchedule interviews with the Foundation trustees unless the trustees initiate the meeting.\nGrant funds for political or lobbying activities.\nGrant funds to supporting organizations described in section 509(a)(3), other than a Type I, Type II or functionally-integrated Type III supporting organization of which is not (and the supported organization of which is not) directly or indirectly controlled by a disqualified person of either the Foundation or a family fund.\nGrant funds to foreign organizations.\nThe Foundation uses a two-step process to review capital grant requests. After each application deadline, staff members review submissions and identify proposals that are eligible for funding but unlikely to be recommended or approved by the board of trustees."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2791071,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AmLUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "(for a mid-June decision)\nSeptember 1\nat 5:00 p.m. (for a mid-December decision;\nNOTE this is changed from previous deadline of Sept. 15)\nPlease note: If the application deadline falls on a weekend or holiday, the due date will move to the next business day. Additionally, applicants must have at least 30% of their project budget secured before being considered.\nInquiries\nPrior to submitting a proposal, many applicants find it useful to contact\nLisa Rucker\nto review the substance of the proposed project. We also accept inquiries that follow the Narrative Section III of the\nColorado Common Application for Capital Grants\n.\nHow to Apply\nHave questions about requirements, restrictions, and how to submit?\nLearn More and Apply\n\nHow to apply (Colorado Grant Guide: Applying for a Grant)\nResources and Guidance for Capital Grant Applicants\nThe Gates Family Foundation accepts the\nColorado Common Capital Grant Application\nfor all capital grant requests.\nPlease send completed grant applications by email to\ngrants@gatesfamilyfoundation.org,\nor by mail or delivery to\n1390 Lawrence Street, Suite 400, Denver, CO 80204.\nWe accept capital grant applications at any time throughout the year; however, funding decisions are made at regular meetings of the Gates Family Foundation board of trustees. In order for each proposal to be thoughtfully studied, it is important for applicants to submit proposals to Foundation staff\nat least 12 weeks prior to the trustees’ meeting\n. Annual submission deadlines are:\nMarch 15\n(for a decision at our mid-June board meeting)\nSeptember 1\n(for a decision at our mid-December board meeting)\nIf the application deadline falls on a weekend or holiday, the due date will move to the next business day.\nTo be eligible for a capital grant from the Gates Family Foundation, applicants must:\nBe classified by the Internal Revenue Service as tax-exempt under section 501(c)(3) of the Internal Revenue Code (the “Code”), classified as a public charity under section 509(a)(1) or 509(a)(2) of the Code, and be able to provide documentation of tax-exempt status issued within the last five years. In limited circumstances, the Foundation also considers grant requests from governmental entities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2666879,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Al7UeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We support capital projects that:\nserve a majority of students from low-income families (who qualify for free or reduced-price lunch)\nbuild or improve education facilities that will be heavily used by a majority of the community\nincrease access to education in rural areas\nprovide life-long learning to a broad audience\nFunding examples and limitations:\nWe prioritize facilities for high-performing charter schools and other autonomous schools, particularly those seeking matching funds for a BEST grant\nOther examples include: rural schools improving facilities for community use; licensed early childhood education centers, particularly in underserved rural communities; and GED, literacy, or vocational training centers\nWe generally do not support P-12 private schools or district-owned facilities, or higher education facilities or capital campaigns\nSee our recent capital grants supporting Education\nNatural Resources\nWe are committed to the conservation, management, and protection\nof Colorado’s natural resources.\nProjects that qualify for capital grants include:\nland conservation\npublic recreation facilities\noutdoor spaces\ncommunity gardens\nprojects that acquire, construct, and improve parks, greenways, and trail systems\nParks and Recreation\nAppreciation and conservation of Colorado’s natural beauty, resources, and opportunities for outdoor recreation are fundamental to the quality of life and the economy of the state.\nWe support capital projects that:\nprotect and steward land and water resources, habitat, and the health of natural systems\npreserve the state’s agricultural legacy\nconstruct and improve parks, trail systems, and open space for public recreation and access\nprovide environmental education and leadership opportunities for young people\nFunding examples and limitations:\nWe prioritize park and recreation facilities in smaller, rural and/or low-income communities\nLand conservation and easement purchases outside of our two “focused landscapes” (\nSoutheast Colorado\nand the\nSan Luis Valley\n) are eligible for support from our capital grants program\nOther examples include: greenways and trail systems; urban public spaces and community gardens; and outdoor/indoor recreation facilities\nWe only consider school athletic or recreation facilities when they will be widely used by the community, in addition to the school\nSee our recent capital grants supporting Parks and Recreation\nWell-Being of Children, Youth, and Families\nEnergy Resource Center\nHealthy individuals have greater opportunities to be productive members of society who contribute to the economic, social and cultural life of their communities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2438456,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlbUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "A staff report is sent to the board via email for review, and if there is unanimous agreement among the trustees, the requests in that group are eliminated from consideration and the applicants are notified of this decision.\nThe balance of eligible applications are assigned to Foundation staff members for further review, who will reach out to applicants for further conversation and, in most cases, in-person site visits.\nThe Foundation sends letters outlining all trustee decisions on capital grants within two weeks following each quarterly meeting.\nPlanning a capital campaign can be daunting. There are many things to consider before embarking, and proper planning can be invaluable.\nFor these reasons, we’ve put together a handy guide to help organizations think about and plan for a capital campaign.\nCapital Projects Guide\n\nColorado Common Capital Grant Application: https://gatesfamilyfoundation.org/wp-content/uploads/2018/06/Colorado_Common_Grant_Application_Capital.doc\nSubmit to grants@gatesfamilyfoundation.org or 1390 Lawrence Street, Suite 400, Denver, CO 80204."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1740584,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AmbUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We support capital projects that:\nenhance the cultural quality of community life while also strengthening the economy\nlink a community with its heritage and contribute to usable community infrastructure\nserve as an educational resource for children, youth, and adults\nFunding examples and limitations:\nWe prioritize capital projects that support libraries and museums; community theaters; performing arts organizations; and historic preservation\nWhen funding historic preservation, we prioritize projects that contribute to community revitalization and/or will result in opportunities for significant community use, over those purely for the sake of preservation\nSee our recent capital grants supporting Arts and Culture\nCommunity Development\nColorado’s economic health is dependent on the vitality of all of the state’s communities — large and small, urban and rural.\nWe support capital projects that:\ncreate economic opportunity, add to the quality of life, and enhance stability for the residents of a community\nhave the potential to reinforce and enhance the economic vitality of a community\ninvolve partnerships between public and private sector organizations that seek to improve the economic and cultural health of communities\nFunding examples and limitations:\nWe prioritize capital projects that restore historically significant architecture, revitalize main streets, and/or support heritage tourism that contributes to community revitalization, particularly in rural areas\nWe look for opportunities that leverage public-private partnerships to stimulate economic development\nWe support a range of affordable housing – including emergency shelters and transitional housing – through our capital grants program\nWe support permanently affordable housing through our impact investment in\nElevation Community Land Trust\n, but are unlikely to support this need through our capital grants program\nSee our recent capital grants supporting Community Development\nEducation\nClosing the achievement gap for children from low-income families and increasing access to high-quality, life-long learning for all Coloradans enhances the economic, social and civic life of our communities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1685839,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlLUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   }
+  ]
+ },
+ "5155927256032cc1": {
+  "query": "grant cycle dates and board meeting schedule",
+  "filter": "27be6b8cdc409378",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "(for a mid-June decision)\nSeptember 1\nat 5:00 p.m. (for a mid-December decision;\nNOTE this is changed from previous deadline of Sept. 15)\nPlease note: If the application deadline falls on a weekend or holiday, the due date will move to the next business day. Additionally, applicants must have at least 30% of their project budget secured before being considered.\nInquiries\nPrior to submitting a proposal, many applicants find it useful to contact\nLisa Rucker\nto review the substance of the proposed project. We also accept inquiries that follow the Narrative Section III of the\nColorado Common Application for Capital Grants\n.\nHow to Apply\nHave questions about requirements, restrictions, and how to submit?\nLearn More and Apply\n\nHow to apply (Colorado Grant Guide: Applying for a Grant)\nResources and Guidance for Capital Grant Applicants\nThe Gates Family Foundation accepts the\nColorado Common Capital Grant Application\nfor all capital grant requests.\nPlease send completed grant applications by email to\ngrants@gatesfamilyfoundation.org,\nor by mail or delivery to\n1390 Lawrence Street, Suite 400, Denver, CO 80204.\nWe accept capital grant applications at any time throughout the year; however, funding decisions are made at regular meetings of the Gates Family Foundation board of trustees. In order for each proposal to be thoughtfully studied, it is important for applicants to submit proposals to Foundation staff\nat least 12 weeks prior to the trustees’ meeting\n. Annual submission deadlines are:\nMarch 15\n(for a decision at our mid-June board meeting)\nSeptember 1\n(for a decision at our mid-December board meeting)\nIf the application deadline falls on a weekend or holiday, the due date will move to the next business day.\nTo be eligible for a capital grant from the Gates Family Foundation, applicants must:\nBe classified by the Internal Revenue Service as tax-exempt under section 501(c)(3) of the Internal Revenue Code (the “Code”), classified as a public charity under section 509(a)(1) or 509(a)(2) of the Code, and be able to provide documentation of tax-exempt status issued within the last five years. In limited circumstances, the Foundation also considers grant requests from governmental entities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4974989,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Al7UeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "A staff report is sent to the board via email for review, and if there is unanimous agreement among the trustees, the requests in that group are eliminated from consideration and the applicants are notified of this decision.\nThe balance of eligible applications are assigned to Foundation staff members for further review, who will reach out to applicants for further conversation and, in most cases, in-person site visits.\nThe Foundation sends letters outlining all trustee decisions on capital grants within two weeks following each quarterly meeting.\nPlanning a capital campaign can be daunting. There are many things to consider before embarking, and proper planning can be invaluable.\nFor these reasons, we’ve put together a handy guide to help organizations think about and plan for a capital campaign.\nCapital Projects Guide\n\nColorado Common Capital Grant Application: https://gatesfamilyfoundation.org/wp-content/uploads/2018/06/Colorado_Common_Grant_Application_Capital.doc\nSubmit to grants@gatesfamilyfoundation.org or 1390 Lawrence Street, Suite 400, Denver, CO 80204."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3783779,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AmbUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We prioritize capital projects that:\ndevelop greater self-sufficiency, including the well-being and independence of disadvantaged families and the elderly\nincrease leadership and life skills\npromote good health and well-being rather than cure disease\nFunding examples and limitations:\nWe support job training centers, family resource centers, and transitional housing facilities\nWe support youth mentoring organizations, community centers and senior centers\nWe rarely support medical and dental facilities, though in rare occasions will prioritize those in remote rural areas with service to low-income populations\nWe do not fund mental and behavioral treatment facilities for adults; senior care facilities; or hospice facilities\nWe only fund faith-based organizations that serve and welcome all individuals, and do not require participation in religious activities\nWe do not fund animal service or animal welfare organizations\nSee our recent capital grants supporting the Well-Being of Children, Youth, and Families\nIf the application deadline falls on a weekend or holiday, the due date will move to the next business day. Applicants must have at least 30% of their project budget secured before being considered.Deadlines\nGates reviews capital grant applications TWICE each year. Annual deadlines are:\nMarch 15\nat 5:00 p.m."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2909799,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlrUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Program: Capital Grants\nFunder: Gates Family Foundation\nSource: https://gatesfamilyfoundation.org/types-of-support/capital-grants/ | https://gatesfamilyfoundation.org/engage/how-to-apply/\nRetrieved: 2026-10-20\nApplication deadline: March 15, 2027, 5:00 p.m. (annual deadlines March 15 and September 1; applications accepted any time)\n---\nCAPITAL GRANT OPPORTUNITIES FOR COLORADO\nLand, facilities, and civic infrastructure are long-term assets that can transform the ability of nonprofit and community organizations to serve Colorado communities. For this reason, the Gates Family Foundation invests in capital projects across the state, in both rural and urban areas. We strive to be responsive to each community’s unique needs and opportunities.\nOur capital grants are generally limited to comprehensive capital campaigns, which are typically for building purchases, construction, expansion, renovation, and/or land acquisition. Only nonprofit organizations with capital projects that benefit Colorado and its residents are qualified to apply. When making funding decisions, we prioritize:\nProjects that address root problems with substantive solutions\nProjects with evidence of community involvement in setting project priorities\nProjects in rural and low-income areas across Colorado where there are fewer individuals and institutions providing support for capital projects\nProjects that serve individuals and communities of color who have faced historic inequities and lack of access to funding\nProjects with strong engagement and financial support from the organization’s governing board\nProjects that reinforce the foundation’s\nstrategic priorities\nin K-12 public education, natural resources, community development, and informed communities\nProjects that address climate change, and/or incorporate green building and sustainable development practices\nWe fund capital projects within five categories that overlap somewhat with the Foundation’s strategic priorities, but are broader in scope in order to be more responsive to community needs:\nArts & Culture\nCommunity Development\nEducation\nNatural Resources\nParks & Recreation\nWell-Being of Children, Youth & Families\nArts and Culture\nArtistic expression arouses the imagination, stimulates creativity, and prompts self-discovery. Organizations dedicated to art and culture enrich the spirit and enhance economic vitality."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2720145,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ak7UeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Provide services benefiting the state of Colorado and its citizens.\nHave commitments for approximately 30% of the funds needed to complete the project in place prior to submission, unless a waiver of this requirement has been granted.\nWhen making funding decisions, we prioritize:\nProjects that address root problems with substantive solutions\nProjects with strong evidence of support from the community and the organization’s board\nProjects in rural communities that face greater challenges in accessing funds for capital projects\nProjects that reinforce the foundation’s strategic priorities in K-12 public education, natural resources, and community development\nProjects that incorporate green building and sustainable development practices\nOrganizations with sound management practices, effective executive leaders, and engaged board members\nAlthough the Gates Family Foundation reviews each proposal separately, it generally does not:\nGrant funds for general operating or program expenses unless initiated by the Foundation.\nProvide loans, grants, scholarships, or camperships to individuals.\nGrant funds for projects that have been substantially completed prior to the next trustees’ meeting.\nGrant funds for conferences, meetings, or studies that are not initiated by the Foundation.\nConsider more than one proposal from an organization in a calendar year unless initiated by the Foundation, and does not reconsider previously denied proposals.\nGrant funds to other private foundations or organizations engaged in grant making.\nGrant funds to retire operating or construction debt.\nGrant funds for the purchase of vehicles.\nGrant funds to purchase office or computer equipment unless they are part of a comprehensive capital campaign.\nGrant funds directly to individual public schools or public school districts unless initiated by the Foundation.\nGrant funds for medical research or grant funds for the construction of major medical facilities.\nPurchase tickets for fundraising dinners, parties, benefits, balls, or other social fundraising events.\nSupport religious organizations or activities.\nSchedule interviews with the Foundation trustees unless the trustees initiate the meeting.\nGrant funds for political or lobbying activities.\nGrant funds to supporting organizations described in section 509(a)(3), other than a Type I, Type II or functionally-integrated Type III supporting organization of which is not (and the supported organization of which is not) directly or indirectly controlled by a disqualified person of either the Foundation or a family fund.\nGrant funds to foreign organizations.\nThe Foundation uses a two-step process to review capital grant requests. After each application deadline, staff members review submissions and identify proposals that are eligible for funding but unlikely to be recommended or approved by the board of trustees."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2328014,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AmLUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We support capital projects that:\nserve a majority of students from low-income families (who qualify for free or reduced-price lunch)\nbuild or improve education facilities that will be heavily used by a majority of the community\nincrease access to education in rural areas\nprovide life-long learning to a broad audience\nFunding examples and limitations:\nWe prioritize facilities for high-performing charter schools and other autonomous schools, particularly those seeking matching funds for a BEST grant\nOther examples include: rural schools improving facilities for community use; licensed early childhood education centers, particularly in underserved rural communities; and GED, literacy, or vocational training centers\nWe generally do not support P-12 private schools or district-owned facilities, or higher education facilities or capital campaigns\nSee our recent capital grants supporting Education\nNatural Resources\nWe are committed to the conservation, management, and protection\nof Colorado’s natural resources.\nProjects that qualify for capital grants include:\nland conservation\npublic recreation facilities\noutdoor spaces\ncommunity gardens\nprojects that acquire, construct, and improve parks, greenways, and trail systems\nParks and Recreation\nAppreciation and conservation of Colorado’s natural beauty, resources, and opportunities for outdoor recreation are fundamental to the quality of life and the economy of the state.\nWe support capital projects that:\nprotect and steward land and water resources, habitat, and the health of natural systems\npreserve the state’s agricultural legacy\nconstruct and improve parks, trail systems, and open space for public recreation and access\nprovide environmental education and leadership opportunities for young people\nFunding examples and limitations:\nWe prioritize park and recreation facilities in smaller, rural and/or low-income communities\nLand conservation and easement purchases outside of our two “focused landscapes” (\nSoutheast Colorado\nand the\nSan Luis Valley\n) are eligible for support from our capital grants program\nOther examples include: greenways and trail systems; urban public spaces and community gardens; and outdoor/indoor recreation facilities\nWe only consider school athletic or recreation facilities when they will be widely used by the community, in addition to the school\nSee our recent capital grants supporting Parks and Recreation\nWell-Being of Children, Youth, and Families\nEnergy Resource Center\nHealthy individuals have greater opportunities to be productive members of society who contribute to the economic, social and cultural life of their communities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1565373,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlbUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We support capital projects that:\nenhance the cultural quality of community life while also strengthening the economy\nlink a community with its heritage and contribute to usable community infrastructure\nserve as an educational resource for children, youth, and adults\nFunding examples and limitations:\nWe prioritize capital projects that support libraries and museums; community theaters; performing arts organizations; and historic preservation\nWhen funding historic preservation, we prioritize projects that contribute to community revitalization and/or will result in opportunities for significant community use, over those purely for the sake of preservation\nSee our recent capital grants supporting Arts and Culture\nCommunity Development\nColorado’s economic health is dependent on the vitality of all of the state’s communities — large and small, urban and rural.\nWe support capital projects that:\ncreate economic opportunity, add to the quality of life, and enhance stability for the residents of a community\nhave the potential to reinforce and enhance the economic vitality of a community\ninvolve partnerships between public and private sector organizations that seek to improve the economic and cultural health of communities\nFunding examples and limitations:\nWe prioritize capital projects that restore historically significant architecture, revitalize main streets, and/or support heritage tourism that contributes to community revitalization, particularly in rural areas\nWe look for opportunities that leverage public-private partnerships to stimulate economic development\nWe support a range of affordable housing – including emergency shelters and transitional housing – through our capital grants program\nWe support permanently affordable housing through our impact investment in\nElevation Community Land Trust\n, but are unlikely to support this need through our capital grants program\nSee our recent capital grants supporting Community Development\nEducation\nClosing the achievement gap for children from low-income families and increasing access to high-quality, life-long learning for all Coloradans enhances the economic, social and civic life of our communities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1346626,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlLUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   }
+  ]
+ },
+ "5f0a9e9766323ae3": {
+  "query": "application submission deadline",
+  "filter": "019a2171efa96c9b",
+  "retrievalResults": []
+ },
+ "6487286e10bdd450": {
+  "query": "application submission deadline",
+  "filter": "27be6b8cdc409378",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "(for a mid-June decision)\nSeptember 1\nat 5:00 p.m. (for a mid-December decision;\nNOTE this is changed from previous deadline of Sept. 15)\nPlease note: If the application deadline falls on a weekend or holiday, the due date will move to the next business day. Additionally, applicants must have at least 30% of their project budget secured before being considered.\nInquiries\nPrior to submitting a proposal, many applicants find it useful to contact\nLisa Rucker\nto review the substance of the proposed project. We also accept inquiries that follow the Narrative Section III of the\nColorado Common Application for Capital Grants\n.\nHow to Apply\nHave questions about requirements, restrictions, and how to submit?\nLearn More and Apply\n\nHow to apply (Colorado Grant Guide: Applying for a Grant)\nResources and Guidance for Capital Grant Applicants\nThe Gates Family Foundation accepts the\nColorado Common Capital Grant Application\nfor all capital grant requests.\nPlease send completed grant applications by email to\ngrants@gatesfamilyfoundation.org,\nor by mail or delivery to\n1390 Lawrence Street, Suite 400, Denver, CO 80204.\nWe accept capital grant applications at any time throughout the year; however, funding decisions are made at regular meetings of the Gates Family Foundation board of trustees. In order for each proposal to be thoughtfully studied, it is important for applicants to submit proposals to Foundation staff\nat least 12 weeks prior to the trustees’ meeting\n. Annual submission deadlines are:\nMarch 15\n(for a decision at our mid-June board meeting)\nSeptember 1\n(for a decision at our mid-December board meeting)\nIf the application deadline falls on a weekend or holiday, the due date will move to the next business day.\nTo be eligible for a capital grant from the Gates Family Foundation, applicants must:\nBe classified by the Internal Revenue Service as tax-exempt under section 501(c)(3) of the Internal Revenue Code (the “Code”), classified as a public charity under section 509(a)(1) or 509(a)(2) of the Code, and be able to provide documentation of tax-exempt status issued within the last five years. In limited circumstances, the Foundation also considers grant requests from governmental entities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4119059,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Al7UeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "A staff report is sent to the board via email for review, and if there is unanimous agreement among the trustees, the requests in that group are eliminated from consideration and the applicants are notified of this decision.\nThe balance of eligible applications are assigned to Foundation staff members for further review, who will reach out to applicants for further conversation and, in most cases, in-person site visits.\nThe Foundation sends letters outlining all trustee decisions on capital grants within two weeks following each quarterly meeting.\nPlanning a capital campaign can be daunting. There are many things to consider before embarking, and proper planning can be invaluable.\nFor these reasons, we’ve put together a handy guide to help organizations think about and plan for a capital campaign.\nCapital Projects Guide\n\nColorado Common Capital Grant Application: https://gatesfamilyfoundation.org/wp-content/uploads/2018/06/Colorado_Common_Grant_Application_Capital.doc\nSubmit to grants@gatesfamilyfoundation.org or 1390 Lawrence Street, Suite 400, Denver, CO 80204."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2507908,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AmbUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We prioritize capital projects that:\ndevelop greater self-sufficiency, including the well-being and independence of disadvantaged families and the elderly\nincrease leadership and life skills\npromote good health and well-being rather than cure disease\nFunding examples and limitations:\nWe support job training centers, family resource centers, and transitional housing facilities\nWe support youth mentoring organizations, community centers and senior centers\nWe rarely support medical and dental facilities, though in rare occasions will prioritize those in remote rural areas with service to low-income populations\nWe do not fund mental and behavioral treatment facilities for adults; senior care facilities; or hospice facilities\nWe only fund faith-based organizations that serve and welcome all individuals, and do not require participation in religious activities\nWe do not fund animal service or animal welfare organizations\nSee our recent capital grants supporting the Well-Being of Children, Youth, and Families\nIf the application deadline falls on a weekend or holiday, the due date will move to the next business day. Applicants must have at least 30% of their project budget secured before being considered.Deadlines\nGates reviews capital grant applications TWICE each year. Annual deadlines are:\nMarch 15\nat 5:00 p.m."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2239523,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlrUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Program: Capital Grants\nFunder: Gates Family Foundation\nSource: https://gatesfamilyfoundation.org/types-of-support/capital-grants/ | https://gatesfamilyfoundation.org/engage/how-to-apply/\nRetrieved: 2026-10-20\nApplication deadline: March 15, 2027, 5:00 p.m. (annual deadlines March 15 and September 1; applications accepted any time)\n---\nCAPITAL GRANT OPPORTUNITIES FOR COLORADO\nLand, facilities, and civic infrastructure are long-term assets that can transform the ability of nonprofit and community organizations to serve Colorado communities. For this reason, the Gates Family Foundation invests in capital projects across the state, in both rural and urban areas. We strive to be responsive to each community’s unique needs and opportunities.\nOur capital grants are generally limited to comprehensive capital campaigns, which are typically for building purchases, construction, expansion, renovation, and/or land acquisition. Only nonprofit organizations with capital projects that benefit Colorado and its residents are qualified to apply. When making funding decisions, we prioritize:\nProjects that address root problems with substantive solutions\nProjects with evidence of community involvement in setting project priorities\nProjects in rural and low-income areas across Colorado where there are fewer individuals and institutions providing support for capital projects\nProjects that serve individuals and communities of color who have faced historic inequities and lack of access to funding\nProjects with strong engagement and financial support from the organization’s governing board\nProjects that reinforce the foundation’s\nstrategic priorities\nin K-12 public education, natural resources, community development, and informed communities\nProjects that address climate change, and/or incorporate green building and sustainable development practices\nWe fund capital projects within five categories that overlap somewhat with the Foundation’s strategic priorities, but are broader in scope in order to be more responsive to community needs:\nArts & Culture\nCommunity Development\nEducation\nNatural Resources\nParks & Recreation\nWell-Being of Children, Youth & Families\nArts and Culture\nArtistic expression arouses the imagination, stimulates creativity, and prompts self-discovery. Organizations dedicated to art and culture enrich the spirit and enhance economic vitality."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1693718,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ak7UeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Provide services benefiting the state of Colorado and its citizens.\nHave commitments for approximately 30% of the funds needed to complete the project in place prior to submission, unless a waiver of this requirement has been granted.\nWhen making funding decisions, we prioritize:\nProjects that address root problems with substantive solutions\nProjects with strong evidence of support from the community and the organization’s board\nProjects in rural communities that face greater challenges in accessing funds for capital projects\nProjects that reinforce the foundation’s strategic priorities in K-12 public education, natural resources, and community development\nProjects that incorporate green building and sustainable development practices\nOrganizations with sound management practices, effective executive leaders, and engaged board members\nAlthough the Gates Family Foundation reviews each proposal separately, it generally does not:\nGrant funds for general operating or program expenses unless initiated by the Foundation.\nProvide loans, grants, scholarships, or camperships to individuals.\nGrant funds for projects that have been substantially completed prior to the next trustees’ meeting.\nGrant funds for conferences, meetings, or studies that are not initiated by the Foundation.\nConsider more than one proposal from an organization in a calendar year unless initiated by the Foundation, and does not reconsider previously denied proposals.\nGrant funds to other private foundations or organizations engaged in grant making.\nGrant funds to retire operating or construction debt.\nGrant funds for the purchase of vehicles.\nGrant funds to purchase office or computer equipment unless they are part of a comprehensive capital campaign.\nGrant funds directly to individual public schools or public school districts unless initiated by the Foundation.\nGrant funds for medical research or grant funds for the construction of major medical facilities.\nPurchase tickets for fundraising dinners, parties, benefits, balls, or other social fundraising events.\nSupport religious organizations or activities.\nSchedule interviews with the Foundation trustees unless the trustees initiate the meeting.\nGrant funds for political or lobbying activities.\nGrant funds to supporting organizations described in section 509(a)(3), other than a Type I, Type II or functionally-integrated Type III supporting organization of which is not (and the supported organization of which is not) directly or indirectly controlled by a disqualified person of either the Foundation or a family fund.\nGrant funds to foreign organizations.\nThe Foundation uses a two-step process to review capital grant requests. After each application deadline, staff members review submissions and identify proposals that are eligible for funding but unlikely to be recommended or approved by the board of trustees."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.078582,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AmLUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We support capital projects that:\nserve a majority of students from low-income families (who qualify for free or reduced-price lunch)\nbuild or improve education facilities that will be heavily used by a majority of the community\nincrease access to education in rural areas\nprovide life-long learning to a broad audience\nFunding examples and limitations:\nWe prioritize facilities for high-performing charter schools and other autonomous schools, particularly those seeking matching funds for a BEST grant\nOther examples include: rural schools improving facilities for community use; licensed early childhood education centers, particularly in underserved rural communities; and GED, literacy, or vocational training centers\nWe generally do not support P-12 private schools or district-owned facilities, or higher education facilities or capital campaigns\nSee our recent capital grants supporting Education\nNatural Resources\nWe are committed to the conservation, management, and protection\nof Colorado’s natural resources.\nProjects that qualify for capital grants include:\nland conservation\npublic recreation facilities\noutdoor spaces\ncommunity gardens\nprojects that acquire, construct, and improve parks, greenways, and trail systems\nParks and Recreation\nAppreciation and conservation of Colorado’s natural beauty, resources, and opportunities for outdoor recreation are fundamental to the quality of life and the economy of the state.\nWe support capital projects that:\nprotect and steward land and water resources, habitat, and the health of natural systems\npreserve the state’s agricultural legacy\nconstruct and improve parks, trail systems, and open space for public recreation and access\nprovide environmental education and leadership opportunities for young people\nFunding examples and limitations:\nWe prioritize park and recreation facilities in smaller, rural and/or low-income communities\nLand conservation and easement purchases outside of our two “focused landscapes” (\nSoutheast Colorado\nand the\nSan Luis Valley\n) are eligible for support from our capital grants program\nOther examples include: greenways and trail systems; urban public spaces and community gardens; and outdoor/indoor recreation facilities\nWe only consider school athletic or recreation facilities when they will be widely used by the community, in addition to the school\nSee our recent capital grants supporting Parks and Recreation\nWell-Being of Children, Youth, and Families\nEnergy Resource Center\nHealthy individuals have greater opportunities to be productive members of society who contribute to the economic, social and cultural life of their communities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.0316374,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlbUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We support capital projects that:\nenhance the cultural quality of community life while also strengthening the economy\nlink a community with its heritage and contribute to usable community infrastructure\nserve as an educational resource for children, youth, and adults\nFunding examples and limitations:\nWe prioritize capital projects that support libraries and museums; community theaters; performing arts organizations; and historic preservation\nWhen funding historic preservation, we prioritize projects that contribute to community revitalization and/or will result in opportunities for significant community use, over those purely for the sake of preservation\nSee our recent capital grants supporting Arts and Culture\nCommunity Development\nColorado’s economic health is dependent on the vitality of all of the state’s communities — large and small, urban and rural.\nWe support capital projects that:\ncreate economic opportunity, add to the quality of life, and enhance stability for the residents of a community\nhave the potential to reinforce and enhance the economic vitality of a community\ninvolve partnerships between public and private sector organizations that seek to improve the economic and cultural health of communities\nFunding examples and limitations:\nWe prioritize capital projects that restore historically significant architecture, revitalize main streets, and/or support heritage tourism that contributes to community revitalization, particularly in rural areas\nWe look for opportunities that leverage public-private partnerships to stimulate economic development\nWe support a range of affordable housing – including emergency shelters and transitional housing – through our capital grants program\nWe support permanently affordable housing through our impact investment in\nElevation Community Land Trust\n, but are unlikely to support this need through our capital grants program\nSee our recent capital grants supporting Community Development\nEducation\nClosing the achievement gap for children from low-income families and increasing access to high-quality, life-long learning for all Coloradans enhances the economic, social and civic life of our communities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.015766,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlLUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   }
+  ]
+ },
+ "8cdc35795ed5b1ea": {
+  "query": "eligibility who is eligible to apply",
+  "filter": "27be6b8cdc409378",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We prioritize capital projects that:\ndevelop greater self-sufficiency, including the well-being and independence of disadvantaged families and the elderly\nincrease leadership and life skills\npromote good health and well-being rather than cure disease\nFunding examples and limitations:\nWe support job training centers, family resource centers, and transitional housing facilities\nWe support youth mentoring organizations, community centers and senior centers\nWe rarely support medical and dental facilities, though in rare occasions will prioritize those in remote rural areas with service to low-income populations\nWe do not fund mental and behavioral treatment facilities for adults; senior care facilities; or hospice facilities\nWe only fund faith-based organizations that serve and welcome all individuals, and do not require participation in religious activities\nWe do not fund animal service or animal welfare organizations\nSee our recent capital grants supporting the Well-Being of Children, Youth, and Families\nIf the application deadline falls on a weekend or holiday, the due date will move to the next business day. Applicants must have at least 30% of their project budget secured before being considered.Deadlines\nGates reviews capital grant applications TWICE each year. Annual deadlines are:\nMarch 15\nat 5:00 p.m."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.166419,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlrUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Program: Capital Grants\nFunder: Gates Family Foundation\nSource: https://gatesfamilyfoundation.org/types-of-support/capital-grants/ | https://gatesfamilyfoundation.org/engage/how-to-apply/\nRetrieved: 2026-10-20\nApplication deadline: March 15, 2027, 5:00 p.m. (annual deadlines March 15 and September 1; applications accepted any time)\n---\nCAPITAL GRANT OPPORTUNITIES FOR COLORADO\nLand, facilities, and civic infrastructure are long-term assets that can transform the ability of nonprofit and community organizations to serve Colorado communities. For this reason, the Gates Family Foundation invests in capital projects across the state, in both rural and urban areas. We strive to be responsive to each community’s unique needs and opportunities.\nOur capital grants are generally limited to comprehensive capital campaigns, which are typically for building purchases, construction, expansion, renovation, and/or land acquisition. Only nonprofit organizations with capital projects that benefit Colorado and its residents are qualified to apply. When making funding decisions, we prioritize:\nProjects that address root problems with substantive solutions\nProjects with evidence of community involvement in setting project priorities\nProjects in rural and low-income areas across Colorado where there are fewer individuals and institutions providing support for capital projects\nProjects that serve individuals and communities of color who have faced historic inequities and lack of access to funding\nProjects with strong engagement and financial support from the organization’s governing board\nProjects that reinforce the foundation’s\nstrategic priorities\nin K-12 public education, natural resources, community development, and informed communities\nProjects that address climate change, and/or incorporate green building and sustainable development practices\nWe fund capital projects within five categories that overlap somewhat with the Foundation’s strategic priorities, but are broader in scope in order to be more responsive to community needs:\nArts & Culture\nCommunity Development\nEducation\nNatural Resources\nParks & Recreation\nWell-Being of Children, Youth & Families\nArts and Culture\nArtistic expression arouses the imagination, stimulates creativity, and prompts self-discovery. Organizations dedicated to art and culture enrich the spirit and enhance economic vitality."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1632822,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ak7UeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "(for a mid-June decision)\nSeptember 1\nat 5:00 p.m. (for a mid-December decision;\nNOTE this is changed from previous deadline of Sept. 15)\nPlease note: If the application deadline falls on a weekend or holiday, the due date will move to the next business day. Additionally, applicants must have at least 30% of their project budget secured before being considered.\nInquiries\nPrior to submitting a proposal, many applicants find it useful to contact\nLisa Rucker\nto review the substance of the proposed project. We also accept inquiries that follow the Narrative Section III of the\nColorado Common Application for Capital Grants\n.\nHow to Apply\nHave questions about requirements, restrictions, and how to submit?\nLearn More and Apply\n\nHow to apply (Colorado Grant Guide: Applying for a Grant)\nResources and Guidance for Capital Grant Applicants\nThe Gates Family Foundation accepts the\nColorado Common Capital Grant Application\nfor all capital grant requests.\nPlease send completed grant applications by email to\ngrants@gatesfamilyfoundation.org,\nor by mail or delivery to\n1390 Lawrence Street, Suite 400, Denver, CO 80204.\nWe accept capital grant applications at any time throughout the year; however, funding decisions are made at regular meetings of the Gates Family Foundation board of trustees. In order for each proposal to be thoughtfully studied, it is important for applicants to submit proposals to Foundation staff\nat least 12 weeks prior to the trustees’ meeting\n. Annual submission deadlines are:\nMarch 15\n(for a decision at our mid-June board meeting)\nSeptember 1\n(for a decision at our mid-December board meeting)\nIf the application deadline falls on a weekend or holiday, the due date will move to the next business day.\nTo be eligible for a capital grant from the Gates Family Foundation, applicants must:\nBe classified by the Internal Revenue Service as tax-exempt under section 501(c)(3) of the Internal Revenue Code (the “Code”), classified as a public charity under section 509(a)(1) or 509(a)(2) of the Code, and be able to provide documentation of tax-exempt status issued within the last five years. In limited circumstances, the Foundation also considers grant requests from governmental entities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.12859,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Al7UeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "A staff report is sent to the board via email for review, and if there is unanimous agreement among the trustees, the requests in that group are eliminated from consideration and the applicants are notified of this decision.\nThe balance of eligible applications are assigned to Foundation staff members for further review, who will reach out to applicants for further conversation and, in most cases, in-person site visits.\nThe Foundation sends letters outlining all trustee decisions on capital grants within two weeks following each quarterly meeting.\nPlanning a capital campaign can be daunting. There are many things to consider before embarking, and proper planning can be invaluable.\nFor these reasons, we’ve put together a handy guide to help organizations think about and plan for a capital campaign.\nCapital Projects Guide\n\nColorado Common Capital Grant Application: https://gatesfamilyfoundation.org/wp-content/uploads/2018/06/Colorado_Common_Grant_Application_Capital.doc\nSubmit to grants@gatesfamilyfoundation.org or 1390 Lawrence Street, Suite 400, Denver, CO 80204."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1217861,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AmbUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We support capital projects that:\nserve a majority of students from low-income families (who qualify for free or reduced-price lunch)\nbuild or improve education facilities that will be heavily used by a majority of the community\nincrease access to education in rural areas\nprovide life-long learning to a broad audience\nFunding examples and limitations:\nWe prioritize facilities for high-performing charter schools and other autonomous schools, particularly those seeking matching funds for a BEST grant\nOther examples include: rural schools improving facilities for community use; licensed early childhood education centers, particularly in underserved rural communities; and GED, literacy, or vocational training centers\nWe generally do not support P-12 private schools or district-owned facilities, or higher education facilities or capital campaigns\nSee our recent capital grants supporting Education\nNatural Resources\nWe are committed to the conservation, management, and protection\nof Colorado’s natural resources.\nProjects that qualify for capital grants include:\nland conservation\npublic recreation facilities\noutdoor spaces\ncommunity gardens\nprojects that acquire, construct, and improve parks, greenways, and trail systems\nParks and Recreation\nAppreciation and conservation of Colorado’s natural beauty, resources, and opportunities for outdoor recreation are fundamental to the quality of life and the economy of the state.\nWe support capital projects that:\nprotect and steward land and water resources, habitat, and the health of natural systems\npreserve the state’s agricultural legacy\nconstruct and improve parks, trail systems, and open space for public recreation and access\nprovide environmental education and leadership opportunities for young people\nFunding examples and limitations:\nWe prioritize park and recreation facilities in smaller, rural and/or low-income communities\nLand conservation and easement purchases outside of our two “focused landscapes” (\nSoutheast Colorado\nand the\nSan Luis Valley\n) are eligible for support from our capital grants program\nOther examples include: greenways and trail systems; urban public spaces and community gardens; and outdoor/indoor recreation facilities\nWe only consider school athletic or recreation facilities when they will be widely used by the community, in addition to the school\nSee our recent capital grants supporting Parks and Recreation\nWell-Being of Children, Youth, and Families\nEnergy Resource Center\nHealthy individuals have greater opportunities to be productive members of society who contribute to the economic, social and cultural life of their communities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1160117,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlbUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Provide services benefiting the state of Colorado and its citizens.\nHave commitments for approximately 30% of the funds needed to complete the project in place prior to submission, unless a waiver of this requirement has been granted.\nWhen making funding decisions, we prioritize:\nProjects that address root problems with substantive solutions\nProjects with strong evidence of support from the community and the organization’s board\nProjects in rural communities that face greater challenges in accessing funds for capital projects\nProjects that reinforce the foundation’s strategic priorities in K-12 public education, natural resources, and community development\nProjects that incorporate green building and sustainable development practices\nOrganizations with sound management practices, effective executive leaders, and engaged board members\nAlthough the Gates Family Foundation reviews each proposal separately, it generally does not:\nGrant funds for general operating or program expenses unless initiated by the Foundation.\nProvide loans, grants, scholarships, or camperships to individuals.\nGrant funds for projects that have been substantially completed prior to the next trustees’ meeting.\nGrant funds for conferences, meetings, or studies that are not initiated by the Foundation.\nConsider more than one proposal from an organization in a calendar year unless initiated by the Foundation, and does not reconsider previously denied proposals.\nGrant funds to other private foundations or organizations engaged in grant making.\nGrant funds to retire operating or construction debt.\nGrant funds for the purchase of vehicles.\nGrant funds to purchase office or computer equipment unless they are part of a comprehensive capital campaign.\nGrant funds directly to individual public schools or public school districts unless initiated by the Foundation.\nGrant funds for medical research or grant funds for the construction of major medical facilities.\nPurchase tickets for fundraising dinners, parties, benefits, balls, or other social fundraising events.\nSupport religious organizations or activities.\nSchedule interviews with the Foundation trustees unless the trustees initiate the meeting.\nGrant funds for political or lobbying activities.\nGrant funds to supporting organizations described in section 509(a)(3), other than a Type I, Type II or functionally-integrated Type III supporting organization of which is not (and the supported organization of which is not) directly or indirectly controlled by a disqualified person of either the Foundation or a family fund.\nGrant funds to foreign organizations.\nThe Foundation uses a two-step process to review capital grant requests. After each application deadline, staff members review submissions and identify proposals that are eligible for funding but unlikely to be recommended or approved by the board of trustees."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1066718,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AmLUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We support capital projects that:\nenhance the cultural quality of community life while also strengthening the economy\nlink a community with its heritage and contribute to usable community infrastructure\nserve as an educational resource for children, youth, and adults\nFunding examples and limitations:\nWe prioritize capital projects that support libraries and museums; community theaters; performing arts organizations; and historic preservation\nWhen funding historic preservation, we prioritize projects that contribute to community revitalization and/or will result in opportunities for significant community use, over those purely for the sake of preservation\nSee our recent capital grants supporting Arts and Culture\nCommunity Development\nColorado’s economic health is dependent on the vitality of all of the state’s communities — large and small, urban and rural.\nWe support capital projects that:\ncreate economic opportunity, add to the quality of life, and enhance stability for the residents of a community\nhave the potential to reinforce and enhance the economic vitality of a community\ninvolve partnerships between public and private sector organizations that seek to improve the economic and cultural health of communities\nFunding examples and limitations:\nWe prioritize capital projects that restore historically significant architecture, revitalize main streets, and/or support heritage tourism that contributes to community revitalization, particularly in rural areas\nWe look for opportunities that leverage public-private partnerships to stimulate economic development\nWe support a range of affordable housing – including emergency shelters and transitional housing – through our capital grants program\nWe support permanently affordable housing through our impact investment in\nElevation Community Land Trust\n, but are unlikely to support this need through our capital grants program\nSee our recent capital grants supporting Community Development\nEducation\nClosing the achievement gap for children from low-income families and increasing access to high-quality, life-long learning for all Coloradans enhances the economic, social and civic life of our communities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.0707881,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlLUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   }
+  ]
+ },
+ "bcba0d4ad50eb1ca": {
+  "query": "maximum grant award amount request limit",
+  "filter": "27be6b8cdc409378",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "(for a mid-June decision)\nSeptember 1\nat 5:00 p.m. (for a mid-December decision;\nNOTE this is changed from previous deadline of Sept. 15)\nPlease note: If the application deadline falls on a weekend or holiday, the due date will move to the next business day. Additionally, applicants must have at least 30% of their project budget secured before being considered.\nInquiries\nPrior to submitting a proposal, many applicants find it useful to contact\nLisa Rucker\nto review the substance of the proposed project. We also accept inquiries that follow the Narrative Section III of the\nColorado Common Application for Capital Grants\n.\nHow to Apply\nHave questions about requirements, restrictions, and how to submit?\nLearn More and Apply\n\nHow to apply (Colorado Grant Guide: Applying for a Grant)\nResources and Guidance for Capital Grant Applicants\nThe Gates Family Foundation accepts the\nColorado Common Capital Grant Application\nfor all capital grant requests.\nPlease send completed grant applications by email to\ngrants@gatesfamilyfoundation.org,\nor by mail or delivery to\n1390 Lawrence Street, Suite 400, Denver, CO 80204.\nWe accept capital grant applications at any time throughout the year; however, funding decisions are made at regular meetings of the Gates Family Foundation board of trustees. In order for each proposal to be thoughtfully studied, it is important for applicants to submit proposals to Foundation staff\nat least 12 weeks prior to the trustees’ meeting\n. Annual submission deadlines are:\nMarch 15\n(for a decision at our mid-June board meeting)\nSeptember 1\n(for a decision at our mid-December board meeting)\nIf the application deadline falls on a weekend or holiday, the due date will move to the next business day.\nTo be eligible for a capital grant from the Gates Family Foundation, applicants must:\nBe classified by the Internal Revenue Service as tax-exempt under section 501(c)(3) of the Internal Revenue Code (the “Code”), classified as a public charity under section 509(a)(1) or 509(a)(2) of the Code, and be able to provide documentation of tax-exempt status issued within the last five years. In limited circumstances, the Foundation also considers grant requests from governmental entities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3545235,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Al7UeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Program: Capital Grants\nFunder: Gates Family Foundation\nSource: https://gatesfamilyfoundation.org/types-of-support/capital-grants/ | https://gatesfamilyfoundation.org/engage/how-to-apply/\nRetrieved: 2026-10-20\nApplication deadline: March 15, 2027, 5:00 p.m. (annual deadlines March 15 and September 1; applications accepted any time)\n---\nCAPITAL GRANT OPPORTUNITIES FOR COLORADO\nLand, facilities, and civic infrastructure are long-term assets that can transform the ability of nonprofit and community organizations to serve Colorado communities. For this reason, the Gates Family Foundation invests in capital projects across the state, in both rural and urban areas. We strive to be responsive to each community’s unique needs and opportunities.\nOur capital grants are generally limited to comprehensive capital campaigns, which are typically for building purchases, construction, expansion, renovation, and/or land acquisition. Only nonprofit organizations with capital projects that benefit Colorado and its residents are qualified to apply. When making funding decisions, we prioritize:\nProjects that address root problems with substantive solutions\nProjects with evidence of community involvement in setting project priorities\nProjects in rural and low-income areas across Colorado where there are fewer individuals and institutions providing support for capital projects\nProjects that serve individuals and communities of color who have faced historic inequities and lack of access to funding\nProjects with strong engagement and financial support from the organization’s governing board\nProjects that reinforce the foundation’s\nstrategic priorities\nin K-12 public education, natural resources, community development, and informed communities\nProjects that address climate change, and/or incorporate green building and sustainable development practices\nWe fund capital projects within five categories that overlap somewhat with the Foundation’s strategic priorities, but are broader in scope in order to be more responsive to community needs:\nArts & Culture\nCommunity Development\nEducation\nNatural Resources\nParks & Recreation\nWell-Being of Children, Youth & Families\nArts and Culture\nArtistic expression arouses the imagination, stimulates creativity, and prompts self-discovery. Organizations dedicated to art and culture enrich the spirit and enhance economic vitality."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2996824,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ak7UeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We prioritize capital projects that:\ndevelop greater self-sufficiency, including the well-being and independence of disadvantaged families and the elderly\nincrease leadership and life skills\npromote good health and well-being rather than cure disease\nFunding examples and limitations:\nWe support job training centers, family resource centers, and transitional housing facilities\nWe support youth mentoring organizations, community centers and senior centers\nWe rarely support medical and dental facilities, though in rare occasions will prioritize those in remote rural areas with service to low-income populations\nWe do not fund mental and behavioral treatment facilities for adults; senior care facilities; or hospice facilities\nWe only fund faith-based organizations that serve and welcome all individuals, and do not require participation in religious activities\nWe do not fund animal service or animal welfare organizations\nSee our recent capital grants supporting the Well-Being of Children, Youth, and Families\nIf the application deadline falls on a weekend or holiday, the due date will move to the next business day. Applicants must have at least 30% of their project budget secured before being considered.Deadlines\nGates reviews capital grant applications TWICE each year. Annual deadlines are:\nMarch 15\nat 5:00 p.m."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.272122,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlrUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Provide services benefiting the state of Colorado and its citizens.\nHave commitments for approximately 30% of the funds needed to complete the project in place prior to submission, unless a waiver of this requirement has been granted.\nWhen making funding decisions, we prioritize:\nProjects that address root problems with substantive solutions\nProjects with strong evidence of support from the community and the organization’s board\nProjects in rural communities that face greater challenges in accessing funds for capital projects\nProjects that reinforce the foundation’s strategic priorities in K-12 public education, natural resources, and community development\nProjects that incorporate green building and sustainable development practices\nOrganizations with sound management practices, effective executive leaders, and engaged board members\nAlthough the Gates Family Foundation reviews each proposal separately, it generally does not:\nGrant funds for general operating or program expenses unless initiated by the Foundation.\nProvide loans, grants, scholarships, or camperships to individuals.\nGrant funds for projects that have been substantially completed prior to the next trustees’ meeting.\nGrant funds for conferences, meetings, or studies that are not initiated by the Foundation.\nConsider more than one proposal from an organization in a calendar year unless initiated by the Foundation, and does not reconsider previously denied proposals.\nGrant funds to other private foundations or organizations engaged in grant making.\nGrant funds to retire operating or construction debt.\nGrant funds for the purchase of vehicles.\nGrant funds to purchase office or computer equipment unless they are part of a comprehensive capital campaign.\nGrant funds directly to individual public schools or public school districts unless initiated by the Foundation.\nGrant funds for medical research or grant funds for the construction of major medical facilities.\nPurchase tickets for fundraising dinners, parties, benefits, balls, or other social fundraising events.\nSupport religious organizations or activities.\nSchedule interviews with the Foundation trustees unless the trustees initiate the meeting.\nGrant funds for political or lobbying activities.\nGrant funds to supporting organizations described in section 509(a)(3), other than a Type I, Type II or functionally-integrated Type III supporting organization of which is not (and the supported organization of which is not) directly or indirectly controlled by a disqualified person of either the Foundation or a family fund.\nGrant funds to foreign organizations.\nThe Foundation uses a two-step process to review capital grant requests. After each application deadline, staff members review submissions and identify proposals that are eligible for funding but unlikely to be recommended or approved by the board of trustees."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2594113,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AmLUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "A staff report is sent to the board via email for review, and if there is unanimous agreement among the trustees, the requests in that group are eliminated from consideration and the applicants are notified of this decision.\nThe balance of eligible applications are assigned to Foundation staff members for further review, who will reach out to applicants for further conversation and, in most cases, in-person site visits.\nThe Foundation sends letters outlining all trustee decisions on capital grants within two weeks following each quarterly meeting.\nPlanning a capital campaign can be daunting. There are many things to consider before embarking, and proper planning can be invaluable.\nFor these reasons, we’ve put together a handy guide to help organizations think about and plan for a capital campaign.\nCapital Projects Guide\n\nColorado Common Capital Grant Application: https://gatesfamilyfoundation.org/wp-content/uploads/2018/06/Colorado_Common_Grant_Application_Capital.doc\nSubmit to grants@gatesfamilyfoundation.org or 1390 Lawrence Street, Suite 400, Denver, CO 80204."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2564402,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AmbUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We support capital projects that:\nserve a majority of students from low-income families (who qualify for free or reduced-price lunch)\nbuild or improve education facilities that will be heavily used by a majority of the community\nincrease access to education in rural areas\nprovide life-long learning to a broad audience\nFunding examples and limitations:\nWe prioritize facilities for high-performing charter schools and other autonomous schools, particularly those seeking matching funds for a BEST grant\nOther examples include: rural schools improving facilities for community use; licensed early childhood education centers, particularly in underserved rural communities; and GED, literacy, or vocational training centers\nWe generally do not support P-12 private schools or district-owned facilities, or higher education facilities or capital campaigns\nSee our recent capital grants supporting Education\nNatural Resources\nWe are committed to the conservation, management, and protection\nof Colorado’s natural resources.\nProjects that qualify for capital grants include:\nland conservation\npublic recreation facilities\noutdoor spaces\ncommunity gardens\nprojects that acquire, construct, and improve parks, greenways, and trail systems\nParks and Recreation\nAppreciation and conservation of Colorado’s natural beauty, resources, and opportunities for outdoor recreation are fundamental to the quality of life and the economy of the state.\nWe support capital projects that:\nprotect and steward land and water resources, habitat, and the health of natural systems\npreserve the state’s agricultural legacy\nconstruct and improve parks, trail systems, and open space for public recreation and access\nprovide environmental education and leadership opportunities for young people\nFunding examples and limitations:\nWe prioritize park and recreation facilities in smaller, rural and/or low-income communities\nLand conservation and easement purchases outside of our two “focused landscapes” (\nSoutheast Colorado\nand the\nSan Luis Valley\n) are eligible for support from our capital grants program\nOther examples include: greenways and trail systems; urban public spaces and community gardens; and outdoor/indoor recreation facilities\nWe only consider school athletic or recreation facilities when they will be widely used by the community, in addition to the school\nSee our recent capital grants supporting Parks and Recreation\nWell-Being of Children, Youth, and Families\nEnergy Resource Center\nHealthy individuals have greater opportunities to be productive members of society who contribute to the economic, social and cultural life of their communities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1547412,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlbUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We support capital projects that:\nenhance the cultural quality of community life while also strengthening the economy\nlink a community with its heritage and contribute to usable community infrastructure\nserve as an educational resource for children, youth, and adults\nFunding examples and limitations:\nWe prioritize capital projects that support libraries and museums; community theaters; performing arts organizations; and historic preservation\nWhen funding historic preservation, we prioritize projects that contribute to community revitalization and/or will result in opportunities for significant community use, over those purely for the sake of preservation\nSee our recent capital grants supporting Arts and Culture\nCommunity Development\nColorado’s economic health is dependent on the vitality of all of the state’s communities — large and small, urban and rural.\nWe support capital projects that:\ncreate economic opportunity, add to the quality of life, and enhance stability for the residents of a community\nhave the potential to reinforce and enhance the economic vitality of a community\ninvolve partnerships between public and private sector organizations that seek to improve the economic and cultural health of communities\nFunding examples and limitations:\nWe prioritize capital projects that restore historically significant architecture, revitalize main streets, and/or support heritage tourism that contributes to community revitalization, particularly in rural areas\nWe look for opportunities that leverage public-private partnerships to stimulate economic development\nWe support a range of affordable housing – including emergency shelters and transitional housing – through our capital grants program\nWe support permanently affordable housing through our impact investment in\nElevation Community Land Trust\n, but are unlikely to support this need through our capital grants program\nSee our recent capital grants supporting Community Development\nEducation\nClosing the achievement gap for children from low-income families and increasing access to high-quality, life-long learning for all Coloradans enhances the economic, social and civic life of our communities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1198554,
+    "metadata": {
+     "documentIdentifier": "Gates Family Foundation Capital Grants",
+     "agency": "Gates Family Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlLUeW6EBbayybwJO_d56",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Gates Family Foundation Capital Grants/NOFO-File-TXT",
+     "nofoName": "Gates Family Foundation Capital Grants",
+     "scope": "state",
+     "processedAt": "2026-10-20T20:59:58.035Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Community Development"
+    }
+   }
+  ]
+ },
+ "ca80ed8c0dab4304": {
+  "query": "grant cycle dates and board meeting schedule",
+  "filter": "019a2171efa96c9b",
+  "retrievalResults": []
+ },
+ "e9b72cc8e0359373": {
+  "query": "funding range typical grant size percentage of project cost",
+  "filter": "019a2171efa96c9b",
+  "retrievalResults": []
+ }
+}

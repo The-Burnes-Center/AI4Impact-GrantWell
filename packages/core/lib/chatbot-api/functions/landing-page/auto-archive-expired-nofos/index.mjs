@@ -12,8 +12,9 @@
  */
 
 import { DynamoDBClient, QueryCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb';
-import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client } from '@aws-sdk/client-s3';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
+import { getArtifact, putArtifact } from 'grantwell-shared';
 
 // Convert a ReadableStream to a string
 async function streamToString(stream) {
@@ -59,12 +60,7 @@ async function archiveNofoInS3(s3Client, bucket, nofoName) {
   
   try {
     // Read existing summary.json
-    const getCommand = new GetObjectCommand({
-      Bucket: bucket,
-      Key: summaryKey,
-    });
-    
-    const result = await s3Client.send(getCommand);
+    const result = await getArtifact(s3Client, summaryKey, bucket);
     const fileContent = await streamToString(result.Body);
     const summary = JSON.parse(fileContent);
     
@@ -72,14 +68,7 @@ async function archiveNofoInS3(s3Client, bucket, nofoName) {
     summary.status = 'archived';
     
     // Write back to S3
-    const putCommand = new PutObjectCommand({
-      Bucket: bucket,
-      Key: summaryKey,
-      Body: JSON.stringify(summary, null, 2),
-      ContentType: 'application/json',
-    });
-    
-    await s3Client.send(putCommand);
+    await putArtifact(s3Client, summaryKey, JSON.stringify(summary, null, 2), 'application/json');
     console.log(`Archived ${nofoName} in S3`);
   } catch (error) {
     console.error(`Error archiving ${nofoName} in S3:`, error);

@@ -89,6 +89,7 @@ export class ChatBotApi extends Construct {
       knowledgeBaseSource: knowledgeBase.dataSource,
       userDocumentsDataSource: knowledgeBase.userDocumentsDataSource,
       ffioNofosBucket: buckets.ffioNofosBucket,
+      grantArtifactsBucket: buckets.grantArtifactsBucket,
       userDocumentsBucket: buckets.userDocumentsBucket,
       grantsGovApiKey: props.grantsGovApiKey,
       openSearchCollection: openSearch.openSearchCollection,

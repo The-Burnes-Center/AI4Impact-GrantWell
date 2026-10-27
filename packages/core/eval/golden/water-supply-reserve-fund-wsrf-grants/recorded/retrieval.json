@@ -1,0 +1,1500 @@
+{
+ "1a8f3664b30ebf25": {
+  "query": "detailed budget narrative and cost breakdown",
+  "filter": "536016ba70e0d908",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The request for payment must be transmitted on the grantee’s letterhead, and shall include:\n\n • Date of request • Grantee’s contact name, email address, physical address, and phone number • Contract or purchase order numberWater Supply Reserve Fund Program Grant Guidelines – January 2023\n\n • Description of the work accomplished by major task as presented in the approved budget10\n\n • Estimate of the percent completion for individual tasks and the entire water activity in relation to the percentage of budget spent\n\n • Supporting documentation for items or services billed\n\n Grant Amendments Grants may be amended as appropriate, including modifications to Exhibit A, Statement of Work, Budget, and Schedule; purchase order or contract extensions; and Change of Grantee. All amendment requests shall include:\n\n • Date of request • Grantee’s contact name, email address, physical address, and phone number; • Roundtable that recommended the grant; • Date of the initial CWCB grant approval; • Contract or purchase order number and current expiration date; • Rationale for amendment; ● Revised Tasks – CWCB Program Manager approval\n\n required; • Revised Exhibit A (Statement of Work and Budget/Schedule Table); • Extension to Terms – Revised Exhibit A, Schedule (B, C, etc.) with desired\n\n expiration date.\n\n Request for Change of Grantee A signed Letter of Request shall be accompanied by (when applicable): a revised Statement of Work, Budget, and Schedule (proposed new Grantee); a letter drafted by current Grantee requesting the release; a letter drafted by proposed Grantee accepting grant obligations and responsibilities; and an updated Certificate(s) of Insurance for the proposed new Grantee. Requests for Change of Grantee must be presented and approved by the CWCB Board. Amended documents for grant extension requests shall be delivered to CWCB 30 days prior to the current expiration date of purchase orders and 90 days prior to expiration of a contract.\n\n \n\n 10 This may be utilized in lieu of a 6 month progress report if adequate detail is provided. Contact the Project Manager to determine if your project qualifies for this option."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2171704,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AXbUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If approved, the grant can move forward with contracting as detailed below:\n\n • Documents Required for ContractingWater Supply Reserve Fund Program Grant Guidelines – January 2023\n\n The following documents are required by the state for all contracts. o Insurance Certificate of Liability (Government entities excluded) o Secretary of State - Certificate of Good Standing (excluding government\n\n entities) o W-9 Taxpayer Identification number and certification ○ Electronic Funds\n\n Transfer (preferred)\n\n • Contracting After approval of funding, CWCB staff will direct the applicant to revise and supplement submitted documents if required for issuance of a purchase order or execution of a contract. Successful applicants are expected to execute a contract with CWCB within 6 months of award. If a grant contract is not executed within this timeframe, CWCB staff may return the funds back to the appropriate funding category if adequate progress is not made. For contracts related to easements (e.g. conservation easements) CWCB staff may require additional processing time. If a grant is not executed within this six (6) month time frame due to applicant delays, staff may revert funds back to appropriate accounts, after consulting with the respective roundtable(s).\n\n • Reporting Requirements Progress Reports: The applicant shall provide the CWCB progress reports every 6 months, beginning from the date of issuance of a purchase order, or the execution of a contract. The progress report shall describe the status of the tasks identified in the statement of work, including a description of any major issues that have occurred and any corrective action taken to address these issues. The CWCB may withhold reimbursement until satisfactory progress reports have been submitted.\n\n o Final Report and Final Payment At completion of the project, the applicant shall provide the CWCB a final report on the applicant’s letterhead that:  Summarizes the project and how the project was completed.  Describes any obstacles encountered, and how these obstacles\n\n were overcome.  Confirms that all matching commitments have been fulfilled.  Includes photographs, summaries of meetings and engineering\n\n reports/designs.\n\n The CWCB will withhold disbursement of the last 10% of the budget until the Final Report is completed to the satisfaction of CWCB staff. Once the final report has been accepted, and final payment has been issued, the purchase order or grant will be closed without any further payment. See additional information on payments below.\n\n Payments Payment will be based on actual expenditures invoiced by the grantee. Payments are limited by the proportionate grant percentage of the overall project."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2025536,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AXLUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Studies or analysis of structural, programmatic, consumptive, and non- consumptive water projects or activities.\n\n • Design of structural projects or activities. Infrastructure replacement or maintenance projects"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1879263,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AVbUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If the grant request is for a phase of a larger project, only include costs associated with the phase being funded at this time in the Total WSRF Project Cost.\n\n 9 Applicants can use the WSRF Calculator to confirm if their basin request and applicant match is consistent with the required amount for Statewide applications.\n\n \n\n Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n \n\n \n  https://docs.google.com/spreadsheets/d/1qpZqZpkGo4Y1rr99ahEfwJDbWLLzXlSX/edit#gid%3D1685517751Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n Eligible Project Examples Examples of eligible projects and activities:\n\n • Technical assistance regarding permitting, feasibility studies, and environmental compliance."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1585765,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AVLUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Exception requests will be reviewed on a case-by-case basis and applicants must coordinate with CWCB to obtain written approval from CWCB\n\n 1 Based on the provisions outlined in Policy 25 (https://dnrweblink.state.co.us/CWCB/0/edoc/214605/Policy25.pdf) approval will be determined by either the CWCB Director or the CWCB Board based on the dollar amount being requested. In all cases, staff provide initial review and recommendation for submitted grant applications to the director(s)\n\n \n\n \n  https://dnrweblink.state.co.us/CWCB/0/edoc/214605/Policy25.pdfWater Supply Reserve Fund Program Grant Guidelines – January 2023\n\n staff in advance of the application submission to identify the need for the request and potential alternative solutions.\n\n WSRF Grants and PEPO Grant Program WSRF funds can be used to fund education and outreach initiatives. In revising WSRF guidelines and funding, the CWCB Board developed guidelines for a separate Public Education Participation and Outreach (PEPO) Grant Program that is connected to WSRF funding account distributions - effectively representing a tenth basin to fund (nine basin roundtables and one PEPO funding source paid from the WSRF accounts). As such, WSRF funding operations impact PEPO Grant Program funds.\n\n Severance Tax Variability Applicants should be aware that many variables will impact available funding for this grant program, including severance tax. To address the historical variability in funding for this grant program and provide stability to the roundtables, the CWCB has worked to restructure the WSRF program to offer greater predictability in roundtable allocations and develop a consistent level of funding that CWCB could achieve in most years. At the same time, revisions to the guidelines allow for special operations in times of higher severance tax and/or special funding is made available to WSRF.\n\n WSRF Program Operations\n\n WSRF Operating Procedures for Standard and Special Funding Conditions To fund WSRF grants, a Basin Account was established and annual allocations are distributed equally, unless otherwise noted, across the nine (9) basin roundtables. The CWCB tracks distributed funds by basin and monitors ongoing balances and expenditures. The CWCB also manages a statewide account that can be used in two ways; Standard Funding, or Special Operating Procedures2.\n\n The Standard Funding Operating Procedures exist to ensure monies for roundtables can be consistently funded even when severance tax inputs are low or non-existent."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1558441,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ATrUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Consideration is also given to the timing of projects with priority given to projects with an earlier start date. The CWCB’s review and approval process (consistent with Policy 25: https://dnrweblink.state.co.us/CWCB/0/edoc/214605/Policy25.pdf) will include the following steps:\n\n o Following a Roundtable recommendation for approval, CWCB staff will determine if the required documentation has been submitted. The application will be accepted once all documentation has been received.\n\n o CWCB staff and a committee of subject matter experts will evaluate the application based on the guidelines described in this document and notify the CWCB Board member representing the corresponding basin.\n\n o CWCB staff will prepare a Water Activity Summary Sheet for the Board or the CWCB Director based on the grant amount requested per CWCB Policy 25, that contains the application, the required documents and optional documents listed above, and an explanation of the staff’s recommendation for Board/Director action.\n\n o CWCB staff will notify the applicant of the staff’s recommendation and of the date and time when the Board will consider the application if required per Policy 25. While CWCB staff has primary responsibility for presenting the recommendation to the Board, the applicant is welcome to attend the meeting to address the Board and may offer comments during the opportunity for public comment.\n\n o Upon Board approval (or where Policy 25 is applicable, CWCB Director approval) of the applicant’s request, funding can only be used on project components that begin after a grant contract is executed by the Office of the State Controller.\n\n o Successful applicants are expected to execute a contract with CWCB within six (6) months of award.\n\n • Initial CWCB Review of Grant Applications\n\n After thorough evaluation, CWCB staff will recommend applicable projects to the CWCB Board or CWCB Director for approval of grant funding during regularly scheduled Board meetings. The CWCB reserves the right to negotiate with applicants to modify the scope and/or budget of a project to ensure it aligns with procurement rules, enhances the quality of the projects, and/or better aligns with state planning documents. The latter include subsequent statewide water supply initiative (SWSI) updates like the Analysis and Technical Update to the Colorado Water Plan (Technical Update), the Basin Implementation Plans, and the Colorado Water Plan.\n\n Grant Administration and Contracting All WSRF grants are not approved until the CWCB board has voted on them or have been otherwise approved by the CWCB Director as allowed by Policy 25."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1473858,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AW7UdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The Special Funding Operating Procedures may be triggered periodically when a special allocation of funding has been made by the CWCB board or the legislature due to higher than expected severance tax, stimulus dollars or similar reasons. While Special Funding Operating Procedures may become effective as a result of one-time infusions of funds, the size of the infusion may result in components (i.e. additional statewide funding) remaining in operation for multiple years, detailed below:\n\n • Standard Funding Operating Procedures o Standard Funding of Basin Account Disbursement, Tracking and Cap\n\n Pending severance tax funding availability, annual board review and approval, the CWCB aims to distribute $300,000 to each basin annually. Fund balances may be carried from year-to-year but the total balance for each basin cannot exceed a basin cap of $750,0003. If a disbursement were to cause a basin to exceed $750,000, the disbursement would fill the basin to its cap and the remainder of the disbursement would be reallocated\n\n 2 Funding distributions will be made to the designated basin and statewide accounts and reflected in tracking sheets by the first Tuesday in October following the addition of funding in the same fiscal year and after the September CWCB Finance Committee and board meetings. 3 June 1 WSRF submissions will be counted toward the basins remaining budget and used by CWCB to determine WSRF\n\n allocations in the following October (pending board approval at the September CWCB Board meeting).Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n evenly amongst the other basins that remain under the cap. If all basins are at the $750,000 cap or the disbursement causes basins to reach the cap, any remaining dollars would revert back to the Statewide Account where it will be held in reserve to fund basin distributions in the following year(s)4.\n\n o Standard Funding of Statewide Reserve Account\n\n Under the Standard Funding Operating Procedures, the Statewide Account is operated by CWCB as a kind of savings account or “reserve” which is used to ensure there is enough money to fulfill each basin's annual distribution and help reduce the impacts of severance tax variability on this program, which has had seen consecutive years of zero severance tax disbursements to WSRF in previous years. Balances held in the Statewide Account act to provide a reservoir of funds which can make annual releases to the Basin Account."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1453034,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AT7UdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "1c95d26d7b9c5586": {
+  "query": "budget format requirements",
+  "filter": "7c90c9e31a66f8a8",
+  "retrievalResults": []
+ },
+ "2192218bee007feb": {
+  "query": "application submission deadline",
+  "filter": "536016ba70e0d908",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The CWCB will make decisions for approving or denying the allocation of WSRF during regularly scheduled board meetings after a three-month processing period. Table 1 lists the submittal deadlines for the respective Board meetings when WSRF applications submitted by the deadline will be reviewed.\n\n Table 1: WSRF Submittal Dates and Board Meeting Schedule for all WSRF Grants\n\n WSRF Application Submittal Date CWCB Board Meeting Where Application Is Reviewed\n\n October 1 January CWCB Board Meeting December 1 March CWCB Board Meeting February 1 May CWCB Board Meeting\n\n April 1 July CWCB Board Meeting June 1 September CWCB Board Meeting\n\n August 1 November CWCB Board MeetingWater Supply Reserve Fund Program Grant Guidelines – January 2023\n\n • Grant Evaluation Criteria The proposed water project shall be evaluated using the WSRF guidelines for state support in Colorado’s Water Plan. In general, the proposal will be evaluated on how well it aligns with the respective Basin Implementation Plan(s)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2630286,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AWbUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Past Expenditures Recognizing the limited resources of some entities, past expenditures directly related to the water activity may be considered as matching funds if the expenditures occurred within 9 months of the execution date of the contract or purchase order between the applicant and the State of Colorado.Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n Application Process Applicants should contact the applicable roundtable and CWCB staff early in the process, several months (6 - 12 months) before the applicant would like to begin the project to ensure they can be placed on roundtable agendas and have time to consult with WSRF coordinators at CWCB and at the roundtable level beforehand. Applicants must upload application documents into the online portal CWCB created to process water project grants and loans (CWCB Portal). Application forms are available on the CWCB website (https://cwcb.colorado.gov) under Loans and Grants. Basin WSRF coordinators will evaluate the application from the CWCB Portal using the roundtable’s process. The roundtable will determine if the application meets the eligibility requirements described in this document, including the requirements for match funding. If the application is recommended for approval, the roundtable will submit a written recommendation to the CWCB signed by the Roundtable Chair through the CWCB Portal. The letter of recommendation must specify the amount of grant funding requested from the Basin Account and describe how the water activity meets Basin Implementation Plan goals. The letter should describe the level of agreement among roundtable members, who opposed the application and why, and any minority opinion.\n\n Applicants should include at a minimum the following documents:\n\n • Completed Application through the CWCB Portal • Upload a Word version of Exhibit A (Statement of Work) • Upload Engineer’s estimate of probable cost for construction projects over\n\n $100,000 • Upload the Exhibit B Budget & Schedule. A detailed budget must be provided in\n\n Excel • Upload Maps to the CWCB Portal (if applicable) • Upload Letters of Commitment (matching funds) as PDFs • Upload Photos or drawings as PDFs\n\n Applicants should confirm that the documentation in the grants and loan portal correctly captures the roundtable’s recommendation to move the grant forward for CWCB approval. This is captured by the Basin Roundtable Chair’s submitted approval letter for the applicant's project (submitted via the CWCB portal).\n\n • Grant Submittal and CWCB Review Schedule Applications for both basin and, when available, statewide WSRF grants can be submitted based on the schedule shown in Table 1 below."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1776351,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AWLUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Consideration is also given to the timing of projects with priority given to projects with an earlier start date. The CWCB’s review and approval process (consistent with Policy 25: https://dnrweblink.state.co.us/CWCB/0/edoc/214605/Policy25.pdf) will include the following steps:\n\n o Following a Roundtable recommendation for approval, CWCB staff will determine if the required documentation has been submitted. The application will be accepted once all documentation has been received.\n\n o CWCB staff and a committee of subject matter experts will evaluate the application based on the guidelines described in this document and notify the CWCB Board member representing the corresponding basin.\n\n o CWCB staff will prepare a Water Activity Summary Sheet for the Board or the CWCB Director based on the grant amount requested per CWCB Policy 25, that contains the application, the required documents and optional documents listed above, and an explanation of the staff’s recommendation for Board/Director action.\n\n o CWCB staff will notify the applicant of the staff’s recommendation and of the date and time when the Board will consider the application if required per Policy 25. While CWCB staff has primary responsibility for presenting the recommendation to the Board, the applicant is welcome to attend the meeting to address the Board and may offer comments during the opportunity for public comment.\n\n o Upon Board approval (or where Policy 25 is applicable, CWCB Director approval) of the applicant’s request, funding can only be used on project components that begin after a grant contract is executed by the Office of the State Controller.\n\n o Successful applicants are expected to execute a contract with CWCB within six (6) months of award.\n\n • Initial CWCB Review of Grant Applications\n\n After thorough evaluation, CWCB staff will recommend applicable projects to the CWCB Board or CWCB Director for approval of grant funding during regularly scheduled Board meetings. The CWCB reserves the right to negotiate with applicants to modify the scope and/or budget of a project to ensure it aligns with procurement rules, enhances the quality of the projects, and/or better aligns with state planning documents. The latter include subsequent statewide water supply initiative (SWSI) updates like the Analysis and Technical Update to the Colorado Water Plan (Technical Update), the Basin Implementation Plans, and the Colorado Water Plan.\n\n Grant Administration and Contracting All WSRF grants are not approved until the CWCB board has voted on them or have been otherwise approved by the CWCB Director as allowed by Policy 25."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1574904,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AW7UdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If approved, the grant can move forward with contracting as detailed below:\n\n • Documents Required for ContractingWater Supply Reserve Fund Program Grant Guidelines – January 2023\n\n The following documents are required by the state for all contracts. o Insurance Certificate of Liability (Government entities excluded) o Secretary of State - Certificate of Good Standing (excluding government\n\n entities) o W-9 Taxpayer Identification number and certification ○ Electronic Funds\n\n Transfer (preferred)\n\n • Contracting After approval of funding, CWCB staff will direct the applicant to revise and supplement submitted documents if required for issuance of a purchase order or execution of a contract. Successful applicants are expected to execute a contract with CWCB within 6 months of award. If a grant contract is not executed within this timeframe, CWCB staff may return the funds back to the appropriate funding category if adequate progress is not made. For contracts related to easements (e.g. conservation easements) CWCB staff may require additional processing time. If a grant is not executed within this six (6) month time frame due to applicant delays, staff may revert funds back to appropriate accounts, after consulting with the respective roundtable(s).\n\n • Reporting Requirements Progress Reports: The applicant shall provide the CWCB progress reports every 6 months, beginning from the date of issuance of a purchase order, or the execution of a contract. The progress report shall describe the status of the tasks identified in the statement of work, including a description of any major issues that have occurred and any corrective action taken to address these issues. The CWCB may withhold reimbursement until satisfactory progress reports have been submitted.\n\n o Final Report and Final Payment At completion of the project, the applicant shall provide the CWCB a final report on the applicant’s letterhead that:  Summarizes the project and how the project was completed.  Describes any obstacles encountered, and how these obstacles\n\n were overcome.  Confirms that all matching commitments have been fulfilled.  Includes photographs, summaries of meetings and engineering\n\n reports/designs.\n\n The CWCB will withhold disbursement of the last 10% of the budget until the Final Report is completed to the satisfaction of CWCB staff. Once the final report has been accepted, and final payment has been issued, the purchase order or grant will be closed without any further payment. See additional information on payments below.\n\n Payments Payment will be based on actual expenditures invoiced by the grantee. Payments are limited by the proportionate grant percentage of the overall project."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.153455,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AXLUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The request for payment must be transmitted on the grantee’s letterhead, and shall include:\n\n • Date of request • Grantee’s contact name, email address, physical address, and phone number • Contract or purchase order numberWater Supply Reserve Fund Program Grant Guidelines – January 2023\n\n • Description of the work accomplished by major task as presented in the approved budget10\n\n • Estimate of the percent completion for individual tasks and the entire water activity in relation to the percentage of budget spent\n\n • Supporting documentation for items or services billed\n\n Grant Amendments Grants may be amended as appropriate, including modifications to Exhibit A, Statement of Work, Budget, and Schedule; purchase order or contract extensions; and Change of Grantee. All amendment requests shall include:\n\n • Date of request • Grantee’s contact name, email address, physical address, and phone number; • Roundtable that recommended the grant; • Date of the initial CWCB grant approval; • Contract or purchase order number and current expiration date; • Rationale for amendment; ● Revised Tasks – CWCB Program Manager approval\n\n required; • Revised Exhibit A (Statement of Work and Budget/Schedule Table); • Extension to Terms – Revised Exhibit A, Schedule (B, C, etc.) with desired\n\n expiration date.\n\n Request for Change of Grantee A signed Letter of Request shall be accompanied by (when applicable): a revised Statement of Work, Budget, and Schedule (proposed new Grantee); a letter drafted by current Grantee requesting the release; a letter drafted by proposed Grantee accepting grant obligations and responsibilities; and an updated Certificate(s) of Insurance for the proposed new Grantee. Requests for Change of Grantee must be presented and approved by the CWCB Board. Amended documents for grant extension requests shall be delivered to CWCB 30 days prior to the current expiration date of purchase orders and 90 days prior to expiration of a contract.\n\n \n\n 10 This may be utilized in lieu of a 6 month progress report if adequate detail is provided. Contact the Project Manager to determine if your project qualifies for this option."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1478089,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AXbUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n \n\n WATER SUPPLY RESERVE FUND PROGRAM Grant Guidelines\n\n Approved January 23, 2023; (accessibility updated July 2025) Effective date for Statewide Grant request is 1/1/2022\n\n Grant Guidelines\n\n Introduction\n\n Legislation and Authority Senate Bill 06-179, adopted by the 2006 General Assembly, created the Water Supply Reserve Account, now called the Water Supply Reserve Fund (WSRF) per SB13-181. The WSRF grant program is subject to amendment by the legislature - most recently by SB21- 281. The WSRF Criteria and Guidelines (guidelines hereafter) are also subject to review and revision at the discretion of the Colorado Water Conservation Board (CWCB), especially when additional infusions of funds come available through special funding measures that may augment WSRF.\n\n While roundtables recommend WSRF grants for approval to the board and while the Interbasin Compact Committee (IBCC) is consulted on guideline changes, CWCB has the sole discretion to establish the WSRF guidelines and the CWCB is the ultimate approver of any WSRF grants which are recommended for approval and moved to the board for consideration1. Additional requirements cannot be imposed on the CWCB by a local public body or other entity. Guidelines or other requirements are set by the CWCB and can only be amended by the CWCB or the state legislature. This document establishes the guidelines developed by the CWCB. In approving grants from WSRF, the CWCB will apply the guidelines described in this document.\n\n Intended Use and Contracting WSRF funds are to be used to fund water activities within any designated roundtable on a competitive basis based on the eligibility requirements and the evaluation guidelines outlined in this document. Grant funds can be used to fund projects, studies or other planning efforts but cannot be used to hire consultants directly - all funds must go to grant making and all contracts are held with the State of Colorado and are managed and reportable to the CWCB.\n\n WSRF Grants and the Water Plan Grant Program WSRF grant funds are generally not eligible to be used as match funding for a Water Plan Grant and may not be approved."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1119846,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ATbUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Exception requests will be reviewed on a case-by-case basis and applicants must coordinate with CWCB to obtain written approval from CWCB\n\n 1 Based on the provisions outlined in Policy 25 (https://dnrweblink.state.co.us/CWCB/0/edoc/214605/Policy25.pdf) approval will be determined by either the CWCB Director or the CWCB Board based on the dollar amount being requested. In all cases, staff provide initial review and recommendation for submitted grant applications to the director(s)\n\n \n\n \n  https://dnrweblink.state.co.us/CWCB/0/edoc/214605/Policy25.pdfWater Supply Reserve Fund Program Grant Guidelines – January 2023\n\n staff in advance of the application submission to identify the need for the request and potential alternative solutions.\n\n WSRF Grants and PEPO Grant Program WSRF funds can be used to fund education and outreach initiatives. In revising WSRF guidelines and funding, the CWCB Board developed guidelines for a separate Public Education Participation and Outreach (PEPO) Grant Program that is connected to WSRF funding account distributions - effectively representing a tenth basin to fund (nine basin roundtables and one PEPO funding source paid from the WSRF accounts). As such, WSRF funding operations impact PEPO Grant Program funds.\n\n Severance Tax Variability Applicants should be aware that many variables will impact available funding for this grant program, including severance tax. To address the historical variability in funding for this grant program and provide stability to the roundtables, the CWCB has worked to restructure the WSRF program to offer greater predictability in roundtable allocations and develop a consistent level of funding that CWCB could achieve in most years. At the same time, revisions to the guidelines allow for special operations in times of higher severance tax and/or special funding is made available to WSRF.\n\n WSRF Program Operations\n\n WSRF Operating Procedures for Standard and Special Funding Conditions To fund WSRF grants, a Basin Account was established and annual allocations are distributed equally, unless otherwise noted, across the nine (9) basin roundtables. The CWCB tracks distributed funds by basin and monitors ongoing balances and expenditures. The CWCB also manages a statewide account that can be used in two ways; Standard Funding, or Special Operating Procedures2.\n\n The Standard Funding Operating Procedures exist to ensure monies for roundtables can be consistently funded even when severance tax inputs are low or non-existent."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.100613,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ATrUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "3b14195552e8187d": {
+  "query": "budget template or spreadsheet submission",
+  "filter": "536016ba70e0d908",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The request for payment must be transmitted on the grantee’s letterhead, and shall include:\n\n • Date of request • Grantee’s contact name, email address, physical address, and phone number • Contract or purchase order numberWater Supply Reserve Fund Program Grant Guidelines – January 2023\n\n • Description of the work accomplished by major task as presented in the approved budget10\n\n • Estimate of the percent completion for individual tasks and the entire water activity in relation to the percentage of budget spent\n\n • Supporting documentation for items or services billed\n\n Grant Amendments Grants may be amended as appropriate, including modifications to Exhibit A, Statement of Work, Budget, and Schedule; purchase order or contract extensions; and Change of Grantee. All amendment requests shall include:\n\n • Date of request • Grantee’s contact name, email address, physical address, and phone number; • Roundtable that recommended the grant; • Date of the initial CWCB grant approval; • Contract or purchase order number and current expiration date; • Rationale for amendment; ● Revised Tasks – CWCB Program Manager approval\n\n required; • Revised Exhibit A (Statement of Work and Budget/Schedule Table); • Extension to Terms – Revised Exhibit A, Schedule (B, C, etc.) with desired\n\n expiration date.\n\n Request for Change of Grantee A signed Letter of Request shall be accompanied by (when applicable): a revised Statement of Work, Budget, and Schedule (proposed new Grantee); a letter drafted by current Grantee requesting the release; a letter drafted by proposed Grantee accepting grant obligations and responsibilities; and an updated Certificate(s) of Insurance for the proposed new Grantee. Requests for Change of Grantee must be presented and approved by the CWCB Board. Amended documents for grant extension requests shall be delivered to CWCB 30 days prior to the current expiration date of purchase orders and 90 days prior to expiration of a contract.\n\n \n\n 10 This may be utilized in lieu of a 6 month progress report if adequate detail is provided. Contact the Project Manager to determine if your project qualifies for this option."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2518327,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AXbUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Past Expenditures Recognizing the limited resources of some entities, past expenditures directly related to the water activity may be considered as matching funds if the expenditures occurred within 9 months of the execution date of the contract or purchase order between the applicant and the State of Colorado.Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n Application Process Applicants should contact the applicable roundtable and CWCB staff early in the process, several months (6 - 12 months) before the applicant would like to begin the project to ensure they can be placed on roundtable agendas and have time to consult with WSRF coordinators at CWCB and at the roundtable level beforehand. Applicants must upload application documents into the online portal CWCB created to process water project grants and loans (CWCB Portal). Application forms are available on the CWCB website (https://cwcb.colorado.gov) under Loans and Grants. Basin WSRF coordinators will evaluate the application from the CWCB Portal using the roundtable’s process. The roundtable will determine if the application meets the eligibility requirements described in this document, including the requirements for match funding. If the application is recommended for approval, the roundtable will submit a written recommendation to the CWCB signed by the Roundtable Chair through the CWCB Portal. The letter of recommendation must specify the amount of grant funding requested from the Basin Account and describe how the water activity meets Basin Implementation Plan goals. The letter should describe the level of agreement among roundtable members, who opposed the application and why, and any minority opinion.\n\n Applicants should include at a minimum the following documents:\n\n • Completed Application through the CWCB Portal • Upload a Word version of Exhibit A (Statement of Work) • Upload Engineer’s estimate of probable cost for construction projects over\n\n $100,000 • Upload the Exhibit B Budget & Schedule. A detailed budget must be provided in\n\n Excel • Upload Maps to the CWCB Portal (if applicable) • Upload Letters of Commitment (matching funds) as PDFs • Upload Photos or drawings as PDFs\n\n Applicants should confirm that the documentation in the grants and loan portal correctly captures the roundtable’s recommendation to move the grant forward for CWCB approval. This is captured by the Basin Roundtable Chair’s submitted approval letter for the applicant's project (submitted via the CWCB portal).\n\n • Grant Submittal and CWCB Review Schedule Applications for both basin and, when available, statewide WSRF grants can be submitted based on the schedule shown in Table 1 below."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2254186,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AWLUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If approved, the grant can move forward with contracting as detailed below:\n\n • Documents Required for ContractingWater Supply Reserve Fund Program Grant Guidelines – January 2023\n\n The following documents are required by the state for all contracts. o Insurance Certificate of Liability (Government entities excluded) o Secretary of State - Certificate of Good Standing (excluding government\n\n entities) o W-9 Taxpayer Identification number and certification ○ Electronic Funds\n\n Transfer (preferred)\n\n • Contracting After approval of funding, CWCB staff will direct the applicant to revise and supplement submitted documents if required for issuance of a purchase order or execution of a contract. Successful applicants are expected to execute a contract with CWCB within 6 months of award. If a grant contract is not executed within this timeframe, CWCB staff may return the funds back to the appropriate funding category if adequate progress is not made. For contracts related to easements (e.g. conservation easements) CWCB staff may require additional processing time. If a grant is not executed within this six (6) month time frame due to applicant delays, staff may revert funds back to appropriate accounts, after consulting with the respective roundtable(s).\n\n • Reporting Requirements Progress Reports: The applicant shall provide the CWCB progress reports every 6 months, beginning from the date of issuance of a purchase order, or the execution of a contract. The progress report shall describe the status of the tasks identified in the statement of work, including a description of any major issues that have occurred and any corrective action taken to address these issues. The CWCB may withhold reimbursement until satisfactory progress reports have been submitted.\n\n o Final Report and Final Payment At completion of the project, the applicant shall provide the CWCB a final report on the applicant’s letterhead that:  Summarizes the project and how the project was completed.  Describes any obstacles encountered, and how these obstacles\n\n were overcome.  Confirms that all matching commitments have been fulfilled.  Includes photographs, summaries of meetings and engineering\n\n reports/designs.\n\n The CWCB will withhold disbursement of the last 10% of the budget until the Final Report is completed to the satisfaction of CWCB staff. Once the final report has been accepted, and final payment has been issued, the purchase order or grant will be closed without any further payment. See additional information on payments below.\n\n Payments Payment will be based on actual expenditures invoiced by the grantee. Payments are limited by the proportionate grant percentage of the overall project."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2229062,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AXLUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If the grant request is for a phase of a larger project, only include costs associated with the phase being funded at this time in the Total WSRF Project Cost.\n\n 9 Applicants can use the WSRF Calculator to confirm if their basin request and applicant match is consistent with the required amount for Statewide applications.\n\n \n\n Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n \n\n \n  https://docs.google.com/spreadsheets/d/1qpZqZpkGo4Y1rr99ahEfwJDbWLLzXlSX/edit#gid%3D1685517751Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n Eligible Project Examples Examples of eligible projects and activities:\n\n • Technical assistance regarding permitting, feasibility studies, and environmental compliance."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.190937,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AVLUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Exception requests will be reviewed on a case-by-case basis and applicants must coordinate with CWCB to obtain written approval from CWCB\n\n 1 Based on the provisions outlined in Policy 25 (https://dnrweblink.state.co.us/CWCB/0/edoc/214605/Policy25.pdf) approval will be determined by either the CWCB Director or the CWCB Board based on the dollar amount being requested. In all cases, staff provide initial review and recommendation for submitted grant applications to the director(s)\n\n \n\n \n  https://dnrweblink.state.co.us/CWCB/0/edoc/214605/Policy25.pdfWater Supply Reserve Fund Program Grant Guidelines – January 2023\n\n staff in advance of the application submission to identify the need for the request and potential alternative solutions.\n\n WSRF Grants and PEPO Grant Program WSRF funds can be used to fund education and outreach initiatives. In revising WSRF guidelines and funding, the CWCB Board developed guidelines for a separate Public Education Participation and Outreach (PEPO) Grant Program that is connected to WSRF funding account distributions - effectively representing a tenth basin to fund (nine basin roundtables and one PEPO funding source paid from the WSRF accounts). As such, WSRF funding operations impact PEPO Grant Program funds.\n\n Severance Tax Variability Applicants should be aware that many variables will impact available funding for this grant program, including severance tax. To address the historical variability in funding for this grant program and provide stability to the roundtables, the CWCB has worked to restructure the WSRF program to offer greater predictability in roundtable allocations and develop a consistent level of funding that CWCB could achieve in most years. At the same time, revisions to the guidelines allow for special operations in times of higher severance tax and/or special funding is made available to WSRF.\n\n WSRF Program Operations\n\n WSRF Operating Procedures for Standard and Special Funding Conditions To fund WSRF grants, a Basin Account was established and annual allocations are distributed equally, unless otherwise noted, across the nine (9) basin roundtables. The CWCB tracks distributed funds by basin and monitors ongoing balances and expenditures. The CWCB also manages a statewide account that can be used in two ways; Standard Funding, or Special Operating Procedures2.\n\n The Standard Funding Operating Procedures exist to ensure monies for roundtables can be consistently funded even when severance tax inputs are low or non-existent."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1684806,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ATrUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The CWCB will make decisions for approving or denying the allocation of WSRF during regularly scheduled board meetings after a three-month processing period. Table 1 lists the submittal deadlines for the respective Board meetings when WSRF applications submitted by the deadline will be reviewed.\n\n Table 1: WSRF Submittal Dates and Board Meeting Schedule for all WSRF Grants\n\n WSRF Application Submittal Date CWCB Board Meeting Where Application Is Reviewed\n\n October 1 January CWCB Board Meeting December 1 March CWCB Board Meeting February 1 May CWCB Board Meeting\n\n April 1 July CWCB Board Meeting June 1 September CWCB Board Meeting\n\n August 1 November CWCB Board MeetingWater Supply Reserve Fund Program Grant Guidelines – January 2023\n\n • Grant Evaluation Criteria The proposed water project shall be evaluated using the WSRF guidelines for state support in Colorado’s Water Plan. In general, the proposal will be evaluated on how well it aligns with the respective Basin Implementation Plan(s)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1651341,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AWbUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The Special Funding Operating Procedures may be triggered periodically when a special allocation of funding has been made by the CWCB board or the legislature due to higher than expected severance tax, stimulus dollars or similar reasons. While Special Funding Operating Procedures may become effective as a result of one-time infusions of funds, the size of the infusion may result in components (i.e. additional statewide funding) remaining in operation for multiple years, detailed below:\n\n • Standard Funding Operating Procedures o Standard Funding of Basin Account Disbursement, Tracking and Cap\n\n Pending severance tax funding availability, annual board review and approval, the CWCB aims to distribute $300,000 to each basin annually. Fund balances may be carried from year-to-year but the total balance for each basin cannot exceed a basin cap of $750,0003. If a disbursement were to cause a basin to exceed $750,000, the disbursement would fill the basin to its cap and the remainder of the disbursement would be reallocated\n\n 2 Funding distributions will be made to the designated basin and statewide accounts and reflected in tracking sheets by the first Tuesday in October following the addition of funding in the same fiscal year and after the September CWCB Finance Committee and board meetings. 3 June 1 WSRF submissions will be counted toward the basins remaining budget and used by CWCB to determine WSRF\n\n allocations in the following October (pending board approval at the September CWCB Board meeting).Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n evenly amongst the other basins that remain under the cap. If all basins are at the $750,000 cap or the disbursement causes basins to reach the cap, any remaining dollars would revert back to the Statewide Account where it will be held in reserve to fund basin distributions in the following year(s)4.\n\n o Standard Funding of Statewide Reserve Account\n\n Under the Standard Funding Operating Procedures, the Statewide Account is operated by CWCB as a kind of savings account or “reserve” which is used to ensure there is enough money to fulfill each basin's annual distribution and help reduce the impacts of severance tax variability on this program, which has had seen consecutive years of zero severance tax disbursements to WSRF in previous years. Balances held in the Statewide Account act to provide a reservoir of funds which can make annual releases to the Basin Account."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1571845,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AT7UdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "6367a716460fbf95": {
+  "query": "eligibility requirements applicant types municipalities regional water authorities",
+  "filter": "536016ba70e0d908",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Past Expenditures Recognizing the limited resources of some entities, past expenditures directly related to the water activity may be considered as matching funds if the expenditures occurred within 9 months of the execution date of the contract or purchase order between the applicant and the State of Colorado.Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n Application Process Applicants should contact the applicable roundtable and CWCB staff early in the process, several months (6 - 12 months) before the applicant would like to begin the project to ensure they can be placed on roundtable agendas and have time to consult with WSRF coordinators at CWCB and at the roundtable level beforehand. Applicants must upload application documents into the online portal CWCB created to process water project grants and loans (CWCB Portal). Application forms are available on the CWCB website (https://cwcb.colorado.gov) under Loans and Grants. Basin WSRF coordinators will evaluate the application from the CWCB Portal using the roundtable’s process. The roundtable will determine if the application meets the eligibility requirements described in this document, including the requirements for match funding. If the application is recommended for approval, the roundtable will submit a written recommendation to the CWCB signed by the Roundtable Chair through the CWCB Portal. The letter of recommendation must specify the amount of grant funding requested from the Basin Account and describe how the water activity meets Basin Implementation Plan goals. The letter should describe the level of agreement among roundtable members, who opposed the application and why, and any minority opinion.\n\n Applicants should include at a minimum the following documents:\n\n • Completed Application through the CWCB Portal • Upload a Word version of Exhibit A (Statement of Work) • Upload Engineer’s estimate of probable cost for construction projects over\n\n $100,000 • Upload the Exhibit B Budget & Schedule. A detailed budget must be provided in\n\n Excel • Upload Maps to the CWCB Portal (if applicable) • Upload Letters of Commitment (matching funds) as PDFs • Upload Photos or drawings as PDFs\n\n Applicants should confirm that the documentation in the grants and loan portal correctly captures the roundtable’s recommendation to move the grant forward for CWCB approval. This is captured by the Basin Roundtable Chair’s submitted approval letter for the applicant's project (submitted via the CWCB portal).\n\n • Grant Submittal and CWCB Review Schedule Applications for both basin and, when available, statewide WSRF grants can be submitted based on the schedule shown in Table 1 below."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4048499,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AWLUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If the grant request is for a phase of a larger project, only include costs associated with the phase being funded at this time in the Total WSRF Project Cost.\n\n 9 Applicants can use the WSRF Calculator to confirm if their basin request and applicant match is consistent with the required amount for Statewide applications.\n\n \n\n Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n \n\n \n  https://docs.google.com/spreadsheets/d/1qpZqZpkGo4Y1rr99ahEfwJDbWLLzXlSX/edit#gid%3D1685517751Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n Eligible Project Examples Examples of eligible projects and activities:\n\n • Technical assistance regarding permitting, feasibility studies, and environmental compliance."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3857666,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AVLUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n \n\n WATER SUPPLY RESERVE FUND PROGRAM Grant Guidelines\n\n Approved January 23, 2023; (accessibility updated July 2025) Effective date for Statewide Grant request is 1/1/2022\n\n Grant Guidelines\n\n Introduction\n\n Legislation and Authority Senate Bill 06-179, adopted by the 2006 General Assembly, created the Water Supply Reserve Account, now called the Water Supply Reserve Fund (WSRF) per SB13-181. The WSRF grant program is subject to amendment by the legislature - most recently by SB21- 281. The WSRF Criteria and Guidelines (guidelines hereafter) are also subject to review and revision at the discretion of the Colorado Water Conservation Board (CWCB), especially when additional infusions of funds come available through special funding measures that may augment WSRF.\n\n While roundtables recommend WSRF grants for approval to the board and while the Interbasin Compact Committee (IBCC) is consulted on guideline changes, CWCB has the sole discretion to establish the WSRF guidelines and the CWCB is the ultimate approver of any WSRF grants which are recommended for approval and moved to the board for consideration1. Additional requirements cannot be imposed on the CWCB by a local public body or other entity. Guidelines or other requirements are set by the CWCB and can only be amended by the CWCB or the state legislature. This document establishes the guidelines developed by the CWCB. In approving grants from WSRF, the CWCB will apply the guidelines described in this document.\n\n Intended Use and Contracting WSRF funds are to be used to fund water activities within any designated roundtable on a competitive basis based on the eligibility requirements and the evaluation guidelines outlined in this document. Grant funds can be used to fund projects, studies or other planning efforts but cannot be used to hire consultants directly - all funds must go to grant making and all contracts are held with the State of Colorado and are managed and reportable to the CWCB.\n\n WSRF Grants and the Water Plan Grant Program WSRF grant funds are generally not eligible to be used as match funding for a Water Plan Grant and may not be approved."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3669388,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ATbUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Consideration is also given to the timing of projects with priority given to projects with an earlier start date. The CWCB’s review and approval process (consistent with Policy 25: https://dnrweblink.state.co.us/CWCB/0/edoc/214605/Policy25.pdf) will include the following steps:\n\n o Following a Roundtable recommendation for approval, CWCB staff will determine if the required documentation has been submitted. The application will be accepted once all documentation has been received.\n\n o CWCB staff and a committee of subject matter experts will evaluate the application based on the guidelines described in this document and notify the CWCB Board member representing the corresponding basin.\n\n o CWCB staff will prepare a Water Activity Summary Sheet for the Board or the CWCB Director based on the grant amount requested per CWCB Policy 25, that contains the application, the required documents and optional documents listed above, and an explanation of the staff’s recommendation for Board/Director action.\n\n o CWCB staff will notify the applicant of the staff’s recommendation and of the date and time when the Board will consider the application if required per Policy 25. While CWCB staff has primary responsibility for presenting the recommendation to the Board, the applicant is welcome to attend the meeting to address the Board and may offer comments during the opportunity for public comment.\n\n o Upon Board approval (or where Policy 25 is applicable, CWCB Director approval) of the applicant’s request, funding can only be used on project components that begin after a grant contract is executed by the Office of the State Controller.\n\n o Successful applicants are expected to execute a contract with CWCB within six (6) months of award.\n\n • Initial CWCB Review of Grant Applications\n\n After thorough evaluation, CWCB staff will recommend applicable projects to the CWCB Board or CWCB Director for approval of grant funding during regularly scheduled Board meetings. The CWCB reserves the right to negotiate with applicants to modify the scope and/or budget of a project to ensure it aligns with procurement rules, enhances the quality of the projects, and/or better aligns with state planning documents. The latter include subsequent statewide water supply initiative (SWSI) updates like the Analysis and Technical Update to the Colorado Water Plan (Technical Update), the Basin Implementation Plans, and the Colorado Water Plan.\n\n Grant Administration and Contracting All WSRF grants are not approved until the CWCB board has voted on them or have been otherwise approved by the CWCB Director as allowed by Policy 25."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3366107,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AW7UdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Activities that promote education, outreach, and innovation consistent with the mission and goals of the Colorado Water Plan.\n\n Matching Fund Requirements WSRF Grant requests require matching funds. A minimum of 25% match is required for all WSRF projects. Greater weight may be given to projects with a higher match. Matching funds may consist of a combination of in-kind and cash match with no more than half of the match coming from in-kind. Applicants should identify matching funds as either pending or secure and provide evidence of those matching funds (such as an award letter). Matching funds must be secured within one year of the application date and prior to contracting. Non-CWCB matching funds include state agencies such as Great Outdoors Colorado (GOCO), Colorado Parks and Wildlife (CPW) funding, and other state and/or federal agencies. CWCB loans are also considered matching funds. All other funding sources within the control of the CWCB Board and its Director are considered CWCB funds.\n\n • Cash Match\n\n Actual expenditures paid directly with cash funds (based on contractual arrangements) from the grantee to a vendor. Examples are supplies, services, and necessary equipment purchase or rental"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3273903,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AVrUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Exception requests will be reviewed on a case-by-case basis and applicants must coordinate with CWCB to obtain written approval from CWCB\n\n 1 Based on the provisions outlined in Policy 25 (https://dnrweblink.state.co.us/CWCB/0/edoc/214605/Policy25.pdf) approval will be determined by either the CWCB Director or the CWCB Board based on the dollar amount being requested. In all cases, staff provide initial review and recommendation for submitted grant applications to the director(s)\n\n \n\n \n  https://dnrweblink.state.co.us/CWCB/0/edoc/214605/Policy25.pdfWater Supply Reserve Fund Program Grant Guidelines – January 2023\n\n staff in advance of the application submission to identify the need for the request and potential alternative solutions.\n\n WSRF Grants and PEPO Grant Program WSRF funds can be used to fund education and outreach initiatives. In revising WSRF guidelines and funding, the CWCB Board developed guidelines for a separate Public Education Participation and Outreach (PEPO) Grant Program that is connected to WSRF funding account distributions - effectively representing a tenth basin to fund (nine basin roundtables and one PEPO funding source paid from the WSRF accounts). As such, WSRF funding operations impact PEPO Grant Program funds.\n\n Severance Tax Variability Applicants should be aware that many variables will impact available funding for this grant program, including severance tax. To address the historical variability in funding for this grant program and provide stability to the roundtables, the CWCB has worked to restructure the WSRF program to offer greater predictability in roundtable allocations and develop a consistent level of funding that CWCB could achieve in most years. At the same time, revisions to the guidelines allow for special operations in times of higher severance tax and/or special funding is made available to WSRF.\n\n WSRF Program Operations\n\n WSRF Operating Procedures for Standard and Special Funding Conditions To fund WSRF grants, a Basin Account was established and annual allocations are distributed equally, unless otherwise noted, across the nine (9) basin roundtables. The CWCB tracks distributed funds by basin and monitors ongoing balances and expenditures. The CWCB also manages a statewide account that can be used in two ways; Standard Funding, or Special Operating Procedures2.\n\n The Standard Funding Operating Procedures exist to ensure monies for roundtables can be consistently funded even when severance tax inputs are low or non-existent."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.325584,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ATrUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Construction projects that relate to green infrastructure, in-channel or similar repairs, enhancements or support for existing natural infrastructure may also be considered aging infrastructure. These projects may support drought resilience but are distinguished from the drought resilience category by their focus on physical infrastructure. These projects will typically include efforts that involve heavy machinery, construction materials and/or industrial hardware/equipment.\n\n ● Statewide Grants for Drought Resilience Non-structural projects that seek to enhance drought resilience through planning, pilot projects, studies, research or similar investments that enhance drought resilience through efforts that do not relate to infrastructure construction. These efforts may include equipment needed to conduct research or perform studies. Some drought resilience projects such as existing municipal turf removal programs, removal of phreatophytes, alternative crop test plots or similar projects may move soil but are not generally considered to be construction.\n\n \n\n \n\n Eligible Applicants\n\n ■ Statewide Grant Match Requirements Statewide grant requests require a minimum of 25% match. Matching funds can include applicant cash match (e.g. self- funding/WSRF basin grant funds) or other non-CWCB grants, and in-kind contributions. However, at least one tenth (0.1 or 10%) of the total WSRF project cost8 must come from roundtable(s) Basin Account funds which can count toward the applicant's 25% match9. This adds to any general WSRF match requirement details and definitions in the sections below (e.g. no more than half of the match can come from in-kind match, etc.). In total, statewide WSRF funds will cover a maximum of 75% of the project costs for statewide WSRF grant requests.\n\n Eligible applicants include:\n\n ● Governmental Entities: Governmental entities include municipalities, districts, enterprises, counties, and State of Colorado agencies. Federal agencies are encouraged to work with local entities. Covered Entities as defined in Section 37- 60-126, C.R.S., are eligible if the applicant has adopted an approved Water Efficiency Plan. ● Private Entities: Private entities include mutual ditch companies, non-profit corporations, and partnerships, etc.\n\n 8 The Total WSRF Project Cost is equal to the amount of the WSRF grant request (basin + statewide) and sum of all matching funds to complete a project. For this purpose, a project is defined as the tasks outlined in the Statement of Work associated with a specific grant request."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.310703,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AU7UdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "6f1584b888439f4d": {
+  "query": "eligibility requirements applicant types municipalities regional water authorities",
+  "filter": "7c90c9e31a66f8a8",
+  "retrievalResults": []
+ },
+ "7253cf43e2887c1c": {
+  "query": "eligible applicants who can apply",
+  "filter": "536016ba70e0d908",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If the grant request is for a phase of a larger project, only include costs associated with the phase being funded at this time in the Total WSRF Project Cost.\n\n 9 Applicants can use the WSRF Calculator to confirm if their basin request and applicant match is consistent with the required amount for Statewide applications.\n\n \n\n Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n \n\n \n  https://docs.google.com/spreadsheets/d/1qpZqZpkGo4Y1rr99ahEfwJDbWLLzXlSX/edit#gid%3D1685517751Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n Eligible Project Examples Examples of eligible projects and activities:\n\n • Technical assistance regarding permitting, feasibility studies, and environmental compliance."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.189113,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AVLUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Past Expenditures Recognizing the limited resources of some entities, past expenditures directly related to the water activity may be considered as matching funds if the expenditures occurred within 9 months of the execution date of the contract or purchase order between the applicant and the State of Colorado.Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n Application Process Applicants should contact the applicable roundtable and CWCB staff early in the process, several months (6 - 12 months) before the applicant would like to begin the project to ensure they can be placed on roundtable agendas and have time to consult with WSRF coordinators at CWCB and at the roundtable level beforehand. Applicants must upload application documents into the online portal CWCB created to process water project grants and loans (CWCB Portal). Application forms are available on the CWCB website (https://cwcb.colorado.gov) under Loans and Grants. Basin WSRF coordinators will evaluate the application from the CWCB Portal using the roundtable’s process. The roundtable will determine if the application meets the eligibility requirements described in this document, including the requirements for match funding. If the application is recommended for approval, the roundtable will submit a written recommendation to the CWCB signed by the Roundtable Chair through the CWCB Portal. The letter of recommendation must specify the amount of grant funding requested from the Basin Account and describe how the water activity meets Basin Implementation Plan goals. The letter should describe the level of agreement among roundtable members, who opposed the application and why, and any minority opinion.\n\n Applicants should include at a minimum the following documents:\n\n • Completed Application through the CWCB Portal • Upload a Word version of Exhibit A (Statement of Work) • Upload Engineer’s estimate of probable cost for construction projects over\n\n $100,000 • Upload the Exhibit B Budget & Schedule. A detailed budget must be provided in\n\n Excel • Upload Maps to the CWCB Portal (if applicable) • Upload Letters of Commitment (matching funds) as PDFs • Upload Photos or drawings as PDFs\n\n Applicants should confirm that the documentation in the grants and loan portal correctly captures the roundtable’s recommendation to move the grant forward for CWCB approval. This is captured by the Basin Roundtable Chair’s submitted approval letter for the applicant's project (submitted via the CWCB portal).\n\n • Grant Submittal and CWCB Review Schedule Applications for both basin and, when available, statewide WSRF grants can be submitted based on the schedule shown in Table 1 below."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1522352,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AWLUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Exception requests will be reviewed on a case-by-case basis and applicants must coordinate with CWCB to obtain written approval from CWCB\n\n 1 Based on the provisions outlined in Policy 25 (https://dnrweblink.state.co.us/CWCB/0/edoc/214605/Policy25.pdf) approval will be determined by either the CWCB Director or the CWCB Board based on the dollar amount being requested. In all cases, staff provide initial review and recommendation for submitted grant applications to the director(s)\n\n \n\n \n  https://dnrweblink.state.co.us/CWCB/0/edoc/214605/Policy25.pdfWater Supply Reserve Fund Program Grant Guidelines – January 2023\n\n staff in advance of the application submission to identify the need for the request and potential alternative solutions.\n\n WSRF Grants and PEPO Grant Program WSRF funds can be used to fund education and outreach initiatives. In revising WSRF guidelines and funding, the CWCB Board developed guidelines for a separate Public Education Participation and Outreach (PEPO) Grant Program that is connected to WSRF funding account distributions - effectively representing a tenth basin to fund (nine basin roundtables and one PEPO funding source paid from the WSRF accounts). As such, WSRF funding operations impact PEPO Grant Program funds.\n\n Severance Tax Variability Applicants should be aware that many variables will impact available funding for this grant program, including severance tax. To address the historical variability in funding for this grant program and provide stability to the roundtables, the CWCB has worked to restructure the WSRF program to offer greater predictability in roundtable allocations and develop a consistent level of funding that CWCB could achieve in most years. At the same time, revisions to the guidelines allow for special operations in times of higher severance tax and/or special funding is made available to WSRF.\n\n WSRF Program Operations\n\n WSRF Operating Procedures for Standard and Special Funding Conditions To fund WSRF grants, a Basin Account was established and annual allocations are distributed equally, unless otherwise noted, across the nine (9) basin roundtables. The CWCB tracks distributed funds by basin and monitors ongoing balances and expenditures. The CWCB also manages a statewide account that can be used in two ways; Standard Funding, or Special Operating Procedures2.\n\n The Standard Funding Operating Procedures exist to ensure monies for roundtables can be consistently funded even when severance tax inputs are low or non-existent."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1365938,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ATrUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Construction projects that relate to green infrastructure, in-channel or similar repairs, enhancements or support for existing natural infrastructure may also be considered aging infrastructure. These projects may support drought resilience but are distinguished from the drought resilience category by their focus on physical infrastructure. These projects will typically include efforts that involve heavy machinery, construction materials and/or industrial hardware/equipment.\n\n ● Statewide Grants for Drought Resilience Non-structural projects that seek to enhance drought resilience through planning, pilot projects, studies, research or similar investments that enhance drought resilience through efforts that do not relate to infrastructure construction. These efforts may include equipment needed to conduct research or perform studies. Some drought resilience projects such as existing municipal turf removal programs, removal of phreatophytes, alternative crop test plots or similar projects may move soil but are not generally considered to be construction.\n\n \n\n \n\n Eligible Applicants\n\n ■ Statewide Grant Match Requirements Statewide grant requests require a minimum of 25% match. Matching funds can include applicant cash match (e.g. self- funding/WSRF basin grant funds) or other non-CWCB grants, and in-kind contributions. However, at least one tenth (0.1 or 10%) of the total WSRF project cost8 must come from roundtable(s) Basin Account funds which can count toward the applicant's 25% match9. This adds to any general WSRF match requirement details and definitions in the sections below (e.g. no more than half of the match can come from in-kind match, etc.). In total, statewide WSRF funds will cover a maximum of 75% of the project costs for statewide WSRF grant requests.\n\n Eligible applicants include:\n\n ● Governmental Entities: Governmental entities include municipalities, districts, enterprises, counties, and State of Colorado agencies. Federal agencies are encouraged to work with local entities. Covered Entities as defined in Section 37- 60-126, C.R.S., are eligible if the applicant has adopted an approved Water Efficiency Plan. ● Private Entities: Private entities include mutual ditch companies, non-profit corporations, and partnerships, etc.\n\n 8 The Total WSRF Project Cost is equal to the amount of the WSRF grant request (basin + statewide) and sum of all matching funds to complete a project. For this purpose, a project is defined as the tasks outlined in the Statement of Work associated with a specific grant request."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1341172,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AU7UdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "While the need to fund single issue projects is understandable, project proponents are encouraged to identify where projects can add additional public good. Preference will be given to projects that have multiple benefits, multiple purposes and involve multiple stakeholders."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1129715,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AWrUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Consideration is also given to the timing of projects with priority given to projects with an earlier start date. The CWCB’s review and approval process (consistent with Policy 25: https://dnrweblink.state.co.us/CWCB/0/edoc/214605/Policy25.pdf) will include the following steps:\n\n o Following a Roundtable recommendation for approval, CWCB staff will determine if the required documentation has been submitted. The application will be accepted once all documentation has been received.\n\n o CWCB staff and a committee of subject matter experts will evaluate the application based on the guidelines described in this document and notify the CWCB Board member representing the corresponding basin.\n\n o CWCB staff will prepare a Water Activity Summary Sheet for the Board or the CWCB Director based on the grant amount requested per CWCB Policy 25, that contains the application, the required documents and optional documents listed above, and an explanation of the staff’s recommendation for Board/Director action.\n\n o CWCB staff will notify the applicant of the staff’s recommendation and of the date and time when the Board will consider the application if required per Policy 25. While CWCB staff has primary responsibility for presenting the recommendation to the Board, the applicant is welcome to attend the meeting to address the Board and may offer comments during the opportunity for public comment.\n\n o Upon Board approval (or where Policy 25 is applicable, CWCB Director approval) of the applicant’s request, funding can only be used on project components that begin after a grant contract is executed by the Office of the State Controller.\n\n o Successful applicants are expected to execute a contract with CWCB within six (6) months of award.\n\n • Initial CWCB Review of Grant Applications\n\n After thorough evaluation, CWCB staff will recommend applicable projects to the CWCB Board or CWCB Director for approval of grant funding during regularly scheduled Board meetings. The CWCB reserves the right to negotiate with applicants to modify the scope and/or budget of a project to ensure it aligns with procurement rules, enhances the quality of the projects, and/or better aligns with state planning documents. The latter include subsequent statewide water supply initiative (SWSI) updates like the Analysis and Technical Update to the Colorado Water Plan (Technical Update), the Basin Implementation Plans, and the Colorado Water Plan.\n\n Grant Administration and Contracting All WSRF grants are not approved until the CWCB board has voted on them or have been otherwise approved by the CWCB Director as allowed by Policy 25."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1057419,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AW7UdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "This encourages spending of special infusion dollars, especially as some may have timelines for spending tied to them.\n\n o Statewide Grant Fund Becomes Available Once Statewide Reserve is\n\n Full Once the three-year reserve balance in the Statewide Account has been exceeded or special funding becomes available, excess funding beyond the three-year reserve will be used to re-establish statewide grants intended to support projects that address specific objectives and categories defined by CWCB. The statewide grant funds will last until they are exhausted or until established federal or state legislated deadlines require monies to be spent. Annually, the CWCB may reevaluate the definitions, categories and operations of the statewide grant fund to enhance clarity and support if needed. Details on the statewide grant fund categories and match requirements follow:\n\n ■ Grant Conditions and Categories for Statewide Grant Funding CWCB will seek to fund projects as they pertain to the mission of the CWCB, the Colorado Water Plan and related statutes. This includes encouraging applicants to work with diverse stakeholder groups and demonstrate multiple benefits whenever possible. In some cases, projects that may fall into certain categories (e.g. wastewater treatment; drinking water treatment) may not ultimately fit or fully fit within the WSRF program and may be better suited for other programs such as the CWCB Loan Program, State Revolving Funds (maintained by other state entities), federal grants, etc. Other legal, legislative and/or contractual requirements may limit what can be funded through WSRF.\n\n Because funding for aging infrastructure and drought resilience are two identified needs that are not specifically the focus of other CWCB grant funds, the statewide match will focus statewide grants in these two areas. Funds will be distributed into one shared account where both categories can request funds from as specified below.\n\n ● Statewide Grants for Aging Infrastructure Structural projects that seek to rehab or repair existing physical infrastructure for dams, pipelines, headgates or other construction projects that aim to strengthen or otherwise secure/repair water storage, conveyance, passage, delivery or equipment that may be failing,\n\n \n\n 7 As established when the PEPO Grants were created and because both PEPO Grants and WSRF Grants come from the same severance tax-supported Perpetual Base Fund, the Standard and Special Funding Operations Procedures for the Basin Account will be applied to both WSRF and PEPO grants. The same infusions will be applied to each of the nine basins as well as the single PEPO account (which is distributed to each basin through the PEPO Grant Program).impaired or in need of enhancements."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1019475,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AUrUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 4,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "85f8c6bc40529429": {
+  "query": "application submission deadline",
+  "filter": "7c90c9e31a66f8a8",
+  "retrievalResults": []
+ },
+ "98b4579ce58bbd12": {
+  "query": "budget template or spreadsheet submission",
+  "filter": "7c90c9e31a66f8a8",
+  "retrievalResults": []
+ },
+ "9c417985e871383b": {
+  "query": "detailed budget narrative and cost breakdown",
+  "filter": "7c90c9e31a66f8a8",
+  "retrievalResults": []
+ },
+ "b24b7d60ba3d51e3": {
+  "query": "eligible applicants who can apply",
+  "filter": "7c90c9e31a66f8a8",
+  "retrievalResults": []
+ },
+ "b8acee34f6ad7a56": {
+  "query": "WSRF application due date schedule",
+  "filter": "536016ba70e0d908",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The CWCB will make decisions for approving or denying the allocation of WSRF during regularly scheduled board meetings after a three-month processing period. Table 1 lists the submittal deadlines for the respective Board meetings when WSRF applications submitted by the deadline will be reviewed.\n\n Table 1: WSRF Submittal Dates and Board Meeting Schedule for all WSRF Grants\n\n WSRF Application Submittal Date CWCB Board Meeting Where Application Is Reviewed\n\n October 1 January CWCB Board Meeting December 1 March CWCB Board Meeting February 1 May CWCB Board Meeting\n\n April 1 July CWCB Board Meeting June 1 September CWCB Board Meeting\n\n August 1 November CWCB Board MeetingWater Supply Reserve Fund Program Grant Guidelines – January 2023\n\n • Grant Evaluation Criteria The proposed water project shall be evaluated using the WSRF guidelines for state support in Colorado’s Water Plan. In general, the proposal will be evaluated on how well it aligns with the respective Basin Implementation Plan(s)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.5731876,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AWbUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n \n\n WATER SUPPLY RESERVE FUND PROGRAM Grant Guidelines\n\n Approved January 23, 2023; (accessibility updated July 2025) Effective date for Statewide Grant request is 1/1/2022\n\n Grant Guidelines\n\n Introduction\n\n Legislation and Authority Senate Bill 06-179, adopted by the 2006 General Assembly, created the Water Supply Reserve Account, now called the Water Supply Reserve Fund (WSRF) per SB13-181. The WSRF grant program is subject to amendment by the legislature - most recently by SB21- 281. The WSRF Criteria and Guidelines (guidelines hereafter) are also subject to review and revision at the discretion of the Colorado Water Conservation Board (CWCB), especially when additional infusions of funds come available through special funding measures that may augment WSRF.\n\n While roundtables recommend WSRF grants for approval to the board and while the Interbasin Compact Committee (IBCC) is consulted on guideline changes, CWCB has the sole discretion to establish the WSRF guidelines and the CWCB is the ultimate approver of any WSRF grants which are recommended for approval and moved to the board for consideration1. Additional requirements cannot be imposed on the CWCB by a local public body or other entity. Guidelines or other requirements are set by the CWCB and can only be amended by the CWCB or the state legislature. This document establishes the guidelines developed by the CWCB. In approving grants from WSRF, the CWCB will apply the guidelines described in this document.\n\n Intended Use and Contracting WSRF funds are to be used to fund water activities within any designated roundtable on a competitive basis based on the eligibility requirements and the evaluation guidelines outlined in this document. Grant funds can be used to fund projects, studies or other planning efforts but cannot be used to hire consultants directly - all funds must go to grant making and all contracts are held with the State of Colorado and are managed and reportable to the CWCB.\n\n WSRF Grants and the Water Plan Grant Program WSRF grant funds are generally not eligible to be used as match funding for a Water Plan Grant and may not be approved."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3939892,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ATbUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Exception requests will be reviewed on a case-by-case basis and applicants must coordinate with CWCB to obtain written approval from CWCB\n\n 1 Based on the provisions outlined in Policy 25 (https://dnrweblink.state.co.us/CWCB/0/edoc/214605/Policy25.pdf) approval will be determined by either the CWCB Director or the CWCB Board based on the dollar amount being requested. In all cases, staff provide initial review and recommendation for submitted grant applications to the director(s)\n\n \n\n \n  https://dnrweblink.state.co.us/CWCB/0/edoc/214605/Policy25.pdfWater Supply Reserve Fund Program Grant Guidelines – January 2023\n\n staff in advance of the application submission to identify the need for the request and potential alternative solutions.\n\n WSRF Grants and PEPO Grant Program WSRF funds can be used to fund education and outreach initiatives. In revising WSRF guidelines and funding, the CWCB Board developed guidelines for a separate Public Education Participation and Outreach (PEPO) Grant Program that is connected to WSRF funding account distributions - effectively representing a tenth basin to fund (nine basin roundtables and one PEPO funding source paid from the WSRF accounts). As such, WSRF funding operations impact PEPO Grant Program funds.\n\n Severance Tax Variability Applicants should be aware that many variables will impact available funding for this grant program, including severance tax. To address the historical variability in funding for this grant program and provide stability to the roundtables, the CWCB has worked to restructure the WSRF program to offer greater predictability in roundtable allocations and develop a consistent level of funding that CWCB could achieve in most years. At the same time, revisions to the guidelines allow for special operations in times of higher severance tax and/or special funding is made available to WSRF.\n\n WSRF Program Operations\n\n WSRF Operating Procedures for Standard and Special Funding Conditions To fund WSRF grants, a Basin Account was established and annual allocations are distributed equally, unless otherwise noted, across the nine (9) basin roundtables. The CWCB tracks distributed funds by basin and monitors ongoing balances and expenditures. The CWCB also manages a statewide account that can be used in two ways; Standard Funding, or Special Operating Procedures2.\n\n The Standard Funding Operating Procedures exist to ensure monies for roundtables can be consistently funded even when severance tax inputs are low or non-existent."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.333879,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ATrUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Past Expenditures Recognizing the limited resources of some entities, past expenditures directly related to the water activity may be considered as matching funds if the expenditures occurred within 9 months of the execution date of the contract or purchase order between the applicant and the State of Colorado.Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n Application Process Applicants should contact the applicable roundtable and CWCB staff early in the process, several months (6 - 12 months) before the applicant would like to begin the project to ensure they can be placed on roundtable agendas and have time to consult with WSRF coordinators at CWCB and at the roundtable level beforehand. Applicants must upload application documents into the online portal CWCB created to process water project grants and loans (CWCB Portal). Application forms are available on the CWCB website (https://cwcb.colorado.gov) under Loans and Grants. Basin WSRF coordinators will evaluate the application from the CWCB Portal using the roundtable’s process. The roundtable will determine if the application meets the eligibility requirements described in this document, including the requirements for match funding. If the application is recommended for approval, the roundtable will submit a written recommendation to the CWCB signed by the Roundtable Chair through the CWCB Portal. The letter of recommendation must specify the amount of grant funding requested from the Basin Account and describe how the water activity meets Basin Implementation Plan goals. The letter should describe the level of agreement among roundtable members, who opposed the application and why, and any minority opinion.\n\n Applicants should include at a minimum the following documents:\n\n • Completed Application through the CWCB Portal • Upload a Word version of Exhibit A (Statement of Work) • Upload Engineer’s estimate of probable cost for construction projects over\n\n $100,000 • Upload the Exhibit B Budget & Schedule. A detailed budget must be provided in\n\n Excel • Upload Maps to the CWCB Portal (if applicable) • Upload Letters of Commitment (matching funds) as PDFs • Upload Photos or drawings as PDFs\n\n Applicants should confirm that the documentation in the grants and loan portal correctly captures the roundtable’s recommendation to move the grant forward for CWCB approval. This is captured by the Basin Roundtable Chair’s submitted approval letter for the applicant's project (submitted via the CWCB portal).\n\n • Grant Submittal and CWCB Review Schedule Applications for both basin and, when available, statewide WSRF grants can be submitted based on the schedule shown in Table 1 below."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3301146,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AWLUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If the grant request is for a phase of a larger project, only include costs associated with the phase being funded at this time in the Total WSRF Project Cost.\n\n 9 Applicants can use the WSRF Calculator to confirm if their basin request and applicant match is consistent with the required amount for Statewide applications.\n\n \n\n Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n \n\n \n  https://docs.google.com/spreadsheets/d/1qpZqZpkGo4Y1rr99ahEfwJDbWLLzXlSX/edit#gid%3D1685517751Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n Eligible Project Examples Examples of eligible projects and activities:\n\n • Technical assistance regarding permitting, feasibility studies, and environmental compliance."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3297288,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AVLUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Activities that promote education, outreach, and innovation consistent with the mission and goals of the Colorado Water Plan.\n\n Matching Fund Requirements WSRF Grant requests require matching funds. A minimum of 25% match is required for all WSRF projects. Greater weight may be given to projects with a higher match. Matching funds may consist of a combination of in-kind and cash match with no more than half of the match coming from in-kind. Applicants should identify matching funds as either pending or secure and provide evidence of those matching funds (such as an award letter). Matching funds must be secured within one year of the application date and prior to contracting. Non-CWCB matching funds include state agencies such as Great Outdoors Colorado (GOCO), Colorado Parks and Wildlife (CPW) funding, and other state and/or federal agencies. CWCB loans are also considered matching funds. All other funding sources within the control of the CWCB Board and its Director are considered CWCB funds.\n\n • Cash Match\n\n Actual expenditures paid directly with cash funds (based on contractual arrangements) from the grantee to a vendor. Examples are supplies, services, and necessary equipment purchase or rental"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.30436,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AVrUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Consideration is also given to the timing of projects with priority given to projects with an earlier start date. The CWCB’s review and approval process (consistent with Policy 25: https://dnrweblink.state.co.us/CWCB/0/edoc/214605/Policy25.pdf) will include the following steps:\n\n o Following a Roundtable recommendation for approval, CWCB staff will determine if the required documentation has been submitted. The application will be accepted once all documentation has been received.\n\n o CWCB staff and a committee of subject matter experts will evaluate the application based on the guidelines described in this document and notify the CWCB Board member representing the corresponding basin.\n\n o CWCB staff will prepare a Water Activity Summary Sheet for the Board or the CWCB Director based on the grant amount requested per CWCB Policy 25, that contains the application, the required documents and optional documents listed above, and an explanation of the staff’s recommendation for Board/Director action.\n\n o CWCB staff will notify the applicant of the staff’s recommendation and of the date and time when the Board will consider the application if required per Policy 25. While CWCB staff has primary responsibility for presenting the recommendation to the Board, the applicant is welcome to attend the meeting to address the Board and may offer comments during the opportunity for public comment.\n\n o Upon Board approval (or where Policy 25 is applicable, CWCB Director approval) of the applicant’s request, funding can only be used on project components that begin after a grant contract is executed by the Office of the State Controller.\n\n o Successful applicants are expected to execute a contract with CWCB within six (6) months of award.\n\n • Initial CWCB Review of Grant Applications\n\n After thorough evaluation, CWCB staff will recommend applicable projects to the CWCB Board or CWCB Director for approval of grant funding during regularly scheduled Board meetings. The CWCB reserves the right to negotiate with applicants to modify the scope and/or budget of a project to ensure it aligns with procurement rules, enhances the quality of the projects, and/or better aligns with state planning documents. The latter include subsequent statewide water supply initiative (SWSI) updates like the Analysis and Technical Update to the Colorado Water Plan (Technical Update), the Basin Implementation Plans, and the Colorado Water Plan.\n\n Grant Administration and Contracting All WSRF grants are not approved until the CWCB board has voted on them or have been otherwise approved by the CWCB Director as allowed by Policy 25."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3024433,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AW7UdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "d95e28807bc99b69": {
+  "query": "budget format requirements",
+  "filter": "536016ba70e0d908",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The request for payment must be transmitted on the grantee’s letterhead, and shall include:\n\n • Date of request • Grantee’s contact name, email address, physical address, and phone number • Contract or purchase order numberWater Supply Reserve Fund Program Grant Guidelines – January 2023\n\n • Description of the work accomplished by major task as presented in the approved budget10\n\n • Estimate of the percent completion for individual tasks and the entire water activity in relation to the percentage of budget spent\n\n • Supporting documentation for items or services billed\n\n Grant Amendments Grants may be amended as appropriate, including modifications to Exhibit A, Statement of Work, Budget, and Schedule; purchase order or contract extensions; and Change of Grantee. All amendment requests shall include:\n\n • Date of request • Grantee’s contact name, email address, physical address, and phone number; • Roundtable that recommended the grant; • Date of the initial CWCB grant approval; • Contract or purchase order number and current expiration date; • Rationale for amendment; ● Revised Tasks – CWCB Program Manager approval\n\n required; • Revised Exhibit A (Statement of Work and Budget/Schedule Table); • Extension to Terms – Revised Exhibit A, Schedule (B, C, etc.) with desired\n\n expiration date.\n\n Request for Change of Grantee A signed Letter of Request shall be accompanied by (when applicable): a revised Statement of Work, Budget, and Schedule (proposed new Grantee); a letter drafted by current Grantee requesting the release; a letter drafted by proposed Grantee accepting grant obligations and responsibilities; and an updated Certificate(s) of Insurance for the proposed new Grantee. Requests for Change of Grantee must be presented and approved by the CWCB Board. Amended documents for grant extension requests shall be delivered to CWCB 30 days prior to the current expiration date of purchase orders and 90 days prior to expiration of a contract.\n\n \n\n 10 This may be utilized in lieu of a 6 month progress report if adequate detail is provided. Contact the Project Manager to determine if your project qualifies for this option."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3096613,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AXbUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If approved, the grant can move forward with contracting as detailed below:\n\n • Documents Required for ContractingWater Supply Reserve Fund Program Grant Guidelines – January 2023\n\n The following documents are required by the state for all contracts. o Insurance Certificate of Liability (Government entities excluded) o Secretary of State - Certificate of Good Standing (excluding government\n\n entities) o W-9 Taxpayer Identification number and certification ○ Electronic Funds\n\n Transfer (preferred)\n\n • Contracting After approval of funding, CWCB staff will direct the applicant to revise and supplement submitted documents if required for issuance of a purchase order or execution of a contract. Successful applicants are expected to execute a contract with CWCB within 6 months of award. If a grant contract is not executed within this timeframe, CWCB staff may return the funds back to the appropriate funding category if adequate progress is not made. For contracts related to easements (e.g. conservation easements) CWCB staff may require additional processing time. If a grant is not executed within this six (6) month time frame due to applicant delays, staff may revert funds back to appropriate accounts, after consulting with the respective roundtable(s).\n\n • Reporting Requirements Progress Reports: The applicant shall provide the CWCB progress reports every 6 months, beginning from the date of issuance of a purchase order, or the execution of a contract. The progress report shall describe the status of the tasks identified in the statement of work, including a description of any major issues that have occurred and any corrective action taken to address these issues. The CWCB may withhold reimbursement until satisfactory progress reports have been submitted.\n\n o Final Report and Final Payment At completion of the project, the applicant shall provide the CWCB a final report on the applicant’s letterhead that:  Summarizes the project and how the project was completed.  Describes any obstacles encountered, and how these obstacles\n\n were overcome.  Confirms that all matching commitments have been fulfilled.  Includes photographs, summaries of meetings and engineering\n\n reports/designs.\n\n The CWCB will withhold disbursement of the last 10% of the budget until the Final Report is completed to the satisfaction of CWCB staff. Once the final report has been accepted, and final payment has been issued, the purchase order or grant will be closed without any further payment. See additional information on payments below.\n\n Payments Payment will be based on actual expenditures invoiced by the grantee. Payments are limited by the proportionate grant percentage of the overall project."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2767967,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AXLUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Past Expenditures Recognizing the limited resources of some entities, past expenditures directly related to the water activity may be considered as matching funds if the expenditures occurred within 9 months of the execution date of the contract or purchase order between the applicant and the State of Colorado.Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n Application Process Applicants should contact the applicable roundtable and CWCB staff early in the process, several months (6 - 12 months) before the applicant would like to begin the project to ensure they can be placed on roundtable agendas and have time to consult with WSRF coordinators at CWCB and at the roundtable level beforehand. Applicants must upload application documents into the online portal CWCB created to process water project grants and loans (CWCB Portal). Application forms are available on the CWCB website (https://cwcb.colorado.gov) under Loans and Grants. Basin WSRF coordinators will evaluate the application from the CWCB Portal using the roundtable’s process. The roundtable will determine if the application meets the eligibility requirements described in this document, including the requirements for match funding. If the application is recommended for approval, the roundtable will submit a written recommendation to the CWCB signed by the Roundtable Chair through the CWCB Portal. The letter of recommendation must specify the amount of grant funding requested from the Basin Account and describe how the water activity meets Basin Implementation Plan goals. The letter should describe the level of agreement among roundtable members, who opposed the application and why, and any minority opinion.\n\n Applicants should include at a minimum the following documents:\n\n • Completed Application through the CWCB Portal • Upload a Word version of Exhibit A (Statement of Work) • Upload Engineer’s estimate of probable cost for construction projects over\n\n $100,000 • Upload the Exhibit B Budget & Schedule. A detailed budget must be provided in\n\n Excel • Upload Maps to the CWCB Portal (if applicable) • Upload Letters of Commitment (matching funds) as PDFs • Upload Photos or drawings as PDFs\n\n Applicants should confirm that the documentation in the grants and loan portal correctly captures the roundtable’s recommendation to move the grant forward for CWCB approval. This is captured by the Basin Roundtable Chair’s submitted approval letter for the applicant's project (submitted via the CWCB portal).\n\n • Grant Submittal and CWCB Review Schedule Applications for both basin and, when available, statewide WSRF grants can be submitted based on the schedule shown in Table 1 below."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2334582,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AWLUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If the grant request is for a phase of a larger project, only include costs associated with the phase being funded at this time in the Total WSRF Project Cost.\n\n 9 Applicants can use the WSRF Calculator to confirm if their basin request and applicant match is consistent with the required amount for Statewide applications.\n\n \n\n Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n \n\n \n  https://docs.google.com/spreadsheets/d/1qpZqZpkGo4Y1rr99ahEfwJDbWLLzXlSX/edit#gid%3D1685517751Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n Eligible Project Examples Examples of eligible projects and activities:\n\n • Technical assistance regarding permitting, feasibility studies, and environmental compliance."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2280293,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AVLUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Exception requests will be reviewed on a case-by-case basis and applicants must coordinate with CWCB to obtain written approval from CWCB\n\n 1 Based on the provisions outlined in Policy 25 (https://dnrweblink.state.co.us/CWCB/0/edoc/214605/Policy25.pdf) approval will be determined by either the CWCB Director or the CWCB Board based on the dollar amount being requested. In all cases, staff provide initial review and recommendation for submitted grant applications to the director(s)\n\n \n\n \n  https://dnrweblink.state.co.us/CWCB/0/edoc/214605/Policy25.pdfWater Supply Reserve Fund Program Grant Guidelines – January 2023\n\n staff in advance of the application submission to identify the need for the request and potential alternative solutions.\n\n WSRF Grants and PEPO Grant Program WSRF funds can be used to fund education and outreach initiatives. In revising WSRF guidelines and funding, the CWCB Board developed guidelines for a separate Public Education Participation and Outreach (PEPO) Grant Program that is connected to WSRF funding account distributions - effectively representing a tenth basin to fund (nine basin roundtables and one PEPO funding source paid from the WSRF accounts). As such, WSRF funding operations impact PEPO Grant Program funds.\n\n Severance Tax Variability Applicants should be aware that many variables will impact available funding for this grant program, including severance tax. To address the historical variability in funding for this grant program and provide stability to the roundtables, the CWCB has worked to restructure the WSRF program to offer greater predictability in roundtable allocations and develop a consistent level of funding that CWCB could achieve in most years. At the same time, revisions to the guidelines allow for special operations in times of higher severance tax and/or special funding is made available to WSRF.\n\n WSRF Program Operations\n\n WSRF Operating Procedures for Standard and Special Funding Conditions To fund WSRF grants, a Basin Account was established and annual allocations are distributed equally, unless otherwise noted, across the nine (9) basin roundtables. The CWCB tracks distributed funds by basin and monitors ongoing balances and expenditures. The CWCB also manages a statewide account that can be used in two ways; Standard Funding, or Special Operating Procedures2.\n\n The Standard Funding Operating Procedures exist to ensure monies for roundtables can be consistently funded even when severance tax inputs are low or non-existent."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2208754,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ATrUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Water Supply Reserve Fund Program Grant Guidelines – January 2023\n\n \n\n WATER SUPPLY RESERVE FUND PROGRAM Grant Guidelines\n\n Approved January 23, 2023; (accessibility updated July 2025) Effective date for Statewide Grant request is 1/1/2022\n\n Grant Guidelines\n\n Introduction\n\n Legislation and Authority Senate Bill 06-179, adopted by the 2006 General Assembly, created the Water Supply Reserve Account, now called the Water Supply Reserve Fund (WSRF) per SB13-181. The WSRF grant program is subject to amendment by the legislature - most recently by SB21- 281. The WSRF Criteria and Guidelines (guidelines hereafter) are also subject to review and revision at the discretion of the Colorado Water Conservation Board (CWCB), especially when additional infusions of funds come available through special funding measures that may augment WSRF.\n\n While roundtables recommend WSRF grants for approval to the board and while the Interbasin Compact Committee (IBCC) is consulted on guideline changes, CWCB has the sole discretion to establish the WSRF guidelines and the CWCB is the ultimate approver of any WSRF grants which are recommended for approval and moved to the board for consideration1. Additional requirements cannot be imposed on the CWCB by a local public body or other entity. Guidelines or other requirements are set by the CWCB and can only be amended by the CWCB or the state legislature. This document establishes the guidelines developed by the CWCB. In approving grants from WSRF, the CWCB will apply the guidelines described in this document.\n\n Intended Use and Contracting WSRF funds are to be used to fund water activities within any designated roundtable on a competitive basis based on the eligibility requirements and the evaluation guidelines outlined in this document. Grant funds can be used to fund projects, studies or other planning efforts but cannot be used to hire consultants directly - all funds must go to grant making and all contracts are held with the State of Colorado and are managed and reportable to the CWCB.\n\n WSRF Grants and the Water Plan Grant Program WSRF grant funds are generally not eligible to be used as match funding for a Water Plan Grant and may not be approved."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2182165,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ATbUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The CWCB’s goal is to hold three years of funding in reserve to help ensure that consistent basin funding can be provided in years where severance tax and/or the CWCB’s Perpetual Base Fund may be lower5.\n\n • Special Funding Operating Procedures Special Funding Operating Procedures will be initiated and will temporarily supersede the Standard Funding Operating Procedures when the three-year reserve funding threshold for the Statewide Account has been exceeded, the CWCB Board approves an infusion and/or additional stimulus or legislative funds have been made available that create surplus funding for WSRF. The Special Funding Operating Procedures will be initiated by: A) providing a one-time increase to the Basin Account and providing basin dollars beyond the cap; B) reinstituting statewide grants above the reserve for as long as those funds are available in the Statewide Account. These procedures build on the Standard Funding Operating Procedures to augment both basin and statewide funds as described below.\n\n o Basin Disbursement, Tracking and Temporary Cap Exceedance\n\n Under special funding conditions, roundtable funds will be increased with a one-time infusion from their current balance on the day of approval, up to $1 million6. This temporarily exceeds the $750,000 cap that exists under Standard Operating Procedures; however, the cap will remain in effect to encourage spending unless another special infusion is made in the following year. In other words, the Standard Funding Operating Procedures for the Basin Account go back into effect immediately after the one-time infusion such that only basins that have spent money down\n\n 4 In 2021 the board approved the creation of a separate Public Education Participation and Outreach (PEPO) grant program which also supports roundtable PEPO liaisons and cross-basin collaboration of statewide PEPO efforts. These funds also come from the Perpetual Base Fund."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2098626,
+    "metadata": {
+     "documentIdentifier": "Water Supply Reserve Fund (WSRF) Grants",
+     "agency": "Colorado Water Conservation Board with Basin Roundtables",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AULUdW6EBbayybwJOyd1o",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Water Supply Reserve Fund (WSRF) Grants/NOFO-File-PDF",
+     "nofoName": "Water Supply Reserve Fund (WSRF) Grants",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "state",
+     "processedAt": "2026-10-20T20:54:46.299Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "state": "CO",
+     "category": "Natural Resources"
+    }
+   }
+  ]
+ },
+ "e32f4204abafe6cd": {
+  "query": "WSRF application due date schedule",
+  "filter": "7c90c9e31a66f8a8",
+  "retrievalResults": []
+ }
+}

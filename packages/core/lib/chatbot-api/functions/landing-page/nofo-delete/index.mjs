@@ -9,7 +9,7 @@ import { S3Client, ListObjectsV2Command, DeleteObjectCommand } from '@aws-sdk/cl
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import { DynamoDBClient, DeleteItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
-import { requireAdmin, assertCanEditNofoOr403 } from 'grantwell-shared';
+import { requireAdmin, assertCanEditNofoOr403, deleteArtifacts } from 'grantwell-shared';
 
 const scopeDeps = { client: new DynamoDBClient(), GetItemCommand, marshall, unmarshall };
 
@@ -57,10 +57,12 @@ export const handler = async (event) => {
       return items;
     }
 
-    objects = await listAllObjects(nofoName);
+    let folder = nofoName;
+    objects = await listAllObjects(folder);
 
     if (objects.length === 0 && nofoName.includes('/')) {
-      objects = await listAllObjects(nofoName.replace(/\//g, '-'));
+      folder = nofoName.replace(/\//g, '-');
+      objects = await listAllObjects(folder);
     }
 
     // Delete all objects in the folder (including metadata files)
@@ -72,6 +74,8 @@ export const handler = async (event) => {
 
       await s3Client.send(deleteCommand);
     }
+
+    const artifactCount = await deleteArtifacts(s3Client, folder);
 
     // Always remove the DynamoDB row even when S3 has no objects: the dashboard
     // lists NOFOs from DynamoDB, so an orphaned metadata row (S3 already gone)
@@ -99,7 +103,7 @@ export const handler = async (event) => {
       }
     }
 
-    if (objects.length === 0 && !dynamoDeleted) {
+    if (objects.length === 0 && artifactCount === 0 && !dynamoDeleted) {
       return {
         statusCode: 404,
         headers: { 'Access-Control-Allow-Origin': '*' },

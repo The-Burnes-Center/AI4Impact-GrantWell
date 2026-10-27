@@ -1,0 +1,1244 @@
+{
+ "044fae7d783b6ba7": {
+  "query": "pre-application meeting, workshop, or outreach session",
+  "filter": "8fd7fa693814d85b",
+  "retrievalResults": []
+ },
+ "0cfbe8a262895f8d": {
+  "query": "eligible applicants who can apply",
+  "filter": "216794c1aec1b9c0",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Eligible Applicants .................................................................................................................................... 8\n\n 1. DOE/NNSA National Laboratories ............................................................................................................. 8 2. Non-DOE/NNSA FFRDCs ............................................................................................................................ 8 3. Other Federal Agencies ............................................................................................................................. 9 4. Ineligible Participants ................................................................................................................................ 9\n\n B. Other Eligibility Requirements and Limitations ...................................................................................... 10 C. Cost Sharing ........................................................................................................................................... 10\n\n 1. Cost Share Requirements ........................................................................................................................ 10 2. Unallowable Cost Share Sources ............................................................................................................. 10\n\n III. PROGRAM DESCRIPTION ...................................................................................................... 11 A."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3828564,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AyLVgYKEBbayybwJOc_Q8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "You can find the eligibility requirements that apply to all NOFOs in NOFO Part 2, Eligibility.\n\n Eligible Applicants\n\n All types of applicants are eligible to apply, except nonprofit organizations described in section 501(c)(4) of the Internal Revenue Code of 1986 that engaged in lobbying activities after December 31, 1995.\n\n Federally affiliated1 entities must adhere to the eligibility standards below: 1. DOE/NNSA National Laboratories2\n\n DOE/National Nuclear Security Administration (NNSA) National Laboratories are not eligible to submit applications under this NOFO but may be proposed as subrecipients under another organization’s application. If recommended for funding as a proposed subrecipient, the value of the proposed subaward will be removed from the prime applicant’s award and will be provided to the laboratory through the DOE Field-Work Proposal System and work will be conducted under the laboratory’s contract with DOE. No administrative provisions of this NOFO will apply to the laboratory or any laboratory subcontractor. Additional instructions for securing authorization from the cognizant Contracting Officer are found in Part 2 of this NOFO. 2. Non-DOE/NNSA FFRDCs\n\n Non-DOE/NNSA Federally Funded Research and Development Centers (FFRDCs) are eligible to submit applications (either as a lead organization or as a team member in a multi- institutional team) under this NOFO and may be proposed as subrecipients under another organization’s application. If recommended for funding as a lead applicant or a team member, funding will be provided through an interagency agreement award to the FFRDC’s sponsoring Federal agency. If recommended for funding as a proposed subrecipient, the value of the proposed subaward may be removed from the prime applicant’s award and may be provided\n\n 1 Institutions that are not DOE/NNSA National Laboratories, a non-DOE/NNSA FFRDC,\n\n or another Federal agency are not Federally affiliated, even if they receive Federal funds or perform work under a Federal award or contract.\n\n 2 The phrase “National Laboratories” is used broadly to encompass DOE/NNSA laboratories and sites capable of performing the work described in this NOFO and capable of receiving funds through the DOE Field Work System.Version 4.1 Page 9 of 130\n\n \n\n Notice of Funding Opportunity, Part 1\n\n through an interagency agreement award to the FFRDC’s sponsoring Federal agency."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3397257,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AzrVgYKEBbayybwJOc_Q8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Additional instructions for securing authorization from the cognizant Contracting Officer are found in Part 2 of this NOFO. 3. Other Federal Agencies\n\n Other Federal agencies are eligible to submit applications (either as a lead organization or as a team member in a multi-institutional team) under this NOFO and may be proposed as subrecipients under another organization’s application. If recommended for funding as a lead applicant or a team member, funding will be provided through an interagency agreement award. If recommended for funding as a proposed subrecipient, the value of the proposed subaward may be removed from the prime applicant’s award and may be provided through an interagency agreement award. Additional instructions for providing statutory authorization are found in Part 2 of this NOFO. Notes for applicants of all types:\n\n • Individuals not affiliated with a research institution should ensure that their applications demonstrate that they possess the skills, abilities, and resources to successfully accomplish the objectives of this NOFO.\n\n • For non-domestic applicants, successful applications include a detailed demonstration of how the applicant possesses the skills, resources, and abilities that do not exist among potential domestic applicants.\n\n This NOFO does not support an applicant’s commercial activity. This NOFO\n\n supports basic research to advance understanding rather than to address commercial opportunities. Applications that propose research related to current commercial activity or current customer needs may be declined without merit review. All for-profit applicants must include a description as an appendix to the Project Narrative, not to exceed 200 words, of how their proposed work will advance scientific understanding of a basic and fundamental nature. 4. Ineligible Participants\n\n The following entities are ineligible for this NOFO as a recipient, subrecipient, or\n\n subcontractor: • In accordance with 2 C.F.R. § 200.214, entities banned from doing business with the U.S."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3067627,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Az7VgYKEBbayybwJOc_Q8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Such applications must be aligned with programmatic priorities listed for at least two\n\n CSGB research areas described in the following subprograms. Potential applicants should submit a preapplication and discuss their ideas with the subprogram contacts for the areas of interest to determine programmatic before submitting an application."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2959518,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A-LVgYKEBbayybwJOc_Q8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 35,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Figures and references, if included, must fit within the three-page limit.\n\n In addition, the pre-application must include a list of senior/key personnel and a listing of individuals who should not serve as merit reviewers of a subsequent application. Detailed instructions for how to craft the required listings are provided in Part 2 of this NOFO. The list of individuals who should not serve as merit reviewers is rarely empty because the instructions contain mandatory inclusions requirements. This listing will not count toward the pre-application’s page limit. The list of individuals must be included as an “Additional Attachment” to your pre-application in PAMS.\n\n The pre-application must be machine-readable. Do not submit a scanned image of a printed document.\n\n The absence of an optional pre-application will not negatively affect an evaluation of a responsive application.Version 4.1 Page 107 of 130\n\n \n\n Notice of Funding Opportunity, Part 1\n\n Pre-Application Submission\n\n Pre-applications are created in the software system of your choice and must be submitted electronically through the DOE SC PAMS website. You cannot draft or edit a pre-application in PAMS. Do not submit a pre-application through FedConnect or Grants.gov.\n\n Pre-applications may be submitted by a PI or by other users at the PI’s institution with the “Submit to DOE” privilege in PAMS.\n\n Applicants are strongly encouraged to inform their DOE Program Manager if teaming arrangements, proposed personnel, topics, or the anticipated title change between submitting the pre-application and when an application is submitted to ensure that their application is properly linked to their pre-application and that reviewers are properly assigned to the application.\n\n Detailed instructions about how to submit a pre-application are in Part 2 of this NOFO. B. Application\n\n Applications in response to this NOFO must be submitted through Grants.gov. Detailed instructions for registering in and using Grants.gov are in Part 2 of this NOFO. C. Component Pieces of the Application Letters of Collaboration or Access\n\n Letters from collaborators or from institutions providing access to data, models, software, equipment, or facilities may be appended to your Project Narrative and are not considered part of the Project Narrative’s page limit. Please ensure that letters from collaborators or from institutions providing access to data, models, software, equipment, or facilities only describe the nature of the collaboration or the access to data, models, software, equipment, or facilities. Letters of recommendation are not allowed in applications under this NOFO.\n\n Letters of collaboration or access should be placed in Appendix 7 (Other Attachments)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2899859,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AabVgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 106,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Each pre-application will be reviewed for responsiveness and competitiveness of the proposed research.\n\n • To be considered by the panel, an application must be associated with an encouraged pre- application and request no more than $500,000 per year in total across all institutions for a three-year award. ASCR anticipates making at most two awards.\n\n • To be considered by the panel, a pre-application must be submitted by November 22, 2026. ASCR expects to provide pre-application encouragement and discouragement decisions by December 11, 2026.\n\n • Applications associated with an encouraged pre-application must be submitted by January 24, 2027"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2866048,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A27VgYKEBbayybwJOc_Q8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 17,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Each pre-application will be reviewed for responsiveness and competitiveness of the proposed research.\n\n • To be considered by the panel, an application must be associated with an encouraged pre- application and request no more than $500,000 per year in total across all institutions for a three-year award. ASCR anticipates making at most two awards.\n\n • To be considered by the panel, a pre-application must be submitted by February 19, 2027. ASCR expects to provide pre-application encouragement and discouragement decisions by March 12, 2027.\n\n • Applications associated with an encouraged pre-application must be submitted by April 12, 2027"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2862896,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A17VgYKEBbayybwJOc_Q8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   }
+  ]
+ },
+ "1961458cdfe99dd8": {
+  "query": "informational webinar for applicants",
+  "filter": "8fd7fa693814d85b",
+  "retrievalResults": []
+ },
+ "1bafdfde7f6c866a": {
+  "query": "application submission deadline",
+  "filter": "216794c1aec1b9c0",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Applications submitted by December 14, 2026, will be considered for funding in FY 2027.\n\n • Applications submitted after December 14, 2026, are not guaranteed consideration for funding this fiscal year."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4750615,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ABrVgYKEBbayybwJOc_U8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 44,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • Applications submitted by December 11, 2026, will be considered for funding in FY 2027.\n\n • Applications submitted after December 11, 2026, are not guaranteed consideration for funding this FY."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4742739,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AEbVgYKEBbayybwJOc_U8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 50,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Submission Dates and Times 1. Letter of Intent Due Date\n\n Not applicable. 2. Pre-application Due Date\n\n Optional pre-applications may be submitted at any time while this NOFO is available. Some topics may have required or strongly encouraged submissions by specified dates if an application is to be considered by a review panel. 3. Application Due Date\n\n This NOFO will remain open until September 30, 2027, at 11:59 PM Eastern Time, or until it is succeeded by another issuance, whichever occurs first. This NOFO succeeds DE-FOA- 0003600, which was published September 30, 2025.\n\n Applications for conference or workshop support must be submitted at least six months before the meeting date and no later than April 1, 2027, to be considered for FY 2027 funding.\n\n Renewal applications compete with all other applications and must be submitted through Grants.gov at least six months before the scheduled expiration of the current award’s project period. Earlier submission is strongly encouraged to allow for timely processing."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4687045,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AjLVgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 125,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Target Dates:\n\n • To be considered for funding in FY 2027, a pre-application must be submitted by November 20, 2026.\n\n • FES expects to provide pre-application encouragement and discouragement decisions by December 18, 2026.\n\n • Applications associated with encouraged pre-applications must be submitted by February 1, 2027."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4571718,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AOrVgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 75,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applications from encouraged pre-applications are due by September 5, 2027. Applications submitted without an encouraged pre-application will not be considered by the review panels. FY 2028 comparative review applications are also subject to the following additional guidance:\n\n o Narrative Length: Applications requesting $1,000,000 or less with research narratives longer than ten pages may present an undue burden on reviewers. Applications requesting more than $1,000,000 with research narratives longer than 20 pages may present an undue burden on reviewers.\n\n o Project start date: Applicants may wish to request a project start date in spring/summer of 2028, though actual start dates will be negotiated later.\n\n o Project duration: A three-year project period is standard. Any proposed deviations from a three-year project period must be described in the pre- application."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4435971,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AKbVgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 66,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "mailto:joshua.king@doe.gov\n \n\n \n  https://science.osti.gov/fes/ResearchVersion 4.1 Page 73 of 130\n\n \n\n Notice of Funding Opportunity, Part 1\n\n • Applications associated with encouraged pre-applications must be submitted by January 26, 2027.\n\n • Applications submitted after this deadline will be considered for funding in a future selection cycle.\n\n Applicants in this topic are advised that:\n\n • FES considers an appropriate budget to be up to $300,000 per year, regardless of the number of participating institutions.\n\n • FES considers award durations of three years to be appropriate for this topic. • If a multi-institutional team is submitting collaborative applications, only the lead\n\n institution should submit a pre-application, which should include all institutions, institutional Co-Principal Investigators, and all other personnel and relevant information."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4390779,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ANrVgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 72,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "These dates are not hard deadlines and applications are accepted throughout\n\n \n\n \n  mailto:xiaofeng.guo@doe.gov\n \n\n \n  mailto:david.rabson@doe.gov\n \n\n \n  mailto:marco.fornari@doe.gov\n \n\n \n  mailto:ravinder.kapoor@doe.gov\n \n\n \n  https://science.osti.gov/bes/\n \n\n \n  http://science.osti.gov/bes/community-resources/reports/\n \n\n \n  http://science.osti.gov/bes/mse/principal-investigators-meetings/\n \n\n \n  http://science.osti.gov/bes/csgb/principal-investigators-meetings/\n \n\n \n  http://science.osti.gov/bes/suf/Version 4.1 Page 22 of 130\n\n \n\n Notice of Funding Opportunity, Part 1\n\n the fiscal year for all BES research areas in this NOFO. The target dates reflect the time needed to conduct the review and recommendation process for support with funds from this fiscal year. Applications submitted after a target date are not guaranteed consideration for funding this fiscal year. If not considered this fiscal year, applications will be held for consideration in a future selection cycle"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4144609,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A4rVgYKEBbayybwJOc_Q8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 21,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   }
+  ]
+ },
+ "51be4db37a92cd48": {
+  "query": "informational webinar for applicants",
+  "filter": "216794c1aec1b9c0",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The scope and estimated budget of AI-related work should follow the guidance outlined in the NP introduction section of this NOFO.\n\n Because this subprogram focuses primarily on research, applications for community activities, such as visitor programs and workshops, must be submitted as standalone requests to be considered for merit review.\n\n For FY 2027, a comparative review panel is expected in early 2027. Applications submitted by Monday, November 16, 2026, will be evaluated by the panel. Applications submitted after this deadline will be considered for funding in FY 2028.\n\n FY 2028 comparative research review panels for HENP will meet in November 2027. Research applications for all programs are due by Thursday, September 2, 2027, for merit reviews by those panels."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.317899,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AS7VgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 87,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Scope of AI-related work and its estimated budget should follow the guidance outlined in the HENP introduction section of this NOFO.\n\n For FY 2027, a comparative review panel is expected in early 2027. Applications submitted by Monday, November 16, 2026, will be evaluated by the panel. Applications submitted after this deadline will be considered for funding in FY 2028.\n\n FY 2028 comparative research review panels for HENP will meet in November 2027. Research applications for all programs are due by Thursday, September 2, 2027, for merit reviews by those panels."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2800605,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AW7VgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 96,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applications from encouraged pre-applications are due by September 5, 2027. Applications submitted without an encouraged pre-application will not be considered by the review panels. FY 2028 comparative review applications are also subject to the following additional guidance:\n\n o Narrative Length: Applications requesting $1,000,000 or less with research narratives longer than ten pages may present an undue burden on reviewers. Applications requesting more than $1,000,000 with research narratives longer than 20 pages may present an undue burden on reviewers.\n\n o Project start date: Applicants may wish to request a project start date in spring/summer of 2028, though actual start dates will be negotiated later.\n\n o Project duration: A three-year project period is standard. Any proposed deviations from a three-year project period must be described in the pre- application."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2791582,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AKbVgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 66,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Additional Application Instructions\n\n Applications must adhere to the following guidelines:\n\n • Team Structure: Applications can originate from a single institution or a multi- institutional team. For multi-institutional collaborations, a prime and subaward model, with the lead institution submitting a single consolidated application, is a better fit for applications to this subtopic.\n\n • Interdisciplinary Requirement: Applications with experimental scope must involve researchers from both nuclear physics and QIS disciplines. Applications must clearly articulate how the proposed research will generate significant impact in both fields.\n\n • National Laboratory Alignment: Applications that include subawards to Department of Energy (DOE) or National Nuclear Security Administration (NNSA) National Laboratories must explicitly detail how the proposed research aligns with the existing and ongoing scientific activities at the respective laboratories.\n\n • AI Integration: If the application includes AI components, the scope of this work and its estimated budget must conform to the specific guidance provided in the HENP introduction section of this NOFO.\n\n • Relevance to Objectives: Applications that do not clearly articulate the relevance of the proposed research to the nuclear physics and QIS objectives within the application narrative will not be considered.\n\n For FY 2027, a comparative review panel is expected in early 2027. Applications\n\n submitted by Monday, November 16, 2026, will be evaluated by the panel. Applications submitted after this deadline will be considered for funding in FY 2028.\n\n FY 2028 comparative research review panels for HENP will meet in November 2027. Research applications for all programs are due by Thursday, September 2, 2027, for merit reviews by those panels. Applicants are strongly encouraged to submit pre-applications by July 29, 2027.\n\n Applicants are strongly encouraged to review recent QIS awards from NP. You can find those awards on the program website. You can find more information about SC endeavors in the QIS Centers website and the SC Program Offices QIS website."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.265224,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AUrVgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 92,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Submission Dates and Times 1. Letter of Intent Due Date\n\n Not applicable. 2. Pre-application Due Date\n\n Optional pre-applications may be submitted at any time while this NOFO is available. Some topics may have required or strongly encouraged submissions by specified dates if an application is to be considered by a review panel. 3. Application Due Date\n\n This NOFO will remain open until September 30, 2027, at 11:59 PM Eastern Time, or until it is succeeded by another issuance, whichever occurs first. This NOFO succeeds DE-FOA- 0003600, which was published September 30, 2025.\n\n Applications for conference or workshop support must be submitted at least six months before the meeting date and no later than April 1, 2027, to be considered for FY 2027 funding.\n\n Renewal applications compete with all other applications and must be submitted through Grants.gov at least six months before the scheduled expiration of the current award’s project period. Earlier submission is strongly encouraged to allow for timely processing."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2630863,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AjLVgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 125,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "We strongly encourage pre- applications to ensure alignment with program goals. Before submission, we highly encourage you to contact the subprogram contact for format and content.\n\n Applications in response to this NOFO may also propose activities that support FNS research, which include but are not limited to supplemental support for research activities, conferences, or exploratory (seed) research. Emerging fusion technologies and innovative feasibility studies that contribute to the fusion technology ecosystem and accelerate commercialization of fusion energy are in scope. These applications are not part of the comparative review process and may receive lower programmatic priority unless exceptions are warranted based on program needs. Additional Application Instructions\n\n • The deadline for the FY 2027 FNS Comparative Review was September 5, 2026. • For FY 2028, FNS expects to convene merit review panels in November 2027.\n\n Applicants must submit pre-applications by July 15, 2027. Encourage/discourage decisions are expected to be returned by August 5, 2027. Applications from encouraged pre-applications are due by September 7, 2027. Applications submitted without an\n\n \n\n \n  mailto:kramer.akli@doe.gov\n \n\n \n  https://science.osti.gov/fes/Research\n \n\n \n  mailto:josh.king@doe.gov\n \n\n \n  https://science.osti.gov/fes/ResearchVersion 4.1 Page 70 of 130\n\n \n\n Notice of Funding Opportunity, Part 1\n\n encouraged pre-application will not be considered. FY 2028 comparative review applications are also subject to the following additional guidance:  Narrative Page Limits: Applications requesting less than $1,500,000 with research\n\n narratives longer than 15 pages may present an undue burden on reviewers; applications requesting more than $1,500,000 with research narratives longer than 20 pages may present an undue burden on reviewers."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2542356,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AMbVgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 69,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Administrative questions should be directed to sc.opencall@doe.gov. Applications submitted for the FY 2028 HENP comparative review process\n\n HENP expects to convene merit review panels in November 2027 for research areas (a) through (o) below. Research applications that are aligned with one or more of those research areas and are received by Thursday, September 2, 2027, will be considered for merit review by those panels. Applicants are strongly encouraged to submit pre-applications by July 29, 2027.\n\n Additional information about the high energy physics and nuclear research areas described above, and in areas (a) through (o) below, may be found at https://science.osti.gov/hep/research/ and https://science.osti.gov/np/. All applicants should pay particular attention to the following when preparing applications to be submitted to this NOFO:\n\n \n\n \n  mailto:sc.opencall@science.doe.gov\n \n\n \n  https://science.osti.gov/hep/research/\n \n\n \n  https://science.osti.gov/np/Version 4.1 Page 81 of 130\n\n \n\n Notice of Funding Opportunity, Part 1\n\n • External peer reviewers will be explicitly requested to evaluate the applicant’s proposed work in relation to HENP priorities.\n\n • Applications for support of generic particle detector R&D efforts should be directed to the Instrumentation and Detector R&D in High Energy and Nuclear Physics research area described below. However, applicants proposing physics studies and pre-conceptual R&D efforts directed toward a specific experiment should submit their application to the relevant HENP scientific frontier research subprogram specified below.\n\n • Applications which pose an undue burden on merit reviewers may be declined without review:\n\n • Applications in HENP from a single institution must not contain project narratives longer than nine pages per senior/key person. This limit includes multi- institutional teams with applications structured as a single primary applicant with subawards.\n\n • Collaborative applications in HENP from multi-institutional teams must not contain project narratives longer than nine pages per senior/key person or a total of 20 pages, whichever is less.\n\n • In addition to the points listed in Section IV, HENP also offers these suggestions on the Project Narrative:\n\n • Research using Artificial Intelligence AI or ML, if applicable: HENP will prioritize support for AI research activities through the Genesis Mission and dedicated funding opportunities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2509267,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AQ7VgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 80,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   }
+  ]
+ },
+ "9dfa0c57b301de08": {
+  "query": "due date for applications and pre-application deadlines",
+  "filter": "216794c1aec1b9c0",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Target Dates:\n\n • To be considered for funding in FY 2027, a pre-application must be submitted by November 20, 2026.\n\n • FES expects to provide pre-application encouragement and discouragement decisions by December 18, 2026.\n\n • Applications associated with encouraged pre-applications must be submitted by February 1, 2027."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.6196246,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AOrVgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 75,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applications from encouraged pre-applications are due by September 5, 2027. Applications submitted without an encouraged pre-application will not be considered by the review panels. FY 2028 comparative review applications are also subject to the following additional guidance:\n\n o Narrative Length: Applications requesting $1,000,000 or less with research narratives longer than ten pages may present an undue burden on reviewers. Applications requesting more than $1,000,000 with research narratives longer than 20 pages may present an undue burden on reviewers.\n\n o Project start date: Applicants may wish to request a project start date in spring/summer of 2028, though actual start dates will be negotiated later.\n\n o Project duration: A three-year project period is standard. Any proposed deviations from a three-year project period must be described in the pre- application."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.5359468,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AKbVgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 66,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Each pre-application will be reviewed for responsiveness and competitiveness of the proposed research.\n\n • To be considered by the panel, an application must be associated with an encouraged pre- application and request no more than $500,000 per year in total across all institutions for a three-year award. ASCR anticipates making at most two awards.\n\n • To be considered by the panel, a pre-application must be submitted by November 22, 2026. ASCR expects to provide pre-application encouragement and discouragement decisions by December 11, 2026.\n\n • Applications associated with an encouraged pre-application must be submitted by January 24, 2027"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.5261239,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A27VgYKEBbayybwJOc_Q8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 17,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Each pre-application will be reviewed for responsiveness and competitiveness of the proposed research.\n\n • To be considered by the panel, an application must be associated with an encouraged pre- application and request no more than $500,000 per year in total across all institutions for a three-year award. ASCR anticipates making at most two awards.\n\n • To be considered by the panel, a pre-application must be submitted by February 19, 2027. ASCR expects to provide pre-application encouragement and discouragement decisions by March 12, 2027.\n\n • Applications associated with an encouraged pre-application must be submitted by April 12, 2027"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.5142932,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A17VgYKEBbayybwJOc_Q8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "mailto:joshua.king@doe.gov\n \n\n \n  https://science.osti.gov/fes/ResearchVersion 4.1 Page 73 of 130\n\n \n\n Notice of Funding Opportunity, Part 1\n\n • Applications associated with encouraged pre-applications must be submitted by January 26, 2027.\n\n • Applications submitted after this deadline will be considered for funding in a future selection cycle.\n\n Applicants in this topic are advised that:\n\n • FES considers an appropriate budget to be up to $300,000 per year, regardless of the number of participating institutions.\n\n • FES considers award durations of three years to be appropriate for this topic. • If a multi-institutional team is submitting collaborative applications, only the lead\n\n institution should submit a pre-application, which should include all institutions, institutional Co-Principal Investigators, and all other personnel and relevant information."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4988016,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ANrVgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 72,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Preliminary Submissions 1. Letter of Intent (LOI) Not applicable. 2. Pre-application Pre-Application Due Date\n\n Pre-applications may be submitted at any time while this NOFO is available. Some topics may have required or strongly encouraged submissions by specified dates if an application is to be considered by a review panel.\n\n A pre-application (also called white paper) is recommended but optional for many topics. Before submitting a pre-application, read the information in Section III of this NOFO carefully to make sure your idea is responsive and to select the topical subprogram most relevant to your idea.\n\n \n\n \n  https://science.osti.gov/About/History\n \n\n \n  https://science.osti.gov/Science-Features/Science-Highlights\n \n\n \n  https://pamspublic.science.energy.gov/WebPAMSExternal/interface/awards/AwardSearchExternal.aspxVersion 4.1 Page 106 of 130\n\n \n\n Notice of Funding Opportunity, Part 1\n\n You must select a program manager when you submit your pre-application using the\n\n DOE SC PAMS website. Choose the subprogram contact for the topical area most relevant to your idea from those listed in Section III of this NOFO.\n\n Feedback from DOE to the principal investigator is optional, but you are encouraged to use your submitted pre-application or white paper to initiate a discussion with the listed program manager about the appropriateness of the proposed research for this solicitation.\n\n If a multi-institutional team is submitting collaborative applications, only the lead institution may submit a pre-application. Pre-Application Format\n\n The pre-application must begin with a title page that will not count toward the pre- application page limitation. Include, at the top of the first page, the following information:\n\n Title of Pre-application\n\n Principal Investigator Name, Job Title [Lead] Institution\n\n PI Phone Number, PI Email Address NOFO Number: Include the NOFO Number indicated on the cover of this NOFO\n\n Include a list of all senior/key personnel at the applicant and, if applicable, team member institutions\n\n The title page must be followed by a clear and concise description of the objectives and\n\n technical approach of the proposed research. The pre-application may not exceed three pages, when printed using standard letter-size (8.5-inch x 11-inch) paper with 1-inch margins (top, bottom, left, and right). The body text font must not be smaller than 11 point."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4697266,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AaLVgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 105,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Submission Dates and Times 1. Letter of Intent Due Date\n\n Not applicable. 2. Pre-application Due Date\n\n Optional pre-applications may be submitted at any time while this NOFO is available. Some topics may have required or strongly encouraged submissions by specified dates if an application is to be considered by a review panel. 3. Application Due Date\n\n This NOFO will remain open until September 30, 2027, at 11:59 PM Eastern Time, or until it is succeeded by another issuance, whichever occurs first. This NOFO succeeds DE-FOA- 0003600, which was published September 30, 2025.\n\n Applications for conference or workshop support must be submitted at least six months before the meeting date and no later than April 1, 2027, to be considered for FY 2027 funding.\n\n Renewal applications compete with all other applications and must be submitted through Grants.gov at least six months before the scheduled expiration of the current award’s project period. Earlier submission is strongly encouraged to allow for timely processing."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.46544,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AjLVgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 125,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   }
+  ]
+ },
+ "b54ed5b51510dd30": {
+  "query": "pre-application meeting, workshop, or outreach session",
+  "filter": "216794c1aec1b9c0",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Preliminary Submissions 1. Letter of Intent (LOI) Not applicable. 2. Pre-application Pre-Application Due Date\n\n Pre-applications may be submitted at any time while this NOFO is available. Some topics may have required or strongly encouraged submissions by specified dates if an application is to be considered by a review panel.\n\n A pre-application (also called white paper) is recommended but optional for many topics. Before submitting a pre-application, read the information in Section III of this NOFO carefully to make sure your idea is responsive and to select the topical subprogram most relevant to your idea.\n\n \n\n \n  https://science.osti.gov/About/History\n \n\n \n  https://science.osti.gov/Science-Features/Science-Highlights\n \n\n \n  https://pamspublic.science.energy.gov/WebPAMSExternal/interface/awards/AwardSearchExternal.aspxVersion 4.1 Page 106 of 130\n\n \n\n Notice of Funding Opportunity, Part 1\n\n You must select a program manager when you submit your pre-application using the\n\n DOE SC PAMS website. Choose the subprogram contact for the topical area most relevant to your idea from those listed in Section III of this NOFO.\n\n Feedback from DOE to the principal investigator is optional, but you are encouraged to use your submitted pre-application or white paper to initiate a discussion with the listed program manager about the appropriateness of the proposed research for this solicitation.\n\n If a multi-institutional team is submitting collaborative applications, only the lead institution may submit a pre-application. Pre-Application Format\n\n The pre-application must begin with a title page that will not count toward the pre- application page limitation. Include, at the top of the first page, the following information:\n\n Title of Pre-application\n\n Principal Investigator Name, Job Title [Lead] Institution\n\n PI Phone Number, PI Email Address NOFO Number: Include the NOFO Number indicated on the cover of this NOFO\n\n Include a list of all senior/key personnel at the applicant and, if applicable, team member institutions\n\n The title page must be followed by a clear and concise description of the objectives and\n\n technical approach of the proposed research. The pre-application may not exceed three pages, when printed using standard letter-size (8.5-inch x 11-inch) paper with 1-inch margins (top, bottom, left, and right). The body text font must not be smaller than 11 point."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3577017,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AaLVgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 105,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• The first page of the pre-application should specify at least one scientific hypothesis whose investigation motivates the proposed work. This information must be followed by a clear and concise description of the objectives and technical approach of the proposed research.\n\n • Pre-applications with a sufficiently identical scope of work from a previously reviewed application will be discouraged without review. Applicants must highlight changes or revisions to previously reviewed applications."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3276604,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AN7VgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 73,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Figures and references, if included, must fit within the three-page limit.\n\n In addition, the pre-application must include a list of senior/key personnel and a listing of individuals who should not serve as merit reviewers of a subsequent application. Detailed instructions for how to craft the required listings are provided in Part 2 of this NOFO. The list of individuals who should not serve as merit reviewers is rarely empty because the instructions contain mandatory inclusions requirements. This listing will not count toward the pre-application’s page limit. The list of individuals must be included as an “Additional Attachment” to your pre-application in PAMS.\n\n The pre-application must be machine-readable. Do not submit a scanned image of a printed document.\n\n The absence of an optional pre-application will not negatively affect an evaluation of a responsive application.Version 4.1 Page 107 of 130\n\n \n\n Notice of Funding Opportunity, Part 1\n\n Pre-Application Submission\n\n Pre-applications are created in the software system of your choice and must be submitted electronically through the DOE SC PAMS website. You cannot draft or edit a pre-application in PAMS. Do not submit a pre-application through FedConnect or Grants.gov.\n\n Pre-applications may be submitted by a PI or by other users at the PI’s institution with the “Submit to DOE” privilege in PAMS.\n\n Applicants are strongly encouraged to inform their DOE Program Manager if teaming arrangements, proposed personnel, topics, or the anticipated title change between submitting the pre-application and when an application is submitted to ensure that their application is properly linked to their pre-application and that reviewers are properly assigned to the application.\n\n Detailed instructions about how to submit a pre-application are in Part 2 of this NOFO. B. Application\n\n Applications in response to this NOFO must be submitted through Grants.gov. Detailed instructions for registering in and using Grants.gov are in Part 2 of this NOFO. C. Component Pieces of the Application Letters of Collaboration or Access\n\n Letters from collaborators or from institutions providing access to data, models, software, equipment, or facilities may be appended to your Project Narrative and are not considered part of the Project Narrative’s page limit. Please ensure that letters from collaborators or from institutions providing access to data, models, software, equipment, or facilities only describe the nature of the collaboration or the access to data, models, software, equipment, or facilities. Letters of recommendation are not allowed in applications under this NOFO.\n\n Letters of collaboration or access should be placed in Appendix 7 (Other Attachments)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3276134,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AabVgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 106,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Target Dates:\n\n • To be considered for funding in FY 2027, a pre-application must be submitted by November 20, 2026.\n\n • FES expects to provide pre-application encouragement and discouragement decisions by December 18, 2026.\n\n • Applications associated with encouraged pre-applications must be submitted by February 1, 2027."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3110659,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AOrVgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 75,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Each pre-application will be reviewed for responsiveness and competitiveness of the proposed research.\n\n • To be considered by the panel, an application must be associated with an encouraged pre- application and request no more than $500,000 per year in total across all institutions for a three-year award. ASCR anticipates making at most two awards.\n\n • To be considered by the panel, a pre-application must be submitted by November 22, 2026. ASCR expects to provide pre-application encouragement and discouragement decisions by December 11, 2026.\n\n • Applications associated with an encouraged pre-application must be submitted by January 24, 2027"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2961035,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A27VgYKEBbayybwJOc_Q8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 17,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Each pre-application will be reviewed for responsiveness and competitiveness of the proposed research.\n\n • To be considered by the panel, an application must be associated with an encouraged pre- application and request no more than $500,000 per year in total across all institutions for a three-year award. ASCR anticipates making at most two awards.\n\n • To be considered by the panel, a pre-application must be submitted by February 19, 2027. ASCR expects to provide pre-application encouragement and discouragement decisions by March 12, 2027.\n\n • Applications associated with an encouraged pre-application must be submitted by April 12, 2027"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2935,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A17VgYKEBbayybwJOc_Q8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "mailto:joshua.king@doe.gov\n \n\n \n  https://science.osti.gov/fes/ResearchVersion 4.1 Page 73 of 130\n\n \n\n Notice of Funding Opportunity, Part 1\n\n • Applications associated with encouraged pre-applications must be submitted by January 26, 2027.\n\n • Applications submitted after this deadline will be considered for funding in a future selection cycle.\n\n Applicants in this topic are advised that:\n\n • FES considers an appropriate budget to be up to $300,000 per year, regardless of the number of participating institutions.\n\n • FES considers award durations of three years to be appropriate for this topic. • If a multi-institutional team is submitting collaborative applications, only the lead\n\n institution should submit a pre-application, which should include all institutions, institutional Co-Principal Investigators, and all other personnel and relevant information."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2659731,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ANrVgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 72,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   }
+  ]
+ },
+ "c5f14e2954ec350f": {
+  "query": "eligibility requirements organization types",
+  "filter": "216794c1aec1b9c0",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "You can find the eligibility requirements that apply to all NOFOs in NOFO Part 2, Eligibility.\n\n Eligible Applicants\n\n All types of applicants are eligible to apply, except nonprofit organizations described in section 501(c)(4) of the Internal Revenue Code of 1986 that engaged in lobbying activities after December 31, 1995.\n\n Federally affiliated1 entities must adhere to the eligibility standards below: 1. DOE/NNSA National Laboratories2\n\n DOE/National Nuclear Security Administration (NNSA) National Laboratories are not eligible to submit applications under this NOFO but may be proposed as subrecipients under another organization’s application. If recommended for funding as a proposed subrecipient, the value of the proposed subaward will be removed from the prime applicant’s award and will be provided to the laboratory through the DOE Field-Work Proposal System and work will be conducted under the laboratory’s contract with DOE. No administrative provisions of this NOFO will apply to the laboratory or any laboratory subcontractor. Additional instructions for securing authorization from the cognizant Contracting Officer are found in Part 2 of this NOFO. 2. Non-DOE/NNSA FFRDCs\n\n Non-DOE/NNSA Federally Funded Research and Development Centers (FFRDCs) are eligible to submit applications (either as a lead organization or as a team member in a multi- institutional team) under this NOFO and may be proposed as subrecipients under another organization’s application. If recommended for funding as a lead applicant or a team member, funding will be provided through an interagency agreement award to the FFRDC’s sponsoring Federal agency. If recommended for funding as a proposed subrecipient, the value of the proposed subaward may be removed from the prime applicant’s award and may be provided\n\n 1 Institutions that are not DOE/NNSA National Laboratories, a non-DOE/NNSA FFRDC,\n\n or another Federal agency are not Federally affiliated, even if they receive Federal funds or perform work under a Federal award or contract.\n\n 2 The phrase “National Laboratories” is used broadly to encompass DOE/NNSA laboratories and sites capable of performing the work described in this NOFO and capable of receiving funds through the DOE Field Work System.Version 4.1 Page 9 of 130\n\n \n\n Notice of Funding Opportunity, Part 1\n\n through an interagency agreement award to the FFRDC’s sponsoring Federal agency."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4474603,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AzrVgYKEBbayybwJOc_Q8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Eligible Applicants .................................................................................................................................... 8\n\n 1. DOE/NNSA National Laboratories ............................................................................................................. 8 2. Non-DOE/NNSA FFRDCs ............................................................................................................................ 8 3. Other Federal Agencies ............................................................................................................................. 9 4. Ineligible Participants ................................................................................................................................ 9\n\n B. Other Eligibility Requirements and Limitations ...................................................................................... 10 C. Cost Sharing ........................................................................................................................................... 10\n\n 1. Cost Share Requirements ........................................................................................................................ 10 2. Unallowable Cost Share Sources ............................................................................................................. 10\n\n III. PROGRAM DESCRIPTION ...................................................................................................... 11 A."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.39718,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AyLVgYKEBbayybwJOc_Q8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Additional instructions for securing authorization from the cognizant Contracting Officer are found in Part 2 of this NOFO. 3. Other Federal Agencies\n\n Other Federal agencies are eligible to submit applications (either as a lead organization or as a team member in a multi-institutional team) under this NOFO and may be proposed as subrecipients under another organization’s application. If recommended for funding as a lead applicant or a team member, funding will be provided through an interagency agreement award. If recommended for funding as a proposed subrecipient, the value of the proposed subaward may be removed from the prime applicant’s award and may be provided through an interagency agreement award. Additional instructions for providing statutory authorization are found in Part 2 of this NOFO. Notes for applicants of all types:\n\n • Individuals not affiliated with a research institution should ensure that their applications demonstrate that they possess the skills, abilities, and resources to successfully accomplish the objectives of this NOFO.\n\n • For non-domestic applicants, successful applications include a detailed demonstration of how the applicant possesses the skills, resources, and abilities that do not exist among potential domestic applicants.\n\n This NOFO does not support an applicant’s commercial activity. This NOFO\n\n supports basic research to advance understanding rather than to address commercial opportunities. Applications that propose research related to current commercial activity or current customer needs may be declined without merit review. All for-profit applicants must include a description as an appendix to the Project Narrative, not to exceed 200 words, of how their proposed work will advance scientific understanding of a basic and fundamental nature. 4. Ineligible Participants\n\n The following entities are ineligible for this NOFO as a recipient, subrecipient, or\n\n subcontractor: • In accordance with 2 C.F.R. § 200.214, entities banned from doing business with the U.S."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3865068,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Az7VgYKEBbayybwJOc_Q8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "government, such as entities debarred, suspended, or otherwise excluded from or ineligible for participating in Federal programs (2 C.F.R. § 200.214)\n\n • Entities identified on the Department of the Treasury Office of Foreign Assets Control Treasury’s Sanctions Program Specially Designated Nationals list (OFAC – Sanctions List Service [treas.gov])\n\n • Nonprofit organizations described in section 501(c)(4) of the Internal Revenue Code of 1986 that engaged in lobbying activities after December 31, 1995\n\n \n\n \n  https://sanctionslist.ofac.treas.gov/Home/SdnList\n \n\n \n  https://sanctionslist.ofac.treas.gov/Home/SdnListVersion 4.1 Page 10 of 130\n\n \n\n Notice of Funding Opportunity, Part 1\n\n Entity of Concern Prohibition\n\n Entities of Concern are prohibited from participating in projects under this NOFO. You\n\n can find details and definitions in NOFO Part 2, Eligibility, Other Eligibility Information, Entity of Concern Prohibition.\n\n Other Eligibility Requirements and Limitations\n\n Individuals with the skills, knowledge, and resources necessary to carry out the proposed\n\n research as a Principal Investigator (PI) are invited to work with their organizations to develop an application.\n\n Cost Sharing\n\n Cost sharing for basic and fundamental research is not required pursuant to an exclusion\n\n from the requirements of Section 988 of the Energy Policy Act of 2005. For OTA awards, to the maximum extent practicable, non-Federal parties carrying out a research, development, and demonstration project under an OTA award are to provide at least 50% cost sharing.\n\n Cost sharing is not required of DOE/NNSA National Laboratories, other Federal agencies, another Federal agency’s FFRDC, or their subcontractors at any tier. DOE/NNSA National Laboratories, other Federal agencies, and another Federal agency’s FFRDC may impose cost-sharing requirements on their contractors subject to their policies and procedures.\n\n Cost sharing will not be considered as a factor during merit review or award selection.\n\n 1. Cost Share Requirements Cost sharing is not required for awards under 2 C.F.R. part 200 and 2 C.F.R. part 910.\n\n Cost sharing is required for awards under 2 C.F.R. part 930. 2."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3325996,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A0LVgYKEBbayybwJOc_Q8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Agency Contact Information .................................................................................................................... 7\n\n II. ELIGIBILITY ............................................................................................................................. 8 A."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3027333,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ax7VgYKEBbayybwJOc_Q8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Each system has its own requirements.\n\n Applicants must register with SAM.gov and obtain a Unique Entity Identifier (UEI). You can find assistance with this process at the SAM Help Desk.\n\n Applicants must provide a Taxpayer Identification Number (TIN) to complete their registration in SAM.gov. An applicant’s TIN is an EIN assigned by the Internal Revenue Service (IRS). You may obtain an EIN online from the IRS if you don’t already have one. Do not use a social security number in place of a TIN.\n\n If entities have technical difficulties with the UEI validation or SAM registration process, use the Help feature on SAM.gov. SAM.gov will work entity service tickets in the order they receive them and asks that entities not create multiple service tickets for the same request or technical issue. 1. Requirements for System for Award Management\n\n Unless exempt from this requirement under 2 C.F.R. § 25.110, the recipient must maintain a current and active registration in SAM.gov. The recipient’s registration must always be current and active until the recipient submits all final reports required under this Federal award or receives the final payment, whichever is later. The recipient must review and update its information in SAM.gov at least annually from the date of its initial registration or any subsequent updates to ensure it is current, accurate, and complete. If applicable, this requirement includes identifying the recipient’s immediate and highest-level owner and subsidiaries and providing information about the recipient’s predecessors that have received a Federal award or contract within the last three years. 2. Requirement for Unique Entity Identifier (UEI)\n\n If the recipient is authorized to make subawards under this Federal award, the recipient:\n\n \n\n \n  https://www.sam.gov/\n \n\n \n  https://sam.gov/content/help\n \n\n \n  https://www.sam.gov/\n \n\n \n  https://www.irs.gov/businesses/small-businesses-self-employed/apply-for-an-employer-identification-number-ein-onlineVersion 4.1 Page 125 of 130\n\n \n\n Notice of Funding Opportunity, Part 1\n\n • Must notify potential subrecipients that no entity may receive a subaward until the entity has provided its UEI to the recipient.\n\n • Must not make a subaward to an entity unless the entity has provided its UEI to the recipient. o Subrecipients are not required to complete full registration in SAM.gov to obtain a\n\n UEI. C."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2529347,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AibVgYKEBbayybwJOdPXX",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 124,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Intergovernmental Review\n\n This NOFO is not subject to Executive Order 12372, Intergovernmental Review of Federal Programs.\n\n \n\n \n  https://pamspublic.science.energy.gov/\n \n\n \n  https://www.grants.gov/Version 4.1 Page 126 of 130\n\n \n\n Notice of Funding Opportunity, Part 1\n\n \n\n VI. Application Review Information Standards for Application Evaluation\n\n Applications that pass the initial review will be subjected to a formal merit review and will be evaluated based on the criteria codified at 10 C.F.R. § 605.10(d) in accordance with the guidance provided in the Office of Science Merit Review System for Financial Assistance. Responsiveness Review\n\n We will not review or consider the following concept papers and applications: • Project concepts or approaches identified as NOT of interest (see the Applications\n\n Specifically Not of Interest section above) • Applicants and applications that do NOT meet the Eligibility Criteria in NOFO Parts 1\n\n and 2 Review Criteria\n\n 1. Compliance Criteria\n\n Prior to a comprehensive merit evaluation, DOE will perform an initial review in accordance with 10 C.F.R. § 605.10(b) to determine that: (1) the applicant is eligible for the award; (2) the information required by the NOFO, including LOIs or pre-applications, has been submitted; (3) all mandatory requirements are satisfied; (4) the proposed project is responsive to the objectives of the NOFO; and (5) the proposed project does not duplicate programmatic work. Applications that fail to pass the initial review will not be forwarded for merit review and will be eliminated from further consideration.\n\n 2. Technical Review Criteria\n\n Applications will be subjected to scientific merit review (peer review) and will be\n\n evaluated against the following criteria, listed in descending order of importance, as found in 10 C.F.R. § 605.10 (d), the Office of Science Financial Assistance Program Rule.\n\n • Scientific and/or Technical Merit of the Project • Appropriateness of the Proposed Method or Approach • Competency of Applicant’s Personnel and Adequacy of Proposed Resources • Reasonableness and Appropriateness of the Proposed Budget • Appropriateness of the Data Management and Sharing Plan\n\n External peer reviewers are selected regarding both their scientific expertise and the\n\n absence of conflict-of-interest issues."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2389127,
+    "metadata": {
+     "documentIdentifier": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "agency": "Office of Science",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AjbVgYKEBbayybwJOdvVP",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program/NOFO-File-PDF",
+     "nofoName": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+     "x-amz-bedrock-kb-document-page-number": 125,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:26:32.892Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   }
+  ]
+ },
+ "c78db470be82298d": {
+  "query": "eligible applicants who can apply",
+  "filter": "8fd7fa693814d85b",
+  "retrievalResults": []
+ },
+ "c90636f3faee5dea": {
+  "query": "application submission deadline",
+  "filter": "8fd7fa693814d85b",
+  "retrievalResults": []
+ },
+ "e75f1f74eb0ee4bf": {
+  "query": "eligibility requirements organization types",
+  "filter": "8fd7fa693814d85b",
+  "retrievalResults": []
+ },
+ "f4c86bce36aefff6": {
+  "query": "due date for applications and pre-application deadlines",
+  "filter": "8fd7fa693814d85b",
+  "retrievalResults": []
+ }
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When are applications due?",
+    "expected": "There are multiple receipt cycles, all due by 5:00 PM local time of the applicant organization: new applications June 12, 2026, October 12, 2026 and February 12, 2027; resubmission/revision applications July 12, 2026, November 12, 2026 and March 12, 2027. The NOFO expires May 8, 2027 and no letter of intent is required.",
+    "quote": "All applications are due by 5:00 PM local time of applicant organization.",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "eligibility",
+    "question": "Who can apply for this K23?",
+    "expected": "Candidates must hold a health-professional doctoral degree (e.g., MD, DO, DDS, PharmD, or a nursing doctorate), or a PhD/other doctorate in a clinical discipline such as clinical psychology, nursing or audiology, must have completed clinical training before the award, and be a U.S. citizen, non-citizen national, or permanent resident by the time of award; current or former PDs/PIs on R01s, P01s, P50s or other major individual K awards are not eligible.",
+    "quote": "Candidates for the K23 award must have a health-professional doctoral degree.",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "documents",
+    "question": "How do my reference letters get submitted?",
+    "expected": "Reference letters are required and are submitted separately by referees through the eRA Commons Submit Referee Information link, not through Grants.gov; applications lacking the required letters will not be reviewed.",
+    "quote": "through the eRA Commons Submit Referee Information link and not through Grants.gov.",
+    "confirmed": false
+  }
+]

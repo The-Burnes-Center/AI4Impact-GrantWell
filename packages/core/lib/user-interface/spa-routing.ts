@@ -25,9 +25,27 @@ export const APP_ROUTES = [
  * bucket as a file request, so a missing file or unknown page is a real 404 with /404.html.
  * App routes can carry grant titles with dots (/requirements/U.S.%20Grants), so files are matched
  * by prefix, not by extension, and routes match case-insensitively with one optional trailing
- * slash, as the UI router does.
+ * slash, as the UI router does. Requests for a redirect host get a 301 to the same path on the
+ * canonical host first.
  */
-export const SPA_ROUTING_CODE = `var ROUTES = ${JSON.stringify(APP_ROUTES.map((r) => r.split("/")))};
+export const spaRoutingCode = (redirect?: { from: string[]; to: string }) => `var ROUTES = ${JSON.stringify(APP_ROUTES.map((r) => r.split("/")))};
+var REDIRECT_FROM = ${JSON.stringify(redirect?.from ?? [])};
+var REDIRECT_TO = ${JSON.stringify(redirect?.to ?? "")};
+function redirectFor(request) {
+  var host = request.headers.host && request.headers.host.value.toLowerCase();
+  if (REDIRECT_FROM.indexOf(host) === -1) return null;
+  var qs = [];
+  for (var key in request.querystring) {
+    var param = request.querystring[key];
+    var values = param.multiValue ? param.multiValue : [param];
+    for (var i = 0; i < values.length; i++) qs.push(values[i].value === '' ? key : key + '=' + values[i].value);
+  }
+  return {
+    statusCode: 301,
+    statusDescription: 'Moved Permanently',
+    headers: { location: { value: 'https://' + REDIRECT_TO + request.uri + (qs.length ? '?' + qs.join('&') : '') } },
+  };
+}
 function isAppRoute(uri) {
   var parts = uri.toLowerCase().split('/');
   if (parts.length > 2 && parts[parts.length - 1] === '') parts.pop();
@@ -42,6 +60,8 @@ function isAppRoute(uri) {
 }
 function handler(event) {
   var request = event.request;
+  var redirect = redirectFor(request);
+  if (redirect) return redirect;
   var uri = request.uri;
   if (uri.indexOf('/assets/') === 0 || uri.indexOf('/images/') === 0 ||
       uri.indexOf('/.well-known/') === 0 || /^\\/[^\\/]*\\.[^\\/]*$/.test(uri)) {
@@ -55,3 +75,5 @@ function handler(event) {
   return request;
 }
 `;
+
+export const SPA_ROUTING_CODE = spaRoutingCode();

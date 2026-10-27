@@ -1,0 +1,1244 @@
+{
+ "0896e2273a90e86d": {
+  "query": "award amount direct costs per year salary support limit",
+  "filter": "f94ab6fe741bf4f0",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Section II. Award Information\n\n Other Award Budget Information\n\n Funding Instrument\n\n Grant: A financial assistance mechanism providing money, property, or both to an eligible entity to carry out an approved project or activity.\n\n Application Types Allowed\n\n New Resubmission\n\n The OER Glossary (//grants.nih.gov/grants/guide/url_redirect.php?id=11116) and the SF424 (R&R) Application Guide provide details on these application types.\n\n Clinical Trial? Not Allowed: Only accepting applications that do not propose clinical trials.\n\n Note: Applicants may propose to gain experience in a clinical trial led by a mentor/co-mentor as part of their research career development.\n\n Need help determining whether you are doing a clinical trial? (https://grants.nih.gov/grants/guide/url_redirect.php?id=82370)\n\n Funds Available and Anticipated Number of Awards\n\n The number of awards is contingent upon NIH appropriations and the submission of a sufficient number of meritorious applications.\n\n Award Budget\n\n Award budgets are composed of salary and other program-related expenses, as described below.\n\n Award Project Period\n\n Generally the research experience shall span a contiguous period of six months to two years.\n\n Salary\n\n NIDCD will contribute up to the legislatively mandated salary cap in effect at the time of award per year toward the salary of the career award recipient. Further guidance on budgeting for career development salaries is provided in the SF424 (R&R) Application Guide. See also NOT-OD-17-094. (https://grants.nih.gov/grants/guide/notice-files/NOT-OD-17-094.html)\n\n The total NIH contribution to salary, however, may not exceed the legislatively mandated salary cap.  See: http://grants.nih.gov/grants/policy/salcap_summary.htm (https://grants.nih.gov/grants/policy/salcap_summary.htm). \n\n Other Program-Related Expenses\n\n NIDCD will contribute $40,000 per year toward the research development costs of the award recipient, which must be justified and consistent with the stage of development of the candidate and the proportion of time to be spent in research or career development activities.\n\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4267871,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Az7VYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Indirect Costs\n\n Indirect Costs (also known as Facilities & Administrative [F&A] Costs) are reimbursed at 8% of modified total direct costs.\n\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3654759,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A0rVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Use the section on Participant/Trainee Support Costs to include all allowable categories of funds requested to support participants in the program.\n\n PHS 398 Cover Page Supplement\n\n All instructions in the SF424 (R&R) Application Guide must be followed.\n\n PHS 398 Career Development Award Supplemental Form\n\n The PHS 398 Career Development Award Supplemental Form is comprised of the following sections:\n\n Candidate Research Plan Other Candidate Information Mentor, Co-Mentor, Consultant, Collaborators Environment & Institutional Commitment to the Candidate Other Research Plan Sections Appendix\n\n All instructions in the SF424 (R&R) Application Guide must be followed.\n\n Candidate Section\n\n All instructions in the SF424 (R&R) Application Guide must be followed, with the following additional instructions: \n\n Candidate Information and Goals for Career Development\n\n Candidate’s Background\n\n Describe the candidate's commitment to a career as a health related research scientist.  Describe the candidate's research efforts and accomplishments in health related research to date as an independent investigator, including publications, prior research interests and experience, and history of research support.  Present evidence of the candidate's potential to augment their research career and to ultimately advance scientific progress through this career enhancement plan.  Provide evidence of the candidate's ability to interact and collaborate with other scientists, particularly those from other disciplines.\n\n Career Goals and Objectives​\n\n Describe the candidate's research career trajectory to date and future career goals and objectives and explain how these relate to the proposed research career development enhancement program.  Justify the need for further career enhancement in order to achieve the candidate's future research goals.  Demonstrate how the proposed career enhancement program and the research, educational and mentoring resources of the sponsoring laboratory and institution will further the stated research career goals.\n\n Candidate’s Plan for Career Development/Training Activities During Award Period\n\n The candidate and the mentor are jointly responsible for the preparation of the career development plan. The candidate and mentor may propose a mentoring team.  Describe the career development plan, tailoring it to the candidate's goals, prior experience and career level, as well as to the intent of the K18 program.  Provide a systematic plan for progression of career enhancement and research experiences for the period of the award and beyond, including a timeline for the phasing of the career enhancement and research activities.  Explain how the career development plan will enhance the candidate’s independent research career trajectory, including a description of any cutting-edge research skills and conceptual knowledge thatwill be acquired during the career award period."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.32709,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A3LVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "(https://grants.nih.gov/grants/policy/nihgps/html5/section_10/10.10.1_executive_orders.htm)\n\n 6. Funding Restrictions\n\n All NIH awards are subject to the terms and conditions, cost principles, and other considerations described in the NIH Grants Policy Statement Section 7.9.1 Selected Items of Cost  (//grants.nih.gov/grants/guide/url_redirect.php? id=11143).\n\n Pre-award costs are allowable only as described in the NIH Grants Policy Statement (//grants.nih.gov/grants/guide/url_redirect.php?id=11143).\n\n 7."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3047597,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A47VYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=11176\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11176\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82300\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82300\n \n\n \n  https://orcid.org/\n \n\n \n  https://orcid.org/\n \n\n \n  https://era.nih.gov/erahelp/Commons/default.htm#orcid.htm%3FTocPath%3D_____29\n \n\n \n  https://era.nih.gov/erahelp/Commons/default.htm#orcid.htm%3FTocPath%3D_____29\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11126\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11126\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11126\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82415\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82415\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82415\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82415\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423information regarding NIH policy on determining full-time professional effort for career awards, see NOT-OD-04- 056. The allowance for a part-time commitment of professional effort will enable candidates to hold their ongoing research grants (if applicable) and/or meet their academic responsibilities in a limited capacity, and in accordance with NIH policy, as they pursue the career enhancement program. However, the total effort cannot exceed 100%, and all other activities must be consistent with the goals of the K18 award. Generally, the research experience shall span a contiguous period of six months to two years."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.217971,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A17VYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=82423)).\n\n Individuals are eligible for a K22 award if they have been, or currently are, the PD/PI of an NIH R03 or R21 grant or an equivalent non-NIH award. Individuals are NOT eligible to apply if they have a pending application for any other PHS career development award, an NIH institute-specific K22, or a Pathway to Independence Award (K99/R00). Individuals are not eligible to apply if they have been or are currently a PD/PI on an NIH research grant (such as R01, R29, P01, or DP2) or a subproject leader on an NIH multicomponent grant or cooperative agreement (e.g., P01, U19, P20, P30, P50, U54, UM2), or an equivalent NIH or non-NIH award.\n\n Level of Effort At the time of award, the candidate must have a \"full-time\" appointment at the academic institution that is the applicant organization. The candidate is required to devote at least 6 calendar months (50% of full-time professional effort) to the K18 program, but may devote their full-time (12 calendar months) effort to it. For\n\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2103913,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A1rVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Section VI. Award Administration Information 1. Award Notices\n\n If the application is under consideration for funding, NIH will request \"just-in-time\" information from the applicant as described in the NIH Grants Policy Statement (//grants.nih.gov/grants/guide/url_redirect.php?id=82418).\n\n A formal notification in the form of a Notice of Award (NoA) will be provided to the applicant organization for successful applications. The NoA signed by the grants management officer is the authorizing document and will be sent via email to the recipient’s business official.\n\n Recipients must comply with any funding restrictions described in Section IV.6."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2103808,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A8rVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 16,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ },
+ "0ed3220d26a8239e": {
+  "query": "reference letters submission",
+  "filter": "a70ce02dfc578a19",
+  "retrievalResults": []
+ },
+ "2e89d99189a44f0c": {
+  "query": "application due date submission deadline",
+  "filter": "a70ce02dfc578a19",
+  "retrievalResults": []
+ },
+ "3c34181075cfd778": {
+  "query": "K18 award budget besides salary research development support costs",
+  "filter": "a70ce02dfc578a19",
+  "retrievalResults": []
+ },
+ "614d89d96be9a097": {
+  "query": "key dates open date, due dates, earliest start date, expiration date",
+  "filter": "a70ce02dfc578a19",
+  "retrievalResults": []
+ },
+ "6417b811a9686de3": {
+  "query": "application due date submission deadline",
+  "filter": "f94ab6fe741bf4f0",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Overview Information contains information about Key Dates and Times. Applicants are encouraged to submit applications before the due date to ensure they have time to make any application corrections that might be necessary for successful submission. When a submission date falls on a weekend or Federal holiday (https://grants.nih.gov/grants/guide/url_redirect.php?id=82380), the application deadline is automatically extended to the next business day.\n\n Organizations must submit applications to Grants.gov (//grants.nih.gov/grants/guide/url_redirect.php?id=11128) (the online portal to find and apply for grants across all Federal agencies) using ASSIST or other electronic submission systems. Applicants must then complete the submission process by tracking the status of the application in the eRA Commons (//grants.nih.gov/grants/guide/url_redirect.php?id=11123), NIH’s electronic system for grants administration. NIH and Grants.gov systems check the application against many of the application instructions upon submission. Errors must be corrected and a changed/corrected application must be submitted to Grants.gov on or before the application due date and time.  If a Changed/Corrected application is submitted after the deadline, the application will be considered late. Applications that miss the due date and time are subjected to the NIH Grants Policy Statement Section 2.3.9.2 Electronically Submitted Applications (//grants.nih.gov/grants/guide/url_redirect.php?id=82423).\n\n Applicants are responsible for viewing their application before the due date in the eRA Commons to ensure accurate and successful submission.\n\n Information on the submission process and a definition of on-time submission are provided in the How to Apply – Application Guide (https://grants.nih.gov/grants/guide/url_redirect.php?id=82400).\n\n 5. Intergovernmental Review (E.O. 12372)\n\n This initiative is not subject to (//grants.nih.gov/grants/guide/url_redirect.php?id=11142)intergovernmental review."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.5409337,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A4rVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Overview Information\n\n Key Dates Part 2. Full Text of Announcement\n\n Section I. Funding Opportunity Description Section II. Award Information Other Award Budget Information\n\n All applications are due by 5:00 PM local time of applicant organization.\n\n Applications are encouraged to apply early to allow adequate time to make any corrections to errors found in the application during the submission process by the due date.\n\n Expiration Date\n\n May 08, 2027\n\n Due Dates for E.O. 12372\n\n Not Applicable\n\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4470222,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AybVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "text_curr=K18&&Search.x=0&&Search.y=0&&Search_Type=Activity\n \n\n \n  https://grants.nih.gov/grants/funding/ac_search_results.htm?text_curr=K18&&Search.x=0&&Search.y=0&&Search_Type=Activity\n \n\n \n  https://grants.nih.gov/grants/funding/ac_search_results.htm?text_curr=K18&&Search.x=0&&Search.y=0&&Search_Type=ActivityKey Dates\n\n The following table includes NIH standard due dates (https://grants.nih.gov/grants/how-to-apply-application- guide/due-dates-and-submission-policies/due-dates.htm) marked with an asterisk.\n\n Application Due Dates Review and Award Cycles\n\n New\n\n Renewal / Resubmission / Revision (as\n\n allowed)\n\n AIDS - New/Renewal/Resubmission/Revision,\n\n as allowed\n\n Scientific Merit\n\n Review\n\n Advisory Council Review\n\n Earliest Start Date\n\n June 10, 2024\n\n June 10, 2024 September 07, 2024 * October 2024\n\n January 2025\n\n April 2025\n\n October 08, 2024\n\n October 08, 2024 January 07, 2025 * February 2025\n\n May 2025 July 2025\n\n February 10, 2025\n\n February 10, 2025\n\n May 07, 2025 * June 2025 October 2025\n\n December 2025\n\n June 09, 2025\n\n June 09, 2025 September 07, 2025 * October 2025\n\n January 2026\n\n April 2026\n\n October 08, 2025\n\n October 08, 2025 January 07, 2026 * February 2026\n\n May 2026 July 2026\n\n February 09, 2026\n\n February 09, 2026\n\n May 07, 2026 * June 2026 October 2026\n\n December 2026\n\n See Section III. 3. Additional Information on Eligibility."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3716264,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AxbVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=111543. Anticipated Announcement and Award Dates\n\n After the peer review of the application is completed, the PD/PI will be able to access his or her Summary Statement (written critique) via the eRA Commons (//grants.nih.gov/grants/guide/url_redirect.php?id=11123). Refer to Part 1 for dates for peer review, advisory council review, and earliest start date.\n\n Information regarding the disposition of applications is available in the NIH Grants Policy Statement Section 2.4.4 Disposition of Applications (//grants.nih.gov/grants/guide/url_redirect.php?id=82416)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3394494,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A8bVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Posted Date\n\n February 09, 2024\n\n Open Date (Earliest Submission Date)\n\n May 10, 2024\n\n Letter of Intent Due Date(s)\n\n Not Applicable\n\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/due-dates.htm\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/due-dates.htm\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/due-dates.htm\n \n\n \n  https://grants.nih.gov/grants/guide/pa-files/PAR-24-140.html\n \n\n \n  https://grants.nih.gov/grants/guide/pa-files/PAR-24-140.html\n \n\n \n  https://grants.nih.gov/grants/guide/pa-files/PAR-24-142.html\n \n\n \n  https://grants.nih.gov/grants/guide/pa-files/PAR-24-142.html\n \n\n \n  https://grants.nih.gov/grants/guide/pa-files/PAR-24-142.htmlApplication Due Dates Review and Award Cycles\n\n New\n\n Renewal / Resubmission / Revision (as\n\n allowed)\n\n AIDS - New/Renewal/Resubmission/Revision,\n\n as allowed\n\n Scientific Merit\n\n Review\n\n Advisory Council Review\n\n Earliest Start Date\n\n June 08, 2026\n\n June 08, 2026 Not Applicable October 2026\n\n January 2027\n\n April 2027\n\n October 08, 2026\n\n October 08, 2026 Not Applicable February 2027\n\n May 2027 July 2027\n\n February 08, 2027\n\n March 08, 2027 Not Applicable July 2027 October 2027\n\n December 2027\n\n Required Application Instructions It is critical that applicants follow the instructions in the Career Development (K) Instructions in the How to Apply - Application Guide (https://grants.nih.gov/grants/guide/url_redirect.php?id=82400), except where instructed to do otherwise (in this NOFO or in a Notice from the NIH Guide for Grants and Contracts (//grants.nih.gov/grants/guide/url_redirect.php?id=11164))."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3368169,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ax7VYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Submission Dates and Times\n\n Part I."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3343735,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A4bVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Other Submission Requirements and Information\n\n Applications must be submitted electronically following the instructions described in the SF424 (R&R) Application Guide. Paper applications will not be accepted.\n\n Applicants must complete all required registrations before the application due date. Section III. Eligibility Information contains information about registration.\n\n For assistance with your electronic application or for more information on the electronic submission process, visit How to Apply - Application Guide (https://grants.nih.gov/grants/guide/url_redirect.php?id=82400). If you encounter a system issue beyond your control that threatens your ability to complete the submission process on- time, you must follow the Dealing with System Issues (https://grants.nih.gov/grants/how-to-apply-application- guide/due-dates-and-submission-policies/dealing-with-system-issues.htm) guidance. For assistance with application submission, contact the Application Submission Contacts in Section VII.\n\n Important reminders:\n\n All PD(s)/PI(s) must include their eRA Commons ID in the Credential fieldof the Senior/Key Person Profile form. Failure to register in the Commons and to include a valid PD/PI Commons ID in the credential field will prevent the successful submission of an electronic application to NIH. See Section III of this NOFO for information on registration requirements.\n\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82380\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82380\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11128\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11128\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3084178,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A5LVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ },
+ "794380cf860cff22": {
+  "query": "letters of reference submitted by referees deadline eRA Commons",
+  "filter": "f94ab6fe741bf4f0",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=111543. Anticipated Announcement and Award Dates\n\n After the peer review of the application is completed, the PD/PI will be able to access his or her Summary Statement (written critique) via the eRA Commons (//grants.nih.gov/grants/guide/url_redirect.php?id=11123). Refer to Part 1 for dates for peer review, advisory council review, and earliest start date.\n\n Information regarding the disposition of applications is available in the NIH Grants Policy Statement Section 2.4.4 Disposition of Applications (//grants.nih.gov/grants/guide/url_redirect.php?id=82416)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3694441,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A8bVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Overview Information contains information about Key Dates and Times. Applicants are encouraged to submit applications before the due date to ensure they have time to make any application corrections that might be necessary for successful submission. When a submission date falls on a weekend or Federal holiday (https://grants.nih.gov/grants/guide/url_redirect.php?id=82380), the application deadline is automatically extended to the next business day.\n\n Organizations must submit applications to Grants.gov (//grants.nih.gov/grants/guide/url_redirect.php?id=11128) (the online portal to find and apply for grants across all Federal agencies) using ASSIST or other electronic submission systems. Applicants must then complete the submission process by tracking the status of the application in the eRA Commons (//grants.nih.gov/grants/guide/url_redirect.php?id=11123), NIH’s electronic system for grants administration. NIH and Grants.gov systems check the application against many of the application instructions upon submission. Errors must be corrected and a changed/corrected application must be submitted to Grants.gov on or before the application due date and time.  If a Changed/Corrected application is submitted after the deadline, the application will be considered late. Applications that miss the due date and time are subjected to the NIH Grants Policy Statement Section 2.3.9.2 Electronically Submitted Applications (//grants.nih.gov/grants/guide/url_redirect.php?id=82423).\n\n Applicants are responsible for viewing their application before the due date in the eRA Commons to ensure accurate and successful submission.\n\n Information on the submission process and a definition of on-time submission are provided in the How to Apply – Application Guide (https://grants.nih.gov/grants/guide/url_redirect.php?id=82400).\n\n 5. Intergovernmental Review (E.O. 12372)\n\n This initiative is not subject to (//grants.nih.gov/grants/guide/url_redirect.php?id=11142)intergovernmental review."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2894828,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A4rVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=11142\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11142\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/html5/section_10/10.10.1_executive_orders.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/html5/section_10/10.10.1_executive_orders.htm\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11143\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11143\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11143\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11143\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11143\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/dealing-with-system-issues.htm\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/dealing-with-system-issues.htm\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/dealing-with-system-issues.htmThe applicant organization must ensure that the unique entity identifier provided on the application is the same identifier used in the organization’s profile in the eRA Commons and for the System for Award Management. Additional information may be found in the SF424 (R&R) Application Guide.\n\n See more tips (//grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2607341,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A5bVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Other Submission Requirements and Information\n\n Applications must be submitted electronically following the instructions described in the SF424 (R&R) Application Guide. Paper applications will not be accepted.\n\n Applicants must complete all required registrations before the application due date. Section III. Eligibility Information contains information about registration.\n\n For assistance with your electronic application or for more information on the electronic submission process, visit How to Apply - Application Guide (https://grants.nih.gov/grants/guide/url_redirect.php?id=82400). If you encounter a system issue beyond your control that threatens your ability to complete the submission process on- time, you must follow the Dealing with System Issues (https://grants.nih.gov/grants/how-to-apply-application- guide/due-dates-and-submission-policies/dealing-with-system-issues.htm) guidance. For assistance with application submission, contact the Application Submission Contacts in Section VII.\n\n Important reminders:\n\n All PD(s)/PI(s) must include their eRA Commons ID in the Credential fieldof the Senior/Key Person Profile form. Failure to register in the Commons and to include a valid PD/PI Commons ID in the credential field will prevent the successful submission of an electronic application to NIH. See Section III of this NOFO for information on registration requirements.\n\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82380\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82380\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11128\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11128\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2527902,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A5LVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Agency Contacts We encourage inquiries concerning this funding opportunity and welcome the opportunity to answer questions from potential applicants.\n\n Application Submission Contacts eRA Service Desk (Questions regarding ASSIST, eRA Commons, application errors and warnings, documenting system problems that threaten on-time submission, and post-submission issues)\n\n Finding Help Online: https://www.era.nih.gov/need-help (https://www.era.nih.gov/need-help) (preferred method of contact) Telephone: 301-402-7469 or 866-504-9552 (Toll Free)\n\n General Grants Information (Questions regarding application processes and NIH grant resources) Email: GrantsInfo@nih.gov (mailto:GrantsInfo@nih.gov) (preferred method of contact) Telephone: 301-480-7075\n\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.2.3_sharing_research_resources.htm#Data\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.2.3_sharing_research_resources.htm#Data\n \n\n \n  https://grants.nih.gov/grants/rppr/index.htm\n \n\n \n  https://grants.nih.gov/grants/rppr/index.htm\n \n\n \n  https://grants.nih.gov/grants/rppr/index.htm\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82419\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82419\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82419\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.6_closeout.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/HTML5/section_8/8.6_closeout.htm\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11170\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11170\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82420\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2397612,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A-bVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 17,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Overview Information\n\n Key Dates Part 2. Full Text of Announcement\n\n Section I. Funding Opportunity Description Section II. Award Information Other Award Budget Information\n\n All applications are due by 5:00 PM local time of applicant organization.\n\n Applications are encouraged to apply early to allow adequate time to make any corrections to errors found in the application during the submission process by the due date.\n\n Expiration Date\n\n May 08, 2027\n\n Due Dates for E.O. 12372\n\n Not Applicable\n\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.221234,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AybVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11164\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11164\n \n\n \n  https://public.era.nih.gov/commons/\n \n\n \n  https://public.era.nih.gov/commons/\n \n\n \n  https://grants.gov/search-grants?oppStatuses=closed|archived|posted|forecasted&fon=PAR-24-143\n \n\n \n  https://grants.gov/search-grants?oppStatuses=closed|archived|posted|forecasted&fon=PAR-24-143\n \n\n \n  https://grants.gov/search-grants?oppStatuses=closed|archived|posted|forecasted&fon=PAR-24-143\n \n\n \n  http://public.era.nih.gov/commons/\n \n\n \n  http://public.era.nih.gov/commons/Section III. Eligibility Information Mentor(s)\n\n Section IV. Application and Submission Information Reference Letters\n\n Section V. Application Review Information Section VI. Award Administration Information Section VII. Agency Contacts Section VIII. Other Information\n\n Part 2."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2178181,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AyrVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ },
+ "961a2b1d42f1645a": {
+  "query": "K18 award budget besides salary research development support costs",
+  "filter": "f94ab6fe741bf4f0",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Section II. Award Information\n\n Other Award Budget Information\n\n Funding Instrument\n\n Grant: A financial assistance mechanism providing money, property, or both to an eligible entity to carry out an approved project or activity.\n\n Application Types Allowed\n\n New Resubmission\n\n The OER Glossary (//grants.nih.gov/grants/guide/url_redirect.php?id=11116) and the SF424 (R&R) Application Guide provide details on these application types.\n\n Clinical Trial? Not Allowed: Only accepting applications that do not propose clinical trials.\n\n Note: Applicants may propose to gain experience in a clinical trial led by a mentor/co-mentor as part of their research career development.\n\n Need help determining whether you are doing a clinical trial? (https://grants.nih.gov/grants/guide/url_redirect.php?id=82370)\n\n Funds Available and Anticipated Number of Awards\n\n The number of awards is contingent upon NIH appropriations and the submission of a sufficient number of meritorious applications.\n\n Award Budget\n\n Award budgets are composed of salary and other program-related expenses, as described below.\n\n Award Project Period\n\n Generally the research experience shall span a contiguous period of six months to two years.\n\n Salary\n\n NIDCD will contribute up to the legislatively mandated salary cap in effect at the time of award per year toward the salary of the career award recipient. Further guidance on budgeting for career development salaries is provided in the SF424 (R&R) Application Guide. See also NOT-OD-17-094. (https://grants.nih.gov/grants/guide/notice-files/NOT-OD-17-094.html)\n\n The total NIH contribution to salary, however, may not exceed the legislatively mandated salary cap.  See: http://grants.nih.gov/grants/policy/salcap_summary.htm (https://grants.nih.gov/grants/policy/salcap_summary.htm). \n\n Other Program-Related Expenses\n\n NIDCD will contribute $40,000 per year toward the research development costs of the award recipient, which must be justified and consistent with the stage of development of the candidate and the proportion of time to be spent in research or career development activities.\n\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.5484234,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Az7VYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Use the section on Participant/Trainee Support Costs to include all allowable categories of funds requested to support participants in the program.\n\n PHS 398 Cover Page Supplement\n\n All instructions in the SF424 (R&R) Application Guide must be followed.\n\n PHS 398 Career Development Award Supplemental Form\n\n The PHS 398 Career Development Award Supplemental Form is comprised of the following sections:\n\n Candidate Research Plan Other Candidate Information Mentor, Co-Mentor, Consultant, Collaborators Environment & Institutional Commitment to the Candidate Other Research Plan Sections Appendix\n\n All instructions in the SF424 (R&R) Application Guide must be followed.\n\n Candidate Section\n\n All instructions in the SF424 (R&R) Application Guide must be followed, with the following additional instructions: \n\n Candidate Information and Goals for Career Development\n\n Candidate’s Background\n\n Describe the candidate's commitment to a career as a health related research scientist.  Describe the candidate's research efforts and accomplishments in health related research to date as an independent investigator, including publications, prior research interests and experience, and history of research support.  Present evidence of the candidate's potential to augment their research career and to ultimately advance scientific progress through this career enhancement plan.  Provide evidence of the candidate's ability to interact and collaborate with other scientists, particularly those from other disciplines.\n\n Career Goals and Objectives​\n\n Describe the candidate's research career trajectory to date and future career goals and objectives and explain how these relate to the proposed research career development enhancement program.  Justify the need for further career enhancement in order to achieve the candidate's future research goals.  Demonstrate how the proposed career enhancement program and the research, educational and mentoring resources of the sponsoring laboratory and institution will further the stated research career goals.\n\n Candidate’s Plan for Career Development/Training Activities During Award Period\n\n The candidate and the mentor are jointly responsible for the preparation of the career development plan. The candidate and mentor may propose a mentoring team.  Describe the career development plan, tailoring it to the candidate's goals, prior experience and career level, as well as to the intent of the K18 program.  Provide a systematic plan for progression of career enhancement and research experiences for the period of the award and beyond, including a timeline for the phasing of the career enhancement and research activities.  Explain how the career development plan will enhance the candidate’s independent research career trajectory, including a description of any cutting-edge research skills and conceptual knowledge thatwill be acquired during the career award period."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3814571,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A3LVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Assistance Listing Number(s)\n\n 93.173\n\n Funding Opportunity Purpose\n\n The purpose of the NIDCD Research Career Enhancement Award for Established Investigators (K18) program is to enable established, proven investigators to augment or redirect their research programs through the acquisition of new research skills to answer questions relevant to the hearing, balance, smell, taste, voice, speech and language sciences.\n\n This Notice of Funding Opportunity (NOFO) is designed specifically for applicants proposing research that does not involve leading an independent clinical trial, a clinical trial feasibility study, or an ancillary study to a clinical trial. Applicants to this NOFO are permitted to propose research experience in a clinical trial led by a mentor or co-mentor. Those proposing a clinical trial or an ancillary clinical trial as lead investigator, should apply to the companion NOFO (NOFO# PAR-24-140 (https://grants.nih.gov/grants/guide/pa-files/PAR-24-140.html) and PAR- 24-142 (https://grants.nih.gov/grants/guide/pa-files/PAR-24-142.html))."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3768188,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AxrVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If the PD/PI is also the organizational Signing Official, they must have two distinct eRA Commons accounts, one for each role. Obtaining an eRA Commons account can take up to 2 weeks.\n\n All PD(s)/PI(s) must be registered with ORCID (https://orcid.org/). The personal profile associated with the PD(s)/PI(s) eRA Commons account must be linked to a valid ORCID ID. For more information on linking an ORCID ID to an eRA Commons personal profile see the ORCID topic in our eRA Commons online help (https://era.nih.gov/erahelp/Commons/default.htm#orcid.htm%3FTocPath%3D_____29).\n\n Eligible Individuals (Program Director/Principal Investigator) Any candidate with the skills, knowledge, and resources necessary to carry out the proposed research as the Program Director/Principal Investigator (PD/PI) is invited to work with their mentor and organization to develop an application for support. Multiple PDs/PIs are not allowed.\n\n By the time of award, the individual must be a citizen or a non-citizen national of the United States or have been lawfully admitted for permanent residence (i.e., possess a currently valid Permanent Resident Card USCIS Form I- 551, or other legal verification of such status).\n\n Candidates for the K18 award must have a research or health-professional doctoral degree. This award is intended for well-established investigators who have established records of independent, peer-reviewed Federal or private research grant funding. Applicants are not required to have active research grant support at the time of application for this award.\n\n 2. Cost Sharing\n\n This NOFO does not require cost sharing as defined in the NIH Grants Policy Statement Section 1.2 Definition of Terms (//grants.nih.gov/grants/guide/url_redirect.php?id=11126).\n\n 3. Additional Information on Eligibility\n\n Number of Applications Applicant organizations may submit more than one application, provided that each application is scientifically distinct, and each is from a different candidate.\n\n NIH will not accept duplicate or highly overlapping applications under review at the same time per NIH Grants Policy Statement Section 2.3.7.4 Submission of Resubmission Application (//grants.nih.gov/grants/guide/url_redirect.php? id=82415). An individual may not have two or more competing NIH career development applications pending review concurrently."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3498654,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A1LVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=82423)).\n\n Individuals are eligible for a K22 award if they have been, or currently are, the PD/PI of an NIH R03 or R21 grant or an equivalent non-NIH award. Individuals are NOT eligible to apply if they have a pending application for any other PHS career development award, an NIH institute-specific K22, or a Pathway to Independence Award (K99/R00). Individuals are not eligible to apply if they have been or are currently a PD/PI on an NIH research grant (such as R01, R29, P01, or DP2) or a subproject leader on an NIH multicomponent grant or cooperative agreement (e.g., P01, U19, P20, P30, P50, U54, UM2), or an equivalent NIH or non-NIH award.\n\n Level of Effort At the time of award, the candidate must have a \"full-time\" appointment at the academic institution that is the applicant organization. The candidate is required to devote at least 6 calendar months (50% of full-time professional effort) to the K18 program, but may devote their full-time (12 calendar months) effort to it. For\n\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3235476,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A1rVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "(https://grants.nih.gov/grants/policy/nihgps/html5/section_10/10.10.1_executive_orders.htm)\n\n 6. Funding Restrictions\n\n All NIH awards are subject to the terms and conditions, cost principles, and other considerations described in the NIH Grants Policy Statement Section 7.9.1 Selected Items of Cost  (//grants.nih.gov/grants/guide/url_redirect.php? id=11143).\n\n Pre-award costs are allowable only as described in the NIH Grants Policy Statement (//grants.nih.gov/grants/guide/url_redirect.php?id=11143).\n\n 7."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3095211,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A47VYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Indirect Costs\n\n Indirect Costs (also known as Facilities & Administrative [F&A] Costs) are reimbursed at 8% of modified total direct costs.\n\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3011773,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A0rVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ },
+ "aa379ffb47df4d0b": {
+  "query": "reference letters submission",
+  "filter": "f94ab6fe741bf4f0",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Follow all instructions for the Appendix as described in the SF424 (R&R) Application Guide; any instructions provided here are in addition to the SF424 (R&R) Application Guide instructions.\n\n PHS Human Subjects and Clinical Trials Information\n\n When involving NIH-defined human subjects research, clinical research, and/or clinical trials (and when applicable, clinical trials research experience) follow all instructions for the PHS Human Subjects and Clinical Trials Information form in the SF424 (R&R) Application Guide, with the following additional instructions:\n\n If you answered “Yes” to the question “Are Human Subjects Involved?” on the R&R Other Project Information form, you must include at least one human subjects study record using the Study Record: PHS Human Subjects and Clinical Trials Information form or Delayed Onset Study record.\n\n Study Record: PHS Human Subjects and Clinical Trials Information\n\n All instructions in the SF424 (R&R) Application Guide must be followed.\n\n The following additional instructions apply:\n\n For NOFOs that do not allow independent clinical trials, do not complete Section 4 – Protocol Synopsis information or Section 5 - Other Clinical Trial-related Attachments.\n\n Delayed Onset Study\n\n Note: Delayed onset (https://grants.nih.gov/grants/glossary.htm#DelayedOnsetStudy) does NOT apply to a study that can be described but will not start immediately (i.e., delayed start).\n\n All instructions in the SF424 (R&R) Application Guide must be followed.\n\n PHS Assignment Request Form\n\n \n\n \n  https://grants.nih.gov/grants/glossary.htm#DelayedOnsetStudy\n \n\n \n  https://grants.nih.gov/grants/glossary.htm#DelayedOnsetStudyAll instructions in the SF424 (R&R) Application Guide must be followed.\n\n Reference Letters\n\n Candidates must carefully follow the SF424 (R&R) Application Guide, including the time period for when reference letters will be accepted. Applications lacking the appropriate required reference letters will not be reviewed. This is a separate process from submitting an application electronically. Reference letters are submitted directly through the eRA Commons Submit Referee Information link and not through Grants.gov. \n\n 3. Unique Entity Identifier and System for Award Management (SAM)\n\n See Part 1. Section III.1 for information regarding the requirement for obtaining a unique entity identifier and for completing and maintaining active registrations in System for Award Management (SAM), NATO Commercial and Government Entity (NCAGE) Code (if applicable), eRA Commons, and Grants.gov\n\n 4."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2779584,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A4LVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 11,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=11146) for avoiding common errors. Upon receipt, applications will be evaluated for completeness and compliance with application instructions by the Center for Scientific Review, NIH. Applications that are incomplete or non-compliant will not be reviewed.\n\n Post Submission Materials\n\n Applicants are required to follow the instructions for post-submission materials, as described in the policy (//grants.nih.gov/grants/guide/url_redirect.php?id=82299)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.268105,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A5rVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 13,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application and Submission Information 1. Requesting an Application Package\n\n Buttons to access the online ASSIST system or to download application forms are available in Part 1 of this NOFO. See your administrative office for instructions if you plan to use an institutional system-to-system solution.\n\n 2. Content and Form of Application Submission\n\n It is critical that applicants follow the instructions in the Career Development (K) Instructions in the How to Apply - Application Guide (https://grants.nih.gov/grants/guide/url_redirect.php?id=82400) except where instructed in this notice of funding opportunity to do otherwise. Conformance to the requirements in the Application Guide is required and strictly enforced. Applications that are out of compliance with these instructions may be delayed or not accepted for review.\n\n For information on Application Submission and Receipt, visit Frequently Asked Questions – Application Guide, Electronic Submission of Grant Applications (//grants.nih.gov/grants/guide/url_redirect.php?id=41137).\n\n Page Limitations\n\n All page limitations described in the How to Apply – Application Guide (https://grants.nih.gov/grants/guide/url_redirect.php?id=82400) and the Table of Page Limits (https://grants.nih.gov/grants/guide/url_redirect.php?id=61134) must be followed.\n\n Instructions for Application Submission The following section supplements the instructions found in the How to Apply – Application Guide (https://grants.nih.gov/grants/guide/url_redirect.php?id=82400) and should be used for preparing an application to this NOFO.\n\n SF424(R&R) Cover\n\n All instructions in the SF424 (R&R) Application Guide must be followed.\n\n SF424(R&R) Project/Performance Site Locations\n\n All instructions in the SF424 (R&R) Application Guide must be followed."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2621537,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A2rVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "https://grants.nih.gov/grants/guide/notice-files/NOT-OD-18-156.html\n \n\n \n  https://grants.nih.gov/grants/guide/notice-files/NOT-OD-18-156.html\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/html5/section_12/12.3.6_level_of_effort.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/html5/section_12/12.3.6_level_of_effort.htm\n \n\n \n  https://grants.nih.gov/grants/policy/nihgps/html5/section_12/12.3.6_level_of_effort.htm\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=41137\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=41137\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=41137\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=61134\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=61134\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400Other Project Information\n\n All instructions in the SF424 (R&R) Application Guide must be followed.\n\n Project Summary/Abstract\n\n Include a description of your current research and the research you propose to continue in the independent phase.\n\n SF424(R&R) Senior/Key Person Profile Expanded\n\n All instructions in the SF424 (R&R) Application Guide must be followed.\n\n R&R Budget\n\n All instructions in the SF424 (R&R) Application Guide must be followed."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2603399,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A27VYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Other Submission Requirements and Information\n\n Applications must be submitted electronically following the instructions described in the SF424 (R&R) Application Guide. Paper applications will not be accepted.\n\n Applicants must complete all required registrations before the application due date. Section III. Eligibility Information contains information about registration.\n\n For assistance with your electronic application or for more information on the electronic submission process, visit How to Apply - Application Guide (https://grants.nih.gov/grants/guide/url_redirect.php?id=82400). If you encounter a system issue beyond your control that threatens your ability to complete the submission process on- time, you must follow the Dealing with System Issues (https://grants.nih.gov/grants/how-to-apply-application- guide/due-dates-and-submission-policies/dealing-with-system-issues.htm) guidance. For assistance with application submission, contact the Application Submission Contacts in Section VII.\n\n Important reminders:\n\n All PD(s)/PI(s) must include their eRA Commons ID in the Credential fieldof the Senior/Key Person Profile form. Failure to register in the Commons and to include a valid PD/PI Commons ID in the credential field will prevent the successful submission of an electronic application to NIH. See Section III of this NOFO for information on registration requirements.\n\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82380\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82380\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11128\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11128\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=11123\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82423\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2566624,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A5LVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The application must include a statement from the mentor providing: 1) information on their research qualifications and previous experience as a research supervisor; 2) a plan that describes the nature of the supervision and mentoring that will occur during the proposed award period; 3) a plan for career progression for the candidate to move from the mentored stage of their career to independent research investigator status during the project period of the award; and 4) a plan for monitoring the candidate’s research, publications, and progression towards independence.  Similar information must be provided by any co-mentor.  If more than one co-mentor is proposed, the respective areas of expertise and responsibility of each should be described.  Co-mentors should clearly describe how they will coordinate the mentoring of the candidate. If any co-mentor is not located at the sponsoring institution, a statement should be provided describing the mechanism(s) and frequency of communication with the candidate, including the frequency of face-to-face meetings.  The primary mentor must agree to provide annual evaluations of the candidate’s progress as required in the annual progress report.\n\n If the candidate is proposing to gain experience in a clinical trial as part of his or her research career development, the mentor or co-mentor of the mentoring team must include a statement to document leadership of the clinical trial, and appropriate expertise to guide the applicant in any proposed clinical trials research experience.\n\n Letters of Support from Collaborators, Contributors and Consultants\n\n Signed statements must be provided by all collaborators and/or consultants confirming their participation in the project and describing their specific roles. Unless also listed as senior/key personnel, collaborators and consultants do not need to provide their biographical sketches. However, information should be provided clearly documenting the appropriate expertise in the proposed areas of consulting/collaboration.  Advisory committee members (if applicable): Signed statements must be provided by each member of the proposed advisory committee.  These statements should confirm their participation, describetheir specific roles, and document the expertise they will contribute.  "
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2545867,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A3rVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=111543. Anticipated Announcement and Award Dates\n\n After the peer review of the application is completed, the PD/PI will be able to access his or her Summary Statement (written critique) via the eRA Commons (//grants.nih.gov/grants/guide/url_redirect.php?id=11123). Refer to Part 1 for dates for peer review, advisory council review, and earliest start date.\n\n Information regarding the disposition of applications is available in the NIH Grants Policy Statement Section 2.4.4 Disposition of Applications (//grants.nih.gov/grants/guide/url_redirect.php?id=82416)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2462481,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A8bVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ },
+ "c2ceb6a878d74bcb": {
+  "query": "award amount direct costs per year salary support limit",
+  "filter": "a70ce02dfc578a19",
+  "retrievalResults": []
+ },
+ "c6d15f051b6ddbf3": {
+  "query": "letters of reference submitted by referees deadline eRA Commons",
+  "filter": "a70ce02dfc578a19",
+  "retrievalResults": []
+ },
+ "d06d9d191751a523": {
+  "query": "key dates open date, due dates, earliest start date, expiration date",
+  "filter": "f94ab6fe741bf4f0",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Overview Information\n\n Key Dates Part 2. Full Text of Announcement\n\n Section I. Funding Opportunity Description Section II. Award Information Other Award Budget Information\n\n All applications are due by 5:00 PM local time of applicant organization.\n\n Applications are encouraged to apply early to allow adequate time to make any corrections to errors found in the application during the submission process by the due date.\n\n Expiration Date\n\n May 08, 2027\n\n Due Dates for E.O. 12372\n\n Not Applicable\n\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?id=82400\n \n\n \n  https://grants.nih.gov/grants/guide/url_redirect.php?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3258226,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AybVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 3,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Submission Dates and Times\n\n Part I."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2812464,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A4bVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "text_curr=K18&&Search.x=0&&Search.y=0&&Search_Type=Activity\n \n\n \n  https://grants.nih.gov/grants/funding/ac_search_results.htm?text_curr=K18&&Search.x=0&&Search.y=0&&Search_Type=Activity\n \n\n \n  https://grants.nih.gov/grants/funding/ac_search_results.htm?text_curr=K18&&Search.x=0&&Search.y=0&&Search_Type=ActivityKey Dates\n\n The following table includes NIH standard due dates (https://grants.nih.gov/grants/how-to-apply-application- guide/due-dates-and-submission-policies/due-dates.htm) marked with an asterisk.\n\n Application Due Dates Review and Award Cycles\n\n New\n\n Renewal / Resubmission / Revision (as\n\n allowed)\n\n AIDS - New/Renewal/Resubmission/Revision,\n\n as allowed\n\n Scientific Merit\n\n Review\n\n Advisory Council Review\n\n Earliest Start Date\n\n June 10, 2024\n\n June 10, 2024 September 07, 2024 * October 2024\n\n January 2025\n\n April 2025\n\n October 08, 2024\n\n October 08, 2024 January 07, 2025 * February 2025\n\n May 2025 July 2025\n\n February 10, 2025\n\n February 10, 2025\n\n May 07, 2025 * June 2025 October 2025\n\n December 2025\n\n June 09, 2025\n\n June 09, 2025 September 07, 2025 * October 2025\n\n January 2026\n\n April 2026\n\n October 08, 2025\n\n October 08, 2025 January 07, 2026 * February 2026\n\n May 2026 July 2026\n\n February 09, 2026\n\n February 09, 2026\n\n May 07, 2026 * June 2026 October 2026\n\n December 2026\n\n See Section III. 3. Additional Information on Eligibility."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2607104,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AxbVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Posted Date\n\n February 09, 2024\n\n Open Date (Earliest Submission Date)\n\n May 10, 2024\n\n Letter of Intent Due Date(s)\n\n Not Applicable\n\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/due-dates.htm\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/due-dates.htm\n \n\n \n  https://grants.nih.gov/grants/how-to-apply-application-guide/due-dates-and-submission-policies/due-dates.htm\n \n\n \n  https://grants.nih.gov/grants/guide/pa-files/PAR-24-140.html\n \n\n \n  https://grants.nih.gov/grants/guide/pa-files/PAR-24-140.html\n \n\n \n  https://grants.nih.gov/grants/guide/pa-files/PAR-24-142.html\n \n\n \n  https://grants.nih.gov/grants/guide/pa-files/PAR-24-142.html\n \n\n \n  https://grants.nih.gov/grants/guide/pa-files/PAR-24-142.htmlApplication Due Dates Review and Award Cycles\n\n New\n\n Renewal / Resubmission / Revision (as\n\n allowed)\n\n AIDS - New/Renewal/Resubmission/Revision,\n\n as allowed\n\n Scientific Merit\n\n Review\n\n Advisory Council Review\n\n Earliest Start Date\n\n June 08, 2026\n\n June 08, 2026 Not Applicable October 2026\n\n January 2027\n\n April 2027\n\n October 08, 2026\n\n October 08, 2026 Not Applicable February 2027\n\n May 2027 July 2027\n\n February 08, 2027\n\n March 08, 2027 Not Applicable July 2027 October 2027\n\n December 2027\n\n Required Application Instructions It is critical that applicants follow the instructions in the Career Development (K) Instructions in the How to Apply - Application Guide (https://grants.nih.gov/grants/guide/url_redirect.php?id=82400), except where instructed to do otherwise (in this NOFO or in a Notice from the NIH Guide for Grants and Contracts (//grants.nih.gov/grants/guide/url_redirect.php?id=11164))."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2317532,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ax7VYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 2,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Overview Information contains information about Key Dates and Times. Applicants are encouraged to submit applications before the due date to ensure they have time to make any application corrections that might be necessary for successful submission. When a submission date falls on a weekend or Federal holiday (https://grants.nih.gov/grants/guide/url_redirect.php?id=82380), the application deadline is automatically extended to the next business day.\n\n Organizations must submit applications to Grants.gov (//grants.nih.gov/grants/guide/url_redirect.php?id=11128) (the online portal to find and apply for grants across all Federal agencies) using ASSIST or other electronic submission systems. Applicants must then complete the submission process by tracking the status of the application in the eRA Commons (//grants.nih.gov/grants/guide/url_redirect.php?id=11123), NIH’s electronic system for grants administration. NIH and Grants.gov systems check the application against many of the application instructions upon submission. Errors must be corrected and a changed/corrected application must be submitted to Grants.gov on or before the application due date and time.  If a Changed/Corrected application is submitted after the deadline, the application will be considered late. Applications that miss the due date and time are subjected to the NIH Grants Policy Statement Section 2.3.9.2 Electronically Submitted Applications (//grants.nih.gov/grants/guide/url_redirect.php?id=82423).\n\n Applicants are responsible for viewing their application before the due date in the eRA Commons to ensure accurate and successful submission.\n\n Information on the submission process and a definition of on-time submission are provided in the How to Apply – Application Guide (https://grants.nih.gov/grants/guide/url_redirect.php?id=82400).\n\n 5. Intergovernmental Review (E.O. 12372)\n\n This initiative is not subject to (//grants.nih.gov/grants/guide/url_redirect.php?id=11142)intergovernmental review."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2269232,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A4rVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "March 31, 2025 This funding opportunity was updated to align with agency priorities. Carefully reread the full\n\n funding opportunity and make any needed adjustments to your application prior to submission."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1825536,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AwbVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "id=111543. Anticipated Announcement and Award Dates\n\n After the peer review of the application is completed, the PD/PI will be able to access his or her Summary Statement (written critique) via the eRA Commons (//grants.nih.gov/grants/guide/url_redirect.php?id=11123). Refer to Part 1 for dates for peer review, advisory council review, and earliest start date.\n\n Information regarding the disposition of applications is available in the NIH Grants Policy Statement Section 2.4.4 Disposition of Applications (//grants.nih.gov/grants/guide/url_redirect.php?id=82416)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1703297,
+    "metadata": {
+     "documentIdentifier": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A8bVYYKEBbayybwJOaupR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)/NOFO-File-PDF",
+     "nofoName": "NIDCD Research Career Enhancement Award for Established Investigators (K18 Clinical Trial Not Allowed)",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:22:06.622Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ }
+}

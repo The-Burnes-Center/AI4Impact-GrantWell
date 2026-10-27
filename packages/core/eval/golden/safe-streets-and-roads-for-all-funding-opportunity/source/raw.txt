@@ -1,0 +1,3321 @@
+BILLING CODE 4910-9X
+DEPARTMENT OF TRANSPORTATION
+Office of the Secretary of Transportation
+Docket Number: DOT-OST-2026-0050
+DOT FY 2026 Safe Streets and Roads for All Funding
+ISSUED: March 27, 2026
+AGENCY: Office of the Secretary of Transportation, U.S. Department of Transportation (DOT
+or the Department)
+ACTION: Notice of Funding Opportunity (NOFO or Notice), Assistance Listing # 20.939
+Each section of this Notice contains information and instructions relevant to the application
+process for Safe Streets and Roads for All (SS4A) grants, and all applicants should read this
+Notice in its entirety to have the information they need to submit eligible and competitive
+applications.
+Section
+Content
+A
+Basic Information
+B
+Definitions
+C
+Eligibility Information
+D
+Program Description
+E
+Application Contents and Format
+F
+Submission Requirements and Deadlines
+G
+Application Review Information
+H
+Federal Award Notices
+I
+Post-Award Requirements and Administration
+J
+Other Information
+1
+A. Basic Information
+Federal Agency
+Office of the Secretary of Transportation, U.S. Department of Transportation
+Name
+Announcement
+Notice of Funding Opportunity
+Type
+Funding
+DOT-SS4A-FY26-01 (Grants.gov)
+Opportunity
+Number
+Assistance Listing
+20.939
+Number
+Executive
+Funds for the fiscal year (FY) 2026 SS4A grant program are to be awarded on a
+Summary
+competitive basis to support planning, infrastructure, and behavioral and
+operational initiatives to prevent fatalities and serious injuries on roads and
+streets involving all roadway users, including pedestrians, bicyclists, public
+transportation, motorists, and commercial vehicle operators.
+Objective
+The purpose of this notice is to solicit applications for SS4A.
+Eligible Applicants
+Metropolitan planning organizations;
+Political subdivisions of a State or territory (e.g., cities, towns, counties);
+Federally recognized Tribal governments; and
+A multijurisdictional group of entities described in any of the
+aforementioned three types of entities.
+Eligible Project
+Develop a comprehensive safety action plan (Action Plan).
+Types
+Conduct supplemental safety planning to enhance an Action Plan.
+Carry out demonstration activities to inform the development of, or an
+update to, an Action Plan.
+Perform planning, design, and development activities for projects and
+strategies identified in an Action Plan.
+Implement projects and strategies identified in an Action Plan that
+address roadway safety problems.
+Funding Details
+This Notice makes available up to $993,488,194 for FY 2026 grants:
+$687,809,874 is available for Implementation Grants
+Expected number of awards: 40 to 70
+Expected funding range: $2,500,000 to $25,000,000
+$305,678,320 is available for Planning and Demonstration Grants
+Expected number of awards: 400 to 700
+Expected funding range: $100,000 to $5,000,000
+DOT reserves the right to make more, or fewer, awards. DOT reserves the
+discretion to alter minimum and maximum award sizes upon receiving the full
+pool of applications and assessing the needs of the program in relation to the
+SS4A grant priorities in Section D.vi: Grant Priorities. DOT may increase the
+overall amount of funding if additional funds become available.
+2
+Funding
+Not more than 15 percent of the $1 billion in FY 2026 funds made available to
+Restrictions
+carry out the SS4A program may be awarded to eligible applicants in a single
+State. 1
+A minimum of 30 percent of the total funds made available in FY 2026 must be
+awarded for developing an Action Plan, including supplemental planning to
+update an existing Action Plan, or demonstration activities to inform the
+development or update of an Action Plan.
+Key Dates
+Planning and Demonstration Grant and Implementation Grant applications must
+be submitted by 5:00 PM (EDT) on May 26, 2026.
+Technical questions must be submitted by 5:00 PM (EDT) on April 24, 2026.
+Pre-application eligibility review requests must be submitted for Implementation
+Grants by 5:00 PM (EDT) on April 24, 2026.
+Application Links
+Applications must be submitted via Valid Eval, an online application submission
+system used by DOT
+Implementation Grant Application:
+https://usg.valideval.com/teams/usdot ss4a 2026 implementation/signup
+Planning and Demonstration Grant Application:
+https://usg.valideval.com/teams/usdot ss4a 2026 planning demo/signup
+Customer support for Valid Eval can be reached at support@valideval.com.
+Agency Contact
+Email: SS4A@dot.gov
+Information
+Website: https://www.transportation.gov/grants/SS4A
+DOT will regularly post answers to common questions and requests for
+clarification, as well as schedule information for webinars providing additional
+guidance on the SS4A website.
+1. Changes in the FY 2026 NOFO
+The FY 2026 NOFO substantively differs from the FY 2025 NOFO in the following ways:
+DOT is placing a priority on Public Safety Infrastructure.
+Section B. Definitions. Clarifying information is added regarding Public Safety
+Infrastructure for post-crash care, emergency response coordination, and prehospital
+blood transfusion activities.
+1 Funding for Tribal lands will be treated as their own State and will not count toward a State's 15% limit.
+3
+Section G. Application Review Information has been updated to include clearer
+information regarding how SS4A applications will be assessed.
+Section G. Application Review Information. Added language noting that if DOT does not
+receive enough merit-worthy applications for Planning and Demonstration Grants to
+award the 30 percent set aside requirement, surplus funds may be redirected toward
+merit-worthy Implementation Grants.
+Added language highlighting new Executive Orders and DOT Orders.
+4
+B. Definitions
+Term
+Definition
+Applicant's
+The U.S. Census tract(s) where the applicant operates or performs their safety
+Jurisdiction(s)
+responsibilities. If an applicant is seeking funding for multiple jurisdictions,
+they should include all relevant Census tracts for the jurisdictions covered by
+the application.
+Comprehensive Safety
+A comprehensive safety action plan (referred to as an "Action Plan") is a plan
+Action Plan
+to prevent roadway fatalities and serious injuries in a locality or region or on
+Tribal land. This can be either an Action Plan developed with a Planning and
+Demonstration Grant, or a previously developed plan (e.g., a Vision Zero plan
+or similar plan) that is substantially similar to and meets the eligibility
+requirements of an Action Plan. See Table 1 for a detailed description.
+Fatal or Serious Injury
+A fatal or serious injury crash involves a motor vehicle traveling on a
+Crash
+roadway customarily open to the public. To be considered a motor vehicle
+related fatal injury, the crash must involve a motor vehicle traveling on a
+trafficway customarily open to the public and must result in the death of a
+vehicle occupant or a nonoccupant within 30 days of the crash. This definition
+aligns with the definition of a fatal crash in the Fatality Analysis Reporting
+System (FARS).
+High-Injury Network
+Identifies the highest concentrations of motor vehicle related crashes resulting
+in serious injuries and fatalities within a given roadway network or
+jurisdiction.
+Political Subdivision
+A unit of government created under the authority of State law. This includes
+of a State
+cities, towns, counties, special districts, certain transit agencies, and similar
+units of local government. A transit district, authority, or public benefit
+corporation is eligible if it was created under State law, including transit
+authorities operated by political subdivisions of a State.
+Public Safety
+Physical and digital hardware, software, systems, technologies, equipment,
+Infrastructure
+protocols, facilities, and coordination models used by public safety agencies
+such as 9-1-1, emergency medical services (EMS), fire services, law
+enforcement, and trauma system partners to either prevent, respond to, or
+reduce the severity of roadway crashes. Public safety infrastructure may be
+permanent, modular, configurable, or interoperable, and may include
+temporary, pilot, or limited-scale deployments.
+5
+Term
+Definition
+Rural
+For the purposes of this NOFO, jurisdictions outside an Urban Area (UA) or
+located within UAs with populations fewer than 200,000, based on the 2020
+Census, will be considered rural. Lists of UAs are available on the U.S.
+Census Bureau website at
+https://www2.census.gov/geo/docs/reference/ua/2020_Census_ua_list_al.xlsx
+Safe System
+A guiding principle to address the safety of all road users. It involves a
+Approach
+paradigm shift to improve safety culture, increase collaboration across all
+safety stakeholders, and refocus transportation system design and operation
+on anticipating human mistakes and lessening impact forces to reduce crash
+severity and save lives. 2
+Areas of Persistent
+Areas of Persistent Poverty (APP)³ are defined as:
+Poverty and
+Any county that has consistently had greater than or equal to 20
+Underserved
+percent of the population living in poverty during the 30-year period
+Community
+preceding November 15, 2021, as measured by the 1990 and 2000
+decennial census and the most recent annual Small Area Income
+Poverty Estimates as estimated by the Bureau of the Census
+Any census tract with a poverty rate of at least 20 percent as measured
+by the 2014 - 2018 5-year data series available from the American
+Community Survey of the Bureau of the Census
+Any territory or possession of the United States
+Underserved Community will use the same definition as APP for purposes of
+this NOFO.
+C. Eligibility Information
+1. Eligible Applicants
+Section 24112(a)(2) of the Infrastructure Investment and Jobs Act (IIJA), Pub. L. 117-58,
+provides statutory eligibility criteria for the SS4A grants. Eligible applicants for SS4A grants are:
+²For additional information, visit: https://www.transportation.gov/safe-system-approach
+3 See 49 U.S.C. § 6702(a)(1).
+6
+1. a metropolitan planning organization (MPO);
+2. a political subdivision of a State or territory;
+3. a federally recognized Tribal government; and
+4. a multijurisdictional group of entities made up of any of the aforementioned three types
+of entities.
+A multijurisdictional group of entities should identify a lead applicant as the primary point of
+contact. Non-profits are not eligible applicants unless created under State law with roadway
+safety and/or planning responsibilities equivalent to a political subdivision of a State. States and
+territories are not eligible applicants.
+SS4A award recipients from all previous years are eligible to apply in FY 2026. FY 2026
+Projects of Merit, which are Implementation Grant or Planning and Demonstration Grant
+applications that received a Highly Recommended rating, may automatically be carried forward
+for consideration under a future SS4A NOFO, subject to availability of appropriations and
+specific funding requirements which will be explained in future NOFOs. Applicants would be
+responsible for updating an application should the future SS4A NOFO include program or policy
+changes from this FY 2026 NOFO.
+Additional Eligibility Requirements for Implementation Grant Applicants
+An eligible applicant for an Implementation Grant must also meet at least one of the following
+conditions:
+have ownership and/or maintenance responsibilities over a roadway network;
+have safety responsibilities that affect roadways; or
+7
+have an agreement in the form of a signed letter, MOU, or other documentation from the
+agency that has ownership and/or maintenance responsibilities for the roadway within
+the applicant's jurisdiction.
+2. Number of Applications
+Eligible applicants may submit one application only to the FY 2026 funding opportunity. If
+multiple applications are received from the same political subdivision of a State and/or applicant,
+the last application submitted will be reviewed. If an applicant is eligible for both a Planning and
+Demonstration Grant and an Implementation Grant, the applicant must choose between applying
+for a Planning and Demonstration Grant or an Implementation Grant.
+Implementation Grant applicants may request funds to bundle supplemental planning and
+demonstration activities as described in Section D.8.i, alongside a request for funds to implement
+projects and strategies.
+3. Planning and Demonstration Grant Eligibility Requirements
+Eligible activities for a Planning and Demonstration Grant include: develop a new Action Plan,
+conduct supplemental safety planning to update an existing Action Plan, or carry out safety
+demonstration activities to inform the development of or update to an Action Plan.
+These activities may be bundled in any combination, provided that the requirements in this
+Notice are met. DOT encourages complementary but distinct activities, including but not limited
+to safety demonstration activities that will help inform the development of an Action Plan.
+Any applicant that meets the eligibility requirements described below may apply for a Planning
+and Demonstration Grant to develop an Action Plan.
+8
+i.
+Developing an Action Plan
+The development of an Action Plan must include all relevant road users and be at a broad,
+systemwide geography (i.e., the eligible applicant's entire jurisdiction, not a few road segments
+within a jurisdiction). Corridor-level or site-specific studies are considered to be supplemental
+planning and not an Action Plan. Applicants with an existing Action Plan may also apply to
+update their Action Plan.
+ii.
+Supplemental Planning and Demonstration Activities
+Supplemental planning broadly refers to an activity that informs the development of a new or
+existing Action Plan. Eligible supplemental planning activities include, but are not limited to, the
+following:
+Action plan updates
+Action plan consolidation including combining different jurisdiction's action plans or
+integrating topical safety activities into an action plan
+Complementary or topical safety plan development
+Road safety audits
+Follow-up data collection and safety analysis
+Progress reporting
+Stakeholder engagement and collaboration
+Roadway safety planning
+Demonstration activities are temporary safety improvements that inform the Action Plan by
+testing proposed project and strategy approaches to determine future benefits and future scope.
+Eligible demonstration activities include, but are not limited to the following:
+Feasibility studies
+9
+MUTCD engineering studies
+Behavioral or operational activity pilot programs
+New technology pilot programs
+Examples of eligible supplemental planning and demonstration activities are provided at
+Planning and Demonstration Activities - SS4A | US Department of Transportation
+iii.
+Action Plan Requirement
+Applicants requesting Federal funding to conduct supplemental planning and/or demonstration
+activities only, without developing or updating an Action Plan must either a) have an existing
+Action Plan, which is demonstrated through meeting the Action Plan requirements outlined in
+the Self-Certification Eligibility Worksheet4 and described in Table 1: Action Plan Components,
+b) have received SS4A funding in a previous round to develop or update an Action Plan and are
+in the process of completing or updating an Action Plan, as described in Table 1: Action Plan
+Components, or c) use a higher-level jurisdiction's Action Plan as described below.
+If a higher-level jurisdiction (e.g., an MPO or county would be a higher-level jurisdiction for a
+city or town) has an eligible and finalized Action Plan, or is in the process of completing or
+updating an SS4A-funded Action Plan from a previous grant round, an eligible applicant can
+apply for supplemental planning and/or demonstration activities without its own plan only if: 1)
+the geographic boundaries of the higher-level jurisdiction's Action Plan cover the eligible
+applicant's jurisdiction; 2) the proposed activities are coordinated with the higher-level
+jurisdiction and the application demonstrates such coordination; and 3) the activities will inform
+the Action Plan of the higher-level jurisdiction.
+4
+https://www.transportation.gov/grants/ss4a/self-certification-worksheet
+10
+iv.
+Duplicative Action Plans
+An application may be deemed duplicative, and therefore ineligible, if it requests funds to
+develop a new Action Plan when another jurisdiction is already preparing an Action Plan in the
+same area using SS4A funding and/or requests funds to develop a new Action Plan in the same
+area as another FY26 application. Duplicative funding requests to develop a new Action Plan
+will be identified and assessed for merit within the context of other jurisdictions and their
+planning activities and will result in an eligibility determination.
+4. Implementation Grant Eligibility Requirements
+i.
+Action Plan Requirement
+To apply for an Implementation Grant, the applicant must certify that they have an existing plan
+that is substantially similar to an Action Plan as defined in Section B and Table 1: Action Plan
+Components and has been finalized and/or last updated between 2021 and May 26, 2026. The
+components required for an existing plan to be substantially similar to an Action Plan may be
+found in up to three plans (e.g., a regional transportation safety plan and a local Vision Zero plan
+may be used together to meet all component requirements).
+If another jurisdiction (e.g., an MPO or county) has an existing plan in place that meets Action
+Plan eligibility requirements, an eligible applicant covered within the Action Plan's geographic
+boundaries could apply without its own plan as long as the existing plan is focused, at least in
+part, on the roadway network within the applicant's jurisdiction, the plans include the applicant's
+projects and strategies, and all other eligibility requirements are met.
+11
+If an applicant does not have an existing Action Plan or is not located in a jurisdiction which has
+an existing Action Plan, they should apply for a Planning and Demonstration Grant to develop
+one. They should NOT apply for an Implementation Grant.
+The plan, or a combination of up to three plans, must be uploaded as an attachment to the
+application or provided as web links to publicly available sites. Applicants should use the Self-
+Certification Eligibility Worksheet to determine eligibility and upload the completed worksheet
+with their application. 5
+Ineligible Plans
+State-level Action Plans (e.g., a Strategic Highway Safety Plan required under 23 U.S.C. § 148,
+State Highway Safety Plans required under 23 U.S.C. § 402, Commercial Vehicle Safety Plans
+required under 49 U.S.C. § 31102, or Public Transportation Agency Safety Plans required under
+49 U.S.C. § 5329) cannot be used as an established plan to apply for an Implementation Grant.
+Alignment With All Action Plan Components
+Implementation Grant applicants who meet any of the following conditions must update their
+Action Plan during the period of performance for the grant agreement to align with all Action
+Plan components in Table 1: Action Plan Components as a condition of receiving SS4A funds:
+Self-Certification Eligibility Worksheet areas that include a "no" response; or
+Safety focus in the qualifying Action Plan does not include all road users.
+Implementation Grant applicants are encouraged to request supplemental planning funding in
+their application to complete any missing components of an existing plan but may choose to
+complete such activities without Federal funding.
+12
+5. Cost Sharing or Matching
+The Federal share of an SS4A grant may not exceed 80 percent of total eligible SS4A project
+costs. Recipients are required to contribute a local matching share of no less than 20 percent of
+total eligible project costs. Matching funds may include funding from the applicant or other
+eligible non-Federal sources. Unless otherwise authorized by statute, all matching contributions
+must be from non-Federal sources. Applicants that intend to combine SS4A funds with Federal-
+Aid funds provided under Title 23 U.S.C. could experience a significant delay in the
+programming of funding and the execution of a grant agreement.
+i.
+Exceptions to Non-Federal Match Requirements
+In the following situations, the non-federal match requirement may be met with Federal funds or
+may be waived:
+For eligible applicants on federally recognized American Indian and Alaska Native tribes,
+nations, bands, communities and affiliated groups, Tribal Transportation Program and
+Tribal Transportation Program Safety Funds are Federal funding programs, and these
+programs may be used as non-Federal match.
+For eligible applicants located in the U.S. Virgin Islands, Guam, American Samoa, and
+the Commonwealth of the Northern Mariana Islands, when the required local match is
+less than $200,000, SS4A will apply a 100 percent Federal share and waive local match
+requirements per 48 U.S.C. § 1469a and Pub. L. 96-205, Title VI, § 601, as amended, and
+consistent with OMB Controller Alert CA-23-04, Waiving Matching Fund Requirements
+for Insular Areas.
+13
+ii.
+Types of Non-Federal Match
+In accordance with 2 CFR § 200.306, grant recipients may use in-kind or cash contributions
+toward local match requirements so long as those contributions meet the requirements under 2
+CFR § 200.306(b). Any in-kind contributions used to fulfill the cost-share requirement for both
+Planning and Demonstration Grants and Implementation Grants must:
+Be in accordance with the cost principles in 2 CFR Part 200, Subpart E;
+Include documented evidence of completion within the period of performance; and
+Support the execution of the eligible activities in Section D.10: Eligible Activities and
+Costs
+Additional information about match requirements and costs that can be considered match are
+available at https://www.transportation.gov/grants/SS4A.
+D. Program Description
+1. Overview
+The Infrastructure Investment and Jobs Act (IIJA), Pub. L. 117-58, authorized and appropriated
+$1,000,000,000 to be awarded by DOT for FY 2026 for the SS4A grant program. 6 This Notice
+solicits applications for activities to be funded under the SS4A grant program.
+The purpose of SS4A grants is to improve roadway safety by significantly reducing or
+eliminating roadway fatalities and serious injuries through the development, refinement, and
+implementation of Action Plans focused on all users, including pedestrians, bicyclists, public
+transportation users, motorists, and commercial vehicle operators. The Action Plans include
+6 See IIJA, Pub. L. 117-58, 135 Stat. 429, 815, Div. B, Title IV, § 24112; id., 135 Stat at 1413, Div. J, Title VIII.
+14
+strategies to implement the Safe System Approach. The program provides funding to develop
+tools to strengthen a community's approach to roadway safety and is designed to meet the needs
+of local, Tribal, and regional communities that differ dramatically in size, location, and
+experience administering Federal funding.
+2. Total Funding Available
+IIJA established the SS4A program with $5,000,000,000 in advanced appropriations in
+Division J, including $1,000,000,000 for FY 2026. DOT has retained not more than 2 percent, or
+$20,000,000, for administrative expenses. 7 In addition, DOT has $13,488,194 in carryover funds.
+Therefore, this Notice makes available up to $993,488,194 for FY 2026 grants under the SS4A
+program. Refer to Section G for greater detail on additional funding considerations and Section
+A. Basic Information for funding restrictions.
+3. Start Dates and Period of Performance
+DOT expects to obligate SS4A award funding via signed grant agreements between DOT and
+recipients, as flexibly and expeditiously as possible, within 12 months of award announcement.
+Because award recipients under this program may be first-time recipients of Federal funding,
+DOT is committed to providing assistance to help them through the process of securing a grant
+agreement and delivering grant projects and strategies through the SS4A Technical Assistance
+Center⁸. Applicants who have never received Federal funding from DOT are also encouraged to
+partner with eligible applicants within the same region, such as an MPO, that have established
+7 IIJA § 24112(f)(2)
+8 For additional information about the SS4A Technical Assistance Center, visit:
+https://www.ss4aclearinghouse.org/TechnicalAssistance
+15
+financial relationships with DOT and knowledge of Federal grant administration requirements.
+While States are not eligible applicants and cannot be a co-applicant (which includes State
+Departments of Transportation and similar State-level entities), eligible applicants are
+encouraged to seek guidance on project delivery and processes from States and other entities
+experienced with administering Federal grants, outside of the SS4A grant award process, to
+ensure effective administration of a grant award. The expected period of performance for
+Planning and Demonstration and Implementation Grant agreements is between 24 months and
+five years, depending on the scope and extent of the grant activities. The period of performance
+for Planning and Demonstration Grant and Implementation Grant agreements may not exceed
+five years.
+4. Data Collection Requirements
+Pursuant to section 24112(i)(1) of IIJA, DOT must post on a publicly available website best
+practices and lessons learned for preventing roadway fatalities and serious injuries pursuant to
+strategies or interventions implemented under SS4A. In addition, DOT must evaluate and
+incorporate, as appropriate, the effectiveness of strategies and interventions implemented under
+the SS4A grant program into the publicly available website on best practices and lessons
+learned. 9 The best practices and lessons learned collected thus far are available on the SS4A
+Clearinghouse website. DOT intends to measure safety outcomes through a combination of grant
+agreement activities and data collections, including DOT data collections already underway and
+program evaluations separate from the individual grant agreements. The grant data-collection
+9 IIJA specifically cites Countermeasures That Work: A Highway Safety Countermeasure Guide for State Highway
+Safety Offices, Eleventh Edition, or any successor document.
+16
+requirements reflect the need to build evidence of noteworthy strategies and best practices. DOT
+expects to use the data and outcome information collected before and after evaluations. See
+Section I for more information about post-award reporting requirements.
+5. Grant Options and Deliverables
+The SS4A program provides funding for two main types of grants: Planning and
+Demonstration Grants and Implementation Grants. Planning and Demonstration Grants are
+used to develop, complete, or supplement an Action Plan, as well as carry out safety
+demonstration activities that inform an Action Plan. Implementation Grants are used to
+implement strategies or projects that are consistent with an existing Action Plan. In addition,
+applicants may bundle funding requests for supplemental planning and demonstration activities
+that inform the Action Plan into an Implementation Grant application.
+i.
+Planning and Demonstration Grants
+Action Plan
+An Action Plan is the foundation of the SS4A grant program and supports the implementation of
+projects and strategies that will help achieve local, data-driven transportation safety goals. The
+goal of an Action Plan is to develop a holistic, well-defined strategy to prevent roadway fatalities
+and serious injuries in a locality, region, or on Tribal Lands. Grants for Action Plans provide
+Federal funds to eligible applicants to develop, complete, or enhance an Action Plan for broad,
+systemwide geography covering the applicant's entire jurisdiction.
+The primary deliverable is a publicly available Action Plan. For the purposes of the SS4A grant
+program, an Action Plan includes the components in Table 1. DOT considers the process of
+17
+developing an Action Plan to be critical for success and the components reflect a process-
+oriented set of activities. For applications involving a multi-jurisdictional group, applicants may
+propose the development of a single Action Plan covering all jurisdictions, several plans for
+individual jurisdictions, or a system to administer sub-awards to entities within its jurisdiction.
+Table 1: Action Plan Components
+Component
+Description
+Leadership
+An official public commitment (e.g., resolution, policy, ordinance) by a high-
+Commitment and
+ranking official and/or governing body (e.g., Mayor, City Council, Tribal
+Goal Setting
+Council, MPO Policy Board) to an eventual goal of zero roadway fatalities and
+serious injuries. The commitment must include a goal and timeline for eliminating
+roadway fatalities and serious injuries achieved through one, or both, of the
+following:
+(1) the target date for achieving zero roadway fatalities and serious injuries, or
+(2) a percentage reduction of roadway fatalities and serious injuries by a specific
+date with an eventual goal of eliminating roadway fatalities and serious injuries.
+Planning Structure
+A committee, task force, implementation group, or similar body charged with
+oversight of the Action Plan development, implementation, and monitoring.
+Safety Analysis
+Analysis of existing conditions and historical trends that provides a baseline level
+of crashes involving fatalities and serious injuries across a jurisdiction, locality,
+Tribe, or region. Includes an analysis of crash locations and crash severity, as well
+as contributing factors and crash types by relevant road users (e.g., motorists,
+pedestrians, transit users, etc.). Analysis of systemic and specific safety needs is
+also performed, as needed (e.g., high-risk road features, specific safety needs of
+relevant road users, analysis of the built environment, demographics, and
+structural issues). The safety analysis can consider factors that influence the
+severity of outcomes when crashes occur, including the availability and
+coordination of emergency response and post-crash care systems. To the extent
+practical, the analysis should include all roadways within the jurisdiction, without
+regard to ownership. Based on the analysis performed, a geospatial identification
+of higher-risk locations is developed (a high-injury network or equivalent).
+18
+Component
+Description
+Engagement and
+Robust engagement with the public and relevant stakeholders and partners,
+Collaboration
+including the private sector, and community groups allows for both community
+representation and feedback. Information received from engagement and
+collaboration is analyzed and incorporated into the Action Plan. Overlapping
+jurisdictions are included in the process. Plans and processes are coordinated and
+aligned with other governmental plans and planning processes to the extent
+practicable.
+Policy and Process
+Assessment of current local policies, plans, guidelines, and/or standards (e.g.,
+Changes
+manuals) to identify opportunities to improve how processes prioritize
+transportation safety. The Action Plan discusses implementation through the
+adoption of revised or new local policies, guidelines, and/or standards, as
+appropriate.
+Strategy and
+Identification of a comprehensive set of projects and strategies informed by data,
+Project Selections
+the best available evidence and noteworthy practices, and stakeholder input that
+will address the safety problems described in the Action Plan. These strategies
+and countermeasures focus on a Safe System Approach and effective
+interventions and consider multidisciplinary activities. To the extent practicable,
+data limitations are identified and mitigated.
+Once identified, the projects and strategies are prioritized in a list that provides
+time ranges for when the strategies and countermeasures are expected to be
+deployed (e.g., short-, mid-, and long-term timeframes). The list should include
+specific projects and strategies, or descriptions of programs of projects and
+strategies, and explain prioritization criteria used. The list should contain
+interventions focused on infrastructure and behavioral and operational safety.
+Progress and
+Method to measure progress over time after an Action Plan is developed or
+Transparency
+updated, including outcome data. A means to ensure ongoing transparency is
+established with residents and other relevant stakeholders. The approach must
+include, at a minimum, annual public and accessible reporting on progress toward
+reducing roadway fatalities and serious injuries and public posting of the Action
+Plan online.
+Supplemental Planning Activities
+Supplemental planning activities support or enhance an existing Action Plan. Examples of
+eligible supplemental planning activities are provided at
+https://www.transportation.gov/grants/ss4a/planning-and-demonstration-activities.
+19
+The final deliverable for supplemental planning is a written product that connects to, and
+enhances, an Action Plan. Final products shall be made publicly available.
+Demonstration Activities
+Demonstration activities inform an Action Plan by testing proposed project and strategy
+approaches to determine their potential benefits and future scope. Demonstration activities are
+temporary and small in scale. Demonstration activities must measure potential benefits through
+data collection and evaluation (e.g., before and after studies) and inform an Action Plan's list of
+selected projects and strategies and their future implementation.
+Demonstration activities and pilot programs must inform Action Plans through small-scale tests
+with finite trial periods intended to gauge potential project and strategy effectiveness that will
+lead to project and strategy selection at a systemic level. DOT generally expects demonstration
+activities to be initiated within 18 months of executing a grant agreement (e.g., quick-builds on
+the roadway; pilot project established) and the benefits of the demonstration activity to be
+evaluated during the period of performance for the grant agreement.
+The final deliverable is an assessment of the demonstration activities and an updated Action Plan
+that incorporates the information gathered from the demonstration activities into the Action
+Plan's list of projects or strategies and/or informs another part of the Action Plan.
+ii.
+Implementation Grants
+Implementation Grants fund projects and strategies identified in an Action Plan that address
+roadway safety problems. Implementation Grants may also fund supplemental planning and
+demonstration activities as described above, as well as project-level planning, design, and
+development activities for projects and strategies identified in an Action Plan (e.g., project-level
+20
+National Environmental Policy Act (NEPA) compliance, associated environmental review
+activities, permits and approvals, construction design, etc.).
+6. SS4A Grant Priorities
+This section discusses priorities specific to SS4A and NOFO requirements. Successful grant
+applications will:
+Promote safety to prevent fatal and serious injuries on public roadways;
+Employ low-cost, high-impact strategies that can improve safety over a wide geographic
+area;
+Ensure equitable investment in the safety needs of underserved communities, which
+includes both underserved urban and rural communities;
+Beautifying transportation infrastructure with context-appropriate design and/or child-
+friendly elements;
+Advance eligible truck parking with a clear roadway safety nexus;
+Incorporate evidence-based projects and strategies and adopt innovative technologies and
+strategies; and
+Demonstrate engagement with a variety of public and private stakeholders. 10
+Additionally, applications will be more competitive if they
+Beautify transportation infrastructure with context-appropriate design and/or child-
+friendly elements;
+Advance eligible truck parking with a clear roadway safety nexus;
+10 See IIJA, Pub. L. 117-58, 135 Stat. 429, 816, § 24112(d)(3)(A)-(E).
+21
+Modernize public safety infrastructure, including prehospital blood transfusion
+capabilities and improve post-crash care.
+In accordance with the Americans with Disabilities Act of 1990 (ADA), awards focused on
+infrastructure and demonstration activities must ensure that newly constructed facilities in the
+public right-of-way are accessible to, and usable by, individuals with disabilities to the extent
+that it is not structurally impracticable to do so. The ADA also requires that, when an existing
+facility is altered, the altered facility be made accessible to and usable by individuals with
+disabilities to the maximum extent feasible. 11
+DOT intends to use the SS4A program to support the creation of good-paying jobs through union
+participation or project labor agreements which promote cost-effectiveness and open
+competition, registered apprenticeship programs, and other training and placement programs.
+DOT intends to apply principles from DOT Order 2100.7, (Ensuring Reliance Upon Sound
+Economic Analysis in DOT's Policies, Programs and Activities) and DOT Order 2100.9, (Ensuring
+Nondiscrimination and Equal Opportunity in Department of Transportation Policies, Programs, and
+Activities) when evaluating applications and making award selections. To the maximum extent
+permitted by law, DOT will prioritize projects that are in alignment with the principles outlined in
+DOT Order 2100.7 and DOT Order 2100.9.
+DOT seeks to fund projects that advance the priorities of this Administration as described in
+DOT's mission statement and across executive orders.
+11 See 28 CFR § 35.151.
+22
+7. Eligible Activities and Costs
+Broadly, eligible activity costs must comply with the cost principles set forth in 2 CFR Part 200,
+Subpart E. DOT reserves the right to make cost eligibility determinations on a case-by-case
+basis.
+i.
+Eligible Activities
+Eligible activities for grant funding include the following three elements:
+A. Developing or updating an Action Plan (i.e., the activities described in Section C.3.i:
+Developing an Action Plan);
+B. Conducting planning, design, and development activities for projects and strategies
+identified in an Action Plan; and
+C. Carrying out projects and strategies identified in an Action Plan.
+For Implementation Grants, activities must include element (C) and may include element (B).
+Implementation Grant applications may also include element (A) such as supplemental planning
+or demonstration activities. Projects and strategies identified in element (C) must be either
+infrastructure, behavioral, operational, or post-crash care activities identified in the Action Plan,
+including prehospital blood transfusion programs and other public safety system improvements,
+and must be directly related to addressing the safety problem(s) identified in the application and
+Action Plan. Applicants may "bundle" different projects, strategies, supplemental planning,
+and/or demonstration activities into one Implementation Grant application, even if they address
+different safety problems or are located in different areas. For "bundled" funding requests,
+element (B) planning, design, and development activities must be directly connected to the
+completion of the element (C) projects and strategies funded through the Implementation Grant
+23
+application. Public safety infrastructure activities are eligible for Implementation Grants such as
+Field Blood Delivery, Public Safety Dispatch, Digital Alert System, and Education Campaigns;
+these activities could also be eligible as a safety demonstration activity provided they meet the
+demonstration activity eligibility requirements described in Section D.5.i: Demonstration
+Activities. Truck parking activities contained in an Action Plan may be eligible under an Action
+Plan Grant or as part of an Implementation Grant if such activities demonstrates a clear roadway
+safety nexus and are not among the ineligible activities listed below in Section D.7.ii. Examples
+of eligible Implementation Grant activities are listed on the SS4A website
+(https://www.transportation.gov/grants/ss4a/implementation-grants).
+ii.
+Ineligible Activities and Costs
+The following activities are not eligible for element (C) "projects and strategies" nor
+demonstration activity funding:
+Projects and strategies whose primary purpose is not roadway safety.
+Projects and strategies exclusively focused on non-roadway modes of transportation,
+including air, rail, marine, and pipeline. Note, however, roadway intersections with other
+modes of transportation (e.g., at-grade highway rail crossings) are eligible activities.
+Capital projects to construct new roadways used for motor vehicles. A new roadway
+facility exclusively for non-motorists (e.g., a pedestrian bridge) is an eligible activity if
+the primary purpose is safety related.
+Infrastructure projects primarily intended to expand capacity to improve Levels of
+Service for motorists on an existing roadway, such as the creation of additional through
+lanes (i.e. without a clear safety nexus).
+24
+Maintenance activities for an existing roadway primarily to maintain a state of good
+repair. However, roadway modifications on an existing roadway in support of specific
+safety-related projects identified in an Action Plan are eligible activities.
+Development or implementation of a Public Transportation Agency Safety Plan (PTASP)
+required by 49 U.S.C. § 5329. However, a PTASP that identifies and addresses risks to
+pedestrians, bicyclists, personal conveyance and micromobility users, transit riders, and
+others may inform Action Plan development.
+E. Application Contents and Format
+The Planning and Demonstration Grant and the Implementation Grant, respectively, have
+different application submission and supporting document requirements. The SS4A website
+(https://www.transportation.gov/grants/SS4A) provides many resources to help complete the
+required submission materials.
+1. Implementation Grant Pre-Application Submissions
+Prior to submitting an application, a potential Implementation Grant applicant is encouraged to
+submit a Self-Certification Eligibility Worksheet and links or attachments to any referenced
+plan(s) to determine whether the applicant has an existing plan or plans that are substantially
+similar to an Action Plan, which is required for Implementation Grant eligibility. A pre-
+application eligibility review request must contain all required materials, including relevant
+documentation, to receive an eligibility determination by DOT.
+Pre-application submissions must be received at or before 5:00 PM (EDT) on April 24, 2026, by
+emailing SS4A@dot.gov with the subject "Implementation Grant Eligibility Review: Applicant
+25
+Name, State." DOT expects to provide an affirmative response or details as to why the plan(s) do
+not meet eligibility requirements to the applicant within three weeks of receipt. Each applicant
+may request only one pre-application submission review. DOT will not perform pre-application
+reviews of full application materials nor provide feedback on the quality of the overall
+application.
+If a potential applicant has an Action Plan covering their jurisdiction that was developed using
+prior SS4A funds that has been accepted by DOT, they should not submit those plans for pre-
+application eligibility review. DOT will confirm eligibility for these applicants upon application
+submittal.
+Planning and Demonstration Grant applicants are not eligible for pre-application submission
+reviews.
+2. Planning and Demonstration Grant Application Submissions
+The application must include the application materials as described below. The necessary file
+formats for each application component will be displayed on the Valid Eval application portal.
+Standard Forms
+All applicants must submit the following Standard Forms:
+Application for Federal Assistance (SF-424),
+Budget Information for Non-Construction Programs (SF-424A),
+Assurances for Non-Construction Programs (SF-424B), and
+Disclosure of Lobbying Activities (SF-LLL).
+26
+The SF-424 requests applicants provide information on "Estimated Funds" (box 18). This budget
+must list the amount and percent of both the total Federal funding requested and any additional
+non-Federal funds, if any, that will be used to pay for the project. If the SS4A Federal funding
+amounts requested differ between forms and/or other application materials, the amount in the SF-
+424 will be used to determine funding. Funding requests must be in whole numbers (no cents).
+For the SF-424A form, Section D and Section E are optional as described in the SF-424A
+instructions.
+Key Information Questions
+The following questions are asked in the SS4A application on Valid Eval at
+https://usg.valideval.com/teams/usdot. ss4a 2026 planning demo/signup.
+Table 2: Example Planning and Demonstration Application Key Information Table
+Title
+Instructions
+Lead Applicant Name
+This should be consistent with Q. 8.a. of the SF-424.
+Lead Applicant Unique Entity Identifier
+See Section F.2 for more information about obtaining a
+(UEI)
+UEI from SAM.gov.
+Eligible Entity Type
+See Section C.1
+Application Type (select one)
+Develop a new Action Plan;
+Update/add to an existing local safety plan to meet
+the requirements of an SS4A Action Plan as
+described in Table 1 Action Plan Components;
+Develop or update an Action Plan and conduct
+Demonstration or Supplemental Planning activities;
+or
+Conduct Demonstration or Supplemental Planning
+activities only.
+Project Title
+A concise, descriptive title for the project. This should be
+the same title used in the SF-424 form and the application
+narrative.
+27
+Title
+Instructions
+Project Goal/Description
+A short description of the proposed activities and how
+they will address the safety problem(s) in the applicant's
+jurisdiction.
+Total Applicant Jurisdiction Population
+Source: 2020 U.S. Census data.
+Total Count Motor Vehicle-Involved
+From the Fatality Analysis Reporting System (FARS) for
+Roadway Fatalities that includes the last 5
+the applicant jurisdiction. Use 2019-2023 data.
+years of data made available in the Fatality
+Analysis Reporting System (FARS) during
+the NOFO period
+Total Average Annual Fatality Rate (per
+The fatality rate calculated using the 5-year annual
+100,000 population)
+average from the total count of fatalities based on FARS
+data from 2019-2023, divided by the population of the
+applicant's jurisdiction based on 2020 U.S. Census
+population data.
+Inclusion of Underserved Communities
+Whether the jurisdiction(s) covered by this application
+Census Tract(s)
+are, or include, underserved communities.
+Description of Supplemental Planning and
+See Section D.5.i: Planning and Demonstration Grants
+Demonstration Activities (if relevant)
+Total SS4A Funding Request
+Must be a whole number (no cents).
+Total SS4A Non-Federal Share
+Must be equal to, or greater than, 20% of total project
+cost.
+Total SS4A Project Cost
+Sum of Total Federal Funding Request and Total Local
+Share/Match.
+Total Other Federal Funds Used
+Must be a whole number (no cents). Other Federal funds
+may include funds directly received from a Federal
+agency or funds received through a pass-through agency
+(e.g., State governmental agency) that originated as
+Federal funds.
+Coordination
+For applications that include Action Plan development or
+updates, the applicant agency must affirm that they will
+coordinate with any jurisdictions that geographically
+overlap with the applicant jurisdiction and have received
+SS4A funding to develop or update an Action Plan or
+have submitted an FY26 application requesting funds to
+develop or update an Action Plan.
+28
+Title
+Instructions
+Proof of coordination (e.g., letter, email) from ALL such
+geographically overlapping entities affirming they are
+aware of your application and the need for coordination
+to avoid duplication of efforts must be provided as an
+attachment to the application.
+Narrative
+The narrative should include a brief description of the proposed activities. The narrative should
+also respond to the Planning and Demonstration Grant Safety Context merit criteria described in
+Section G.1.i: Planning and Demonstration Grant Merit Criteria to affirm the proposal's
+alignment with SS4A safety considerations and address the criteria. The applicant does not need
+to address the Safety Impact or Underserved Communities merit criteria in the narrative; these
+are based on nationally available data.
+Applicants requesting less than $100,000 in funding must explain how the scope of activities will
+be completed with the funding amount proposed.
+Applicants requesting funding for demonstration activities to inform an Action Plan must
+provide a brief schedule showing when the activities will occur (e.g., temporary materials
+installed, when the pilot would begin), and the start/end dates of the pilot. If anticipated to be a
+schedule constraint, applicants should include in the narrative any potential timeline implications
+of meeting administration requirements in Section I such as domestic preference and any
+required waivers, NEPA requirements, and any applicable permitting and approval timeframes.
+Narrative Requirements:
+The narrative should be in PDF format, with font size no less than 12-point Times New
+Roman, margins a minimum of one inch on all sides, and include page numbers.
+29
+The narrative should be no longer than two pages if requesting less than $1,000,000 in
+Federal funds. If requesting $1,000,000 or more in Federal funds, the narrative must be
+no longer than three pages.
+Self-Certification Eligibility Worksheet
+If only applying for supplemental planning and/or demonstration activities that will inform the
+update of an existing Action Plan, applicants must either demonstrate that their existing plan is
+eligible by attaching a completed Self-Certification Eligibility Worksheet, or be in the process of
+developing or updating an SS4A-funded Action Plan from a previous grant round, as described
+in Section C.3.i.
+If applying to develop a new Action Plan, applicants do not need to include the Self-Certification
+Eligibility Worksheet even if supplemental planning and/or demonstration activities are
+included.
+Map
+The applicant must submit a map in both PDF and spatial format (e.g., Shapefile, .KML) that
+shows the location of the jurisdiction and highlights the roadway network under the applicant's
+jurisdiction. Applicants requesting funding for demonstration activities must include the
+locations of any proposed demonstration pilots if known.
+Estimated Budget
+Applicants are required to show how different funding sources will contribute to each activity
+and present the data in whole dollars in a table similar to Table 3: Planning and Demonstration
+Grant Supplemental Estimated Budget, below. A template is available at
+https://www.transportation.gov/grants/ss4a/planning-and-demo-grant-budget-template.ha
+Planning and Demonstration Grant Supplemental Estimated Budget should summarize the
+30
+amount of funding going toward each of the three eligible activities for a Planning and
+Demonstration Grant as applicable (developing a new Action Plan, conducting supplemental
+planning to update an existing plan, and carrying out demonstration activities to inform the
+development or update of an Action Plan). Funding sources should be grouped into four
+categories: SS4A funding request, SS4A non-Federal match, total SS4A project cost, and other
+Federal funds (if applicable), with specific amounts for each funding source. Estimated costs or
+value of in-kind matches should also be provided. The budget should show how each source of
+funds will be spent. This budget should not include any previously incurred expenses, or costs to
+be incurred before the time of award and obligation because these expenses are not eligible for
+reimbursement or cost-sharing. This table should be completed in a manner consistent with the
+Federal funding amount, non-Federal share, and total project cost in the SF-424 form.
+31
+Table 3: Planning and Demonstration Grant Supplemental Estimated Budget
+SS4A
+Other
+Federal
+SS4A Non-
+Federal
+Funding
+Federal
+Total SS4A
+Funds (if
+Activities
+Request
+Match
+Project Cost
+applicable)
+Itemized Estimated Costs to Develop or Update an Action Plan (if applicable)
+New or Updated Action
+$0.00
+$0.00
+$0.00
+$0.00
+Plan
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Subtotal Budget for New
+$0.00
+$0.00
+$0.00
+$0.00
+or Updated Action Plan
+Itemized Estimated Costs of Supplemental Planning Activities (if applicable)
+Supplemental Planning
+$0.00
+$0.00
+$0.00
+$0.00
+Activity #1
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Supplemental Planning
+$0.00
+$0.00
+$0.00
+$0.00
+Activity #2
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Supplemental Planning
+$0.00
+$0.00
+$0.00
+$0.00
+Activity #3
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+32
+Subtotal Budget for
+$0.00
+$0.00
+$0.00
+$0.00
+Supplemental Planning
+Itemized Estimated Costs of Demonstration Activities (if applicable)
+Demonstration/Pilot
+$0.00
+$0.00
+$0.00
+$0.00
+Activity #1
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Demonstration/Pilot
+$0.00
+$0.00
+$0.00
+$0.00
+Activity #2
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Subtotal Budget for
+$0.00
+$0.00
+$0.00
+$0.00
+Demonstration Activities
+Total Budget for
+$0.00
+$0.00
+$0.00
+$0.00
+Planning and
+Demonstration Activities
+3. Implementation Grant Application Submissions
+The application must include the application materials as described below. The necessary file
+formats for each application component will be displayed on the Valid Eval application portal.
+Standard Forms
+All applicants must submit the following Standard Forms:
+Application for Federal Assistance (SF-424),
+Budget Information for Construction Programs (SF-424C),
+Assurances for Construction Programs (SF-424D), and
+33
+Disclosure of Lobbying Activities (SF-LLL).
+The SF-424 requests applicants provide information on "Estimated Funds" (box 18). This budget
+must list the amount and percent of both the total Federal funding requested and any additional
+non-Federal funds, if any, that will be used to pay for the project. If the SS4A Federal funding
+amounts requested differ between forms and/or other application materials, the amount in the SF-
+424 will be used to determine funding. Funding requests must be in whole numbers (no cents).
+Key Information Questions
+The following questions are asked in the SS4A application on Valid Eval at
+https://usg.valideval.com/teams/usdot, ss4a 2026 implementation/signup.
+Table 4: Example Implementation Grant Application Key Information Table
+Title
+Instructions
+Lead Applicant Name
+This should be consistent with Q. 8.a. of the SF-424.
+Lead Applicant Unique Entity
+See Section F.2 for more information about obtaining a UEI from
+Identifier (UEI)
+SAM.gov.
+Eligible Entity Type
+See Section C.1.
+Project Title
+A concise, descriptive title for the project. This should be the same
+title used in the SF-424 form and the application narrative.
+Project Goal/Description
+A short description of the proposed activities and how they will
+address the safety problem(s) in the applicant's jurisdiction.
+Primary Project Purpose (select
+Infrastructure Strategies: Build physical transportation
+one)
+improvements; goal is to create safer facilities (e.g.,
+constructing roundabouts, sidewalks, and traffic calming
+measures)
+Behavioral Strategies: Focus on altering road user behavior
+and/or reinforcing roadway habits for all users (e.g.,
+performing High Visibility Enforcement or safety outreach
+campaigns)
+Operational or Technology Strategies: Focus on enhancing the
+safety and efficacy of existing transportation infrastructure
+34
+Title
+Instructions
+(e.g., updating signal phasing to protect turning movements or
+address conflict points at intersections)
+Public Safety Infrastructure Strategies: Focus on programs or
+technologies used by public safety agencies (e.g., field blood
+distribution or improved emergency communications) to
+prevent, respond to, and/or reduce the severity of roadway
+crashes.
+Total Applicant Jurisdiction
+Source: 2020 U.S. Census data.
+Population
+Total Count Motor Vehicle-
+From the Fatality Analysis Reporting System (FARS) for the
+Involved Roadway Fatalities in
+applicant jurisdiction. Use 2019-2023 data.
+the Applicant Jurisdiction that
+includes the last 5 years of data
+made available in the Fatality
+Analysis Reporting System
+(FARS) during the NOFO period
+Total Average Annual Fatality
+The fatality rate calculated using the 5-year annual average from
+Rate (per 100,000 population) for
+the total count of fatalities based on FARS data from 2019-2023,
+the Applicant Jurisdiction
+divided by the population of the applicant's jurisdiction based on
+2020 U.S. Census population data.
+Inclusion of Underserved
+Whether the jurisdiction(s) covered by this application are or
+Communities in Jurisdiction(s)
+include underserved communities.
+Inclusion of Underserved
+Whether the project area(s) covered by this application are or
+Communities in Project Area(s)
+include underserved communities.
+Project Area Fatalities
+Count of fatalities in the project area(s). May use source other than
+FARS, provided the data source is included in the application.
+2019-2023 data is recommended, but applicants may use the most
+recent five-year data available.
+Count of serious injuries in the project area(s). Applicants without
+Project Area Serious Injuries OR
+reliable serious injury data may use suspected serious injury
+Project Area Injuries Severity
+figures. The data source must be included in the application.
+Unknown
+2019-2023 data is recommended, but applicants may use the most
+recent five-year data available.
+35
+Title
+Instructions
+Applicant roadway safety
+Ownership and/or maintenance responsibilities over a roadway
+responsibility (may select
+network;
+multiple)
+Safety responsibilities that affect roadways;
+Have an agreement with the agency that has ownership and/or
+maintenance responsibilities for the roadway within the
+applicant's jurisdiction
+Does your project include
+See Section D.5.i
+Supplemental Planning and/or
+Demonstration activities?
+Would you consider accepting
+Yes, no, n/a.
+funding for only Supplemental
+Planning and/or Demonstration
+activities?
+Total SS4A Federal Funds
+Must be a whole number (no cents).
+Requested
+Total SS4A Non-Federal Share
+Must be equal to, or greater than, 20% of total project cost.
+Total SS4A Project Cost
+Sum of Total SS4A Federal Funding Request and Total SS4A
+Non-Federal Share/Match.
+Total Other Federal Funds Used
+Must be a whole number (no cents). Other federal funds may
+(if applicable)
+include funds directly received from a federal agency or funds
+received through a pass-through agency (e.g., State governmental
+agency) that originated as federal funds.
+SS4A Funding Request for
+Must be consistent with Implementation Grant Supplemental
+Supplemental Planning and/or
+Budget
+Demonstration Activities (A)
+SS4A Funding Request for
+Must be consistent with Implementation Grant Supplemental
+Planning, Design, and
+Budget
+Development Activities for
+Projects/Strategies (B)
+SS4A Funding Request for
+Must be consistent with Implementation Grant Supplemental
+Carrying Out Projects and
+Budget
+Strategies (C)
+Existing Comprehensive Safety
+Link to or attachment
+Action Plan (or equivalent)
+36
+Narrative
+In narrative form, the applicant must respond to the Implementation Grant merit criteria
+described in Section G.1.ii to affirm its alignment with SS4A safety considerations and to
+address the criteria.
+a) Narrative Requirements
+The narrative should be in PDF format, with font size no less than 12-point Times New
+Roman, margins a minimum of one inch on all sides, and include page numbers.
+The narrative may not exceed 12 pages in length, excluding cover page and the table of
+contents.
+Implementation Grant applications that include supplemental planning and
+demonstration activities may submit up to two additional pages - 14 pages total - if they
+are focused solely on responding to the Supplemental Planning and Demonstration
+Activities merit criterion (see Section G.1.ii).
+The following application elements do not count toward the page limit:
+Self-Certification Eligibility Worksheet
+Budget
+Appendices, which may include additional maps and documents supporting
+assertions or conclusions made in the narrative.
+If possible, website links to supporting documentation should be provided rather than
+copies of these supporting materials.
+If supporting documents are submitted, applicants should clearly identify within the
+narrative the relevance of each supporting document.
+37
+Letters of support are encouraged, especially from relevant stakeholders and Public
+Safety Agencies and associated Labor Unions representing First Responders. Letters of
+support should be submitted with the application as one consolidated set in one
+supporting attachment on Valid Eval.
+b) Recommended Narrative Outline
+Applicants are not required to follow a specific narrative format, but the structure should clearly
+identify the narrative portions associated with each merit criterion. DOT recommends that the
+narrative follows the outline below to address the program requirements and assist evaluators in
+locating relevant information.
+Overview
+See below
+Location
+See below
+Response to Merit Criteria
+See Section G.1
+Project Readiness
+See Section G.1.ii
+1. Overview
+This section should provide an introduction and describe the proposed activities, safety context,
+jurisdiction, and any high-level background information that would be useful to understand the
+rest of the application.
+2. Location
+This section of the application should describe the jurisdiction's location, the jurisdiction's high-
+injury network or equivalent geospatial identification (i.e., geographic or locational data using
+maps) of higher risk locations, and potential locations (e.g., corridors or intersections) of the
+projects and strategies they plan to implement based on their Action Plan.
+38
+Note that the applicant is not required to provide exact locations for each project or strategy if
+they are not yet defined. In this case, the application should identify which geographic locations
+are under consideration for projects and strategies to be implemented and what analysis will be
+used in a final determination.
+3. Response to Merit Criteria
+This section should respond to the criteria for evaluation and selection in Section G.1 of this
+notice and include a compelling narrative to highlight how the application aligns with four
+required merit criteria: #1 Safety Need; #2 Safety Impact; #3 Implementation Costs; and #4
+Engagement and Collaboration. If the application is bundling supplemental planning and/or
+demonstration activities, it also must include narrative responding to criterion #5 Supplemental
+Planning and Demonstration Activities.
+4. Project Readiness
+The applicant must provide information to demonstrate the applicant's ability to complete the
+full scope of work in the application proposal within five years of when the grant agreement is
+executed, with a particular focus on environmental permitting, design, and construction, as well
+as right of way acquisition, and utility relocation, if applicable. Applicants should indicate if they
+will be seeking permission to use roadway design standards that are different from those
+generally applied by the State in which the project is located. As part of this portion of the
+narrative, the applicant must include a detailed activity schedule that identifies all major project
+and strategy milestones. Examples of such milestones include State and local planning
+approvals; start and completion of the NEPA process and other Federal environmental reviews
+and approvals including permitting; design completion; right of way acquisition; utility
+39
+relocation; approval of plans, specifications, and estimates; procurement; public involvement;
+partnership and implementation agreements; and construction. Environmental review
+documentation should describe in detail known project impacts and possible mitigation for those
+impacts. When a project will result in impacts, an award recipient must take steps to engage the
+public. At a minimum, the project readiness narrative and detailed project activity schedule must
+include the applicability and disposition of: NEPA and Federal environment reviews and
+approvals; utility relocation; and right-of-way acquisition. For additional guidance and resources,
+visit https://www.transportation.gov/grants/SS4A.
+Self-Certification Eligibility Worksheet
+Submit a completed Self-Certification Eligibility Worksheet demonstrating that the jurisdiction
+has an Action Plan that meets the requirements described in Table 1: Action Plan Components.
+Map
+The applicant must submit a map in both PDF and spatial format (e.g., Shapefile, .KML) that
+shows the location of the jurisdiction and highlights the roadway network under the applicant's
+jurisdiction. The map should show the jurisdiction's high-injury network and potential locations
+of the projects and strategies.
+Estimated Budget
+This section of the application should describe the budget for the SS4A proposal. Applicants are
+required to submit an Implementation Grant Supplemental Estimated Budget that provides an
+overview of estimated activity costs, organized by all major cost elements. The budget should
+provide itemized estimates of the costs by separating different locations and/or different sets of
+proposed projects and strategies that address a similar safety problem and provide a breakdown
+of the major individual components that contribute to each of the line items. This information
+40
+should include capital costs for infrastructure safety improvements and/or costs associated with
+behavioral and operational safety projects and strategies. The section should also distinguish
+between the three eligible activity elements: (A) supplemental planning and demonstration
+activities in support of an existing Action Plan; (B) conducting planning, design, and
+development activities for projects and strategies identified in an Action Plan; and (C) carrying
+out projects and strategies identified in an Action Plan. See Section C.3 for more information on
+eligible activities.
+Implementation Grant Supplemental Estimated Budgets should show how different funding
+sources will contribute to each activity and present the data in whole dollars. A template for the
+supplemental budget is available at https://www.transportation.gov/grants/ss4a/implementation-
+grant-budget-template. Funding sources should be grouped into four categories: SS4A funding
+request, SS4A non-Federal match, total SS4A project cost, and other Federal funds (if
+applicable), with specific amounts for each funding source. Estimated costs or value of in-kind
+matches should also be provided. The budget should show how each source of funds will be
+spent. This budget should not include any previously incurred expenses, or costs to be incurred
+before the time of award and obligation because these expenses are not eligible for
+reimbursement or cost-sharing. This table should be completed in a manner consistent with the
+Federal funding amount, non-Federal share, and total project cost in the SF-424 form. This table
+should be completed in a manner consistent with the SF-424 in terms of total project cost, SS4A
+Federal share, and SS4A cost sharing/match.
+41
+Table 5: Implementation Grant Supplemental Estimated Budget
+SS4A
+Other
+Federal
+SS4A Non-
+Federal
+Funding
+Federal
+Total SS4A
+Funds (if
+Activities
+Request
+Match
+Project Cost
+applicable)
+Itemized Estimated Costs of the (A) Supplemental Action Plan Activities (if applicable)
+Supplemental Planning or
+Demonstration Activity #1
+$0.00
+$0.00
+$0.00
+$0.00
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Supplemental Planning or
+Demonstration Activity #2
+$0.00
+$0.00
+$0.00
+$0.00
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Component
+$0.00
+$0.00
+$0.00
+$0.00
+Subtotal Budget for (A)
+Supplemental Action
+Plan Activities
+$0.00
+$0.00
+$0.00
+$0.00
+Itemized Estimated Costs of the (B) Planning, Design, and Development Activities
+Planning, Design, and
+Development - Location or
+Project #1
+$0.00
+$0.00
+$0.00
+$0.00
+Individual Component for
+Location or Project #1
+$0.00
+$0.00
+$0.00
+$0.00
+Individual Component for
+Location or Project #1
+$0.00
+$0.00
+$0.00
+$0.00
+Individual Component for
+Location or Project #1
+$0.00
+$0.00
+$0.00
+$0.00
+Planning, Design, and
+Development - Location or
+Project #2
+$0.00
+$0.00
+$0.00
+$0.00
+42
+SS4A
+Other
+Federal
+SS4A Non-
+Federal
+Funding
+Federal
+Total SS4A
+Funds (if
+Activities
+Request
+Match
+Project Cost
+applicable)
+Individual Component for
+Location or Project #2
+$0.00
+$0.00
+$0.00
+$0.00
+Individual Component for
+Location or Project #2
+$0.00
+$0.00
+$0.00
+$0.00
+Individual Component for
+Location or Project #2
+$0.00
+$0.00
+$0.00
+$0.00
+Subtotal Budget for (B)
+Conducting Planning,
+Design, and Development
+Activities
+$0.00
+$0.00
+$0.00
+$0.00
+Itemized Estimated Costs of the (C) Proposed Projects and Strategies
+Implementation - Location
+or Project #1
+$0.00
+$0.00
+$0.00
+$0.00
+Individual Component for
+Location or Project #1
+$0.00
+$0.00
+$0.00
+$0.00
+Individual Component for
+Location or Project #1
+$0.00
+$0.00
+$0.00
+$0.00
+Individual Component for
+Location or Project #1
+$0.00
+$0.00
+$0.00
+$0.00
+Implementation - Location
+or Project #2
+$0.00
+$0.00
+$0.00
+$0.00
+Individual Component for
+Location or Project #2
+$0.00
+$0.00
+$0.00
+$0.00
+Individual Component for
+Location or Project #2
+$0.00
+$0.00
+$0.00
+$0.00
+Individual Component for
+Location or Project #2
+$0.00
+$0.00
+$0.00
+$0.00
+Subtotal Budget for (C)
+Carrying Out Projects
+and Strategies
+$0.00
+$0.00
+$0.00
+$0.00
+Total Budget for
+Activities (A), (B), and
+(C)
+$0.00
+$0.00
+$0.00
+$0.00
+43
+F. Submission Requirements and Deadlines
+1. Address to Request Application Package
+All grant application materials can be accessed at grants.gov under opportunity number DOT-
+SS4A-FY26-01. Potential applicants may also request paper copies of materials at:
+Email: SS4A@dot.gov
+Phone: 202-948-3466 (Telecommunication Relay Service: 7-1-1)
+Mail: U.S. Department of Transportation
+1200 New Jersey Avenue SE
+W84-237
+Washington, DC 20590
+2. Unique Entity Identifier and the System for Award Management (SAM)
+Each applicant is required to:
+a. Be registered in SAM (https://sam.gov/content/home) before submitting its
+application;
+b. Provide an active unique entity identifier in its application; and
+c. Continue to maintain an active SAM registration with current information at all times
+during which it has an active Federal award or an application or plan under
+consideration by a Federal awarding agency.
+DOT may not make a Federal award to an applicant until the applicant has complied with all
+applicable unique entity identifier and SAM requirements and, if an applicant has not fully
+44
+complied with the requirements by the time DOT is ready to make an award, DOT may
+determine that the applicant is not qualified to receive an award and use that determination as a
+basis for making an award to another applicant.
+3. Submission Instructions
+Applicants must submit their applications electronically via Valid Eval at:
+https://usg.valideval.com/teams/usdot ss4a 2026 planning demo/signup for Planning and
+Demonstration Grant applicants
+https://usg.valideval.com/teams/usdot ss4a 2026 implementation/signup for Implementation
+Grant applicants
+For technical assistance with Valid Eval, applicants should contact Valid Eval at
+support@valideval.com.
+4. Submission Dates and Times
+This NOFO has a single application deadline for both Planning and Demonstration and
+Implementation Grant applicants. All applications must be submitted by 5:00 PM (EDT) on
+Tuesday, May 26, 2026. Applications cannot be submitted to Valid Eval after the deadline. Late
+applications will not be considered unless there is a technical issue directly caused by the online
+proposal submission system (Valid Eval), and the applicant contacts Valid Eval at
+support@valideval.com describing the technical issue no later than 1:00 PM (EDT) on Tuesday,
+May 26, 2026.
+Pre-application submissions to review an applicant's Self-Certification Eligibility Worksheet
+must be received via email at or before 5:00 PM (EDT) on April 24, 2026.
+45
+5. Intergovernmental Review
+This program is not subject to intergovernmental review and applicants should select "c" on Box
+19 of the SF-424 form.
+G. Application Review Information
+1. Merit Criteria
+This section specifies the criteria DOT will use to evaluate and select applications for SS4A
+grant awards. All complete applications from eligible applicants will be reviewed against the
+merit criteria. Planning and Demonstration Grants and Implementation Grants, respectively, each
+have their own set of application review and merit criteria.
+i.
+Planning and Demonstration Grant Merit Criteria
+For Planning and Demonstration Grants, DOT will use three merit criteria to evaluate proposals.
+DOT will evaluate each application narrative against merit criteria #1 Safety Context using the
+rubric table provided below. Individual ratings of High, Medium, Low, or Non-Responsive will
+be assigned to each Planning and Demonstration Grant component included in the proposal -
+developing a new Action Plan, conducting supplemental planning to update an existing plan,
+and/or carrying out demonstration activities to inform the development or update of an Action
+Plan. Together, the individual component ratings will roll up into an overall rating for the Safety
+Context merit criterion.
+DOT will also evaluate quantitative data in two criteria: #2 Safety Impact; and #3 Underserved
+Communities. The adequacy and reasonableness of costs will also be considered.
+46
+Merit Criterion #1: Safety Context Rubric Table
+Merit
+Non-Responsive
+Low
+Medium
+High
+Criteria
+New/Updated
+The project is not
+The project is expected to make
+The project is expected to
+The project is expected to
+Action Plan
+connected to an
+a very limited advancement in
+moderately advance safety
+strongly advance safety
+Action Plan; the
+safety planning. The proposal
+planning, however the
+planning.
+narrative indicates
+is weakly tied to safety
+narrative is missing clear or
+the proposal is
+planning.
+detailed descriptions of one of
+The narrative includes ALL of
+expected to
+the following components:
+the following components:
+negatively affect
+The narrative is missing two or
+A clear description of
+A very clear and
+roadway safety; or
+more of the components below,
+the Action Plan scope
+detailed description of
+the narrative does
+and/or contains insufficient
+of work to be
+the Action Plan scope of
+not contain sufficient
+information to assess the
+performed;
+work to be performed;
+information.
+project's impact:
+A clear description of
+A very clear and
+A clear description of
+the roadway safety
+detailed description of
+the Action Plan scope
+issues that necessitate
+the specific local
+of work to be
+Action Plan
+roadway safety issues
+performed;
+development;
+that necessitate Action
+A clear description of
+A clear and detailed
+Plan development;
+the roadway safety
+approach to developing
+A very clear and
+issues that necessitate
+an Action Plan that
+detailed approach to
+Action Plan
+contains all required
+developing an Action
+development;
+components as
+Plan that contains all
+A clear and detailed
+described in Table 1 of
+required components as
+approach to developing
+the NOFO, with a clear
+described in Table 1 of
+an Action Plan that
+goal to engage with a
+the NOFO, with a clear
+contains all required
+variety of stakeholders
+goal to engage with a
+components as
+to identify evidence-
+variety of stakeholders
+described in Table 1 of
+based, high-impact,
+to identify evidence-
+the NOFO, with a clear
+low-cost, and
+based, high-impact,
+goal to engage with a
+innovative strategies for
+low-cost, and
+variety of stakeholders
+all road users.
+innovative strategies for
+to identify evidence-
+all road users.
+based, high-impact,
+47
+Merit
+Non-Responsive
+Low
+Medium
+High
+Criteria
+low-cost, and
+innovative strategies for
+all road users.
+Supplemental
+The project is not
+The project is expected to make
+The project is expected to
+The project is expected to
+Planning
+connected to
+a very limited advancement in
+moderately advance safety
+strongly advance safety
+Supplemental
+safety planning. The proposal
+planning, however the
+planning.
+Planning activities;
+is weakly tied to safety
+narrative is missing clear or
+the narrative
+planning.
+detailed descriptions of one of
+The narrative includes ALL of
+indicates the
+the following components:
+the following components:
+proposal is expected
+The narrative is missing two or
+A clear description of
+A very clear description
+to negatively affect
+more of the components below,
+the Supplemental
+of the Supplemental
+roadway safety; or
+and/or contains insufficient
+Planning scope of work
+Planning scope of work
+the narrative does
+information to assess the
+to be performed;
+to be performed;
+not contain sufficient
+project's impact:
+A clear description of
+A very clear description
+information.
+A clear description of
+the roadway safety
+of the roadway safety
+the Supplemental
+issues that necessitate
+issues that necessitate
+Planning scope of work
+the Supplemental
+the Supplemental
+to be performed;
+Planning activities;
+Planning activities;
+A clear description of
+A clear description of
+A very clear description
+the roadway safety
+how the funded
+of how the funded
+issues that necessitate
+Supplemental Planning
+Supplemental Planning
+the Supplemental
+activities will inform an
+activities will inform an
+Planning activities;
+Action Plan that
+Action Plan that
+A clear description of
+contains all required
+contains all required
+how the funded
+components as
+components as
+Supplemental Planning
+described in Table 1 of
+described in Table 1 of
+activities will inform an
+the NOFO.
+the NOFO.
+Action Plan and
+identify evidence-based,
+high-impact, low-cost,
+and innovative
+strategies for all road
+users.
+48
+Merit
+Non-Responsive
+Low
+Medium
+High
+Criteria
+Demonstration
+The project is not
+The project is expected to make
+The project is expected to
+The project is expected to
+Activities
+connected to
+a very limited advancement in
+moderately advance safety
+strongly advance safety
+Demonstration
+safety planning. The proposal
+planning, however the narrative
+planning.
+Activities; the
+is weakly tied to safety
+is missing one of the following
+narrative indicates
+planning.
+components:
+The narrative includes ALL of
+the proposal is
+A clear description of
+the following components:
+expected to
+The narrative is missing two or
+the scope of work for
+A very clear description
+negatively affect
+more of the components below,
+the Demonstration
+of the scope of work for
+roadway safety; or
+and/or contains insufficient
+Activities to be
+Demonstration
+the narrative does
+information to assess the
+performed;
+Activities to be
+not contain sufficient
+project's impact:
+A schedule showing
+performed;
+information.
+A clear description of
+when the
+A detailed schedule
+the scope of work for
+Demonstration
+showing when the
+the Demonstration
+Activities will occur
+Demonstration
+Activities to be
+and the start/end dates
+Activities will occur
+performed;
+of the work;
+and the start/end dates
+A schedule showing
+A clear description of
+of the work;
+when the
+the roadway safety
+A very clear description
+Demonstration
+issues that necessitate
+of the roadway safety
+Activities will occur
+the Demonstration
+issues that necessitate
+and the start/end dates
+Activities;
+the Demonstration
+of the work;
+A clear description of
+Activities;
+A clear description of
+how the funded
+A very clear description
+the roadway safety
+Demonstration
+of how the funded
+issues that necessitate
+Activities will inform
+Demonstration
+the Demonstration
+an Action Plan that
+Activities will inform
+Activities;
+contains all required
+an Action Plan that
+A clear description of
+components as
+contains all required
+how the funded
+described in Table 1 of
+components as
+Demonstration
+the NOFO, and help to
+described in Table 1 of
+Activities will inform
+identify evidence-based,
+the NOFO, and help to
+an Action Plan that
+high-impact strategies
+identify evidence-based,
+contains all required
+for all road users;
+49
+Merit
+Non-Responsive
+Low
+Medium
+High
+Criteria
+components as
+A clear description of
+high-impact strategies
+described in Table 1 of
+an approach to
+for all road users;
+the NOFO, and help to
+measuring the potential
+A very clear description
+identify evidence-based,
+safety benefits of the
+of an approach to
+high-impact strategies
+Demonstration
+measuring the potential
+for all road users;
+Activities through data
+safety benefits of the
+A clear description of
+collection and
+Demonstration
+an approach to
+evaluation.
+Activities through data
+measuring the potential
+collection and
+safety benefits of the
+evaluation.
+Demonstration
+Activities through data
+collection and
+evaluation.
+50
+Merit Criterion #2: Safety Impact
+DOT will assess the proposal's Safety Impact using two quantitative ratings that DOT will
+calculate based on materials provided in the Key Information Table, map, and nationally
+available data:
+The count of roadway fatalities from 2019-2023 data based on DOT's FARS data, an
+alternative traffic crash dataset, or a comparable data set with roadway fatality
+information. 12
+The fatality rate, which is calculated using a 5-year annual average from the total count of
+fatalities (based on FARS data or an alternative traffic crash dataset from 2019-2023)
+divided by the population of the applicant's jurisdiction based on 2020 population data
+from the U.S. Census. The rate should be normalized per 100,000 persons. 13
+Merit Criterion #3: Underserved Communities
+DOT will assess the Underserved Communities merit criterion using one quantitative rating that
+DOT will calculate using the definition of Underserved Community in this NOFO and the
+mapped jurisdictions included in the application:
+The percentage of the population in the applicant's jurisdiction that resides in an
+Underserved Community Census tract. 14
+Population of a Census tract, either a tract that is an Underserved Community or not,
+must be based on 2020 U.S. Census data.
+12 https://cdan.dot.gov/query
+13
+https://www.transportation.gov/grants/ss4a/calculating-average-anual-fatality-rate-s4a
+14 List of Areas of Persistent Poverty and Historically Disadvantaged Communities US Department of
+Transportation
+51
+Selection Consideration: Budget Costs
+DOT will assess the extent to which the budget and costs to perform the proposed activities are
+reasonable, necessary, and allocable based on 2 CFR § 200.404 and 405, and the extent to which
+the application delineates the breakdown of Federal funds requested between developing an
+Action Plan, conducting supplemental planning to update an existing plan, and/or carrying out
+demonstration activities to inform the development or update of an Action Plan. DOT also will
+review whether costs are reasonable and adequate if the amount requested is under $100,000.
+Selection Consideration: High Fatality Rates
+To prioritize areas with the highest fatality rates, DOT may prioritize SS4A Planning and
+Demonstration Grant applications with a quantitative fatality rate of 17.5 fatalities per 100,000
+persons or greater. 15
+Selection Consideration: No Prior SS4A Funding
+DOT may prioritize SS4A Planning and Demonstration Grant applicants that have not received
+SS4A funding previously.
+ii.
+Implementation Grant Merit Criteria
+Implementation Grants have four required merit criteria: #1 Safety Need; #2 Safety Impact; #3
+Implementation Costs, and #4 Engagement and Collaboration. An additional optional merit
+criterion #5 Supplemental Planning and Demonstration Activities is only required for
+Implementation Grant applicants requesting funds to conduct supplemental planning and/or carry
+out demonstration activities.
+15 The 90th percentile threshold value of 17.46 was derived from the 5-year average (2018-2022) fatality rate for all
+counties with a population of 50,000+, and all cities with a population of 5,000+
+52
+DOT will evaluate application narratives against each of the merit criteria using the rubric table
+provided below. Individual ratings of High, Medium, Low, or Non-Responsive will be
+assigned to each merit criteria. Together, the individual merit criterion ratings will roll up into an
+overall application rating of Highly Recommended, Recommended, Acceptable, or Not
+Recommended.
+Two additional factors will be used in the selection process: Project Readiness and Award
+Considerations. The response to each criterion, to the extent practicable, should be aligned with
+the applicant's Action Plan.
+53
+Implementation Grant Merit Criteria Rubric Table
+Merit Criteria
+Non-Responsive
+Low
+Medium
+High
+Safety Need
+The narrative
+The narrative is missing two of
+The narrative demonstrates the
+The narrative demonstrates the
+does not address
+the components below, and/or
+proposal is addressing an
+proposal is addressing a
+a safety
+contains insufficient
+existing safety problem, however
+substantial and documented
+problem
+information to assess the
+the narrative is missing one of
+safety problem.
+project's safety need:
+the following components:
+OR
+The safety problem to be
+The safety problem to be
+The narrative addresses ALL of
+addressed is well-
+addressed is well-
+the following components:
+Project
+articulated and is clearly
+articulated and is clearly
+The safety problem to be
+negatively
+supported by strong data
+supported by strong data
+addressed is well-
+affects safety
+and analysis, including
+and analysis, including
+articulated and is clearly
+historical trends, fatal
+historical trends, fatal
+supported by strong data
+and serious injury crash
+and serious injury crash
+and analysis, including
+locations, contributing
+locations, contributing
+historical trends, fatal and
+factors, and crash types
+factors, and crash types
+serious injury crash
+by category of road user;
+by category of road user;
+locations, contributing
+The locations of crashes
+The locations of crashes
+factors, and crash types
+and/or crash risk
+and/or crash risk
+by category of road user;
+associated with the
+associated with the
+The locations of crashes
+specific safety problem
+specific safety problem
+and/or crash risk
+are clearly described
+are clearly described
+associated with the
+and displayed on a
+and displayed on a
+specific safety problem
+High Injury Network
+High Injury Network
+are clearly described
+or equivalent map;
+or equivalent map;
+and displayed on a High
+Safety risk is
+Safety risk is
+Injury Network or
+summarized from risk
+summarized from risk
+equivalent map;
+models, hazard analysis,
+models, hazard analysis,
+Safety risk is
+the identification of
+the identification of
+summarized from risk
+high-risk roadway
+high-risk roadway
+models, hazard analysis,
+features, road safety
+features, road safety
+the identification of high-
+54
+Merit Criteria
+Non-Responsive
+Low
+Medium
+High
+audits/assessments, near
+audits/assessments, near
+risk roadway features,
+miss data, and/or other
+miss data, and/or other
+road safety audits/
+proactive safety
+proactive safety
+assessments, near miss
+analyses.
+analyses.
+data, and/or other
+proactive safety analyses.
+Safety Impact
+The projects and
+The proposed projects and
+The proposed projects and
+The proposed projects and
+strategies do not
+strategies are missing more than
+strategies align with and address
+strategies align with and
+address the
+four of the components below
+an identified safety problem,
+comprehensively address the
+safety problem
+and/or the narrative contains
+however the projects and
+safety problem and provide
+insufficient information to
+strategies are_missing three or
+significant, documented, and
+OR
+assess the project's safety need:
+four of the following
+data-driven safety benefits.
+Are primarily on a
+components:
+Project
+High Injury Network
+Are primarily on a
+The proposed projects and
+negatively
+or address high-risk
+High Injury Network
+strategies meet at least five of the
+affects safety
+roadway features
+or address high-risk
+following components and are
+correlated with severe
+roadway features
+addressed in the narrative:
+crash types;
+correlated with severe
+Are primarily on a High
+Significantly reduce or
+crash types;
+Injury Network or
+eliminate roadway
+Significantly reduce or
+address high-risk
+fatalities and serious
+eliminate roadway
+roadway features
+injuries involving
+fatalities and serious
+correlated with severe
+various road users;
+injuries involving
+crash types;
+Use low-cost, high-
+various road users;
+Significantly reduce or
+impact strategies and
+Use low-cost, high-
+eliminate roadway
+projects over a wide
+impact strategies and
+fatalities and serious
+geographical area;
+projects over a wide
+injuries involving various
+Use evidence-based,
+geographical area;
+road users;
+FHWA Proven Safety
+Use evidence-based,
+Use low-cost, high-
+Countermeasures
+FHWA Proven Safety
+impact strategies and
+and/or NHTSA's
+Countermeasures
+projects over a wide
+Countermeasures that
+and/or NHTSA's
+geographical area;
+Work, and/or other
+Countermeasures that
+Use evidence-based,
+documented highly
+Work, and/or other
+FHWA Proven Safety
+effective safety
+documented highly
+Countermeasures
+55
+Merit Criteria
+Non-Responsive
+Low
+Medium
+High
+countermeasures to
+effective safety
+and/or NHTSA's
+significantly improve
+countermeasures to
+Countermeasures that
+existing roadways;
+significantly improve
+Work, and/or other
+Measure safety through
+existing roadways;
+documented highly
+models, studies, reports,
+Measure safety through
+effective safety
+proven noteworthy
+models, studies, reports,
+countermeasures to
+practices, or Crash
+proven noteworthy
+significantly improve
+Modification Factors
+practices, or Crash
+existing roadways;
+(CMF);
+Modification Factors
+Measure safety through
+Will have safety benefits
+(CMF);
+models, studies, reports,
+that persist over time;
+Will have safety benefits
+proven noteworthy
+Incorporate technologies
+that persist over time;
+practices, or Crash
+that promote safety.
+Incorporate technologies
+Modification Factors
+that promote safety.
+(CMF);
+Will have safety benefits
+that persist over time;
+Incorporate technologies
+that promote safety.
+Implementation
+Cost information
+The costs for the implementation
+The costs for the implementation
+The costs for the implementation
+Costs
+and/or fatality
+of the projects and strategies are
+of the projects and strategies are
+of the projects and strategies are
+and serious
+missing more than one of the
+summarized in the supplemental
+summarized in the supplemental
+injury
+components below and/or
+budget and narrative and are
+budget and narrative.
+information are
+insufficient information is
+reasonable based on the
+not provided.
+provided to assess the
+projects/strategies being
+The applications addresses ALL
+reasonableness of costs for
+proposed, but the application is
+of the following components:
+implementation of projects and
+missing one of the following
+Costs are clearly
+strategies.
+components:
+itemized and
+Costs are clearly
+Costs are clearly
+summarized in a logical
+itemized and
+itemized and
+manner in the
+summarized in a logical
+summarized in a logical
+supplemental budget
+manner;
+manner;
+and narrative
+56
+Merit Criteria
+Non-Responsive
+Low
+Medium
+High
+Costs are reasonable
+Costs are reasonable
+Costs are reasonable and
+based on the
+based on the
+necessary based on the
+projects/strategies being
+projects/strategies being
+projects/strategies being
+proposed;
+proposed;
+proposed;
+The projects and
+The projects and
+The projects and
+strategies make
+strategies make
+strategies make effective
+effective use of Federal
+effective use of Federal
+use of Federal funds to
+funds to address
+funds to address
+address locations with
+locations with high
+locations with high
+high fatalities
+fatalities proportionate
+fatalities proportionate
+proportionate to the
+to the amount of
+to the amount of
+amount of funding
+funding requested.
+funding requested.
+requested.
+Engagement
+The narrative
+The narrative is missing more
+General engagement is described
+The narrative clearly
+and
+does not address
+than two of the following
+that is not specific to the
+demonstrates plans to ensure
+Collaboration
+the engagement
+components and/or contains
+planning and implementation of
+investment in the safety needs of
+and collaboration
+insufficient information to
+the proposed projects/strategies.
+underserved communities, as well
+criterion or there
+assess the engagement and
+The narrative is missing one or
+as engagement with a variety of
+is a demonstrated
+collaboration benefits:
+two of the following
+public and private stakeholders.
+lack of support
+Ensures investment in
+components:
+The narrative has clear and direct
+for the project
+preventing roadway
+Ensures investment in
+evidence of engagement and
+fatalities and serious
+preventing roadway
+collaboration in relation to the
+injuries in underserved
+fatalities and serious
+implementation of the proposed
+communities including
+injuries in underserved
+projects and strategies.
+rural communities;
+communities including
+Includes demographic
+rural communities;
+The narrative addresses ALL of
+analysis, both qualitative
+Includes demographic
+the following components:
+and quantitative, and
+analysis, both qualitative
+Ensures investment in
+stakeholder engagement
+and quantitative, and
+preventing roadway
+as part of the project
+stakeholder engagement
+fatalities and serious
+development and
+as part of the project
+injuries in underserved
+implementation process;
+development and
+communities including
+Includes or will include
+implementation process;
+rural communities;
+meaningful engagement
+Includes or will include
+Includes demographic
+with the public during all
+meaningful engagement
+analysis, both qualitative
+57
+Merit Criteria
+Non-Responsive
+Low
+Medium
+High
+phases of the project
+with the public during all
+and quantitative, and
+such as planning, design,
+phases of the project
+stakeholder engagement
+construction, and
+such as planning, design,
+as part of the project
+implementation;
+construction, and
+development and
+Leverages partnerships
+implementation;
+implementation process;
+within the applicant
+Leverages partnerships
+Includes or will include
+jurisdiction, with other
+within the applicant
+meaningful engagement
+government entities,
+jurisdiction, with other
+with the public during all
+non-governmental
+government entities,
+phases of the project such
+organizations, the private
+non-governmental
+as planning, design,
+sector, academic
+organizations, the private
+construction, and
+institutions, or other
+sector, academic
+implementation;
+relevant stakeholders to
+institutions, or other
+Leverages partnerships
+achieve safety benefits
+relevant stakeholders to
+within the applicant
+while avoiding negative
+achieve safety benefits
+jurisdiction, with other
+consequences for the
+while avoiding negative
+government entities, non-
+community.
+consequences for the
+governmental
+community.
+organizations, the private
+sector, academic
+institutions, or other
+relevant stakeholders to
+achieve safety benefits
+while avoiding negative
+consequences for the
+community.
+58
+Merit Criterion #5: Supplemental Planning and Demonstration Activities
+Merit Criteria
+Non-Responsive
+Low
+Medium
+High
+Supplemental
+The project is not
+The project is expected to make
+The project is expected to
+The project is expected to
+Planning
+connected to
+a very limited advancement in
+moderately advance safety
+strongly advance safety
+Supplemental
+safety planning. The proposal
+planning, however the
+planning.
+Planning activities;
+is weakly tied to safety
+narrative is missing clear or
+the narrative
+planning.
+detailed descriptions of one of
+The narrative includes ALL of
+indicates the
+the following components:
+the following components:
+proposal is expected
+The narrative is missing two or
+A clear description of
+A very clear
+to negatively affect
+more of the components below,
+the Supplemental
+description of the
+roadway safety; or
+and/or contains insufficient
+Planning scope of work
+Planning
+the narrative does
+information to assess the
+to be performed;
+scope to be
+not contain
+project's impact:
+A clear description of
+sufficient
+A clear description of
+the roadway safety
+A
+information.
+the Supplemental
+issues that necessitate
+the
+Planning scope of work
+the Supplemental
+roadway issues
+to be performed;
+Planning activities;
+that the
+A clear description of
+A clear description of
+Planning
+the roadway safety
+how the funded
+issues that necessitate
+Supplemental Planning
+A
+the Supplemental
+activities will inform an
+description how the
+description activities; performed; Supplemental Supplemental very very necessitate of an clear clear work safety Action of of
+Planning activities;
+Action Plan that
+funded Supplemental
+A clear description of
+contains all required
+Planning activities will
+how the funded
+components as
+inform Plan
+Supplemental Planning
+described in Table 1 of
+that contains all
+activities will inform an
+the NOFO.
+required components as
+Action Plan and
+described in Table 1 of
+identify evidence-
+the NOFO.
+based, high-impact,
+low-cost, and
+innovative strategies
+for all road users.
+59
+Merit Criteria
+Non-Responsive
+Low
+Medium
+High
+Demonstration
+The project is not
+The project is expected to make
+The project is expected to
+The project is expected to
+Activities
+connected to
+a very limited advancement in
+moderately advance safety
+strongly advance safety
+Demonstration
+safety planning. The proposal
+planning, however the
+planning.
+Activities; the
+is weakly tied to safety
+narrative is missing one of the
+narrative indicates
+planning.
+following components:
+The narrative includes ALL of
+the proposal is
+A clear description of
+the following components:
+expected to
+The narrative is missing two or
+the scope of work for
+A very clear
+negatively affect
+more of the components below,
+the Demonstration
+description of the scope
+roadway safety; or
+and/or contains insufficient
+Activities to be
+of work for
+the narrative does
+information to assess the
+performed;
+Demonstration
+not contain
+project's impact:
+A schedule showing
+Activities to be
+sufficient
+A clear description of
+when the
+performed;
+information.
+the scope of work for
+Demonstration
+A detailed schedule
+the Demonstration
+Activities will occur
+showing when the
+Activities to be
+and the start/end dates
+Demonstration
+performed;
+of the work;
+Activities will occur
+A schedule showing
+A clear description of
+and the start/end dates
+when the
+the roadway safety
+of the work;
+Demonstration
+issues that necessitate
+A very clear
+Activities will occur
+the Demonstration
+description of the
+and the start/end dates
+Activities;
+roadway safety issues
+of the work;
+A clear description of
+that necessitate the
+A clear description of
+how the funded
+Demonstration
+the roadway safety
+Demonstration
+Activities;
+issues that necessitate
+Activities will inform
+A very clear
+the Demonstration
+an Action Plan that
+description of how the
+Activities;
+contains all required
+funded Demonstration
+A clear description of
+components as
+Activities will inform
+how the funded
+described in Table 1 of
+an Action Plan that
+Demonstration
+the NOFO, and help to
+contains all required
+Activities will inform
+identify evidence-
+components as
+an Action Plan that
+based, high-impact
+described in Table 1 of
+contains all required
+the NOFO, and help to
+60
+Merit Criteria
+Non-Responsive
+Low
+Medium
+High
+components as
+strategies for all road
+identify evidence-
+described in Table 1 of
+users;
+based, high-impact
+the NOFO, and help to
+A clear description of
+strategies for all road
+identify evidence-
+an approach to
+users;
+based, high-impact
+measuring the potential
+A very clear
+strategies for all road
+safety benefits of the
+description of an
+users;
+Demonstration
+approach to measuring
+A clear description of
+Activities through data
+the potential safety
+an approach to
+collection and
+benefits of the
+measuring the potential
+evaluation.
+Demonstration
+safety benefits of the
+Activities through data
+Demonstration
+collection and
+Activities through data
+evaluation.
+collection and
+evaluation.
+61
+Selection Consideration: Project Readiness
+DOT will review and consider Project Readiness in application selection. Project Readiness
+focuses on the extent to which the applicant will be able to complete the full scope of work in the
+Implementation Grant application within five years of when the grant agreement is executed.
+This includes information related to required design and construction standards, as well as
+environmental, permitting, and approval processes. DOT also will review and consider how soon
+the applicant expects to be able to execute a grant agreement based on the project's readiness.
+DOT will evaluate the extent to which the application:
+Documents all applicable local, State, and Federal requirements;
+Includes information on activity schedule, required permits and approvals, the NEPA
+class of action and status, State Transportation Improvement Program (STIP) and
+Transportation Improvement Program (TIP) status (if applicable), public involvement,
+right-of-way acquisition plans, procurement schedules, multi-party agreements, utility
+relocation plans, and risk and mitigation strategies, as appropriate; and
+Is reasonably expected to begin any construction-related projects in a timely manner
+consistent with all applicable local, State, and Federal requirements.
+2. Review and Selection Process
+This section addresses the IIJA requirement to publish the methodology for evaluation in the
+NOFO, 16 including how applications advance through the evaluation process and the other
+considerations made during selection. DOT may utilize reviewers from within DOT or other
+16 See IIJA, Pub. L. 117-58, 135 Stat. 429, 816-17, § 24112(d)(4).
+62
+Federal agencies. The SS4A grant program review and selection process consists of eligibility
+reviews, merit criteria review, Senior Review Team consideration and a final selection by the
+Secretary.
+i.
+Eligibility Review
+Teams of Department and contractor support staff will review all applications to determine
+eligibility based on the Eligibility Information in Section C. This process includes confirmation
+that the applicant is an eligible entity and has an active UEI. Applications will also be reviewed
+for completeness.
+If DOT cannot confirm eligibility based on the above considerations, the applicant will be
+contacted and given an opportunity to provide clarifications and/or updated materials.
+Eligible applications will be reviewed for merit based on the merit criteria in Section G.1.
+The review teams will examine the locations of the applicants to identify if an applicant is
+requesting funds to develop an Action Plan in a geographic area that previously received SS4A
+funds to develop an Action Plan, as well as any potential overlap in geographic boundaries in
+funding requests for FY 2026. DOT will assess the extent to which the application to develop an
+Action Plan is duplicative of existing or proposed activities and reserves the right to advise
+applicants with duplicative funding requests to consolidate their efforts as one multijurisdictional
+group prior to receiving an award. DOT may decline to fund duplicative applications irrespective
+of their individual merits. Planning and Demonstration Grant Review and Selection Process
+ii.
+Planning and Demonstration Grant Review and Selection Process
+Overall Selection Process and Ratings
+All eligible SS4A Planning and Demonstration Grant applications receive a Merit Criteria
+Review to see how well the project described in the application aligns with the Safety Context
+63
+merit criterion listed in Section G.1.i. DOT staff will evaluate the significance of the benefits and
+the extent to which the proposal is likely to achieve the benefits described in the application.
+For Merit Criteria #1 Safety Context, each eligible Planning and Demonstration Grant
+application narrative will be reviewed for its merit based on the Safety Context merit criteria in
+Section G.1.i. Each application narrative will be reviewed and assessed, and then receive a rating
+of Highly Recommended, Recommended, Acceptable, or Not Recommended. Applications
+that do not address Merit Criteria #1 Safety Context are deemed "not qualified" and will not be
+considered for award.
+For Merit Criteria #2 Safety Impact and #3 Underserved Communities, the review team will rate
+eligible applications numerically based on information provided in the application materials and
+nationally available data.
+Safety Context Criterion Rating Methodology
+Each Planning and Demonstration Grant application is reviewed to determine which eligible
+activities are included in the proposal - developing a new Action Plan, conducting supplemental
+planning to update an existing plan, and carrying out demonstration activities to inform the
+development or update of an Action Plan.
+Each component is assigned a rating of High, Medium, Low, or Non-Responsive, according to
+the rubric table in Section G.1.i. The individual ratings are tallied to calculate an overall merit
+rating of: Highly Recommended, Recommended, Acceptable, or Not Recommended based
+on the table below.
+64
+Safety Context Component
+Ratings (Update/New Action
+Overall Criteria #1
+Justification
+Plan, Supplemental Planning,
+Safety Context Rating
+Demonstration Activities)
+Consistent excellence across all proposed
+All "High"
+Highly Recommended
+activities.
+The application shows strong merit; minor
+weaknesses in some activities do not
+outweigh primary goals. If more than 1
+element is rated "Medium", then the
+Mixed "High" and "Medium"
+Highly Recommended
+overall rating is "Recommended."
+A "Low" in any activity (like
+Demonstration Activities) suggests a lack
+of readiness that prevents a "High" overall
+rating. If more than 1 element is rated
+"Low", then the overall rating is
+"High" and "Low"
+Recommended
+"Acceptable."
+Solid application that meets all basic
+All "Medium"
+Recommended
+requirements.
+A "Low" in more than one category
+demonstrates a lack of readiness/clarity
+Two or more "Low"
+Acceptable
+about the project being proposed.
+All "Low"
+Acceptable
+Insufficient information is provided.
+Fails to meet the basic requirements of the
+Any "Not Responsive"
+Not Recommended
+NOFO.
+iii.
+Implementation Grant Review and Selection Process
+Overall Selection Process and Ratings
+All eligible Implementation Grant applications receive a Merit Criteria Review to see how well
+the project described in the application aligns with the merit criteria listed in Section G.1.ii: #1
+Safety Need; #2 Safety Impact; #3 Implementation Costs; and #4 Engagement and
+Collaboration. Based on the individual merit criterion ratings, DOT will assign an overall
+application rating of Highly Recommended, Recommended, Acceptable, or Not
+Recommended based on the evaluation team consensus discussion, and using the rubric table
+below. The merit criteria are weighted according to importance.
+65
+Implementation Grant applications that include supplemental planning or demonstration
+activities will also be reviewed for criterion #5 Supplemental Planning and Demonstration
+Activities, but it will not affect the overall Implementation Grant rating. Instead, DOT will use
+the information to determine whether the supplemental planning and/or demonstration activities
+should be funded as part of the overall project. DOT is more likely to fund, as part of an overall
+implementation project, supplemental planning and demonstration activities that rate well on
+criterion #5. Alternatively, DOT may award an Implementation Grant but exclude proposed
+supplemental planning or demonstration activities from the scope of the award if those activities
+were not rated well under criterion #5.
+Implementation Grant Application Rating Methodology
+Overall Merit
+Criteria Ratings
+Rating
+Highly
+At least 3 of the 4 merit criteria ratings are "High". The Safety Impact rating must
+Recommended
+be "High."
+None of the merit criteria ratings are "Low" or "Non-Responsive"
+Recommended
+At least 2 of the 4 merit criteria ratings are "High"
+None of the merit criteria ratings are "Low" or "Non-Responsive"
+Acceptable
+Any combination of "High" and "Medium" not described above, and no more than
+2 "Low" merit criteria ratings. None of the merit criteria ratings are "Non-
+Responsive." Safety Impact is not "Low."
+Not
+Ratings that do not fit the definitions of Highly Recommended, Recommended, or
+Recommended
+Acceptable.
+Project Readiness Criterion Rating Methodology
+All Implementation Grant applications will also receive a Project Readiness evaluation, as
+described below. The reviewers will use the application materials to assess the applicant's
+Project Readiness and will provide a rating of either "Likely" or "Unlikely" based on the table
+below.
+66
+Likely
+Unlikely
+Based on the information provided in the
+Based on the information provided in the
+application and the proposed scope of the
+application and the proposed scope of the
+projects and strategies, it is likely the
+projects and strategies, it is uncertain whether
+applicant can execute a grant agreement
+the applicant can execute a grant agreement
+within 1 year and complete all projects and
+within 1 year and complete all projects and
+strategies within 5 years of grant agreement
+strategies within 5 years of grant agreement
+execution. Application provides information
+execution. Application is missing information
+on NEPA status, utility relocation, right-of-
+on NEPA status, and whether utility
+way acquisition, and other project
+relocation and/or right-of-way acquisition is
+implementation requirements.
+required.
+iv.
+Senior Review Team Phase
+The Senior Review Team (SRT), comprised of senior DOT officials, determines which highly
+rated Implementation Grant and Planning and Demonstration Grant applications will be
+advanced for selection by the Secretary. The SRT may consider the following when determining
+which applications to advance.
+Favorable Considerations:
+Whether previous SS4A funding was awarded to the applicant to develop or update an
+Action Plan;
+Letters of support, especially from relevant stakeholders and Public Safety Agencies and
+associated Labor Unions representing First Responders;
+Higher percentage of Implementation Grant funds that will be spent in, and provide
+safety benefits to, locations in Census tracts designated as underserved communities as
+defined by this NOFO; 17
+17 See the definition of Underserved Community in Section B, which includes U.S. Census tracts identified as Areas
+of Persistent Poverty.
+67
+Applicants in a rural area;
+Geographic diversity of Implementation Grant award recipients;
+Principles from the DOT Order, Ensuring Reliance Upon Sound Economic Analysis in
+DOT's Policies, Programs and Activities;
+Beautifying transportation infrastructure with context-appropriate design and/or child-
+friendly elements;
+At-grade highway rail crossing safety improvements (including railroad and rail transit);
+Truck Parking safety improvements with a clear roadway safety nexus;
+Applicants that best reflect the prioritization of reducing vagrancy as detailed in
+Executive Order 14321 "Ending Crime and Disorder on America's Streets."; and
+Whether an applicant has a Killed and Serious Injuries per $1 million in Federal funding
+rate that is high compared to other Highly Rated applications.
+Less Favorable Considerations:
+Inclusion of infrastructure reducing level of service for vehicles or reducing access for
+emergency vehicles, delivery vehicles, and vehicles serving the disabled;
+Inclusion of automated traffic enforcement, except in work zones, school zones, or
+cameras affixed to school buses; and
+Inclusion of new dedicated bicycle lanes that reduce vehicular capacity or impair
+movements.
+Among well-rated applications, the SRT may prioritize Planning and Demonstration Grant
+applicants and jurisdictions that have not received prior SS4A funding, as described in Section
+68
+G.1.i: Selection Consideration; the SRT may also prioritize Implementation Grant applicants and
+jurisdictions that did not receive an SS4A Implementation Grant in previous funding rounds.
+For each grant type, the SRT will present the list of Applications for Consideration to the
+Secretary, either collectively or through a representative of the SRT. The SRT may advise the
+Secretary on any application on the list of Applications for Consideration, including options for
+reduced awards. The Secretary makes final selections of applications that best address program
+requirements and are most worthy of funding.
+If insufficient merit-worthy applications for Planning and Demonstration Grants are received for
+DOT to award the full 30 percent of funding set aside for the planning and demonstration grants,
+the SRT may redirect any such surplus funding toward merit-worthy Implementation Grants.
+FY 2026 SS4A applications advanced by the SRT to the Highly Rated List, but that are not
+awarded, are automatically designated as "Projects of Merit." Projects with this designation will
+be carried over into future potential SS4A rounds, subject to authorization and appropriations,
+and considered by the SRT for advancement to the Highly Rated List, along with other
+applications eligible for advancement to the Highly Rated List.
+Planning and Demonstration Grant Senior Review Team Phase
+Once every Planning and Demonstration Grant application has been reviewed based on the
+methodology above, all applications with a Highly Recommended or Recommended Safety
+Context rating will be included in a list of Applications for Consideration by the SRT. If the total
+funding request for Planning and Demonstration Grants exceeds the funding available, the SRT
+will consider quantitative merit criteria ratings for #2 Safety Impact and #3 Underserved
+Communities as well as applicants that meet the criteria for Award Considerations.
+69
+Implementation Grant Senior Review Team Phase
+Once every Implementation Grant application has been assigned an overall rating based on the
+methodology above, all "Highly Recommended" applications will be included in a list of
+Applications for Consideration by the Secretary. The SRT will review all "Highly
+Recommended" applications that received an "Unlikely" project readiness rating, and either
+remove those applicants from the Applications for Consideration or recommend a reduced scope
+to remove components that reduced the project's readiness, so that if awarded the applicant
+would be likely to execute a grant agreement within one year and complete the scope of work
+within five years of the grant agreement execution. The Secretary will consider the applications
+with a reduced scope due to the "Unlikely" project readiness rating in the same way as
+applications with a "Likely" rating.
+In addition, to ensure the funding awards align to the extent practicable with the program goals,
+the SRT may review and call up "Recommended" applications for substantial safety benefits.
+SRT-identified "Recommended" applications with substantial safety benefits that would
+otherwise be added to the Applications for Consideration will also receive a SRT project
+readiness review similar to all "Highly Recommended" applications.
+For applications that would not otherwise be included on the list of Applications for
+Consideration, the SRT may include applications with supplemental planning and demonstration
+activity funding that received a "High" or "Medium" rating for merit criterion #5
+Supplemental Planning and Demonstration Activities. The SRT may recommend to the Secretary
+that DOT fund a reduced scope of only the supplemental planning and demonstration activities
+for these applications.
+70
+Risk Review
+Pursuant to federal statute and regulation, DOT is required to review eligibility and financial
+integrity information for applicants, available in databases designated by the Office of
+Management and Budget (OMB), prior to making a Federal award. 18
+DOT is required to review the responsibility and qualification records available in the non-public
+segment of SAM prior to making a Federal award where the Federal share is expected to exceed
+the simplified acquisition threshold, defined at 41 U.S.C. § 134, over the period of performance.
+An applicant can review and comment on any information in the responsibility/qualification
+records available in SAM.
+When assessing risk, DOT will consider:
+Financial stability. The applicant's record of effectively managing financial risks, assets,
+and resources;
+Management systems and standards. Quality of management systems and ability to meet
+the management standards prescribed in this part;
+History of performance. The applicant's record of managing previous and current
+Federal awards, including compliance with reporting requirements and conformance to
+the terms and conditions of Federal awards, if applicable;
+Audit reports and findings. Reports and findings from audits performed under subpart F
+or the reports and findings of any other available audits, if applicable; and
+18 See Payment Integrity Information Act of 2019, Pub. L. 116-117, 134 Stat. 113; 31 U.S.C. § 3354 (the "Do Not
+Pay Initiative"); 41 U.S.C. § 2313; and 2 CFR § 200.206.
+71
+Ability to effectively implement requirements. The applicant's ability to effectively
+implement statutory, regulatory, or other requirements imposed on recipients of Federal
+awards.
+Before making decisions in the risk review required by $ 200.206, DOT will consider any
+comments by the applicant, along with information available in the responsibility/qualification
+records in SAM.gov.
+H. Federal Award Notices
+The Secretary will announce awards no later than 270 days after issuing the NOFO. Following
+the evaluation outlined in Section G, the Secretary will announce awarded applications by
+posting a list of selected recipients at https://www.transportation.gov/grants/SS4A. The posting
+of the list of selected award recipients will not constitute an authorization to begin performance.
+Following the announcement, DOT will contact the point of contact listed in the SF-424 to
+initiate negotiation of a grant agreement unless the applicant notifies DOT of a changed contact
+via SS4A@dot.gov.
+1. Availability of Funds
+Grant funding obligation occurs when a selected applicant and DOT enter into a written grant
+agreement after the applicant has satisfied applicable administrative requirements. Unless
+authorized by DOT in writing after DOT's announcement of FY 2026 SS4A grant awards, any
+costs incurred prior to DOT's obligation of funds for activities ("pre-award costs") are ineligible
+for reimbursement and may not be used as matching funds. If authorized by DOT in writing,
+Implementation Grant award recipients may incur pre-award costs for NEPA and design
+72
+activities, and these expenses may count toward match or cost share. Applicants who expect to
+request pre-award authority must clearly articulate such request in the application. DOT will
+determine whether such pre-award costs may be counted toward match or cost share on a case-
+by-case basis. All SS4A funds must be expended within five years after the grant agreement is
+executed.
+SS4A funds will reimburse recipients only after a grant agreement has been executed, allowable
+expenses are incurred, and valid requests for reimbursement are submitted. Grant agreements are
+expected to be administered on a reimbursement basis; and at DOT's discretion alternative
+funding arrangements may be established on a case-by-case basis.
+In connection with any program or activity conducted with or benefiting from funds awarded
+under this notice, recipients of funds must comply with all applicable requirements of Federal
+law, including, without limitation, the Constitution of the United States; the conditions of
+performance, nondiscrimination requirements, and other assurances made applicable to the
+award of funds in accordance with applicable executive orders and the regulations of DOT; and
+applicable Federal financial assistance and contracting principles promulgated by the OMB. In
+complying with these requirements, recipients must ensure that no concession agreements are
+denied, or other contracting decisions made on the basis of speech or other activities protected by
+the First Amendment. If DOT determines that a recipient has failed to comply with applicable
+Federal requirements, DOT may terminate the award of funds and disallow previously incurred
+costs, requiring the recipient to reimburse any expended award funds.
+I. Post-Award Requirements and Administration
+73
+1. Administrative and National Policy Requirements
+i.
+Compliance with Federal Law and Policies
+Except where prohibited by court order, the applicant assures and certifies, with respect to any
+application and awarded Project under this NOFO, that it will comply with all applicable Federal
+laws, regulations, executive orders, policies, guidelines, and requirements as they relate to the
+application, acceptance, and use of Federal funds.
+ii.
+Federal Anti-Discrimination
+Except where prohibited by court order, pursuant to Executive Order 14173, Ending Illegal
+Discrimination and Restoring Merit-Based Opportunity, as a condition of grant award, each
+Recipient must agree that its compliance in all respects with all applicable Federal anti-
+discrimination laws is material to the government's payment decisions for purposes of section
+3729(b)(4) of Title 31, United States Code.
+Except where prohibited by court order, pursuant to Executive Order 14173, Ending Illegal
+Discrimination and Restoring Merit-Based Opportunity, as a condition of grant award, each
+Recipient must certify that it does not operate any programs promoting diversity, equity, and
+inclusion (DEI) initiatives that violate any applicable Federal anti-discrimination laws.
+iii.
+Civil Rights and Title VI
+As a condition of a grant award, grant recipients should demonstrate that the recipient has a plan
+for compliance with civil rights obligations and nondiscrimination laws, including Title VI of the
+Civil Rights Act of 1964 and implementing regulations (49 CFR Part 21), the ADA, and section
+504 of the Rehabilitation Act of 1973 (29 U.S.C. § 794), all other civil rights requirements, and
+accompanying regulations. This should include a current Title VI plan, completed Community
+74
+Participation Plan, and a plan to address any legacy infrastructure or facilities that are not
+compliant with ADA standards. DOT's and the applicable Operating Administrations' Office of
+Civil Rights may work with awarded grant recipients to ensure full compliance with Federal civil
+rights requirements.
+iv.
+National Environmental Policy Act of 1969 (NEPA)
+Funding recipients must comply with NEPA under 42 U.S.C. § 4321. Obligation of Federal
+funds for final design, right-of-way acquisition, utility relocation, and/or construction will not
+occur until NEPA approval is received. In these cases, the grant agreement will require a partial
+obligation of Federal funding until NEPA approval is obtained and a grant agreement
+amendment to obligate additional funding after NEPA approval is received and documented.
+V.
+Domestic Preference Requirements
+As expressed in Executive Order 14005, Ensuring the Future Is Made in All of America by All
+of America's Workers (86 FR 7475), the executive branch should maximize, consistent with law,
+the use of goods, products, and materials produced in, and services offered in, the United States.
+Infrastructure projects and demonstration activities are subject to the Build America, Buy
+America Act as clarified in OMB Memorandum M-24-02. 19 Projects under this notice are
+subject to the domestic preference requirement at section 70914 of the Build America, Buy
+America Act. DOT expects all recipients to comply with this requirement.
+19 See IIJA, Pub. L. No. 117-58, Div. G, Title IX, Subtitle A, 135 Stat. 429, 1298, § 70914 (2021). For additional
+information and guidance on section 70914, see OMB-24-02, available at: https://www.whitehouse.gov/wp-
+content/uploads/2023/10/M-24-02-Buy-America-Implementation-Guidance-Update.pdf.
+75
+vi.
+Labor and Workforce
+Each applicant selected for SS4A grant funding must demonstrate, to the full extent possible
+consistent with the law, an effort to create good-paying jobs with a free and fair choice to join a
+union in project construction and in on-going operations and maintenance, and promote cost-
+effectiveness and open competition through union participation and the use of project labor
+agreements, registered apprenticeship programs, and other joint labor-management training
+programs.
+vii.
+Critical Infrastructure Security and Resilience
+It is the policy of the United States to strengthen the security and resilience of its critical
+infrastructure against all hazards, including physical and cyber threats, consistent with the
+National Security Memorandum (NSM-22) on Critical Infrastructure Security and Resilience,
+and the National Security Memorandum on Critical Infrastructure Cybersecurity for Critical
+Infrastructure Control Systems. Each applicant selected for SS4A grant funding must
+demonstrate, prior to the signing of the grant agreement, effort to consider and address physical
+and cyber security risks relevant to the transportation mode and type and scale of the project.
+Award recipients that have not appropriately considered and addressed physical and cyber
+security and resilience in their planning, design, and project oversight, as determined by DOT
+and the Department of Homeland Security, will be required to do so before receiving
+Implementation Grant funds.
+viii.
+Other Administrative and Policy Requirements
+All awards will be administered pursuant to the Uniform Administrative Requirements, Cost
+Principles and Audit Requirements for Federal Awards found in 2 CFR Part 200 as adopted by
+DOT at 2 CFR Part 1201. In addition, as permitted under the requirements described above,
+76
+applicable Federal laws, rules, and regulations of the relevant operating administration (e.g., the
+Federal Highway Administration) administering the activities will apply to the activities that
+receive SS4A grants, including planning requirements, Stakeholder Agreements, and other
+requirements under DOT's other highway and transit grant programs. DOT anticipates grant
+recipients to have varying levels of experience administering Federal funding agreements and
+complying with Federal requirements, and DOT will take a risk-based approach to SS4A
+program grant administration to ensure compliance with all applicable laws and regulations.
+Because award recipients under this program may be first-time recipients of Federal funding,
+DOT is committed to implementing the program as flexibly as permitted by statute and to
+assisting award recipients through the process of securing a grant agreement and delivering both
+Planning and Demonstration Grant activities and Implementation Grant projects and strategies.
+Award recipients are encouraged to identify any needs for assistance in delivering the
+Implementation Grant projects and strategies so that DOT can provide directly, or through a third
+party, sufficient support and technical assistance to mitigate potential execution risks.
+2. Reporting
+i.
+Progress Reporting on Grant Activity
+Reporting responsibilities for award recipients include quarterly program performance reports
+using the Performance Progress Report (PPR) and quarterly financial status using the SF-425
+(also known as the Federal Financial Report or SF-FFR). 20
+20 https://www.grants.gov/forms/post-award-reporting-forms.html
+77
+Budget and recipient performance information will be gathered on a quarterly basis in PPR. To
+fulfill the data collection requirements and in accordance with the DOT Public Access Plan,
+award recipients must consider, budget for, and implement appropriate data management, for
+data and information outputs acquired or generated during the course of the grant. 21, Federally
+recognized Tribal governments receiving grants may request alternative data collection
+requirements during grant agreement formulation, as appropriate. Applicants are expected to
+account for data and performance reporting in their budget submission.
+ii.
+Post Award Reporting Requirements/Reporting of Matters Related to
+Integrity and Performance
+All award recipients shall submit a final report not later than 120 days after the end of the period
+of performance. A link to submit this report electronically will be provided by the Operating
+Administration (FHWA, FTA, or NHTSA) administering your grant. The content of the final
+report includes:
+The costs of each eligible project and strategy carried out using the grant;
+The lessons learned and any recommendations relating to future projects or strategies to
+prevent death and serious injury on roads and streets.
+Recipients of Implementation Grants or Planning and Demonstration Grants with demonstration
+activities must also provide:
+Safety performance data, including total fatalities and serious injuries, and fatalities by
+road user category, and other outcomes and benefits in the project location(s);
+Information about project location(s).
+21
+https://doi.org/10.21949/1520559
+78
+Award recipients that develop, complete, or enhance an Action Plan must provide information to
+support that the Action Plan satisfies each of the required Action Plan components listed in Table
+1: Action Plan Components.
+Award recipients carrying out demonstration activities must also:
+Measure potential benefits through data collection and evaluative activities, and
+Report to DOT how the demonstration activities informed an Action Plan's list of
+projects and strategies and future implementation.
+iii.
+General Reporting Requirement (Federal Share of SS4A Funds Over
+$500,000)
+If the total value of a selected applicant's currently active grants, cooperative agreements, and
+procurement contracts from all Federal awarding agencies exceeds $10,000,000 for any period of
+time during the period of performance of this Federal award, the applicant during that period of
+time must maintain the currency of information reported in SAM that is made available in the
+designated integrity and performance system about civil, criminal, or administrative proceedings
+described in Section I.2.iv: "Proceedings About Which Recipients Must Report" of this award
+term and condition. This is a statutory requirement under section 872 of Pub. L. No. 110-417, as
+amended (41 U.S.C. § 2313). As required by section 3010 of Pub. L. No. 111-212, all
+information posted in the designated integrity and performance system on or after April 15,
+2011, except past performance reviews required for Federal procurement contracts, will be
+publicly available. In addition, if applicable, funding recipients must be in compliance with the
+audit requirements in 2 CFR Part 200, Subpart F.
+iv.
+Proceedings About Which Recipients Must Report
+Recipients must submit the required information about each proceeding that:
+79
+Is in connection with the award or performance of a grant, cooperative agreement, or
+procurement contract from the Federal Government;
+Reached its final disposition during the most recent five-year period; and
+Is one of the following-
+A criminal proceeding that resulted in a conviction;
+A civil proceeding that resulted in a finding of fault and liability and payment of a
+monetary fine, penalty, reimbursement, restitution, or damages of $5,000 or more;
+An administrative proceeding that resulted in a finding of fault and liability and
+payment of either a monetary fine or penalty of $5,000 or more or reimbursement,
+restitution, or damages in excess of $100,000; or
+Any other criminal, civil, or administrative proceeding if-
+It could have led to an outcome described in one of the three examples
+cited above;
+It had a different disposition arrived at by consent or compromise with an
+acknowledgment of fault on the recipient's part; and
+The requirement in this award term to disclose information about the
+proceeding does not conflict with applicable laws and regulations.
+Reporting Procedures. Enter the required information in SAM for each proceeding
+described in paragraph (b) of this award term. Recipients do not need to submit the
+information a second time under grants and cooperative agreements that the recipient
+received if already provided the information in SAM because the recipient were required
+to do so under Federal procurement contracts that the recipient was awarded.
+80
+Reporting Frequency. During any period of time when the recipient is subject to the
+general reporting requirement, the recipient must report proceedings information in
+SAM.gov for the most recent five-year period, either to report new information about a
+proceeding that the recipient has not reported previously or affirm that there is no new
+information to report. If the recipient has Federal contract, grant, and cooperative
+agreement awards with a cumulative total value greater than $10,000,000, the recipient
+must disclose semiannually any information about the criminal, civil, and administrative
+proceedings.
+Definitions. For purposes of this Notice-
+Administrative proceeding means a non-judicial process that is adjudicatory in
+nature to make a determination of fault or liability (for example, Securities and
+Exchange Commission Administrative proceedings, Civilian Board of Contract
+Appeals proceedings, and Armed Services Board of Contract Appeals
+proceedings). This includes proceedings at the Federal and State level but only in
+connection with the performance of a Federal contract or grant. It does not include
+audits, site visits, corrective plans, or inspection of deliverables.
+Conviction means a judgment or conviction of a criminal offense by any court of
+competent jurisdiction, whether entered upon a verdict or a plea, and includes a
+conviction entered upon a plea of nolo contendere.
+Total value of currently active grants, cooperative agreements, and procurement
+contracts includes the value of the Federal share already received plus any
+anticipated Federal share under those awards (such as continuation funding).
+81
+3. Program Evaluation
+DOT intends to measure safety outcomes through a combination of grant agreement activities
+and data collections, including DOT data collections already underway and program evaluations
+separate from the individual grant agreements in accordance with Section D.4. Pursuant to 5
+U.S.C. § 311, Program Evaluation is "an assessment using systematic data collection and
+analysis of one or more programs, policies, and organizations intended to assess their
+effectiveness and efficiency." Recipients and subrecipients are encouraged to incorporate
+program evaluation including associated data collection activities from the outset of their
+program design and implementation to meaningfully document and measure their progress.
+Allowable data and evaluation costs are specified in 2 CFR § 200.455(c). As a condition of grant
+award, SS4A grant recipients may be required to participate in an evaluation undertaken by
+DOT, or another agency or partner. The evaluation may take different forms such as an
+implementation assessment across grant recipients, an impact and/or outcomes analysis of all or
+selected sites within or across grant recipients, or a benefit/cost analysis or assessment of return
+on investment. DOT may require applicants to collect data elements to aid the evaluation and/or
+use information available through other reporting. Grant recipients must agree to: (1) make
+records available to the evaluation contractor or DOT agency staff; (2) facilitate and provide
+access to program records, and any other relevant documents to calculate costs and benefits; (3)
+in the case of an impact analysis, facilitate the access to relevant information as requested; and
+(4) follow evaluation procedures as specified by the evaluation contractor or DOT agency staff.
+J. Other Information
+82
+1. Publication of Application Information
+Following the completion of the selection process and announcement of awards, DOT intends to
+publish a list of all applications received along with the names of the applicant organizations and
+a few relevant data fields from the application. DOT may share application information within
+DOT or with other Federal agencies if DOT determines the applicant could benefit from Federal
+technical assistance programs, or that sharing is relevant to the respective program's objectives.
+2. Department Feedback on Applications
+DOT strives to provide as much information as possible to assist applicants with the application
+process. Unsuccessful applicants may request a debrief up to 30 days after the selected funding
+recipients are publicly announced on https://www.transportation.gov/grants/SS4A.
+3. Grant Application Resources
+DOT will provide resources to help interested applicants understand the different DOT
+competitive grant programs through webinars, frequently asked questions, templates, and other
+materials provided on the SS4A program website https://www.transportation.gov/grants/SS4A.
+Additional grant applications resources for this and other Departmental grant programs can be
+found on the DOT Navigator at www.transportation.gov/dot-navigator. User-friendly
+information and resources regarding DOT's competitive grant programs relevant to rural
+applicants can be found on the Rural Opportunities to Use Transportation for Economic Success
+(ROUTES) website at www.transportation.gov/rural.
+83

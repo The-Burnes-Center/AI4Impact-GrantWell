@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When is the Youth Community Access proposal due?",
+    "expected": "The guidelines do not give a date; they tell applicants to refer to the solicitation notice for due dates. The Project Proposal (step one of three) is submitted online in RAPTR, with no hard copy required.",
+    "quote": "Project Tracking and Reporting (RAPTR) system. Applicants should refer to the solicitation",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "award",
+    "question": "What's the most we can get?",
+    "expected": "The maximum award for an individual project is $500,000 and the minimum is $25,000, out of about $18.5 million available.",
+    "quote": "The maximum award for an individual project is $500,000. The minimum award is $25,000.",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "absent",
+    "question": "How many grants are they going to fund?",
+    "expected": "Not stated in the notice.",
+    "quote": null,
+    "confirmed": false
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When are applications due?",
+    "expected": "Multiple receipt cycles on NIH standard dates: new applications February 5, June 5, and October 5, and renewal/resubmission/revision applications March 5, July 5, and November 5 (from February 05, 2025 through November 05, 2027), all due by 5:00 PM local time of the applicant organization; the NOFO expires January 08, 2028.",
+    "quote": "All applications are due by 5:00 PM local time of applicant organization.",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "award",
+    "question": "Is there a budget cap?",
+    "expected": "No. Application budgets are not limited but need to reflect the actual needs of the proposed project; the maximum project period is 5 years.",
+    "quote": "Application budgets are not limited but need to reflect the actual needs of the proposed budget.",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "absent",
+    "question": "Is there an info webinar for applicants?",
+    "expected": "Not stated in the notice.",
+    "quote": null,
+    "confirmed": false
+  }
+]

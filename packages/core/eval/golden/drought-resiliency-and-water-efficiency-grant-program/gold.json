@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "status": "confirmed",
+  "family": "MA state",
+  "deadlines": [
+    {
+      "kind": "other",
+      "label": "Deadline for Submission of Questions through COMMBUYS",
+      "date": "2026-10-23",
+      "time": "17:00",
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Deadline for Submission of Questions through COMMBUYS October 23, 2026 at 5:00 pm"
+    },
+    {
+      "kind": "application",
+      "label": "Deadline for Submission of Proposals via the Grant Management System",
+      "date": "2026-11-12",
+      "time": "23:59",
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "The online application and other supporting documents must be submitted on or before, November 12, 2026 at 11:59 PM at which time the online portal will close for this opportunity."
+    },
+    {
+      "kind": "other",
+      "label": "Deadline for completion of projects / contract end (June 30, 2027)",
+      "date": "2027-06-30",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "CONTRACT DURATION: All contracts for grant assistance will end on or before June 30, 2027.",
+      "conflict": true
+    },
+    {
+      "kind": "other",
+      "label": "Section 3e work plan and contract duration: funded portions completed and approved costs expended by June 30, 2026",
+      "date": "2026-06-30",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Ensure that the timeline is realistic and aligned with the grant period (funded portions of projects must be completed by June 30, 2026).",
+      "conflict": true
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": null,
+    "periodMonths": null,
+    "expectedAwards": null,
+    "range": {
+      "min": null,
+      "max": 50000,
+      "quote": "Target awards are up to $50,000 per project."
+    },
+    "caps": [],
+    "match": {
+      "required": false,
+      "ratio": null,
+      "appliesTo": null,
+      "quote": "Please note that no match is required to be eligible for this program."
+    },
+    "quote": "This is a REIMBURSEMENT program. Target awards are up to $50,000 per project."
+  },
+  "sections": [
+    {
+      "name": "Short Description",
+      "order": 1,
+      "limit": {
+        "type": "paragraphs",
+        "value": 1
+      },
+      "conditional": null,
+      "component": "Section 1 - Application Summary",
+      "quote": "Short description. Use this field to provide a 1 paragraph description of the project suitable for use in press releases or program summaries."
+    },
+    {
+      "name": "Project Overview",
+      "order": 2,
+      "limit": null,
+      "conditional": null,
+      "component": "Section 3 - Project Identification and Narrative",
+      "quote": "a. Project Overview Provide a concise summary of the project, including its goals, objectives, and how it aligns with the program's purpose of reducing indoor and outdoor water use"
+    },
+    {
+      "name": "Project Description",
+      "order": 3,
+      "limit": null,
+      "conditional": null,
+      "component": "Section 3 - Project Identification and Narrative",
+      "quote": "b. Project Description Describe the scope of work for this project in detail, outlining the specific activities/tasks and methods that will be used to achieve the stated goals."
+    },
+    {
+      "name": "Organizations Involved and Regional Collaboration",
+      "order": 4,
+      "limit": null,
+      "conditional": null,
+      "component": "Section 3 - Project Identification and Narrative",
+      "quote": "C. Organizations Involved and Regional Collaboration Provide a description of the individuals/organizations that will be involved."
+    },
+    {
+      "name": "Expected Outcomes",
+      "order": 5,
+      "limit": null,
+      "conditional": null,
+      "component": "Section 3 - Project Identification and Narrative",
+      "quote": "Clearly define the anticipated outcomes of the project, including specific, measurable impacts on water use reduction, efficiency improvements, water loss control, or drought resiliency."
+    },
+    {
+      "name": "Project Schedule",
+      "order": 6,
+      "limit": null,
+      "conditional": null,
+      "component": "Section 3e - Budget, Project Schedule, and Cost Estimates",
+      "quote": "Present a comprehensive work plan that includes the key tasks, deliverables, milestones, and timeline for completing the project. Ensure that the timeline is realistic and aligned with the grant period"
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Alignment with Program Goals",
+      "scored": true,
+      "points": null,
+      "weightPct": 15,
+      "scale": null,
+      "sections": [
+        "Project Overview"
+      ],
+      "quote": "Alignment with Program Goals (15%) Proposals will be assessed on how well they align with the program's overall objectives of reducing indoor and outdoor water use"
+    },
+    {
+      "name": "Project Impact",
+      "scored": true,
+      "points": null,
+      "weightPct": 40,
+      "scale": null,
+      "sections": [
+        "Expected Outcomes",
+        "Organizations Involved and Regional Collaboration"
+      ],
+      "quote": "Project Impact (40%) Proposals must outline expected water savings, improvements in water loss control, and/or increased drought resiliency"
+    },
+    {
+      "name": "Cost, Budget, Feasibility and Readiness",
+      "scored": true,
+      "points": null,
+      "weightPct": 30,
+      "scale": null,
+      "sections": [
+        "Project Schedule"
+      ],
+      "quote": "Cost, Budget, Feasibility and Readiness (30%) Proposals should provide justification for the project's costs relative to its expected outcomes, including detailed budgets and quotes, as applicable."
+    },
+    {
+      "name": "Overall Project Quality",
+      "scored": true,
+      "points": null,
+      "weightPct": 15,
+      "scale": null,
+      "sections": [],
+      "quote": "Overall Project Quality (15%) In general, projects that are well planned and have a high likelihood of success will be preferred."
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Uploaded files must be Microsoft Office compatible format or unlocked Adobe Acrobat"
+    ],
+    "quote": "Digital files uploaded to the application site must be provided in Microsoft Office compatible format or unlocked Adobe Acrobat."
+  },
+  "eligibility": [
+    {
+      "item": "Applicant is a municipality, public water supplier, nonprofit organization, public school/college/university, or regional planning agency",
+      "quote": "Eligible Entities include Municipalities, Public Water Suppliers, Nonprofit Organizations, Public Schools/Colleges/Universities, and Regional Planning Agencies."
+    },
+    {
+      "item": "Grantee must be able to certify compliance with G.L. c. 40A, § 3A (MBTA Communities Act) to receive funds",
+      "quote": "The receipt of grant funds is contingent upon the grantee being able to certify that it will comply with the Massachusetts General Laws, including G.L. C. 40A, § 3A, the MBTA Communities Act."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "Online Application Cover Form in the EEA Grant Management System",
+      "userWrites": false,
+      "quote": "A sample of the online form used in the Grant Management System may also be found on the COMMBUYS page for this procurement. Use of this form for the application is required."
+    },
+    {
+      "item": "Answers to the project-type-specific questions in the online form (Section 2)",
+      "userWrites": true,
+      "quote": "The selection of the project type while filling out the application in the GMS will direct the applicant to specific questions. Please ensure the appropriate project type is selected and that all required questions are answered completely."
+    },
+    {
+      "item": "Budget and Cost Estimates (Section 3e): detailed breakdown of project costs (personnel, materials, equipment, other)",
+      "userWrites": true,
+      "quote": "e. Budget, Project Schedule, and Cost Estimates Provide a detailed breakdown of the project costs, including all expenses related to personnel, materials, equipment, and other associated costs."
+    },
+    {
+      "item": "Project Site Map (uploaded appendix)",
+      "userWrites": false,
+      "quote": "Appendices (Online - To be uploaded as attachments) Project Site Map"
+    },
+    {
+      "item": "Cost Estimates/Quotes from Vendors (uploaded appendix)",
+      "userWrites": false,
+      "quote": "Project Site Map Cost Estimates/Quotes from Vendors"
+    }
+  ],
+  "libraryRequired": []
+}

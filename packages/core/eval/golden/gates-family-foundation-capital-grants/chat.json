@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When's the deadline?",
+    "expected": "Applications are accepted any time, but the twice-yearly deadlines are March 15 and September 1 at 5:00 p.m. (no time zone given); the next one is March 15, 2027, and a deadline on a weekend or holiday moves to the next business day.",
+    "quote": "Application deadline: March 15, 2027, 5:00 p.m. (annual deadlines March 15 and September 1; applications accepted any time)",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "eligibility",
+    "question": "Who is eligible to apply?",
+    "expected": "501(c)(3) public charities (509(a)(1) or 509(a)(2)) with tax-exempt documentation from the last five years, serving Colorado, with about 30% of project funds already committed; governmental entities are considered only in limited circumstances.",
+    "quote": "Be classified by the Internal Revenue Service as tax-exempt under section 501(c)(3) of the Internal Revenue Code (the “Code”), classified as a public charity",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "absent",
+    "question": "What's the most we can request?",
+    "expected": "Not stated in the notice.",
+    "quote": null,
+    "confirmed": false
+  }
+]

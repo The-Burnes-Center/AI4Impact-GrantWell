@@ -1,0 +1,7 @@
+{
+ "name": "NASA Innovative Advanced Concepts (NIAC) Phase II",
+ "agency": "NASA Headquarters",
+ "scope": "federal",
+ "sourceUrl": "https://nspires.nasaprs.com/external/viewrepositorydocument/cmdocumentid=1130209/solicitationId=%7BB5DE81B7-7F00-AF1A-0E6B-5E546BDED622%7D/viewSolicitationDocument=1",
+ "sourceNote": "grantwell.us holds NASA's GCAM manual for this grant (wrong document); this is the 2026 NIAC Phase II Appendix from NSPIRES, text extracted locally until dev's Textract run replaces it."
+}

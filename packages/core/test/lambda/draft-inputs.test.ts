@@ -21,6 +21,7 @@ beforeAll(async () => {
   vi.stubEnv("KB_ID", "kb-1");
   vi.stubEnv("NOFO_METADATA_TABLE_NAME", "nofo-metadata");
   vi.stubEnv("BUCKET", "nofos");
+  vi.stubEnv("ARTIFACTS_BUCKET", "grant-artifacts");
   vi.stubEnv("DRAFT_GENERATION_JOBS_TABLE_NAME", "jobs");
   vi.stubEnv("DRAFT_GENERATION_STATE_MACHINE_ARN", "arn:aws:states:us-east-1:111111111111:stateMachine:draft");
   vi.stubEnv("SONNET_MODEL_ID", "model-1");

@@ -1,0 +1,595 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "DOE",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "Rolling: applications accepted any time while the NOFO is open (until September 30, 2027, or until succeeded)",
+      "date": "2027-09-30",
+      "time": "23:59",
+      "tzAsWritten": "Eastern Time",
+      "fromBrokenTable": false,
+      "quote": "This NOFO will remain open until September 30, 2027, at 11:59 PM Eastern Time, or until it is succeeded by another issuance, whichever occurs first."
+    },
+    {
+      "kind": "application",
+      "label": "Conference or workshop support applications: at least six months before the meeting and no later than April 1, 2027 for FY 2027 funding",
+      "date": "2027-04-01",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Applications for conference or workshop support must be submitted at least six months before the meeting date and no later than April 1, 2027, to be considered for FY 2027 funding."
+    },
+    {
+      "kind": "application",
+      "label": "Renewal applications: at least six months before the current award's project period expires (no calendar date)",
+      "date": null,
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Renewal applications compete with all other applications and must be submitted through Grants.gov at least six months before the scheduled expiration of the current award's project period."
+    },
+    {
+      "kind": "preapp",
+      "label": "ASCR panel on Algorithms for Large-Scale Sparse Linear Algebra: pre-application",
+      "date": "2027-02-19",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "To be considered by the panel, a pre-application must be submitted by February 19, 2027."
+    },
+    {
+      "kind": "application",
+      "label": "ASCR panel on Algorithms for Large-Scale Sparse Linear Algebra: application (encouraged pre-application required)",
+      "date": "2027-04-12",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Applications associated with an encouraged pre-application must be submitted by April 12, 2027."
+    },
+    {
+      "kind": "preapp",
+      "label": "ASCR panel on Foundations of Analog Computing: pre-application",
+      "date": "2026-11-22",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "To be considered by the panel, a pre-application must be submitted by November 22, 2026."
+    },
+    {
+      "kind": "application",
+      "label": "ASCR panel on Foundations of Analog Computing: application (encouraged pre-application required)",
+      "date": "2027-01-24",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Applications associated with an encouraged pre-application must be submitted by January 24, 2027."
+    },
+    {
+      "kind": "preapp",
+      "label": "ASCR panel on Innovative Approaches to Quantum Routing Protocols: pre-application",
+      "date": "2027-01-10",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "To be considered by the panel, a pre-application must be submitted by January 10, 2027."
+    },
+    {
+      "kind": "application",
+      "label": "ASCR panel on Innovative Approaches to Quantum Routing Protocols: application (encouraged pre-application required)",
+      "date": "2027-02-28",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Applications associated with an encouraged pre-application must be submitted by February 28, 2027."
+    },
+    {
+      "kind": "preapp",
+      "label": "BER panels (Microbial Biosystems Design; Bioimaging and Sensing; Low Dose Radiation): pre-application",
+      "date": "2026-12-22",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "To be considered by the panel, a pre- application must be submitted by December 22, 2026."
+    },
+    {
+      "kind": "application",
+      "label": "BER panels (Microbial Biosystems Design; Bioimaging and Sensing; Low Dose Radiation): application from encouraged pre-application",
+      "date": "2027-03-16",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "To be reviewed by the panel, applications associated with encouraged pre- applications must be submitted by March 16, 2027."
+    },
+    {
+      "kind": "preapp",
+      "label": "FES General Plasma Science merit review: pre-application",
+      "date": "2026-11-24",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "To be considered, a pre-application must be submitted by November 24, 2026."
+    },
+    {
+      "kind": "application",
+      "label": "FES General Plasma Science merit review: application from encouraged pre-application",
+      "date": "2027-01-26",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Applications associated with encouraged pre-applications must be submitted by January 26, 2027."
+    },
+    {
+      "kind": "preapp",
+      "label": "FES Plasma Science and Technology, Microelectronics Research (FY 2027 funding): pre-application",
+      "date": "2026-11-20",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "To be considered for funding in FY 2027, a pre-application must be submitted by November 20, 2026."
+    },
+    {
+      "kind": "application",
+      "label": "FES Plasma Science and Technology, Microelectronics Research (FY 2027 funding): application from encouraged pre-application",
+      "date": "2027-02-01",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Applications associated with encouraged pre-applications must be submitted by February 1, 2027."
+    },
+    {
+      "kind": "preapp",
+      "label": "FES Plasma Science and Technology, Quantum Information Science (FY 2027 funding): pre-application",
+      "date": "2026-11-20",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "To be considered for funding in FY 2027, a pre-application must be submitted by November 20, 2026."
+    },
+    {
+      "kind": "application",
+      "label": "FES Plasma Science and Technology, Quantum Information Science (FY 2027 funding): application from encouraged pre-application",
+      "date": "2027-02-01",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Applications associated with encouraged pre-applications must be submitted by February 1, 2027."
+    },
+    {
+      "kind": "preapp",
+      "label": "FES FY 2028 Fusion Materials and Internal Components comparative review: pre-application",
+      "date": "2027-07-09",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Applicants must submit pre-applications for the FY 2028 comparative review by July 9, 2027."
+    },
+    {
+      "kind": "application",
+      "label": "FES FY 2028 Fusion Materials and Internal Components comparative review: application from encouraged pre-application",
+      "date": "2027-09-05",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Applications from encouraged pre-applications are due by September 5, 2027."
+    },
+    {
+      "kind": "preapp",
+      "label": "FES FY 2028 Fusion Nuclear Science comparative review: pre-application",
+      "date": "2027-07-15",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Applicants must submit pre-applications by July 15, 2027."
+    },
+    {
+      "kind": "application",
+      "label": "FES FY 2028 Fusion Nuclear Science comparative review: application from encouraged pre-application",
+      "date": "2027-09-07",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Applications from encouraged pre-applications are due by September 7, 2027."
+    },
+    {
+      "kind": "application",
+      "label": "HENP nuclear physics FY 2027 comparative review panels: application",
+      "date": "2026-11-16",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Applications are due Monday, November 16, 2026, for full consideration."
+    },
+    {
+      "kind": "application",
+      "label": "HENP FY 2028 comparative review panels (research areas (a) through (o)): application",
+      "date": "2027-09-02",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Research applications that are aligned with one or more of those research areas and are received by Thursday, September 2, 2027, will be considered for merit review by those panels."
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": null,
+    "periodMonths": 60,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [
+      {
+        "what": "ASCR panel applications (Sparse Linear Algebra, Analog Computing, Quantum Routing): total per year across all institutions for a three-year award",
+        "value": 500000
+      },
+      {
+        "what": "FES General Plasma Science: budget per year regardless of the number of participating institutions",
+        "value": 300000
+      }
+    ],
+    "match": {
+      "required": true,
+      "ratio": "0.5",
+      "appliesTo": "OTA awards only (at least 50% to the maximum extent practicable); not required for grants under 2 C.F.R. part 200 and 910",
+      "quote": "For OTA awards, to the maximum extent practicable, non-Federal parties carrying out a research, development, and demonstration project under an OTA award are to provide at least 50% cost sharing."
+    },
+    "quote": "We anticipate making awards with a project period of six months to five years, with a most common project period of three years."
+  },
+  "sections": [
+    {
+      "name": "Pre-application",
+      "order": 1,
+      "limit": {
+        "type": "pages",
+        "value": 3
+      },
+      "conditional": "Required for certain review panels; optional for all other submissions",
+      "component": "Pre-application (PAMS)",
+      "quote": "The title page must be followed by a clear and concise description of the objectives and technical approach of the proposed research. The pre-application may not exceed three pages,"
+    },
+    {
+      "name": "Project Summary/Abstract",
+      "order": 2,
+      "limit": {
+        "type": "pages",
+        "value": 1
+      },
+      "conditional": null,
+      "component": "R&R Other Project Information, Field 7",
+      "quote": "The description of the proposed research may not exceed one page (excluding Project Title and list of investigators)"
+    },
+    {
+      "name": "Title Page Supplement for Collaborative Applications",
+      "order": 3,
+      "limit": null,
+      "conditional": "Multi-institutional teams submitting collaborative applications",
+      "component": "Project Narrative file, Field 8",
+      "quote": "If a multi-institutional team is submitting collaborative applications, provide the following information on a separate page as a supplement to the title page."
+    },
+    {
+      "name": "Buy America Infrastructure Statement",
+      "order": 4,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative",
+      "quote": "Within the first two (2) pages of the Project Narrative, include a short statement on whether the project will involve the construction, alteration, maintenance and/or repair of public infrastructure in the U.S."
+    },
+    {
+      "name": "Background/Introduction",
+      "order": 5,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative",
+      "quote": "Background/Introduction: explanation of the importance and relevance of the proposed work as well as a review of the relevant literature"
+    },
+    {
+      "name": "Project Objectives",
+      "order": 6,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative",
+      "quote": "Project Objectives: a clear, concise statement of the specific objectives or aims of the proposed project"
+    },
+    {
+      "name": "Progress Report",
+      "order": 7,
+      "limit": null,
+      "conditional": "Renewal applications only",
+      "component": "Project Narrative",
+      "quote": "Progress Report (for renewal applications only): a section that describes the results of the work accomplished during the current project period"
+    },
+    {
+      "name": "Proposed Research and Methods",
+      "order": 8,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative",
+      "quote": "Proposed Research and Methods: the hypotheses to be tested (if any) and details of the methods to be used, including the integration of experiments with theoretical and computational research efforts."
+    },
+    {
+      "name": "Advancement of Basic Scientific Understanding (for-profit applicants)",
+      "order": 9,
+      "limit": {
+        "type": "words",
+        "value": 200
+      },
+      "conditional": "For-profit applicants only",
+      "component": "Project Narrative appendix",
+      "quote": "All for-profit applicants must include a description as an appendix to the Project Narrative, not to exceed 200 words, of how their proposed work will advance scientific understanding of a basic and fundamental nature."
+    },
+    {
+      "name": "Bibliography & References Cited",
+      "order": 10,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative Appendix 1",
+      "quote": "Provide a bibliography of any references cited in the Project Narrative. Each reference must include the names of all authors"
+    },
+    {
+      "name": "Facilities and Other Resources",
+      "order": 11,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative Appendix 2",
+      "quote": "This information is used to assess the capability of the organizational resources, including subrecipient resources, available to perform the effort proposed."
+    },
+    {
+      "name": "Equipment",
+      "order": 12,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative Appendix 3",
+      "quote": "List major items of equipment already available for this project and, if appropriate, identify location and pertinent capabilities."
+    },
+    {
+      "name": "Data Management and Sharing Plan",
+      "order": 13,
+      "limit": null,
+      "conditional": "Not required for conference, workshop, or scientific meeting support applications",
+      "component": "Project Narrative Appendix 4",
+      "quote": "Provide a Data Management and Sharing Plan (DMSP) as an appendix to the Project Narrative. DMSPs are not required for applications that only request support for a conference, workshop, or scientific meeting."
+    },
+    {
+      "name": "Synergistic Activities",
+      "order": 14,
+      "limit": {
+        "type": "pages",
+        "value": 1
+      },
+      "conditional": "Optional; one page per senior/key person",
+      "component": "Project Narrative Appendix 5",
+      "quote": "each senior/key person may provide a one-page list of no more than five distinct examples of synergistic activities"
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Scientific and/or Technical Merit of the Project",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Background/Introduction",
+        "Project Objectives",
+        "Proposed Research and Methods"
+      ],
+      "quote": "What is the scientific innovation of the proposed research? What is the likelihood of achieving valuable results?"
+    },
+    {
+      "name": "Appropriateness of the Proposed Method or Approach",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Proposed Research and Methods"
+      ],
+      "quote": "How logical and feasible are the research approaches? Does the proposed research employ innovative concepts or methods?"
+    },
+    {
+      "name": "Competency of Applicant's Personnel and Adequacy of Proposed Resources",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Facilities and Other Resources",
+        "Equipment"
+      ],
+      "quote": "How well qualified is the research team to carry out the proposed research? Are the research environment and facilities adequate for performing the research?"
+    },
+    {
+      "name": "Reasonableness and Appropriateness of the Proposed Budget",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Are the proposed budget and staffing levels adequate to carry out the proposed research? Is the budget reasonable and appropriate for the scope?"
+    },
+    {
+      "name": "Appropriateness of the Data Management and Sharing Plan",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Data Management and Sharing Plan"
+      ],
+      "quote": "To what extent does the Data Management and Sharing Plan (DMSP) enable data generated during the research project to be publicly shared and preserved"
+    }
+  ],
+  "format": {
+    "pageSize": "8.5 x 11 inch (letter)",
+    "margins": "1 inch (top, bottom, left, right)",
+    "font": null,
+    "fontSizePt": 11,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "DOE Title Page, Project Narrative, and all required appendices go in one single machine-readable plain PDF attached to Field 8 (not scanned; no editable fields, signatures, passwords, portfolios or binders)",
+      "Do not attach appendices separately to Fields 9, 10, 11 or 12 of the Other Project Information form",
+      "Do not include URLs that provide supplementary information forming part of the application",
+      "Letters of collaboration or access go in Appendix 7, may contain only two sentences in the prescribed format; letters of recommendation are not allowed",
+      "Disclose use of any AI tools in the application unless used solely for editing an original draft",
+      "Applications submitted through Grants.gov only (not FedConnect or PAMS); pre-applications submitted only through PAMS, must be machine-readable",
+      "Pre-application: title page does not count toward the three-page limit; figures and references must fit within three pages",
+      "BER: research narratives longer than 15 pages may be declined without review",
+      "HENP (FY 2028 comparative review): project narratives no longer than nine pages per senior/key person; multi-institutional collaborative applications nine pages per senior/key person or 20 pages total, whichever is less",
+      "Nuclear Physics FY 2027 comparative review: narratives longer than 20 pages (plus five pages per major research thrust or task) may be declined; narrative reference list must not exceed three pages",
+      "FES FY 2028 FM&IC comparative review: narratives over 10 pages (requests of $1,000,000 or less) or over 20 pages (larger requests) may burden reviewers",
+      "FES FY 2028 FNS comparative review: narratives over 15 pages (requests under $1,500,000) or over 20 pages (larger requests) may burden reviewers",
+      "Subaward budget file names use up to 10 letters of the subrecipient's name and must not exceed 50 characters"
+    ],
+    "quote": "when printed using standard letter-size (8.5-inch x 11-inch) paper with 1-inch margins (top, bottom, left, and right). The body text font of all main text must not be smaller than 11 point."
+  },
+  "eligibility": [
+    {
+      "item": "All types of applicants are eligible except 501(c)(4) nonprofits that engaged in lobbying activities after December 31, 1995",
+      "quote": "All types of applicants are eligible to apply, except nonprofit organizations described in section 501(c)(4) of the Internal Revenue Code of 1986 that engaged in lobbying activities after December 31, 1995."
+    },
+    {
+      "item": "DOE/NNSA National Laboratories may not apply but may be proposed as subrecipients",
+      "quote": "DOE/National Nuclear Security Administration (NNSA) National Laboratories are not eligible to submit applications under this NOFO but may be proposed as subrecipients"
+    },
+    {
+      "item": "Non-DOE/NNSA FFRDCs may apply as lead or team member, or be proposed as subrecipients",
+      "quote": "Non-DOE/NNSA Federally Funded Research and Development Centers (FFRDCs) are eligible to submit applications (either as a lead organization or as a team member in a multi- institutional team)"
+    },
+    {
+      "item": "Other Federal agencies may apply as lead or team member, or be proposed as subrecipients",
+      "quote": "Other Federal agencies are eligible to submit applications (either as a lead organization or as a team member in a multi-institutional team)"
+    },
+    {
+      "item": "Non-domestic applicants must demonstrate skills, resources, and abilities that do not exist among potential domestic applicants",
+      "quote": "For non-domestic applicants, successful applications include a detailed demonstration of how the applicant possesses the skills, resources, and abilities that do not exist among potential domestic applicants."
+    },
+    {
+      "item": "Research must be basic research; work related to current commercial activity or customer needs may be declined without merit review",
+      "quote": "Applications that propose research related to current commercial activity or current customer needs may be declined without merit review."
+    },
+    {
+      "item": "Entities debarred, suspended, or otherwise excluded from Federal programs are ineligible as recipient, subrecipient, or subcontractor",
+      "quote": "entities banned from doing business with the U.S. government, such as entities debarred, suspended, or otherwise excluded from or ineligible for participating in Federal programs"
+    },
+    {
+      "item": "Entities on the Treasury OFAC Specially Designated Nationals list are ineligible",
+      "quote": "Entities identified on the Department of the Treasury Office of Foreign Assets Control Treasury's Sanctions Program Specially Designated Nationals list"
+    },
+    {
+      "item": "Entities of Concern are prohibited from participating",
+      "quote": "Entities of Concern are prohibited from participating in projects under this NOFO."
+    },
+    {
+      "item": "Individuals with the skills, knowledge, and resources to serve as PI work with their organizations to apply",
+      "quote": "Individuals with the skills, knowledge, and resources necessary to carry out the proposed research as a Principal Investigator (PI) are invited to work with their organizations to develop an application."
+    },
+    {
+      "item": "Research must fall within the technical parameters of the NOFO and be based on established scientific principles",
+      "quote": "Applications that fall outside the technical parameters specified in Background and Context Project concepts or approaches not based on established scientific principles"
+    },
+    {
+      "item": "All work must be basic and fundamental research publishable in scholarly literature; no restricted data or unclassified controlled nuclear information",
+      "quote": "All work proposed under this NOFO must be for basic and fundamental research whose results may be published in scholarly literature."
+    },
+    {
+      "item": "For panel reviews, an application must be associated with an encouraged pre-application to be considered by the panel",
+      "quote": "To be considered by the panel, an application must be associated with an encouraged pre- application"
+    },
+    {
+      "item": "Only the lead institution of a multi-institutional collaborative team may submit a pre-application",
+      "quote": "If a multi-institutional team is submitting collaborative applications, only the lead institution may submit a pre-application."
+    },
+    {
+      "item": "Register with SAM.gov and obtain a Unique Entity Identifier (UEI)",
+      "quote": "Applicants must register with SAM.gov and obtain a Unique Entity Identifier (UEI)."
+    },
+    {
+      "item": "Provide an IRS-assigned EIN as the TIN for SAM.gov registration; do not use a social security number",
+      "quote": "Applicants must provide a Taxpayer Identification Number (TIN) to complete their registration in SAM.gov."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "DOE Title Page (project title, applicant, PIs, contacts, NOFO number, program office, senior/key personnel, budget table), first page of the Project Narrative file in Field 8",
+      "userWrites": true,
+      "quote": "The application narrative must begin with a title page. The title page must include the following items:"
+    },
+    {
+      "item": "SF-424 (R&R) form",
+      "userWrites": false,
+      "quote": "Complete this form first to populate data in other forms. Complete all the required fields in accordance with the pop-up instructions on the form."
+    },
+    {
+      "item": "Research and Related Other Project Information form (Fields 1-6)",
+      "userWrites": false,
+      "quote": "Complete questions in Fields 1 through 6 of the SF-424 Research and Related Other Project Information form."
+    },
+    {
+      "item": "Identification of Merit Reviewer Conflicts list (Field 12)",
+      "userWrites": true,
+      "quote": "Provide a list of individuals who should not serve as merit reviewers of this application, following the instructions in Part 2 of this NOFO."
+    },
+    {
+      "item": "Research and Related Senior/Key Person Profile (Expanded) form with each person's biographical sketch and current and pending support",
+      "userWrites": true,
+      "quote": "Attach the person's biographical sketch, following the instructions in Part 2 of this NOFO for crafting a biographical sketch."
+    },
+    {
+      "item": "Research and Related Budget form, a separate budget for each year of support",
+      "userWrites": false,
+      "quote": "You must complete a separate budget for each year of support requested."
+    },
+    {
+      "item": "Budget Justification (Field L) for the entire project period, including the indirect cost rate agreement",
+      "userWrites": true,
+      "quote": "Provide a justification that explains all costs proposed in the budget."
+    },
+    {
+      "item": "R&R Subaward Budget Attachments form with a separate budget and budget justification for each subrecipient (if applicable)",
+      "userWrites": true,
+      "quote": "You must provide a separate R&R budget and budget justification for each subrecipient."
+    },
+    {
+      "item": "Project/Performance Site Locations form",
+      "userWrites": false,
+      "quote": "Indicate the primary site where the work will be performed."
+    },
+    {
+      "item": "SF-LLL Disclosure of Lobbying Activities (if non-Federal funds were paid for lobbying)",
+      "userWrites": false,
+      "quote": "you must complete and submit Standard Form - LLL, Disclosure Form to Report Lobbying."
+    },
+    {
+      "item": "Transparency of Foreign Connections disclosure for the applicant and each proposed subrecipient, with signature, date, and certification (Appendix 6)",
+      "userWrites": true,
+      "quote": "Include a separate disclosure for the applicant and each proposed subrecipient."
+    },
+    {
+      "item": "Pre-application: list of senior/key personnel and list of individuals who should not serve as merit reviewers, as an Additional Attachment in PAMS",
+      "userWrites": true,
+      "quote": "the pre-application must include a list of senior/key personnel and a listing of individuals who should not serve as merit reviewers of a subsequent application."
+    },
+    {
+      "item": "Document from the facility manager confirming access to experimental user facilities maintained by other institutions (if applicable)",
+      "userWrites": false,
+      "quote": "provide a document from the facility manager confirming that researchers will have access to the facility."
+    },
+    {
+      "item": "Record of Discussion from DIII-D National Fusion Facility (if research includes DIII-D activities)",
+      "userWrites": false,
+      "quote": "then a Record of Discussion from the facility must be included in the submission."
+    },
+    {
+      "item": "Biographical Sketch",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Current and Pending Support",
+      "userWrites": true,
+      "quote": null
+    }
+  ],
+  "libraryRequired": []
+}

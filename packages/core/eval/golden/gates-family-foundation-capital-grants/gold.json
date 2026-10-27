@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "status": "confirmed",
+  "family": "foundation",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "Capital grant application deadline (for a mid-June decision); moves to next business day if on a weekend or holiday",
+      "date": "2027-03-15",
+      "time": "17:00",
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Application deadline: March 15, 2027, 5:00 p.m. (annual deadlines March 15 and September 1; applications accepted any time)"
+    },
+    {
+      "kind": "application",
+      "label": "Annual September 1 deadline at 5:00 p.m. (for a mid-December decision); year not stated",
+      "date": null,
+      "time": "17:00",
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "September 1 at 5:00 p.m. (for a mid-December decision; NOTE this is changed from previous deadline of Sept. 15)"
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": null,
+    "periodMonths": null,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [],
+    "match": null,
+    "quote": null
+  },
+  "sections": [],
+  "criteria": [
+    {
+      "name": "Projects that address root problems with substantive solutions",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "When making funding decisions, we prioritize: Projects that address root problems with substantive solutions"
+    },
+    {
+      "name": "Evidence of community involvement and support",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Projects with evidence of community involvement in setting project priorities"
+    },
+    {
+      "name": "Projects in rural and low-income areas",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Projects in rural and low-income areas across Colorado where there are fewer individuals and institutions providing support for capital projects"
+    },
+    {
+      "name": "Projects that serve individuals and communities of color",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Projects that serve individuals and communities of color who have faced historic inequities and lack of access to funding"
+    },
+    {
+      "name": "Engagement and financial support from the governing board",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Projects with strong engagement and financial support from the organization’s governing board"
+    },
+    {
+      "name": "Reinforces the foundation's strategic priorities",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Projects that reinforce the foundation’s strategic priorities in K-12 public education, natural resources, community development, and informed communities"
+    },
+    {
+      "name": "Climate change, green building and sustainable development practices",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Projects that address climate change, and/or incorporate green building and sustainable development practices"
+    },
+    {
+      "name": "Sound management, effective leadership and engaged board",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Organizations with sound management practices, effective executive leaders, and engaged board members"
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Submit the completed Colorado Common Capital Grant Application by email to grants@gatesfamilyfoundation.org, or by mail or delivery to 1390 Lawrence Street, Suite 400, Denver, CO 80204"
+    ],
+    "quote": "Please send completed grant applications by email to grants@gatesfamilyfoundation.org, or by mail or delivery to 1390 Lawrence Street, Suite 400, Denver, CO 80204."
+  },
+  "eligibility": [
+    {
+      "item": "Applicant must be a 501(c)(3) tax-exempt public charity under section 509(a)(1) or 509(a)(2), able to document tax-exempt status issued within the last five years",
+      "quote": "Be classified by the Internal Revenue Service as tax-exempt under section 501(c)(3) of the Internal Revenue Code (the “Code”), classified as a public charity under section 509(a)(1) or 509(a)(2) of the Code, and be able to provide documentation of tax-exempt status issued within the last five years."
+    },
+    {
+      "item": "Governmental entities are considered only in limited circumstances",
+      "quote": "In limited circumstances, the Foundation also considers grant requests from governmental entities."
+    },
+    {
+      "item": "Must provide services benefiting the state of Colorado and its citizens",
+      "quote": "Provide services benefiting the state of Colorado and its citizens."
+    },
+    {
+      "item": "Commitments for approximately 30% of the funds needed to complete the project must be in place before submission, unless waived",
+      "quote": "Have commitments for approximately 30% of the funds needed to complete the project in place prior to submission, unless a waiver of this requirement has been granted."
+    },
+    {
+      "item": "Capital grants are generally limited to comprehensive capital campaigns (building purchase, construction, expansion, renovation, land acquisition)",
+      "quote": "Our capital grants are generally limited to comprehensive capital campaigns, which are typically for building purchases, construction, expansion, renovation, and/or land acquisition."
+    },
+    {
+      "item": "Generally no more than one proposal per organization per calendar year; previously denied proposals are not reconsidered",
+      "quote": "Consider more than one proposal from an organization in a calendar year unless initiated by the Foundation, and does not reconsider previously denied proposals."
+    },
+    {
+      "item": "Generally no funding for projects substantially completed before the next trustees' meeting",
+      "quote": "Grant funds for projects that have been substantially completed prior to the next trustees’ meeting."
+    },
+    {
+      "item": "Generally no funding for general operating or program expenses unless initiated by the Foundation",
+      "quote": "Grant funds for general operating or program expenses unless initiated by the Foundation."
+    },
+    {
+      "item": "Generally no funding to retire operating or construction debt",
+      "quote": "Grant funds to retire operating or construction debt."
+    },
+    {
+      "item": "Generally no funding for vehicles, or for office or computer equipment unless part of a comprehensive capital campaign",
+      "quote": "Grant funds for the purchase of vehicles. Grant funds to purchase office or computer equipment unless they are part of a comprehensive capital campaign."
+    },
+    {
+      "item": "Generally no grants directly to individual public schools or public school districts unless initiated by the Foundation; P-12 private schools, district-owned facilities and higher education facilities or campaigns generally not supported",
+      "quote": "We generally do not support P-12 private schools or district-owned facilities, or higher education facilities or capital campaigns"
+    },
+    {
+      "item": "Generally no grants to private foundations or grantmaking organizations, to foreign organizations, or to individuals",
+      "quote": "Grant funds to other private foundations or organizations engaged in grant making."
+    },
+    {
+      "item": "Generally no grants to 509(a)(3) supporting organizations other than Type I, Type II or functionally-integrated Type III not controlled by a disqualified person",
+      "quote": "Grant funds to supporting organizations described in section 509(a)(3), other than a Type I, Type II or functionally-integrated Type III supporting organization"
+    },
+    {
+      "item": "Generally no support for religious organizations or activities; faith-based organizations funded only if they serve and welcome all and do not require religious participation",
+      "quote": "We only fund faith-based organizations that serve and welcome all individuals, and do not require participation in religious activities"
+    },
+    {
+      "item": "Generally no funding for medical research or construction of major medical facilities; mental and behavioral treatment facilities for adults, senior care and hospice facilities are not funded",
+      "quote": "We do not fund mental and behavioral treatment facilities for adults; senior care facilities; or hospice facilities"
+    },
+    {
+      "item": "Animal service or animal welfare organizations are not funded",
+      "quote": "We do not fund animal service or animal welfare organizations"
+    },
+    {
+      "item": "Generally no funding for conferences, meetings or studies, fundraising event tickets, or political or lobbying activities",
+      "quote": "Grant funds for conferences, meetings, or studies that are not initiated by the Foundation."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "Colorado Common Capital Grant Application (completed)",
+      "userWrites": true,
+      "quote": "The Gates Family Foundation accepts the Colorado Common Capital Grant Application for all capital grant requests."
+    },
+    {
+      "item": "Documentation of tax-exempt status issued within the last five years",
+      "userWrites": false,
+      "quote": "be able to provide documentation of tax-exempt status issued within the last five years."
+    }
+  ],
+  "libraryRequired": []
+}

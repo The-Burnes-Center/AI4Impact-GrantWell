@@ -1,0 +1,272 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "DOI",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "Closing Date for Applications",
+      "date": "2026-10-31",
+      "time": "23:59",
+      "tzAsWritten": "ET",
+      "fromBrokenTable": false,
+      "quote": "Closing Date for Applications: 10/31/2026 Closing Date Explanation Electronically submitted applications must be submitted no later than 11:59 PM, ET, on the listed application due date."
+    }
+  ],
+  "award": {
+    "ceiling": 2293362,
+    "floor": 25000,
+    "periodMonths": 48,
+    "expectedAwards": 4,
+    "range": null,
+    "caps": [
+      {
+        "what": "Federal funding request as a percent of total project cost",
+        "value": 50,
+        "quote": "The total Federal funding request cannot exceed 50% of the total project cost."
+      },
+      {
+        "what": "percent of a grant award a State may use to administer the HCA program",
+        "value": 5,
+        "quote": "A State may use up to five percent of a grant award to administer the HCA program."
+      }
+    ],
+    "match": {
+      "required": true,
+      "ratio": "1:1",
+      "appliesTo": null,
+      "quote": "Cost Sharing Required? Yes 50 percent non-Federal cost share required."
+    },
+    "quote": "Each State may request up to $2,293,362 in Base funding. The earliest anticipated project start date is January 1, 2026. Project periods will be no longer than 4 years from the date the grantee is notified of an award."
+  },
+  "sections": [
+    {
+      "name": "Project Abstract Summary",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Abstract Summary (OMB 4040-0019)",
+      "quote": "Project Abstract Summary (OMB 4040-0019). Must include, in plain language: Award purpose, Activities to be performed,"
+    },
+    {
+      "name": "Need",
+      "order": 2,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative",
+      "quote": "Need: Describe why the proposed land acquisition is needed. Describe how the proposed land acquisition fulfills the purposes of the Highlands Conservation Act and meets the Department of the Interior priorities"
+    },
+    {
+      "name": "Purpose",
+      "order": 3,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative",
+      "quote": "Purpose: Explain what is to be accomplished during the period of the project pursuant to the stated need."
+    },
+    {
+      "name": "Objective",
+      "order": 4,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative",
+      "quote": "Objective: Specify the type of interest and acres to be acquired. Specify the target acquisition date."
+    },
+    {
+      "name": "Expected Results or Benefits",
+      "order": 5,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative",
+      "quote": "Expected Results or Benefits: Each parcel must show that at least one of the following resources (identified in the HCA program authorizing legislation) is of \"high conservation value\""
+    },
+    {
+      "name": "Approach",
+      "order": 6,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative",
+      "quote": "Approach: Explain how the objective(s) will be attained. Include specific procedures, schedules, key cooperators, and respective roles. Describe any subaward relationships."
+    },
+    {
+      "name": "Location",
+      "order": 7,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative",
+      "quote": "Location: Describe and show the parcel(s) proposed for acquisition. Proposals must include at minimum an aerial map of the proposed properties"
+    },
+    {
+      "name": "Stakeholder Coordination/Involvement",
+      "order": 8,
+      "limit": null,
+      "conditional": "As applicable",
+      "component": "Project Narrative",
+      "quote": "Stakeholder Coordination/Involvement As applicable, describe how your organization has coordinated with and involved other relevant organizations or individuals in planning the project"
+    },
+    {
+      "name": "Description of Entities Undertaking the Project",
+      "order": 9,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative",
+      "quote": "Description of Entities Undertaking the Project: Provide a brief description of the applicant organization and all participating entities and individuals."
+    }
+  ],
+  "criteria": [
+    {
+      "name": "1. Project is in the Highlands Region or an approved Highlands Expansion Opportunity Area municipality (minimum criterion)",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Location"
+      ],
+      "quote": "Minimum Criteria for all projects: 1. Project is either 1) in the Highlands Region as defined in the NY-NJ Highlands Regional Study: 2002 Update"
+    },
+    {
+      "name": "2. 1:1 cost share (minimum criterion)",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "2. 1:1 cost share."
+    },
+    {
+      "name": "3. High conservation value",
+      "scored": true,
+      "points": 50,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Expected Results or Benefits"
+      ],
+      "quote": "a) Project Narrative clearly demonstrates the project has high conservation value. 25-50 points. b) Project Narrative does not demonstrate that the project has high conservation value. 0-24 points."
+    },
+    {
+      "name": "c) Presidential and Department of Interior Priorities",
+      "scored": true,
+      "points": 20,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Need"
+      ],
+      "quote": "c) Presidential and Department of Interior Priorities Up to 20 points may be awarded based on the extent that the project demonstrably:"
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Do not encrypt, zip, or password-protect any files"
+    ],
+    "quote": "Do not encrypt, zip, or password-protect any files."
+  },
+  "eligibility": [
+    {
+      "item": "Only the Lead State Agency (or Agencies) designated by the Governor of Connecticut, New Jersey, New York, or Pennsylvania may apply (State governments)",
+      "quote": "Only the Lead State Agency (or Agencies) as determined by the Governor of each Highlands State may be the applicant for funding under the Highlands Conservation Act Grant Program."
+    },
+    {
+      "item": "If the Governor assigns multiple Lead Agencies, they must coordinate requests before submission and not exceed the maximum allowable amount",
+      "quote": "If the Governor assigns multiple Lead Agencies, those Agencies must coordinate on funding requests prior to submission and ensure no more than the maximum allowable amount is requested through this funding opportunity."
+    },
+    {
+      "item": "Each parcel must be in the Highlands Region or in a Highlands Expansion Opportunity Area municipality approved by the Service",
+      "quote": "To be eligible for Highlands Conservation Act Grant funding, a parcel must be either 1) in the Highlands Region as defined in the NY-NJ Highlands Regional Study: 2002 Update"
+    },
+    {
+      "item": "Only land acquisition projects (fee or conservation easement from a willing seller) and associated administrative costs are funded",
+      "quote": "The HCA Grant Program funds only land acquisition projects and associated administrative costs."
+    },
+    {
+      "item": "Acquired land may be held only by a State Conservation Agency, County, or Municipality; a State Agency may co-hold a conservation easement with a County, Municipality, or non-profit land conservation organization",
+      "quote": "A State Conservation Agency, or a County or Municipality through a subaward agreement, may hold the interest in the land acquired. For conservation easements (CE), a State Agency may co-hold the CE with a County, Municipality, or a non-profit land conservation organization."
+    },
+    {
+      "item": "A project may not be proposed in both the Base and the Competitive funding opportunities",
+      "quote": "A project may not be proposed for funding in both funding opportunities."
+    },
+    {
+      "item": "Register in SAM.gov (obtaining a UEI) and certify the Financial Assistance General Representations and Certifications before applying",
+      "quote": "Before applying, all applicants except individuals applying as a natural person must be registered in SAM.gov. During the SAM.gov registration the entity will obtain their Unique Entity Identifier (UEI)."
+    },
+    {
+      "item": "Register the organization with GrantSolutions and assign at least the Authorizing Official and PI/PD user roles",
+      "quote": "This program accepts applications through GrantSolutions.gov. You must register with GrantSolutions. See Submission Instructions."
+    },
+    {
+      "item": "By applying, the applicant certifies awareness of and compliance with all applicable executive orders and Secretary's orders",
+      "quote": "By applying in response to this Notice of Funding Opportunity, the applicant certifies awareness and compliance with all currently effective and applicable executive orders and secretary's orders"
+    },
+    {
+      "item": "Projects must meet Criteria 1 and 2 and score 35 points or higher on Criteria 3 to be eligible for funding",
+      "quote": "Projects that meet Criteria 1 and 2 and score 35 points or higher in Criteria 3 as determined by the Merit Review Panel will be eligible for funding."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "SF-424, Application for Federal Assistance (all applicants)",
+      "userWrites": false,
+      "quote": "SF-424, Application for Federal Assistance"
+    },
+    {
+      "item": "SF-424A, Budget Information - Non-Construction Programs (non-construction projects)",
+      "userWrites": false,
+      "quote": "SF-424A, Budget Information - Non-Construction Programs"
+    },
+    {
+      "item": "SF-424C, Budget Information - Construction Programs (construction projects)",
+      "userWrites": false,
+      "quote": "SF-424C: Budget Information - Construction Programs"
+    },
+    {
+      "item": "SF-429 Cover Page and Attachment B, Request to Acquire, Improve, or Furnish Real Property, if acquiring real property (may instead be submitted after award notification)",
+      "userWrites": false,
+      "quote": "SF-429 (Cover Page & Attachment B), Request to Acquire,"
+    },
+    {
+      "item": "SF-LLL, Disclosure of Lobbying Activities, if requesting more than $100,000 and non-Federal funds are used for lobbying",
+      "userWrites": false,
+      "quote": "SF-LLL, Disclosure of Lobbying Activities"
+    },
+    {
+      "item": "Aerial map of the proposed properties and a map showing their location relative to the Highlands Region boundary",
+      "userWrites": false,
+      "quote": "Proposals must include at minimum an aerial map of the proposed properties and a map showing the location of proposed properties in relation to the Highlands Region boundary."
+    },
+    {
+      "item": "Budget Narrative justifying costs (total estimated costs, non-Federal cost share, third-party contributions, pre-award costs, indirect cost method, per-property cost breakdown)",
+      "userWrites": true,
+      "quote": "Applicants must describe and justify items and costs listed in their budget. The budget narrative must identify the following cost items: total estimated costs, non-Federal cost share, third-party contributions, and any pre-award costs."
+    },
+    {
+      "item": "Copy of the most recently negotiated indirect cost rate agreement, if the organization has previously negotiated a rate",
+      "userWrites": false,
+      "quote": "If your organization has previously negotiated a rate, attach a copy of the most recently negotiated rate agreement (active or expired)."
+    },
+    {
+      "item": "Conflict of interest disclosure, if any actual or potential conflict of interest exists",
+      "userWrites": true,
+      "quote": "If any actual or potential conflict of interest exists related to this project at the time of application, the applicant must provide sufficient information to support a program determination of significance"
+    },
+    {
+      "item": "Overlap or Duplication of Effort Statement (a statement of no overlap, or details of overlapping activities, costs, and key personnel time)",
+      "userWrites": true,
+      "quote": "Applicants must state in their application if the activities, costs, or time commitment of key personnel proposed in this application overlap with those in any other Federal proposal or award or not."
+    },
+    {
+      "item": "Copy of any overlapping or duplicative proposal submitted to another funding entity, with when, to whom, and expected decision date",
+      "userWrites": false,
+      "quote": "A copy of any overlapping or duplicative proposal submitted to any other potential funding entity."
+    }
+  ],
+  "libraryRequired": []
+}

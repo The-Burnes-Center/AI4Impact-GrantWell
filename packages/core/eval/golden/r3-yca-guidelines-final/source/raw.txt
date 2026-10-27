@@ -1,0 +1,1360 @@
+YOUTH COMMUNITY ACCESS GRANT
+PROGRAM GUIDELINES
+PROP
+64
+Youth Community
+Access
+STATE OF CALIFORNIA
+NATURAL RESOURCES AGENCY
+JUNE 2024
+CALIFORNIA
+NATURAL
+RESOURCES
+AGENCY
+(page intentionally left blank)
+TECHNICAL ASSISTANCE WORKSHOPS
+The California Natural Resources Agency will conduct online technical assistance
+workshops. A list of workshop dates and times can be found on the California Natural
+Resources Agency website at https://resources.ca.gov/grants/youth.
+These Guidelines include information to assist applicants in applying for funding. Please
+read them in their entirety for important information on project eligibility, evaluation
+criteria, and submission requirements.
+For general project evaluation process questions, contact the California Natural
+Resources Agency at:
+Phone: (916) 653-2812
+Email: bondsandgrants@resources.ca.gov
+Website: www.resources.ca.gov/grants
+i
+HOW TO SUBMIT
+This grant program consists of a progressive, three-step evaluation process:
+1) Project Proposal
+2) Teleconference Visit
+3) Supporting Documents
+All documents are submitted using the California Natural Resource Agency's Project
+Tracking and Reporting (RAPTR) system, which can be found at
+https://raptr.resources.ca.gov.
+To access RAPTR, applicants must create a user account. A detailed RAPTR user manual
+is located on the RAPTR homepage.
+RAPTR SYSTEM QUESTIONS
+For technical assistance with RAPTR, please e-mail the RAPTR help desk.
+Hours:
+9:00 AM to 4:00 PM M-F
+Email:
+raptr@resources.ca.gov
+When contacting the RAPTR help desk, please provide the following:
+Your name and contact information
+Recipient Organization (the grant applicant organization)
+Funding Program
+Short description of the problem, including where it is within the application
+A screen shot of the error received, if applicable
+If you have barriers to accessing the internet, please contact the California Natural
+Resources Agency to discuss alternate means of communication and submittal.
+ii
+TABLE OF CONTENTS
+INTRODUCTION
+1
+PROGRAM REQUIREMENTS & FUNDING PRIORITIES
+4
+SELECTION PROCESS
+6
+EVALUATION & SCORING CRITERIA
+8
+STEP ONE: PROJECT PROPOSAL
+8
+REQUIRED DOCUMENTATION FOR PROJECT PROPOSAL
+12
+STEP TWO: TELECONFERENCE VISITS
+14
+STEP THREE: SUPPORTING DOCUMENTATION
+15
+GRANT PROJECT ADMINSTRATION
+17
+STATE AUDIT & ACCOUNTING REQUIREMENTS
+19
+APPENDIX A: SUBMITTAL CHECKLIST
+21
+APPENDIX B: PROJECT PROPOSAL SIGNATURE PAGE
+22
+APPENDIX C: PROJECT PROPOSAL QUESTIONS
+23
+APPENDIX D: COST ESTIMATE
+24
+APPENDIX E: ELIGIBLE COSTS
+26
+APPENDIX F: NONPROFIT QUESTIONNAIRE
+30
+APPENDIX G: RESOLUTION TEMPLATE
+32
+APPENDIX H: CERTIFICATION LETTER REQUIREMENTS
+33
+APPENDIX I: SIGNAGE & RECOGNITION GUIDELINES
+34
+APPENDIX J: ENVIRONMENTAL COMPLIANCE
+36
+iii
+APPENDIX K: SITE CONTROL/LAND TENURE REQUIREMENTS
+38
+APPENDIX L: PAYEE DATA RECORD
+40
+APPENDIX M: SAMPLE PROGRESS REPORT TEMPLATE
+41
+APPENDIX N: AVAILABLE RESOURCES
+42
+APPENDIX O: DEFINITIONS
+44
+iv
+INTRODUCTION
+California voters passed the Control, Regulate and Tax Adult Use of Marijuana Act
+(Proposition 64) on November 8, 2016, which legalized the recreational sale and use of
+cannabis to people over the age of 21 and levied new excise taxes on the cultivation
+and retail sale of all state-regulated cannabis. Proposition 64 created the Youth
+Education, Prevention, Early Intervention and Treatment Account (YEPEITA) into which
+the State Controller deposits 60 percent (60%) of the tax revenues from marijuana sales
+for youth programs designed to educate about and prevent substance use disorders and
+to prevent harm from substance use. These programs emphasize accurate education,
+effective prevention, early intervention, school retention, and timely treatment services
+for youth, their families, and caregivers.
+YEPEITA funds appropriated to the California Natural Resources Agency (the State) are
+to be used for competitive grants to support youth access to natural or cultural resources
+with a focus on low-income and disadvantaged communities. The grants may include,
+but are not limited to, community education and recreational amenities to support youth
+substance use prevention and early intervention. To meet this mandate, the State
+created the Youth Community Access Grant Program.
+The Youth Community Access Grant Program is a competitive program to award grants
+to communities disproportionately affected by past federal and state drug policies, also
+known as the War on Drugs, as well as other underserved communities. The War on Drugs
+disproportionately impacted communities of color, particularly low-income communities.
+Harsh federal and state drug policies enacted during the War on Drugs led to mass
+incarceration of people of color, decreased access to social services, loss of educational
+attainment due to diminished federal financial aid eligibility, prohibitions on the use of
+public assistance, and the separation of families. The Youth Community Access Grant
+Program aims to be a resource to address and repair the multi-generational community
+impacts of the War on Drugs.
+Funding Allocation
+Approximately $18.5 million is available for Youth Community Access projects.
+Grant Amounts
+The maximum award for an individual project is $500,000. The minimum award is $25,000.
+Eligible Applicants
+Eligible applicants include local, state, and federal agencies; nonprofit organizations;
+and federally recognized Native American tribes.
+Nonprofit organizations are defined as any nonprofit public benefit corporation that is
+formed pursuant to the Nonprofit Corporation Law (commencing with Section 5000 of
+1
+the Corporations Code), incorporated for a minimum of two years, qualified to do
+business in California, and qualified as a tax-exempt 501(c)(3) organization under the US
+Internal Revenue Code. In addition, all nonprofit organizations must be active with the
+California Secretary of State and current with the registration and reporting requirements
+of the California Department of Justice, Office of the Attorney General Registry of
+Charities and Fundraisers. A fiscal sponsor may apply on behalf of a nonprofit that is not
+a qualified 501(c)(3) organization, but the fiscal sponsor, not the nonprofit, must be the
+grant applicant.
+Eligible Projects
+Eligible projects must serve youth and directly support access to either natural or cultural
+resources AND meet the criteria for both low-income AND disadvantaged (not one or
+the other) communities. To determine eligibility, the following definitions will apply:
+Natural Resources include, but are not limited to, land, water, forests, fisheries, and
+animals.
+Cultural Resources include any property or location that was created, modified, or used
+by people at least 50 years ago. Cultural resource means archeological sites, objects,
+grounds, gardens, landscapes, structures, and buildings.
+Low-Income Community means a community and/or household with an annual median
+household income less than 80 percent of the statewide average or a household that
+qualifies for School Nutrition Programs such as the National School Lunch Program, School
+Breakfast Program, Afterschool Meal Supplements, Special Milk Program, and State Meal
+Programs (hereinafter "Free or Reduced-price Meals Programs").
+Two tools showing annual median household income of geographic areas are the
+California State Parks Outdoor Equity Program Community Fact Finder and the
+Department of Water Resources Mapping tool. Income eligibility guidelines for Free and
+Reduced-price Meals can be found on the California Department of Education (CDE)
+website. (See Appendix N for links to these tools and to the CDE Income Eligibility
+Guidelines for Free and Reduced-price Meals).
+Disadvantaged Community means underserved communities of color and/or vulnerable
+populations (hereafter referred to as "underserved communities and vulnerable
+populations").
+Communities of color are defined as American Indian/Alaskan Native, African
+American, Asian-Pacific Islander, and Latinx.
+Vulnerable populations are defined as foster and transition age youth, LGBTQIA+
+youth, youth with disabilities, youth involved in the juvenile or criminal justice system,
+and other youth populations disproportionately affected by past state and federal
+drug policies.
+2
+At least eighty percent (80%) of the youth participants must meet the criteria for low-
+income and underserved and vulnerable communities. If the project is a Development
+project (see definition in Appendix O), 80% or more of the project's footprint must be
+located in the low-income community.
+Projects must comply with all labor laws. In addition, Development Projects (see Appendix
+O for definition) must comply with the California Environmental Quality Act (CEQA)
+(Public Resources Code, Division 13, commencing with Section 21000). (See Appendix J)
+3
+PROGRAM REQUIREMENTS & FUNDING PRIORITIES
+To be eligible for funding, projects must meet ALL the following program requirements:
+1. Projects must serve youth. For the purposes of this program, youth is defined as a
+person between the ages of birth and 26 years old.
+2. Projects must directly support youth access to either natural or cultural resources.
+3. Projects must include design features and program elements to promote youth health,
+safety, well-being, and comfort.
+Funding Priorities
+Projects containing one or more of the following elements will be given priority
+consideration in funding decisions:
+1. Projects in which youth participate in project planning, decision making, facilitation,
+and evaluation.
+2. Projects in which youth participate in outreach and awareness campaigns.
+3. Projects that empower youth to make healthy choices.
+Other Funding Considerations
+In evaluating Project Proposals, scores are used to determine initial rankings and facilitate
+discussions for each proposal among a multidisciplinary team. To achieve equitable
+distribution of funds, the State may consider additional factors including, but not limited
+to, geographic distribution of funds, priority populations, previous grant performance,
+and feasibility to accept partial funding.
+Eligible Project Examples
+The list below provides examples of eligible projects. The list is not exhaustive.
+Youth-led outdoor skills workshops and classes for younger youth
+Camp excursions that combine outdoor fun with support group activities for at-risk
+youth
+Field trips to local, state, or national parks and outdoor areas in California and provide
+opportunities for hiking, birdwatching, environmental education, etc.
+Acquire a clean vehicle to take youth hiking, camping, to archeological sites, etc.
+Acquire a clean vehicle to take youth on eligible outdoor excursions along with
+educational programming to support/enhance the excursions
+Youth interns, with adult guidance, design, and construct trailheads in a low-income
+community for use by youth and their families
+4
+Farming program to educate and provide job training in an outdoor environment with
+programming that addresses healthy choices
+Educational programs that combine classroom instruction with excursions to access
+natural and/or cultural resources
+Programs that teach youth about their history, culture, and language with trips to
+various culturally important sites in California to enhance the teachings
+Workforce development programs that integrate new environments, healthy choices,
+and skills to advance careers relating to natural or cultural resources
+ADA improvements to increase youth accessibility to natural and/or cultural resources
+Ineligible Project Examples
+The list below provides examples of projects and/or project components that are not
+eligible under the Youth Community Access Grant Program. This is not an exhaustive list.
+Projects that do not directly support access to natural or cultural resources (e.g.,
+indoor-only projects)
+Acquisitions of non-eco-friendly or clean vehicles (as defined in Appendix O)
+Acquisitions of eco-friendly or clean vehicles that are not primarily dedicated to
+transporting youth on excursions to natural or cultural resources
+Educational or workforce development programs that do not include access to
+natural or cultural resources
+Project Proposals that include more than one project (however, more than one
+Project Proposal can be submitted by an applicant)
+Development Projects contingent on a future land acquisition for project
+implementation
+Cash reserves, endowments, or fundraising activities
+Payment of a debt or mortgage
+Projects that do not serve youth
+Projects where applicant intends to subgrant or regrant to another entity to implement
+the project
+5
+SELECTION PROCESS
+Step One
+Applicants submit Project Proposals though the Resources Agency's Project Tracking
+and Reporting (RAPTR) system. No hardcopy Project Proposals are required.
+Project Proposals are reviewed and evaluated. Incomplete or ineligible Project
+Proposals may be removed from the competitive process.
+Step Two
+Teleconference visits are conducted for the most competitive projects. Applicants
+may be required to provide additional documentation prior to or after a
+teleconference visit.
+Step Three
+Applicants selected to further compete will submit additional documentation.
+Documentation is evaluated, with the most competitive projects being
+recommended for funding.
+Once Step 3 evaluations have been completed, funding recommendations are
+submitted to the California Secretary for Natural Resources. Upon approval by the
+Secretary, grant awards are announced.
+All information contained in the Project Proposal and supporting documentation is
+confidential until grant awards are announced.
+The State reserves the right to reject any Project Proposal from an applicant who is in
+violation of law or policy at any other public agency. Potential violations include, but
+are not limited to, being in default of performance requirements in other contracts or
+grant agreements issued by the State, being engaged in or suspected of criminal
+conduct that poorly reflects or brings discredit to the State or failing to have all required
+licenses necessary to carry out the project.
+The State further reserves the right to reject any proposal from an applicant who has a
+history of performance issues with past grants or other agreements with any public entity.
+Tribal Outreach and Consultation
+For projects that affect California Native American tribal communities, Grantees will be
+required to show early, often, and meaningful outreach and attempt to collaborate with
+local California Native American tribes through the implementation of their project.
+Meaningful outreach includes, but is not limited to, writing letters and emails, and
+following with phone calls updating the tribe throughout the development,
+implementation, and completion of the project, inviting tribal leadership to attend
+6
+planning meetings, and meeting with local tribal government-led consortiums or other
+inter-tribal governmental organizations. Collaborating with local California Native
+American tribes can include developing the project with tribal leadership, ensuring the
+project provides benefits to the local tribe and its membership, and providing
+contracting opportunities to local tribes and their members where appropriate.
+Conflict of Interest
+All applicants and individuals who participate in the review of submitted Project
+Proposals are subject to state and federal conflict-of-interest laws. Any individual who
+has participated in planning or setting priorities for a specific solicitation over and above
+the public comment process or who will participate in any part of the grant
+development and negotiation process on behalf of the public is ineligible to receive
+funds or personally benefit from funds through that solicitation. Failure to comply with
+conflict-of-interest laws, including business and financial disclosure provisions, will result
+in the Project Proposal being rejected and any subsequent grant agreement being
+declared void. Other legal actions may also be taken. Applicable statutes include, but
+are not limited to, California Government Code section 1090 and Public Contract Code
+sections 10365.5, 10410, and 10411. Applicants should also be aware that certain state
+agencies may submit project proposals that will compete for funding.
+7
+EVALUATION & SCORING CRITERIA
+Information provided by applicant during the evaluation process should demonstrate
+how effectively the proposed project meets statutory requirements, funding priorities,
+and program objectives. Projects will be evaluated using established criteria and any
+additional funding considerations. Project Proposals will receive an initial ranking, with a
+score of 100 points possible. The initial ranking will be used to facilitate discussions about
+each proposal among a multidisciplinary team. Points will be attributed to each section
+and not to individual questions. Applicable sections left blank will receive zero for that
+section.
+Scoring Criteria
+Points
+Requirements & Project Need
+0-35
+Funding Priorities
+0-25
+Project Readiness
+0-20
+Organizational Capacity & Collaboration
+0-15
+Additional Project Characteristics
+0-5
+Total Points Possible
+100
+STEP ONE: PROJECT PROPOSAL
+Applicants are required to submit an online Project Proposal in the Resource Agency's
+Project Tracking and Reporting (RAPTR) system. Applicants should refer to the solicitation
+notice for due dates. No hard copy Project Proposals are required. Applicants proposing
+the most competitive eligible projects will be invited to compete in the next phase of
+the evaluation process, a teleconference visit. The most competitive projects receiving
+a teleconference visit will be invited to submit additional supporting documentation for
+further evaluation. Incomplete or noncompliant proposals may be eliminated from the
+competitive process.
+All Project Proposal submittals must include both responses to the project questions
+below and the required project proposal documentation (See Appendix A for submittal
+checklist).
+8
+PROJECT QUESTIONS
+Applicants must answer the following questions. If a question does not apply to the
+project, indicate "Not Applicable" with a brief explanation. Do not leave blank fields.
+Be sure to address all parts of each question as succinctly as possible.
+The Project
+1. Describe the discrete project the grant would fund. The information provided should
+include grant deliverables and support the cost estimate submitted with the proposal.
+(See Appendix O for a definition and examples of grant deliverables).
+The following project-specific information should be included in response to this
+question (as applicable):
+a. The approximate number of experiences with natural or cultural resources
+youth will have (e.g., field trips, days at camp), the length of the project funded
+by the grant, any cost for youth to participate, and percentage of classroom
+versus outdoor program time.
+b. A description of the clean vehicle to be acquired and how the vehicle will be
+used both during and after the grant period.
+C. For Development Projects (see Appendix o for definition): The percentage of
+the project footprint located within a low-income community, the owners of
+the property on which the project will take place, the status of any agreements
+needed to access and implement the project and plans for long-term
+operations and maintenance of the project (See Appendix K).
+Requirements & Project Need
+1. How many youth will be served by the project funded with the grant and across what
+time period?
+2. How will youth be recruited to participate in the project? Describe the low-income
+communities and/or households to which at least 80% of the youth participants will
+belong.
+3. How will applicant ensure that at least 80% of youth served through the project live
+within a low-income household and/or community?
+4. Describe the underserved communities of color and/or vulnerable populations to
+which at least 80% of youth participants will belong.
+5. How will applicant ensure that at least 80% of the youth to be served are members of
+underserved communities of color and/or vulnerable populations? (If funded,
+documentation must be available upon request and for audit purposes.)
+9
+6. Provide specific examples of natural and/or cultural resources youth will access
+because of the project.
+7. Describe how the project addresses a critical need of the youth to be served.
+8. What steps will be taken to address youth safety, well-being, and comfort throughout
+the project?
+9. Describe the specific training staff receive in areas such as safety, risk management,
+cultural competency, trauma informed practices, etc.
+10. Describe any existing ADA accessibility accommodations available to participating
+youth and/or planned accommodations to be created by the proposed project.
+Funding Priorities
+11. Describe any youth leadership opportunities during project development and/or
+implementation. Provide information pertaining to any distinct youth participant roles
+that may be applicable (e.g., interns, youth advisory committee, etc.).
+12. Of the total number of youth participants, how many will be given leadership
+opportunities during project development or implementation? If distinct roles are
+applicable, how many youth are anticipated for each role?
+13. What skills and knowledge will youth gain because of the project?
+14. Describe lasting impacts of the project and how project experiences will continue to
+influence youth participants after the project concludes.
+15. Describe any youth participation in public awareness/outreach campaigns before
+and/or after project completion.
+16. Explain how the project encourages and empowers youth to make healthy choices
+during and beyond the project.
+Project Readiness
+17. Describe the immediate steps to be taken post-grant award and timeline for
+implementation and completion of each.
+18. Explain how the applicant will fill any funding gaps to complete the project.
+19. If the project requires hiring of staff, explain the timeline for hiring and the specific
+role(s) the new staff will perform for the grant-funded project.
+20. If applicable, provide the status of communications about the project with entities
+(e.g., schools, nonprofit organizations, foster system, etc.) from which youth will be
+recruited.
+10
+21. If a Development Project (see Appendix O for definition), will the project trigger any
+permits and/or environmental reviews? If SO, provide the status and/or anticipated
+timeline of applicable compliance measures (See Appendix J).
+Organizational Capacity & Collaboration
+22. Describe the applicant's ability and experience with fundraising (e.g., grants,
+donations, etc.).
+23. Describe the applicant's experience in completing similar projects.
+24. Describe the applicant's fiscal capacity to carry out the proposed project.
+25. What is the applicant's primary source of revenue? Describe any partnerships with
+other entities and their roles in the project.
+26. If funded, what documentation will applicant use to demonstrate that the project
+was successful-i.e., met expected outcomes and benefitted the intended
+audience?
+Additional Project Characteristics
+27. Describe other project characteristics not previously discussed that would assist in
+evaluating the proposal. (No response or an answer of "Not Applicable" will be given
+a score of zero).
+End of Project Questions
+11
+REQUIRED DOCUMENTATION FOR PROJECT PROPOSAL
+The following documents must be uploaded into RAPTR as part of the Project Proposal:
+1. Proposal Form Signature Page - The signature page of the completed Project Proposal
+Form should be electronically signed (See Appendix B). In the alternative to electronic
+signature, the page may be printed, signed, and then scanned. This form should
+signed by the same Authorized Representative to be identified in the resolution or
+certification letter. (See Appendix G or Appendix H).
+2. Project Proposal Questions Form - The Project Proposal Questions Form contains the
+project proposal questions and a space for responses. The form can be downloaded
+from RAPTR and is available on the program webpage.
+3. Low-Income Community Documentation - Provide evidence the project meets the
+low-income community eligibility requirement. Submit at least one of the following:
+a. Color-coded map from State Parks Outdoor Equity Program Community Fact
+Finder demonstrating the project meets the low-income requirement.
+See https://www.parksforcalifornia.org/outdoorequity/
+b. Color-coded map from Department of Water Resources Mapping tool
+demonstrating project meets the low-income requirement.
+See https://gis.water.ca.gov/app/dacs/
+C. For those populations (e.g., foster or homeless youth) that may not be
+identifiable on the above tools, submit evidence demonstrating youth
+participants will meet the low-income requirement.
+4. Cost Estimate - Provide a cost estimate reflecting all costs associated with the project.
+Identify costs to be funded by the grant and costs covered by other funding sources
+in separate columns. Where possible, the cost of project elements funded by the grant
+should not be split between the grant and other funding sources. (See Appendix D for
+a sample format).
+5. Nonprofit Questionnaire - Nonprofit applicants provide a completed questionnaire.
+(See Appendix F).
+6. Supporting Documentation - Submit up to eight pages of documentation that helps
+illustrate and support the proposed project, such as, but not limited to, brochures,
+curriculum samples, draft workplans, logic models, sample formats, modules,
+photographs of program or current site conditions for development (e.g.,
+construction projects) marketing materials, or other relevant documentation.
+12
+Development Projects (see Appendix O for definition) should include the following
+additional documents:
+7. Site Plan - Submit a drawing or schematic of the proposed changes to land or
+structures to support youth access to natural or cultural resources that clearly
+delineates exterior project boundaries and the location of proposed improvements
+described in the proposal.
+End of Step One Information
+13
+STEP TWO: TELECONFERENCE VISITS
+(QUALIFYING PROJECTS ONLY)
+Applicants submitting the most competitive Project Proposals will be further evaluated
+during a teleconference visit with grant program staff. Applicants should be prepared
+to respond to project-specific questions including, but not limited to, the cost estimate,
+curriculum design, site plan, program goals, outreach efforts, partnerships, sustainability,
+transportation, community involvement, and any possible barriers to successful project
+completion.
+For Development Projects, landowners must join the teleconference visit. Applicants and
+landowners should be prepared to discuss formal agreements, status of environmental
+reviews, and long-term roles and responsibilities for project maintenance, as applicable.
+Applicants may be required to provide additional documentation about the project
+before being granted a teleconference visit.
+End of Step Two Information
+14
+STEP THREE: SUPPORTING DOCUMENTATION
+(QUALIFYING PROJECTS ONLY)
+Applicants with the most competitive projects after teleconference visits will be required
+to submit supporting documentation further demonstrating their ability to carry out the
+project.
+The following required supporting materials must be uploaded to RAPTR. If a requested
+document is not applicable to the project, upload an attachment with a brief
+explanation of why it is not applicable. Templates for some materials will be available at
+http://resources.ca.gov/grants/youth/.
+1. Signed Authorizing Resolution or Certification Letter - Provide a signed authorizing
+resolution from the applicant's governing board. (See Appendix G for the required
+resolution format and content). Resolutions must include all assurances contained in
+the template. A Certification Letter can be submitted for agencies without a
+governing board. (See Appendix H for required format and content).
+2. Eligibility for Nonprofit Applicants - Provide evidence:
+a. The corporation is qualified under Section 501 (c) of the Internal Revenue Service
+Code. An IRS 501(c)(3) Determination Letter or printout from the IRS tax-exempt
+organization search tool on the official IRS website is sufficient. See
+https://apps.irs.gov/app/eos/; and
+b. The corporation has an active status with the Secretary of State. A printout from
+the Secretary of State business search web page showing the corporation is Active
+is sufficient. See https://bizfileonline.sos.ca.gov/search/business; and
+C. The corporation is current in registration and reporting requirements with the
+Attorney General's Registry of Charities and Fundraisers. A printout from the
+Department of Justice Registry Search Tool showing the corporation's registration
+is Current is sufficient.
+See https://rct.doj.ca.gov/Verification/Web/Search.aspx?facility=Y
+3. Timeline - Provide an estimated timeline for major project milestones.
+4. Assurance Statement - Provide a statement signed by the applicant's Authorized
+Representative attesting that if the project is awarded funding, at least 80 percent or
+more of youth participants will be from low-income communities or households based
+on median household income or free and reduced-price meals requirements, and
+from underserved communities of color or vulnerable populations as defined in the
+program guidelines. If the project includes a vehicle acquisition, provide a statement
+signed by the applicant's Authorized Representative attesting that the clean vehicle
+will be used only for the intent of the project until completion.
+15
+5. Work Plan - Provide an outline of the program schedule and work plan including
+activities. List goals objectives, benchmarks, evaluation, timeframe, resources, and
+who is responsible for tasks.
+6. Other - Project-specific additional documentation may be requested.
+7. Payee Data Record/Government Agency Taxpayer ID Form - Nonprofit applicants
+must provide a completed and signed STD 204 Payee Data Record form.
+Government Agency applicants must provide a completed and signed Government
+Agency Taxpayer ID Form. (See Appendix L for links to both forms).
+End of Step Three Information
+16
+GRANT PROJECT ADMINSTRATION (POST GRANT AWARD)
+For projects awarded grant funding, the following is the general post-award
+administrative procedure:
+1. Grantee attends grant management workshop which addresses project
+administration, including proper submission of payment requests and periodic reports.
+2. State Grant Administrator works with Grantee to develop and execute a grant
+agreement.
+3. Grantee commences initial planning work and submits periodic reimbursement
+requests for eligible costs (subject to retention).
+4. Grantee submits evidence of funding recognition on program materials, acquired
+vehicles, and/or at a Development project site, as applicable.
+5. Grantee notifies the State of public events related to the project.
+6. Grantee commences project work/activities.
+7. Grantee submits periodic progress reports.
+8. Grantee completes project and submits project completion forms.
+9. The State conducts final project inspection and/or reviews final report and approves
+final payment request(s).
+Changes to Approved Project
+Grantees seeking changes or amendments to an approved project must obtain the
+State's approval. Changes in project scope must continue to meet the need cited in
+the original Project Proposal. Grantees jeopardize funding should changes be made
+without prior notice to and approval by the State.
+Eligible Costs
+Direct project-related costs incurred during the project performance period specified in
+the grant agreement are eligible for reimbursement. All eligible costs must be supported
+by appropriate documentation. Costs incurred outside of the project performance
+period are not eligible for reimbursement. (See Appendix E for further information on
+Eligible Costs). Indirect costs are limited to 15% of the grant-funded budget.
+Site Visits
+The State may make periodic visits to the project site, including a final inspection. The
+State will determine if the work is consistent with the approved project scope and ensure
+compliance with signage requirements.
+17
+Payment of Grant Funds
+Funds will not be disbursed until there is a fully executed grant agreement between the
+State and the Grantee. For Development Projects (see Appendix O for definition) that
+require an environmental review, funds cannot be disbursed until the review is complete
+and evidence provided to the State.
+Generally, payments will be made on a reimbursement basis. This means the Grantee
+pays for services, products, or supplies; submits invoices; and is then reimbursed by
+the State. It generally takes six to eight weeks to receive payment after Grantee
+submits a completed payment request.
+Ten percent (10%) of the amount requested for reimbursement may be retained and
+issued as a final payment upon completion.
+Upon compelling need, advances up to twenty-five percent (25%) of the grant
+award at a time may be available. For vehicle acquisitions, higher advances may be
+approved. Advances must be reconciled at least quarterly.
+Loss of Funding
+The following are examples of actions that may result in a Grantee's loss of funding. This
+is not an exhaustive list.
+1. Grantee fails to execute a grant agreement.
+2. Grantee changes the project scope without prior notice to and approval by the
+State.
+3. Grantee fails to timely submit all required documentation.
+4. Grantee fails to complete the project.
+5. Grantee fails to provide project updates as requested.
+Project Reporting
+Grantee is required to keep the State informed of the project's progress throughout the
+project performance period. Grantee must submit periodic status reports as requested
+by the Grant Administrator. (See Appendix M for periodic reporting template).
+Insurance Requirements
+Grantees shall maintain commercial general liability workers compensation and
+employer's liability, and, if applicable, automobile liability insurance with minimum
+coverage limits of $1 million. Upon request, Grantees must provide evidence of
+compliance with insurance requirements.
+18
+STATE AUDIT & ACCOUNTING REQUIREMENTS
+Audit Requirements
+Projects are subject to audit by the State annually and for three (3) years following the
+final payment of grant funds. If the project is selected for audit, Grantee will be
+contacted in advance. The audit shall include all books, papers, accounts, documents,
+or other records for Grantee as they relate to the project. All project expenditure
+documentation should be available for an audit, whether paid with grant funds or other
+funds.
+Grantee must have project records, including source documents and evidence of
+payment, readily available and must provide an employee with knowledge of the
+project to assist the auditor. Grantee must provide a copy of any document, paper,
+record, etc., requested by the auditor. Further, Grantees must include planning,
+monitoring, and reporting necessary to ensure successful implementation of the project
+objectives and have documentation available for State review upon request.
+Accounting Requirements
+Grantee must maintain an accounting system that:
+Accurately reflects fiscal transactions, with necessary controls and safeguards.
+Provides a good audit trail, including original source documents such as purchase
+orders, receipts, progress payments, invoices, employee paystubs, and timecards,
+evidence of payment, etc.
+Provides accounting data SO the total cost of each individual project can be readily
+determined.
+Records Retention
+Records must be retained for a period of three (3) years after final payment is made by
+the State. Grantee must retain all project records at least one (1) year following an audit.
+19
+APPENDICES FOR
+STEP ONE: PROJECT PROPOSAL
+(PAGES 21 TO 30)
+20
+APPENDIX A: SUBMITTAL CHECKLIST
+STEP ONE - PROJECT PROPOSAL
+The following is entered directly into RAPTR:
+Project Summary
+The following will be uploaded into RAPTR as attachments:
+Project Proposal Form Signature Page
+Project Proposal Questions
+Low-Income Community Documentation
+Cost Estimate
+Nonprofit Questionnaire (Nonprofit Applicants Only)
+Supporting Documents (limited to 8 pages)
+Site Plan (Development Projects Only, see definition in Appendix 0)
+21
+APPENDIX B - PROJECT PROPOSAL SIGNATURE PAGE FORM
+A fillable Project Proposal Signature Form can be found on the YCA Grant Page here.
+YOUTH COMMUNITY ACCESS GRANT PROGRAM
+Project Proposal Signature Form
+Project Title:
+Project Description (limited to 2,000 characters)
+Total Project Cost:
+Funding Amount Requested:
+Project Start Date:
+Project End Date:
+Project Latitude:
+Project Longitude:
+Applicant Organization:
+Address:
+City:
+Zip Code:
+Project Manager:
+Job Title:
+Email:
+Phone Number:
+Authorized Representative:
+Job Title:
+Email:
+Phone Number:
+Certification:
+As the Authorized Representative for the Applicant Organization, I certify the information provided in
+this Project Proposal, including required attachments, is complete and accurate.
+Signed:
+Date:
+Printed Name:
+Title:
+22
+APPENDIX c - PROJECT PROPOSAL QUESTIONS
+The Project Proposal Questions are a downloadable form found on the YCA homepage
+or in RAPTR. Provide responses to all the questions. If a question does not apply to the
+project, indicate "Not Applicable" with a brief explanation. Do not leave blank fields.
+Once completed, upload the questions, as an attachment, into RAPTR.
+23
+APPENDIX D: COST ESTIMATE
+In preparing a cost estimate for the project, applicants should comply with the following:
+1. All project elements should be detailed and customized to fit the project.
+2. Each element should be clearly described in the project narrative.
+3. Where possible, the cost of project elements funded by the Youth Community Access
+Grant should not be split between the grant and other funding sources.
+4. Grantee's staff labor must be computed on actual time spent on the project and
+evidenced by time and attendance records describing the work performed. Only
+salary plus benefits are eligible. No indirect rates or overhead costs may be folded into
+the hourly rate. No billable rates may be used.
+5. Youth Community Access Grant and Other Funding Source columns should sum to the
+Total Cost column.
+6. Add/delete elements and funding sources as needed. Be sure all costs are eligible,
+within allowable limits, and all columns add up correctly.
+7. Contingency costs can be no more than ten percent (10%) of the grant request.
+8. Any indirect costs must be included as a separate line item in the budget and are
+limited to no more than 15% of total direct costs of the grant. (See Appendix E for
+further information on indirect cost requirements).
+24
+COST ESTIMATE TEMPLATE
+Line items below are examples - edit to reflect items applicable to the proposed project.
+Unit of
+Other Funding
+Other Funding
+Project Tasks/Elements
+Total Costs
+Unit Price
+Quantity
+YCA Grant
+Measure
+if applicable
+if applicable
+Personnel/Payroll Services
+Youth Camp Manager
+Field Trip Coordinator
+Support staff
+Administrative (accounting, payroll, etc.)
+Youth stipends
+Staff training
+Materials and Supplies
+Program materials
+Camping supplies
+Transportation
+Acquire eco-friendly clean vehicle
+Mileage
+Fee for renting bus
+Funding acknowledgement sign (vehicle
+acquisition only)
+Field Trips
+Entrance fees
+Lunches
+Sundry items
+Indirect Costs (not to exceed 15% of direct costs)
+Contingency (not to exceed 10% of grant)
+PROJECT GRAND TOTAL
+All invoices and receipts for all project expenditures from all funding sources will be retained and made available in the event of any
+future State Audits. Applicant must demonstrate that all costs, including personnel salaries were incurred for the discrete project
+A customizable cost estimate template can be found at:
+http://resources.ca.gov/grants/youth/
+25
+APPENDIX E: ELIGIBLE COSTS
+Direct project-related costs incurred during the project performance period specified in
+the grant agreement are eligible. All eligible costs must be supported by appropriate
+documentation. Costs incurred outside of the project performance period are not
+eligible for reimbursement. Indirect costs are limited to 15% of the grant-funded project
+budget.
+Projects must comply with Labor Code section 1771.5. Therefore, cost estimates should
+include prevailing wages, as applicable. See Department of Industrial Relations' Division
+of Labor Statistics and Research website at Director's General Prevailing Wage
+Determinations (ca.gov) for general prevailing wage determinations. For questions
+about prevailing wage, contact the Department Industrial Relations.
+All Projects
+1. Direct Costs - Costs that are directly tied to the implementation of the project to be
+funded and incurred during the project performance period specified in the grant
+agreement. Direct costs may include materials, equipment, technical consultants,
+subcontractors, Grantee's staff labor, and other eligible costs. Direct costs do not
+include general administrative costs and overhead nor do they include endowments
+for ongoing project maintenance.
+2. Contingency - Up to ten percent (10%) of the grant may be budgeted for
+contingency costs. All contingency costs must be eligible per these guidelines.
+Contingency funds may not be used to increase the amount of funds that can be
+used for project management/non-construction (pre-implementation) work or
+indirect costs.
+3. Contracted Services - The costs of contracted services may be reimbursed if invoices
+identify the specific project activities and include evidence of payment.
+4. Personnel or Employee Services - Costs for the services of Grantee's employees
+directly engaged in project execution must be computed according to Grantee's
+prevailing wage or salary scales and may include benefits such as vacation, sick
+leave, Social Security contributions, etc., that are customarily charged to grantee's
+various projects, excluding overhead allocations.
+a. Costs charged to the project must be computed on actual time spent on the
+project and evidenced by time and attendance records describing the work as
+well as payroll records. Overtime costs may be allowed under Grantee's
+established policy, provided the regular work time was devoted to the same
+project.
+b. Salaries and wages claimed for employees working on State grant-funded
+projects must not exceed Grantee's established rates for similar positions.
+26
+5. Supplies and Materials - Supplies and materials may be purchased for a specific
+project or may be drawn from a central stock, providing they are claimed at a cost
+no higher than that paid by the Grantee.
+6. Community Engagement - Costs of engaging community members through
+community meetings and events directly related to the project are eligible.
+7. Indirect Costs - Indirect costs (also known as administrative costs, incidental costs, or
+overhead) are the costs of doing business that are not directly related to carrying out
+the grant-funded project but are necessary for the general operation of the grantee
+organization. Examples of indirect costs include rent, computers, telephones, office
+supplies, internet access, copy machines, electricity as well as functions such as
+janitorial, human resources, business services, information technology, etc. Certain
+types of indirect costs are not allowed including food and beverage, fundraising,
+lobbying, and entertainment. Any cost that is billed as a direct cost may NOT be
+included in indirect costs.
+Indirect costs should be included as a single line item in the project cost estimate
+and is charged as a percentage of the grant-funded project budget (i.e., the direct
+costs). The maximum indirect rate is 15 percent of direct costs. For example, if direct
+project costs total $260,870, the maximum indirect cost that could be budgeted is
+$39,130 (15% X $260,870). Together, the direct and indirect costs should equal the
+total grant award, which is $300,000 in this example ($260,870 + $39,130).
+Grantees that wish to include indirect costs in their grant budgets must be able to
+document how the indirect rate was calculated. One typical method for
+documentation is to have a Cost Allocation Plan. Other methods may also be
+adequate, but it is the grantee's responsibility to determine this based on Generally
+Accepted Accounting Principles. It is recommended that grantees work with a
+Certified Public Accountant (CPA) to develop an appropriate method for calculating
+their indirect rate and determining what indirect costs may be allocated to a grant.
+It is the responsibility of the grantee to maintain appropriate records for all indirect
+costs and to be able to provide those records in the event of an audit.
+8. Travel Costs - Travel costs incurred by Grantee staff directly related to the project
+and reasonable and necessary for the completion of the project are eligible.
+Reimbursement rates shall be consistent with the Grantee's written travel policy.
+Absent a written policy, per diem shall not exceed the California Standard Per Diem
+Rate allowable by the U.S. General Services Administration.
+Mileage rates shall not exceed the IRS mileage reimbursement rate in effect at the
+time of travel. Mileage reimbursement covers:
+The cost of maintenance (oil, lube, routine maintenance)
+Insurance (liability, damage, comprehensive, and collision coverage)
+27
+Licensing and registration
+Depreciation and all other costs associated with operation of the vehicle
+For Grantee-owned vehicles, a Mileage Log with the date, mileage, destination,
+and trip purpose (referencing the grant's project scope) must be signed by the
+operator and supervisor.
+9. Food and Beverage Expenses -
+a. Employee meals incurred as a travel expense necessary to carry out the grant
+project may be reimbursed at a rate at or below the State employee per diem
+reimbursement rate in effect at the time of travel. See
+https://www.calhr.ca.gov/employees/Pages/trovel-reimbursements.aspx
+b. Food expenses for grants that are reasonable and necessary to complete the
+grant project may be eligible at the discretion of the State. The specific purpose
+for the expense must be discussed and approved by the State and included as a
+separate item in the grant budget.
+10. Construction -
+a. All necessary labor and construction activities to complete the project are eligible,
+including site preparation (demolition, clearing and grubbing, excavation,
+grading), monitoring (including soil and water testing during construction),
+onsite/field implementation, and construction supervision, etc. The grant can pay
+for up to two years of plant establishment, as deemed appropriate.
+b. Supplies and materials may be purchased for a specific project or may be drawn
+from central stock, providing they are claimed at a cost no higher than paid by
+the grantee. When supplies and/or materials are purchased with the intention of
+constructing a piece of equipment, a structure or part of a structure, the costs that
+are charged as supplies and materials may be capitalized according to the
+grantee's normal practice or policy. If capitalized, only that cost reasonably
+attributable to the project may be claimed under the project.
+C. Trees, supplies, and materials may be purchased for a specific project or may be
+drawn from a central stock, provided they are claimed at a cost no higher than
+that paid by grantee.
+d. Grantees in the business of growing plants may not charge retail rates for plants
+reared for a project; however, charges for materials and staff time are allowable.
+e. Trees larger than 15 gallons in size are not eligible for reimbursement.
+f. Equipment owned by Grantee may be charged to the project for each use.
+Equipment use charges must be made in accordance with Grantee's normal
+accounting practices. The equipment rental rates published by the California
+Department of Transportation may be used as a guide.
+(Refer to: http://www.dot.ca.gov/hg/construc/equipmnt.html)
+28
+g. If Grantee's equipment is used, a use log or source document must describe the
+work performed, indicate the hours used, relate the use to the project, and be
+signed by the operator and supervisor.
+h. Grantee-owned vehicles used to transport personnel and supplies on grant-
+related business may not be charged to the grant as an equipment cost. Instead,
+Grantees may charge mileage for use of their vehicles.
+i. Equipment may be leased, rented, or purchased, whichever is most economical.
+If equipment is purchased, its residual market value must be credited to the project
+costs upon completion of the project.
+11. Clean Vehicle Acquisition -
+a. All operation, care, and maintenance for the acquired clean vehicle are eligible,
+including insurance coverage, gasoline, and scheduled/routine maintenance are
+eligible for reimbursement.
+12. Youth Stipends -
+a. Stipends paid to youth participants for their participation in a grant-funded
+program are eligible. Grantee must document youth participation in the program
+via a signed agreement between the youth recipient and the Grantee.
+Gift card reimbursement is typically discouraged; however, gift card
+payment is allowed for youth stipends. Grantee must obtain signed
+acknowledgement by the youth recipient confirming receipt and dollar
+amount of the stipend. Additionally, Grantee must maintain a tracking sheet
+detailing all gift-card stipends disbursed, including the gift card amount, the
+recipient, and the date of receipt.
+13. Other Expenditures - In addition to the major categories of expenditures, grant
+funding may be used for miscellaneous costs necessary for execution of the project,
+approval of which is at the discretion of the State. Some of these costs may include:
+a. Premiums on hazard and liability insurance to cover personnel and/or property.
+b. Work performed by another section or department of Grantee's agency that can
+be documented as direct costs to the project (see requirements above under
+Personnel or Employee Services).
+C. Transportation costs for moving equipment, program participants, or personnel.
+d. Cultural competency training costs for staff.
+29
+APPENDIX F: NONPROFIT QUESTIONNAIRE
+All nonprofit applicants must complete the following questionnaire.
+NONPROFIT QUESTIONNAIRE
+All nonprofit applicants must complete the following questionnaire.
+General Information
+1. Does your organization have appropriate segregation of duties to prevent
+Yes
+No
+one individual from processing an entire financial transaction?
+2. Does your organization have a conflict-of-interest policy?
+Yes
+No
+3. How much unrestricted money does your organization raise annually?
+$
+4. Does your organization have controls to prevent expenditure of funds in
+Yes
+No
+excess of what is approved in your project budget?
+5. Does the Board of Directors have a separate Finance Committee, or does
+Yes
+No
+the Board make all financial decisions?
+6. What are the Treasurer's duties?
+Cash Management
+7. Are grant funds accounted for through segregated accounts?
+Yes
+No
+8. Are all disbursements properly documented with evidence of receipt of
+Yes
+No
+goods or performance of service?
+Payroll
+9.
+Does your organization have a time reporting system developed to
+Yes
+No
+determine and explain proper labor charges billed to the grant?
+10. Have you developed procedures to ensure fair and competitive
+Yes
+No
+contracting?
+11. Is there an effective system of identifying expenditures for time, travel, and
+Yes
+No
+purchase of supplies to determine relevancy to individual grant projects?
+Property Management (Complete if State grants will be used to purchase physical assets)
+12. Are detailed records of individual capital assets kept and periodically
+Yes
+No
+balanced with the general ledger accounts?
+13. Are there effective procedures for authorizing and accounting for the
+Yes
+No
+disposal of property and equipment?
+Compliance
+14. Does your organization have a formal system for complying with the
+Yes
+No
+payment of prevailing wages?
+15. Does your organization have a system in place to ensure it does not use
+Yes
+No
+contractors who may be suspended or debarred from receiving federal or
+state contracts?
+Name of Person Completing questionnaire
+Title
+Signature
+Date
+30
+APPENDICES FOR
+STEP THREE: SUPPORTING DOCUMENTATION
+(QUALIFYING PROJECTS ONLY)
+(PAGES 32 TO 47)
+31
+APPENDIX G: RESOLUTION TEMPLATE
+Resolution No:
+RESOLUTION OF (APPLICANT'S GOVERNING BODY)
+APPROVING THE APPLICATION FOR GRANT FUNDS FOR THE
+YOUTH COMMUNITY ACCESS GRANT PROGRAM
+WHEREAS, the Legislature and Governor of the State of California have provided funds for the
+program shown above; and
+WHEREAS, the California Natural Resources Agency has been delegated the responsibility for the
+administration of this grant program, establishing necessary procedures; and
+WHEREAS, said procedures established by the California Natural Resources Agency require a
+resolution certifying the approval of application(s) by the Applicant's governing board before
+submission of said application(s) to the State; and
+WHEREAS, the Applicant, if selected, will enter into an agreement with the State of California to
+carry out the project.
+NOW, THEREFORE, BE IT RESOLVED that the (Applicant's Governing Body):
+1. Approves the filing of an application for the (Project Name); and
+2. Certifies that Applicant understands the assurances and certification in the application
+package; and
+3. Certifies that Applicant or title holder will have enough funds to operate and maintain the
+project consistent with the grant guideline requirements or will secure the resources to do
+so; and
+4. Certifies that it will comply with all provisions of Section 1771.5 of the California Labor
+Code; and
+5. If applicable, certifies that the project will comply with any laws and regulations including,
+but not limited to, the California Environmental Quality Act (CEQA), legal requirements for
+building codes, health and safety codes, and disabled access laws, and that prior to
+commencement of construction all applicable permits will have been obtained; and
+6. Appoints the (Title/Position of Authorized Representative, not the name of the person
+occupying position)
+,
+or designee, as agent to conduct all
+negotiations, execute and submit all documents including, but not limited to,
+applications, agreements, payment requests and so on, which may be necessary for the
+completion of the aforementioned project(s).
+Approved and adopted the
+day of
+20
+.
+I, the undersigned, hereby certify that the foregoing Resolution Number
+was duly adopted
+by the (Applicant's Governing Body).
+Following Roll Call Vote: Ayes:
+Nos:
+Absent:
+Clerk/Secretary for the Governing Board
+32
+APPENDIX H: CERTIFICATION LETTER REQUIREMENTS
+If an applicant does not have a governing board, a certification letter from the
+organization's Director or Chief Executive Officer must be furnished. The letter should:
+1. Approve the filing of an application for the (name of the project); and
+2. Certify that applicant understands the assurances and certification in the application;
+and
+3. Certify that applicant or title holder will have enough funds to operate and maintain
+the project consistent with the grant guideline requirements or will secure the
+resources to do SO; and
+4. Certify that applicant will comply with the provisions of Section 1771.5 of the California
+Labor Code; and
+5. If applicable, certify that the project will comply with any laws and regulations
+including, but not limited to, the California Environmental Quality Act (CEQA), legal
+requirements for building codes, health and safety codes, and disabled access laws,
+and that prior to commencement of construction all applicable permits will have
+been obtained; and
+6. Appoint the (Title/Position of Authorized Representative (e.g., Executive Director,
+President, etc., not the individual's name)), or designee, as agent to conduct all
+negotiations, execute and submit all documents including, but not limited to,
+applications, agreements, payment requests and SO on, which may be necessary for
+the completion of the aforementioned project(s).
+7. Contain the signature of the Director or Chief Executive Officer.
+33
+APPENDIX I: SIGNAGE & RECOGNITION GUIDELINES
+Funding acknowledgement recognition must be included for all projects as follows:
+Programming - The Grantee shall use the Youth Community Access logo and
+acknowledgement language on project announcements, social media, website,
+marketing materials, and news releases. Materials should include the logo and
+acknowledgement language, at a minimum, throughout the performance period of
+the Grant Agreement.
+Clean Vehicle Acquisition - The Grantee shall install a vehicle decal/banner with the
+Youth Community Access logo and required acknowledgment language on each
+vehicle purchased prior to activating the vehicle for program use. Said decal/banner
+should remain in place for at least four (4) years from the date the vehicle was
+purchased.
+Development - The Grantee shall install a sign with the Youth Community Access logo
+and required acknowledgement language at the project location. The sign should
+remain in place for at least (4) years from the date the project was completed.
+Vehicle decals/banners and development project signage should contain the language
+included with the logo as shown below. The applicant's name may be added, as well
+as the names (and/or logos) of partner organizations, individuals, and elected
+representatives. The logo must measure a minimum of 12 inches in size.
+The logo is available at https://resources.ca.gov/grants/Grant-Program-Resourcesunder
+Logo Artwork.
+34
+The cost of the funding acknowledgment materials is an eligible project cost.
+Clean Vehicle Acquisition Funding
+Development and Programming Project
+Acknowledgment
+Funding Acknowledgement
+This clean vehicle was purchased with funds
+Project Title/Description
+provided by the California Natural Resources
+Agency to improve youth access
+Another community access project through the
+to natural and cultural resources
+California Natural Resources Agency to improve
+youth access to natural and cultural resources
+PROP
+64
+PROP
+64
+Youth Community
+Youth Community
+Access
+Access
+GAVIN NEWSOM, GOVERNOR
+GAVIN NEWSOM, GOVERNOR
+Wade Crowfoot, Secretary for Natural Resources
+Wade Crowfoot, Secretary for Natural Resources
+When appropriate, exceptions may be approved at the State's discretion.
+35
+APPENDIX J: ENVIRONMENTAL COMPLIANCE
+Prior to approval and distribution of grant funds for construction/implementation, every
+proposed project shall comply with the California Environmental Quality Act, Division 13
+(commencing with section 21000; 14 California Code of Regulations section 15000 et seq.
+["CEQA"]).
+The State of California, acting through its administering agencies and departments, will
+typically act as a responsible agency for the purposes of CEQA. Therefore, prior to the
+State approving funding for a proposed project, one of the following must be submitted.
+a. The Notice of Exemption filed with the County Clerk and State Clearinghouse (as
+applicable) if the proposed project is categorically or statutorily exempt, with the
+appropriate Public Resources Code section citation to the exemption(s) being
+relied upon by the lead agency.
+b. The Negative Declaration or Mitigated Negative Declaration adopted by the
+lead agency and Initial Study, including a copy of the Environmental Checklist
+Form located in Appendix G of the CEQA Guidelines and the Notice of
+Determination filed with the County and with the State Clearinghouse* (as
+applicable). If the lead agency has adopted a Mitigated Negative Declaration,
+the applicant must also provide the adopted mitigation monitoring and reporting
+program*.
+C. The Final Environmental Impact Report certified and adopted by the lead agency
+with Initial Study, including a copy of the Environmental Checklist Form located in
+Appendix G of the CEQA Guidelines, the adopted mitigation monitoring and
+reporting program, and the Notice of Determination filed with the County and the
+State Clearinghouse. Please include any State Clearinghouse Responses received
+by the applicant**
+d. Projects that tier from a Programmatic, Master, or other Environmental Impact
+Report shall include a copy of any subsequent Initial Study for the proposed
+project together with a copy of any supplementary environmental
+documentation adopted by the lead agency, including, if applicable, any
+required findings pursuant to Public Resources Code section 21157.1, subdivision
+(c), and the Notice of Determination, filed with the County Clerk and with the
+State Clearinghouse, as applicable
+Pursuant to section 75102 of the Public Resources Code, before the adoption of a
+Negative Declaration or Environmental Impact Report, the lead agency shall notify the
+proposed action to a California Native American tribe which is on the contact list
+maintained by the Native American Heritage Commission, if that tribe has traditional
+lands located within the area of the proposed project.
+36
+Native American Graves Protection and Repatriation Act (NAGPRA): Grantees must
+comply with NAGPRA which provides a process to return certain Native American
+cultural items - human remains, funerary objects, sacred objects, or objects of cultural
+patrimony - to lineal descendants, culturally affiliated Indian tribes, and Native Hawaiian
+organizations.
+National Historic Preservation Act: Projects involving construction, renovation, repair,
+rehabilitation, or ground or visual disturbances must follow the Secretary of the Interior's
+Standards for the Treatment of Historic Properties, where appropriate, to ensure the
+historical integrity of the project, and comply with the National Historic Preservation Act,
+Section 106.
+*For b and C, include documentation the State of California Department of Fish and Wildlife CEQA fee was paid or is
+not applicable.
+**Beginning January 1, 2024, Senate Bill (SB) 69 (Cortese, 2023) requires electronic filing of all notices of determination
+(NODs) and notices of exemption (NOEs), normally filed with the local county clerk, to also be filed with the State
+Clearinghouse in the Governor's Office of Planning and Research (OPR).
+37
+APPENDIX K: SITE CONTROL/LAND TENURE REQUIREMENTS
+The State recognizes that specific activities on the project property may change over
+time; however, all uses on the property must remain compatible with the Youth
+Community Access Grant Program, in accordance with the following requirements:
+Development Projects (see definition in Appendix O)
+Grantee shall maintain and operate the property developed pursuant to this grant for a
+period of:
+At least 10 years for grants up to $500,000
+Grantee shall not use or allow the use of any portion of the real property for mitigation
+(i.e., to compensate for adverse changes to the environment elsewhere) without written
+permission of the State.
+Grantee shall not use or allow the use of any portion of the real property as security for
+any debt.
+With the approval of the State, Grantee or Grantee's successor in interest in the property
+may enter into an agreement with another party to maintain and operate the property
+in accordance with this grant program. At a minimum, the agreement must do the
+following:
+Clearly spell out the roles of each party in detail
+Be signed by both parties signifying their acceptance
+Not terminate prior to the length of site control/land tenure required by the grant
+agreement (only agreements that allow early termination for cause or by mutual
+consent will be acceptable)
+Include language that Grantee will resume responsibility for ongoing operation and
+maintenance in the event of cancellation
+Grantee may be excused from its obligations for operation and maintenance of the
+project site only upon the written approval of the State for good cause. Good cause
+includes, but is not limited to, natural disasters that destroy the project improvements and
+render the project obsolete or impracticable to rebuild.
+Grantee may be required to record a Memorandum of Unrecorded Grant Agreement
+(MOUGA) on property developed with grant funds. Landowners should be advised of
+and agree to this requirement prior to submission of a project proposal to the Youth
+Community Access Program.
+38
+Clean Vehicle Acquisition Projects
+Grantee shall maintain and operate the clean vehicle acquired pursuant to this grant
+for a period of at least eight years. Grantee may be excused from its obligations for
+operation and maintenance of the clean vehicle only upon the written approval of the
+State for good cause. Good cause includes, but is not limited to, natural disasters that
+damage the clean vehicle and render the use obsolete.
+39
+APPENDIX L: PAYEE DATA RECORD
+Nonprofit applicants must provide a completed and signed STD 204 Payee Data Record
+form. Government agency applicants must provide a completed and signed
+Government Agency Taxpayer ID Form. These forms are required to receive payment
+from the State of California.
+A fillable STD 204 form can be found at https://resources.ca.gov/-/media/CNRA-
+Website/Files/grants/AdminForms/std204.pdf.
+A fillable Government Agency Taxpayer ID Form can be found at
+https://fiscal.ca.gov/wp-content/uploads/2019/08/GovtTINForm_000.pdf
+40
+APPENDIX M: SAMPLE PROGRESS REPORT TEMPLATE
+YOUTH COMMUNITY ACCESS PROGRESS REPORT
+Grantee Name:
+Grant Number:
+Reporting Period:
+Objective/Goal:
+Completed to Date with Focus on Most Recent Quarter
+Activities
+(Grant deliverables)
+Outcomes
+(Results such as
+number of youth
+served, number
+programs run,
+number of youth
+leaders, etc.)
+Tools
+(How outcomes
+were measured,
+provide samples as
+available)
+Timeline
+(Next quarter
+activities, possible
+delays)
+Other information (Obstacles facing, expectations for next quarter, success stories,
+photos, etc. - may use additional pages if needed):
+41
+APPENDIX N: AVAILABLE RESOURCES
+Assembly Bill 64: Cannabis: licensure and regulation
+https://leginfo.legislature.ca.gov/faces/bilTextClient.xhtml?biIl_id=201720180AB64
+CAL FIRE's Tree Planting Standards and Specifications
+https://californiareleaf.org/wp-content/uploads/2021/03/Tree-planting-
+guidelines_final.pdf
+California Department of Industrial Relations Prevailing Wage Determination
+https://www.dir.ca.gov/OPRL/DPreWageDetermination.htm
+California Department of Justice, Office of the Attorney, General Registry of Charities
+and Fundraisers
+http://rct.doj.ca.gov/Verification/Web/Search.aspx?faclity=Y
+California Department of Public Health, Health in All Policies
+https://www.cdph.ca.gov/Programs/OHE/Pages/HIAP.aspx
+California Secretary of State Business Search
+https://bizfileonline.sos.ca.gov/search/business
+California State Parks: A Valuable Resource for Youth Health
+https://www.ioes.ucla.edu/wp-content/uploads/UCLA-report-on-California-State-Porks-
+and-Youth-Health.pdf
+California State Parks Safety Tips
+https://www.parks.ca.gov/?page id=29142
+California State Parks Outdoor Equity Program Community FactFinder
+https://www.parksforcalifornia.org/outdoorequity/
+Department of Water Resources Disadvantaged Communities Mapping Tool
+https://gis.water.ca.gov/app/dacs/
+Free and Reduced Lunch Income Eligibility Guidelines
+https://www.cde.ca.gov/Is/nu/rs/scales2324.asp
+Natural environments and craving: The mediating role of negative affect
+https://www.sciencedirect.com/science/article/abs/pi/S13538292183084519via3Dihu
+b#!
+Urban greenspace is associated with reduced psychological stress among adolescents:
+A Geographic Ecological Momentary Assessment (GEMA) analysis of activity space
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5863919/pdf/nihms946222.pdf
+42
+Youth Engagement and Local Planning: Ideas for Youth Commissions
+https://www.ca-ilg.org/sites/main/files/fileattachments/lg_briefing paper 3 proof7.pdf
+43
+APPENDIX O: DEFINITIONS
+Unless otherwise stated, the terms used in these grant guidelines have the following
+meanings:
+Acquisition - means obtaining title to a clean vehicle.
+Agency - means the California Natural Resources Agency.
+Americans with Disabilities Act (ADA) - means the U.S. Americans with Disabilities Act of
+1990 that gives civil rights protections to individuals with disabilities, guaranteeing equal
+opportunity in employment, public accommodations, transportation, State and local
+government services, and telecommunications.
+Applicant - means an eligible organization requesting funding from a program
+administered by the State.
+CEQA - means the California Environmental Quality Act, Public Resources Code Section
+21000 et seq.; Title 14, California Code of Regulations, Section 15000 et seq.
+Clean Vehicle - means a vehicle that uses technology to replace or reduce the direct
+use of fossil fuels, which generate greenhouse gas emissions. Clean vehicles include plug-
+in hybrid electric (PHEV), standard full-hybrid, battery electric (BEV), hydrogen fuel cell,
+ethanol, biodiesel, natural gas, and propane-powered vehicles. Vehicles that can run
+solely on gas (e.g., E85/FLEX-FUEL) are NOT considered clean vehicles.
+Cultural Resource - means any property or location that was created, modified, or used
+by people at least 50 years ago. Cultural resource means archeological sites, objects,
+grounds, gardens, landscapes, structures, and buildings.
+Deliverables - means the "final products" of a task. It reflects the tangible result of the
+completion of a task. Examples of project deliverables are: 24-month afterschool
+program offered two times a week, 15 field trips to natural resources and 125 youth
+served.
+Development Project - means a project that physically improves, builds, or changes land
+or structures to support youth access to natural or cultural resources. Development
+projects may require permits, environmental reviews, and long-term access and
+operation and maintenance agreements. To be eligible, at least 80 percent of the
+project's footprint must be located within a low-income community.
+Direct Costs - means costs associated with the development, administration, planning,
+and management of the project which are specifically incurred for the benefit of the
+project.
+44
+Disadvantaged Community - means underserved communities of color and/or
+vulnerable populations. See definition of underserved community.
+Free and Reduced-price Meal Program - means School Nutrition Programs such as the
+National School Lunch Program, School Breakfast Program, Afterschool Meal
+Supplements, Special Milk Program, and State Meal Programs. See
+https://www.cde.ca.gov/ls/nu/sn/eligmaterials.asp.
+Fund or Funds - means the Youth Education Prevention, Early Intervention, and Treatment
+account created by The Control, Regulate, and Tax Adult Use of Marijuana Act of 2016
+(Proposition 64).
+Grant Agreement - means an arrangement between the State and Grantee specifying
+the payment of funds by the State for the performance of specific project objectives
+within a specific project performance period by the Grantee.
+Grantee - means an applicant that has an agreement for grant funding with the State.
+Grants Administrator - means an employee of the State who manages the grants.
+In-Kind - means non-cash donations, from governmental or private sources, and
+includes volunteers, materials, and services.
+Indirect Costs - means the costs of doing business that are not directly related to carrying
+out the grant-funded project but are necessary for the general operation of the grantee
+organization. Examples of indirect costs include rent, electricity, computers, telephones,
+office supplies, internet access as well as functions such as janitorial, human resources,
+business services, information technology, etc. Certain types of indirect costs may not be
+charged to the grant including food and beverage, fundraising, lobbying, and
+entertainment. Any cost that is billed as a direct cost may not be including in indirect
+costs.
+Land Tenure/Site Control - means the applicant owns the project land or has other legal
+long-term interest with the landowner that is satisfactory to the State.
+Local Agency - means any political subdivision of the State of California, including, but
+not limited to, any county, city, city and county, district, joint powers authority, public
+schools and school districts, local community conservation corps agency, or council of
+governments.
+Low-Income Community - means a community or household with an annual median
+household income less than 80 percent of the statewide average or a household that
+qualifies for the Free and Reduced-Price Meals Program. Two tools using this criterion are
+the California State Parks Outdoor Equity Community Fact Finder and the Department of
+Water Resources Mapping tool. Income eligibility guidelines for Free and Reduced-price
+Meals can be found on the California Department of Education (CDE) website. (See
+45
+Appendix N for links to these tools and to the CDE Income Eligibility Guidelines for Free
+and Reduced-price Meals).
+NAGPRA - means The Native American Graves Protection and Repatriation Act that
+provides a process to return certain cultural Native American items - human remains,
+funerary objects, sacred objects, or objects of cultural patrimony - to lineal descendants,
+and cultural affiliated Indian tribe and Native Hawaiian organizations.
+Natural Resource - means, but is not limited to, land, water, forests, fisheries, and animals.
+Nonprofit Organization - means a nonprofit public benefit corporation qualified to do
+business in California, and qualified under Section 501(c)(3) of the Internal Revenue
+Code and incorporated for a minimum of two (2) years. In addition, all nonprofit
+organizations must be active with the California Secretary of State and current with the
+registration and reporting requirements of the California Department of Justice, Office of
+the Attorney General Registry of Charities and Fundraisers.
+Other Sources of Funds - means cash or in-kind contributions that are required or used to
+complete the project beyond the grant funds provided by the Youth Community Access
+Grant Program.
+Program - means a planned, coordinated group of activities or procedures, often with
+a common goal.
+Project - means any or all of the following: 1) a program that directly supports access to
+natural or cultural resources and includes planned, coordinated trips; 2) acquisition of a
+clean vehicle; and/or 3) development - a physical change to the footprint of a property
+that may require permits environmental reviews, and long-term agreements that support
+access to natural or cultural resources.
+Project Performance Period - refers to the beginning and ending dates of the grant
+agreement. Eligible costs incurred during this period may be funded from the grant.
+Project Scope - means the description or activity of work to be accomplished by the
+project.
+Public Agency - means any State of California department or agency, a county, city,
+public district, or public agency formed under California law.
+Secretary - means the Secretary for Natural Resources or his/her representative.
+State - means a political subdivision of the State of California.
+Tasks - means itemized steps that are necessary to fulfill the proposed project.
+46
+Underserved Community - means an underserved community of color and vulnerable
+populations. Communities of color are American Indian/Alaskan Native, African
+American, Asian-Pacific Islander, and Latinx. Vulnerable populations are foster and
+transition age youth, youth with disabilities, LGBTQIA youth, youth involved in the juvenile
+and criminal justice system and other youth populations disproportionately affected by
+past state and federal drug policies.
+Youth - means a person between the ages of birth and 26 years old.
+END OF GUIDELINES
+47

@@ -45,6 +45,7 @@ beforeAll(async () => {
   vi.stubEnv("DRAFT_GENERATION_STATE_MACHINE_ARN", "arn:aws:states:us-east-1:111111111111:stateMachine:draft");
   vi.stubEnv("DRAFT_GENERATION_JOBS_TABLE_NAME", "jobs");
   vi.stubEnv("BUCKET", "nofo-bucket");
+  vi.stubEnv("ARTIFACTS_BUCKET", "grant-artifacts");
   ({ handler: chatHandler } = await import("../../lib/chatbot-api/functions/websocket-chat/index.mjs"));
   ({ handler: draftHandler } = await import("../../lib/chatbot-api/gateway/api-routes/draft-generation/index.mjs"));
   ({ handler: summaryHandler } = await import("../../lib/chatbot-api/functions/landing-page/retrieveNOFOSummary/index.mjs"));

@@ -1,0 +1,1402 @@
+{
+ "0cb0e05410070f62": {
+  "query": "application due date submission deadline",
+  "filter": "a414c68243574ab2",
+  "retrievalResults": []
+ },
+ "0ea5f1097a1b2b5c": {
+  "query": "page limits for application components",
+  "filter": "9fd43350bccb38ae",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applications that are out of compliance with these instructions may be delayed or not accepted for review. Page Limitations All page limitations described in the How to Apply- Application Guide and the Table of Page Limits must be followed. Component Component Type for Submission Page Limit Required/Optional Minimum Maximum Overall Overall 12 Required 1 1 Admin Core Admin Core 12 Required 1 1 Translational Research and Engagement Core TREC 12 Required 1 1 Research Project Project 12 Required 3 4 Research Support Core RSC 6 Optional 0 1 Instructions for the Submission of Multi-Component Applications The following section supplements the instructions found in How to Apply- Application Guide and should be used for preparing a multi-component application. Note for Research Projects: Biomedical Research Projects (BMR): required, minimum of 1; maximum of 2 Environmental Science and Engineering Research Projects (ESE): required, minimum of 1; maximum of 2 Centers must be comprised of a minimum of 3 (maximum of 4) Research Projects and could be a combination of 2 BMR/2 ESE or 2 BMR/1 ESE or 1 BMR/2 ESE. Overall Component When preparing the application, use Component Type &lsquo;Overall."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.6231048,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AELVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The hazardous substances being evaluated, the exposure context (as appropriate), the model organisms/biological systems, disease pathways, research approaches, environmental media, etc., as well as study sites (if applicable). Aspects of the application that are innovative, paradigm-shifting, and/or gap-filling. Plans for engaging end-users/stakeholders or communities, if applicable. Project Narrative: It should be clear in the \"Project Narrative\" (i.e., the \"public health relevance\" statement) the relevance of the projects activities to public health, end-users/stakeholders, Superfund, and the SRP mandates. Project /Performance Site Location(s) (Research Project) List all performance sites that apply to the specific component. Note: The Project Performance Site form allows up to 300 sites, prior to using additional attachment for additional entries. Research & Related Senior/Key Person Profile (Research Project) In the Project Director/Principal Investigator section of the form, use Project Role of &lsquo;Other with Category of &lsquo;Project Lead and provide a valid eRA Commons ID in the Credential field. In the additional Senior/Key Profiles section, list Senior/Key persons that are working in the component. Include a single Biographical Sketch for each Senior/Key person listed in the application regardless of the number of components in which they participate. When a Senior/Key person is listed in multiple components, the Biographical Sketch can be included in any one component. If more than 100 Senior/Key persons are included in a component, the Additional Senior Key Person attachments should be used. Budget (Research Project) Budget forms appropriate for the specific component will be included in the application package. Include budget information for Data Management and Sharing Costs, if applicable to the Project. Note: The R&R Budget form included in many of the component types allows for up to 100 Senior/Key Persons in section A and 100 Equipment Items in section C prior to using attachments for additional entries. All other SF424 (R&R) instructions apply. PHS 398 Research Plan (Research Project) Introduction to Application: For Resubmission and Revision applications, an Introduction to Application is allowed for each component. Specific Aims: Specific Aims should describe the objectives and goals of the project, as it relates to the SRP Mandates and Superfund. The specific aims section should also include a brief statement about how the project integrates with the rest of the Center and how the project contributes to the other projects and cores."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.211459,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AMbVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Include a single Biographical Sketch for each Senior/Key person listed in the application regardless of the number of components in which they participate. When a Senior/Key person is listed in multiple components, the Biographical Sketch can be included in any one component. If more than 100 Senior/Key persons are included in a component, the Additional Senior Key Person attachments should be used. Budget (Research Support Core) Budget forms appropriate for the specific component will be included in the application package. Note: The R&R Budget form included in many of the component types allows for up to 100 Senior/Key Persons in section A and 100 Equipment Items in section C prior to using attachments for additional entries. All other SF424 (R&R) instructions apply. PHS 398 Research Plan (Research Support Core) Introduction to Application: For Resubmission and Revision applications, an Introduction to Application is allowed for each component. Specific Aims: Specific Aims should describe the objectives and goals of the Core. The specific aims section should also contain a brief statement about how the Core integrates with the rest of the Center. Research Strategy: the applicant should include in the description: The services and methodological approaches to be rendered by the Core, why they are not currently available to the Center, and how they are distinct from other facilities at the institution A plan for prioritizing the use of the facility by Center members. The role of the core as a resource to the Center as a whole (e.g., how the Core may provide a cost-savings to the Center). How specific Research Projects will use the resources of the core (note: at least 2 research projects must utilize the Core to be responsive to this NOFO. In addition, a RSC is principally designed as a service or resource component; it would be highly unusual to include research in an RSC (a possible exception would be methodology development). The ways in which the Core augments interdisciplinary activities and/or integration between projects and cores. How the Core will coordinate with the Administrative Core's Data Management Coordinator to facilitate its data management, analysis, and sharing within the Core and the Overall Center and, if applicable, plans to share with the wider research community. The professional skills that the core will provide to the Center's trainees (as applicable). If an RSC provides analytical and quantitative services to the Center, a Quality Assurance Section should be included. The Quality Assurance Section should document a Center's policy on implementing and assessing the effectiveness of its quality assurance and quality control operations."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1915979,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AObVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "PHS Assignment Request Form (Overall) All instructions in the How to Apply- Application Guide must be followed. Administrative Core When preparing your application, use Component Type &lsquo;Admin Core. All instructions in the SF424 (R&R) Application Guide must be followed, with the following additional instructions, as noted. SF424 (R&R) Cover (Administrative Core) Complete only the following fields: Applicant Information Type of Applicant (optional) Descriptive Title of Applicants Project Proposed Project Start/Ending Dates PHS 398 Cover Page Supplement (Administrative Core) Follow standard instructions. Research & Related Other Project Information (Administrative Core) Human Subjects: Answer only the &lsquo;Are Human Subjects Involved?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1804985,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AGbVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "For Renewal/Resubmissions: Table of Changes to Projects and Cores. To assist review of renewal/resubmission applications, a table should be included that lists projects and core components (by project title and project/core leader/coordinator) denoting which projects are new, continuing, substantially modified, finished/completed, or discontinued. This table should coincide in order and number with the projects and cores in the current application. Also, the applicant should indicate which projects are considered biomedical research (BMR) and which are considered environmental science and engineering (ESE) research. Indicate which ESE project(s) supports Mandate 4. ASSIST assigns projects/cores consecutively; therefore, when numbering projects and cores, numbering must not be skipped if a project from a previous funding period is discontinued in the renewal application. Please label in the following format: new = N; continuing = C; substantially modified = M; finished/completed = F; or discontinued = D. This table should be provided as a pdf file titled \"Table of Changes to Projects and Cores\". Please refer to the following website for example illustrations of the tables. Project/Performance Site Locations (Overall) Enter primary site only. A summary of Project/Performance Sites in the Overall section of the assembled application image in eRA Commons compiled from data collected in the other components will be generated upon submission. Research and Related Senior/Key Person Profile (Overall) Include only the Project Director/Principal Investigator (PD/PI) and any multi-PDs/PIs (if applicable to this NOFO) for the entire application. A summary of Senior/Key Persons followed by their Biographical Sketches in the Overall section of the assembled application image in eRA Commons will be generated upon submission. Budget (Overall) The only budget information included in the Overall component is the Estimated Project Funding section of the SF424 (R&R) Cover. A budget summary in the Overall section of the assembled application image in eRA Commons compiled from detailed budget data collected in the other components will be generated upon submission. PHS 398 Research Plan (Overall) Introduction to Application: For Resubmission and Revision applications, an Introduction to Application is required in the Overall component. Specific Aims: Applicants must provide Specific Aims for the Overall Center describing the objectives and goals of the Center, as they relate to the SRP Mandates and Superfund. The Specific Aims section should provide greater scientific detail and approaches than the overall Summary/Abstract."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1803325,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AE7VaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Project Summary/Abstract: Include a Core Summary/Abstract that briefly describes: How the Administrative Core will provide leadership and oversight to the Center and ensure that the Centers BMR and ESE projects and TREC and RSC (if applicable) cores are being supported to achieve the Centers goals. Specific activities and innovative plans for supporting data management, which includes key activities that will be conducted by the Data Management Coordinator (e.g., how they will support the management and integration of data assets across the Center and how they will leverage institutional and computing infrastructure). Specific activities for coordinating trainee activities for the projects and cores within the Center tailored to fit the overall goals of the Center, including how they will support the trainees' professional and multidisciplinary research experiences. Project Narrative: It should be clear in the \"Project Narrative\" (i.e., the \"public health relevance\" statement) the relevance of the Centers activities to public health, end-users/stakeholders, Superfund, and the SRP mandates. Other Attachments: Trainee List (For renewal applications only). Renewal applications must provide a \"Trainee List\". In the \"Trainee List\", it is important that the application identifies the graduate students and post-doctoral researchers who participated in the Center during the previous funding cycle. This list should be in tabular form and include the names of the trainees, their SRP Center-associated mentor name, project number/core name, position during training experience, current position and affiliation, and location of affiliation (i.e., city/state). An illustration of the \"Trainee List\" can be found here . Project /Performance Site Location(s) (Administrative Core) List all performance sites that apply to the specific component. Note: The Project Performance Site form allows up to 300 sites, prior to using additional attachment for additional entries. Research & Related Senior/Key Person Profile (Administrative Core) In the Project Director/Principal Investigator section of the form, use Project Role of &lsquo;Other with Category of &lsquo;Project Lead and provide a valid eRA Commons ID in the Credential field. In the additional Senior/Key Profiles section, list Senior/Key persons that are working in the component (e.g., Center Director, Data Management Coordinator, and Training Coordinator). Include a single Biographical Sketch for each Senior/Key person listed in the application regardless of the number of components in which they participate."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1537057,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AHLVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Summary/Abstract: Include a Core Summary/Abstract that briefly describes: How the RSC will serve as a resource for the Center. Specific activities (e.g., shared laboratory facilities and services), innovative plans, and unique capabilities of the core indicating how its objectives have been tailored to fit the overall goals of the Center. Project Narrative: It should be clear in the \"Project Narrative\" (i.e., the \"public health relevance\" statement) the relevance of the Center's activities to public health, end-users/stakeholders, Superfund, and the SRP. Project /Performance Site Location(s) (Research Support Core) List all performance sites that apply to the specific component. Note: The Project Performance Site form allows up to 300 sites, prior to using additional attachment for additional entries. Research & Related Senior/Key Person Profile (Research Support Core) In the Project Director/Principal Investigator section of the form, use Project Role of &lsquo;Other with Category of &lsquo;Project Lead and provide a valid eRA Commons ID in the Credential field. In the additional Senior/Key Profiles section, list Senior/Key persons that are working in the component."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1531684,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AOLVaYKEBbayybwJO7u5b"
+    }
+   }
+  ]
+ },
+ "1f492a3192d56613": {
+  "query": "total project period and direct costs limit",
+  "filter": "a414c68243574ab2",
+  "retrievalResults": []
+ },
+ "2c3ac0ab30d88656": {
+  "query": "total project period and direct costs limit",
+  "filter": "9fd43350bccb38ae",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Award Budget Applications may request a budget for direct costs of up to $1.75 million dollars for each year. Award Project Period Applications may propose a project period of up to 5 years. NIH grants policies as described in the NIH Grants Policy Statement will apply to the applications submitted and awards made from this NOFO. Section III."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4855244,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AC7VaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Each KC Donnelly externship is limited to $10,000 direct costs for support up to three (3) months, consisting of supplies, travel to externship site(s), housing costs, and travel to the Annual SRP Grant Recipient Meeting to present the externship experience. In the budget justification, the KC Donnelly expenses should be clearly detailed (e.g., details on level of effort and salary of core leader/staff, description of other expenses, etc.). Annual SRP Grant Recipient Meetings: Funds for travel by required staff (i.e., Center Director, Center Administrator, Data Management Coordinator, Training Coordinator, TREC leader(s), and at least four trainees) to attend the Superfund Research Program three-day annual meeting shall be included in the Administrative Cores budget for each year. An SRP Center should expect to host the Annual SRP Grant Recipient Meeting once within the project period and may want to set funds aside for the event. Please consult with program staff for details. Note: The R&R Budget form included in many of the component types allows for up to 100 Senior/Key Persons in section A and 100 Equipment Items in section C prior to using attachments for additional entries. All other SF424 (R&R) instructions apply. PHS 398 Research Plan (Administrative Core) Introduction to Application: For Resubmission and Revision applications, an Introduction to Application is allowed for each component. Specific Aims: Specific Aims should describe the objectives and goals of the Core. The specific aims section should also contain a brief statement, in coordination with the Center's projects and cores, about how the Core will provide leadership to the Center; support effective data management for all relevant Center components; and promote interdisciplinary and professional development opportunities for the Centers trainees to achieve the Center's goals. Research Strategy: The research strategy should include a detailed description of how the Core will provide leadership to the Center; support effective data management for all relevant Center components and support NIH's data sharing policy ; and promote interdisciplinary and professional development opportunities for the Centers trainees to achieve the Center's goals. The leadership description should include how the Core (and the Center Director) will: Provide guidance in ensuring the synthesis of findings and activities from research projects and cores towards addressing the central problem/objective proposed by the Center. Create an infrastructure that promotes cross-discipline interactions and integration among all the projects and cores (e.g., lines of communication among the Center Director and the Center's project and core leaders)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2156475,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AHrVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "For Renewal/Resubmissions: Table of Changes to Projects and Cores. To assist review of renewal/resubmission applications, a table should be included that lists projects and core components (by project title and project/core leader/coordinator) denoting which projects are new, continuing, substantially modified, finished/completed, or discontinued. This table should coincide in order and number with the projects and cores in the current application. Also, the applicant should indicate which projects are considered biomedical research (BMR) and which are considered environmental science and engineering (ESE) research. Indicate which ESE project(s) supports Mandate 4. ASSIST assigns projects/cores consecutively; therefore, when numbering projects and cores, numbering must not be skipped if a project from a previous funding period is discontinued in the renewal application. Please label in the following format: new = N; continuing = C; substantially modified = M; finished/completed = F; or discontinued = D. This table should be provided as a pdf file titled \"Table of Changes to Projects and Cores\". Please refer to the following website for example illustrations of the tables. Project/Performance Site Locations (Overall) Enter primary site only. A summary of Project/Performance Sites in the Overall section of the assembled application image in eRA Commons compiled from data collected in the other components will be generated upon submission. Research and Related Senior/Key Person Profile (Overall) Include only the Project Director/Principal Investigator (PD/PI) and any multi-PDs/PIs (if applicable to this NOFO) for the entire application. A summary of Senior/Key Persons followed by their Biographical Sketches in the Overall section of the assembled application image in eRA Commons will be generated upon submission. Budget (Overall) The only budget information included in the Overall component is the Estimated Project Funding section of the SF424 (R&R) Cover. A budget summary in the Overall section of the assembled application image in eRA Commons compiled from detailed budget data collected in the other components will be generated upon submission. PHS 398 Research Plan (Overall) Introduction to Application: For Resubmission and Revision applications, an Introduction to Application is required in the Overall component. Specific Aims: Applicants must provide Specific Aims for the Overall Center describing the objectives and goals of the Center, as they relate to the SRP Mandates and Superfund. The Specific Aims section should provide greater scientific detail and approaches than the overall Summary/Abstract."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2091173,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AE7VaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Summary/Abstract: The Project Summary/Abstract should briefly describe: The objectives of the project and how the project will support the problem-solving goals of the Center. How the project relates to the SRP's mandates, drawing connections to Superfund, as appropriate."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2039043,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AMLVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "When a Senior/Key person is listed in multiple components, the Biographical Sketch can be included in any one component. If more than 100 Senior/Key persons are included in a component, the Additional Senior Key Person attachments should be used. Note: The Data Management Coordinator and Training Coordinator (along with their biosketches) should be named in the application. A Deputy Director may also be named, but is not required, within the Administrative Core. Center Directors should consider choosing a Deputy Director with expertise that complements and broadens the overall theme of the Center. For example, if the Center Director has expertise in BMR, the Deputy Director would have expertise in ESE. The Administrative Core should also designate a point of contact to inform SRP staff of dataset deposition and training activities/accomplishments through the optional SRP Data Collection Tool . Budget (Administrative Core) Budget forms appropriate for the specific component will be included in the application package. The Center Director must commit a minimum of 1.8 person months per year to the administration of the Center. (Note: The sum of Direct Costs for the Administrative Core and the TREC cannot exceed 25% of the total Direct Costs of the Center per year.) Salaries for the Center Director, Data Management Coordinator, Training Coordinator, Center Administrator, and for individuals responsible for Data Collection Tool entry may be included in the Administrative Core budget, if not already included in other project/core budgets. Given the limited core budget, data management and sharing expenses are expected to be provided through their respective project or core components rather than the Administrative Core. Training activities that may be supported by the Administrative Core include cross-disciplinary laboratory experiences, invitational travel for speakers for Center seminar series for trainees, development of a journal club, trainee specific workshops related to professional development, travel of trainees to scientific meetings. Compensation for trainees (e.g., graduate students and Post-Docs) is expected to be provided through their respective project or core components. Other related training costs (e.g., research equipment, supplies) should be part of the project or core budgets rather than the Administrative Core budget. KC Donnelly Externships: applicants may request up to 2 KC Donnelly externships per year. KC Donnelly externships should be listed as a separate line item under \"Other\" in the budget section."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2036537,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AHbVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The sum of Direct Costs for the Administrative Core and TREC cannot exceed 25% of the total Direct Costs of the Center per year. In addition, given the limited core budget, some translational research activities (e.g., technology transfer expenses) may be included in their respective project or core components rather than the TREC. Note: The R&R Budget form included in many of the component types allows for up to 100 Senior/Key Persons in section A and 100 Equipment Items in section C prior to using attachments for additional entries. All other SF424 (R&R) instructions apply. PHS 398 Research Plan (Translational Research and Engagement Core) Introduction to Application: For Resubmission and Revision applications, an Introduction to Application is allowed for each component. Specific Aims: The specific aims should include how the TREC will facilitate translational research activities for each project and how the TREC will coordinate Center engagement with communities, end-users, and/or stakeholders. The specific aims should also indicate which community or communities, end-users, and/or stakeholders are planned for partnerships, as well as which hazardous substances are of interest to the community or communities, end-users, and/or stakeholders. Applicants should highlight specific activities and innovative plans for appropriate prevention/intervention activities, tailored to fit in the overall goals of the Center. The specific aims section should also contain a brief statement about how the Core integrates with the rest of the Center. Specific Aims should also describe the objectives and goals of the core as it relates to the SRP Mandates and Superfund. Research Strategy: The research strategy should indicate how the TREC will achieve the Center's translational research goals and conduct engagement activities with communities, end-users, and/or stakeholders and cross-reference, as applicable, the Table of End-user/Stakeholders and Field Sites. The following objectives should be described in the TRECs Research Strategy: Translational Research: Coordination to explore translational research opportunities appropriate for the stage and type of science for each research project. Development of a TRP for each of the Center research projects and cross-reference the projects TRP (located in the projects Resource Sharing Plans), where details should be provided. Identify opportunities to move science across the research continuum and linking potential stakeholders/end-users with the Center's research results. Work with project leaders on research communication to a variety of audiences using an assortment of strategies (e.g., review articles; websites, videos, newspapers, webinars, social media, fact sheets)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2020392,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AKbVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": " and 'Is the Project Exempt from Federal regulations?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1952794,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ALrVaYKEBbayybwJO7u5b"
+    }
+   }
+  ]
+ },
+ "2e032d1605018c32": {
+  "query": "maximum award amount budget ceiling per year",
+  "filter": "a414c68243574ab2",
+  "retrievalResults": []
+ },
+ "54e9b6eed1e44651": {
+  "query": "Research Strategy page limit",
+  "filter": "a414c68243574ab2",
+  "retrievalResults": []
+ },
+ "8d30cbc0f00ff83e": {
+  "query": "page limits for application components",
+  "filter": "a414c68243574ab2",
+  "retrievalResults": []
+ },
+ "a149270efa11b72c": {
+  "query": "maximum award amount budget ceiling per year",
+  "filter": "9fd43350bccb38ae",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Award Budget Applications may request a budget for direct costs of up to $1.75 million dollars for each year. Award Project Period Applications may propose a project period of up to 5 years. NIH grants policies as described in the NIH Grants Policy Statement will apply to the applications submitted and awards made from this NOFO. Section III."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4205058,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AC7VaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Need help determining whether you are doing a clinical trial? Funds Available and Anticipated Number of Awards NIEHS intends to fund an estimate of up to 10 awards based on programmatic needs and availability of funds, corresponding to a total of up to approximately $22 million, for fiscal year 2027. Future year amounts will depend on annual appropriations."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3008268,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ACrVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Each KC Donnelly externship is limited to $10,000 direct costs for support up to three (3) months, consisting of supplies, travel to externship site(s), housing costs, and travel to the Annual SRP Grant Recipient Meeting to present the externship experience. In the budget justification, the KC Donnelly expenses should be clearly detailed (e.g., details on level of effort and salary of core leader/staff, description of other expenses, etc.). Annual SRP Grant Recipient Meetings: Funds for travel by required staff (i.e., Center Director, Center Administrator, Data Management Coordinator, Training Coordinator, TREC leader(s), and at least four trainees) to attend the Superfund Research Program three-day annual meeting shall be included in the Administrative Cores budget for each year. An SRP Center should expect to host the Annual SRP Grant Recipient Meeting once within the project period and may want to set funds aside for the event. Please consult with program staff for details. Note: The R&R Budget form included in many of the component types allows for up to 100 Senior/Key Persons in section A and 100 Equipment Items in section C prior to using attachments for additional entries. All other SF424 (R&R) instructions apply. PHS 398 Research Plan (Administrative Core) Introduction to Application: For Resubmission and Revision applications, an Introduction to Application is allowed for each component. Specific Aims: Specific Aims should describe the objectives and goals of the Core. The specific aims section should also contain a brief statement, in coordination with the Center's projects and cores, about how the Core will provide leadership to the Center; support effective data management for all relevant Center components; and promote interdisciplinary and professional development opportunities for the Centers trainees to achieve the Center's goals. Research Strategy: The research strategy should include a detailed description of how the Core will provide leadership to the Center; support effective data management for all relevant Center components and support NIH's data sharing policy ; and promote interdisciplinary and professional development opportunities for the Centers trainees to achieve the Center's goals. The leadership description should include how the Core (and the Center Director) will: Provide guidance in ensuring the synthesis of findings and activities from research projects and cores towards addressing the central problem/objective proposed by the Center. Create an infrastructure that promotes cross-discipline interactions and integration among all the projects and cores (e.g., lines of communication among the Center Director and the Center's project and core leaders)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2196922,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AHrVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applications that are out of compliance with these instructions may be delayed or not accepted for review. Page Limitations All page limitations described in the How to Apply- Application Guide and the Table of Page Limits must be followed. Component Component Type for Submission Page Limit Required/Optional Minimum Maximum Overall Overall 12 Required 1 1 Admin Core Admin Core 12 Required 1 1 Translational Research and Engagement Core TREC 12 Required 1 1 Research Project Project 12 Required 3 4 Research Support Core RSC 6 Optional 0 1 Instructions for the Submission of Multi-Component Applications The following section supplements the instructions found in How to Apply- Application Guide and should be used for preparing a multi-component application. Note for Research Projects: Biomedical Research Projects (BMR): required, minimum of 1; maximum of 2 Environmental Science and Engineering Research Projects (ESE): required, minimum of 1; maximum of 2 Centers must be comprised of a minimum of 3 (maximum of 4) Research Projects and could be a combination of 2 BMR/2 ESE or 2 BMR/1 ESE or 1 BMR/2 ESE. Overall Component When preparing the application, use Component Type &lsquo;Overall."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2121353,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AELVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "When a Senior/Key person is listed in multiple components, the Biographical Sketch can be included in any one component. If more than 100 Senior/Key persons are included in a component, the Additional Senior Key Person attachments should be used. Note: The Data Management Coordinator and Training Coordinator (along with their biosketches) should be named in the application. A Deputy Director may also be named, but is not required, within the Administrative Core. Center Directors should consider choosing a Deputy Director with expertise that complements and broadens the overall theme of the Center. For example, if the Center Director has expertise in BMR, the Deputy Director would have expertise in ESE. The Administrative Core should also designate a point of contact to inform SRP staff of dataset deposition and training activities/accomplishments through the optional SRP Data Collection Tool . Budget (Administrative Core) Budget forms appropriate for the specific component will be included in the application package. The Center Director must commit a minimum of 1.8 person months per year to the administration of the Center. (Note: The sum of Direct Costs for the Administrative Core and the TREC cannot exceed 25% of the total Direct Costs of the Center per year.) Salaries for the Center Director, Data Management Coordinator, Training Coordinator, Center Administrator, and for individuals responsible for Data Collection Tool entry may be included in the Administrative Core budget, if not already included in other project/core budgets. Given the limited core budget, data management and sharing expenses are expected to be provided through their respective project or core components rather than the Administrative Core. Training activities that may be supported by the Administrative Core include cross-disciplinary laboratory experiences, invitational travel for speakers for Center seminar series for trainees, development of a journal club, trainee specific workshops related to professional development, travel of trainees to scientific meetings. Compensation for trainees (e.g., graduate students and Post-Docs) is expected to be provided through their respective project or core components. Other related training costs (e.g., research equipment, supplies) should be part of the project or core budgets rather than the Administrative Core budget. KC Donnelly Externships: applicants may request up to 2 KC Donnelly externships per year. KC Donnelly externships should be listed as a separate line item under \"Other\" in the budget section."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2094743,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AHbVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "All activities proposed in your application and budget narrative must align with applicable law, including but not limited to statutes, executive orders, federal regulations and applicable judicial holdings. Accordingly, discretionary awards shall not be used to fund, promote, encourage, subsidize, or facilitate; racial preferences or other forms of racial discrimination by the recipient, including activities where race or intentional proxies for race will be used as a selection criterion for employment or program participation; denial by the recipient of the sex binary in humans, or the belief that sex is a chosen or mutable characteristic; illegal immigration; or any other initiatives that compromise public safety. If an application does not align, the application will not receive funding to the extent permitted by law and applicable court orders. For applications involving substance abuse, the application must not support harm reduction. Please see Updated Funding Guidance for Recipients on Supplies and Services . As of October 1, 2025, HHS has adopted 2 CFR Part 200, with some modifications included in 2 CFR Part 300. These regulations replace those in 45 CFR Part 75. However, for NIH, under the Consolidated Appropriations Act for FY 2026, ( P.L. 119-75 , Division B, Title II, Sec. 224), the provisions relating to indirect costs in 45 CFR 75 continue to apply to NIH awards. Consistent with the statute, NIH will not apply updated thresholds outlined within 2 CFR Part 200, at this time. Cooperative Agreement Terms and Conditions of Award Not Applicable 3. Data Management and Sharing A Data Management and Sharing Plan (DMS Plan) is required for any NIH-funded or conducted research that will generate scientific data. Applicants must submit the DMS Plan at the time of application using the NIH DMS Plan Format Page . The DMS Plan must address the elements in the structured format should not exceed two (2) pages. Where the DMS Plan Format Page requires a Yes or No response, no additional narrative is allowed. The Data Management and Sharing (DMS) Plan must be provided in the Overall component. 4. Reporting When multiple years are involved, recipients will be required to submit the Research Performance Progress Report (RPPR) annually and financial statements as required in the NIH Grants Policy Statement Section 8.4.1 Reporting . To learn more about post-award monitoring and reporting, see the NIH Grants & Funding website, see Post-Award Monitoring and Reporting ."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2069583,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AVLVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Table of Contents Part 1. Overview Information Key Dates Part 2. Full Text of Announcement Section I. Notice of Funding Opportunity Description Section II. Award Information Section III. Eligibility Information Section IV. Application and Submission Information Section V. Application Review Information Section VI. Award Administration Information Section VII. Agency Contacts Section VIII. Other Information Part 2."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1886148,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A_bVaYKEBbayybwJO7u1b"
+    }
+   }
+  ]
+ },
+ "a3e6dd3bc4ea2f80": {
+  "query": "key dates open date, application due dates, earliest start date",
+  "filter": "a414c68243574ab2",
+  "retrievalResults": []
+ },
+ "ac143360ddc5e755": {
+  "query": "key dates open date, application due dates, earliest start date",
+  "filter": "9fd43350bccb38ae",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "In accordance with NIH standard peer-review processes, the application(s) will be peer-reviewed, and only meritorious application(s) will be considered for funding. Funding Opportunity Goal(s) To support innovative research and training through multi-project, interdisciplinary grants. Areas of research may include: (1) advanced techniques for the detection, assessment, and evaluation of the effects of hazardous substances on human health; (2) methods to assess the risks to human health presented by hazardous substances; (3) methods and technologies to detect hazardous substances in the environment; and (4) basic biological, chemical, and physical methods to reduce the amount and toxicity of hazardous substances. Key Dates Posted Date May 19, 2026 Open Date (Earliest Submission Date) June 01, 2026 The following table includes NIH standard due dates marked with an asterisk. Application Due Dates Review and Award Cycles New Renewal / Resubmission / Revision (as allowed) AIDS - New/Renewal/Resubmission/Revision, as allowed Scientific Merit Review Advisory Council Review Earliest Start Date September 25, 2026 * September 25, 2026 * Not Applicable March 2027 May 2027 July 2027 September 25, 2027 * September 25, 2027 * Not Applicable March 2028 May 2028 July 2028 September 25, 2028 * September 25, 2028 * Not Applicable March 2029 May 2029 July 2029 All applications are due by 5:00 PM local time of applicant organization. Applicants are encouraged to apply early to allow adequate time to make any corrections to errors found in the application during the submission process by the due date. No late applications will be accepted for this Notice of Funding Opportunity (NOFO). Expiration Date September 26, 2028 Due Dates for E.O. 12372 Not Applicable Required Application Instructions It is critical that applicants follow the Multi-Project (M) Instructions in the How to Apply - Application Guide , except where instructed to do otherwise (in this NOFO or in a Notice from the NIH Guide for Grants and Contracts ). Conformance to all requirements (both in the How to Apply - Application Guide and the NOFO) is required and strictly enforced."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3296471,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A-7VaYKEBbayybwJO7u1b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applicants are encouraged to submit applications before the due date to ensure they have time to make any application corrections that might be necessary for successful submission. When a submission date falls on a weekend or Federal holiday , the application deadline is automatically extended to the next business day. Organizations must submit applications to Grants.gov (the online portal to find and apply for grants across all Federal agencies) using ASSIST or other electronic submission systems. Applicants must then complete the submission process by tracking the status of the application in the eRA Commons , NIHs electronic system for grants administration. NIH and Grants.gov systems check the application against many of the application instructions upon submission. Errors must be corrected and a changed/corrected application must be submitted to Grants.gov on or before the application due date and time. If a Changed/Corrected application is submitted after the deadline, the application will be considered late. Applications that miss the due date and time are subjected to the NIH Grants Policy Statement Section 2.3.9.2 Electronically Submitted Applications . Applicants are responsible for viewing their application before the due date in the eRA Commons to ensure accurate and successful submission. Information on the submission process and a definition of on-time submission are provided in How to Apply- Application Guide. 5. Intergovernmental Review (E.O. 12372) This initiative is not subject to intergovernmental review . 6. Funding Restrictions All NIH awards are subject to the terms and conditions, cost principles, and other considerations described in the NIH Grants Policy Statement . Pre-award costs are allowable only as described in the NIH Grants Policy Statement Section 7.9.1 Selected Items of Cost. 7. Other Submission Requirements and Information Applications must be submitted electronically following the instructions described in the How to Apply - Application Guide . Paper applications will not be accepted. For information on how applications will be automatically assembled for review and funding consideration after submission, refer to: http://grants.nih.gov/grants/ElectronicReceipt/files/Electronic_Multi-project_Application_Image_Assembly.pdf . Applicants must complete all required registrations before the application due date."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2856297,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3APrVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Table of Contents Part 1. Overview Information Key Dates Part 2. Full Text of Announcement Section I. Notice of Funding Opportunity Description Section II. Award Information Section III. Eligibility Information Section IV. Application and Submission Information Section V. Application Review Information Section VI. Award Administration Information Section VII. Agency Contacts Section VIII. Other Information Part 2."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2057012,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A_bVaYKEBbayybwJO7u1b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application and Submission Information 1. Requesting an Application Package The application forms package specific to this opportunity must be accessed through ASSIST or an institutional system-to-system solution. A button to apply using ASSIST is available in Part 1 of this NOFO. See the administrative office for instructions if planning to use an institutional system-to-system solution. 2. Content and Form of Application Submission It is critical that applicants follow the Multi-Project (M) Instructions in the How to Apply - Application Guide , except where instructed in this notice of funding opportunity to do otherwise (in this NOFO, in a policy notice , or other notice from NIH Guide for Grants and Contracts ) and where instructions in the How to Apply - Application Guide are directly related to the Grants.gov downloadable forms currently used with most NIH opportunities. Conformance to the requirements in the How to Apply - Application Guide is required and strictly enforced."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1697338,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AD7VaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Recommended data management and training coordination activities have been listed in the \"Suggested Research and Activities\" document found on the SRP website . (Note: If KC Donnelly Externships will be conducted as part of training activities, the Administrative Core will report, in their annual Research Performance Progress Report (RPPR), the trainees' names, a brief description of the externship activities/objectives, how the externship(s) fits within the scope of the parent grant, anticipated outcomes, timeline, and mentorship plan. The PD/PI is also strongly encouraged to contact their Program Administrator to discuss their proposed externship plans to ensure that it fulfills the description and goals of the KC Donnelly Externship Program.) Relation to Overall Center: The Research Strategy for the Administrative Core should include a \"Relation to Overall Center\" statement. In this statement, clearly state the relevance of the Core to the goals of the overall Center, how this Core will integrate with other projects and cores, and how the findings/activities of this Core will assist in solving the problem(s) that the Center is addressing. Lines of authority and interactions with the Center Administrator; Data Management Coordinator; and Training Coordinator should also be included. Applicants may refer to their Table of Integration with Center attachment (see Overall Section Other Attachments) as well as the TRP in the Project/Cores Resource Sharing Plan section for points of coordination with the Administrative Core and Center Components. Renewal Applications: Renewal applications must include, in the Research Strategy, a progress report that describes the achievements of the Administrative Core. This is also the section where the Center's data management (i.e., formerly referred to as the Data Management and Analysis Core) and training (i.e., formerly referred to as the Research Experience and Training Coordination Core) achievements since the last competitive review should be reported. Letters of Support: Applicants may include letters to demonstrate the support of, for example, research collaborators, end-users/stakeholders, communities, institutional support, and/or entities whose resources may be utilized as part of the Administrative Core (e.g., sample sharing, access to field site, etc.). Letters from data repository facilities and institutional support (if applicable), when leveraging such resources for the Center's data management and training activities, are strongly encouraged. Applications that propose work with American Indian or Alaska Native populations, tribes or communities must include letters of support from the appropriate tribal officials and/or tribal organizations as applicable."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1693811,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AJLVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "See more tips for avoiding common errors. Upon receipt, applications will be evaluated for completeness and compliance with application instructions by the Center for Scientific Review and responsiveness by components of participating organizations, NIH. Applications that are incomplete, non-compliant and/or nonresponsive will not be reviewed. Funding Opportunity Webinar A free informational webinar will be held to provide information about this NOFO. Information about how to register for this webinar can be found on the following website . Mandatory Disclosure Recipients or subrecipients must submit any information related to violations of federal criminal law involving fraud, bribery, or gratuity violations potentially affecting the federal award. See Mandatory Disclosures, 2 CFR 200.113 and NIH Grants Policy Statement Section 4.1.35 . Send written disclosures to the NIH Chief Grants Management Officer listed on the Notice of Award for the IC that funded the award and to the HHS Office of Inspector Grant Self Disclosure Program at grantdisclosures@oig.hhs.gov . Post Submission Materials Applicants are required to follow the instructions for post-submission materials, as described in the policy ."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1606973,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AQLVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If the PD/PI is also the organizational Signing Official, they must have two distinct eRA Commons accounts, one for each role. Obtaining an eRA Commons account can take up to 2 weeks. All PD(s)/PI(s) must be registered with ORCID . The personal profile associated with the PD(s)/PI(s) eRA Commons account must be linked to a valid ORCID ID. For more information on linking an ORCID ID to an eRA Commons personal profile see the ORCID topic in our eRA Commons online help. Eligible Individuals (Program Director/Principal Investigator) Any individual(s) with the skills, knowledge, and resources necessary to carry out the proposed research as the Program Director(s)/Principal Investigator(s) (PD(s)/PI(s)) is invited to work with his/her organization to develop an application for support. For institutions/organizations proposing multiple PDs/PIs, visit the Multiple Program Director/Principal Investigator Policy and submission details in the Senior/Key Person Profile (Expanded) Component of the How to Apply - Application Guide . 2. Cost Sharing This NOFO does not require cost sharing as defined in the NIH Grants Policy Statement Section 1.2- Definitions of Terms. 3. Additional Information on Eligibility Number of Applications Applicant organizations may submit more than one application, provided that each application is scientifically distinct. The NIH will not accept duplicate or highly overlapping applications under review at the same time per NIH Grants Policy Statement Section 2.3.7.4 Submission of Resubmission Application . This means that the NIH will not accept: A new (A0) application that is submitted before issuance of the summary statement from the review of an overlapping new (A0) or resubmission (A1) application. A resubmission (A1) application that is submitted before issuance of the summary statement from the review of the previous new (A0) application. An application that has substantial overlap with another application pending appeal of initial peer review (see NIH Grants Policy Statement 2.3.9.4 Similar, Essentially Identical, or Identical Applications ). Based on 42 USC 9660(a)(3) eligible applicants are limited to accredited institutes of higher education. Eligible applicants are permitted under the law, and encouraged by NIEHS, to subcontract as appropriate with other organizations as necessary to conduct portions of the research."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1563101,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ADbVaYKEBbayybwJO7u5b"
+    }
+   }
+  ]
+ },
+ "c0ce4d272086aa95": {
+  "query": "Overall component Project Summary Facilities Budget Justification pages",
+  "filter": "9fd43350bccb38ae",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Summary/Abstract: The Project Summary/Abstract should briefly describe: The objectives of the project and how the project will support the problem-solving goals of the Center. How the project relates to the SRP's mandates, drawing connections to Superfund, as appropriate."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4039261,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AMLVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "All instructions in the How to Apply - Application Guide must be followed, with the following additional instructions, as noted. SF424(R&R) Cover (Overall) Complete entire form. PHS 398 Cover Page Supplement (Overall) Follow standard instructions. Research & Related Other Project Information (Overall) Follow standard instructions. Project Summary/Abstract: For the Overall Component, applicants must include a Project Summary/Abstract that describes: The scientific problem(s)/overall hypothesis being addressed by the Overall Center and how the Center plans to solve these target problem(s) related to health effects, risk, detection and/or remediation of hazardous substances (i.e., with relevance to SRP mandates and Superfund). An overall indication of the importance of the proposed science and what the Center proposes to accomplish. Which hazardous substances are being evaluated, study sites, research approaches, model organisms/biological systems, disease pathways, etc. Aspects of the Center that are particularly innovative or paradigm-shifting. How the cores will be integrated into the Center. How the Center will reduce disease/dysfunction and improve public health. Project Narrative: It should be clear in the \"Project Narrative\" (i.e., the \"public health relevance\" statement) the relevance of the Centers activities to public health, end-users/stakeholders, Superfund, and the SRP mandates. Other Attachments: The following \"Other Attachments\" must be included with the overall component to aid in the review of applications. The filename provided for each attachment will be the name used for the bookmark in the application image. Center Organizational Structure."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3886399,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AEbVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "For Renewal/Resubmissions: Table of Changes to Projects and Cores. To assist review of renewal/resubmission applications, a table should be included that lists projects and core components (by project title and project/core leader/coordinator) denoting which projects are new, continuing, substantially modified, finished/completed, or discontinued. This table should coincide in order and number with the projects and cores in the current application. Also, the applicant should indicate which projects are considered biomedical research (BMR) and which are considered environmental science and engineering (ESE) research. Indicate which ESE project(s) supports Mandate 4. ASSIST assigns projects/cores consecutively; therefore, when numbering projects and cores, numbering must not be skipped if a project from a previous funding period is discontinued in the renewal application. Please label in the following format: new = N; continuing = C; substantially modified = M; finished/completed = F; or discontinued = D. This table should be provided as a pdf file titled \"Table of Changes to Projects and Cores\". Please refer to the following website for example illustrations of the tables. Project/Performance Site Locations (Overall) Enter primary site only. A summary of Project/Performance Sites in the Overall section of the assembled application image in eRA Commons compiled from data collected in the other components will be generated upon submission. Research and Related Senior/Key Person Profile (Overall) Include only the Project Director/Principal Investigator (PD/PI) and any multi-PDs/PIs (if applicable to this NOFO) for the entire application. A summary of Senior/Key Persons followed by their Biographical Sketches in the Overall section of the assembled application image in eRA Commons will be generated upon submission. Budget (Overall) The only budget information included in the Overall component is the Estimated Project Funding section of the SF424 (R&R) Cover. A budget summary in the Overall section of the assembled application image in eRA Commons compiled from detailed budget data collected in the other components will be generated upon submission. PHS 398 Research Plan (Overall) Introduction to Application: For Resubmission and Revision applications, an Introduction to Application is required in the Overall component. Specific Aims: Applicants must provide Specific Aims for the Overall Center describing the objectives and goals of the Center, as they relate to the SRP Mandates and Superfund. The Specific Aims section should provide greater scientific detail and approaches than the overall Summary/Abstract."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3797266,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AE7VaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The hazardous substances being evaluated, the exposure context (as appropriate), the model organisms/biological systems, disease pathways, research approaches, environmental media, etc., as well as study sites (if applicable). Aspects of the application that are innovative, paradigm-shifting, and/or gap-filling. Plans for engaging end-users/stakeholders or communities, if applicable. Project Narrative: It should be clear in the \"Project Narrative\" (i.e., the \"public health relevance\" statement) the relevance of the projects activities to public health, end-users/stakeholders, Superfund, and the SRP mandates. Project /Performance Site Location(s) (Research Project) List all performance sites that apply to the specific component. Note: The Project Performance Site form allows up to 300 sites, prior to using additional attachment for additional entries. Research & Related Senior/Key Person Profile (Research Project) In the Project Director/Principal Investigator section of the form, use Project Role of &lsquo;Other with Category of &lsquo;Project Lead and provide a valid eRA Commons ID in the Credential field. In the additional Senior/Key Profiles section, list Senior/Key persons that are working in the component. Include a single Biographical Sketch for each Senior/Key person listed in the application regardless of the number of components in which they participate. When a Senior/Key person is listed in multiple components, the Biographical Sketch can be included in any one component. If more than 100 Senior/Key persons are included in a component, the Additional Senior Key Person attachments should be used. Budget (Research Project) Budget forms appropriate for the specific component will be included in the application package. Include budget information for Data Management and Sharing Costs, if applicable to the Project. Note: The R&R Budget form included in many of the component types allows for up to 100 Senior/Key Persons in section A and 100 Equipment Items in section C prior to using attachments for additional entries. All other SF424 (R&R) instructions apply. PHS 398 Research Plan (Research Project) Introduction to Application: For Resubmission and Revision applications, an Introduction to Application is allowed for each component. Specific Aims: Specific Aims should describe the objectives and goals of the project, as it relates to the SRP Mandates and Superfund. The specific aims section should also include a brief statement about how the project integrates with the rest of the Center and how the project contributes to the other projects and cores."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3760535,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AMbVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Summary/Abstract: Include a Core Summary/Abstract that briefly describes: How the RSC will serve as a resource for the Center. Specific activities (e.g., shared laboratory facilities and services), innovative plans, and unique capabilities of the core indicating how its objectives have been tailored to fit the overall goals of the Center. Project Narrative: It should be clear in the \"Project Narrative\" (i.e., the \"public health relevance\" statement) the relevance of the Center's activities to public health, end-users/stakeholders, Superfund, and the SRP. Project /Performance Site Location(s) (Research Support Core) List all performance sites that apply to the specific component. Note: The Project Performance Site form allows up to 300 sites, prior to using additional attachment for additional entries. Research & Related Senior/Key Person Profile (Research Support Core) In the Project Director/Principal Investigator section of the form, use Project Role of &lsquo;Other with Category of &lsquo;Project Lead and provide a valid eRA Commons ID in the Credential field. In the additional Senior/Key Profiles section, list Senior/Key persons that are working in the component."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3461897,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AOLVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Include a single Biographical Sketch for each Senior/Key person listed in the application regardless of the number of components in which they participate. When a Senior/Key person is listed in multiple components, the Biographical Sketch can be included in any one component. If more than 100 Senior/Key persons are included in a component, the Additional Senior Key Person attachments should be used. Budget (Research Support Core) Budget forms appropriate for the specific component will be included in the application package. Note: The R&R Budget form included in many of the component types allows for up to 100 Senior/Key Persons in section A and 100 Equipment Items in section C prior to using attachments for additional entries. All other SF424 (R&R) instructions apply. PHS 398 Research Plan (Research Support Core) Introduction to Application: For Resubmission and Revision applications, an Introduction to Application is allowed for each component. Specific Aims: Specific Aims should describe the objectives and goals of the Core. The specific aims section should also contain a brief statement about how the Core integrates with the rest of the Center. Research Strategy: the applicant should include in the description: The services and methodological approaches to be rendered by the Core, why they are not currently available to the Center, and how they are distinct from other facilities at the institution A plan for prioritizing the use of the facility by Center members. The role of the core as a resource to the Center as a whole (e.g., how the Core may provide a cost-savings to the Center). How specific Research Projects will use the resources of the core (note: at least 2 research projects must utilize the Core to be responsive to this NOFO. In addition, a RSC is principally designed as a service or resource component; it would be highly unusual to include research in an RSC (a possible exception would be methodology development). The ways in which the Core augments interdisciplinary activities and/or integration between projects and cores. How the Core will coordinate with the Administrative Core's Data Management Coordinator to facilitate its data management, analysis, and sharing within the Core and the Overall Center and, if applicable, plans to share with the wider research community. The professional skills that the core will provide to the Center's trainees (as applicable). If an RSC provides analytical and quantitative services to the Center, a Quality Assurance Section should be included. The Quality Assurance Section should document a Center's policy on implementing and assessing the effectiveness of its quality assurance and quality control operations."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.344278,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AObVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Project Summary/Abstract: Include a Core Summary/Abstract that briefly describes: How the Administrative Core will provide leadership and oversight to the Center and ensure that the Centers BMR and ESE projects and TREC and RSC (if applicable) cores are being supported to achieve the Centers goals. Specific activities and innovative plans for supporting data management, which includes key activities that will be conducted by the Data Management Coordinator (e.g., how they will support the management and integration of data assets across the Center and how they will leverage institutional and computing infrastructure). Specific activities for coordinating trainee activities for the projects and cores within the Center tailored to fit the overall goals of the Center, including how they will support the trainees' professional and multidisciplinary research experiences. Project Narrative: It should be clear in the \"Project Narrative\" (i.e., the \"public health relevance\" statement) the relevance of the Centers activities to public health, end-users/stakeholders, Superfund, and the SRP mandates. Other Attachments: Trainee List (For renewal applications only). Renewal applications must provide a \"Trainee List\". In the \"Trainee List\", it is important that the application identifies the graduate students and post-doctoral researchers who participated in the Center during the previous funding cycle. This list should be in tabular form and include the names of the trainees, their SRP Center-associated mentor name, project number/core name, position during training experience, current position and affiliation, and location of affiliation (i.e., city/state). An illustration of the \"Trainee List\" can be found here . Project /Performance Site Location(s) (Administrative Core) List all performance sites that apply to the specific component. Note: The Project Performance Site form allows up to 300 sites, prior to using additional attachment for additional entries. Research & Related Senior/Key Person Profile (Administrative Core) In the Project Director/Principal Investigator section of the form, use Project Role of &lsquo;Other with Category of &lsquo;Project Lead and provide a valid eRA Commons ID in the Credential field. In the additional Senior/Key Profiles section, list Senior/Key persons that are working in the component (e.g., Center Director, Data Management Coordinator, and Training Coordinator). Include a single Biographical Sketch for each Senior/Key person listed in the application regardless of the number of components in which they participate."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3318548,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AHLVaYKEBbayybwJO7u5b"
+    }
+   }
+  ]
+ },
+ "c28803408e081636": {
+  "query": "application due date submission deadline",
+  "filter": "9fd43350bccb38ae",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applicants are encouraged to submit applications before the due date to ensure they have time to make any application corrections that might be necessary for successful submission. When a submission date falls on a weekend or Federal holiday , the application deadline is automatically extended to the next business day. Organizations must submit applications to Grants.gov (the online portal to find and apply for grants across all Federal agencies) using ASSIST or other electronic submission systems. Applicants must then complete the submission process by tracking the status of the application in the eRA Commons , NIHs electronic system for grants administration. NIH and Grants.gov systems check the application against many of the application instructions upon submission. Errors must be corrected and a changed/corrected application must be submitted to Grants.gov on or before the application due date and time. If a Changed/Corrected application is submitted after the deadline, the application will be considered late. Applications that miss the due date and time are subjected to the NIH Grants Policy Statement Section 2.3.9.2 Electronically Submitted Applications . Applicants are responsible for viewing their application before the due date in the eRA Commons to ensure accurate and successful submission. Information on the submission process and a definition of on-time submission are provided in How to Apply- Application Guide. 5. Intergovernmental Review (E.O. 12372) This initiative is not subject to intergovernmental review . 6. Funding Restrictions All NIH awards are subject to the terms and conditions, cost principles, and other considerations described in the NIH Grants Policy Statement . Pre-award costs are allowable only as described in the NIH Grants Policy Statement Section 7.9.1 Selected Items of Cost. 7. Other Submission Requirements and Information Applications must be submitted electronically following the instructions described in the How to Apply - Application Guide . Paper applications will not be accepted. For information on how applications will be automatically assembled for review and funding consideration after submission, refer to: http://grants.nih.gov/grants/ElectronicReceipt/files/Electronic_Multi-project_Application_Image_Assembly.pdf . Applicants must complete all required registrations before the application due date."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4542981,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3APrVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "In accordance with NIH standard peer-review processes, the application(s) will be peer-reviewed, and only meritorious application(s) will be considered for funding. Funding Opportunity Goal(s) To support innovative research and training through multi-project, interdisciplinary grants. Areas of research may include: (1) advanced techniques for the detection, assessment, and evaluation of the effects of hazardous substances on human health; (2) methods to assess the risks to human health presented by hazardous substances; (3) methods and technologies to detect hazardous substances in the environment; and (4) basic biological, chemical, and physical methods to reduce the amount and toxicity of hazardous substances. Key Dates Posted Date May 19, 2026 Open Date (Earliest Submission Date) June 01, 2026 The following table includes NIH standard due dates marked with an asterisk. Application Due Dates Review and Award Cycles New Renewal / Resubmission / Revision (as allowed) AIDS - New/Renewal/Resubmission/Revision, as allowed Scientific Merit Review Advisory Council Review Earliest Start Date September 25, 2026 * September 25, 2026 * Not Applicable March 2027 May 2027 July 2027 September 25, 2027 * September 25, 2027 * Not Applicable March 2028 May 2028 July 2028 September 25, 2028 * September 25, 2028 * Not Applicable March 2029 May 2029 July 2029 All applications are due by 5:00 PM local time of applicant organization. Applicants are encouraged to apply early to allow adequate time to make any corrections to errors found in the application during the submission process by the due date. No late applications will be accepted for this Notice of Funding Opportunity (NOFO). Expiration Date September 26, 2028 Due Dates for E.O. 12372 Not Applicable Required Application Instructions It is critical that applicants follow the Multi-Project (M) Instructions in the How to Apply - Application Guide , except where instructed to do otherwise (in this NOFO or in a Notice from the NIH Guide for Grants and Contracts ). Conformance to all requirements (both in the How to Apply - Application Guide and the NOFO) is required and strictly enforced."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3044662,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A-7VaYKEBbayybwJO7u1b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "See more tips for avoiding common errors. Upon receipt, applications will be evaluated for completeness and compliance with application instructions by the Center for Scientific Review and responsiveness by components of participating organizations, NIH. Applications that are incomplete, non-compliant and/or nonresponsive will not be reviewed. Funding Opportunity Webinar A free informational webinar will be held to provide information about this NOFO. Information about how to register for this webinar can be found on the following website . Mandatory Disclosure Recipients or subrecipients must submit any information related to violations of federal criminal law involving fraud, bribery, or gratuity violations potentially affecting the federal award. See Mandatory Disclosures, 2 CFR 200.113 and NIH Grants Policy Statement Section 4.1.35 . Send written disclosures to the NIH Chief Grants Management Officer listed on the Notice of Award for the IC that funded the award and to the HHS Office of Inspector Grant Self Disclosure Program at grantdisclosures@oig.hhs.gov . Post Submission Materials Applicants are required to follow the instructions for post-submission materials, as described in the policy ."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2417847,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AQLVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applicants must read and follow all application instructions in the How to Apply - Application Guide as well as any program-specific instructions noted in Section IV. When the program-specific instructions deviate from those in the How to Apply - Application Guide , follow the program-specific instructions. Applications that do not comply with these instructions may be delayed or not accepted for review. There are several options available to submit your application through Grants.gov to NIH and Department of Health and Human Services partners. You must use one of these submission options to access the application forms for this opportunity. Use the NIH ASSIST system to prepare, submit and track your application online. Use an institutional system-to-system (S2S) solution to prepare and submit your application to Grants.gov and eRA Commons to track your application. Check with your institutional officials regarding availability."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.239609,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A_LVaYKEBbayybwJO7u1b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Section III. Eligibility Information contains information about registration. For assistance with your electronic application or for more information on the electronic submission process, visit How to Apply - Application Guide . If you encounter a system issue beyond your control that threatens your ability to complete the submission process on-time, you must follow the Dealing with System Issues guidance. For assistance with application submission, contact the Application Submission Contacts in Section VII. Important reminders: All PD(s)/PI(s) and component Project Leads must include their eRA Commons ID in the Credential field of the Senior/Key Person Profile form . Failure to register in the Commons and to include a valid PD/PI Commons ID in the credential field will prevent the successful submission of an electronic application to NIH. The applicant organization must ensure that the unique entity identifier provided on the application is the same identifier used in the organizations profile in the eRA Commons and for the System for Award Management. Additional information may be found in How to Apply - Application Guide ."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2196959,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AP7VaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "As part of the scientific peer review, all applications will receive a written critique. Applications may undergo a selection process in which only those applications deemed to have the highest scientific and technical merit (generally the top half of applications under review) will be discussed and assigned an overall impact score. Requests for reconsideration of initial peer review of initial peer review will not be accepted for applications submitted in response to this NOFO. Applications will be assigned to the appropriate NIH Institute or Center. Applications will compete for available funds with all other recommended applications submitted in response to this NOFO. Following initial peer review, recommended applications will receive a second level of review by the National Advisory Environmental Health Sciences Council. The following will be considered in making funding decisions: Scientific and technical merit of the proposed project as determined by scientific peer review. Availability of funds. Relevance of the proposed project to program priorities. If the application is under consideration for funding, NIH will request \"just-in-time\" information from the applicant as described in the NIH Grants Policy Statement Section 2.5.1. Just-in-Time Procedures . This request is not a Notice of Award nor should it be construed to be an indicator of possible funding. Prior to making an award, NIH reviews an applicants federal award history in SAM.gov to ensure sound business practices. An applicant can review and comment on any information in the Responsibility/Qualification records available in SAM.gov. NIH will consider any comments by the applicant in the Responsibility/Qualification records in SAM.gov to ascertain the applicants integrity, business ethics, and performance record of managing Federal awards per 2 CFR Part 200.206 Federal awarding agency review of risk posed by applicants. This provision will apply to all NIH grants and cooperative agreements except fellowships. 3. Anticipated Announcement and Award Dates After the peer review of the application is completed, the PD/PI will be able to access their Summary Statement (written critique) via the eRA Commons . Refer to Part 1 for dates for peer review, advisory council review, and earliest start date. Information regarding the disposition of applications is available in the NIH Grants Policy Statement Section 2.4.4 Disposition of Applications . Section VI."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1904293,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AULVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applications that are out of compliance with these instructions may be delayed or not accepted for review. Page Limitations All page limitations described in the How to Apply- Application Guide and the Table of Page Limits must be followed. Component Component Type for Submission Page Limit Required/Optional Minimum Maximum Overall Overall 12 Required 1 1 Admin Core Admin Core 12 Required 1 1 Translational Research and Engagement Core TREC 12 Required 1 1 Research Project Project 12 Required 3 4 Research Support Core RSC 6 Optional 0 1 Instructions for the Submission of Multi-Component Applications The following section supplements the instructions found in How to Apply- Application Guide and should be used for preparing a multi-component application. Note for Research Projects: Biomedical Research Projects (BMR): required, minimum of 1; maximum of 2 Environmental Science and Engineering Research Projects (ESE): required, minimum of 1; maximum of 2 Centers must be comprised of a minimum of 3 (maximum of 4) Research Projects and could be a combination of 2 BMR/2 ESE or 2 BMR/1 ESE or 1 BMR/2 ESE. Overall Component When preparing the application, use Component Type &lsquo;Overall."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1894704,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AELVaYKEBbayybwJO7u5b"
+    }
+   }
+  ]
+ },
+ "d26b7a92d76b70e5": {
+  "query": "Overall component Project Summary Facilities Budget Justification pages",
+  "filter": "a414c68243574ab2",
+  "retrievalResults": []
+ },
+ "f87095d9dd6be7bd": {
+  "query": "Research Strategy page limit",
+  "filter": "9fd43350bccb38ae",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "In addition, it should be clear how the components of the Center will interact to solve the target scientific problem(s) proposed by the Center, and the role of each project and core in contributing to resolving the problem(s) stated in the application. Research Strategy: The Research Strategy section should highlight the following subsections: Significance and Relevance to SRP Mandates and Superfund; Research Team; Innovation, Approach; Environment; and Center Integration. Descriptions should include: S ignificance and Relevance to SRP Mandates and Superfund How the hazardous substance(s) being studied, and their subsequent research findings/results, are relevant to the SRP and Superfund. The role that each project and core have in contributing to resolving the problem(s) related to health effects, risk, detection and/or remediation of hazardous. Identifying where the research can make a big impact in reducing the prevalence and burden of disease/dysfunction from exposure to hazardous substances as well as an understanding of the molecular, cellular, and pathophysiologic parameters associated with these hazardous substances. How the Overall Center is relevant to SRPs end-users (e.g., the agencies responsible for management of sites impacted by hazardous substances, as well as the individuals and communities impacted by these sites) and other Center stakeholders (as applicable). Information/data to assist risk assessors and remediation managers at sites impacted by hazardous substances. Research Team An introduction to the leadership and key personnel of the Center, highlighting the complementary and integrated expertise and breadth of disciplines among the project and core leaders/coordinators to accomplish the goals of the Center (without duplicating information in biosketches). Outline, on a per project/core basis, the expertise associated with the hazardous substances being evaluated, and the capability of the research team to access study sites, conduct the research approaches, and knowledge of model systems/disease pathways, etc. The successes and accomplishments of the team as a whole in advancing their respective field - particularly with regard to integration between disciplines. A brief description of plans for the Administrative Core and the TREC (and RSC, if applicable) to facilitate the overall goals of the Center and maintain organization of the Center. Innovation, Approach, and Environment: The importance of the knowledge gap(s) the Center is fulfilling. Novel theoretical concepts, approaches or methodologies, instrumentation, or interventions including novel adaptations of technologies from one field to another (i.e., multi-disciplinary approaches). How the Centers strategies ensure a robust, unbiased approach."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4205236,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AFLVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "In addition, applicants are encouraged to identify specific aim(s) that are considered high-risk, high-reward. Research Strategy: The following subsections are recommended: Significance and Relevance to SRP Mandates and Superfund; Investigators; Innovation; Approach; Environment; and Center Integration. In addition, the Research Strategy section should highlight: The scientific problem(s) being addressed by the project and provide a timeline for project completion. How the project advances knowledge or provides resources/technologies that could be utilized to improve human health, addresses uncertainty of risk, or improve the quality of the environment (i.e., remediation); and how the project provides rigorous scientific data that could be used by end-users/stakeholders. The hazardous substance (and potential metabolites) being studied. How the proposed methodology and analyses are appropriate to accomplish the specific aims of the project as well as alternative strategies, and benchmarks for success. The justification of approaches. As examples: For BMR: an appropriate model for the exposure-disease paradigm under investigation (if using vertebrate animals, explain why other non-vertebrate approaches are not satisfactory); justification of sample size in population studies through power calculations and justification of dose in mechanistic/toxicological studies. For ESE: appropriateness of model, sample size, environmental media, the conditions in which the technology is being utilized, target detection/sensing goals, value-added of technology relative to existing technologies. Innovative aspects of the project including whether the project challenges current research paradigms by utilizing novel theoretical concepts, approaches, methodologies, instrumentation, or interventions. A description of how the project contributes to the Overall SRP Center and what will be gained to advance public health. For projects that involve significant interactions with communities, include the following: A description of the defined community of interest or community partner and the community's and researchers' roles (e.g., the multi-directional relationship between the researcher(s) and the community). How the research activity will lead to improved public understanding of the research proposed by the Center. What is the generalizability of the research to other communities. How the participating community (or community group) will be involved in the design and approach of the research from the onset through to the conclusion (including a timeline) of the activity. A management plan for maintaining transparent communications between the community and the academic partners (e.g., including plans for lines of communication in challenging situations, such as disaster or other emergency)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4193279,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AMrVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applications that are out of compliance with these instructions may be delayed or not accepted for review. Page Limitations All page limitations described in the How to Apply- Application Guide and the Table of Page Limits must be followed. Component Component Type for Submission Page Limit Required/Optional Minimum Maximum Overall Overall 12 Required 1 1 Admin Core Admin Core 12 Required 1 1 Translational Research and Engagement Core TREC 12 Required 1 1 Research Project Project 12 Required 3 4 Research Support Core RSC 6 Optional 0 1 Instructions for the Submission of Multi-Component Applications The following section supplements the instructions found in How to Apply- Application Guide and should be used for preparing a multi-component application. Note for Research Projects: Biomedical Research Projects (BMR): required, minimum of 1; maximum of 2 Environmental Science and Engineering Research Projects (ESE): required, minimum of 1; maximum of 2 Centers must be comprised of a minimum of 3 (maximum of 4) Research Projects and could be a combination of 2 BMR/2 ESE or 2 BMR/1 ESE or 1 BMR/2 ESE. Overall Component When preparing the application, use Component Type &lsquo;Overall."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3703285,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AELVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The sum of Direct Costs for the Administrative Core and TREC cannot exceed 25% of the total Direct Costs of the Center per year. In addition, given the limited core budget, some translational research activities (e.g., technology transfer expenses) may be included in their respective project or core components rather than the TREC. Note: The R&R Budget form included in many of the component types allows for up to 100 Senior/Key Persons in section A and 100 Equipment Items in section C prior to using attachments for additional entries. All other SF424 (R&R) instructions apply. PHS 398 Research Plan (Translational Research and Engagement Core) Introduction to Application: For Resubmission and Revision applications, an Introduction to Application is allowed for each component. Specific Aims: The specific aims should include how the TREC will facilitate translational research activities for each project and how the TREC will coordinate Center engagement with communities, end-users, and/or stakeholders. The specific aims should also indicate which community or communities, end-users, and/or stakeholders are planned for partnerships, as well as which hazardous substances are of interest to the community or communities, end-users, and/or stakeholders. Applicants should highlight specific activities and innovative plans for appropriate prevention/intervention activities, tailored to fit in the overall goals of the Center. The specific aims section should also contain a brief statement about how the Core integrates with the rest of the Center. Specific Aims should also describe the objectives and goals of the core as it relates to the SRP Mandates and Superfund. Research Strategy: The research strategy should indicate how the TREC will achieve the Center's translational research goals and conduct engagement activities with communities, end-users, and/or stakeholders and cross-reference, as applicable, the Table of End-user/Stakeholders and Field Sites. The following objectives should be described in the TRECs Research Strategy: Translational Research: Coordination to explore translational research opportunities appropriate for the stage and type of science for each research project. Development of a TRP for each of the Center research projects and cross-reference the projects TRP (located in the projects Resource Sharing Plans), where details should be provided. Identify opportunities to move science across the research continuum and linking potential stakeholders/end-users with the Center's research results. Work with project leaders on research communication to a variety of audiences using an assortment of strategies (e.g., review articles; websites, videos, newspapers, webinars, social media, fact sheets)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3108484,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AKbVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Include a single Biographical Sketch for each Senior/Key person listed in the application regardless of the number of components in which they participate. When a Senior/Key person is listed in multiple components, the Biographical Sketch can be included in any one component. If more than 100 Senior/Key persons are included in a component, the Additional Senior Key Person attachments should be used. Budget (Research Support Core) Budget forms appropriate for the specific component will be included in the application package. Note: The R&R Budget form included in many of the component types allows for up to 100 Senior/Key Persons in section A and 100 Equipment Items in section C prior to using attachments for additional entries. All other SF424 (R&R) instructions apply. PHS 398 Research Plan (Research Support Core) Introduction to Application: For Resubmission and Revision applications, an Introduction to Application is allowed for each component. Specific Aims: Specific Aims should describe the objectives and goals of the Core. The specific aims section should also contain a brief statement about how the Core integrates with the rest of the Center. Research Strategy: the applicant should include in the description: The services and methodological approaches to be rendered by the Core, why they are not currently available to the Center, and how they are distinct from other facilities at the institution A plan for prioritizing the use of the facility by Center members. The role of the core as a resource to the Center as a whole (e.g., how the Core may provide a cost-savings to the Center). How specific Research Projects will use the resources of the core (note: at least 2 research projects must utilize the Core to be responsive to this NOFO. In addition, a RSC is principally designed as a service or resource component; it would be highly unusual to include research in an RSC (a possible exception would be methodology development). The ways in which the Core augments interdisciplinary activities and/or integration between projects and cores. How the Core will coordinate with the Administrative Core's Data Management Coordinator to facilitate its data management, analysis, and sharing within the Core and the Overall Center and, if applicable, plans to share with the wider research community. The professional skills that the core will provide to the Center's trainees (as applicable). If an RSC provides analytical and quantitative services to the Center, a Quality Assurance Section should be included. The Quality Assurance Section should document a Center's policy on implementing and assessing the effectiveness of its quality assurance and quality control operations."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2792315,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AObVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "For Renewal Applications. Renewal applications must include, in the Research Strategy, a general progress report that describes achievements under the grant since the last competitive review. The progress report should not be a copy of the material included for the individual projects. (The individual research projects/cores will also provide a Progress Report in their respective Research Strategy sections). Items to be included are the following: Brief summary of major accomplishments of the Center in achieving its problem-solving goals. Brief highlights of integration and synergy among the projects and cores within the Center. Brief report on projects and cores that are not being continued, and the reason for removing them from the Center. Be certain to reference relevant tables (e.g., \"Table of Changes to Projects and Cores\", described above). Timeline: Applicants should also provide an Overall Center timeline for the completion of problem-solving goals. Letters of Support: Applicants should include all letters of support pertaining to the Overall Center in this section. For example, these letters may include collaborative agreements for the entire Center (e.g., from potential end-users/stakeholders), institutional support (if applicable), etc. However, only those Letters of Support that pertain to a specific project/core should be placed in the respective project/core. Applications that propose work with American Indian or Alaska Native populations, tribes or communities must include letters of support from the appropriate tribal officials and/or tribal organizations as applicable. See the Application Guide for instructions."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2781183,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AFrVaYKEBbayybwJO7u5b"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "This includes, but is not limited to, toxicology studies, epidemiology, mechanistic studies, genetic susceptibility, computational toxicology, biomedical engineering, preclinical/clinical intervention, or efficacy of prevention studies. Environmental Science and Engineering (ESE) Projects: A minimum of one (maximum of two) ESE projects are required and should address environmental science or engineering implications of hazardous substances. These projects are integral to the protection of human health through predicting, detecting, and preventing exposures. At least one ESE project should support SRPs fourth mandate basic biological, chemical, and physical methods to reduce the amount and toxicity of hazardous substances. ESE projects include, but would not be limited to: remediation, geochemistry, ecology, civil/environmental engineering, geology, microbiology, fate and transport, hydrogeology, and detection sciences. (Note: Centers should be comprised of a minimum of 3 (maximum of 4) Research Projects and could be a combination of 2 BMR/2 ESE or 2 BMR/1 ESE or 1 BMR/2 ESE.) Research Support Core (Optional): Applicants may include a Research Support Core (RSC) to provide centralized resources/services in support of the scientific goals of at least two projects. This may include, but would not be limited to, analytical services, biostatistics, bioinformatics, geographical information systems, data visualization, and computational modeling, etc. Integration: The SRP considers integration of a Center's projects and core as an important way to target complex problem(s) relevant to the SRP's mandates. A Center should demonstrate evidence of synergy between its projects and core - including interaction between BMR and ESE disciplines. Scope of the SRP Center Grant The scope of the SRP Center is defined by the SRP Mandates. Research and supporting activities under this NOFO may utilize a variety of approaches to achieve SRP mandates, listed here: 1) Advanced techniques for the detection, assessment, and evaluation of the effect of hazardous substances on human health. Mechanistic and/or mode of action research that includes laboratory- and population-based (i.e. epidemiology) studies for unraveling critical biological pathways that contribute to disease when perturbed by environmental contaminants. Molecular, genetic, epigenetic, and biochemical research that describe the normal physiological events and processes that contribute to good health and the roles that hazardous substances play in their disruption and progression of disease."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2556779,
+    "metadata": {
+     "documentIdentifier": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Limited Competition: Superfund Hazardous Substance Research and Training Program (P42 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:23:00.890Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AA7VaYKEBbayybwJO7u5b"
+    }
+   }
+  ]
+ }
+}

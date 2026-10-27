@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "What's the deadline to submit to the AFOSR BAA?",
+    "expected": "There is no fixed deadline: the announcement remains open until superseded and proposals may be submitted at any time and are reviewed as received, though some specific topics recommend submission by certain dates.",
+    "quote": "This announcement remains open until superseded. We review and evaluate proposals as they are received.",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "eligibility",
+    "question": "Can I apply as an individual researcher?",
+    "expected": "No. Individual persons, FFRDCs and federal agencies are not eligible as primary award recipients; qualified, responsible organizations from academia, the non-profit sector and industry may apply.",
+    "quote": "None of the following entity types are eligible to submit proposals as primary award recipients",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "limits",
+    "question": "Is there a page limit on the proposal, and what font do I use?",
+    "expected": "There is no page limit (though unnecessarily elaborate or lengthy proposals are not desirable). Format is 8.5 x 11-inch paper, 1-inch margins, single, 1.5 or 2.0 line spacing, and Times New Roman or Garamond in 10, 11 or 12 point.",
+    "quote": "We do not limit the length of your proposal for this competition; however, you must not",
+    "confirmed": false
+  }
+]

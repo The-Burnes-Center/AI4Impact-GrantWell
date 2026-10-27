@@ -1,0 +1,35 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When is the DERA application due?",
+    "expected": "Applications are due January 22, 2027 at 11:59 pm ET.",
+    "quote": "January 22, 2027 11:59 pm ET",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "eligibility",
+    "question": "Can a for-profit company apply for this?",
+    "expected": "No. For-profit organizations are not eligible; eligible applicants are regional, state, local or Tribal agencies or port authorities with jurisdiction over transportation or air quality, and certain non-profits (501(c)(4) lobbying non-profits are also excluded).",
+    "quote": "For-profit organizations are not an eligible entity for this funding opportunity. Additionally, non-",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "limits",
+    "question": "How many pages can the project narrative be?",
+    "expected": "The Cover Page and Workplan combined are limited to 14 pages (the cover page itself should not exceed one page); required attachments do not count toward the limit.",
+    "quote": "The Cover Page and Workplan combined are limited to 14 pages. Attachments are not included in the",
+    "confirmed": false
+  },
+  {
+    "id": "q4",
+    "kind": "allowable_cost",
+    "question": "Can I use the grant to buy EV chargers for the new electric trucks?",
+    "expected": "No. DERA funds cannot be used for fueling or charging infrastructure, including the purchase and installation of an EV charging unit or related EVSE; for zero-emission projects even cost share cannot cover charging infrastructure.",
+    "quote": "12. Fueling and Charging Infrastructure: Funding under this NOFO cannot be used for fueling or",
+    "confirmed": false,
+    "verdict": "not_allowed"
+  }
+]

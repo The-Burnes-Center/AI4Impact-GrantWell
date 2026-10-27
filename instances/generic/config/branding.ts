@@ -36,7 +36,7 @@ export const branding: Branding = {
     { label: "The Gov Lab", href: "https://thegovlab.org" },
     { label: "Community-Centered AI", href: "https://communitycentered.ai/" },
   ],
-  analyticsId: "G-K27MB9Y26C",
+  analyticsId: "G-1CVKPYK2GD",
   seo: {
     title: "GrantWell | AI Tool to Find and Write Federal Grants",
     description:

@@ -30,6 +30,7 @@ import {
 
 export interface ScraperStackProps extends cdk.NestedStackProps {
   readonly ffioNofosBucket: s3.Bucket;
+  readonly grantArtifactsBucket: s3.Bucket;
   readonly nofoMetadataTable: Table;
   /** Shared with functions outside this stack, so it stays in the parent. */
   readonly jsSharedLayer: lambda.ILayerVersion;
@@ -160,9 +161,11 @@ export class ScraperStack extends cdk.NestedStack {
           path.join(__dirname, 'landing-page/auto-archive-expired-nofos')
         ),
         handler: 'index.handler',
+        layers: [props.jsSharedLayer],
         environment: {
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           BUCKET: props.ffioNofosBucket.bucketName,
+          ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
           GRACE_PERIOD_DAYS: '1', // 1 day grace period (archive next day)
           DRY_RUN: 'false', // Set to 'true' for testing
         },
@@ -197,6 +200,10 @@ export class ScraperStack extends cdk.NestedStack {
           `${props.ffioNofosBucket.bucketArn}/*`,
         ],
       })
+    );
+
+    autoArchiveExpiredNofosFunction.addToRolePolicy(
+      s3ReadWritePolicy(props.grantArtifactsBucket.bucketArn)
     );
 
     this.autoArchiveExpiredNofosFunction = autoArchiveExpiredNofosFunction;

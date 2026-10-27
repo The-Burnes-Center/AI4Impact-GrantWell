@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When are DHAPP applications due?",
+    "expected": "Deadlines are set per country narrative in Attachment 1, and every current narrative (Angola, Burundi, Ethiopia, Ghana, Mozambique, the two multi-country narratives, Senegal, Togo, Uganda) is due by 12pm EST on 15 May 2026. The base announcement's Section D instead says applications must be received by 5:00 p.m. ET on the narrative's date, so the notice conflicts; 12pm EST is the safe deadline. The overall announcement stays open until 5:00 p.m. Eastern Time (ET), 18 September 2027.",
+    "quote": "NOTE: Application submissions for this narrative are due by 12pm EST on 15 May 2026.",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "eligibility",
+    "question": "Who is eligible to apply?",
+    "expected": "All responsible sources from academia, industry and non-governmental organizations may apply; no awards go directly to foreign military establishments, and applicants must show the active support of the in-country military and the DoW representative at the U.S. Embassy.",
+    "quote": "Eligible Applicants: All responsible sources from academia, industry, and non-",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "limits",
+    "question": "How long can the technical narrative be?",
+    "expected": "The Technical Narrative may not exceed 45 pages, in Times New Roman 12 point, single-spaced, with 1-inch margins on 8.5 x 11 paper; pages over the limit are deleted before review.",
+    "quote": "requirements. Proposal Technical Narrative may not exceed 45 pages.",
+    "confirmed": false
+  }
+]

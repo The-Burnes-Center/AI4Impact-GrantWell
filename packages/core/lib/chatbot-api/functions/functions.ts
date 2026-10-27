@@ -40,6 +40,9 @@ import {
   lambdaInvokePolicy,
   metadataTableReadWritePolicy,
   reviewTableReadWritePolicy,
+  s3ListBucketPolicy,
+  s3ObjectReadWriteDeletePolicy,
+  s3ReadOnlyPolicy,
   s3ReadWritePolicy,
 } from "./shared-policies";
 
@@ -76,6 +79,7 @@ interface LambdaFunctionStackProps {
   readonly analyticsTable: Table;
   readonly dailyUsageTable: Table;
   readonly ffioNofosBucket: s3.Bucket;
+  readonly grantArtifactsBucket: s3.Bucket;
   readonly userDocumentsBucket: s3.Bucket;
   readonly knowledgeBase: bedrock.CfnKnowledgeBase;
   readonly knowledgeBaseSource: bedrock.CfnDataSource;
@@ -624,8 +628,10 @@ export class LambdaFunctionStack extends cdk.Stack {
           path.join(__dirname, "landing-page/retrieve-nofos")
         ),
         handler: "index.handler",
+        layers: [jsSharedLayer],
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           ENABLE_DYNAMODB_CACHE: "true",
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
@@ -649,6 +655,8 @@ export class LambdaFunctionStack extends cdk.Stack {
         ],
       })
     );
+
+    getS3APIHandlerFunctionForNOFOs.addToRolePolicy(s3ReadOnlyPolicy(props.grantArtifactsBucket.bucketArn));
 
     // Grant DynamoDB read permissions
     getS3APIHandlerFunctionForNOFOs.addToRolePolicy(
@@ -703,6 +711,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     const nofoPipeline = new NofoPipelineStack(scope, "NofoPipelineStack", {
       stackName,
       ffioNofosBucket: props.ffioNofosBucket,
+      grantArtifactsBucket: props.grantArtifactsBucket,
       nofoMetadataTable: props.nofoMetadataTable,
       nofoProcessingReviewTable: props.nofoProcessingReviewTable,
       jsSharedLayer: jsSharedLayer,
@@ -787,6 +796,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         layers: [jsSharedLayer], // for recordEvent / touchLastActive
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           NOFO_STATE_OVERLAY_TABLE_NAME: props.nofoStateOverlayTable.tableName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
@@ -808,6 +818,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         ],
       })
     );
+    RequirementsForNOFOs.addToRolePolicy(s3ReadOnlyPolicy(props.grantArtifactsBucket.bucketArn));
     props.nofoMetadataTable.grantReadData(RequirementsForNOFOs);
     props.nofoStateOverlayTable.grantReadData(RequirementsForNOFOs);
     this.getNOFOSummary = RequirementsForNOFOs;
@@ -821,8 +832,10 @@ export class LambdaFunctionStack extends cdk.Stack {
           path.join(__dirname, "landing-page/retrieveNOFOQuestions")
         ),
         handler: "index.handler",
+        layers: [jsSharedLayer],
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           NOFO_STATE_OVERLAY_TABLE_NAME: props.nofoStateOverlayTable.tableName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
@@ -842,6 +855,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         ],
       })
     );
+    NOFOQuestionsForNOFOs.addToRolePolicy(s3ReadOnlyPolicy(props.grantArtifactsBucket.bucketArn));
     props.nofoMetadataTable.grantReadData(NOFOQuestionsForNOFOs);
     props.nofoStateOverlayTable.grantReadData(NOFOQuestionsForNOFOs);
     this.getNOFOQuestions = NOFOQuestionsForNOFOs;
@@ -894,6 +908,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         layers: [jsSharedLayer],
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           ENABLE_DYNAMODB_CACHE: "true",
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
@@ -907,6 +922,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     nofoStatusHandlerFunction.addToRolePolicy(
       s3ReadWritePolicy(props.ffioNofosBucket.bucketArn)
     );
+    nofoStatusHandlerFunction.addToRolePolicy(s3ReadWritePolicy(props.grantArtifactsBucket.bucketArn));
 
     // Grant DynamoDB write permissions
     nofoStatusHandlerFunction.addToRolePolicy(
@@ -940,9 +956,9 @@ export class LambdaFunctionStack extends cdk.Stack {
         layers: [jsSharedLayer],
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           ENABLE_DYNAMODB_CACHE: "true",
-          SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         ...SINGLE_STATE_ENV,
@@ -972,9 +988,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
-    nofoSummaryUpdateFunction.addToRolePolicy(
-      lambdaInvokePolicy(kbSyncAPIHandlerFunction.functionArn)
-    );
+    nofoSummaryUpdateFunction.addToRolePolicy(s3ReadWritePolicy(props.grantArtifactsBucket.bucketArn));
 
     this.nofoSummaryUpdateFunction = nofoSummaryUpdateFunction;
 
@@ -1004,6 +1018,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       layers: [jsSharedLayer],
       environment: {
         BUCKET: props.ffioNofosBucket.bucketName,
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
       LEGACY_STATELESS_ADMIN_IS_PLATFORM,
@@ -1013,6 +1028,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     nofoPromoteCopyFunction.addToRolePolicy(
       s3ReadWritePolicy(props.ffioNofosBucket.bucketArn)
     );
+    nofoPromoteCopyFunction.addToRolePolicy(s3ReadWritePolicy(props.grantArtifactsBucket.bucketArn));
     props.nofoMetadataTable.grantReadWriteData(nofoPromoteCopyFunction);
     this.nofoPromoteCopyFunction = nofoPromoteCopyFunction;
 
@@ -1029,6 +1045,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         layers: [jsSharedLayer],
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           NOFO_STATE_OVERLAY_TABLE_NAME: props.nofoStateOverlayTable.tableName,
           ENABLE_DYNAMODB_CACHE: "true",
@@ -1068,6 +1085,9 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
+    nofoRenameHandlerFunction.addToRolePolicy(s3ListBucketPolicy(props.grantArtifactsBucket.bucketArn));
+    nofoRenameHandlerFunction.addToRolePolicy(s3ObjectReadWriteDeletePolicy(props.grantArtifactsBucket.bucketArn));
+
     props.nofoStateOverlayTable.grantReadWriteData(nofoRenameHandlerFunction);
 
     // Re-index the KB so it drops the old prefix and picks up the new one.
@@ -1090,6 +1110,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         layers: [jsSharedLayer],
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
           SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           ENABLE_DYNAMODB_CACHE: "true",
@@ -1111,6 +1132,9 @@ export class LambdaFunctionStack extends cdk.Stack {
         ],
       })
     );
+
+    nofoDeleteHandlerFunction.addToRolePolicy(s3ListBucketPolicy(props.grantArtifactsBucket.bucketArn));
+    nofoDeleteHandlerFunction.addToRolePolicy(s3ObjectReadWriteDeletePolicy(props.grantArtifactsBucket.bucketArn));
 
     nofoDeleteHandlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
@@ -1192,6 +1216,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     // and the Bedrock inference profile stay here and are passed in.
     const draftGeneration = new DraftGenerationStack(scope, "DraftGenerationStack", {
       ffioNofosBucket: props.ffioNofosBucket,
+      grantArtifactsBucket: props.grantArtifactsBucket,
       draftTable: props.draftTable,
       draftGenerationJobsTable: props.draftGenerationJobsTable,
       knowledgeBaseId: props.knowledgeBase.attrKnowledgeBaseId,
@@ -1211,6 +1236,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     const scraper = new ScraperStack(scope, "ScraperStack", {
       dailySchedule: config.scraper.dailySchedule,
       ffioNofosBucket: props.ffioNofosBucket,
+      grantArtifactsBucket: props.grantArtifactsBucket,
       nofoMetadataTable: props.nofoMetadataTable,
       jsSharedLayer: jsSharedLayer,
       grantsGovApiKey: props.grantsGovApiKey,

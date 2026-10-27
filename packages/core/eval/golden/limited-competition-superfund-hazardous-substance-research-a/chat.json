@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When is the P42 Superfund center application due?",
+    "expected": "There are three receipt dates (NIH standard due dates): September 25, 2026, September 25, 2027 and September 25, 2028, for new, renewal and resubmission applications alike (revisions are not an allowed type). All applications are due by 5:00 PM local time of the applicant organization, and no late applications will be accepted.",
+    "quote": "All applications are due by 5:00 PM local time of applicant organization.",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "award",
+    "question": "What's the max budget we can ask for?",
+    "expected": "Applications may request up to $1.75 million in direct costs per year, for a project period of up to 5 years.",
+    "quote": "Applications may request a budget for direct costs of up to $1.75 million dollars for each year.",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "limits",
+    "question": "What are the page limits for each component?",
+    "expected": "Per the NOFO's page-limit table, the Overall, Admin Core, Translational Research and Engagement Core (TREC) and each Research Project (3 to 4 required) are limited to 12 pages, and the optional Research Support Core to 6 pages.",
+    "quote": "Overall Overall 12 Required 1 1 Admin Core Admin Core 12 Required 1 1 Translational Research and Engagement Core TREC 12 Required 1 1 Research Project Project 12 Required 3 4 Research Support Core RSC 6 Optional 0 1",
+    "confirmed": false
+  }
+]

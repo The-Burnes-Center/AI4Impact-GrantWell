@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When are applications due?",
+    "expected": "Multiple receipt cycles on NIH standard dates: new applications February 5, June 5, and October 5, and renewal/resubmission/revision applications March 5, July 5, and November 5 (starting June 05, 2026), all due by 5:00 PM local time of the applicant organization; the NOFO expires March 06, 2029.",
+    "quote": "All applications are due by 5:00 PM local time of applicant organization.",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "award",
+    "question": "What's the max budget per year?",
+    "expected": "Budgets are limited to $250,000 per year in direct costs, and the maximum project period is 4 years.",
+    "quote": "Application budgets are limited to $250,000 per year in direct costs and need to reflect the actual needs of the proposed project.",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "documents",
+    "question": "Do I need a plan for sharing the software we build?",
+    "expected": "Yes. The Resource Sharing Plan should include a general plan for sharing data and resources such as code, and a software dissemination plan with appropriate timelines is expected.",
+    "quote": "A software dissemination plan, with appropriate timelines, is expected to be included to meet the goals of this initiative.",
+    "confirmed": false
+  }
+]

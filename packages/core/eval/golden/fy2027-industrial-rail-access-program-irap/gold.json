@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "MA state",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "Rolling applications; FY2027 quarterly application period close date (applications received after a close date are reviewed in the next period)",
+      "date": "2026-06-30",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "For Fiscal Year 2027, application period close dates are: June 30, 2026"
+    },
+    {
+      "kind": "application",
+      "label": "FY2027 quarterly application period close date",
+      "date": "2026-09-30",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "application period close dates are: June 30, 2026 September 30, 2026"
+    },
+    {
+      "kind": "application",
+      "label": "FY2027 quarterly application period close date",
+      "date": "2026-12-31",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "September 30, 2026 December 31, 2026 March 31, 2027"
+    },
+    {
+      "kind": "application",
+      "label": "FY2027 quarterly application period close date",
+      "date": "2027-03-31",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "December 31, 2026 March 31, 2027 MassDOT will complete the initial review of project applications within thirty (30) days"
+    }
+  ],
+  "award": {
+    "ceiling": 700000,
+    "floor": null,
+    "periodMonths": null,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [
+      {
+        "what": "MassDOT reimbursement as a percentage of eligible project costs (80% or $700,000, whichever is less)",
+        "value": 80
+      }
+    ],
+    "match": {
+      "required": true,
+      "ratio": "0.2",
+      "appliesTo": "eligible project costs (MassDOT reimburses at most 80%; the grantee provides the non-IRAP share, a 20% minimum private sector match)",
+      "quote": "verification that the 20% minimum stipulated private sector matching funds were in fact expended on the project."
+    },
+    "quote": "Reimbursement will not exceed 80% or $700,000, whichever is less, for each approved project."
+  },
+  "sections": [
+    {
+      "name": "Project Need Statement",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative, Section A",
+      "quote": "Project Need Statement - Include a clear and concise statement of the industry transportation logistics problem/product distribution issue(s) that the proposed IRAP project will address and alleviate."
+    },
+    {
+      "name": "Project Description",
+      "order": 2,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative, Section B",
+      "quote": "Project Description - Describe the proposed IRAP project solution to address the needs outlined in Section A."
+    },
+    {
+      "name": "Project Management",
+      "order": 3,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative, Section C",
+      "quote": "Explain how and by whom the requested improvements are planned to be procured and constructed."
+    },
+    {
+      "name": "Project Readiness",
+      "order": 4,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative, Section C (second Section C in the notice)",
+      "quote": "Project Readiness - Projects should demonstrate readiness to proceed promptly upon execution of the IRAP Grant Agreement and issuance of a Notice to Proceed (NTP)."
+    },
+    {
+      "name": "Anticipated Project Public Benefits",
+      "order": 5,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative, Section D",
+      "quote": "Anticipated Project Public Benefits - Discuss the expected IRAP project public benefits."
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Improves freight rail transportation and supports the State Rail Plan and state policies",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Need Statement",
+        "Project Description"
+      ],
+      "quote": "Project will improve freight rail transportation in Massachusetts and support the Commonwealth of Massachusetts's State Rail Plan, transportation, land use, economic development, and environmental policies."
+    },
+    {
+      "name": "Project readiness clearly demonstrated",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Readiness"
+      ],
+      "quote": "Project readiness is clearly demonstrated including identification of any pre-construction actions already advanced (i.e., designed, permitted, and with necessary agreements)"
+    },
+    {
+      "name": "Significant public benefits (rail volumes, truck traffic reduction, jobs, goods movement)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Anticipated Project Public Benefits"
+      ],
+      "quote": "Project application identifies significant public benefits in terms of increased rail volumes, reduction of truck traffic, increased jobs, and the growth of goods movement"
+    },
+    {
+      "name": "Addresses needs and concerns of affected communities, including environmental justice populations",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Readiness"
+      ],
+      "quote": "Project will address the needs and concerns of affected communities including any communities or populations that have faced or are facing environmental justice concerns and/or health disparities."
+    },
+    {
+      "name": "Public benefits in industry retention, expansion and economic development",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Anticipated Project Public Benefits"
+      ],
+      "quote": "Project application identifies significant public benefits in terms of industry retention and expansion and stimulating economic development."
+    },
+    {
+      "name": "Strong host railroad servicing commitment and local support",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Supporting documentation reflects a strong servicing commitment by the host railroad, support for the project extends to locally elected officials, abutters, and local economic and community development entities."
+    },
+    {
+      "name": "Reasonable, complete funding plan and budget with strong private sector support",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Readiness"
+      ],
+      "quote": "Project funding plan and budget are determined to be reasonable and complete and reflect strong private sector support."
+    },
+    {
+      "name": "Cost effectiveness",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "The project demonstrates cost effectiveness, including the relationship between the requested IRAP funding and the anticipated public benefits."
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": 12,
+    "lineSpacing": "single",
+    "overallPageLimit": null,
+    "other": [
+      {
+        "item": "Project Narrative must not exceed 6 single-spaced pages in 12-point font (Section IX)",
+        "conflict": true,
+        "quote": "The project narrative should not exceed 6 single-spaced pages in 12-point font."
+      },
+      {
+        "item": "Project Narrative is a 5-page narrative response (Section XII)",
+        "conflict": true,
+        "quote": "followed by the 5-page narrative response and Attachments B - E below."
+      },
+      "Narrative sections must follow the stated sequence; recommended maximum space allowances (may be exceeded as long as the overall narrative limit is not): Project Need Statement 1 page, Project Description 1 page, Project Management 1 page, Project Readiness 2 pages, Anticipated Project Public Benefits 1 page",
+      "Italicized narrative instructions do not count toward the narrative page limit; the cover sheet and Attachments A-E are not counted",
+      "Application Cover Pages are the first 2 pages of the package, followed by the narrative and Attachments B-E",
+      "Submit the complete application in a single email to MassDOTIRAPProgram@dot.state.ma.us; emails with attachments must be less than 23MB"
+    ],
+    "quote": "The project narrative should not exceed 6 single-spaced pages in 12-point font."
+  },
+  "eligibility": [
+    {
+      "item": "Eligible applicants: host municipalities and their economic development corporations, freight railroads operating in the Commonwealth, and rail shippers/receivers engaged in commercial ventures in the Commonwealth",
+      "quote": "Host municipalities and their economic development corporations, freight railroads operating in the Commonwealth, and rail shippers/receivers engaged in commercial ventures in the Commonwealth are eligible to apply"
+    },
+    {
+      "item": "Project must be a rail access improvement project serving the rail freight shipping needs of one or more employers in the Commonwealth",
+      "quote": "Projects eligible for IRAP support are rail access improvement projects designed to serve the rail freight shipping needs of one or more employers in the Commonwealth."
+    },
+    {
+      "item": "Project must have independent utility; projects that depend on approval or completion of another project are not eligible",
+      "quote": "Projects that depend on the approval or completion of another funded or unfunded project will not be eligible."
+    },
+    {
+      "item": "Project and its major reimbursable components must have a minimum 20-year useful life",
+      "quote": "Projects must have a minimum 20-year useful life."
+    },
+    {
+      "item": "Project must be ready for construction before the application is complete: fully designed, all environmental permits secured, and real property rights secured",
+      "quote": "Before a grant application is identified as complete, IRAP applicants must demonstrate the project is ready for construction or implementation."
+    },
+    {
+      "item": "Project must be of public benefit, with benefit to private parties only indirect and incidental (typical targets: 200+ more annual railcar shipments, 300+ fewer annual interstate truck trips, or 20 added on-site jobs)",
+      "quote": "Each project must be of public benefit, in the public interest, and for a public purpose, and any benefit to private entities or individuals shall be indirect and incidental"
+    },
+    {
+      "item": "Speculative or confidential projects where shipper/receiver detail cannot be provided are not eligible",
+      "quote": "Funding for speculative or confidential projects where shipper/receiver detail cannot be provided are not eligible."
+    },
+    {
+      "item": "Applicant must demonstrate administrative and management capacity to manage the project and meet invoicing, reporting and procurement requirements",
+      "quote": "Applicants must demonstrate that they possess the administrative and management capacity to manage the proposed project and comply with program invoicing, reporting, and procurement requirements."
+    },
+    {
+      "item": "Materials, labor or services for IRAP-eligible costs must be procured through an open, competitive procurement process",
+      "quote": "grantees must use and document an open, competitive procurement process to select the vendor that provides the best value for the publicly supported project."
+    },
+    {
+      "item": "Projects on an active railroad right of way must comply with the operating railroad's safety requirements and applicable FRA regulations",
+      "quote": "Projects which are located on an active railroad right of way will be required to comply with the operating railroad's safety requirements"
+    },
+    {
+      "item": "Reimbursable work may not start, and costs incurred before the grant agreement start date are not reimbursable",
+      "quote": "Project expenses incurred prior to the MassDOT grant agreement start date can NOT be reimbursed with IRAP funds."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "IRAP Application Cover Sheet (Attachment A), signed and dated by the authorized signatory",
+      "userWrites": false,
+      "quote": "Respondents must complete the provided IRAP Application Cover Sheet included as Attachment A. It must be signed and dated by the authorized company or municipal signatory."
+    },
+    {
+      "item": "Schedule of Project Activities and Estimated Timelines (Attachment B form)",
+      "userWrites": true,
+      "quote": "Complete the Project Activities Schedule form (Attachment B). At a minimum, the schedule should include pre-construction milestones such as design completion, permitting, and acquisition of necessary property rights."
+    },
+    {
+      "item": "Budget and Budget Narrative (Attachment C form) with detailed estimated costs and justification",
+      "userWrites": true,
+      "quote": "Complete the Budget/Budget Narrative form (Attachment C). Provide detailed estimated costs for materials and construction components, along with justification and explanation of how these costs were calculated."
+    },
+    {
+      "item": "Project Locus Maps, Railroad Valuation Maps, Track Plans and Right of Way Maps (Attachment D)",
+      "userWrites": false,
+      "quote": "Provide maps clearly indicating the location of the project (include municipality, surrounding and adjacent roads, and project parcels)."
+    },
+    {
+      "item": "Railroad Service Commitment Letter from the servicing railroad",
+      "userWrites": false,
+      "quote": "A railroad service commitment letter must be provided that indicates the servicing railroad has participated in or has reviewed the project's design"
+    },
+    {
+      "item": "Letters of support from businesses impacted by the improvement, indicating their level of commitment",
+      "userWrites": false,
+      "quote": "Letters of project support from the businesses that will be impacted by the improvement (including an indication of their level of commitment) must be provided,"
+    },
+    {
+      "item": "Letter of support from the host municipality",
+      "userWrites": false,
+      "quote": "A letter of support from the host municipality must be provided"
+    },
+    {
+      "item": "Project plans showing the project is fully designed to industry standards",
+      "userWrites": false,
+      "quote": "This will be met by providing MassDOT with project plans for review."
+    },
+    {
+      "item": "Letter from the grantee's legal and/or engineering representative certifying all required permits have been secured",
+      "userWrites": false,
+      "quote": "letter from the grantee's legal and/or engineering representative certifying that all permits have been secured."
+    },
+    {
+      "item": "Letter from the grantee's legal and/or engineering representative certifying all required real property rights have been secured",
+      "userWrites": false,
+      "quote": "certifying that all required real property rights have been secured."
+    },
+    {
+      "item": "Documentation from the railroad or shipper/receiver supporting projected changes in freight service levels (public benefits)",
+      "userWrites": false,
+      "quote": "Projected changes in freight service levels will need to be supported by documentation provided by either the railroad or the shipper/receiver documenting the projected changes"
+    }
+  ],
+  "libraryRequired": []
+}

@@ -82,7 +82,8 @@ export class UserInterface extends Construct {
       websiteBucket: websiteBucket,
       spaRoutingFunctionName: `grantwell-${props.config.id}-spa-routing`,
       customDomain: props.config.customDomain?.domainName,
-      certificateArn: props.config.customDomain?.certificateArn
+      certificateArn: props.config.customDomain?.certificateArn,
+      redirectDomains: props.config.customDomain?.redirectDomains,
     });
     distribution = publicWebsite.distribution
     this.distribution = publicWebsite.distribution;

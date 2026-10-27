@@ -1,0 +1,567 @@
+{
+  "schemaVersion": 1,
+  "status": "confirmed",
+  "family": "EPA",
+  "deadlines": [
+    {
+      "kind": "other",
+      "label": "Final Date to Submit Questions (email dera@epa.gov)",
+      "date": "2026-11-24",
+      "time": "23:59",
+      "tzAsWritten": "ET",
+      "fromBrokenTable": false,
+      "quote": "Deadlines: Email questions by Tuesday, November 24, 2026, 11:59 p.m. ET."
+    },
+    {
+      "kind": "application",
+      "label": "Application Submission Deadline (Grants.gov)",
+      "date": "2027-01-22",
+      "time": "23:59",
+      "tzAsWritten": "ET",
+      "fromBrokenTable": false,
+      "quote": "A. Submission Dates and Times January 22, 2027 11:59 pm ET Application Submission Deadline"
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": null,
+    "periodMonths": null,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [
+      {
+        "what": "maximum federal funding request per application, EPA Region 1",
+        "value": 3000000
+      },
+      {
+        "what": "maximum federal funding request per application, EPA Region 2",
+        "value": 4000000
+      },
+      {
+        "what": "maximum federal funding request per application, EPA Region 3",
+        "value": 5000000
+      },
+      {
+        "what": "maximum federal funding request per application, EPA Region 4",
+        "value": 4000000
+      },
+      {
+        "what": "maximum federal funding request per application, EPA Region 5",
+        "value": 8000000
+      },
+      {
+        "what": "maximum federal funding request per application, EPA Region 6",
+        "value": 3500000
+      },
+      {
+        "what": "maximum federal funding request per application, EPA Region 7",
+        "value": 5600000
+      },
+      {
+        "what": "maximum federal funding request per application, EPA Region 8",
+        "value": 3500000
+      },
+      {
+        "what": "maximum federal funding request per application, EPA Region 9",
+        "value": 12000000
+      },
+      {
+        "what": "maximum federal funding request per application, EPA Region 10",
+        "value": 4500000
+      }
+    ],
+    "match": {
+      "required": true,
+      "ratio": null,
+      "appliesTo": "projects with mandatory cost share; recipient share varies by eligible technology per Table 2: Cost Share Requirements",
+      "quote": "1. Mandatory Cost Share Requirement: Projects are subject to the funding limitations and mandatory cost share requirements shown below in Table 2. Cost Share Requirements."
+    },
+    "quote": "The amount of funding is expected to be $180,000,000, depending on agency funding levels, the quality of applications received, agency priorities, and other applicable considerations. It is anticipated that 4-12 awards per EPA Region will be made under this announcement. Awards funded under this opportunity are expected to have a 2-4 year project period."
+  },
+  "sections": [
+    {
+      "name": "Short Project Description",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": "Cover Page",
+      "quote": "Short Project Description: Briefly describe the project in one to three sentences only, especially noting the expected outputs and outcomes."
+    },
+    {
+      "name": "Project Summary",
+      "order": 2,
+      "limit": null,
+      "conditional": null,
+      "component": "Workplan Section 1 - Project Summary and Approach",
+      "quote": "a. Project Summary: The applicant should provide a project summary. This section should include details about how the activities will meet the goals and objectives of the program"
+    },
+    {
+      "name": "Project Approach",
+      "order": 3,
+      "limit": null,
+      "conditional": null,
+      "component": "Workplan Section 1 - Project Summary and Approach",
+      "quote": "b. Project Approach: The applicant should provide a detailed description of the proposed activities. Include details of every activity and task for which the applicant is seeking funding."
+    },
+    {
+      "name": "Goods Movement Facilities",
+      "order": 4,
+      "limit": null,
+      "conditional": null,
+      "component": "Workplan",
+      "quote": "Section 2 - Goods Movement Facilities: This section of the workplan should include a detailed discussion of the project location in terms of vocational use of the vehicles/engines/equipment targeted for diesel emissions reductions."
+    },
+    {
+      "name": "Project Location",
+      "order": 5,
+      "limit": null,
+      "conditional": null,
+      "component": "Workplan",
+      "quote": "Section 3 - Project Location: The EPA is prioritizing projects that serve poor air quality areas (including nonattainment or maintenance areas and areas with air toxic pollutant concerns)."
+    },
+    {
+      "name": "Continuing Efforts",
+      "order": 6,
+      "limit": null,
+      "conditional": null,
+      "component": "Workplan Section 4 - Project Sustainability",
+      "quote": "a. Continuing Efforts: The applicant should have existing policies or new commitments to, by the end of the project period, adopt idle-reduction policies"
+    },
+    {
+      "name": "Baseline Monitoring",
+      "order": 7,
+      "limit": null,
+      "conditional": null,
+      "component": "Workplan Section 4 - Project Sustainability",
+      "quote": "b. Baseline Monitoring: The applicant should have a publicly available baseline mobile source emissions inventory for PM₂.₅ or NOₓ that was completed after 2021 or commit to completing one before the end of the project period."
+    },
+    {
+      "name": "Emissions Plan",
+      "order": 8,
+      "limit": null,
+      "conditional": null,
+      "component": "Workplan Section 4 - Project Sustainability",
+      "quote": "C. Emissions Plan: The applicant should have a publicly available plan finalized after 2021 to reduce mobile source emissions that include specific PM₂.₅ or NOₓ emission targets"
+    },
+    {
+      "name": "Community Engagement",
+      "order": 9,
+      "limit": null,
+      "conditional": null,
+      "component": "Workplan Section 4 - Project Sustainability",
+      "quote": "d. Community Engagement: The applicant should demonstrate that the applicant or project partner(s) has an existing clear point of contact in a public platform (e.g., newsletter, website) for community issues and complaints"
+    },
+    {
+      "name": "Expected Project Outputs and Outcomes",
+      "order": 10,
+      "limit": null,
+      "conditional": null,
+      "component": "Workplan Section 5 - Environmental Results - Outputs, Outcomes and Performance Measures",
+      "quote": "a. Expected Project Outputs and Outcomes: The applicant should identify expected quantitative and qualitative project outputs and outcomes, including those identified in Section 3.A. of the NOFO."
+    },
+    {
+      "name": "Performance Measures and Plan",
+      "order": 11,
+      "limit": null,
+      "conditional": null,
+      "component": "Workplan Section 5 - Environmental Results - Outputs, Outcomes and Performance Measures",
+      "quote": "b. Performance Measures and Plan: The applicant should describe the proposed performance measures, which will be the mechanism to track, measure, and report progress towards achieving the expected outputs and outcomes."
+    },
+    {
+      "name": "Timeline and Milestones",
+      "order": 12,
+      "limit": null,
+      "conditional": null,
+      "component": "Workplan Section 5 - Environmental Results - Outputs, Outcomes and Performance Measures",
+      "quote": "C. Timeline and Milestones: The applicant should include a detailed timeline for the project including key milestones for specific tasks, such as bidding, procurement, installation, and reports, along with estimated dates."
+    },
+    {
+      "name": "Past Performance",
+      "order": 13,
+      "limit": null,
+      "conditional": null,
+      "component": "Workplan Section 6 - Programmatic Capability and Past Performance",
+      "quote": "a. Past Performance: The applicant should submit a list of up to five federally funded or non- federally funded assistance agreements that the applicant is performing or has performed within the last three years."
+    },
+    {
+      "name": "Reporting Requirements",
+      "order": 14,
+      "limit": null,
+      "conditional": null,
+      "component": "Workplan Section 6 - Programmatic Capability and Past Performance",
+      "quote": "b. Reporting Requirements: For each of the assistance agreements listed, the applicant should describe their history of meeting the reporting requirements under the agreement(s)."
+    },
+    {
+      "name": "Staff Expertise",
+      "order": 15,
+      "limit": null,
+      "conditional": null,
+      "component": "Workplan Section 6 - Programmatic Capability and Past Performance",
+      "quote": "C. Staff Expertise: The applicant should include information on the applicant's organizational experience and plan for timely and successfully achieving the objectives of the proposed project"
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Project Summary",
+      "scored": true,
+      "points": 10,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Summary"
+      ],
+      "quote": "a. Project Summary (10 points) The extent and quality to which the project meets the goals and objectives of the program"
+    },
+    {
+      "name": "Project Approach",
+      "scored": true,
+      "points": 10,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Approach"
+      ],
+      "quote": "b. Project Approach (10 points) The extent and quality of the applicant's overall approach and implementation plan, including activities, tasks, roles and responsibilities, and partnerships."
+    },
+    {
+      "name": "Goods Movement Facilities",
+      "scored": true,
+      "points": 10,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Goods Movement Facilities"
+      ],
+      "quote": "2. Goods Movement Facilities: Under this criterion, the EPA will evaluate applications based on the extent to which projects target vehicles located at, or that service, 10 goods movement facilities"
+    },
+    {
+      "name": "Nonattainment Areas",
+      "scored": true,
+      "points": 5,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Location"
+      ],
+      "quote": "a. Nonattainment Areas (5 points) The extent to which the projects are located in and serve counties that contain ozone or PM₂.₅ nonattainment or maintenance"
+    },
+    {
+      "name": "Areas with Air Toxics Concerns",
+      "scored": true,
+      "points": 5,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Location"
+      ],
+      "quote": "b. Areas with Air Toxics Concerns (5 points) The extent to which projects are located in and serve counties that contain areas with air toxics concerns"
+    },
+    {
+      "name": "Continuing Efforts",
+      "scored": true,
+      "points": 5,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Continuing Efforts"
+      ],
+      "quote": "a. Continuing Efforts (5 points) The application demonstrates that the applicant and project partner(s) have policies in place to promote and continue efforts to reduce diesel emissions."
+    },
+    {
+      "name": "Baseline Monitoring",
+      "scored": true,
+      "points": 5,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Baseline Monitoring"
+      ],
+      "quote": "b. Baseline Monitoring (5 points) The application demonstrates that the applicant and project partner(s) has a publicly available baseline mobile source emission inventory"
+    },
+    {
+      "name": "Emissions Plan",
+      "scored": true,
+      "points": 5,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Emissions Plan"
+      ],
+      "quote": "C. Emissions Plan (5 points) The application demonstrates that the applicant and project partner(s) has a publicly available plan, finalized after 2021, to reduce mobile source emissions"
+    },
+    {
+      "name": "Community Engagement",
+      "scored": true,
+      "points": 5,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Community Engagement"
+      ],
+      "quote": "d. Community Engagement (5 points) The extent and quality to which the application demonstrates that the applicant and project partner(s) have an existing clear point of contact in a public platform"
+    },
+    {
+      "name": "Expected Project Outputs and Outcomes",
+      "scored": true,
+      "points": 10,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Expected Project Outputs and Outcomes"
+      ],
+      "quote": "a. Expected Project Outputs and Outcomes (10 points) The extent and quality to which the applicant identifies and quantifies expected project outputs and outcomes"
+    },
+    {
+      "name": "Performance Measures and Plan",
+      "scored": true,
+      "points": 10,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Performance Measures and Plan"
+      ],
+      "quote": "b. Performance Measures and Plan (10 points) The quality of the proposed performance measures and effectiveness of the applicant's plan for tracking and measuring their progress"
+    },
+    {
+      "name": "Timeline and Milestones",
+      "scored": true,
+      "points": 10,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Timeline and Milestones"
+      ],
+      "quote": "C. Timeline and Milestones (10 points) The reasonableness of the proposed timeline including key milestones for specific tasks and the likelihood of completion of the project's goals and objectives by project end."
+    },
+    {
+      "name": "Past Performance",
+      "scored": true,
+      "points": 5,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Past Performance"
+      ],
+      "quote": "a. Past Performance (5 points) Past performance in successfully completing and managing the grants identified in the project narrative"
+    },
+    {
+      "name": "Reporting Requirements",
+      "scored": true,
+      "points": 5,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Reporting Requirements"
+      ],
+      "quote": "b. Reporting Requirements (5 points) History of meeting the reporting requirements under the grants identified in the project narrative"
+    },
+    {
+      "name": "Staff Expertise",
+      "scored": true,
+      "points": 5,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Staff Expertise"
+      ],
+      "quote": "C. Staff Expertise (5 points) Organizational experience and plan for timely and successfully achieving the objectives of the proposed project"
+    },
+    {
+      "name": "Budget Detail",
+      "scored": true,
+      "points": 5,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "a. Budget Detail (5 points) The proposed budget provides a detailed breakout by funding type in the proper budget category for each activity the applicant is requesting funding."
+    },
+    {
+      "name": "Expenditure of Awarded Funds",
+      "scored": true,
+      "points": 5,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "b. Expenditure of Awarded Funds (5 points) The applicant's approach, procedures, and controls will ensure that awarded grant funds will be expended in a timely and efficient manner."
+    },
+    {
+      "name": "Reasonableness of Costs",
+      "scored": true,
+      "points": 5,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "C. Reasonableness of Costs (5 points) The proposed costs are reasonable to accomplish the proposed goals, objectives, and measurable environmental outcomes"
+    },
+    {
+      "name": "Applicant Fleet Description",
+      "scored": true,
+      "points": 10,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "8. Applicant Fleet Description: Under this criterion, the EPA will evaluate applicants on the extent and quality of the detailed information provided in the applicant fleet description"
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": 14,
+    "other": [
+      "Cover Page and Workplan combined are limited to 14 pages; attachments are not included in the page limit",
+      "Cover page should not exceed one page (recommended)",
+      "Pages over the limit will not be reviewed",
+      "Do not encrypt, zip, or password protect any files"
+    ],
+    "quote": "The Cover Page and Workplan combined are limited to 14 pages. Attachments are not included in the page limitation."
+  },
+  "eligibility": [
+    {
+      "item": "Eligible applicants: a regional, State (including the District of Columbia), local agency, Tribal agency, or port authority with jurisdiction over transportation or air quality; or a non-profit organization or institution that represents or provides pollution reduction or educational services to diesel fleet owners/operators, or whose principal purpose is promoting transportation or air quality (institutions of higher education and government-operated or nonprofit hospitals eligible to the extent they meet this definition)",
+      "quote": "Only these types of organizations may apply: A regional, State (including the District of Columbia), local agency, Tribal agency, or port authority, which has jurisdiction over transportation or air quality."
+    },
+    {
+      "item": "For-profit organizations, including for-profit colleges, universities, trade schools, and hospitals, are not eligible",
+      "quote": "For-profit colleges, universities, trade schools, and hospitals are not eligible to apply."
+    },
+    {
+      "item": "Section 501(c)(4) non-profits that engage in lobbying activities are not eligible",
+      "quote": "non- profit organizations described in Section 501(c)(4) of the Internal Revenue Code that engage in lobbying activities as defined in Section 3 of the Lobbying Disclosure Act of 1995 are not eligible to apply."
+    },
+    {
+      "item": "Intertribal consortia must submit documentation of the partnership and of authorization by all members to apply for and receive assistance",
+      "quote": "Intertribal consortia are eligible to receive assistance under this program only if the consortium demonstrates that all members of the consortium meet the eligibility requirements for the program"
+    },
+    {
+      "item": "Requested EPA funds must not exceed the regional per-application funding cap; applications over the cap are ineligible",
+      "quote": "Applications over the cap are ineligible and will not be reviewed."
+    },
+    {
+      "item": "Each application must request funds from only one EPA regional office, based on where the affected vehicles/engines operate, and identify that region on the Project Narrative cover page",
+      "quote": "Each application must request funds from only one EPA regional office, based on the project location (where the affected vehicles/engines operate)."
+    },
+    {
+      "item": "Applications must substantially comply with the Section 4 submission instructions or be rejected",
+      "quote": "Applications that do not substantially comply with the application submission instructions and requirements set forth in Section 4 of this funding opportunity will be rejected."
+    },
+    {
+      "item": "Applicants may submit up to two applications per EPA region, not exceeding 10 total",
+      "quote": "applicants may submit up to two applications per EPA region, not exceeding 10 total applications."
+    },
+    {
+      "item": "Multiple applications must each include different projects; the same project or equipment cannot appear in more than one application",
+      "quote": "If the applicant submits multiple applications, each application must include a different project(s) and must be submitted separately. Applicants cannot include the same project(s) in multiple applications."
+    },
+    {
+      "item": "Applications must include one or more eligible projects listed in Section 3.A",
+      "quote": "6. Eligible Projects: Applications must include one or more eligible projects listed in Section 3.A."
+    },
+    {
+      "item": "Funds cannot be used for leasing vehicles, engines, or equipment",
+      "quote": "a. Leasing: Funding under this NOFO cannot be used for leasing vehicles, engines, or equipment."
+    },
+    {
+      "item": "Applications must demonstrate how mandatory cost share will be met, on the SF-424, the SF-424A, and in the project narrative, or will not be reviewed",
+      "quote": "Applications that do not demonstrate compliance with the mandatory cost share are not eligible and will not be reviewed."
+    },
+    {
+      "item": "Federal environmental mitigation funds (e.g., Volkswagen Environmental Mitigation Trust) may not be used to meet DERA mandatory cost share",
+      "quote": "Furthermore, federal environmental mitigation funds may not be used to meet non-federal mandatory cost share requirements of any DERA grant."
+    },
+    {
+      "item": "Existing vehicles, engines, or equipment must be fully operational",
+      "quote": "a. Operational: The existing vehicle, engine, or equipment must be fully operational."
+    },
+    {
+      "item": "The participating fleet owner must own and operate the existing vehicle or equipment now and for the two years prior to upgrade",
+      "quote": "b. Ownership: The participating fleet owner must currently own and operate the existing vehicle or equipment and have owned and operated the vehicle or equipment during the two years prior to upgrade."
+    },
+    {
+      "item": "Existing vehicles, engines, or equipment must have at least three years of remaining life when upgraded",
+      "quote": "C. Remaining Life: The existing vehicle, engine, or equipment must have at least three years of remaining life when upgraded."
+    },
+    {
+      "item": "Existing highway engines/vehicles must have accumulated at least 7,000 miles/year during the two years prior to upgrade",
+      "quote": "the existing certified highway engine/vehicle must have accumulated at least 7,000 miles/year during the two years prior to upgrade."
+    },
+    {
+      "item": "Nonroad agricultural pumps must operate at least 250 hours/year during the two years prior to upgrade",
+      "quote": "Agricultural Pumps: To be eligible for funding, nonroad agricultural pumps must operate at least 250 hours/year during the two years prior to upgrade."
+    },
+    {
+      "item": "Existing locomotive and marine engines must operate at least 1,000 hours/year during the two years prior to upgrade",
+      "quote": "the existing locomotive and marine engines must operate at least 1,000 hours/year during the two years prior to upgrade."
+    },
+    {
+      "item": "Replaced vehicles, equipment, or engines must be scrapped or rendered permanently disabled within 90 days of being replaced",
+      "quote": "The vehicle, equipment, or engine being replaced must be scrapped or rendered permanently disabled within ninety (90) days of being replaced."
+    },
+    {
+      "item": "Coalitions must identify the single eligible organization that will be the recipient and which eligible organizations will receive subawards",
+      "quote": "Coalitions must identify which single eligible organization will be the recipient of the grant and which eligible organization(s) will receive subawards from the recipient"
+    },
+    {
+      "item": "Do not name a procurement contractor (including a consultant) in the application unless it was selected through competitive procurement",
+      "quote": "Do not name a procurement contractor (including a consultant) as a \"partner\" or otherwise in your application unless the contractor has been selected in compliance with competitive procurement requirements."
+    },
+    {
+      "item": "Applicant must have active SAM.gov (with UEI) and Grants.gov accounts; the UEI on the application must be registered to the applicant's SAM.gov account",
+      "quote": "The UEI listed on the application must be registered to the applicant organization's SAM.gov account. If not, the application may be deemed ineligible."
+    },
+    {
+      "item": "Application must be submitted through Grants.gov by an official representative registered with Grants.gov and authorized to sign applications",
+      "quote": "Your application must be submitted by an official representative of your organization who is registered with Grants.gov and is authorized to sign applications for Federal financial assistance."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "Application for Federal Assistance (SF-424), including mandatory cost share in Section 15 Estimated Funding",
+      "userWrites": false,
+      "quote": "Mandatory Documents: Application for Federal Assistance (SF-424) Budget Information for Non-Construction Programs (SF-424A)"
+    },
+    {
+      "item": "Budget Information for Non-Construction Programs (SF-424A)",
+      "userWrites": false,
+      "quote": "Budget Information for Non-Construction Programs (SF-424A) EPA Form 5700-54 Key Contacts"
+    },
+    {
+      "item": "EPA Form 5700-54 Key Contacts",
+      "userWrites": false,
+      "quote": "EPA Form 5700-54 Key Contacts EPA Form 4700-4 Pre-award Compliance Review Report"
+    },
+    {
+      "item": "EPA Form 4700-4 Pre-award Compliance Review Report",
+      "userWrites": false,
+      "quote": "EPA Form 4700-4 Pre-award Compliance Review Report Project Narrative Attachment Form"
+    },
+    {
+      "item": "Cover Page (EPA Region, applicant information, eligible applicant type, project title, period of performance, sectors, target fleets, budget summary), submitted with the Workplan on the Project Narrative Attachment Form",
+      "userWrites": true,
+      "quote": "Project Narrative Attachment Form: use this to submit the Cover Page and Workplan as described in Section 4.B.(1) and (2)"
+    },
+    {
+      "item": "Workplan Section 7 - Budget: itemized budget table, detailed budget narrative (including cost share sources and use), expenditure of awarded funds, and reasonableness of costs",
+      "userWrites": true,
+      "quote": "Section 7 - Budget: This section of the project narrative is a detailed description of the budget the applicant provides in the SF-424A and must include a discussion of the applicant's approach to ensuring proper management of grant/cooperative agreement funds, a detailed budget narrative, as well as an itemized budget table."
+    },
+    {
+      "item": "Applicant Fleet Description: DERA Supplemental Application Template (xlsx), EPA Form 5900-681, uploaded via the Other Attachments form",
+      "userWrites": false,
+      "quote": "Applicants must use the \"Other Attachments\" form in Grants.gov to upload their Applicant Fleet Description. The Applicant Fleet Description is a single file: the DERA Supplemental Application Template (excel), also known as the Burden Statement for EPA Form 5900-681."
+    },
+    {
+      "item": "Partnership letter from any named project partner providing cost share (if applicable)",
+      "userWrites": false,
+      "quote": "If a named project partner is to provide the proposed cost share, a partnership letter demonstrating the specified financial commitment is required."
+    },
+    {
+      "item": "Mandated Measures Justification supporting information (if applicable: locomotive, marine, or stationary engine projects)",
+      "userWrites": true,
+      "quote": "calculations and supporting details and information may be provided as an attachment and will not count towards the page limit. These attachments should be uploaded using the \"Other Attachments\" form in Grants.gov."
+    }
+  ],
+  "libraryRequired": []
+}

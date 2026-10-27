@@ -1,0 +1,63 @@
+{
+  "query": "Generate all sections for the grant application",
+  "projectBasics": {
+    "projectName": "Merrimack Valley Reading Corps",
+    "organizationName": "Merrimack Valley Literacy Partners",
+    "requestedAmount": "$420,000",
+    "location": "Lawrence, MA",
+    "zipCode": "01840",
+    "contactName": "Elena Ortiz, Program Director",
+    "contactEmail": "eortiz@mvliteracy.example"
+  },
+  "questionnaireAnswers": [
+    {
+      "question": "Describe the specific community problem your program will address, including relevant local data that establishes the scope and impact of the problem in your service area.",
+      "answer": "In Lawrence 62% of third graders scored below proficient in ELA on MCAS last year. Many families speak Spanish at home and kids fall behind by grade 2."
+    },
+    {
+      "question": "How will you design your Logic Model to show the inputs, core activities (including length, dosage, and target population), measurable outputs, and short, medium, or long-term outcomes for each intervention, and which National Performance Measures will you use?",
+      "answer": "30 members tutor K-3 students 30 minutes a day, 4 days a week, for 20 weeks. Output: 450 students tutored. Outcome: 65% gain at least one benchmark level. We'd use ED1 and ED5."
+    },
+    {
+      "question": "Describe the evidence from research or evaluation studies supporting your intervention, including citations, the study design and key findings, and how the studied intervention matches your proposed program design in population served, activities, and staff qualifications.",
+      "answer": "Based on Minnesota Reading Corps; a randomized study found tutored kids outperformed controls. Our program follows the same model with bilingual tutors."
+    },
+    {
+      "question": "Which AmeriCorps FY27 Funding Priority is a significant part of your program focus and intended outcomes, and how does your high-quality program design demonstrate that priority?",
+      "answer": "Education."
+    },
+    {
+      "question": "Describe how AmeriCorps Volunteers will gain skill attainment, personal growth, and connection to the community they serve in support of a lifetime of civic participation, with specific examples of activities.",
+      "answer": "Members get literacy-coach training, CPR, and a career session with Northern Essex Community College."
+    },
+    {
+      "question": "Describe the roles, responsibilities, and structure of the staff who will implement and oversee the program, and what policies, procedures, and financial controls your organization has in place to manage a federal grant.",
+      "answer": "Executive director, program director, two site supervisors and a part-time finance manager. We've managed state grants for 8 years and have a yearly audit."
+    },
+    {
+      "question": "How will AmeriCorps Volunteers receive guidance and support from their supervisors, including the check-in cadence and format, strengths assessment process, training plan, and the evidence-based supervision practices you will use?",
+      "answer": "Weekly check-ins with site supervisors and a monthly group training. Strengths survey at the start."
+    },
+    {
+      "question": "Describe the budget expenses and practices you will use to recruit, retain, and collect high-quality data on AmeriCorps Volunteers, including how you will analyze data and ensure timely, accurate reporting to AmeriCorps.",
+      "answer": "Recruiting at NECC and local churches; data in our tutoring database, reviewed monthly."
+    },
+    {
+      "question": "How will you ensure broad-based community input in the design, recruitment, and operation of the program, and how will you consult local labor organizations to prevent displacement of paid workers before placing Volunteers?",
+      "answer": "Parent advisory group and school principals. We'll check with the teachers' union before placing members."
+    },
+    {
+      "question": "What evidence will you provide that your organization meets all eligibility requirements, including SAM registration, UEI, EIN, and the required assurances and certifications, and what explanation will you give for any certification you cannot make?",
+      "answer": "We have SAM and a UEI and can make all the certifications."
+    }
+  ],
+  "additionalInfo": "",
+  "userState": "MA",
+  "note": "Rebuilt 2026-10-21 from the 2026-10-16 review's applicant profile; the original answers were deleted with the drafts.",
+  "traps": [
+    "Must follow the state's narrative template (text outside the brackets may not be changed).",
+    "Applicant names Education as its priority; it is not on the FY27 priority list, which the draft must not assert.",
+    "$420,000 for 30 slots exceeds the cost-per-member cap; the budget check should flag it.",
+    "Budget narrative carries points; a draft that skips it loses them."
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "query": "Generate all sections for the grant application",
+  "projectBasics": {
+    "projectName": "A Wearable Sensor for Early Detection of Heat Stress in Outdoor Workers",
+    "organizationName": "Commonwealth Polytechnic University",
+    "requestedAmount": "$275,000 direct costs over 2 years",
+    "location": "Boston, MA",
+    "zipCode": "02115",
+    "contactName": "Dr. Priya Raman, Associate Professor",
+    "contactEmail": "praman@commonwealthpoly.example"
+  },
+  "questionnaireAnswers": [
+    {
+      "question": "Describe the specific gap in current knowledge your exploratory project addresses, and explain why this gap matters for the mission of the participating Institute/Center you plan to target. Include the scientific background and rationale supporting your approach.",
+      "answer": "Heat illness in outdoor workers is usually caught too late; current monitors track heart rate only. We think combining skin temperature, sweat rate and heart rate variability predicts core temperature rise 15-20 minutes earlier. Targeting NIEHS."
+    },
+    {
+      "question": "How will your project be exploratory and novel, and how does it differ from traditional R01-type projects or well-established research? Describe the novel concept, method, model, or technology and how it could enhance impact on the field of biomedical, behavioral, or clinical research.",
+      "answer": "New multi-sensor patch plus a model that learns each worker's baseline. Nobody has validated this combination in the field."
+    },
+    {
+      "question": "Describe your experimental design, including controls, sample size justification, and analysis plan, and explain how you will address consideration of relevant biological variables such as sex and age.",
+      "answer": "Aim 1: lab validation against ingestible core temperature pills in 24 healthy adults (12 F, 12 M). Aim 2: observational field study with 40 landscaping and roofing workers over one summer, no intervention. Power analysis still to do."
+    },
+    {
+      "question": "How will you ensure feasibility within the two-year project period and $275,000 direct cost limit, and what specific plans do you have for anticipating and responding to problems or new challenges that may arise during the work?",
+      "answer": "Two years: Aim 1 in year 1, Aim 2 in year 2 summer. If the patch adhesion fails in sweat we have a backup armband design."
+    },
+    {
+      "question": "If your project involves human subjects, describe your plans for recruitment, retention, and inclusion, and what evidence supports that these plans are realistic. If no human subjects are involved, describe the alternative sources of data or materials you will use.",
+      "answer": "Workers recruited through a Boston landscaping firm and a roofers' union local. We expect 20% drop-out."
+    },
+    {
+      "question": "Describe the background, training, and expertise of your PD/PI and key personnel that are appropriate to their career stage, and explain how institutional resources and the environment will support successful execution of the project.",
+      "answer": "PI is a biomedical engineer with 3 prior wearable-sensor papers. A co-investigator in occupational health is being recruited. We have a climate chamber on campus."
+    },
+    {
+      "question": "Describe your Data Management and Sharing Plan and Resource Sharing Plan, including what scientific data will be generated, how it will be stored and shared, and how you will make resources available to the research community.",
+      "answer": "Sensor data and code shared on PhysioNet after publication."
+    },
+    {
+      "question": "Identify which applicable Additional Review Criteria sections apply to your application, such as Protections for Human Subjects, Vertebrate Animals, Biohazards, and Authentication of Key Biological and/or Chemical Resources, and describe how you will address each one.",
+      "answer": "Human subjects protections apply; no animals."
+    },
+    {
+      "question": "Describe how you will confirm that your registrations (SAM, UEI, eRA Commons, Grants.gov) are complete and that your UEI matches across all systems well before the due date, and how you will verify that your application meets all Application Guide page limits and appendix restrictions.",
+      "answer": "Our grants office handles registrations; eRA Commons is active."
+    }
+  ],
+  "additionalInfo": "",
+  "userState": "MA",
+  "note": "Rebuilt 2026-10-21 from the 2026-10-16 review's applicant profile; the original answers were deleted with the drafts.",
+  "traps": [
+    "Clinical Trial Not Allowed: both aims are observational; a draft that adds a randomized or interventional session may turn Aim 1 into a clinical trial.",
+    "NIH applications need a Specific Aims page even though the notice defers to the Application Guide.",
+    "Co-investigator unnamed and no statistician: drafts must not invent names.",
+    "Section headings should follow the application's own sections, not the review criteria."
+  ]
+}

@@ -1,0 +1,1451 @@
+{
+ "4bb29f489839ad19": {
+  "query": "pre-application letter of intent deadline and submission timeline",
+  "filter": "462924eed92d0c8c",
+  "retrievalResults": []
+ },
+ "4d7bcfbc83d5f196": {
+  "query": "formatting requirements font size margins page length",
+  "filter": "73d1eaec7194837e",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "○ List of Abbreviations, Acronyms, and Symbols: Provide a list of abbreviations, acronyms, and symbols used in the Preproposal Narrative.\n\n ○ Key Personnel Biographical Sketches: All biographical sketches should be uploaded as a single combined file. Biographical sketches should be used to demonstrate background and expertise through education, positions, publications, and previous work accomplished.\n\n 4.3. Full Application Components\n\n Applicants must receive an invitation to submit a full application. Uninvited full application submissions will be rejected.\n\n Each application submission must include the completed full application package for this program announcement. See Appendix 1 for a checklist of the full application components.\n\n (a) SF424 Research & Related Application for Federal Assistance Form (Grants.gov submissions only):\n\n IMPORTANT: When completing the SF424 R&R, enter the eBRAP log number assigned during pre-application submission into Block 4a – Federal Identifier.\n\n (b) Attachments:\n\n Each attachment of the full application components must be uploaded as an individual file in the format specified and in accordance with the formatting guidelines in the GAI.\n\n ○ Attachment 1: Project Narrative (page limits vary, as shown below): Upload as “ProjectNarrative.pdf”.\n\n Describe the proposed project in detail using the outline below.\n\n – Page Limit: Page limits vary:\n\n ▪ Projects without a clinical trial: Eight-page limit\n\n ▪ Projects with a clinical trial component: 15-page limit\n\n Describe the proposed project in detail using one of the two outlines below, depending on whether or not a clinical trial is proposed. The inclusion of preliminary data relevant to the proposed project, but not necessarily derived from autism studies, is required.\n\n Outline for projects without a clinical trial:\n\n – Background: Present the scientific rationale behind the proposed research; include relevant literature citations. Describe and show the preliminary data to justify the rationale for the proposed project.\n\n – Hypothesis(es) and/or Objective(s): State the hypotheses/study questions to be tested and overall objective(s) to be reached. Describe how the project addresses one or more of the FY26 ARP Career Development Award Areas of Interest or a critical problem or question in autism.\n\n – Specific Aims: Concisely explain the project’s specific aims supported by this application. If this application is part of a larger study, present only tasks that this award would fund.\n\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2245197,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Am7VeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 11,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n ○ Attachment 3: Technical Abstract (one-page limit): Upload as “TechAbs.pdf”.\n\n Write the technical abstract using the outline below. Clarity and completeness within the space limits are highly important."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2017131,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AprVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Research & Related Budget\n\n iii. Project/Performance Site Location(s)\n\n iv. Research & Related Subaward Budget Attachment(s) (if applicable, Grants.gov submissions only)\n\n 4.4. Other Application Elements\n\n If recommended for funding, a data management plan compliant with Section 3.c, Enclosure 3, DoD Instructions 3200.12 will be requested.\n\n The government reserves the right to request a revised budget, budget justification and/or additional information for applications recommended for funding.\n\n External Link to the GAI\n\n Grants.gov\n\n External Link to the GAI\n\n eBRAP.org\n\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Definition_List:~:text=Intramural%20DOW%20Organization%3A%20A%20subset%20of%20intragovernmental%20organizations%3B%20refers%20specifically%20to%20DOW%20organizations%2C%20including%20DOW%20laboratories%2C%20DOW%20military%20treatment%20facilities%2C%20and/or%20DOW%20activities%20embedded%20within%20a%20civilian%20medical%20center.\n \n\n \n  https://ebrap.org/eBRAP/public/Program.htm#:~:text=Suggested%20Intragovernmental/Intramural%20Budget\n \n\n \n  https://www.esd.whs.mil/Portals/54/Documents/DD/issuances/dodi/320012p.pdf?ver=2018-12-17-130508-423\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Recipient_Qualification_Restriction_Info:~:text=Suggested%20Intragovernmental/Intramural%20Budget%20Form%2C%20if%20applicable%3A\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Additional_App_Materials_IV:~:text=C.-,Additional%20Application%20Materials,-The%20following%20are\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1529107,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AsrVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 20,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "version=CD26_01#_Recipient_Qualification_Restriction_Info:~:text=APPENDIX%202.%0AFORMATTING%20GUIDELINES\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Recipient_Qualification_Restriction_Info:~:text=(a)%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%20SF424%20(R%26R)%20%E2%80%93%20Application%20for%20Federal%20Assistance%20Form\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Recipient_Qualification_Restriction_Info:~:text=%C2%B7-,Project%20Narrative%3A,-Attach%20as%20%E2%80%9CProjectNarrative\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Content_Form_Full_App_Submission:~:text=eBRAP%20User%20Name-,Biographical%20Sketch,-%3A%20This%20fileSection Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 12\n\n – Research Strategy: Describe the experimental design, methods, and analyses, with appropriate controls, in sufficient detail for assessment. Address potential limitations and present alternative methods and approaches. If animal studies are proposed, the applicant is required to submit an Animal Research Plan (Attachment 10). If human subjects or human biological samples will be used, include a detailed plan for the recruitment of subjects or the acquisition of samples. Where relevant, describe the availability of and access to tissue, data, or human subjects.\n\n – Statistical Plan: Clearly describe the statistical plan and the rationale for the statistical methodology as well as an appropriate power analysis. Describe in detail how the statistical plan is appropriate for the experimental methodology being used. If applicable, describe how the human subject population is appropriate for the study and provide assurance that there is clear access to the designated population. Inclusion of a biostatistician in the study team is encouraged."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1514776,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AnLVeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 11,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Describe the PI’s plan for continued development as an autism researcher and/or clinician (early-stage investigator) and/or the transition into a career in the field of autism research (established investigator) and how the proposed research experience will advance their career. Discuss the appropriateness of the level of effort of the PI for successful conduct of the proposed research.\n\n If the proposed research involves access to military and/or VA patient populations and/or DOW or VA resources or databases, describe the access at the time of submission and include a plan for maintaining access as needed throughout the proposed research. Also include a plan for obtaining any required data sharing, memorandum of understanding or other agreements required to access and publish data. Refer to the GAI, Appendix 4, for additional considerations.\n\n ○ Attachment 2: Supporting Documentation: Combine and upload as a single file named “Support.pdf”.\n\n There are no page limits for these components unless otherwise noted. Include only components described below; inclusion of items not requested or viewed as an extension of the Project Narrative will result in the removal of those items or may result in administrative withdrawal of the application.\n\n References Cited: List the references cited in the Project Narrative using a standard reference format (include URLs, if available).\n\n List of Abbreviations, Acronyms and Symbols: Provide a list of abbreviations, acronyms and symbols.\n\n Facilities, Existing Equipment and Other Resources: Describe the facilities and equipment available for performance of the proposed project; include any additional facilities or equipment proposed for acquisition at no cost to the award. Indicate whether government-furnished facilities or equipment are proposed for use. If so, reference the original or present government award under which the facilities or equipment items are now accountable. There is not a standardized form for this information.\n\n Publications and/or Patents: Include a list of relevant publication URLs and/or patent abstracts. If articles are not publicly available, then copies of up to five published manuscripts may be included in Attachment 2. Extra items will not be reviewed.\n\n Letters of Support (two-page limit per letter is recommended): Provide individual letters signed by collaborating individuals and/or organizational officials demonstrating that the PI has the support and resources necessary for the proposed work. Letters from the PI’s Department Chair, or appropriate organization official, should also confirm that the PI(s) meet eligibility criteria."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1444676,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AorVeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 14,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "○ Attachment 13: Representations (Grants.gov submissions only): Upload as “RequiredReps.pdf”. All extramural applicants must complete and submit the Required Representations document available on eBRAP.\n\n \n\n \n  https://ebrap.org/eBRAP/public/Program.htm#:~:text=Required%20Representations\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Recipient_Qualification_Restriction_Info:~:text=B.%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%20RepresentationsSection Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 20\n\n ○ Attachment 14: Suggested Intragovernmental/Intramural Budget Form (if applicable): Upload as “IGBudget.pdf”. If an intramural DOW organization will be a collaborator in the performance of the project, complete a separate budget for that organization using the Suggested Intragovernmental/Intramural Budget form available on eBRAP.\n\n (c) Additional Application Materials:\n\n The following are additional forms for application submission. Follow the instructions specific to the submission portal, as found within the GAI.\n\n \n\n \n\n \n\n i. Research & Related Senior/Key Person Profile (Expanded)\n\n ○ Biographical Sketch\n\n ○ Current/Pending Support\n\n Intragovernmental applicants must include their internally supported research and development programs.\n\n ii."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1426961,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AsbVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 19,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Costs for one investigator to travel to one scientific/technical meeting per year. The intent of travel to scientific/technical meetings should be to present project information or disseminate project results from the ARP Career Development Award.\n\n • Research subject compensation and reimbursement for trial-related out-of-pocket costs (e.g., travel, lodging, parking, costs associated with caregiving, and resources/equipment to enable participation).\n\n Must not be requested for:\n\n • Costs for travel to scientific/technical meeting(s) beyond the limits stated above.Section Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 10\n\n 4. Application Contents and Format\n\n 4.1. Application Overview\n\n Application submission is a two-step process requiring both a pre-application submitted via the Electronic Biomedical Research Application Portal (eBRAP) and a full application submitted through eBRAP or Grants.gov. Depending on the submission portal, certain aspects of the application will differ.\n\n Intramural DOW organizations submitting a full application should follow instructions for submission through eBRAP.\n\n Extramural organizations submitting a full application must follow instructions for submission through Grants.gov.\n\n 4.2. Pre-Application Components\n\n Pre-application submissions must include the following components.\n\n Upload documents as individual PDF files unless otherwise noted. Files must comply with the formatting guidelines listed in the GAI.\n\n • Preproposal Narrative (two-page limit): The Preproposal Narrative page limit applies to text and non-text elements (e.g., figures, tables, graphs, photographs, diagrams, chemical structures, drawings) used to describe the project. Inclusion of URLs that provide additional information to expand the Preproposal Narrative and could confer an unfair competitive advantage is prohibited and may result in administrative withdrawal of the pre-application.\n\n The Preproposal Narrative should include the following:\n\n ○ Principal Investigator: Describe the PI’s potential for a career at the forefront of autism research, including qualifications and achievements that make the PI an ideal candidate for this award. Describe the PI’s career goals as an autism researcher and how the proposed research experience will advance their career.\n\n ○ Research Idea: State the hypothesis to be tested or the objective(s) to be reached. State the FY26 ARP Career Development Award Areas of Interest that will be addressed."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1394389,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AmLVeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   }
+  ]
+ },
+ "65a557dff3be57cb": {
+  "query": "total costs direct and indirect cost limits per award",
+  "filter": "462924eed92d0c8c",
+  "retrievalResults": []
+ },
+ "70638a1a2126a04d": {
+  "query": "maximum award amount funding ceiling",
+  "filter": "462924eed92d0c8c",
+  "retrievalResults": []
+ },
+ "7e988c7891da33b3": {
+  "query": "maximum award amount funding ceiling",
+  "filter": "73d1eaec7194837e",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "version=CD26_01#_Definition_List:~:text=or%20hardware%20procurement.-,Clinical%20Trial%3A,-As%20defined%20in\n \n\n \n  https://cdmrp.health.mil/#:~:text=Human%20Subject%20Research%20Resource\n \n\n \n  https://www.strobe-statement.org/\n \n\n \n  https://www.nature.com/articles/s41591-025-03635-5#:~:text=SPIRIT%20and%20CONSORT%20are%20evidence,relevant%20empirical%20evidence%20where%20possible\n \n\n \n  https://www.nature.com/articles/s41591-025-03668-w?fromPaywallRec=false\n \n\n \n  https://arriveguidelines.org/arrive-guidelines\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Recipient_Qualification_Restriction_Info:~:text=Period%20of%20Performance%3A%20The%20time%20interval%20between%20the%20start%20of%20a%20federal%20award%20and%20the%20planned%20end%20date.\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Recipient_Qualification_Restriction_Info:~:text=in%20project%20activities.-,Cost%20Cap%3A,-The%20maximum%20costSection Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 9\n\n in accordance with the organization’s negotiated rate. Collaborating organizations should budget associated indirect costs in accordance with each organization’s negotiated rate.\n\n All direct and indirect costs of any subaward or contract must be included in the direct costs of the primary award.\n\n The applicant may request the entire maximum funding amount for a project that may have a period of performance less than the maximum 3 years.\n\n The appropriateness of the budget for the proposed research will be assessed during peer review.\n\n Direct Cost Restrictions: For this award mechanism, direct costs:\n\n May be requested for (not all-inclusive):\n\n • Travel in support of multi-institutional collaborations."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3175979,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Al7VeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Funding recommendations depend on various factors as described in Section 6.2.3, Programmatic Review. Additional information about the two-tier process used by the CDMRP can be found on the CDMRP website.\n\n Funding of applications received is contingent upon the availability of federal funds for this program, the number of applications received, the quality and merit of the applications as evaluated by peer and programmatic review, and the requirements of the government. Funds to be obligated on any award resulting from this funding opportunity will be available for use for a limited time period based on the fiscal year of the funds.\n\n 6.4. Risk, Integrity and Performance Information\n\n Prior to making an assistance agreement award where the federal share is expected to exceed the simplified acquisition threshold, as defined in the Code of Federal Regulations, Title 2, Part 200.1 (2 CFR 200.1), over the period of performance, the federal awarding agency is required to review and consider any information about the applicant that is available in the SAM.\n\n An applicant organization may review the SAM and submit comments on any information currently available about the organization that a federal awarding agency previously entered. The federal awarding agency will consider any comments by the applicant, in addition to other information in the designated integrity and performance system, in making a judgment about the applicant’s integrity, business ethics and record of performance under federal awards when determining a recipient’s qualification prior to award, according to the qualification standards of the Department of Defense Grant and Agreement Regulations (DoDGARs), Section 22.415.\n\n In accordance with National Security Presidential Memorandum-33 and all associated laws, all fundamental research funded by the DOW must be evaluated for affiliations with foreign entities. All applicant organizations must disclose foreign affiliations of all key personnel named on applications. Failure to disclose foreign affiliations of key personnel shall lead to withdrawal of recommendations to fund applications. Applicant organizations may be presented with an opportunity to mitigate identified risks, particularly those pertaining to influence from foreign entities specified in law. Implementation of mitigation discussions and utilization of the DOD Component Decision Matrix must decrease risk of foreign influence in accordance with the above-mentioned laws and guidance prior to award."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3130586,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AvrVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 30,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applications to the FY26 ARP Career Development Award are expected to name at least one community partner (e.g., an Autistic individual or caregiver, representatives of community-based organizations) who will provide advice and consultation throughout the planning and implementation of the research project. Interactions with other team members should be well integrated and ongoing, not limited to attending seminars and semi-annual meetings (see Attachment 11, Community Collaboration Plan).\n\n All projects should adhere to a core set of standards for rigorous study design and reporting to maximize the reproducibility and translational potential of clinical and preclinical research, such as those described in the STROBE, CONSORT, SPIRIT and ARRIVE 2.0 guidelines.\n\n Applications from investigators within the DOW and applications involving multidisciplinary collaborations among academia, industry, the DOW, the U.S. Department of Veterans Affairs (VA) and other federal government agencies are highly encouraged. These relationships can leverage knowledge, infrastructure and access to unique clinical populations that the collaborators bring to the research effort, ultimately advancing research that is of significance to Service Members, Veterans, their Families and the American Public. If the proposed research relies on access to unique resources or databases, the application must describe the access at the time of submission and include a plan for maintaining access as needed throughout the proposed research.\n\n 3.3. Funding Instrument\n\n The funding instrument for awards made under the program announcement will be grants (31 USC 6304).\n\n 3.4. Funding Details\n\n Period of Performance: The maximum period of performance is 3 years.\n\n Cost Cap: The application’s total costs budgeted for the entire period of performance should not exceed $750,000. If indirect cost rates have been negotiated, indirect costs are to be budgeted\n\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3096175,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlrVeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "It is anticipated that awards made from this FY26 funding opportunity will be funded with FY26 funds, which will expire for use on September 30, 2032. Awards supported with FY26 funds will be made no later than September 30, 2027.\n\n Submission and Review Dates and Times\n\n • Pre-Application (Preproposal) Submission Deadline: 5:00 p.m. Eastern Time (ET), July 27, 2026\n\n • Invitation to Submit an Application: August 28, 2026\n\n • Application Submission Deadline: 11:59 p.m. ET, October 22, 2026\n\n • End of Application Verification Period: 5:00 p.m. ET, October 27, 2026\n\n • Peer Review: December 2026\n\n • Programmatic Review: February 2027\n\n Announcement Type: Initial\n\n Funding Opportunity Number: HT942526ARPCDA\n\n Assistance Listing Number: 12.420Section Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 5\n\n 2. Eligibility Information\n\n 2.1."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2831261,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Aj7VeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 4,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Basic Information About the Funding Opportunity\n\n Summary: The fiscal year 2026 (FY26) Autism Research Program (ARP) Career Development Award supports early-career, independent investigators and/or the transition of established investigators from other research fields to conduct innovative, high-impact ideas or early-phase, proof-of-principle clinical trials with the potential to have a major impact on autism.\n\n Distinctive Features: Applications are strongly encouraged to address one of the FY26 ARP Career Development Award Areas of Interest or provide justification that the proposed research addresses a critical problem, question, or need in autism.\n\n FY26 Career Development Award submissions with a pilot clinical trial component are required to include community collaborations to optimize research impact. Applications are expected to name at least one community partner (e.g., an Autistic individual or caregiver, representatives of community-based organizations) who will provide advice and consultation throughout the planning and implementation of the research project.\n\n Funding Details: The Congressionally Directed Medical Research Programs (CDMRP) expects to allot roughly $1.5 million (M) to fund approximately two Career Development Award applications with total cost caps of $0.75M per award. The maximum period of performance is 3 years."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2693629,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AjrVeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 4,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "version=CD26_01#_Full_App_Submission_Grants:~:text=IV.-,FULL%20APPLICATION%20SUBMISSION%20THROUGH%20GRANTS.GOV,-A.%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Full_App_Submission_eBRAP:~:text=V.-,FULL%20APPLICATION%20SUBMISSION%20THROUGH%20eBRAP,-A.%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Applicant_Verification_Grants_Submission:~:text=E.-,Applicant%20Verification%20of%20Grants.gov%20Submission%20in%20eBRAP,-Once%20the%20full\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_PreApp_Submission:~:text=III.-,PRE%2DAPPLICATION%20SUBMISSION,-General%20information%20aboutSection Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 23\n\n 5.5. Intergovernmental Review\n\n Not applicable for this funding opportunity.Section Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 24\n\n 6. Application Review Information\n\n 6.1. Application Compliance Review\n\n Submitting applications that propose essentially the same research project to different funding opportunities within the same program and fiscal year is prohibited and will result in administrative withdrawal of the duplicative application(s).\n\n While it is allowable to propose similar research projects to different programs within the CDMRP or to other organizations, duplication of funding or accepting funding from more than one source for the same research is prohibited. See the CDMRP’s Directive on Research Duplication."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2541358,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AtrVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 22,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Transfer of funds is contingent upon appropriate safety and administrative approvals. Intragovernmental and intramural DOW investigators and collaborators must coordinate receipt and commitment of funds through their respective Resource Manager/Task Area Manager/Comptroller or equivalent Business Official.\n\n An organization may, at its own risk and without the government’s prior approval, incur obligations and expenditures to cover costs up to 90 days before the beginning date of the initial budget period of a new award.\n\n \n\n \n  https://cdmrp.health.mil/search.aspx\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Full_App_Submission_eBRAP:~:text=The%20Defense%20Health%20Agency%20Research,appropriate%20safety%20and%20administrative%20approvals.Section Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n \n\n FY26 Autism Career Development Award 32\n\n 8. Post-Award Requirements\n\n 8.1. Administrative and National Policy Requirements\n\n Applicable requirements in the DoDGARs found in 32 CFR, Chapter I, Subchapter C, and 2 CFR, Chapter XI, apply to grants and cooperative agreements resulting from this program announcement.\n\n The GAI contain information regarding administrative requirements and national policy requirements.\n\n Refer to full text of the latest DoD R&D Terms and Conditions and the DHACA Terms and Conditions for further information.\n\n If there are delinquencies in technical reporting requirements for any existing DHA or U.S. Army Medical Research and Development Command awards at the applicant organization, DHACA will not issue any new awards to the applicant organization until all delinquent reports have been submitted.\n\n Applications recommended for funding that involve animals, human data, human specimens, human subjects or human cadavers must be reviewed for compliance with federal animal and/or human subjects protection requirements and must be approved by the DHA R&D Office of Research and Regulatory Compliance (ORRC), prior to implementation. This administrative review requirement is in addition to the local IACUC, IRB or Ethics Committee (EC) review.\n\n Funded trials are required to post a copy of the IRB-approved informed consent form used to enroll subjects on a publicly available federal website in accordance with federal requirements described in the Code of Federal Regulations, Title 32, Part 219 (32 CFR 219)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2475872,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AwLVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 31,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   }
+  ]
+ },
+ "81676fa4cdfd6995": {
+  "query": "formatting requirements font size margins page length",
+  "filter": "462924eed92d0c8c",
+  "retrievalResults": []
+ },
+ "8e1d17bd37786853": {
+  "query": "full application due date deadline",
+  "filter": "73d1eaec7194837e",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "During the pre-application process, eBRAP assigns each submission a unique log number. This unique log number is required during the full application submission process. The eBRAP log number, application title and all information for the PI, Business Official(s), performing organization, and contracting organization must be consistent throughout the entire pre-application and full application submission process. Inconsistencies may delay application processing and limit or negate the ability to view, modify and verify the application in eBRAP. Contact the eBRAP Help Desk if any changes need to be made.\n\n When starting the pre-application, PIs should select a Mechanism Option appropriate to their pre-application:\n\n Application Includes: Select Option:\n\n CDA CDA – Career Development Award\n\n CDA with Pilot Clinical Trial CDA – Career Development Award – Pilot Clinical Trial\n\n 5.3.2. Full Application Submission\n\n Grants.gov Submissions: Full applications from extramural organizations must be submitted through the Grants.gov Workspace.\n\n eBRAP Submissions: Only intramural DOW organizations may submit full applications through eBRAP.\n\n 5.3.3. Applicant Verification of Full Application Submission in eBRAP\n\n Independent of the submission portal, once the full application is submitted, it is transmitted to and processed in eBRAP; the transmission to eBRAP may take up to 48 hours. At this stage, the PI and organizational representatives will receive an email from eBRAP instructing them to log in to eBRAP to review, modify and verify the full application submission. The Project Narrative and Research & Related Budget Form cannot be changed after the application submission deadline. Other application components, including subaward budget(s) and subaward budget justification(s), may be changed until the application verification period ends. The full application cannot be modified once the application verification period ends.\n\n 5.4. Submission Dates and Times\n\n The pre-application and full application submission process should be started early to avoid missing deadlines. Regardless of submission portal used, all pre- and full application components must be submitted by the deadlines stipulated in this program announcement. There are no grace periods for deadlines; failure to meet submission deadlines will result in application rejection. The DHACA cannot make allowances/exceptions for submission problems encountered by the applicant.\n\n Submission dates and times are specified in Section 1, Basic Information."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3780917,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AtLVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 22,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "It is anticipated that awards made from this FY26 funding opportunity will be funded with FY26 funds, which will expire for use on September 30, 2032. Awards supported with FY26 funds will be made no later than September 30, 2027.\n\n Submission and Review Dates and Times\n\n • Pre-Application (Preproposal) Submission Deadline: 5:00 p.m. Eastern Time (ET), July 27, 2026\n\n • Invitation to Submit an Application: August 28, 2026\n\n • Application Submission Deadline: 11:59 p.m. ET, October 22, 2026\n\n • End of Application Verification Period: 5:00 p.m. ET, October 27, 2026\n\n • Peer Review: December 2026\n\n • Programmatic Review: February 2027\n\n Announcement Type: Initial\n\n Funding Opportunity Number: HT942526ARPCDA\n\n Assistance Listing Number: 12.420Section Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 5\n\n 2. Eligibility Information\n\n 2.1."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3203318,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Aj7VeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 4,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "version=CD26_01#_National_Policy_Reqs:~:text=G.%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%20Post%2DAward%20Organization%20and%20PI%20ChangesSection Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n \n\n FY26 Autism Career Development Award 34\n\n 9. Other Information\n\n 9.1. Program Announcement Version\n\n Questions related to this program announcement should refer to the program name, the program announcement name and the program announcement version code CD26_01d.\n\n 9.2. Administrative Actions\n\n After receipt of full applications, the following administrative actions may occur.\n\n 9.2.1. Rejection\n\n The following will result in administrative rejection of the pre-application:\n\n • The Preproposal Narrative is missing.\n\n The following will result in administrative rejection of the full application:\n\n • The Project Narrative is missing.\n\n • The Budget is missing.\n\n • Submission of an application for which a letter of invitation was not issued.\n\n 9.2.2. Modification\n\n • Pages exceeding the specified limits will be removed prior to reviewing all documents."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2686322,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AxbVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 33,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "This program announcement must be read in conjunction with the General Application Instructions, version CD26_01.\n\n \n\n \n\n \n\n \n\n Program Announcement for the Defense Health Agency\n\n Autism Research Program\n\n Career Development Award Funding Opportunity Number: HT942526ARPCDA Pre-Application Due: July 27, 2026\n\n Application Due: October 22, 2026\n\n \n\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01FY26 Autism Career Development Award 2\n\n Content\n\n Before You Begin 3\n\n \n\n Basic Information Summarizes the funding opportunity, funding details, submission deadlines and review dates\n\n 4\n\n \n\n Eligibility Details eligibility factors for the applicant organization and Principal Investigator\n\n 5\n\n \n\n Program Description Describes the program mission and intent of the Career Development Award; provides key award information and considerations; and outlines funding details\n\n 6\n\n \n\n Application Contents Presents the two-step application process and instructions for preparing a pre-application and full application\n\n 10\n\n \n\n Submission Requirements Provides locations for application packages, instructions for submitting pre-applications and full applications, and describes application verification\n\n 21\n\n \n\n Application Review Information Outlines the processes for application compliance review, pre-application and full application selection/notification, and risk assessment. Also, details the review criteria for pre-application screening and both tiers of the CDMRP application review process – Peer Review and Programmatic Review\n\n 24\n\n \n\n Federal Award Notices Outlines what a successful applicant can expect if recommended for funding\n\n 31\n\n \n\n Post-Award Requirements References policy requirements for funded research; outlines reporting requirements and restrictions related to Principal Investigator changes and institutional award transfers\n\n 32\n\n \n\n Other Information Outlines criteria for administrative actions including application rejection, modification, withdrawal and withhold\n\n 34\n\n Appendix 1 Includes a checklist for all full application components to facilitate application submission\n\n 36\n\n Appendix 2 Acronym List\n\n 37FY26 Autism Career Development Award 3\n\n Before You Begin\n\n • Active SAM.gov, eBRAP.org and Grants.gov registrations are required for application submission. User registration for each of these websites can take several weeks or longer."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2679572,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ai7VeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Environment\n\n ○ To what extent the scientific environment is appropriate for the proposed research project.\n\n ○ How well the research requirements are supported by the availability of and accessibility to facilities and resources.\n\n ○ To what extent the quality and level of institutional support are appropriate for the proposed research project.\n\n • Application Presentation\n\n ○ To what extent the writing, clarity and presentation of the application components influence the review.\n\n 6.2.3. Programmatic Review\n\n To make funding recommendations and select the application(s) that, individually or collectively, will best achieve the program objectives, the following criteria are used by programmatic reviewers:\n\n • Ratings and evaluations of peer reviewers\n\n • Relevance to the priorities of the FY26 ARP, as evidenced by the following:\n\n ○ Adherence to the intent of the award mechanism\n\n ○ Program portfolio balance\n\n ○ Relative impact\n\n ○ Programmatic relevance to one or more of the FY26 ARP Career Development Award areas of interest or another critical problem or question in autism\n\n 6.3. Application Review and Selection Process\n\n 6.3.1. Pre-Application\n\n Following the pre-application screening, PIs will be notified as to whether they are invited to submit full applications. The estimated date when PIs can expect to receive notification of an invitation to submit a full application is indicated in Section 1, Basic Information About the Funding Opportunity. No feedback (e.g., a critique of the pre-application’s strengths and weaknesses) is provided at this stage. Because the invitation to submit a full application is based on the contents of the pre-application, investigators should not change the title or research objectives after the pre-application is submitted.\n\n 6.3.2. Full Application\n\n All applications are evaluated by scientists, clinicians and consumers in a two-tier review process. The first tier is peer review, the evaluation of applications against established criteriaSection Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 30\n\n to determine technical merit, where each application is assessed for its own merit, independent of other applications. The second tier is programmatic review, a comparison-based process in which applications with high scientific and technical merit are further evaluated for programmatic relevance. Final recommendations for funding are subject to review and approval by a designated official. The highest-scoring applications from the first tier of review are not automatically recommended for funding."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2616376,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AvbVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 29,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%20FULL%20APPLICATION%20SUBMISSION%20THROUGH%20eBRAPSection Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 11\n\n the full citation (i.e., author[s], year published, reference title, and reference source, including volume, chapter, page numbers, and publisher, as appropriate)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2575411,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AmrVeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "version=CD26_01#_Full_App_Submission_Grants:~:text=IV.-,FULL%20APPLICATION%20SUBMISSION%20THROUGH%20GRANTS.GOV,-A.%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Full_App_Submission_eBRAP:~:text=V.-,FULL%20APPLICATION%20SUBMISSION%20THROUGH%20eBRAP,-A.%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Applicant_Verification_Grants_Submission:~:text=E.-,Applicant%20Verification%20of%20Grants.gov%20Submission%20in%20eBRAP,-Once%20the%20full\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_PreApp_Submission:~:text=III.-,PRE%2DAPPLICATION%20SUBMISSION,-General%20information%20aboutSection Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 23\n\n 5.5. Intergovernmental Review\n\n Not applicable for this funding opportunity.Section Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 24\n\n 6. Application Review Information\n\n 6.1. Application Compliance Review\n\n Submitting applications that propose essentially the same research project to different funding opportunities within the same program and fiscal year is prohibited and will result in administrative withdrawal of the duplicative application(s).\n\n While it is allowable to propose similar research projects to different programs within the CDMRP or to other organizations, duplication of funding or accepting funding from more than one source for the same research is prohibited. See the CDMRP’s Directive on Research Duplication."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2528586,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AtrVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 22,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   }
+  ]
+ },
+ "a0eef221273bfc8b": {
+  "query": "project narrative page limit",
+  "filter": "73d1eaec7194837e",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "○ List of Abbreviations, Acronyms, and Symbols: Provide a list of abbreviations, acronyms, and symbols used in the Preproposal Narrative.\n\n ○ Key Personnel Biographical Sketches: All biographical sketches should be uploaded as a single combined file. Biographical sketches should be used to demonstrate background and expertise through education, positions, publications, and previous work accomplished.\n\n 4.3. Full Application Components\n\n Applicants must receive an invitation to submit a full application. Uninvited full application submissions will be rejected.\n\n Each application submission must include the completed full application package for this program announcement. See Appendix 1 for a checklist of the full application components.\n\n (a) SF424 Research & Related Application for Federal Assistance Form (Grants.gov submissions only):\n\n IMPORTANT: When completing the SF424 R&R, enter the eBRAP log number assigned during pre-application submission into Block 4a – Federal Identifier.\n\n (b) Attachments:\n\n Each attachment of the full application components must be uploaded as an individual file in the format specified and in accordance with the formatting guidelines in the GAI.\n\n ○ Attachment 1: Project Narrative (page limits vary, as shown below): Upload as “ProjectNarrative.pdf”.\n\n Describe the proposed project in detail using the outline below.\n\n – Page Limit: Page limits vary:\n\n ▪ Projects without a clinical trial: Eight-page limit\n\n ▪ Projects with a clinical trial component: 15-page limit\n\n Describe the proposed project in detail using one of the two outlines below, depending on whether or not a clinical trial is proposed. The inclusion of preliminary data relevant to the proposed project, but not necessarily derived from autism studies, is required.\n\n Outline for projects without a clinical trial:\n\n – Background: Present the scientific rationale behind the proposed research; include relevant literature citations. Describe and show the preliminary data to justify the rationale for the proposed project.\n\n – Hypothesis(es) and/or Objective(s): State the hypotheses/study questions to be tested and overall objective(s) to be reached. Describe how the project addresses one or more of the FY26 ARP Career Development Award Areas of Interest or a critical problem or question in autism.\n\n – Specific Aims: Concisely explain the project’s specific aims supported by this application. If this application is part of a larger study, present only tasks that this award would fund.\n\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3933661,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Am7VeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 11,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Costs for one investigator to travel to one scientific/technical meeting per year. The intent of travel to scientific/technical meetings should be to present project information or disseminate project results from the ARP Career Development Award.\n\n • Research subject compensation and reimbursement for trial-related out-of-pocket costs (e.g., travel, lodging, parking, costs associated with caregiving, and resources/equipment to enable participation).\n\n Must not be requested for:\n\n • Costs for travel to scientific/technical meeting(s) beyond the limits stated above.Section Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 10\n\n 4. Application Contents and Format\n\n 4.1. Application Overview\n\n Application submission is a two-step process requiring both a pre-application submitted via the Electronic Biomedical Research Application Portal (eBRAP) and a full application submitted through eBRAP or Grants.gov. Depending on the submission portal, certain aspects of the application will differ.\n\n Intramural DOW organizations submitting a full application should follow instructions for submission through eBRAP.\n\n Extramural organizations submitting a full application must follow instructions for submission through Grants.gov.\n\n 4.2. Pre-Application Components\n\n Pre-application submissions must include the following components.\n\n Upload documents as individual PDF files unless otherwise noted. Files must comply with the formatting guidelines listed in the GAI.\n\n • Preproposal Narrative (two-page limit): The Preproposal Narrative page limit applies to text and non-text elements (e.g., figures, tables, graphs, photographs, diagrams, chemical structures, drawings) used to describe the project. Inclusion of URLs that provide additional information to expand the Preproposal Narrative and could confer an unfair competitive advantage is prohibited and may result in administrative withdrawal of the pre-application.\n\n The Preproposal Narrative should include the following:\n\n ○ Principal Investigator: Describe the PI’s potential for a career at the forefront of autism research, including qualifications and achievements that make the PI an ideal candidate for this award. Describe the PI’s career goals as an autism researcher and how the proposed research experience will advance their career.\n\n ○ Research Idea: State the hypothesis to be tested or the objective(s) to be reached. State the FY26 ARP Career Development Award Areas of Interest that will be addressed."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2364423,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AmLVeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Describe the PI’s plan for continued development as an autism researcher and/or clinician (early-stage investigator) and/or the transition into a career in the field of autism research (established investigator) and how the proposed research experience will advance their career. Discuss the appropriateness of the level of effort of the PI for successful conduct of the proposed research.\n\n If the proposed research involves access to military and/or VA patient populations and/or DOW or VA resources or databases, describe the access at the time of submission and include a plan for maintaining access as needed throughout the proposed research. Also include a plan for obtaining any required data sharing, memorandum of understanding or other agreements required to access and publish data. Refer to the GAI, Appendix 4, for additional considerations.\n\n ○ Attachment 2: Supporting Documentation: Combine and upload as a single file named “Support.pdf”.\n\n There are no page limits for these components unless otherwise noted. Include only components described below; inclusion of items not requested or viewed as an extension of the Project Narrative will result in the removal of those items or may result in administrative withdrawal of the application.\n\n References Cited: List the references cited in the Project Narrative using a standard reference format (include URLs, if available).\n\n List of Abbreviations, Acronyms and Symbols: Provide a list of abbreviations, acronyms and symbols.\n\n Facilities, Existing Equipment and Other Resources: Describe the facilities and equipment available for performance of the proposed project; include any additional facilities or equipment proposed for acquisition at no cost to the award. Indicate whether government-furnished facilities or equipment are proposed for use. If so, reference the original or present government award under which the facilities or equipment items are now accountable. There is not a standardized form for this information.\n\n Publications and/or Patents: Include a list of relevant publication URLs and/or patent abstracts. If articles are not publicly available, then copies of up to five published manuscripts may be included in Attachment 2. Extra items will not be reviewed.\n\n Letters of Support (two-page limit per letter is recommended): Provide individual letters signed by collaborating individuals and/or organizational officials demonstrating that the PI has the support and resources necessary for the proposed work. Letters from the PI’s Department Chair, or appropriate organization official, should also confirm that the PI(s) meet eligibility criteria."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2232295,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AorVeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 14,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "version=CD26_01#_National_Policy_Reqs:~:text=G.%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%20Post%2DAward%20Organization%20and%20PI%20ChangesSection Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n \n\n FY26 Autism Career Development Award 34\n\n 9. Other Information\n\n 9.1. Program Announcement Version\n\n Questions related to this program announcement should refer to the program name, the program announcement name and the program announcement version code CD26_01d.\n\n 9.2. Administrative Actions\n\n After receipt of full applications, the following administrative actions may occur.\n\n 9.2.1. Rejection\n\n The following will result in administrative rejection of the pre-application:\n\n • The Preproposal Narrative is missing.\n\n The following will result in administrative rejection of the full application:\n\n • The Project Narrative is missing.\n\n • The Budget is missing.\n\n • Submission of an application for which a letter of invitation was not issued.\n\n 9.2.2. Modification\n\n • Pages exceeding the specified limits will be removed prior to reviewing all documents."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2155046,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AxbVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 33,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Including classified research data within the application and/or proposing research that may produce classified outcomes or outcomes deemed sensitive to national security concerns may result in application withdrawal.\n\n Members of the FY26 ARP Programmatic Panel must not be involved in any pre-application or full application including, but not limited to, concept design, application development, budget preparation and the development of any supporting documentation, including personal letters of support/recommendation for the research and/or PI. Programmatic Panel members may provide letters to confirm PI eligibility and access to laboratory space, equipment and other resources necessary for the project if that is part of their regular roles and responsibilities (e.g., as department chair). A list of the FY26 ARP Programmatic Panel members can be found on the CDMRP website.\n\n Additional restrictions and associated administrative responses are outlined in Section 9.2, Administrative Actions.\n\n 6.2."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1921076,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3At7VeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 24,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Full Application Submission Checklist\n\n Full Application Components Uploaded\n\n SF424 Research & Related Application for Federal Assistance (Grants.gov submissions only)\n\n ☐\n\n Summary (Tab 1) and Application Contacts (Tab 2) (eBRAP submissions only)\n\n ☐\n\n Attachments\n\n Project Narrative – Attachment 1, upload as “ProjectNarrative.pdf” ☐\n\n Supporting Documentation – Attachment 2, upload as “Support.pdf” ☐\n\n Technical Abstract – Attachment 3, upload as “TechAbs.pdf” ☐\n\n Lay Abstract – Attachment 4, upload as “LayAbs.pdf” ☐\n\n Statement of Work – Attachment 5, upload as “SOW.pdf” ☐\n\n Impact Statement – Attachment 6, upload as “Impact.pdf” ☐\n\n Eligibility Statement – Attachment 7, upload as “Eligibility.pdf” ☐\n\n Research Outcomes Plan – Attachment 8, upload as “Outcomes.pdf” ☐\n\n Inclusion Enrollment Report – Attachment 9, upload as “Enrollment.pdf” ☐\n\n Animal Research Plan – Attachment 10, upload as “AnimalResPlan.pdf” ☐\n\n Community Collaboration Plan – Attachment 11, upload as “Collaboration.pdf”\n\n ☐\n\n Regulatory Strategy – Attachment 12, upload as “Regulatory.pdf” ☐\n\n Representations (Grants.gov submissions only) – Attachment 13, upload as “RequiredReps.pdf”\n\n ☐\n\n Suggested Intragovernmental/Intramural Budget Form (if applicable) – Attachment 14, upload as “IGBudget.pdf”\n\n ☐\n\n Additional Application Materials\n\n Research & Related Senior/Key Person Profile (Expanded) ☐\n\n Attach Biographical Sketch for Senior/Key Persons (Biosketch_LastName.pdf)\n\n ☐\n\n Attach Current/Pending Support for Senior/Key Persons (Support_LastName.pdf)\n\n ☐\n\n Research & Related Budget ☐\n\n Project/Performance Site Location(s) ☐\n\n Research & Related Subaward Budget Attachment(s) (if applicable) ☐Section Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 37\n\n Appendix 2."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1907102,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AyLVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 36,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "version=CD26_01#_Recipient_Qualification_Restriction_Info:~:text=APPENDIX%202.%0AFORMATTING%20GUIDELINES\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Recipient_Qualification_Restriction_Info:~:text=(a)%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%20SF424%20(R%26R)%20%E2%80%93%20Application%20for%20Federal%20Assistance%20Form\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Recipient_Qualification_Restriction_Info:~:text=%C2%B7-,Project%20Narrative%3A,-Attach%20as%20%E2%80%9CProjectNarrative\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Content_Form_Full_App_Submission:~:text=eBRAP%20User%20Name-,Biographical%20Sketch,-%3A%20This%20fileSection Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 12\n\n – Research Strategy: Describe the experimental design, methods, and analyses, with appropriate controls, in sufficient detail for assessment. Address potential limitations and present alternative methods and approaches. If animal studies are proposed, the applicant is required to submit an Animal Research Plan (Attachment 10). If human subjects or human biological samples will be used, include a detailed plan for the recruitment of subjects or the acquisition of samples. Where relevant, describe the availability of and access to tissue, data, or human subjects.\n\n – Statistical Plan: Clearly describe the statistical plan and the rationale for the statistical methodology as well as an appropriate power analysis. Describe in detail how the statistical plan is appropriate for the experimental methodology being used. If applicable, describe how the human subject population is appropriate for the study and provide assurance that there is clear access to the designated population. Inclusion of a biostatistician in the study team is encouraged."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1878176,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AnLVeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 11,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   }
+  ]
+ },
+ "a35b3af32acbddf1": {
+  "query": "total costs direct and indirect cost limits per award",
+  "filter": "73d1eaec7194837e",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "version=CD26_01#_Definition_List:~:text=or%20hardware%20procurement.-,Clinical%20Trial%3A,-As%20defined%20in\n \n\n \n  https://cdmrp.health.mil/#:~:text=Human%20Subject%20Research%20Resource\n \n\n \n  https://www.strobe-statement.org/\n \n\n \n  https://www.nature.com/articles/s41591-025-03635-5#:~:text=SPIRIT%20and%20CONSORT%20are%20evidence,relevant%20empirical%20evidence%20where%20possible\n \n\n \n  https://www.nature.com/articles/s41591-025-03668-w?fromPaywallRec=false\n \n\n \n  https://arriveguidelines.org/arrive-guidelines\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Recipient_Qualification_Restriction_Info:~:text=Period%20of%20Performance%3A%20The%20time%20interval%20between%20the%20start%20of%20a%20federal%20award%20and%20the%20planned%20end%20date.\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Recipient_Qualification_Restriction_Info:~:text=in%20project%20activities.-,Cost%20Cap%3A,-The%20maximum%20costSection Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 9\n\n in accordance with the organization’s negotiated rate. Collaborating organizations should budget associated indirect costs in accordance with each organization’s negotiated rate.\n\n All direct and indirect costs of any subaward or contract must be included in the direct costs of the primary award.\n\n The applicant may request the entire maximum funding amount for a project that may have a period of performance less than the maximum 3 years.\n\n The appropriateness of the budget for the proposed research will be assessed during peer review.\n\n Direct Cost Restrictions: For this award mechanism, direct costs:\n\n May be requested for (not all-inclusive):\n\n • Travel in support of multi-institutional collaborations."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4187334,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Al7VeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Transfer of funds is contingent upon appropriate safety and administrative approvals. Intragovernmental and intramural DOW investigators and collaborators must coordinate receipt and commitment of funds through their respective Resource Manager/Task Area Manager/Comptroller or equivalent Business Official.\n\n An organization may, at its own risk and without the government’s prior approval, incur obligations and expenditures to cover costs up to 90 days before the beginning date of the initial budget period of a new award.\n\n \n\n \n  https://cdmrp.health.mil/search.aspx\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Full_App_Submission_eBRAP:~:text=The%20Defense%20Health%20Agency%20Research,appropriate%20safety%20and%20administrative%20approvals.Section Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n \n\n FY26 Autism Career Development Award 32\n\n 8. Post-Award Requirements\n\n 8.1. Administrative and National Policy Requirements\n\n Applicable requirements in the DoDGARs found in 32 CFR, Chapter I, Subchapter C, and 2 CFR, Chapter XI, apply to grants and cooperative agreements resulting from this program announcement.\n\n The GAI contain information regarding administrative requirements and national policy requirements.\n\n Refer to full text of the latest DoD R&D Terms and Conditions and the DHACA Terms and Conditions for further information.\n\n If there are delinquencies in technical reporting requirements for any existing DHA or U.S. Army Medical Research and Development Command awards at the applicant organization, DHACA will not issue any new awards to the applicant organization until all delinquent reports have been submitted.\n\n Applications recommended for funding that involve animals, human data, human specimens, human subjects or human cadavers must be reviewed for compliance with federal animal and/or human subjects protection requirements and must be approved by the DHA R&D Office of Research and Regulatory Compliance (ORRC), prior to implementation. This administrative review requirement is in addition to the local IACUC, IRB or Ethics Committee (EC) review.\n\n Funded trials are required to post a copy of the IRB-approved informed consent form used to enroll subjects on a publicly available federal website in accordance with federal requirements described in the Code of Federal Regulations, Title 32, Part 219 (32 CFR 219)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2398827,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AwLVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 31,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Funding recommendations depend on various factors as described in Section 6.2.3, Programmatic Review. Additional information about the two-tier process used by the CDMRP can be found on the CDMRP website.\n\n Funding of applications received is contingent upon the availability of federal funds for this program, the number of applications received, the quality and merit of the applications as evaluated by peer and programmatic review, and the requirements of the government. Funds to be obligated on any award resulting from this funding opportunity will be available for use for a limited time period based on the fiscal year of the funds.\n\n 6.4. Risk, Integrity and Performance Information\n\n Prior to making an assistance agreement award where the federal share is expected to exceed the simplified acquisition threshold, as defined in the Code of Federal Regulations, Title 2, Part 200.1 (2 CFR 200.1), over the period of performance, the federal awarding agency is required to review and consider any information about the applicant that is available in the SAM.\n\n An applicant organization may review the SAM and submit comments on any information currently available about the organization that a federal awarding agency previously entered. The federal awarding agency will consider any comments by the applicant, in addition to other information in the designated integrity and performance system, in making a judgment about the applicant’s integrity, business ethics and record of performance under federal awards when determining a recipient’s qualification prior to award, according to the qualification standards of the Department of Defense Grant and Agreement Regulations (DoDGARs), Section 22.415.\n\n In accordance with National Security Presidential Memorandum-33 and all associated laws, all fundamental research funded by the DOW must be evaluated for affiliations with foreign entities. All applicant organizations must disclose foreign affiliations of all key personnel named on applications. Failure to disclose foreign affiliations of key personnel shall lead to withdrawal of recommendations to fund applications. Applicant organizations may be presented with an opportunity to mitigate identified risks, particularly those pertaining to influence from foreign entities specified in law. Implementation of mitigation discussions and utilization of the DOD Component Decision Matrix must decrease risk of foreign influence in accordance with the above-mentioned laws and guidance prior to award."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2343816,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AvrVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 30,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "These recipients are required to disclose, semiannually, information about criminal, civil and administrative proceedings as specified in the applicable Representations.\n\n 8.3. Additional Requirements\n\n Changes in PI are not allowed, except under extenuating circumstances that will be evaluated on a case-by-case basis.\n\n The organizational transfer of an award supporting a clinical trial is strongly discouraged, and in most cases, will not be allowed. Approval of a transfer request will be on a case-by-case basis at the discretion of the Grants Officer.\n\n An organizational transfer of an award will not be allowed in the last year of the original period of performance or any extension thereof.\n\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.212488,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Aw7VeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 33,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applications to the FY26 ARP Career Development Award are expected to name at least one community partner (e.g., an Autistic individual or caregiver, representatives of community-based organizations) who will provide advice and consultation throughout the planning and implementation of the research project. Interactions with other team members should be well integrated and ongoing, not limited to attending seminars and semi-annual meetings (see Attachment 11, Community Collaboration Plan).\n\n All projects should adhere to a core set of standards for rigorous study design and reporting to maximize the reproducibility and translational potential of clinical and preclinical research, such as those described in the STROBE, CONSORT, SPIRIT and ARRIVE 2.0 guidelines.\n\n Applications from investigators within the DOW and applications involving multidisciplinary collaborations among academia, industry, the DOW, the U.S. Department of Veterans Affairs (VA) and other federal government agencies are highly encouraged. These relationships can leverage knowledge, infrastructure and access to unique clinical populations that the collaborators bring to the research effort, ultimately advancing research that is of significance to Service Members, Veterans, their Families and the American Public. If the proposed research relies on access to unique resources or databases, the application must describe the access at the time of submission and include a plan for maintaining access as needed throughout the proposed research.\n\n 3.3. Funding Instrument\n\n The funding instrument for awards made under the program announcement will be grants (31 USC 6304).\n\n 3.4. Funding Details\n\n Period of Performance: The maximum period of performance is 3 years.\n\n Cost Cap: The application’s total costs budgeted for the entire period of performance should not exceed $750,000. If indirect cost rates have been negotiated, indirect costs are to be budgeted\n\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2067199,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlrVeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "https://cdmrp.health.mil/about/2tierRevProcess\n \n\n \n  https://basicresearch.defense.gov/Programs/Academic-Research-Security/#:~:text=DOD%20COMPONENT%20DECISION%20MATRIX%20TO%20INFORM%20FUNDAMENTAL%20RESEARCH%20PROPOSAL%20MITIGATION%20DECISIONS\n \n\n \n  https://basicresearch.defense.gov/Programs/Academic-Research-Security/#:~:text=DOD%20COMPONENT%20DECISION%20MATRIX%20TO%20INFORM%20FUNDAMENTAL%20RESEARCH%20PROPOSAL%20MITIGATION%20DECISIONSSection Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n \n\n FY26 Autism Career Development Award 31\n\n 7. Federal Award Notices\n\n For each compliant full application received, the organizational representative(s) and PI will receive email notification when the funding recommendations are posted to eBRAP, typically within 6 weeks after programmatic review. At this time, each PI will receive a peer review summary statement on the strengths and weaknesses of the application and an information paper describing the application receipt and review process for the ARP award mechanisms. The information papers and a list of organizations and PIs recommended for funding are also posted on the program’s page within the CDMRP website. After all awards are made, the CDMRP includes individual award information in a searchable database.\n\n If an application is recommended for funding, after the email notification is posted to eBRAP, a government representative will contact the person authorized to negotiate on behalf of the recipient organization.\n\n Only an appointed DHACA Grants Officer may obligate the government to the expenditure of funds to an extramural organization. No commitment on the part of the government should be inferred from discussions with any other individual. The award document signed by the Grants Officer is the official authorizing document (i.e., assistance agreement).\n\n Intragovernmental obligations of funding will be made according to the terms of a negotiated Inter-Agency Agreement and managed by a CDMRP Science Officer.\n\n Funding obligated to intragovernmental and intramural DOW organizations will be sent through the Military Interdepartmental Purchase Request (MIPR), Funding Authorization Document (FAD) or Direct Charge Work Breakdown Structure processes."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2013671,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Av7VeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 30,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Costs for one investigator to travel to one scientific/technical meeting per year. The intent of travel to scientific/technical meetings should be to present project information or disseminate project results from the ARP Career Development Award.\n\n • Research subject compensation and reimbursement for trial-related out-of-pocket costs (e.g., travel, lodging, parking, costs associated with caregiving, and resources/equipment to enable participation).\n\n Must not be requested for:\n\n • Costs for travel to scientific/technical meeting(s) beyond the limits stated above.Section Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 10\n\n 4. Application Contents and Format\n\n 4.1. Application Overview\n\n Application submission is a two-step process requiring both a pre-application submitted via the Electronic Biomedical Research Application Portal (eBRAP) and a full application submitted through eBRAP or Grants.gov. Depending on the submission portal, certain aspects of the application will differ.\n\n Intramural DOW organizations submitting a full application should follow instructions for submission through eBRAP.\n\n Extramural organizations submitting a full application must follow instructions for submission through Grants.gov.\n\n 4.2. Pre-Application Components\n\n Pre-application submissions must include the following components.\n\n Upload documents as individual PDF files unless otherwise noted. Files must comply with the formatting guidelines listed in the GAI.\n\n • Preproposal Narrative (two-page limit): The Preproposal Narrative page limit applies to text and non-text elements (e.g., figures, tables, graphs, photographs, diagrams, chemical structures, drawings) used to describe the project. Inclusion of URLs that provide additional information to expand the Preproposal Narrative and could confer an unfair competitive advantage is prohibited and may result in administrative withdrawal of the pre-application.\n\n The Preproposal Narrative should include the following:\n\n ○ Principal Investigator: Describe the PI’s potential for a career at the forefront of autism research, including qualifications and achievements that make the PI an ideal candidate for this award. Describe the PI’s career goals as an autism researcher and how the proposed research experience will advance their career.\n\n ○ Research Idea: State the hypothesis to be tested or the objective(s) to be reached. State the FY26 ARP Career Development Award Areas of Interest that will be addressed."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1904998,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AmLVeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   }
+  ]
+ },
+ "a49f0167286c2971": {
+  "query": "full application due date deadline",
+  "filter": "462924eed92d0c8c",
+  "retrievalResults": []
+ },
+ "bcb952cd565b5c0e": {
+  "query": "period of performance and anticipated number of awards",
+  "filter": "73d1eaec7194837e",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "version=CD26_01#_Definition_List:~:text=or%20hardware%20procurement.-,Clinical%20Trial%3A,-As%20defined%20in\n \n\n \n  https://cdmrp.health.mil/#:~:text=Human%20Subject%20Research%20Resource\n \n\n \n  https://www.strobe-statement.org/\n \n\n \n  https://www.nature.com/articles/s41591-025-03635-5#:~:text=SPIRIT%20and%20CONSORT%20are%20evidence,relevant%20empirical%20evidence%20where%20possible\n \n\n \n  https://www.nature.com/articles/s41591-025-03668-w?fromPaywallRec=false\n \n\n \n  https://arriveguidelines.org/arrive-guidelines\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Recipient_Qualification_Restriction_Info:~:text=Period%20of%20Performance%3A%20The%20time%20interval%20between%20the%20start%20of%20a%20federal%20award%20and%20the%20planned%20end%20date.\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Recipient_Qualification_Restriction_Info:~:text=in%20project%20activities.-,Cost%20Cap%3A,-The%20maximum%20costSection Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 9\n\n in accordance with the organization’s negotiated rate. Collaborating organizations should budget associated indirect costs in accordance with each organization’s negotiated rate.\n\n All direct and indirect costs of any subaward or contract must be included in the direct costs of the primary award.\n\n The applicant may request the entire maximum funding amount for a project that may have a period of performance less than the maximum 3 years.\n\n The appropriateness of the budget for the proposed research will be assessed during peer review.\n\n Direct Cost Restrictions: For this award mechanism, direct costs:\n\n May be requested for (not all-inclusive):\n\n • Travel in support of multi-institutional collaborations."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2722144,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Al7VeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "It is anticipated that awards made from this FY26 funding opportunity will be funded with FY26 funds, which will expire for use on September 30, 2032. Awards supported with FY26 funds will be made no later than September 30, 2027.\n\n Submission and Review Dates and Times\n\n • Pre-Application (Preproposal) Submission Deadline: 5:00 p.m. Eastern Time (ET), July 27, 2026\n\n • Invitation to Submit an Application: August 28, 2026\n\n • Application Submission Deadline: 11:59 p.m. ET, October 22, 2026\n\n • End of Application Verification Period: 5:00 p.m. ET, October 27, 2026\n\n • Peer Review: December 2026\n\n • Programmatic Review: February 2027\n\n Announcement Type: Initial\n\n Funding Opportunity Number: HT942526ARPCDA\n\n Assistance Listing Number: 12.420Section Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 5\n\n 2. Eligibility Information\n\n 2.1."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2671043,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Aj7VeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 4,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applications to the FY26 ARP Career Development Award are expected to name at least one community partner (e.g., an Autistic individual or caregiver, representatives of community-based organizations) who will provide advice and consultation throughout the planning and implementation of the research project. Interactions with other team members should be well integrated and ongoing, not limited to attending seminars and semi-annual meetings (see Attachment 11, Community Collaboration Plan).\n\n All projects should adhere to a core set of standards for rigorous study design and reporting to maximize the reproducibility and translational potential of clinical and preclinical research, such as those described in the STROBE, CONSORT, SPIRIT and ARRIVE 2.0 guidelines.\n\n Applications from investigators within the DOW and applications involving multidisciplinary collaborations among academia, industry, the DOW, the U.S. Department of Veterans Affairs (VA) and other federal government agencies are highly encouraged. These relationships can leverage knowledge, infrastructure and access to unique clinical populations that the collaborators bring to the research effort, ultimately advancing research that is of significance to Service Members, Veterans, their Families and the American Public. If the proposed research relies on access to unique resources or databases, the application must describe the access at the time of submission and include a plan for maintaining access as needed throughout the proposed research.\n\n 3.3. Funding Instrument\n\n The funding instrument for awards made under the program announcement will be grants (31 USC 6304).\n\n 3.4. Funding Details\n\n Period of Performance: The maximum period of performance is 3 years.\n\n Cost Cap: The application’s total costs budgeted for the entire period of performance should not exceed $750,000. If indirect cost rates have been negotiated, indirect costs are to be budgeted\n\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.259284,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AlrVeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Funding recommendations depend on various factors as described in Section 6.2.3, Programmatic Review. Additional information about the two-tier process used by the CDMRP can be found on the CDMRP website.\n\n Funding of applications received is contingent upon the availability of federal funds for this program, the number of applications received, the quality and merit of the applications as evaluated by peer and programmatic review, and the requirements of the government. Funds to be obligated on any award resulting from this funding opportunity will be available for use for a limited time period based on the fiscal year of the funds.\n\n 6.4. Risk, Integrity and Performance Information\n\n Prior to making an assistance agreement award where the federal share is expected to exceed the simplified acquisition threshold, as defined in the Code of Federal Regulations, Title 2, Part 200.1 (2 CFR 200.1), over the period of performance, the federal awarding agency is required to review and consider any information about the applicant that is available in the SAM.\n\n An applicant organization may review the SAM and submit comments on any information currently available about the organization that a federal awarding agency previously entered. The federal awarding agency will consider any comments by the applicant, in addition to other information in the designated integrity and performance system, in making a judgment about the applicant’s integrity, business ethics and record of performance under federal awards when determining a recipient’s qualification prior to award, according to the qualification standards of the Department of Defense Grant and Agreement Regulations (DoDGARs), Section 22.415.\n\n In accordance with National Security Presidential Memorandum-33 and all associated laws, all fundamental research funded by the DOW must be evaluated for affiliations with foreign entities. All applicant organizations must disclose foreign affiliations of all key personnel named on applications. Failure to disclose foreign affiliations of key personnel shall lead to withdrawal of recommendations to fund applications. Applicant organizations may be presented with an opportunity to mitigate identified risks, particularly those pertaining to influence from foreign entities specified in law. Implementation of mitigation discussions and utilization of the DOD Component Decision Matrix must decrease risk of foreign influence in accordance with the above-mentioned laws and guidance prior to award."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2487254,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AvrVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 30,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Environment\n\n ○ To what extent the scientific environment is appropriate for the proposed research project.\n\n ○ How well the research requirements are supported by the availability of and accessibility to facilities and resources.\n\n ○ To what extent the quality and level of institutional support are appropriate for the proposed research project.\n\n • Application Presentation\n\n ○ To what extent the writing, clarity and presentation of the application components influence the review.\n\n 6.2.3. Programmatic Review\n\n To make funding recommendations and select the application(s) that, individually or collectively, will best achieve the program objectives, the following criteria are used by programmatic reviewers:\n\n • Ratings and evaluations of peer reviewers\n\n • Relevance to the priorities of the FY26 ARP, as evidenced by the following:\n\n ○ Adherence to the intent of the award mechanism\n\n ○ Program portfolio balance\n\n ○ Relative impact\n\n ○ Programmatic relevance to one or more of the FY26 ARP Career Development Award areas of interest or another critical problem or question in autism\n\n 6.3. Application Review and Selection Process\n\n 6.3.1. Pre-Application\n\n Following the pre-application screening, PIs will be notified as to whether they are invited to submit full applications. The estimated date when PIs can expect to receive notification of an invitation to submit a full application is indicated in Section 1, Basic Information About the Funding Opportunity. No feedback (e.g., a critique of the pre-application’s strengths and weaknesses) is provided at this stage. Because the invitation to submit a full application is based on the contents of the pre-application, investigators should not change the title or research objectives after the pre-application is submitted.\n\n 6.3.2. Full Application\n\n All applications are evaluated by scientists, clinicians and consumers in a two-tier review process. The first tier is peer review, the evaluation of applications against established criteriaSection Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 30\n\n to determine technical merit, where each application is assessed for its own merit, independent of other applications. The second tier is programmatic review, a comparison-based process in which applications with high scientific and technical merit are further evaluated for programmatic relevance. Final recommendations for funding are subject to review and approval by a designated official. The highest-scoring applications from the first tier of review are not automatically recommended for funding."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.223866,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AvbVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 29,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "○ How well the hypothesis or objectives, specific aims and experimental design are developed.\n\n ○ How well the study is designed to achieve the research objectives, including, if applicable, the development and use of animal model(s), and to what extent the chosen animal and endpoints/outcome measures are justified.\n\n ○ How well the study (or studies) is designed to achieve reproducible and rigorous results, including controls, sample size estimation, blinding, randomization, and data handling.\n\n ○ If applicable, to what extent the human subject population is appropriate for the study and whether there is clear access to the designated population.\n\n ○ If applicable, whether the strategy for the inclusion of women and minorities and distribution of proposed enrollment are appropriate for the proposed research.\n\n ○ How well the application acknowledges potential problems and addresses alternative approaches.\n\n ○ To what degree the statistical plan is appropriate for the experimental methodology being used.\n\n ○ Whether the power analysis for the proposed study adequately represents an assessment of the population or subpopulation proposed, if applicable.\n\n • Impact\n\n ○ To what degree the proposed project is relevant to autism.\n\n ○ To what extent the anticipated near-term outcome(s)/product(s) of the project will impact Autistic individuals and their families/caregivers and/or improve understanding of autism.\n\n ○ To what degree the anticipated long-term impact from the proposed research project will have a real-world impact on the autism community.\n\n ○ How well the proposed study addresses one or more of the FY26 ARP Career Development Award Areas of Interest or justifies that the proposed research addresses a critical problem, question, or need in autism.\n\n ○ How the anticipated outcomes from the proposed project compare to currently available autism information, products or treatments, if applicable.Section Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 26\n\n • Research Outcomes Plan\n\n ○ Whether the application described the anticipated research outcomes, including knowledge products, clinical products for development, etc.\n\n ○ How well the application demonstrated methods and strategies to move the anticipated research outcomes to the next phase of development or clinical application after successful completion of the project.\n\n ○ Whether the application detailed the funding strategy to transition to the next level of investigation, development, and/or commercialization (e.g., partners, internal/external funding opportunities to be applied for)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2036815,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AubVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 25,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "version=CD26_01#_National_Policy_Reqs:~:text=G.%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%20Post%2DAward%20Organization%20and%20PI%20ChangesSection Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n \n\n FY26 Autism Career Development Award 34\n\n 9. Other Information\n\n 9.1. Program Announcement Version\n\n Questions related to this program announcement should refer to the program name, the program announcement name and the program announcement version code CD26_01d.\n\n 9.2. Administrative Actions\n\n After receipt of full applications, the following administrative actions may occur.\n\n 9.2.1. Rejection\n\n The following will result in administrative rejection of the pre-application:\n\n • The Preproposal Narrative is missing.\n\n The following will result in administrative rejection of the full application:\n\n • The Project Narrative is missing.\n\n • The Budget is missing.\n\n • Submission of an application for which a letter of invitation was not issued.\n\n 9.2.2. Modification\n\n • Pages exceeding the specified limits will be removed prior to reviewing all documents."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1968312,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AxbVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 33,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   }
+  ]
+ },
+ "df55947def08ff19": {
+  "query": "pre-application letter of intent deadline and submission timeline",
+  "filter": "73d1eaec7194837e",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "During the pre-application process, eBRAP assigns each submission a unique log number. This unique log number is required during the full application submission process. The eBRAP log number, application title and all information for the PI, Business Official(s), performing organization, and contracting organization must be consistent throughout the entire pre-application and full application submission process. Inconsistencies may delay application processing and limit or negate the ability to view, modify and verify the application in eBRAP. Contact the eBRAP Help Desk if any changes need to be made.\n\n When starting the pre-application, PIs should select a Mechanism Option appropriate to their pre-application:\n\n Application Includes: Select Option:\n\n CDA CDA – Career Development Award\n\n CDA with Pilot Clinical Trial CDA – Career Development Award – Pilot Clinical Trial\n\n 5.3.2. Full Application Submission\n\n Grants.gov Submissions: Full applications from extramural organizations must be submitted through the Grants.gov Workspace.\n\n eBRAP Submissions: Only intramural DOW organizations may submit full applications through eBRAP.\n\n 5.3.3. Applicant Verification of Full Application Submission in eBRAP\n\n Independent of the submission portal, once the full application is submitted, it is transmitted to and processed in eBRAP; the transmission to eBRAP may take up to 48 hours. At this stage, the PI and organizational representatives will receive an email from eBRAP instructing them to log in to eBRAP to review, modify and verify the full application submission. The Project Narrative and Research & Related Budget Form cannot be changed after the application submission deadline. Other application components, including subaward budget(s) and subaward budget justification(s), may be changed until the application verification period ends. The full application cannot be modified once the application verification period ends.\n\n 5.4. Submission Dates and Times\n\n The pre-application and full application submission process should be started early to avoid missing deadlines. Regardless of submission portal used, all pre- and full application components must be submitted by the deadlines stipulated in this program announcement. There are no grace periods for deadlines; failure to meet submission deadlines will result in application rejection. The DHACA cannot make allowances/exceptions for submission problems encountered by the applicant.\n\n Submission dates and times are specified in Section 1, Basic Information."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3810793,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AtLVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 22,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "▪ Identify the regulatory sponsor. Include a signed sponsor commitment letter acknowledging the regulatory sponsor’s understanding of all sponsor responsibilities and commitment to oversee execution of the study.\n\n ▪ If an Investigational New Drug (IND) or Investigational Device Exemption (IDE) application is required to initiate the proposed research project, it must be submitted to the FDA prior to the FY26 ARP Career Development Award application submission deadline. The government reserves the right to withhold or withdraw funding if an IND or IDE application is necessary but has not been submitted to the FDA by the application submission deadline or if the documented status of the IND or IDE application has not been obtained within 9 months of the award date.\n\n ▪ If the clinical trial will be conducted at international sites, provide equivalent information and supporting documentation relevant to the product indication/label and regulatory approval and/or filings in the host country(ies).\n\n If a device is to be used in the proposed clinical trial, indicate who holds the intellectual property rights to the intervention, if applicable, and how the PI has obtained access to those rights for the conduct of the clinical trial."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3007556,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AsLVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 19,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "It is anticipated that awards made from this FY26 funding opportunity will be funded with FY26 funds, which will expire for use on September 30, 2032. Awards supported with FY26 funds will be made no later than September 30, 2027.\n\n Submission and Review Dates and Times\n\n • Pre-Application (Preproposal) Submission Deadline: 5:00 p.m. Eastern Time (ET), July 27, 2026\n\n • Invitation to Submit an Application: August 28, 2026\n\n • Application Submission Deadline: 11:59 p.m. ET, October 22, 2026\n\n • End of Application Verification Period: 5:00 p.m. ET, October 27, 2026\n\n • Peer Review: December 2026\n\n • Programmatic Review: February 2027\n\n Announcement Type: Initial\n\n Funding Opportunity Number: HT942526ARPCDA\n\n Assistance Listing Number: 12.420Section Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 5\n\n 2. Eligibility Information\n\n 2.1."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.261247,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Aj7VeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 4,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "This program announcement must be read in conjunction with the General Application Instructions, version CD26_01.\n\n \n\n \n\n \n\n \n\n Program Announcement for the Defense Health Agency\n\n Autism Research Program\n\n Career Development Award Funding Opportunity Number: HT942526ARPCDA Pre-Application Due: July 27, 2026\n\n Application Due: October 22, 2026\n\n \n\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01FY26 Autism Career Development Award 2\n\n Content\n\n Before You Begin 3\n\n \n\n Basic Information Summarizes the funding opportunity, funding details, submission deadlines and review dates\n\n 4\n\n \n\n Eligibility Details eligibility factors for the applicant organization and Principal Investigator\n\n 5\n\n \n\n Program Description Describes the program mission and intent of the Career Development Award; provides key award information and considerations; and outlines funding details\n\n 6\n\n \n\n Application Contents Presents the two-step application process and instructions for preparing a pre-application and full application\n\n 10\n\n \n\n Submission Requirements Provides locations for application packages, instructions for submitting pre-applications and full applications, and describes application verification\n\n 21\n\n \n\n Application Review Information Outlines the processes for application compliance review, pre-application and full application selection/notification, and risk assessment. Also, details the review criteria for pre-application screening and both tiers of the CDMRP application review process – Peer Review and Programmatic Review\n\n 24\n\n \n\n Federal Award Notices Outlines what a successful applicant can expect if recommended for funding\n\n 31\n\n \n\n Post-Award Requirements References policy requirements for funded research; outlines reporting requirements and restrictions related to Principal Investigator changes and institutional award transfers\n\n 32\n\n \n\n Other Information Outlines criteria for administrative actions including application rejection, modification, withdrawal and withhold\n\n 34\n\n Appendix 1 Includes a checklist for all full application components to facilitate application submission\n\n 36\n\n Appendix 2 Acronym List\n\n 37FY26 Autism Career Development Award 3\n\n Before You Begin\n\n • Active SAM.gov, eBRAP.org and Grants.gov registrations are required for application submission. User registration for each of these websites can take several weeks or longer."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2422371,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ai7VeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "version=CD26_01#_National_Policy_Reqs:~:text=G.%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%20Post%2DAward%20Organization%20and%20PI%20ChangesSection Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n \n\n FY26 Autism Career Development Award 34\n\n 9. Other Information\n\n 9.1. Program Announcement Version\n\n Questions related to this program announcement should refer to the program name, the program announcement name and the program announcement version code CD26_01d.\n\n 9.2. Administrative Actions\n\n After receipt of full applications, the following administrative actions may occur.\n\n 9.2.1. Rejection\n\n The following will result in administrative rejection of the pre-application:\n\n • The Preproposal Narrative is missing.\n\n The following will result in administrative rejection of the full application:\n\n • The Project Narrative is missing.\n\n • The Budget is missing.\n\n • Submission of an application for which a letter of invitation was not issued.\n\n 9.2.2. Modification\n\n • Pages exceeding the specified limits will be removed prior to reviewing all documents."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2223253,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AxbVeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 33,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "version=CD26_01#_Additional_App_Materials_V:~:text=B.-,Additional%20Application%20Materials,-The%20following%20are\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Additional_App_Materials_V:~:text=E.-,DOW%20Data%20Management%20Plan,-If%20recommended%20forSection Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 21\n\n 5. Submission Requirements\n\n 5.1. Location of Application Package\n\n Download the application package components for HT942526ARPCDA from Grants.gov or eBRAP, depending on which submission portal will be used.\n\n 5.2. Unique Entity Identifier and System for Award Management\n\n The applicant organization must be registered as an entity in the System for Award Management (SAM), SAM.gov, and receive confirmation of an “Active” status before submitting an application through Grants.gov. Organizations must include the unique entity identifier (UEI) generated by the SAM in applications to this funding opportunity and maintain an active registration in the SAM at all times during which it has an active Federal award or an application under consideration.\n\n 5.3. Submission Instructions\n\n The CDMRP uses two portal systems to accept pre- and full application submissions. The workflow below shows which portal system to use for pre- and full application submissions, respectively.\n\n Application Submission Workflow\n\n \n\n \n\n \n  https://grants.gov/\n \n\n \n  https://ebrap.org/eBRAP/public/Program.htm\n \n\n \n  https://www.sam.gov/content/home\n \n\n \n  https://ebrap.org/eBRAP/public/gai.htm?version=CD26_01#_Additional_App_Materials_V:~:text=Obtain%20Unique%20Entity%20Identifier%20from%20System%20for%20Award%20ManagementSection Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 22\n\n 5.3.1. Pre-Application Submission\n\n All pre-application components must be submitted by the PI through eBRAP."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2154251,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3As7VeYKEBbayybwJOfvA8",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 20,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Costs for one investigator to travel to one scientific/technical meeting per year. The intent of travel to scientific/technical meetings should be to present project information or disseminate project results from the ARP Career Development Award.\n\n • Research subject compensation and reimbursement for trial-related out-of-pocket costs (e.g., travel, lodging, parking, costs associated with caregiving, and resources/equipment to enable participation).\n\n Must not be requested for:\n\n • Costs for travel to scientific/technical meeting(s) beyond the limits stated above.Section Shortcuts Basic Information | Eligibility | Program Description | Application Contents and Format | Submission Requirements\n\n Application Review Information | Federal Award Notices | Post-Award Requirements | Other Information\n\n FY26 Autism Career Development Award 10\n\n 4. Application Contents and Format\n\n 4.1. Application Overview\n\n Application submission is a two-step process requiring both a pre-application submitted via the Electronic Biomedical Research Application Portal (eBRAP) and a full application submitted through eBRAP or Grants.gov. Depending on the submission portal, certain aspects of the application will differ.\n\n Intramural DOW organizations submitting a full application should follow instructions for submission through eBRAP.\n\n Extramural organizations submitting a full application must follow instructions for submission through Grants.gov.\n\n 4.2. Pre-Application Components\n\n Pre-application submissions must include the following components.\n\n Upload documents as individual PDF files unless otherwise noted. Files must comply with the formatting guidelines listed in the GAI.\n\n • Preproposal Narrative (two-page limit): The Preproposal Narrative page limit applies to text and non-text elements (e.g., figures, tables, graphs, photographs, diagrams, chemical structures, drawings) used to describe the project. Inclusion of URLs that provide additional information to expand the Preproposal Narrative and could confer an unfair competitive advantage is prohibited and may result in administrative withdrawal of the pre-application.\n\n The Preproposal Narrative should include the following:\n\n ○ Principal Investigator: Describe the PI’s potential for a career at the forefront of autism research, including qualifications and achievements that make the PI an ideal candidate for this award. Describe the PI’s career goals as an autism researcher and how the proposed research experience will advance their career.\n\n ○ Research Idea: State the hypothesis to be tested or the objective(s) to be reached. State the FY26 ARP Career Development Award Areas of Interest that will be addressed."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2153296,
+    "metadata": {
+     "documentIdentifier": "DoW Autism Career Development Award",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AmLVeYKEBbayybwJOfvA7",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/DoW Autism Career Development Award/NOFO-File-PDF",
+     "nofoName": "DoW Autism Career Development Award",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:24:17.069Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development"
+    }
+   }
+  ]
+ },
+ "f416e2aee9c2298d": {
+  "query": "project narrative page limit",
+  "filter": "462924eed92d0c8c",
+  "retrievalResults": []
+ },
+ "fa484b717e8491c7": {
+  "query": "period of performance and anticipated number of awards",
+  "filter": "462924eed92d0c8c",
+  "retrievalResults": []
+ }
+}

@@ -6,6 +6,7 @@ import {
   StartDocumentTextDetectionCommand,
   GetDocumentTextDetectionCommand,
 } from "@aws-sdk/client-textract";
+import { artifactsBucket } from "grantwell-shared";
 import { updateProcessingStatus } from "../shared/status.mjs";
 
 const s3Client = new S3Client();
@@ -35,7 +36,7 @@ export const handler = async (event) => {
   await new Upload({
     client: s3Client,
     params: {
-      Bucket: s3Bucket,
+      Bucket: artifactsBucket(),
       Key: rawTextKey,
       Body: documentContent,
       ContentType: "text/plain",

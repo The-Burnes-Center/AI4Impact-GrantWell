@@ -1,0 +1,791 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "NIH",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "New and Renewal/Resubmission/Revision (as allowed) applications due September 25, 2026",
+      "date": "2026-09-25",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": false,
+      "quote": "Earliest Start Date September 25, 2026 * September 25, 2026 * Not Applicable March 2027 May 2027 July 2027"
+    },
+    {
+      "kind": "application",
+      "label": "New and Renewal/Resubmission/Revision (as allowed) applications due September 25, 2027",
+      "date": "2027-09-25",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": false,
+      "quote": "July 2027 September 25, 2027 * September 25, 2027 * Not Applicable March 2028 May 2028 July 2028"
+    },
+    {
+      "kind": "application",
+      "label": "New and Renewal/Resubmission/Revision (as allowed) applications due September 25, 2028",
+      "date": "2028-09-25",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": false,
+      "quote": "September 25, 2028 * September 25, 2028 * Not Applicable March 2029 May 2029 July 2029 All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "other",
+      "label": "Expiration Date",
+      "date": "2028-09-26",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "No late applications will be accepted for this Notice of Funding Opportunity (NOFO). Expiration Date September 26, 2028"
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": null,
+    "periodMonths": 60,
+    "expectedAwards": {
+      "min": null,
+      "max": 10
+    },
+    "range": null,
+    "caps": [
+      {
+        "what": "direct costs per year",
+        "value": 1750000
+      },
+      {
+        "what": "Administrative Core plus TREC direct costs, percent of total Center direct costs per year",
+        "value": 25
+      },
+      {
+        "what": "each KC Donnelly externship, direct costs (up to 2 per year)",
+        "value": 10000
+      }
+    ],
+    "match": {
+      "required": false,
+      "ratio": null,
+      "appliesTo": null,
+      "quote": "This NOFO does not require cost sharing as defined in the NIH Grants Policy Statement Section 1.2- Definitions of Terms."
+    },
+    "quote": "NIEHS intends to fund an estimate of up to 10 awards based on programmatic needs and availability of funds, corresponding to a total of up to approximately $22 million, for fiscal year 2027. Future year amounts will depend on annual appropriations. Award Budget Applications may request a budget for direct costs of up to $1.75 million dollars for each year. Award Project Period Applications may propose a project period of up to 5 years."
+  },
+  "sections": [
+    {
+      "name": "Project Summary/Abstract (Overall)",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": "Overall",
+      "quote": "Project Summary/Abstract: For the Overall Component, applicants must include a Project Summary/Abstract that describes: The scientific problem(s)/overall hypothesis being addressed by the Overall Center"
+    },
+    {
+      "name": "Project Narrative (Overall)",
+      "order": 2,
+      "limit": null,
+      "conditional": null,
+      "component": "Overall",
+      "quote": "Project Narrative: It should be clear in the \"Project Narrative\" (i.e., the \"public health relevance\" statement) the relevance of the Center"
+    },
+    {
+      "name": "Introduction to Application (Overall)",
+      "order": 3,
+      "limit": null,
+      "conditional": "Resubmission and Revision applications",
+      "component": "Overall",
+      "quote": "Introduction to Application: For Resubmission and Revision applications, an Introduction to Application is required in the Overall component."
+    },
+    {
+      "name": "Specific Aims (Overall)",
+      "order": 4,
+      "limit": null,
+      "conditional": null,
+      "component": "Overall",
+      "quote": "Specific Aims: Applicants must provide Specific Aims for the Overall Center describing the objectives and goals of the Center, as they relate to the SRP Mandates and Superfund."
+    },
+    {
+      "name": "Research Strategy (Overall)",
+      "order": 5,
+      "limit": {
+        "type": "pages",
+        "value": 12
+      },
+      "conditional": null,
+      "component": "Overall",
+      "quote": "Research Strategy: The Research Strategy section should highlight the following subsections: Significance and Relevance to SRP Mandates and Superfund; Research Team; Innovation, Approach; Environment; and Center Integration."
+    },
+    {
+      "name": "Data Management and Sharing Plan",
+      "order": 6,
+      "limit": {
+        "type": "pages",
+        "value": 2
+      },
+      "conditional": null,
+      "component": "Overall",
+      "quote": "Applicants must submit the DMS Plan at the time of application using the NIH DMS Plan Format Page . The DMS Plan must address the elements in the structured format should not exceed two (2) pages."
+    },
+    {
+      "name": "Project Summary/Abstract (Administrative Core)",
+      "order": 7,
+      "limit": null,
+      "conditional": null,
+      "component": "Administrative Core",
+      "quote": "Project Summary/Abstract: Include a Core Summary/Abstract that briefly describes: How the Administrative Core will provide leadership and oversight to the Center"
+    },
+    {
+      "name": "Project Narrative (Administrative Core)",
+      "order": 8,
+      "limit": null,
+      "conditional": null,
+      "component": "Administrative Core",
+      "quote": "Project Narrative: It should be clear in the \"Project Narrative\" (i.e., the \"public health relevance\" statement) the relevance of the Center"
+    },
+    {
+      "name": "Specific Aims (Administrative Core)",
+      "order": 9,
+      "limit": null,
+      "conditional": null,
+      "component": "Administrative Core",
+      "quote": "Specific Aims: Specific Aims should describe the objectives and goals of the Core. The specific aims section should also contain a brief statement, in coordination with the Center's projects and cores, about how the Core will provide leadership to the Center"
+    },
+    {
+      "name": "Research Strategy (Administrative Core)",
+      "order": 10,
+      "limit": {
+        "type": "pages",
+        "value": 12
+      },
+      "conditional": null,
+      "component": "Administrative Core",
+      "quote": "Research Strategy: The research strategy should include a detailed description of how the Core will provide leadership to the Center; support effective data management for all relevant Center components"
+    },
+    {
+      "name": "Project Summary/Abstract (TREC)",
+      "order": 11,
+      "limit": null,
+      "conditional": null,
+      "component": "Translational Research and Engagement Core",
+      "quote": "Summary/Abstract: Include a Core Summary/Abstract that briefly describes: How the TREC will support the Center."
+    },
+    {
+      "name": "Project Narrative (TREC)",
+      "order": 12,
+      "limit": null,
+      "conditional": null,
+      "component": "Translational Research and Engagement Core",
+      "quote": "the relevance of the Core's activities to public health, end-users/stakeholders, Superfund, and the SRP. Project /Performance Site Location(s) (Translational Research and Engagement Core)"
+    },
+    {
+      "name": "Specific Aims (TREC)",
+      "order": 13,
+      "limit": null,
+      "conditional": null,
+      "component": "Translational Research and Engagement Core",
+      "quote": "Specific Aims: The specific aims should include how the TREC will facilitate translational research activities for each project and how the TREC will coordinate Center engagement with communities, end-users, and/or stakeholders."
+    },
+    {
+      "name": "Research Strategy (TREC)",
+      "order": 14,
+      "limit": {
+        "type": "pages",
+        "value": 12
+      },
+      "conditional": null,
+      "component": "Translational Research and Engagement Core",
+      "quote": "Research Strategy: The research strategy should indicate how the TREC will achieve the Center's translational research goals and conduct engagement activities with communities, end-users, and/or stakeholders"
+    },
+    {
+      "name": "Project Summary/Abstract (Research Project)",
+      "order": 15,
+      "limit": null,
+      "conditional": null,
+      "component": "Research Project (each of 3-4)",
+      "quote": "Summary/Abstract: The Project Summary/Abstract should briefly describe: The objectives of the project and how the project will support the problem-solving goals of the Center."
+    },
+    {
+      "name": "Project Narrative (Research Project)",
+      "order": 16,
+      "limit": null,
+      "conditional": null,
+      "component": "Research Project (each of 3-4)",
+      "quote": "Project Narrative: It should be clear in the \"Project Narrative\" (i.e., the \"public health relevance\" statement) the relevance of the project"
+    },
+    {
+      "name": "Specific Aims (Research Project)",
+      "order": 17,
+      "limit": null,
+      "conditional": null,
+      "component": "Research Project (each of 3-4)",
+      "quote": "Specific Aims: Specific Aims should describe the objectives and goals of the project, as it relates to the SRP Mandates and Superfund."
+    },
+    {
+      "name": "Research Strategy (Research Project)",
+      "order": 18,
+      "limit": {
+        "type": "pages",
+        "value": 12
+      },
+      "conditional": null,
+      "component": "Research Project (each of 3-4)",
+      "quote": "Research Strategy: The following subsections are recommended: Significance and Relevance to SRP Mandates and Superfund; Investigators; Innovation; Approach; Environment; and Center Integration."
+    },
+    {
+      "name": "Translational Research Plan (Research Project)",
+      "order": 19,
+      "limit": null,
+      "conditional": null,
+      "component": "Research Project (each of 3-4)",
+      "quote": "a Translational Research Plan (TRP) should be included for each (project/core) to describe how research resources and findings will be shared beyond the project."
+    },
+    {
+      "name": "Project Summary/Abstract (Research Support Core)",
+      "order": 20,
+      "limit": null,
+      "conditional": "Only if the optional Research Support Core is included",
+      "component": "Research Support Core",
+      "quote": "Summary/Abstract: Include a Core Summary/Abstract that briefly describes: How the RSC will serve as a resource for the Center."
+    },
+    {
+      "name": "Project Narrative (Research Support Core)",
+      "order": 21,
+      "limit": null,
+      "conditional": "Only if the optional Research Support Core is included",
+      "component": "Research Support Core",
+      "quote": "the relevance of the Center's activities to public health, end-users/stakeholders, Superfund, and the SRP. Project /Performance Site Location(s) (Research Support Core)"
+    },
+    {
+      "name": "Specific Aims (Research Support Core)",
+      "order": 22,
+      "limit": null,
+      "conditional": "Only if the optional Research Support Core is included",
+      "component": "Research Support Core",
+      "quote": "Specific Aims: Specific Aims should describe the objectives and goals of the Core. The specific aims section should also contain a brief statement about how the Core integrates with the rest of the Center. Research Strategy: the applicant should include"
+    },
+    {
+      "name": "Research Strategy (Research Support Core)",
+      "order": 23,
+      "limit": {
+        "type": "pages",
+        "value": 6
+      },
+      "conditional": "Only if the optional Research Support Core is included",
+      "component": "Research Support Core",
+      "quote": "Research Strategy: the applicant should include in the description: The services and methodological approaches to be rendered by the Core, why they are not currently available to the Center"
+    },
+    {
+      "name": "Authentication of Key Biological and/or Chemical Resources",
+      "order": 24,
+      "limit": null,
+      "conditional": "Projects/cores working with biological or chemical substances",
+      "component": "Each Research Project and Core, as applicable",
+      "quote": "This section should be included for any projects working with biological or chemical substances."
+    },
+    {
+      "name": "Biohazards",
+      "order": 25,
+      "limit": null,
+      "conditional": "Projects/cores working with hazardous substances",
+      "component": "Each Research Project and Core, as applicable",
+      "quote": "Biohazards: As applicable, procedures for proper handling and disposal should be included for biological materials, hazardous chemicals/materials, etc."
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Significance (Overall)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Overall)"
+      ],
+      "quote": "Significance Does the project address an important problem or a critical barrier to progress in the field? Is the prior research that serves as the key support for the proposed project rigorous?"
+    },
+    {
+      "name": "Investigator(s) (Overall)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Overall)"
+      ],
+      "quote": "Investigator(s) Are the PD(s)/PI(s), collaborators, and other researchers well suited to the project?"
+    },
+    {
+      "name": "Innovation (Overall)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Overall)"
+      ],
+      "quote": "Innovation Does the application challenge and seek to shift current research or clinical practice paradigms by utilizing novel theoretical concepts, approaches or methodologies, instrumentation, or interventions?"
+    },
+    {
+      "name": "Approach (Overall)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Overall)"
+      ],
+      "quote": "Approach Are the overall strategy, methodology, and analyses well-reasoned and appropriate to accomplish the specific aims of the project?"
+    },
+    {
+      "name": "Environment (Overall)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Overall)"
+      ],
+      "quote": "Environment Will the scientific environment in which the work will be done contribute to the probability of success?"
+    },
+    {
+      "name": "Integration of the Center",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Overall)"
+      ],
+      "quote": "Integration of the Center To what extent does the Center propose to integrate its BMR and ESE projects and cores (i.e., Administrative, TREC, and if applicable, RSC) to address the central focus of the Center?"
+    },
+    {
+      "name": "Study Timeline (clinical trials)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Study Timeline Specific to applications involving clinical trials Is the study timeline described in detail, taking into account start-up activities, the anticipated rate of enrollment, and planned follow-up assessment?"
+    },
+    {
+      "name": "Protections for Human Subjects",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For research that involves human subjects but does not involve one of the categories of research that are exempt under 45 CFR Part 46, the committee will evaluate the justification for involvement of human subjects"
+    },
+    {
+      "name": "Inclusion of Human Subjects Policies",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Inclusion of Human Subjects Policies When the proposed project involves human subjects and/or NIH-defined clinical research, the committee will evaluate the proposed plans for inclusion."
+    },
+    {
+      "name": "Vertebrate Animals",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Vertebrate Animals The committee will evaluate the involvement of live vertebrate animals as part of the scientific assessment according to the following three points"
+    },
+    {
+      "name": "Biohazards",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Biohazards"
+      ],
+      "quote": "Biohazards Reviewers will assess whether materials or procedures proposed are potentially hazardous to research personnel and/or the environment"
+    },
+    {
+      "name": "Resubmissions",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Introduction to Application (Overall)"
+      ],
+      "quote": "Resubmissions For Resubmissions (as applicable), the committee will evaluate the application as now presented, taking into consideration the responses to comments from the previous scientific review group"
+    },
+    {
+      "name": "Renewals",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Renewals For Renewals (as applicable), the committee will consider the progress made in the last funding period."
+    },
+    {
+      "name": "Revisions",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Revisions For Revisions (as applicable), the committee will consider the appropriateness of the proposed expansion of the scope of the project."
+    },
+    {
+      "name": "Select Agent Research",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Select Agent Research Reviewers will assess the information provided in this section of the application, including 1) the Select Agent(s) to be used in the proposed research"
+    },
+    {
+      "name": "Resource Sharing Plans",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Resource Sharing Plan",
+        "Translational Research Plan (Research Project)"
+      ],
+      "quote": "Resource Sharing Plans Reviewers will comment on whether the Resource Sharing Plan(s) (e.g., Sharing Model Organisms ) or the rationale for not sharing the resources, is reasonable."
+    },
+    {
+      "name": "Authentication of Key Biological and/or Chemical Resources",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Authentication of Key Biological and/or Chemical Resources"
+      ],
+      "quote": "For projects involving key biological and/or chemical resources, reviewers will comment on the brief plans proposed for identifying and ensuring the validity of those resources."
+    },
+    {
+      "name": "Budget and Period of Support",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Budget and Period of Support Reviewers will consider whether the budget and the requested period of support are fully justified and reasonable in relation to the proposed research."
+    },
+    {
+      "name": "Review Criteria Specific to Administrative Core (acceptable/not acceptable)",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": "acceptable / not acceptable descriptive score, no criterion scores",
+      "sections": [
+        "Research Strategy (Administrative Core)"
+      ],
+      "quote": "Review Criteria Specific to Administrative Core To what extent are the objectives of the Administrative Core appropriate to reflect the theme and interdisciplinary nature of the Center?"
+    },
+    {
+      "name": "Review Criteria Specific to Translational Research and Engagement Core (acceptable/not acceptable)",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": "acceptable / not acceptable descriptive score, no criterion scores",
+      "sections": [
+        "Research Strategy (TREC)"
+      ],
+      "quote": "Review Criteria Specific to Translational Research and Engagement Core To what extent are the objectives of the Core appropriate to reflect the theme and interdisciplinary nature of the Center and relevance to SRP Mandates and Superfund?"
+    },
+    {
+      "name": "Significance (Research Projects)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Research Project)"
+      ],
+      "quote": "Significance (Research Projects) How relevant is the project to SRP Mandates and Superfund? To what extent does the project address an important problem or a critical barrier to progress in the field?"
+    },
+    {
+      "name": "Investigator(s) (Research Projects)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Research Project)"
+      ],
+      "quote": "Investigator(s) (Research Projects) To what extent are the project investigators (i.e., lead investigator for the project), collaborators, and other researchers well suited to the project?"
+    },
+    {
+      "name": "Innovation (Research Projects)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Research Project)"
+      ],
+      "quote": "Innovation (Research Projects) To what extent does the project challenge and seek to shift current research or clinical practice paradigms"
+    },
+    {
+      "name": "Approach (Research Projects)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Research Project)",
+        "Translational Research Plan (Research Project)"
+      ],
+      "quote": "Approach (Research Projects) To what extent are the overall strategy, methodology, and analyses well-reasoned and appropriate to accomplish the specific aims of the Center?"
+    },
+    {
+      "name": "Environment (Research Projects)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy (Research Project)"
+      ],
+      "quote": "Environment (Research Projects) To what extent will the scientific environment in which the work will be done contribute to the probability of success?"
+    },
+    {
+      "name": "Review Criteria Specific to the Research Support Core (acceptable/not acceptable)",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": "acceptable / not acceptable descriptive score, no criterion scores",
+      "sections": [
+        "Research Strategy (Research Support Core)"
+      ],
+      "quote": "The Core will not receive criterion scores, but will receive a descriptive score of acceptable (i.e., strengths balance or outweigh weaknesses) or not acceptable (i.e., weaknesses outweigh strengths). To what extent are the objectives of the RSC appropriate to the Center?"
+    },
+    {
+      "name": "Contribution to SRP Center (all Projects and Cores)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Contribution to SRP Center (applies to all Projects and Cores) To what extent does the project/core contribute scientifically to the proposed Center"
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Component page limits (Table of Page Limits): Overall 12, Admin Core 12, TREC 12, each Research Project 12, Research Support Core 6",
+      "Data Management and Sharing Plan must use the NIH DMS Plan Format Page and not exceed 2 pages; no narrative where a Yes/No response is required",
+      "Only limited items are allowed in the Appendix",
+      "Overall Other Attachments provided as PDF files with the specified titles"
+    ],
+    "quote": "Component Component Type for Submission Page Limit Required/Optional Minimum Maximum Overall Overall 12 Required 1 1 Admin Core Admin Core 12 Required 1 1 Translational Research and Engagement Core TREC 12 Required 1 1 Research Project Project 12 Required 3 4 Research Support Core RSC 6 Optional 0 1"
+  },
+  "eligibility": [
+    {
+      "item": "Eligible organizations: accredited institutions of higher education (public/state controlled and private), per 42 USC 9660(a)(3)",
+      "quote": "Based on 42 USC 9660(a)(3) eligible applicants are limited to accredited institutes of higher education."
+    },
+    {
+      "item": "Non-domestic (non-U.S.) entities and non-domestic components of U.S. organizations are not eligible; foreign components are not allowed",
+      "quote": "Non-domestic (non-U.S.) Entities (Foreign Organization) are not eligible to apply. Non-domestic (non-U.S.) components of U.S. Organizations are not eligible to apply. Foreign components, as defined in the NIH Grants Policy Statement , are not allowed."
+    },
+    {
+      "item": "Only one application per institution is allowed",
+      "quote": "Number of Applications Only one application per institution is allowed, as defined in Section III. 3. Additional Information on Eligibility.",
+      "conflict": true
+    },
+    {
+      "item": "Organizations may submit more than one application, provided each is scientifically distinct",
+      "quote": "Applicant organizations may submit more than one application, provided that each application is scientifically distinct.",
+      "conflict": true
+    },
+    {
+      "item": "Only New, Renewal, or Resubmission application types are allowed",
+      "quote": "Application Types Allowed New Renewal Resubmission The OER Glossary and the How to Apply - Application Guide provides details on these application types. Only those application types listed here are allowed for this NOFO."
+    },
+    {
+      "item": "Each Center must include a required Administrative Core and a required Translational Research and Engagement Core (TREC)",
+      "quote": "Translational Research and Engagement Core: a Translational Research and Engagement Core (TREC) is required in each SRP Center grant application."
+    },
+    {
+      "item": "Centers must include 3 to 4 Research Projects: 1-2 Biomedical Research (BMR) and 1-2 Environmental Science and Engineering (ESE) projects",
+      "quote": "Centers must be comprised of a minimum of 3 (maximum of 4) Research Projects and could be a combination of 2 BMR/2 ESE or 2 BMR/1 ESE or 1 BMR/2 ESE."
+    },
+    {
+      "item": "At least one ESE project must support SRP Mandate #4 (methods to reduce the amount and toxicity of hazardous substances)",
+      "quote": "There is a requirement for Center applications to include at least one ESE project that supports Mandate #4."
+    },
+    {
+      "item": "If a Research Support Core is included, at least 2 research projects must use it",
+      "quote": "at least 2 research projects must utilize the Core to be responsive to this NOFO."
+    },
+    {
+      "item": "Applications must have clear relevance to SRP Mandates and Superfund or will be considered nonresponsive",
+      "quote": "Applications lacking clear relevance to SRP Mandates and Superfund will be considered nonresponsive."
+    },
+    {
+      "item": "Hazardous substances studied cannot be petroleum, natural gas, natural gas liquids, liquefied natural gas, or synthetic gas usable for fuel",
+      "quote": "Per SARA Mandates, hazardous substances do not include petroleum, natural gas, natural gas liquids, liquefied natural gas, or synthetic gas usable for fuel."
+    },
+    {
+      "item": "On-site activities at hazardous waste sites require coordination with appropriate federal/state/local/Tribal agencies and site officials, plus procedures for documenting site activities and communicating outcomes",
+      "quote": "If on-site activities will be conducted, researchers must coordinate with appropriate federal/state/local/Tribal agencies and site officials in the early stages of project development and throughout the process."
+    },
+    {
+      "item": "The Center Director must commit at least 1.8 person months per year to administering the Center",
+      "quote": "The Center Director must commit a minimum of 1.8 person months per year to the administration of the Center."
+    },
+    {
+      "item": "A new (A0) application is not accepted before the summary statement issues for an overlapping A0 or A1 application",
+      "quote": "A new (A0) application that is submitted before issuance of the summary statement from the review of an overlapping new (A0) or resubmission (A1) application."
+    },
+    {
+      "item": "A resubmission (A1) is not accepted before the summary statement issues for the previous A0 application",
+      "quote": "A resubmission (A1) application that is submitted before issuance of the summary statement from the review of the previous new (A0) application."
+    },
+    {
+      "item": "An application substantially overlapping another application pending appeal of initial peer review is not accepted",
+      "quote": "An application that has substantial overlap with another application pending appeal of initial peer review"
+    },
+    {
+      "item": "All organizational registrations (SAM, UEI, eRA Commons, Grants.gov) must be completed before the application is submitted",
+      "quote": "All registrations must be completed prior to the application being submitted. Registration can take 6 weeks or more, so applicants should begin the registration process as soon as possible."
+    },
+    {
+      "item": "Maintain an active SAM registration, renewed at least annually",
+      "quote": "System for Award Management (SAM) &ndash; Applicants must complete and maintain an active registration, which requires renewal at least annually ."
+    },
+    {
+      "item": "Use the same UEI for all registrations and on the grant application",
+      "quote": "The same UEI must be used for all registrations, as well as on the grant application."
+    },
+    {
+      "item": "Organization must register in eRA Commons with at least one Signing Official and one PD/PI account",
+      "quote": "eRA Commons requires organizations to identify at least one Signing Official (SO) and at least one Program Director/Principal Investigator (PD/PI) account in order to submit an application."
+    },
+    {
+      "item": "Organization must complete Grants.gov registration (requires active SAM registration)",
+      "quote": "Grants.gov &ndash; Applicants must have an active SAM registration in order to complete the Grants.gov registration."
+    },
+    {
+      "item": "All PD(s)/PI(s) must have an eRA Commons account affiliated with the applicant organization",
+      "quote": "All PD(s)/PI(s) must have an eRA Commons account. PD(s)/PI(s) should work with their organizational officials to either create a new account or to affiliate their existing account with the applicant organization in eRA Commons."
+    },
+    {
+      "item": "A PD/PI who is also the organizational Signing Official must have two distinct eRA Commons accounts",
+      "quote": "If the PD/PI is also the organizational Signing Official, they must have two distinct eRA Commons accounts, one for each role."
+    },
+    {
+      "item": "All PD(s)/PI(s) must be registered with ORCID and link the ORCID ID to their eRA Commons profile",
+      "quote": "All PD(s)/PI(s) must be registered with ORCID . The personal profile associated with the PD(s)/PI(s) eRA Commons account must be linked to a valid ORCID ID."
+    },
+    {
+      "item": "All PD(s)/PI(s) and component Project Leads must enter their eRA Commons ID in the Credential field of the Senior/Key Person Profile form",
+      "quote": "All PD(s)/PI(s) and component Project Leads must include their eRA Commons ID in the Credential field of the Senior/Key Person Profile form ."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "SF424(R&R) Cover (Overall: complete entire form; each other component: only the listed fields)",
+      "userWrites": false,
+      "quote": "SF424(R&R) Cover (Overall) Complete entire form. PHS 398 Cover Page Supplement (Overall) Follow standard instructions."
+    },
+    {
+      "item": "PHS 398 Cover Page Supplement (each component)",
+      "userWrites": false,
+      "quote": "PHS 398 Cover Page Supplement (Overall) Follow standard instructions. Research & Related Other Project Information (Overall) Follow standard instructions."
+    },
+    {
+      "item": "Research & Related Other Project Information (each component)",
+      "userWrites": false,
+      "quote": "Research & Related Other Project Information (Overall) Follow standard instructions."
+    },
+    {
+      "item": "Project/Performance Site Locations (Overall: primary site only; components: all sites for that component)",
+      "userWrites": false,
+      "quote": "Project/Performance Site Locations (Overall) Enter primary site only."
+    },
+    {
+      "item": "Research and Related Senior/Key Person Profile (Overall: PD/PI(s) only; components: Project Lead with eRA Commons ID and component senior/key persons, including named Data Management Coordinator, Training Coordinator, and TREC Coordinator(s))",
+      "userWrites": false,
+      "quote": "Research and Related Senior/Key Person Profile (Overall) Include only the Project Director/Principal Investigator (PD/PI) and any multi-PDs/PIs (if applicable to this NOFO) for the entire application."
+    },
+    {
+      "item": "Budget forms and budget justification for each component except Overall (Admin Core budget includes annual SRP meeting travel; KC Donnelly externship expenses detailed in the justification)",
+      "userWrites": true,
+      "quote": "Budget (Administrative Core) Budget forms appropriate for the specific component will be included in the application package."
+    },
+    {
+      "item": "Center Organizational Structure diagram (PDF, Overall Other Attachment)",
+      "userWrites": true,
+      "quote": "The diagram should be provided as a pdf file titled \"Center Organizational Structure.\""
+    },
+    {
+      "item": "Table of Integration with Center (PDF, Overall Other Attachment)",
+      "userWrites": true,
+      "quote": "This table should be provided as a pdf file titled \"Table of Integration with Center.\""
+    },
+    {
+      "item": "Table of End-users and Field Sites (PDF, Overall Other Attachment)",
+      "userWrites": true,
+      "quote": "This table should be provided as a pdf file titled \"Table of End-users and Field Sites.\""
+    },
+    {
+      "item": "Table of Changes to Projects and Cores (PDF, Overall Other Attachment; renewals/resubmissions)",
+      "userWrites": true,
+      "quote": "This table should be provided as a pdf file titled \"Table of Changes to Projects and Cores\"."
+    },
+    {
+      "item": "Trainee List (Administrative Core Other Attachment; renewal applications only)",
+      "userWrites": true,
+      "quote": "Other Attachments: Trainee List (For renewal applications only). Renewal applications must provide a \"Trainee List\"."
+    },
+    {
+      "item": "Letters of support from appropriate tribal officials/organizations for work with American Indian or Alaska Native populations, tribes, or communities",
+      "userWrites": false,
+      "quote": "Applications that propose work with American Indian or Alaska Native populations, tribes or communities must include letters of support from the appropriate tribal officials and/or tribal organizations as applicable."
+    },
+    {
+      "item": "PHS Human Subjects and Clinical Trials Information, with at least one study record (or Delayed Onset Study record) if human subjects are involved",
+      "userWrites": true,
+      "quote": "there must be at least one human subjects study record using the Study Record: PHS Human Subjects and Clinical Trials Information form or a Delayed Onset Study record within the application."
+    },
+    {
+      "item": "PHS Assignment Request Form (Overall)",
+      "userWrites": false,
+      "quote": "PHS Assignment Request Form (Overall) All instructions in the How to Apply- Application Guide must be followed."
+    },
+    {
+      "item": "Biographical Sketch",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Bibliography & References Cited",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Facilities & Other Resources",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Equipment",
+      "userWrites": true,
+      "quote": null
+    }
+  ],
+  "libraryRequired": [
+    "Resource Sharing Plan"
+  ]
+}

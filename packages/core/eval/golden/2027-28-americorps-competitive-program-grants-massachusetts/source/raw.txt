@@ -1,0 +1,1684 @@
+AmeriCorps
+Massachusetts
+MASSACHUSETTS
+SERVICE ALLIANCE
+Massachusetts State AmeriCorps
+AmeriCorps Competitive Grant
+Request for Applications (RFA)
+PROGRAM YEAR 2027-2028
+INTENT TO APPLY DUE: September 18, 2026
+APPLICATION DUE: October 9, 2026
+Massachusetts Service Alliance
+98 North Washington Street, Suite 400
+Boston, MA 02114
+www.mass-service.org
+TABLE OF CONTENTS
+THE MASSACHUSETTS SERVICE ALLIANCE
+3
+AMERICORPS IN MASSACHUSETTS
+3
+AMERICORPS FY27 FUNDING PRIORITIES
+3
+PROGRAM REQUIREMENTS
+4
+Eligible Applicants
+4
+Types of Grants
+5
+2027-2028 COMPETITIVE GRANTS PROCESS
+7
+Timeline
+7
+Technical Assistance
+7
+AMERICORPS Competitive APPLICATION INSTRUCTIONS
+8
+Grant Application Instructions
+9
+APPENDICES
+14
+APPENDIX A: Budget Instructions
+14
+Attachment A: Match Requirements
+14
+ATTACHMENT B: Detailed Budget Instructions for Cost Reimbursement Grants (eGrants Budget Section) 15
+How to Begin
+15
+ATTACHMENT D: Detailed Budget Instructions for Fixed Amount Grants (eGrants Budget Section)
+26
+ATTACHMENT E: Budget Worksheet for Fixed Amount Grants (eGrants Budget Section)
+28
+ATTACHMENT F: Budget Checklist
+29
+APPENDIX B: Assurances and Certifications
+33
+2
+THE MASSACHUSETTS SERVICE ALLIANCE
+The Massachusetts Service Alliance (MSA) expands volunteerism and service in Massachusetts by providing
+individuals and organizations with funding, training, and support, which enables them to strengthen communities
+and make our Commonwealth a better place to live. We are a dedicated partner of Massachusetts community-
+based organizations of all scopes and sizes, providing tailored resources and support for them to better leverage
+volunteers and service members to meet their mission. Through our direct support, organizations strengthen their
+capacity and are better positioned to expand their impact in Massachusetts communities, serving more and doing
+more. For over 30 years we have had a proven track record of bringing volunteerism and service resources to
+organizations from Pittsfield to New Bedford and Springfield to Lowell. We believe in the power of volunteerism
+and service to improve the quality of life of all residents of the Commonwealth. We seek to understand and address
+the changing needs of Massachusetts and are committed to allocating resources equitably and inclusively, using
+transparent and consistently applied criteria.
+AMERICORPS IN MASSACHUSETTS
+AmeriCorps is a federal program overseen by the AmeriCorps Agency (formerly known as the Corporation for
+National and Community Service or CNCS). For twenty-five years AmeriCorps has mobilized a new generation of
+engaged citizens. AmeriCorps Volunteers help hundreds of community nonprofit organizations, faith-based groups,
+schools, and local agencies meet local needs in education, the environment, public safety, disaster preparedness,
+and other critical areas.
+AmeriCorps grants are awarded to eligible organizations to recruit, train, and manage AmeriCorps Volunteers who
+address unmet community needs. Volunteers are individuals who engage in community service and may receive a
+living allowance during their term of service. Upon successful completion of their service, Volunteers receive a Segal
+AmeriCorps Education Award from the National Service Trust.
+AMERICORPS FY27 FUNDING PRIORITIES
+AmeriCorps' priorities for this funding opportunity are:
+Faith-Based:
+Organizations that are faith-based.
+Serve Communities:
+Serve communities with concentrated poverty, rural communities, and tribal communities.
+Implement programs for or expand access to high-quality youth mental health and substance use
+recovery services and prepare AmeriCorps Volunteers to enter behavioral health careers. These
+may include individuals who have experienced substance use and mental health challenges.
+Focus on improving quality of life for veterans, active-duty members of the Armed Forces, and
+their families through models that provide effective interventions or services or that are designed
+to recruit veterans, military spouses, and their older children into national service, e.g., veterans
+serving in mentorship roles.
+Focus on public safety, crime prevention, and/or partnerships between law enforcement and the
+community.
+Focus on expanding outdoor recreation opportunities for future generations by maintaining
+public lands; supporting wildland fire mitigation and sustainable forest management; and
+providing reforestation services.
+Create workforce pathways for AmeriCorps Volunteers, including deliberate training, such as pre-
+apprenticeship and apprenticeship opportunities, certifications, and hiring preferences or support.
+3
+Focus on strengthening families, e.g., activities that aim to support low-income parents through
+parenting education, responsible parenting and healthy relationship skills.
+Benefit AmeriCorps Volunteers:
+Enhance AmeriCorps Volunteer experience by providing opportunities for skill attainment,
+personal growth and connection to the community they are serving in support of a lifetime of civic
+participation.
+Enhance and expand services to formerly incarcerated and at-risk youth and/or engage those
+youth as AmeriCorps Volunteers.
+Use Evidence:
+Utilize reports from the AmeriCorps Evidence Exchange on programs assessed as having moderate
+or strong evidence to scale, replicate, or adapt the intervention, or demonstrate any evidence
+supporting the performance data described
+To receive priority consideration, applicants must show that the priority area is a significant
+part of the program focus and intended outcomes and must include a high-quality program
+design. Proposing programs that receive priority consideration does not guarantee funding.
+MSA FOCUS AREAS
+MSA is interested in programs that provide effective solutions to address community needs, offer meaningful
+AmeriCorps Volunteer experiences, generate community volunteers, and demonstrate significant community
+impact. MSA is also committed to maintaining geographic, demographic, and programmatic diversity within the
+AmeriCorps portfolio to make resources available to all communities in the Commonwealth.
+PROGRAM REQUIREMENTS
+Eligible Applicants
+The following non-Federal entities (all of which are defined in 2 CFR 200.1 or 42 U.S.C. 12511(21)) are eligible to
+apply:
+Indian Tribes;
+institutions of higher education;
+local governments, including school districts;
+nonprofit organizations;
+State Service Commissions (submit sub-applicants but not operate programs); and
+states and US Territories.
+In addition to Indian Tribes as defined in 2 CFR 200.1, Tribal organizations that are controlled, authorized, or
+chartered by Federally recognized Indian Tribes are also eligible to apply. If an entity applies for an award as a
+tribal organization that is controlled or chartered by one or more Indian Tribes, and the organization does not
+meet any of the other applicant eligibility types, the organization must provide copies or links to documentation
+which demonstrates that the organization is controlled or chartered by a federally recognized Indian Tribe. If an
+entity applies as an organization authorized by a federally recognized Tribe, or multiple specific federally
+recognized tribes, it must submit a resolution or other authorization, adopted by the Tribal Council (or
+comparable tribal governing body) of each Indian Tribe. The authorization(s) must identify the entity applying for
+4
+an AmeriCorps award by name as a tribal organization that is authorized by the Indian Tribe(s) for the purpose of
+applying for AmeriCorps funding (or federal grant funds generally).
+Applicants must have a valid SAM registration and Unique Entity Identifier to receive an award. See Section D.3.
+Unique Entity Identifier and System for Award Management (SAM) for more information.
+New Applicants: AmeriCorps strongly encourages organizations that have not received prior funding from
+AmeriCorps to apply, e.g., small community-based organizations, faith-based organizations, etc.
+New applicants are eligible to apply for cost reimbursement, Education Award Program (EAP), and Professional
+Corps grants, but are not eligible to apply for full cost fixed amount grants.
+Types of Grants
+The AmeriCorps Competitive Grant RFA offers three* types of AmeriCorps Operating Grants to support
+AmeriCorps programming:
+1) Cost Reimbursement Grants
+MSA funds grants that support fully developed plans to establish a Massachusetts AmeriCorps program or to
+support, expand, or replicate an existing program. Grant awards are renewed annually for a total of three years,
+subject to annual review and availability of federal appropriations. Programs seeking funding beyond three years
+must reapply as a recompeting applicant. The maximum award amount a program can request for an operating
+grant is $26,800 per Member Service Year (MSY). One MSY is equivalent to 1,700 hours of service. Programs are
+reimbursed upon submission of Periodic Expense Reports that align with actual, allowable expenses. Programs should
+be prepared to adjust their budgets if a different level is requested.
+2) Full-Cost Fixed Amount Grants
+Most grants are cost reimbursement grants; however, in some cases, MSA may offer applicants the opportunity
+to be considered for a full-cost fixed-amount grant. Applicants applying for a full-cost fixed amount grant are
+allowed to request up to the same cost per MSY as cost-reimbursement grants. Fixed amount grants do not
+require the same level of financial reporting or matching requirements as cost-reimbursement grants, but funds
+may only be drawn in proportion to hours served by AmeriCorps Volunteers.
+3) Education Award Only Program (EAP) and Professional Corps Fixed Amount Grants
+In addition, applicants may also request fixed amount grants for Education Award Only (EAP) or Professional
+Corps Programs. The funding allowed for these programs is significantly less than what is available to full-cost
+grants and is set at a maximum level of $1,000 per Member Service Year (MSY), drawn in proportion to hours
+served by AmeriCorps Volunteers.
+Program Size
+Applicants must apply for a minimum of 20 members. A chart to calculate MSYs is included in the appendix of this
+RFA.
+Grant Size
+Grant requests may vary in size depending on the type and scope of a proposed program. Applicants are allowed
+flexibility in developing their budgets within certain limitations. The maximum cost per MSY (full-time equivalent
+member) an applicant may request through this application is $26,800.
+5
+Applicants should be aware of the associated matching requirements (see Budget instructions) when considering
+their cost per MSY.
+Grant and Program Operating Period
+AmeriCorps funding is provided as a 12-month grant, with the option for renewing two times (three years
+total) before a program must reapply. A program may operate for fewer than 12 months but must fall within a
+12-month grant period. Programs must select a grant start date on or after July 1, 2027 to ensure sufficient
+time for the grant to be awarded by AmeriCorps before program implementation. MSA recommends start
+dates of July 15 or later to allow for unforeseen delays.
+SAM and EIN
+All applicants must register with the System for Award Management (SAM) and maintain an active SAM
+registration until the application process is complete. If an applicant is awarded a grant, it must maintain an
+active SAM registration throughout the life of the award. Use the SAM Quick Guide for Grantees for more
+information.
+MSA recommends applicants finalize a new registration or renew an existing one as soon as possible to allow
+time to resolve any issues that may arise. Applicants must use their SAM-registered legal name and physical
+address on all grant applications to AmeriCorps. The legal applicant's name and physical address in the
+eGrants system must match exactly the applicant's SAM-registered information.
+Applications must include a valid Unique Entity Identifier (UEI), which is generated as part of the SAM
+registration process. AmeriCorps will not make awards to entities that do not have a valid SAM registration and
+UEI.
+Applications must include an Employer Identification Number (EIN). The UEI and EIN must be entered by the
+organization's Grantee Administrator as an organization attribute, and this will apply the information to all
+applications for the organization.
+Additional Resources
+The AmeriCorps Agency posts additional information and resources about the Competitive Process HERE. Please
+refer to this RFA for deadlines and the application process.
+AmeriCorps grants are subject to special terms and conditions. General AmeriCorps Terms and Conditions are
+posted HERE. State and National Terms and Conditions are found HERE.
+Additional information about the Evidence Base and Evaluation Requirements can be found in the AmeriCorps
+Agency's Mandatory Supplementary Information document HERE. The AmeriCorps Agency maintains a database
+of Evaluation studies conducted by other programs called the Evidence Exchange. Applicants are strongly
+encouraged to cite relevant, validated evidence from the Evidence Exchange where possible. The Evidence
+Exchange is found HERE.
+After review and selection by MSA, successful applicants will need to submit their applications on the eGrants
+portal. Instructions for this process can be found HERE. Do not enter anything into eGrants unless asked to by
+MSA.
+The AmeriCorps Agency's full Notice of Funding Opportunity (NOFO) can be found HERE. Where application
+instructions differ between MSA's RFA and the AmeriCorps Agency, follow the RFA instructions in this document.
+MSA also encourages applicants to familiarize themselves with relevant Executive Orders, which can be found
+HERE.
+6
+2027-2028 COMPETITIVE GRANTS PROCESS
+MSA uses a multi-step application process. This process includes:
+1. Submitting an Intent to Apply HERE (optional but encouraged) by September 18, 2026
+2. Submitting an application HERE by October 9th, 2026
+3. Community Review (new applicants only)
+4. MSA Staff and Board Review
+5. Adjustments to applications based on AmeriCorps Agency NOFO requirements
+6. Work with MSA staff to refine approved applications. This process will include:
+Editing and clarifying program details for AmeriCorps compliance.
+Adapting the initially submitted narrative to satisfy the AmeriCorps narrative length requirement.
+Adapting the initially submitted budget narrative to ensure the budget is compliant with the
+Agency's requirements.
+Incorporating any other feedback from the community and MSA staff review.
+MSA Board Review and approval of Full Applications
+Entering the application into eGrants, the electronic grants management system used by
+AmeriCorps. Technical assistance is provided by MSA staff for this process.
+Submission of Full Applications to AmeriCorps Agency
+Please note:
+1. Submission of an application does not always result in an invitation to submit a full application to the
+Agency.
+2. An invitation to submit a full application does not guarantee submission to AmeriCorps.
+3. An invitation to submit a full application does not guarantee funding.
+4. Funding for this grant is contingent on appropriation of funding from the Massachusetts State Legislature
+and the AmeriCorps Agency.
+Timeline
+Applications are due to MSA on Wednesday, Oct 9, 2026 by 2:00 P.M. EST. The review process is as follows (some
+dates are still to be determined):
+September 18, 2026
+Online Intent to Apply Due (optional, strongly encouraged)
+Intent to Apply: https://www.tfaforms.com/5079246
+October 9, 2026
+Submission of competitive Grant Application due to MSA by 2:00 P.M. EST
+at: https://www.tfaforms.com/5142083
+October 12-23, 2026
+Possible clarification questions from MSA- staff should be available to respond
+Early November, 2026
+Notification of status
+November 2026
+Adjust application to suit AmeriCorps Agency NOFO
+December 15, 2026
+Final applications uploaded to AmeriCorps system (eGrants).
+April/May 2027
+Notification of results from the AmeriCorps Agency
+Technical Assistance
+MSA will host a Technical Assistance live, virtual session on Thursday, September 10th at 2pm. Register HERE. A
+recording of the session will be posted on MSA's website afterwards for those who cannot attend. MSA does not
+review applications prior to submission, but staff are available to answer application related questions sent to
+ACQuestions@mass-service.org. Programs that have submitted an intent to apply can request a consultation
+meeting with MSA between September 21-October 6 to discuss non-budget, technical questions related
+elements of their applications.
+Applicants may also wish to review the AmeriCorps Agency's technical assistance webinars. A list of these
+7
+sessions can be found HERE.
+Please direct fiscal/budget questions to MKleiman@Mass-Service.org. Applicants that are selected to be
+submitted directly to AmeriCorps will be provided with one-on-one technical assistance to refine budgets, as
+necessary.
+AMERICORPS Competitive APPLICATION INSTRUCTIONS
+General Submission Information for the competitive Application
+Your application will be submitted online. Please make sure to complete/submit each of the following components.
+Please note that all attachments will be uploaded as part of your application.
+Online Application
+1. Executive Summary (Using Narrative Template)
+2. Uploaded: Program Narrative (Using Narrative Template)
+3. Uploaded: Logic Model Worksheet
+4. Uploaded: Performance Measures Worksheet
+5. Uploaded: Budget Worksheet (as Excel file)
+6. Uploaded: Authorization, Assurances and Certifications
+7. Additional Required Information:
+a. Uploaded: Most recent audit (including a Single Audit, if applicable)
+b. Uploaded: Proof of eligibility
+i. 501(c)(3) letter (or equivalent)
+C. Uploaded: Federally Negotiated Indirect Cost Rate Agreement (NICRA), if applicable
+"AmeriCorps Volunteers" Language Update
+The AmeriCorps Agency has begun using the term AmeriCorps Volunteer (note the capital V) in place of
+AmeriCorps member. For the purposes of this RFA, these terms are interchangeable. Programs are not currently
+required to use the term Volunteer instead of member in their programming, but applicants are encouraged to
+make this adjustment in their applications.
+Submission Requirements
+The application must be submitted via MSA's online application at https://www.tfaforms.com/5142083.
+The application narrative and Logic Model may not exceed the limits in each section listed in the provided
+templates.
+Applications must be received by MSA by 2:00 P.M. EST on October 9th, 2026 via MSA's online application.
+Submission through other means is not acceptable. MSA reserves the right to waive this requirement if an
+applicant can demonstrate extenuating circumstances. MSA reserves the right to re-open the competition after this
+date.
+Note:
+Any application that fails to meet all application submission requirements will not be reviewed.
+Any application that does not request the minimum number of MSYs will not be reviewed.
+Please do not submit supplemental materials such as brochures, newsletters, etc. These materials will not
+be reviewed.
+AmeriCorps Agency Selection Criteria
+8
+Each applicant must describe a project that will use AmeriCorps Volunteers effectively to solve a significant
+community problem.
+Applications must have a well-designed plan with clear justification for the requested funds. Reviewers will assess
+the quality of applications by using the selection criteria described below and will rate them accordingly.
+Prior to issuance, and annually thereafter, awards will be subject to review by one or more AmeriCorps senior
+officials, or their designees, according to the process described in Executive Order 14332, "Improving Oversight of
+Federal Grantmaking."
+Grant Application Instructions
+I. Program Narrative (Use the Narrative Template without format changes)
+Your narrative should cover the three-year program period for which you are requesting funds and must include:
+1. Executive Summary (0 points)
+Follow instructions in the Narrative Template. You will include this text in the template AND copy and
+paste it into Form Assembly when you upload your application. Be sure all information in the summary
+matches any updates you made to your application. DO NOT ADJUST ANY TEXT OUTSIDE OF THE
+BRACKETS.
+2. Community and Logic Model (20 Points)
+In the Narrative Template, the applicant will provide a detailed summary of:
+a. The community problem, including relevant data to establish the scope and impact of the problem;
+b.
+The primary activities related to the program's intervention
+C.
+How those activities will address the community problem to produce outcomes described in the
+Logic Model.
+In the Logic Model Template, the applicant will describe:
+The inputs or resources that are necessary to deliver the intervention, including but not limited to:
+Locations or sites in which AmeriCorps Volunteers will provide services.
+Setting and community condition where the intervention is delivered.
+Number of AmeriCorps Volunteers who will deliver the intervention.
+Characteristics of AmeriCorps Volunteers, including specific knowledge, skills, and abilities
+required to implement the intervention.
+The core activities that Volunteers will deliver as part of the intervention including:
+Length of each activity (e.g., the total number of weeks, sessions, or months of the
+intervention).
+Dosage of each activity (e.g., the number of hours per session or sessions per week).
+Target population for the intervention (e.g., disconnected youth, third graders at a certain
+reading proficiency level).
+The measurable outputs that result from delivering the intervention (i.e., number of beneficiaries
+served, types and number of activities conducted, equity gaps closed). If applicable, identify which
+National Performance Measures will be used as output indicators.
+Outcomes that result from the intervention, including meaningful changes in knowledge/skill, attitude,
+behavior, or condition. If applicable, identify which National Performance Measures will be used as
+outcome indicators. Programs should include short, medium, or long-term outcomes. Applicants are
+not required to measure all components of their Logic Model. The applicant's performance measures
+should be consistent with the program's Logic Model and should represent significant program
+activities.
+Applicants with multiple interventions should include the above information for each intervention in
+9
+the logic model.
+3. Evidence Base (20 points total)
+Applicants should provide and describe evidence from research and evaluation studies that their proposed
+intervention will lead to the outcomes identified in their theory of change. Applicants must (1) summarize
+the study design and key findings of any outcome or impact evaluation studies conducted about their
+program and/or (2) describe any other evidence that supports their program, including past performance
+measure data and/or other research studies that inform their program design. When describing evidence
+from other programs' evaluations or research, applicants should be sure to describe how the intervention
+studied matches the proposed program's design (e.g., how the program studied matches the proposed
+program in population(s) served, intervention activities, training, and qualifications for those delivering the
+intervention, etc.). Applicants should provide citations for the studies they describe, as applicable. The
+AmeriCorps Evidence Exchange is one resource to find studies of AmeriCorps programs that may be
+relevant to your proposed design: https://data.americorps.gov/stories/s/bkv2-68b9.
+Find more information, including definitions, in the AmeriCorps Mandatory Supplemental Information
+document HERE.
+The assessment of an applicant's evidence base has two parts. First, the applicant will be assigned to an
+evidence tier. Second, the quality of the applicant's evidence, how the evidence aligns with AmeriCorps
+funding priorities listed on page 3 of this RFA, and how the evidence supports the proposed program.
+EVIDENCE TIER (12 Points)
+Each applicant will receive an evidence tier assessment. This is based on the relative strength of the
+applicant's evidence base and the likelihood that the proposed intervention will lead to the outcomes
+identified in the Logic Model narrative.
+AmeriCorps values and funds programs at all points along the evidence continuum and expects programs
+to progress along the evidence continuum over time. Thus, applicants should not be deterred from
+applying for funding due to their current evidence level. In 2026, the evidence tiers of competing
+applicants recommended for AmeriCorps State and National funding were as follows: 57% Strong, 11%
+Moderate, 25% Preliminary, 7% Pre-Preliminary.
+To qualify for the Preliminary, Moderate, or Strong evidence tier, applicants may submit up to two
+evidence documents, plus the evaluation report from their last three-year grant cycle, if applicable. If
+multiple evidence documents are submitted by the applicant, the most recent - as measured by the date
+of completion or publication- will be reviewed first, and any documents submitted beyond the allowable
+number will not be reviewed.
+The intervention evaluated in the submitted evidence documents must match the intervention proposed
+by the applicant in the Community and Logic Model sections of the application. Use the Mandatory
+Supplemental Information for a definition of same intervention). Applicants must meet all requirements of
+an evidence tier to be considered for that tier.
+Submitted evidence documents that do not sufficiently match the intervention will not be reviewed or
+receive any points.
+In the Evidence Tier section of the application narrative, applicants must:
+Summarize the study design and key findings of the evidence documents submitted, plus, if applicable,
+the evaluation report from their last three-year grant cycle; and
+Describe any other evidence that supports their program, including past performance measure data
+and/or other research studies that inform their program design.
+10
+Applicants should provide citations for the studies they describe.
+EVIDENCE QUALITY (8 points)
+Reviewers will score the quality of an applicant's evidence and the extent to which it supports the
+proposed program design.
+Standards for scoring in the Preliminary, Moderate, or Strong evidence tiers:
+Submitted evidence documents:
+Are of satisfactory methodological quality and rigor for the type of evaluation conducted e.g.,
+adequate sample size and statistical power, internal and/or external validity, appropriate use of
+control or comparison groups, etc.;
+Describe evaluations that were conducted relatively recently, preferably within the last six years; and
+Show a meaningful and significant positive effect on program beneficiaries or AmeriCorps Volunteers
+in at least one key outcome of interest.
+Standards for scoring in the Pre-Preliminary evidence tier:
+The applicant uses relevant evidence, including past performance measure data and/or cited research
+studies, to inform their proposed program design;
+The described evidence is relatively recent, preferably from the last six years; and
+The evidence described by the applicant indicates a meaningful positive effect on program
+beneficiaries or AmeriCorps Volunteers in at least one key outcome of interest.
+4. Notice Priority (4 points)
+Describe whether one or more of the AmeriCorps funding priorities is a significant part of the program
+focus and intended outcomes. Funding Priorities are listed on page 3 of this RFA.
+5. AmeriCorps Volunteer Experience (6 points)
+Describe how AmeriCorps Volunteers will be provided opportunities for skill attainment, personal
+growth and connection to the community they are serving in support of a lifetime of civic participation.
+6. Organizational Background and Staffing (15 points)
+Describe the roles, responsibilities, and structure of the staff that will implement and provide
+oversight of the program, including but not limited to demonstrating the organization has sufficient
+policies, procedures, and controls to effectively implement a federal grant.
+7. AmeriCorps Volunteer Supervision (10 points)
+Describe how AmeriCorps Volunteers will receive sufficient guidance and support from their
+supervisor to provide effective service. That could include but is not limited to structure for
+AmeriCorps Volunteer supervision: cadence and format of supervisor/member AmeriCorps Volunteer
+check-ins, AmeriCorps Volunteer and supervisor opportunities to assess strengths and opportunities
+for growth, AmeriCorps Volunteer training plan, etc. Applicants should identify best and/or evidence
+based practices for successful Volunteer supervision.
+8. Budget Narratives (25 points total)
+AMERICORPS VOLUNTEER RECRUITMENT (7 points):
+Provide a description of budget expenses to support recruitment of AmeriCorps Volunteers best suited
+to serve the community. Applicants should identify best and/or evidence based practices for successful
+Volunteer recruitment.
+AMERICORPS VOLUNTEER RETENTION (10 Points):
+Provide a description of budget expenses to support retention of AmeriCorps Volunteers. E.g.,
+additional AmeriCorps Volunteer benefits such as paying above the minimum living allowance,
+supporting workforce pathways, certifications, coaching for AmeriCorps Volunteers, resume building,
+individual benefit as well as community building, network building, AmeriCorps Volunteer recognition,
+alumni programming, etc. Applicants should identify best or evidence based practices for successful
+Volunteer retention.
+DATA COLLECTION (8 points):
+11
+Provide a description of budget expenses that support data collection and evaluation, including the
+process for collecting and maintaining high-quality performance data from your organization and
+community partners, how data will be analyzed, and how this will ensure timely and accurate reporting
+to AmeriCorps.
+9. Evaluation Materials (0 points)
+Programs that have received 3 or more years of Competitive AmeriCorps funding are required to
+submit an Evaluation Plan Summary with their application. This form can be downloaded HERE.
+Programs that have received more than 6 years of funding are required to submit a compliant
+Evaluation Report aligned with their submitted Evaluation Plan. The AmeriCorps Agency maintains an
+Evaluation focused FAQ HERE.
+II. Performance Measures
+Complete an aligned Performance Measurement worksheet using the "Performances Measure Template" form. All
+performance measures must reflect significant program activities whose outputs and outcomes are consistent
+with the applicant's core theory of change. Worksheets can be downloaded on MSA's website just below the RFA
+announcement. Performance measure instructions are found on the AmeriCorps Website HERE. The Agency has
+also updated guidance on Program Determined Performance Measures, which are described HERE.
+Applications may also include National Performance Measure outputs without associated outcome(s) provided
+that the output measures a significant program activity. These output-only measures do not fulfill the requirement
+for an aligned performance measure, but they may be selected in addition to the aligned measure(s).
+All performance measures, including output-only measures, must be associated with one or more interventions
+(service activities).
+Programs within the Education priority area are required to utilize national measures. Programs within other
+priority areas are not required to utilize national measures, but AmeriCorps has indicated that priority will be
+given to programs that opt into at least one national measure.
+Utilization of national measures will not be evaluated as part of the application review, but it will be a criterion
+used in evaluating full applications.
+Note: Before you complete Section II. Performance Measures, please review 45 C.F.R. §§ 2522.500 - 2522.650.
+III. Budget - Operating Grants
+Follow the instructions in Appendix A of this document to prepare your detailed budget in the same order as the
+Budget Worksheet. As you prepare your budget please consider the following:
+All of the amounts you request must be defined for a particular purpose. Do not include
+"miscellaneous," "contingency," or other undefined budget amounts.
+Do not include unallowable expenses, e.g., entertainment costs (which include food and beverage
+costs unless provided as part of an all-day training activity or provided as part of business travel and in
+accordance with your organization's written policies).
+Do not include fractional amounts (cents).
+Refer to the Code of Federal Regulations (especially 2 CFR 200) and the current AmeriCorps Terms &
+Conditions for further guidance on allowable costs. General Terms linked HERE. State and National
+Terms linked HERE.
+Your proposed budget should only reflect costs associated with the first year of the three-year grant
+cycle and should be sufficient to allow you to perform the tasks described in your proposal narrative.
+12
+IV. Authorization, Assurances,
+Read the authorization, assurances, and certifications carefully. Complete each section of the Assurances and
+Certification and upload them with your application. This document can be found on MSA's website along with
+other application forms.
+V. Additional Required Documentation
+In addition to your narrative, budget, logic model, performance measures, and evaluation plan (if required),
+applicants must upload a copy of the information described below as part of your original application.
+A. Most recent Audit (including a Single Audit, if applicable)
+B. Proof of 501(c)(3) status (or equivalent)
+C. Federally Negotiated Indirect Cost Rate Agreement (NICRA), if applicable
+13
+APPENDICES
+APPENDIX A: Budget Instructions
+For Fixed Amount grants, including EAPs: Use the Budget Instructions for Fixed Amount applicants
+(Attachment D) and the Budget Worksheet (Attachment E) to prepare your budget.
+NOTE: The AmeriCorps Agency's formal name remains "The Corporation for National and Community Service" and
+they operate as AmeriCorps. The budget application references "Corporation for National and Community Service,"
+"CNCS," and "Corporation" funds. These are all references to federal AmeriCorps funds being requested.
+Attachment A: Match Requirements
+Program requirements, including requirements on match, are located in the AmeriCorps Regulations and
+summarized below.
+Table 2: Match Requirements in the AmeriCorps Regulations
+Grant Type
+Match Requirement
+Cost Reimbursement
+Minimum grantee share is 24% of program costs for the first
+three years. Overall grantee share of total program costs
+increases gradually beginning in year four to 30% by the tenth
+year of funding and any year thereafter.
+EAP Fixed Amount Grants
+There are no specific match requirements for fixed amount
+grants. Grantees pay all program costs over the cost in the
+Notice provided by AmeriCorps.
+Professional Corps Fixed Amount
+There are no specific match requirements for fixed amount
+Grants
+grants. Grantees pay all program costs over the cost in the
+Notice provided by AmeriCorps.
+Full-Cost Fixed Amount Grants
+There are no specific match requirements for full-cost fixed
+amount grants. Grantees pay all program costs over the
+maximum cost in the Notice provided by AmeriCorps.
+Grantees are required to meet an overall matching rate that increases over time. You have the flexibility to
+meet the overall match requirements in any of the three budget areas, as long as you maintain the
+minimum match of 24% for the first three years and the increasing minimums in years thereafter. See 45
+CFR §§ 2521.35-2521.90 for the specific regulations.
+If you are applying for the first time, you must match with cash or in-kind contributions at least 24% of the
+project's total Operating Costs (Section I) plus Member Costs (Section II) plus Administrative Costs (Section
+III). If you are recompeting, please see 45 CFR §§ 2521.40-2521.95 for the match schedule.
+The acceptable sources of matching funds are federal*, state, local, and/or private sector funds in
+accordance with applicable AmeriCorps requirements.
+In the "Source of Funds" field that appears at the end of Budget Section III, enter a brief description of the
+match. Identify each match source separately. Identify if the match is secured or proposed. Include dollar
+amount, the match classification (cash or in-kind), and the source type (Private, State/Local, or Federal) for
+your entire match. (The total amount in the Source of Funds field should match the total amount in the
+budget narrative exactly.) Define all acronyms the first time they are used.
+*Note: Most federal funds are not authorized to be used as match for another federal grant. While the
+14
+Corporation's legislation permits the use of non-Corporation federal funds as match for the grantee share of
+the budget for operating and administrative costs, the determining factor is the other federal agency. You
+must ensure that your use of another federal agency's funds as match for this national service program grant is
+permitted, in writing, by the other agency.
+AmeriCorps
+Funding Year
+Years 1,2, and 3
+Years 4,5, and 6
+Years 7,8, and 9
+Years 10 +
+Grantee Share
+Requirements
+24%
+26%
+28%
+30%
+Preparing Your Budget
+Your proposed budget should be sufficient to allow you to perform the tasks described in your narrative.
+Reviewers will consider the information you provide in this section in their assessment of the Cost-
+Effectiveness and Budget Adequacy selection criterion.
+Follow the detailed budget instructions in the Attachments to prepare your budget. We recommend that you
+prepare your budget in the same order as indicated in the Budget Worksheets in the Attachments. Prior to
+submission, be sure to review the budget checklist (Attachment F) to ensure your budget is compliant.
+As you prepare your budget:
+All the amounts you request must be defined for a particular purpose. Do not include miscellaneous,
+contingency, or other undefined budget amounts.
+Itemize each cost and present the basis for all calculations in the form of an equation.
+Do not include unallowable expenses, e.g. entertainment costs (which include food and beverage costs
+unless provided as part of an all-day training activity or provided as part of business travel and in accordance
+with your organization's written policies)
+Do not include fractional amounts (cents).
+Please add the costs associated with the National Service Criminal History Checks (recommended $38.25
+per individual to be checked). These include the National Sex Offender Public Website (NSOPW), state
+check, and FBI check for criminal history checks for each covered position in the budget. If funds are not
+budgeted, you must note in the budget an explanation for how you will cover the costs.
+Please include $300 for the cost of OnCorps for the purpose of financial reporting to MSA.
+Programs must comply with all applicable federal laws, regulations, and the requirements of the Uniform
+Guidance. Please refer to the Uniform Administrative Requirements, Cost Principles, and Audit Requirements
+for Federal Awards (2 CFR Part 200) for allowable, allocable, and reasonable cost information, as well as audit
+requirements, including the need to undergo a Single Audit submitted to the Clearinghouse if expending over
+$1,000,000 in federal funds during your fiscal year. The Uniform Guidance is online.
+ATTACHMENT B: Detailed Budget Instructions for Cost Reimbursement Grants (eGrants
+Budget Section)
+Fixed Amount Grants refer to Attachment D.
+How to Begin
+15
+Your detailed budget narrative must provide a full explanation of the proposed costs including their purpose,
+justification, and the basis of your calculations. Where appropriate, your calculations should be presented in
+an equation format, e.g., One staff person, two trips, ~60 miles round trip, $0.655/mi = $75 or Salary
+$60,000 @ 20% devoted to program = $12,000.
+Consistency of Treatment
+For any cost to be allowable under a grant award based on an application for AmeriCorps program funding,
+the cost must be accorded consistent treatment using policies and procedures that apply uniformly to both
+the federal grant funded activities and to all other activities of the applicant.
+Calculating the Cost per Member Service Year (MSY)
+An important factor in consideration of the proposed budget is the cost per MSY. One Member Service Year
+is equivalent to 1,700 hours of service. You may calculate your cost per MSY by dividing the Corporation's
+share of budgeted grant costs by the number of Member Service Years you are requesting in your grant. You
+do not include child care or the cost of the education award a member may earn through serving with your
+program. The maximum cost per MSY that is allowable for applicants is $26,800.
+Member Positions
+Calculation
+Total MSYs
+- Full Time (1700 hours)
+members X 1.000
+=
+Three Quarter-Time (1200 hours)
+members X 0.700
+=
+Half Time (900 hours)
+members X 0.500
+=
+-
+- Quarter time (450 hours)
+members X 0. 26455027
+=
+Minimum time (300 hours)
+members X 0. 21164022
+=
+-
+TOTAL MSYs Requested =
+NOTE: Applicants prepare their budget in MSA's provided budget template in Excel format before entering
+anything in eGrants. This should be submitted along with other application materials in the manner
+instructed by MSA. Once MSA approves the budget, you will be instructed on when and how to enter it into
+eGrants for final review. As you enter your detailed budget information, eGrants automatically populates a
+budget summary and budget narrative report. In addition, eGrants performs a limited compliance check to
+validate the budget. If eGrants finds any compliance issues, you will receive a warning and/or error messages.
+You must resolve all errors before you can submit your budget.
+Budget Section I. Program Operating Costs
+Complete Section I, Program Operating Costs, of the Budget Worksheet by entering the "Total Amount column
+in the budget," "CNCS Share column in the budget," and "Grantee Share column in the budget" for Parts A-I,
+for year one of the grant, as follows below. (Note: CNCS = AmeriCorps)
+A. Personnel Expenses
+Under "Position/Title Description," list each staff position separately and provide salary and percentage of
+16
+effort as percentage of FTE devoted to this award. Each staff person's role listed in the budget must be
+described in the application narrative and each staff person mentioned in the narrative must be listed in the
+budget as either CNCS or Grantee share. Because the purpose of this grant is to enable and stimulate volunteer
+community service, do not include the value of direct community service performed by volunteers. However,
+you may include the value of volunteer services contributed to the organization for organizational functions
+such as accounting, audit work, or training staff and AmeriCorps members.
+B. Personnel Fringe Benefits
+Under "Purpose/Description," identify the types of fringe benefits you will cover and the costs of benefit(s)
+for each staff position. Allowable fringe benefits typically include Federal Insurance Contribution Act (FICA),
+Worker's Compensation, Retirement, State Unemployment Tax Act (SUTA), Health and Life Insurance,
+Individual Retirement Account (IRA), and 401K. You may provide a calculation for total benefits as a
+percentage of the salaries to which they apply or list each benefit as a separate item. If a fringe benefit
+amount is over 30%, please list covered items separately and justify the high cost. Holidays, leave, and other
+similar vacation benefits are not included in the fringe benefit rates but are absorbed into the personnel
+expenses (salary) budget line item.
+C. 1. Staff Travel
+Describe the purpose for which program staff will travel. Provide a calculation that includes itemized costs for
+airfare, transportation, lodging, per diem, and other travel-related expenses multiplied by the number of
+trips/staff. Where applicable, identify the current standard reimbursement rate(s) of the organization for
+mileage, daily per diem, and similar supporting information. Reimbursement should not exceed the federal
+mileage rate https://www.gsa.gov/travel/plan-book/transportation-airfare-pov-etc/privately-owned-vehicle-
+pov-mileage-reimbursement-rates) unless a result of applicant policy and justified in the budget narrative.
+Only domestic travel is allowable.
+We expect all applicants to include travel funds in this line item to attend MSA-sponsored events, such as
+Kickoff and Opening Day. You should budget travel funds for at least one staff member, especially new staff,
+to attend Kickoff and for your staff to attend Opening Day.
+Please itemize all costs. For example:
+Per diem - $79/day X 4 days (@ 75% on first and last days); lodging - $258 X 3 nights; round trip airfare -
+$303.50; local transportation - $50 (estimated)] X 2 staff.
+C. 2. Member Travel
+Describe the purpose for which members will travel. Provide a calculation that includes itemized costs for
+airfare, transportation, lodging, per diem, and other related expenses for members to travel outside their
+service location or between sites. Costs associated with local travel, such as bus passes to local sites, mileage
+reimbursement for use of car, etc., should be included in this budget category. Where applicable, identify the
+current standard reimbursement rate(s) of the organization for mileage, daily per diem, and similar supporting
+information. Please include funds budgeted for your members to attend Opening Day.
+D. Equipment
+Equipment is defined as tangible, non-expendable personal property having a useful life of more than one year
+AND an acquisition cost of $10,000 or more per unit (including accessories, attachments, and modifications).
+You should enter any items that do not meet this definition in E. Supplies below. Purchases of equipment are
+limited to 10% of the total CNCS funds requested. If applicable, show the unit cost and number of units you are
+requesting. Provide a brief justification for the purchase of the equipment under Item/Purpose.
+17
+E. Supplies
+AmeriCorps members must wear an AmeriCorps logo on a daily basis - preferably clothing with the
+AmeriCorps logo. The item with the AmeriCorps logo is a required budget expense. Please include the cost of
+the item with the AmeriCorps logo in your budget or explain how your program will be providing the item to
+AmeriCorps members without using grant funds. Grantees may add the AmeriCorps logo to their own local
+program uniform items using federal funds. Please note your program will be using the AmeriCorps logo in the
+budget description.
+Include the amount of funds to purchase consumable supplies and materials, including member service gear
+and equipment that does not fit the definition above. You must individually list any single item costing $1,000
+or more. Except for safety equipment, grantees may only charge the cost of member service gear to the
+federal share if it includes the AmeriCorps logo. All safety gear may be charged to the federal share regardless
+of whether it includes the AmeriCorps logo. All other service gear must be purchased with non-CNCS funds.
+F. Contractual and Consultant Services
+Include costs for consultants related to the project's operations, except training or evaluation consultants,
+who will be listed in Sections G. and H., below. Itemize each contract or consultant and provide a brief
+justification of the need for each. The cost calculation should provide a basis for determining the cost, such
+as a daily or hourly rate. Note that there is no maximum daily rate.
+G. 1. Staff Training
+Include the costs associated with training staff on project requirements and training to enhance the skills staff
+need for effective project implementation, i.e., project or financial management, team building, etc. If using a
+consultant(s) for training, indicate the estimated daily rate. There is no maximum daily rate.
+G. 2. Member Training
+Include the costs associated with member training to support them in carrying out their service activities. You
+may also use this section to request funds to support training in Life after AmeriCorps. If using a consultant(s)
+for training, indicate the estimated daily rate. There is no maximum daily rate.
+H. Evaluation
+Include costs for project evaluation activities, including additional staff time or subcontracts, use of evaluation
+consultants, purchase of instrumentation, and other costs specifically for this activity not budgeted in Section
+A Personnel Expenses. This cost does not include the daily/weekly gathering of data to assess progress toward
+meeting performance measures but is a larger assessment of the impact your project is having on the
+community as well as an assessment of the overall systems and project design. Indicate daily rates of
+consultants, where applicable.
+I. Other Program Operating Costs
+Allowable costs in this budget category should include when applicable:
+Criminal history background checks for all members and for all employees or other individuals who receive
+a salary, education award, living allowance, or stipend or similar payment from the grant (federal or non-
+federal share). Please include the cost of the NSOPW, state check, and FBI check for criminal history checks
+for all covered positions. If you do not budget funds, you must note an explanation in the budget for how
+you will cover the costs.
+Office space rental for projects operating without an approved indirect cost rate agreement that covers
+office space or if you do not allocate these costs as part of your organization's indirect cost allocation pool.
+18
+If you budget space and it is shared with other projects or activities, you must equitably pro-rate and
+allocate the costs between the activities or projects.
+Utilities, telephone, internet, postage, copying, and similar expenses that are specifically used for
+AmeriCorps members and AmeriCorps project staff, and are not part of the organization's indirect cost
+allocation pool. If you budget and share such expenses with other projects or activities, you must equitably
+pro-rate and allocate the costs between the activities or projects.
+Recognition costs for members. List each item and provide a justification in the budget narrative. Gifts
+and/or food in an entertainment/event setting are not allowable costs.
+Retention incentives/performance awards are allowable to the extent they are 1) reasonable, necessary,
+and allowable for program outcomes; 2) tied to the program narrative; 3) fair; 4) consistently applied; and
+5) part of the organization's written policies and procedures. Examples of retention incentives include
+member assistance programs, retention bonuses, and additional member benefits such as housing.
+Please include $300 for the cost of OnCorps for the purpose of financial reporting to MSA.
+Please budget a line item called "State Commission & Partnership Fee" with the following calculation:
+Total CNCS award * 1.9%. Under purpose write, "This fee supports the success of the AmeriCorps program
+through the following activities: training and technical assistance; monitoring; assistance in developing
+strong policies and procedures; one-on-one support in understanding and fulfilling fiscal and
+programmatic compliance requirements; management of all aspects of grants processes to access
+AmeriCorps funding; and additional activities in direct support of AmeriCorps sub-grantees."
+Data Collection: List items that support data collection and align with your budget narrative. Examples of
+data collection expenses under this section include software used for data collection and analysis, stipends
+for focus groups participants, and survey development software among others.
+Recruitment: List items that support successful recruitment of AmeriCorps members best suited to serve
+the community. Examples of recruitment costs include career fair registrations, course credit, and
+advertising on social media and print sources among others.
+Budget Section II. Member Costs
+Member Costs are identified as "Living Allowance" and "Member Support Costs."
+A. Living Allowance
+The narrative should clearly identify the number of members you are supporting by category (i.e., full-time,
+three-quarter-time, half-time, quarter-time, minimum-time) and the amount of living allowance they will
+receive, allocating appropriate portions between the CNCS Share column in the budget and grantee share
+column in the budget (match). Please do not select the 2-Year Half Time (1ˢᵗ Year) and 2-Year Half Time (2ⁿᵈ
+Year) slot types.
+Slot Types
+Minimum #
+Minimum Living
+Maximum Total Living
+of Hours
+Allowance
+Allowance
+Full-time
+1,700
+$20,954
+$41,908
+Three Quarter-time
+1,200
+n/a
+$29,336
+Half-time
+900
+n/a
+$20,954
+Quarter-time
+450
+n/a
+$10,896
+Minimum-time
+300
+n/a
+$8,801
+In eGrants (once instructed by MSA to enter your budget), enter the total number of members you are
+requesting in each category. Enter the average amount of the living allowance for each type of member. In
+19
+addition, enter the number of members for whom you are not requesting funds for a living allowance but for
+whom you are requesting education awards.
+B. Member Support Costs
+You must provide members with the benefits described below:
+FICA. Unless exempted by the IRS, all projects must pay FICA for any member receiving a living allowance,
+even when AmeriCorps does not supply the living allowance. If exempted, please note in the narrative. In
+the first column next to FICA, indicate the number of members who will receive FICA. Calculate the FICA at
+7.65% of the total amount of the living allowance.
+Health Care. You must offer or make available health care benefits to full-time members in accordance
+with AmeriCorps requirements. Except as stated below, you may not pay health care benefits to less-than-
+full-time members with AmeriCorps funds. You may choose to provide health care benefits to less-than-
+full-time members from other sources (i.e., non-AmeriCorps sources) but you cannot include the cost in
+the budget. Less-than-full-time members who are serving in a full-time capacity for a sustained period of
+time (such as a full-time summer project) are eligible for health care benefits. If you budget health
+insurance for less-than-full-time members serving in a full-time capacity, indicate in the budget narrative.
+In your budget narrative, indicate the number of members who will receive health care benefits.
+AmeriCorps will not pay for dependent coverage. If you do not budget health care for all full-time
+members, please confirm all full-time members will have access to coverage.
+Worker's Compensation. You are required to cover your AmeriCorps Members with worker's
+compensation coverage. If you are not required to pay worker's compensation due to an exemption
+provided by the Commonwealth of Massachusetts, you must obtain Occupational, Accidental, Death and
+Dismemberment coverage for members to cover in-service injury or accidents.
+Unemployment Insurance and Other Member Support Costs. You may not charge the cost of
+unemployment insurance taxes to the grant because the Commonwealth of Massachusetts has
+determined that AmeriCorps Members are ineligible for unemployment benefits.
+Massachusetts Paid Family & Medical Leave. It is MSA's position that AmeriCorps Members are not
+eligible for MA PFML based solely on their AmeriCorps service, but we are providing flexibility to sub-
+recipients to make this determination. Employer contributions to MA PFML are not an allowable expense
+on the AmeriCorps award.
+Budget Section III. Administrative/Indirect Costs
+Definitions
+Administrative costs are general or centralized expenses of the overall administration of an organization that
+receives AmeriCorps funds and do not include particular project costs. These costs may include administrative
+staff positions. For organizations that have an established indirect cost rate for federal awards, administrative
+costs mean those costs that are included in the organization's indirect cost rate agreement. Such costs are
+generally identified with the organization's overall operation and are further described in the Office of
+Management and Budget Uniform Guidance.
+Options for Calculating Administrative/Indirect Costs (choose A or B)
+Application budgets may include indirect costs. Based on qualifying factors, applicants may -
+a. use a Federally approved indirect cost rate if they have one;
+b. use a 15 percent de minimis rate of modified total direct costs; or
+C. may claim certain costs directly.
+20
+No more than five percent of award funds may be used to recover indirect costs on AmeriCorps State and
+National grants under section 121(d) of the National and Community Service Act of 1990, as amended and
+AmeriCorps' regulations at 45 CFR 2521.95 and 2540.110."
+Once directed by MSA, you will use the eGrants Indirect Cost Rate (IDCR) User Instructions to enter the
+organization's indirect cost rate. Applicants should not submit documentation addressing the cost rate
+agreement via email.
+Please note: To request a federally negotiated indirect cost rate agreement, when AmeriCorps is the applicable
+cognizant agency for an organization's indirect costs, the applicant must submit a request to
+IndirectCostRate@americorps.gov. The applicant may also obtain instructions and additional information by
+contacting the email address above.
+A. Federally Approved Indirect Cost Rate
+If you have a federally approved indirect cost rate, this method must be used, and the rate will constitute
+documentation of your administrative costs, not to exceed the 5% maximum federal share payable by
+AmeriCorps. Specify the Cost Type for which your organization has current documentation on file, i.e.,
+Provisional, Predetermined, Fixed, or Final indirect cost (IDC) rate. Supply your approved IDC rate (percentage)
+and the base upon which this rate is calculated (direct salaries, salaries and fringe benefits, etc.). AmeriCorps
+does not restrict the overall indirect cost rate claimed. It is at your discretion whether or not to claim your
+entire IDC rate to calculate administrative costs. If you choose to claim a lower rate, please include this rate in
+the Rate Claimed field.
+1. Determine the base amount of direct costs to which you will apply the IDC rate, including both the CNCS and
+Grantee shares, as prescribed by your established rate agreement (i.e., based on salaries and benefits, total
+direct costs, or other). Then multiply the appropriate direct costs by the rate being claimed. This will determine
+the total amount of indirect costs allowable under the grant.
+2. To determine the CNCS share: Multiply the sum of the CNCS funding share in Sections I and II by 0.0526. This
+is the maximum amount you can claim as the CNCS share of indirect costs.
+3. To determine the Grantee share: Subtract the amount calculated in step 2 (the CNCS share) from the
+amount calculated in step 1 (the total Indirect Costs allowed). This is the amount the applicant can claim as
+grantee share for administrative costs.
+B. De Minimis Rate of 15% of Modified Total Direct Costs
+Organizations who do not currently have a federally negotiated indirect cost rate (except for those non-federal
+entities described in Appendix VII to Part 200-States and Local Government and Indian Tribe Indirect Cost
+Proposals, paragraph (d)(1)(B)) and who receive less than $35 million in direct federal funding) may indefinitely
+use a de minimis rate of 15% of modified total direct costs (MTDC).
+Additional information regarding what is included in MTDC and use of this option can be found in the Uniform
+Administrative Requirements, Cost Principles, and Audit Requirements for Federal Awards (2 CFR 200) under
+Indirect (F&A) costs and Definitions. If you elect to use this option, you must use it consistently across all
+federal awards.
+21
+1. Determine the base amount of direct costs to which you will apply the de minimis rate, including both the
+CNCS and Grantee shares. MTDC includes all direct salaries and wages, applicable fringe benefits, materials
+and supplies, services, travel, and up to the first $50,000 of each subaward (regardless of the period of
+performance of the subawards under the award). MTDC excludes equipment, capital expenditures, charges for
+patient care, rental costs, tuition remission, scholarships and fellowships, participant support costs and the
+portion of each subaward in excess of $50,000. Other items may only be excluded when necessary to avoid a
+serious inequity in the distribution of indirect costs, and with the approval of the cognizant agency for indirect
+costs. Once you determine the base, multiply the appropriate costs by 0.15. This will determine the total
+amount of costs allowable in this section.
+2. To determine the CNCS share: Multiply the sum of the CNCS funding share in Sections I and II by 0.0526. This
+is the maximum amount you can claim as the CNCS share of indirect/administrative costs.
+3. To determine the Grantee share: Subtract the amount calculated in step 2 (the CNCS share) from the
+amount calculated in step 1 (the total Indirect Costs allowed). This is the amount the applicant can claim as
+grantee share for indirect/administrative costs.
+Source of Funds
+In the "Source of Funds" field that appears at the end of Budget Section III, enter a brief description of the
+match. Identify each match source separately. Identify if the match is secured or proposed. Include dollar
+amount, the match classification (cash or in-kind), and the source type (Private, State/Local, or Federal) for
+your entire match. The total amount in the Source of Funds field must match the total amount in the budget
+narrative exactly. Define all acronyms the first time they are used.
+Note: The value of the Segal Education Awards that members earn for their service is not identified in the
+budget. Also, the childcare reimbursements provided to eligible members are not included in the budget.
+22
+ATTACHMENT C: Budget Worksheet Cost Reimbursement (eGrants Budget Section)
+Section I. Program Operating Costs
+A.
+Personnel Expenses
+Annual
+Total
+Position/Title/Description
+Qty
+% Time
+CNCS Share
+Grantee Share
+Salary
+Amount
+Totals
+B.
+Personnel Fringe Benefits
+Total
+Purpose/Description
+Calculation
+CNCS Share
+Grantee Share
+Amount
+Totals
+C.1.
+Staff Travel
+Total
+Purpose
+Calculation
+CNCS Share
+Grantee Share
+Amount
+Totals
+C.2.
+Member Travel
+Total
+Purpose
+Calculation
+CNCS Share
+Grantee Share
+Amount
+Totals
+D.
+Equipment
+Total
+Item/ Purpose/Justification
+Qty
+Unit Cost
+CNCS Share
+Grantee Share
+Amount
+Totals
+E.
+Supplies
+Total
+Purpose
+Calculation
+CNCS Share
+Grantee Share
+Amount
+Totals
+23
+F.
+Contractual and Consultant Services
+Daily
+Purpose
+Calculation
+Total
+Rate
+CNCS Share
+Grantee Share
+Amount
+Totals
+G.1.
+Staff Training
+Daily
+Purpose
+Calculation
+Total
+Rate
+CNCS Share
+Grantee Share
+Amount
+Totals
+G.2.
+Member Training
+Daily
+Purpose
+Calculation
+Total
+Rate
+CNCS Share
+Grantee Share
+Amount
+Totals
+H.
+Evaluation
+Daily
+Purpose
+Calculation
+Total
+Rate
+CNCS Share
+Grantee Share
+Amount
+Totals
+I.
+Other Program Operating Costs
+Daily
+Purpose
+Calculation
+Total
+Rate
+CNCS Share
+Grantee Share
+Amount
+Totals
+Subtotal Section I:
+Total
+CNCS Share
+Grantee Share
+Amount
+24
+Section II. Member Costs
+A.
+Living Allowance
+Item
+#
+Allowanc
+# w/o
+Total Amount
+CNCS Share
+Grantee Share
+Mbrs
+e Rate
+Allowa
+nce
+Full-time (1700 hrs)
+Three quarter-time
+(1200 hrs)
+Half-time (900 hrs)
+Quarter-time (450 hrs)
+Minimum-time (300
+hrs)
+Totals
+B.
+Member Support Costs
+Daily
+Purpose
+Calculation
+Rate
+Total Amount
+CNCS Share
+Grantee Share
+Totals
+Subtotal Section II:
+Total Amount
+CNCS Share
+Grantee Share
+Subtotal Sections I + II:
+25
+Section III. Administrative/Indirect Costs
+A. Federally Approved Indirect Cost Rate or De Minimis Rate of 15% of Modified Total Direct Costs
+Cost
+Cost
+Calculation
+Rate
+Rate
+Total Amount
+CNCS Share
+Grantee Share
+Type
+Basis
+Claimed
+Total Sections I + II + III:
+Total Amount
+CNCS Share
+Grantee Share
+Budget Total: Validate this budget
+Total Amount
+Required Match Percentages:
+CNCS Share
+Grantee Share
+Source of Funds
+Match Description (Note
+Amount
+Match Classification
+Match Source (Federal,
+whether Secured or
+(Cash or In Kind)
+State/Local, Private)
+Proposed)
+ATTACHMENT D: Detailed Budget Instructions for Fixed Amount Grants (eGrants Budget
+Section)
+These instructions apply only to applicants for Fixed Amount grants, including education award
+programs (EAPs). PLEASE NOTE: In general, all new programs MUST apply for a Cost-Reimbursement grant.
+In very rare cases, MSA will award a Professional Corps or EAP grant to a new program. If you are interested in a
+Fixed or EAP grant, you must contact MSA directly to discuss your specific situation at least 2 weeks before the
+application deadline.
+26
+Fixed grant applicants should prepare their budget in MSA's provided budget template in Excel format
+before entering anything in eGrants. This should be submitted along with other application materials in the
+manner instructed by MSA. Once MSA approves the budget, you will be instructed on when and how to
+enter it into eGrants for final review.
+EAP and Fixed Amount grant applicants may only request a fixed amount of funding per MSY. Therefore, Fixed
+Amount applicants are not required to complete a detailed budget or complete the grantee share column.
+However, you must complete the source of match chart to identify the sources of the additional revenue you
+need to operate the program. If you are applying for a full-cost fixed amount grant, you must pay at least the
+minimum living allowance listed in the Notice for each type of position you are proposing.
+Budget Section II. AmeriCorps Member Positions
+Member Positions
+Identify the number of members you are requesting by category (i.e. full-time, three quarter-time, half-time,
+quarter-time, minimum-time) and list under the column labeled #Mbrs w/o Allow (without AmeriCorps-
+funded living allowance.) In the Allowance Rate field, enter the average amount of the living allowance for
+each type of member. Enter zero in the column labeled #Mbrs w/ Allow. Leave all other columns blank. See
+example below (applies to a Full-Cost Fixed Amount grant):
+Member Positions
+?
+#
+#
+Mbrs
+Allowance
+Mbrs
+Total
+CNCS
+Grantee
+Item
+w/
+Rate
+w/o
+Amount
+Share
+Share
+Allow
+Allow
+Full Time (1700 hrs)
+0
+$16,502
+5
+$0
+$0
+$0
+Three Quarter Time (1200
+0
+$14,000
+7
+$0
+$0
+$0
+hours)
+The total number of member service years (MSY) will automatically calculate at the bottom of the
+Member Positions chart. The MSY are calculated as follows:
+Member Positions
+Calculation
+MSY
+Full-time (1700 hours)
+(
+members X 1.000)
+=
+Three quarter-time (1200
+(
+members X
+=
+hours)
+0.70000000)
+Half-time (900 hours)
+(
+members X 0.500)
+=
+(
+members X
+Quarter-time (450 hours)
+=
+0.26455027)
+(
+members X
+Minimum-time (300 hours)
+=
+0.21164022)
+27
+B. Fixed
+Total MSY
+Award
+Display
+your calculation in the following format:
+Total # of MSYs
+X MSY amount (See Notice for
+= Total Grant Request $
+amounts)
+Type the total amount requested in the "Total Amount" and "CNCS Share" columns. Leave the "Grantee Share"
+blank. See example below (applies to a Full-Cost Fixed Amount grant):
+Purpose
+Calculation
+Total
+CNCS
+Grantee
+Amount
+Share
+Share
+Program Grant
+47.5 MSY
+$451,25
+$451,250
+$0
+Request
+0
+X $9,500/MSY
+Subtotal
+$451,25
+$451,250
+$0
+0
+Source of Funds
+Match Description
+Description
+ATTACHMENT E: Budget Worksheet for Fixed Amount Grants (eGrants Budget Section)
+Complete the fields for the # w/o Allowance and Allowance Rate only.
+Member Positions
+28
+Purpose
+Calculation
+Total
+CNCS
+Grantee
+Amount
+Share
+Share
+Program Grant
+Request
+Subtotal
+Source of Funds
+Item
+#
+Allowance
+#
+Total
+CNCS
+Grantee
+Mbrs
+Rate
+w/o
+Amount
+Share
+Share
+Allo
+W
+Full-time (1700 hrs)
+Three quarter-time
+(1200 hrs)
+Half-time (900 hrs)
+Quarter-time (450
+hrs)
+Minimum-time (300
+hrs)
+Subtotal
+MSY
+Cost/
+MSY
+Match
+Description
+ATTACHMENT F: Budget Checklist
+Below is a checklist to help you make certain that you submit an accurate budget narrative that meets
+AmeriCorps requirements. Note: This checklist does not apply to Fixed Amount grants.
+In Compliance?
+Section I. Program Operating Costs
+Yes - No -
+Costs charged under the Personnel line item directly relate to the operation of the
+29
+In Compliance?
+Section I. Program Operating Costs
+AmeriCorps project? Examples include costs for staff who recruit, train, place, or
+supervise members as well as manage the project.
+Staff indirectly involved in the management or operation of the applicant organization are
+Yes
+No
+funded through the administrative cost section (Section III) of the budget? Examples of
+administrative costs include central management and support functions.
+Staff fundraising expenses are not charged to the grant? You may not charge AmeriCorps
+staff members' time and related expenses for fundraising to the federal or grantee share
+Yes
+No
+of the grant. Expenses incurred to raise funds must be paid out of the funds raised.
+Development officers and fundraising staff are not allowable expenses.
+The types of fringe benefits to be covered and the costs of benefit(s) for each staff
+position are described? Allowable fringe benefits typically include FICA, Worker's
+Compensation, Retirement, SUTA, Health and Life Insurance, IRA, and 401K. You may
+Yes
+No
+provide a calculation for total benefits as a percentage of the salaries to which they apply
+or list each benefit as a separate item. If the fringe amount is over 30%, the benefits are
+listed separately?
+Holidays, leave, and other similar vacation benefits are not included in the fringe benefit
+Yes
+No
+rates but are absorbed into the personnel expenses (salary) budget line item?
+Yes
+No
+The purpose for all staff and member travel is clearly identified?
+You have budgeted funds for staff travel, as required, to attend technical assistance
+Yes
+No
+meetings under Staff Travel?
+Funds for the purchase of equipment (does not include general use office equipment) are
+Yes
+No
+limited to 10% of the total grant amount?
+Yes
+No
+All single equipment items over $10,000 per unit are specifically listed?
+Yes
+No
+Justification/explanation of equipment items is included in the budget narrative?
+All single supply items over $1,000 per unit are specifically listed and explained in the
+Yes
+No
+budget narrative?
+Cost of items with the AmeriCorps logo that will be worn daily is included for all
+AmeriCorps members? Or if not, there is an explanation of how the program will be
+Yes
+No
+providing the AmeriCorps logo item to AmeriCorps members using funds other than
+AmeriCorps grant funds?
+You only charged to the federal share of the budget member service gear that includes
+Yes
+No
+the AmeriCorps logo and noted that the gear will have the AmeriCorps logo, with the
+exception of safety equipment?
+Does the budget reflect adequate budgeted costs for project evaluation, as required
+Yes
+No
+based on what evaluation requirements your program is required by AmeriCorps to
+complete?
+Have you budgeted the cost of the NSOPW, FBI, and state check in the CNCS share for
+Yes
+No
+criminal history checks of each member and grant-funded staff that are in covered
+positions per 45 CFR 2522.205? If not, have you provided an explanation of how the
+costs will be covered?
+Yes No
+Have you budgeted $300 for OnCorps financial management software (on either the
+CNCS or grantee share)?
+Yes No
+Did you calculate the Commission Partnership & Support fee accurately? This fee
+should equal your total CNCS request (Sec I + Il + III) X 1.9%.
+30
+In Compliance?
+Section I. Program Operating Costs
+Yes No
+Are all items in the budget narrative itemized and the purpose of the funds justified?
+In Compliance?
+Section II. Member Costs
+Are the living allowance amounts correct? Full-time AmeriCorps members must receive at
+least the minimum living allowance.
+Yes
+No
+Note: Programs in existence prior to September 21, 1993 may offer a lower living
+allowance than the minimum. If such a program chooses to offer a living allowance, it is
+exempt from the minimum requirement, but not from the maximum requirement.
+Living allowances are not paid on an hourly basis? They may be calculated using service
+hours and program length to derive a weekly or biweekly distribution amount. Divide the
+Yes
+No
+distribution in equal increments that are not based on the specified number of hours
+served.
+Is FICA calculated correctly? You must pay FICA for any member receiving a living
+allowance. Unless exempted by the IRS, calculate FICA at 7.65% of the total amount of the
+Yes
+No
+living allowance. If exempted from paying FICA, is the exemption noted in the budget
+narrative?
+Is the Worker's Compensation calculation correct? If you are not required to pay worker's
+compensation, you should still note the cost of similar coverage for members' on-the-job
+Yes
+No
+injuries through your own existing coverage or a new policy purchased in accordance with
+normal procedures (i.e., death and dismemberment coverage).
+Health care is provided for full-time AmeriCorps members only (unless part-time serving
+in a full-time capacity)? If your project chooses to provide health care to other part-time
+members, you may not use federal funds to help pay for any portion of the cost. Projects
+Yes No
+must provide health care coverage to all full-time members who do not have adequate
+health care coverage at the time of enrollment or who lose coverage due to participation
+in the project. In addition, projects must provide coverage if a full-time member loses
+coverage during the term of service through no deliberate act of his/her own.
+Yes
+No
+Unemployment insurance is not budgeted?
+In Compliance?
+Section III. Administrative/Indirect Costs
+Yes
+No
+Applicant has a current approved indirect cost rate - The maximum grantee share does
+not exceed the federally approved rate, less the 5% CNCS share?
+Applicant has a current approved indirect cost rate-the type of rate, the IDC rate
+Yes
+No
+percentage, the rate claimed and the base to which the rate is applied has been
+specified? The NICRA has been submitted as directed by MSA?
+Applicant does not have a current federally approved indirect cost rate and is choosing
+Yes
+No
+to use a de minimis rate of 15% of modified total direct costs?
+Applicant does not have a current federally approved indirect cost rate and is choosing
+Yes
+No
+to use a de minimis rate - the maximum federal share of administrative costs does not
+exceed 5% of the total federal funds budgeted?
+In Compliance?
+Source of Funds (Match)
+Yes
+No
+Is the overall match being met at the required level, based on the year of funding?
+For all matching funds, proposed vs secured, the source(s) [private, state, local, and/or
+Yes
+No
+federal], the type of contribution (cash or in-kind), and the amount of match, are clearly
+31
+identified in the narrative and in the Source of Funds section on the budget workbook?
+The amount of match is for the entire amount in the budget narrative? (The total amount
+Yes - No
+of match equals the amount in the budget exactly?)
+32
+APPENDIX B: Assurances and Certifications
+(Copies of these documents are provided in the "Assurances, Certifications and Supplemental Certifications"
+form. Sign and upload that version with your application.)
+Instructions
+Copy and paste the Assurances, Certifications, and Supplementary Certifications forms below into a single
+document. Sign and upload copies with your application as a PDF.
+By signing and submitting this application, as the duly authorized representative of the applicant, you certify that
+the applicant will comply with the Assurances and Certifications described below.
+a) Inability to certify
+Your inability to provide the assurances and certifications listed below will not necessarily result in denial of
+a grant. You must submit an explanation of why you cannot do so. We will consider your explanation in
+determining whether to enter into this transaction. However, your failure to furnish an explanation will
+disqualify your application.
+b) Erroneous certification or assurance
+The assurances and certifications are material representations of fact upon which we rely in determining
+whether to enter into this transaction. If we later determine that you knowingly submitted an erroneous
+certification or assurance, in addition to other remedies available to the federal government, we may
+terminate this transaction for cause or default.
+c) Notice of error in certification or assurance
+You must provide immediate written notice to us if at any time you learn that a certification or assurance was
+erroneous when submitted or has become erroneous because of changed circumstances.
+d) Definitions
+The terms "covered transaction", "debarred", "suspended", "ineligible", "lower tier covered transaction",
+"participant", "person", "primary covered transaction", "principal", "proposal", and "voluntarily excluded" as
+used in this clause, have the meanings set out in the Definitions and Coverage sections of the rules
+implementing Executive Order 12549. An applicant shall be considered a "prospective primary participant in
+a covered transaction" as defined in the rules implementing Executive Order 12549. You may contact us for
+assistance in obtaining a copy of those regulations.
+e) Assurance requirement for subgrant agreements
+You agree by submitting this proposal that if we approve your application you shall not knowingly enter into
+any lower tier covered transaction with a person who is debarred, suspended, declared ineligible, or
+voluntarily excluded from participation in this covered transaction, unless authorized by us.
+f) Assurance inclusion in subgrant agreements
+You agree by submitting this proposal that you will obtain an assurance from prospective participants in all
+lower tier covered transactions and in all solicitations for lower tier covered transactions that the
+participants are not debarred, suspended, ineligible, or voluntarily excluded from the covered transaction.
+g) Assurance of subgrant principals
+You may rely upon an assurance of a prospective participant in a lower-tier covered transaction that is not
+debarred, suspended, ineligible, or voluntarily excluded from the covered transaction, unless you know that
+the assurance is erroneous. You may decide the method and frequency by which you determine the
+eligibility of your principals. You may, but are not required to, check the List of Parties Excluded from
+Federal Procurement and Nonprocurement Programs.
+h) Non-assurance in subgrant agreements
+If you knowingly enter into a lower tier covered transaction with a person who is suspended, debarred,
+ineligible, or voluntarily excluded from participation in this transaction, in addition to other remedies
+available to the federal government, we may terminate this transaction for cause or default.
+i) Prudent person standard
+Nothing contained in the aforementioned may be construed to require establishment of a system of records
+in order to render in good faith the assurances and certifications required. Your knowledge and information
+is not required to exceed that which is normally possessed by a prudent person in the ordinary course of
+33
+business dealings.
+Assurances
+As the duly authorized representative of the applicant, I certify, (to the best of my knowledge) and belief, that the
+applicant:
+1. Has the legal authority to apply for federal assistance, and the institutional, managerial, and financial
+capability (including funds sufficient to pay the non-federal share of program costs) to ensure proper
+planning, management, and completion of the program described in this application.
+2. Will give the awarding agency, the Comptroller General of the United States, and if appropriate, the state,
+through any authorized representative, access to and the right to examine all records, books, papers, or
+documents related to the award; and will establish a proper accounting system in accordance with generally
+accepted accounting standards or agency directives.
+3. Will establish safeguards to prohibit employees from using their position for a purpose that constitutes or
+presents the appearance of personal or organizational conflict of interest, or personal gain.
+4. Will initiate and complete the work within the applicable time frame after receipt of approval of the
+awarding agency.
+5. Will comply with all rules regarding prohibited activities, including those stated in applicable NOFA or NOFO,
+grant provisions, and program regulations, and will ensure that no assistance made available by the
+Corporation will be used to support any such prohibited activities.
+6. Will comply with the Intergovernmental Personnel Act of 1970 (42 U.S.C. 4728-4763) relating to prescribed
+standards for merit systems for programs funded under one of the statutes or regulations specified in
+Appendix A of OPM's Standards for a Merit System of Personnel Administration (5 CFR 900, Subpart F).
+7. Will comply with all federal statutes relating to nondiscrimination. These include but are not limited to:
+(a)Title VI of the Civil Rights Act of 1964 (P.L. 88-352) which prohibits discrimination on the basis of race,
+color, or national origin; (b) Title IX of the Education Amendments of 1972, as amended (20 U.S.C. 1681-
+1683, and 1685-1686). which prohibits discrimination on the basis of sex; (c) Section 504 of the
+Rehabilitation Act of 1973, as amended (29 U.S.C. 794), which prohibits discrimination on the basis of
+handicaps (d) The Age Discrimination Act of 1975, as amended (42 U.S.C. 6101-6107), which prohibits
+discrimination on the basis of age; (e) The Drug Abuse Office and Treatment Act of 1972 (P.L. 92-255), as
+amended, relating to nondiscrimination on the basis of drug abuse; (f) The Comprehensive Alcohol Abuse
+and Alcoholism Prevention, Treatment and Rehabilitation Act of 1970 (P.L. 91-616), as amended, relating to
+nondiscrimination on the basis of alcohol abuse or alcoholism; (g) sections 523 and 527 of the Public Health
+Service Act of 1912 (42 U.S.C. 290 dd-3 and 290 ee-3), as amended, relating to confidentiality of alcohol and
+drug abuse patient records; (h) Title VIII of the Civil Rights Act of 1968 (42 U.S.C. 3601 et seq.), as amended,
+relating to nondiscrimination in the sale, rental or financing of housing; (i) any other nondiscrimination
+provisions in the National and Community Service Act of 1990 or the Domestic Volunteer Services Act, as
+amended; and (j) the requirements of any other nondiscrimination statute(s) which may apply to the
+application.
+8. Will comply, or has already complied, with the requirements of Titles Il and III of the Uniform Relocation
+Assistance and Real Property Acquisition Policies Act of 1970 (P.L. 91-646) which provide for fair and
+equitable treatment of persons displaced or whose property is acquired as a result of federal or federally
+assisted programs. These requirements apply to all interests in real property acquired for program purposes
+regardless of federal participation in purchases.
+9. Will comply, as applicable, with the provisions of the Hatch Act (5 U.S.C. 1501-1508 and 7324-7328) which
+limit the political activities of employees whose principal employment activities are funded in whole or in
+part with federal funds.
+10. Will comply, as applicable, with the provisions of the Davis-Bacon Act (40 U.S.C 276a and 276a-7), the
+Copeland Act (40 U.S.C 276c and 18 U.S.C. 874), and the Contract Work Hours and Safety Standards Act (40
+U.S.C. 327-333), regarding labor standards for federally assisted construction sub- agreements.
+11. Will comply, if applicable, with flood insurance purchase requirements of Section 102(a) of the Flood
+Disaster Protection Act of 1973 (P.L. 93-234) which requires the recipients in a special flood hazard area to
+34
+participate in the program and to purchase flood insurance if the total cost of insurable construction and
+acquisition is $10,000 or more.
+12. Will comply with environmental standards which may be prescribed pursuant to the following: (a)
+institution of environmental quality control measures under the National Environmental Policy Act of 1969
+(P.L. 91-190) and Executive Order (EO) 11514; (b) notification of violating facilities pursuant to EO 11738; (c)
+protection of wetlands pursuant to EO 11990; (d) evaluation of flood hazards in floodplains in accordance
+with EO 11988; (e) assurance of program consistency with the approved state management program
+developed under the Coastal Zone Management Act of 1972 (16 U.S.C 1451 et seq.); (f) conformity of
+federal actions to State (Clean Air) Implementation Plans under Section 176(c) of the Clean Air Act of 1955,
+as amended (42 U.S.C. 7401 et seq.); (g) protection of underground sources of drinking water under the Safe
+Drinking Water Act of 1974, as amended (P.L. 93-523); and (h) protection of endangered species under the
+Endangered Species Act of 1973, as amended (P.L. 93-205).
+13. Will comply with the Wild and Scenic Rivers Act of 1968 (16 U.S.C 1271 et seq.) related to protecting
+components or potential components of the national wild and scenic rivers system.
+14. Will assist the awarding agency in assuring compliance with Section 106 of the National Historic
+Preservation Act of 1966, as amended (16 U.S.C. 470), EO 11593 (identification, and protection of historic
+properties), and the Archaeological and Historic Preservation Act of 1974 (16U.S.C. 469a-I et seq.).
+15. Will comply with P.L. 93-348 regarding the protection of human subjects involved in research, development,
+and related activities supported by this award of assistance.
+16. Will comply with the Laboratory Animal Welfare Act of 1966 (P.L. 89-544, as amended, 7 U.S.C. 2131 et seq.)
+pertaining to the care, handling, and treatment of warm blooded animals held for research, teaching, or
+other activities supported by this award of assistance.
+17. Will comply with the Lead-Based Paint Poisoning Prevention Act (42 U.S.C. 4801 et seq.) which prohibits the
+use of lead based paint in construction or rehabilitation of residence structures.
+18. Will cause to be performed the required financial and compliance audits in accordance with the Single Audit
+Act of 1984, as amended, and OMB Circular A-133, Audits of States, Local Governments, and Non-Profit
+Organizations.
+19. Will comply with all the requirements of Subpart C of 45 CFR Part 2542, implementing E.O. 1259, regarding
+restrictions on doing business with suspended, debarred, and otherwise disqualified entities.
+20. Will comply with all the requirements for providing a drug-free workplace on a continuing bases as set out in
+Subpart B of 45 CFR Part 2545, implementing sections 5151-5160 of the Drug-Free Workplace Act of 1988
+(P.L. 100-690).
+21. Will provide, in the design, recruitment, and operation of any AmeriCorps program, for broad-based input
+from - (1) the community served and potential participants in the program; and (2) community- based
+agencies with a demonstrated record of experience in providing services and local labor organizations
+representing employees of service sponsors, if these entities exist in the area to be served by the program;
+22. Will, prior to the placement of participants, consult with the appropriate local labor organization, if any,
+representing employees in the area who are engaged in the same or similar work as that proposed to be
+carried out by an AmeriCorps program, to ensure compliance with the non-displacement requirements
+specified in section 177 of the NCSA;
+23. Will, in the case of an AmeriCorps program that is not funded through a State, consult with and coordinate
+activities with the State Commission for the State in which the program operates.
+24. Will comply with all applicable requirements of all other federal laws, executive orders, regulations,
+application guidelines, and policies governing this program.
+Certifications
+Lobbying (Activities)
+As required by Section 1352, Title 31 of the U.S. Code, as the duly authorized representative of the applicant, I
+certify, to the best of my knowledge and belief, that:
+a) No federal appropriated funds have been paid or will be paid, by or on behalf of the undersigned, to any
+person for influencing or attempting to influence an officer or employee of any agency, a member of
+Congress, an officer of Congress in connection with the making of any federal grant, the entering into of any
+35
+cooperative agreement, and the extension, renewal, amendment or modification of any federal grant, or
+cooperative agreement;
+b) If any funds other than federal appropriated funds have been paid or will be paid to any person for
+influencing or attempting to influence an officer or employee of any agency, a Member of Congress, an
+officer or employee of Congress, or an employee of a Member of Congress in connection with this federal
+grant or cooperative agreement, the undersigned shall complete and submit Standard Form-LLL, "Disclosure
+Form to Report Lobbying," in accordance with its instructions;
+c) The undersigned shall require that the language of this certification be included in the award documents for
+all tiers (including subawards, subgrants, contracts under grants and cooperative agreements) and that all
+subrecipients shall certify and disclose accordingly.
+Compliance with the Lobbying Disclosure Act of 1995
+As the duly authorized representative of the applicant, I certify, to the best of my knowledge and belief, that
+neither the undersigned nor any of its operating sites is an organization described in Section (501)c(4) of the
+Internal Revenue Code of 1986, 26 U.S.C. $ 501c(4) that engages in lobbying activities.
+Assurances and Certifications
+Assurance signature: NOTE: Sign this form and include in the application.
+SIGNATURE: By signing this assurances page, you certify that you agree to perform all actions and support all
+intentions in the Assurances section.
+Organization Name:
+Program Name:
+Authorized Representative (name):
+Signature:
+Date:
+CERTIFICATION signature: NOTE: Sign this form and include in the application.
+Before you start: Before completing Certification, please read the Certification Instructions.
+SIGNATURE: By signing this Certification page, you certify that you agree to perform all actions and
+support all intentions in the Certification sections of this application. The three Certifications are:
+Certification: Debarment, Suspension and Other Responsibility Matters
+Certification: Drug-Free Workplace
+Certification: Lobbying Activities
+Legal Applicant:
+Program Name:
+Authorized Representative (name):
+Title of Authorized Representative:
+Signature:
+Date:
+36
+Supplementary Certifications
+As the duly authorized representative of the applicant, I certify on behalf of the applicant as follows:
+1. The applicant acknowledges that a portion of any funding to the applicant will be provided by the
+Commonwealth of Massachusetts under the terms of an AmeriCorps grant award between the Division of
+Career Services in Executive Office of Labor and Workforce Development (the "Division") of the
+Commonwealth of Massachusetts and Massachusetts Service Alliance, Inc. ("MSA") and that, as required
+under said grant award, funding to the applicant by MSA will be subject to the terms of that grant award and
+the Commonwealth Terms and Conditions as issued by the Executive Office for Administration and Finance,
+the Office of the Controller, and the Operational Services Division of the Commonwealth of Massachusetts.
+2. Without limitation of the foregoing, the applicant agrees to, and shall comply with, the following provisions
+if the applicant receives an AmeriCorps grant award from MSA:
+3. Confidentiality. The applicant shall comply with M.G.L. C. 66A if the applicant becomes a "holder" of
+"personal data". The applicant shall also protect the physical security and restrict any access to personal or
+other Division data in the applicant's possession, or used by the applicant in the performance of an
+AmeriCorps grant award, which shall include, but is not limited to the Division's public records, documents,
+files, software, equipment or systems.
+4. Record-keeping and Retention, Inspection of Records. The applicant shall maintain records, books, files and
+other data as specified in an AmeriCorps grant award and in such detail as shall properly substantiate claims
+for payment under an AmeriCorps grant award, for a minimum retention period of seven (7) years beginning
+on the first day after the final payment under a an AmeriCorps grant award, or such longer period as is
+necessary for the resolution of any litigation, claim, negotiation, audit or other inquiry involving a an
+AmeriCorps grant award. The Division and MSA shall have access, as well as any parties identified under
+Executive Order 195, during the applicant's regular business hours and upon reasonable prior notice, to such
+records, including on-site reviews and reproduction of such records at a reasonable expense.
+5. Assignment. The applicant may not assign or delegate, in whole or in part, or otherwise transfer any liability,
+responsibility, obligation, duty or interest under an AmeriCorps grant award, with the exception that the
+applicant shall be authorized to assign present and prospective claims for money due to the applicant
+pursuant to an AmeriCorps grant award in accordance with M.G.L. C. 106, 9-318. The applicant must
+provide sufficient notice of assignment and supporting documentation to enable MSA to verify and
+implement the assignment. Payments to third party assignees will be processed as if such payments were
+being made directly to the applicant, and these payments will be subject to intercept, offset, counterclaims
+or any other rights which are available to the Division or the Commonwealth of Massachusetts or MSA
+against the applicant.
+6. Subgrant by Applicant. Any subgrant entered into by the applicant for the purposes of fulfilling the
+obligations under an AmeriCorps grant award must be in writing, authorized in advance by MSA and
+consistent with and subject to the provisions of the AmeriCorps grant award. Subgrants will not relieve or
+discharge the applicant from any duty, obligation, responsibility or liability arising under an AmeriCorps grant
+award. MSA is entitled to copies of all subgrants and shall not be bound by any provisions contained in a
+subgrant to which it is not a party.
+7. Affirmative Action, Non-Discrimination in Hiring and Employment. The applicant shall comply with all federal
+and state laws, rules and regulations promoting fair employment practices or prohibiting employment
+discrimination and unfair labor practices and shall not discriminate in the hiring of any applicant for
+employment nor shall any qualified employee be demoted, discharged or otherwise subject to discrimination
+in the tenure, position, promotional opportunities, wages, benefits or terms and conditions of their
+employment because of race, color, national origin, ancestry, age, sex, religion, disability, handicap, sexual
+orientation or for exercising any rights afforded by law. The applicant commits to purchasing supplies and
+services from certified minority or women-owned businesses, small businesses or businesses owned by
+socially or economically disadvantaged persons or persons with disabilities.
+8. Indemnification. Unless otherwise exempted by law, the applicant shall indemnify and hold harmless the
+Commonwealth of Massachusetts, including the Division, MSA and their respective agents, officers and
+employees (collectively, the "Indemnitees") against any and all claims, liabilities, and costs for any personal
+37
+injury or property damages, patent or copyright infringement or other damages that any of the Indemnitees
+may sustain which arise out of or in connection with the applicant's performance of a an AmeriCorps grant
+award, including but not limited to the negligence, reckless or intentional conduct of the applicant, its
+agents, officers, employees or subcontractors. The applicant shall at no time be considered an agent or
+representative of the Division, the Commonwealth of Massachusetts or MSA. After prompt notification of a
+claim by any of the Indemnitees, the applicant shall have an opportunity to participate in the defense of such
+claim and any negotiated settlement agreement or judgment. Neither the Commonwealth of
+Massachusetts, nor the Division, nor MSA shall not be liable for any costs incurred by the applicant arising
+under this paragraph.
+9. Waivers. Forbearance or indulgence in any form or manner by the applicant or MSA shall not be construed
+as a waiver, nor in any way limit the legal or equitable remedies available to that party. No waiver by either
+party of any default or breach shall constitute a waiver of any subsequent default or breach.
+10. The applicant agrees that in the event that funding to MSA from the Division is modified or terminated so as
+to impair the ability of MSA to continue any funding to the applicant as awarded, MSA may upon notice to
+the applicant modify or terminate its funding to the applicant.
+Supplementary Certifications
+NOTE: Sign this form and include in the application.
+By signing this certification page, you certify that you agree on behalf of the applicant to comply with all
+Certifications.
+Organization Name:
+Program Name:
+Name and Title of Authorized Representative:
+Signature:
+Date:
+38

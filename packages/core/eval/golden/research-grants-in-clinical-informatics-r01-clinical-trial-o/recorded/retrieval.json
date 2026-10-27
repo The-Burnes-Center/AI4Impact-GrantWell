@@ -1,0 +1,1402 @@
+{
+ "1c98993a8505b676": {
+  "query": "resource sharing plan software dissemination open source",
+  "filter": "d9059046a70d4472",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applicants are also expected to demonstrate robust metrics for describing the scope, scale, and evaluation of use cases; well-defined strategies for benchmarking, validation, and comparison to existing methodologies; clear identification and mitigation of limitations, trade-offs, or risks; and sound plans to ensure product accuracy, ongoing maintenance, and effective communication of considerations for downstream use (see Factor 2&mdash;Rigor and Feasibility [Approach]). Resource Sharing Plan : Individuals are required to comply with the instructions for the Resource Sharing Plans as provided in the How to Apply - Application Guide . The following modifications also apply: Applicants are expected to include a general plan for timely dissemination and sharing of data and resources, e.g., code, widely, as appropriate, and consistent with achieving the goals of the program in concert with NIH and NLM policies. A software dissemination plan, with appropriate timelines, is expected to be included to meet the goals of this initiative. A major goal of this NOFO is the development of methods and tools that can transform the landscape of clinical informatics. Applicants should therefore include detailed plans for open dissemination of methods, software, and tools to the community such that they are readily usable and extensible, where applicable. These should be made freely available to biomedical researchers and educators. There is no prescribed license for software produced by applications responding to this announcement, but any software license selected by applicants should allow for unrestricted redistribution and modification of software. Methods, tools, and software should be well documented and where applicable made available via version-controlled public repositories. Where applicable, applicants should describe solutions for portable implementations to cloud computing environments. Solutions that enhance reproducibility when used by the community and ability of the community to integrate into automated pipelines should be emphasized. Any developed software should be freely available to biomedical researchers, curators, and educators in the non-profit sector, such as institutions of education, research institutions, and government laboratories. The terms of software availability should include the ability of outside researchers to modify the source code and to share modifications with other colleagues as well as with the investigators. The terms should also permit the dissemination and commercialization of enhanced or customized versions of the software, or incorporation of the software or pieces of it into other software packages. To preserve utility to the community, the software should be transferable such that another individual or team can continue development if the original investigators are unwilling or unable to do so."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.5344813,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AwbVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Resource sharing should focus on the following to ensure scalability and reusability: All applications, regardless of the amount of direct costs requested for any one year, should address a Data Management and Sharing Plan for the purpose of reusability. Software or other resources resulting from the research must include a plan for resource sharing the resources including coding methods and code editing upon post publication use. Data Management and Sharing Plans must be consistent with the funding agencys current Data Management & Sharing Policy. Considerations should be given to how and where data will be housed and shared with other researchers. Other Plan(s): All instructions in the How to Apply - Application Guide must be followed, with the following additional instructions: All applicants planning research (funded or conducted in whole or in part by NIH) that results in the generation of scientific data are required to comply with the instructions for the Data Management and Sharing Plan. All applications, regardless of the amount of direct costs requested for any one year, must address a Data Management and Sharing Plan. Appendix: Only limited Appendix materials are allowed. Follow all instructions for the Appendix as described in the How to Apply - Application Guide . No publications or other material, with the exception of blank questionnaires or blank surveys, may be included in the Appendix. PHS Human Subjects and Clinical Trials Information When involving human subjects research, clinical research, and/or NIH-defined clinical trials (and when applicable, clinical trials research experience) follow all instructions for the PHS Human Subjects and Clinical Trials Information form in the How to Apply- Application Guide , with the following additional instructions: If you answered Yes to the question Are Human Subjects Involved? on the R&R Other Project Information form, you must include at least one human subjects study record using the Study Record: PHS Human Subjects and Clinical Trials Information form or Delayed Onset Study record. Study Record: PHS Human Subjects and Clinical Trials Information All instructions in the How to Apply - Application Guide must be followed. Delayed Onset Study Note: Delayed onset does NOT apply to a study that can be described but will not start immediately (i.e., delayed start). All instructions in the How to Apply- Application Guide must be followed."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.376114,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AwrVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application and Submission Information 1. Requesting an Application Package The application forms package specific to this opportunity must be accessed through ASSIST, Grants.gov Workspace or an institutional system-to-system solution. Links to apply using ASSIST or Grants.gov Workspace are available in Part 1 of this NOFO. See your administrative office for instructions if you plan to use an institutional system-to-system solution. 2. Content and Form of Application Submission It is critical that applicants follow the instructions in the Research (R) Instructions in the How to Apply - Application Guide except where instructed in this notice of funding opportunity to do otherwise (in this NOFO, in a policy notice , or other notice from NIH Guide for Grants and Contracts ). Conformance to the requirements in the Application Guide is required and strictly enforced. Applications that are out of compliance with these instructions may be delayed or not accepted for review. Page Limitations All page limitations described in the How to Apply- Application Guide and the Table of Page Limits must be followed. Instructions for Application Submission The following section supplements the instructions found in the How to Apply- Application Guide and should be used for preparing an application to this NOFO. SF424(R&R) Cover All instructions in the How to Apply - Application Guide must be followed. SF424(R&R) Project/Performance Site Locations All instructions in the How to Apply- Application Guide must be followed. SF424(R&R) Other Project Information All instructions in the How to Apply- Application Guide must be followed. SF424(R&R) Senior/Key Person Profile All instructions in the How to Apply- Application Guide must be followed. R&R or Modular Budget All instructions in the How to Apply- Application Guide must be followed. R&R Subaward Budget All instructions in the How to Apply - Application Guide must be followed. PHS 398 Cover Page Supplement All instructions in the How to Apply - Application Guide must be followed. PHS 398 Research Plan All instructions in the How to Apply - Application Guide must be followed, with the following additional instructions: Applicants are also expected to demonstrate the potential for scalability and generalizability of the proposed tool or approach beyond the specific use case, including how proposed innovations could enhance applicability and adoption across diverse biomedical domains and settings (see Factor 1&mdash;Importance of the Research [Significance and Innovation])."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2171264,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AwLVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Law 114-113, 6 USC &#x00a7; 1533(d), the HHS Secretary has established a common set of voluntary, consensus-based, and industry-led guidelines, best practices, methodologies, procedures, and processes. Successful recipients under this NOFO agree that: When recipients, subrecipients, or third-party entities have: ongoing and consistent access to HHS owned or operated information or operational technology systems; and receive, maintain, transmit, store, access, exchange, process, or utilize personal identifiable information (PII) or personal health information (PHI) obtained from the awarding HHS agency for the purposes of executing the award. Recipients shall develop plans and procedures, modeled after the NIST Cybersecurity framework , to protect HHS systems and data. Please refer to NIH Post-Award Monitoring and Reporting for additional information. Cooperative Agreement Terms and Conditions of Award Not Applicable 3. Data Management and Sharing Consistent with the 2023 NIH Policy for Data Management and Sharing, when data management and sharing is applicable to the award, recipients will be required to adhere to the Data Management and Sharing requirements as outlined in the NIH Grants Policy Statement . Upon the approval of a Data Management and Sharing Plan, it is required for recipients to implement the plan as described. 4. Reporting When multiple years are involved, recipients will be required to submit the Research Performance Progress Report (RPPR) annually and financial statements as required in the NIH Grants Policy Statement Section 8.4.1 Reporting. To learn more about post-award monitoring and reporting, see the NIH Grants & Funding website, see Post-Award Monitoring and Reporting . A final RPPR, invention statement, and the expenditure data portion of the Federal Financial Report are required for closeout of an award, as described in the NIH Grants Policy Statement Section 8.6 Closeout . NIH NOFOs outline intended research goals and objectives. Post award, NIH will review and measure performance based on the details and outcomes that are shared within the RPPR, as described at 2 CFR Part 200.301. Section VII."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2163405,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A0LVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Overview Information Key Dates Part 2. Full Text of Announcement Section I. Notice of Funding Opportunity Description Section II. Award Information Section III. Eligibility Information Section IV. Application and Submission Information Section V. Application Review Information Section VI. Award Administration Information Section VII. Agency Contacts Section VIII. Other Information Part 2."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.179622,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AtrVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If the PD/PI is also the organizational Signing Official, they must have two distinct eRA Commons accounts, one for each role. Obtaining an eRA Commons account can take up to 2 weeks. Eligible Individuals (Program Director/Principal Investigator) Any individual(s) with the skills, knowledge, and resources necessary to carry out the proposed research as the Program Director(s)/Principal Investigator(s) (PD(s)/PI(s)) is invited to work with their organization to develop an application for support. For institutions/organizations proposing multiple PDs/PIs, visit the Multiple Program Director/Principal Investigator Policy and submission details in the Senior/Key Person Profile (Expanded) Component of the How to Apply-Application Guide. 2. Cost Sharing This NOFO does not require cost sharing as defined in the NIH Grants Policy Statement Section 1.2 Definition of Terms . 3. Additional Information on Eligibility Number of Applications Applicant organizations may submit more than one application, provided that each application is scientifically distinct. The NIH will not accept duplicate or highly overlapping applications under review at the same time, per NIH Grants Policy Statement Section 2.3.7.4 Submission of Resubmission Application . This means that the NIH will not accept: A new (A0) application that is submitted before issuance of the summary statement from the review of an overlapping new (A0) or resubmission (A1) application. A resubmission (A1) application that is submitted before issuance of the summary statement from the review of the previous new (A0) application. An application that has substantial overlap with another application pending appeal of initial peer review (see NIH Grants Policy Statement 2.3.9.4 Similar, Essentially Identical, or Identical Applications ). Section IV."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1672174,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Av7VXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "N, &#x00a7; 405, Pub."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1406469,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Az7VXYKEBbayybwJOCOnR"
+    }
+   }
+  ]
+ },
+ "4655b253a3de2836": {
+  "query": "software development plan requirements application",
+  "filter": "7be5d1b67532bc4b",
+  "retrievalResults": []
+ },
+ "4a2a54f60760fb02": {
+  "query": "software sharing plan",
+  "filter": "d9059046a70d4472",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applicants are also expected to demonstrate robust metrics for describing the scope, scale, and evaluation of use cases; well-defined strategies for benchmarking, validation, and comparison to existing methodologies; clear identification and mitigation of limitations, trade-offs, or risks; and sound plans to ensure product accuracy, ongoing maintenance, and effective communication of considerations for downstream use (see Factor 2&mdash;Rigor and Feasibility [Approach]). Resource Sharing Plan : Individuals are required to comply with the instructions for the Resource Sharing Plans as provided in the How to Apply - Application Guide . The following modifications also apply: Applicants are expected to include a general plan for timely dissemination and sharing of data and resources, e.g., code, widely, as appropriate, and consistent with achieving the goals of the program in concert with NIH and NLM policies. A software dissemination plan, with appropriate timelines, is expected to be included to meet the goals of this initiative. A major goal of this NOFO is the development of methods and tools that can transform the landscape of clinical informatics. Applicants should therefore include detailed plans for open dissemination of methods, software, and tools to the community such that they are readily usable and extensible, where applicable. These should be made freely available to biomedical researchers and educators. There is no prescribed license for software produced by applications responding to this announcement, but any software license selected by applicants should allow for unrestricted redistribution and modification of software. Methods, tools, and software should be well documented and where applicable made available via version-controlled public repositories. Where applicable, applicants should describe solutions for portable implementations to cloud computing environments. Solutions that enhance reproducibility when used by the community and ability of the community to integrate into automated pipelines should be emphasized. Any developed software should be freely available to biomedical researchers, curators, and educators in the non-profit sector, such as institutions of education, research institutions, and government laboratories. The terms of software availability should include the ability of outside researchers to modify the source code and to share modifications with other colleagues as well as with the investigators. The terms should also permit the dissemination and commercialization of enhanced or customized versions of the software, or incorporation of the software or pieces of it into other software packages. To preserve utility to the community, the software should be transferable such that another individual or team can continue development if the original investigators are unwilling or unable to do so."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.5272727,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AwbVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Resource sharing should focus on the following to ensure scalability and reusability: All applications, regardless of the amount of direct costs requested for any one year, should address a Data Management and Sharing Plan for the purpose of reusability. Software or other resources resulting from the research must include a plan for resource sharing the resources including coding methods and code editing upon post publication use. Data Management and Sharing Plans must be consistent with the funding agencys current Data Management & Sharing Policy. Considerations should be given to how and where data will be housed and shared with other researchers. Other Plan(s): All instructions in the How to Apply - Application Guide must be followed, with the following additional instructions: All applicants planning research (funded or conducted in whole or in part by NIH) that results in the generation of scientific data are required to comply with the instructions for the Data Management and Sharing Plan. All applications, regardless of the amount of direct costs requested for any one year, must address a Data Management and Sharing Plan. Appendix: Only limited Appendix materials are allowed. Follow all instructions for the Appendix as described in the How to Apply - Application Guide . No publications or other material, with the exception of blank questionnaires or blank surveys, may be included in the Appendix. PHS Human Subjects and Clinical Trials Information When involving human subjects research, clinical research, and/or NIH-defined clinical trials (and when applicable, clinical trials research experience) follow all instructions for the PHS Human Subjects and Clinical Trials Information form in the How to Apply- Application Guide , with the following additional instructions: If you answered Yes to the question Are Human Subjects Involved? on the R&R Other Project Information form, you must include at least one human subjects study record using the Study Record: PHS Human Subjects and Clinical Trials Information form or Delayed Onset Study record. Study Record: PHS Human Subjects and Clinical Trials Information All instructions in the How to Apply - Application Guide must be followed. Delayed Onset Study Note: Delayed onset does NOT apply to a study that can be described but will not start immediately (i.e., delayed start). All instructions in the How to Apply- Application Guide must be followed."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4278448,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AwrVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Law 114-113, 6 USC &#x00a7; 1533(d), the HHS Secretary has established a common set of voluntary, consensus-based, and industry-led guidelines, best practices, methodologies, procedures, and processes. Successful recipients under this NOFO agree that: When recipients, subrecipients, or third-party entities have: ongoing and consistent access to HHS owned or operated information or operational technology systems; and receive, maintain, transmit, store, access, exchange, process, or utilize personal identifiable information (PII) or personal health information (PHI) obtained from the awarding HHS agency for the purposes of executing the award. Recipients shall develop plans and procedures, modeled after the NIST Cybersecurity framework , to protect HHS systems and data. Please refer to NIH Post-Award Monitoring and Reporting for additional information. Cooperative Agreement Terms and Conditions of Award Not Applicable 3. Data Management and Sharing Consistent with the 2023 NIH Policy for Data Management and Sharing, when data management and sharing is applicable to the award, recipients will be required to adhere to the Data Management and Sharing requirements as outlined in the NIH Grants Policy Statement . Upon the approval of a Data Management and Sharing Plan, it is required for recipients to implement the plan as described. 4. Reporting When multiple years are involved, recipients will be required to submit the Research Performance Progress Report (RPPR) annually and financial statements as required in the NIH Grants Policy Statement Section 8.4.1 Reporting. To learn more about post-award monitoring and reporting, see the NIH Grants & Funding website, see Post-Award Monitoring and Reporting . A final RPPR, invention statement, and the expenditure data portion of the Federal Financial Report are required for closeout of an award, as described in the NIH Grants Policy Statement Section 8.6 Closeout . NIH NOFOs outline intended research goals and objectives. Post award, NIH will review and measure performance based on the details and outcomes that are shared within the RPPR, as described at 2 CFR Part 200.301. Section VII."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2604771,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A0LVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application and Submission Information 1. Requesting an Application Package The application forms package specific to this opportunity must be accessed through ASSIST, Grants.gov Workspace or an institutional system-to-system solution. Links to apply using ASSIST or Grants.gov Workspace are available in Part 1 of this NOFO. See your administrative office for instructions if you plan to use an institutional system-to-system solution. 2. Content and Form of Application Submission It is critical that applicants follow the instructions in the Research (R) Instructions in the How to Apply - Application Guide except where instructed in this notice of funding opportunity to do otherwise (in this NOFO, in a policy notice , or other notice from NIH Guide for Grants and Contracts ). Conformance to the requirements in the Application Guide is required and strictly enforced. Applications that are out of compliance with these instructions may be delayed or not accepted for review. Page Limitations All page limitations described in the How to Apply- Application Guide and the Table of Page Limits must be followed. Instructions for Application Submission The following section supplements the instructions found in the How to Apply- Application Guide and should be used for preparing an application to this NOFO. SF424(R&R) Cover All instructions in the How to Apply - Application Guide must be followed. SF424(R&R) Project/Performance Site Locations All instructions in the How to Apply- Application Guide must be followed. SF424(R&R) Other Project Information All instructions in the How to Apply- Application Guide must be followed. SF424(R&R) Senior/Key Person Profile All instructions in the How to Apply- Application Guide must be followed. R&R or Modular Budget All instructions in the How to Apply- Application Guide must be followed. R&R Subaward Budget All instructions in the How to Apply - Application Guide must be followed. PHS 398 Cover Page Supplement All instructions in the How to Apply - Application Guide must be followed. PHS 398 Research Plan All instructions in the How to Apply - Application Guide must be followed, with the following additional instructions: Applicants are also expected to demonstrate the potential for scalability and generalizability of the proposed tool or approach beyond the specific use case, including how proposed innovations could enhance applicability and adoption across diverse biomedical domains and settings (see Factor 1&mdash;Importance of the Research [Significance and Innovation])."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1794075,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AwLVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If the PD/PI is also the organizational Signing Official, they must have two distinct eRA Commons accounts, one for each role. Obtaining an eRA Commons account can take up to 2 weeks. Eligible Individuals (Program Director/Principal Investigator) Any individual(s) with the skills, knowledge, and resources necessary to carry out the proposed research as the Program Director(s)/Principal Investigator(s) (PD(s)/PI(s)) is invited to work with their organization to develop an application for support. For institutions/organizations proposing multiple PDs/PIs, visit the Multiple Program Director/Principal Investigator Policy and submission details in the Senior/Key Person Profile (Expanded) Component of the How to Apply-Application Guide. 2. Cost Sharing This NOFO does not require cost sharing as defined in the NIH Grants Policy Statement Section 1.2 Definition of Terms . 3. Additional Information on Eligibility Number of Applications Applicant organizations may submit more than one application, provided that each application is scientifically distinct. The NIH will not accept duplicate or highly overlapping applications under review at the same time, per NIH Grants Policy Statement Section 2.3.7.4 Submission of Resubmission Application . This means that the NIH will not accept: A new (A0) application that is submitted before issuance of the summary statement from the review of an overlapping new (A0) or resubmission (A1) application. A resubmission (A1) application that is submitted before issuance of the summary statement from the review of the previous new (A0) application. An application that has substantial overlap with another application pending appeal of initial peer review (see NIH Grants Policy Statement 2.3.9.4 Similar, Essentially Identical, or Identical Applications ). Section IV."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1706014,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Av7VXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Eligibility Information 1. Eligible Applicants Eligible Organizations Higher Education Institutions - Includes all types Public/State Controlled Institutions of Higher Education Private Institutions of Higher Education Nonprofits Other Than Institutions of Higher Education Nonprofits with 501(c)(3) IRS Status (Other than Institutions of Higher Education) Nonprofits without 501(c)(3) IRS Status (Other than Institutions of Higher Education) For-Profit Organizations Small Businesses For-Profit Organizations (Other than Small Businesses) Local Governments State Governments County Governments City or Township Governments Special District Governments Indian/Native American Tribal Governments (Federally Recognized) Indian/Native American Tribal Governments (Other than Federally Recognized). Federal Governments Eligible Agencies of the Federal Government U.S. Territory or Possession Other Independent School Districts Public Housing Authorities/Indian Housing Authorities Native American Tribal Organizations (other than Federally recognized tribal governments) Faith-based or Community-based Organizations Regional Organizations Non-domestic (non-U.S.) Entities (Foreign Organizations) Foreign Organizations/ International Collaborations NIH will no longer issue awards (new, renewal, or non-competing continuation) to domestic or foreign entities that involve foreign subawards/subcontracts. All NIH-funded research involving foreign subawards/subcontracts must be submitted in response to a NOFO that is specifically designated for funded international collaborations. This new requirement was effective, May 1, 2025. Applications involving foreign subawards/subcontracts submitted in response to this NOFO will be deemed noncompliant and will not be considered for funding. This policy applies to all monetary international collaborations resulting in foreign subawards/subcontracts, however, it does not preclude unfunded international collaborations or foreign components , funding for foreign consultants, or procurement of unique equipment or supplies from foreign vendors. Foreign Organizations/International Collaborations Non-domestic (non-U.S.) Entities (Foreign Organizations) are eligible to apply. Non-domestic (non-U.S.) components of U.S. Organizations are eligible to apply. Foreign components, as defined in the NIH Grants Policy Statement , are allowed. NIH will no longer issue awards (i.e., new, renewal, or non-competing continuation) to domestic or foreign entities that involve foreign subawards/subcontracts. All NIH-funded research involving foreign subawards/subcontracts must be submitted in response to a NOFO that is specifically designated for funded international collaborations. This new requirement was effective, May 1, 2025."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1423656,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AvbVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "NIH will consider any comments by the applicant in the Responsibility/Qualification records in SAM.gov to ascertain the applicants integrity, business ethics, and performance record of managing Federal awards per 2 CFR Part 200.206 Federal awarding agency review of risk posed by applicants. This provision will apply to all NIH grants and cooperative agreements except fellowships. 3. Anticipated Announcement and Award Dates After the peer review of the application is completed, the PD/PI will be able to access his or her Summary Statement (written critique) via the eRA Commons . Refer to Part 1 for dates for peer review, advisory council review, and earliest start date. Information regarding the disposition of applications is available in the NIH Grants Policy Statement Section 2.4.4 Disposition of Applications . Section VI."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1395445,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AzLVXYKEBbayybwJOCOnR"
+    }
+   }
+  ]
+ },
+ "517ff06b4433ac98": {
+  "query": "award ceiling and project period budget limits",
+  "filter": "7be5d1b67532bc4b",
+  "retrievalResults": []
+ },
+ "66cc7174398208d1": {
+  "query": "software development plan requirements application",
+  "filter": "d9059046a70d4472",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applicants are also expected to demonstrate robust metrics for describing the scope, scale, and evaluation of use cases; well-defined strategies for benchmarking, validation, and comparison to existing methodologies; clear identification and mitigation of limitations, trade-offs, or risks; and sound plans to ensure product accuracy, ongoing maintenance, and effective communication of considerations for downstream use (see Factor 2&mdash;Rigor and Feasibility [Approach]). Resource Sharing Plan : Individuals are required to comply with the instructions for the Resource Sharing Plans as provided in the How to Apply - Application Guide . The following modifications also apply: Applicants are expected to include a general plan for timely dissemination and sharing of data and resources, e.g., code, widely, as appropriate, and consistent with achieving the goals of the program in concert with NIH and NLM policies. A software dissemination plan, with appropriate timelines, is expected to be included to meet the goals of this initiative. A major goal of this NOFO is the development of methods and tools that can transform the landscape of clinical informatics. Applicants should therefore include detailed plans for open dissemination of methods, software, and tools to the community such that they are readily usable and extensible, where applicable. These should be made freely available to biomedical researchers and educators. There is no prescribed license for software produced by applications responding to this announcement, but any software license selected by applicants should allow for unrestricted redistribution and modification of software. Methods, tools, and software should be well documented and where applicable made available via version-controlled public repositories. Where applicable, applicants should describe solutions for portable implementations to cloud computing environments. Solutions that enhance reproducibility when used by the community and ability of the community to integrate into automated pipelines should be emphasized. Any developed software should be freely available to biomedical researchers, curators, and educators in the non-profit sector, such as institutions of education, research institutions, and government laboratories. The terms of software availability should include the ability of outside researchers to modify the source code and to share modifications with other colleagues as well as with the investigators. The terms should also permit the dissemination and commercialization of enhanced or customized versions of the software, or incorporation of the software or pieces of it into other software packages. To preserve utility to the community, the software should be transferable such that another individual or team can continue development if the original investigators are unwilling or unable to do so."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3346939,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AwbVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application and Submission Information 1. Requesting an Application Package The application forms package specific to this opportunity must be accessed through ASSIST, Grants.gov Workspace or an institutional system-to-system solution. Links to apply using ASSIST or Grants.gov Workspace are available in Part 1 of this NOFO. See your administrative office for instructions if you plan to use an institutional system-to-system solution. 2. Content and Form of Application Submission It is critical that applicants follow the instructions in the Research (R) Instructions in the How to Apply - Application Guide except where instructed in this notice of funding opportunity to do otherwise (in this NOFO, in a policy notice , or other notice from NIH Guide for Grants and Contracts ). Conformance to the requirements in the Application Guide is required and strictly enforced. Applications that are out of compliance with these instructions may be delayed or not accepted for review. Page Limitations All page limitations described in the How to Apply- Application Guide and the Table of Page Limits must be followed. Instructions for Application Submission The following section supplements the instructions found in the How to Apply- Application Guide and should be used for preparing an application to this NOFO. SF424(R&R) Cover All instructions in the How to Apply - Application Guide must be followed. SF424(R&R) Project/Performance Site Locations All instructions in the How to Apply- Application Guide must be followed. SF424(R&R) Other Project Information All instructions in the How to Apply- Application Guide must be followed. SF424(R&R) Senior/Key Person Profile All instructions in the How to Apply- Application Guide must be followed. R&R or Modular Budget All instructions in the How to Apply- Application Guide must be followed. R&R Subaward Budget All instructions in the How to Apply - Application Guide must be followed. PHS 398 Cover Page Supplement All instructions in the How to Apply - Application Guide must be followed. PHS 398 Research Plan All instructions in the How to Apply - Application Guide must be followed, with the following additional instructions: Applicants are also expected to demonstrate the potential for scalability and generalizability of the proposed tool or approach beyond the specific use case, including how proposed innovations could enhance applicability and adoption across diverse biomedical domains and settings (see Factor 1&mdash;Importance of the Research [Significance and Innovation])."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2595067,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AwLVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Resource sharing should focus on the following to ensure scalability and reusability: All applications, regardless of the amount of direct costs requested for any one year, should address a Data Management and Sharing Plan for the purpose of reusability. Software or other resources resulting from the research must include a plan for resource sharing the resources including coding methods and code editing upon post publication use. Data Management and Sharing Plans must be consistent with the funding agencys current Data Management & Sharing Policy. Considerations should be given to how and where data will be housed and shared with other researchers. Other Plan(s): All instructions in the How to Apply - Application Guide must be followed, with the following additional instructions: All applicants planning research (funded or conducted in whole or in part by NIH) that results in the generation of scientific data are required to comply with the instructions for the Data Management and Sharing Plan. All applications, regardless of the amount of direct costs requested for any one year, must address a Data Management and Sharing Plan. Appendix: Only limited Appendix materials are allowed. Follow all instructions for the Appendix as described in the How to Apply - Application Guide . No publications or other material, with the exception of blank questionnaires or blank surveys, may be included in the Appendix. PHS Human Subjects and Clinical Trials Information When involving human subjects research, clinical research, and/or NIH-defined clinical trials (and when applicable, clinical trials research experience) follow all instructions for the PHS Human Subjects and Clinical Trials Information form in the How to Apply- Application Guide , with the following additional instructions: If you answered Yes to the question Are Human Subjects Involved? on the R&R Other Project Information form, you must include at least one human subjects study record using the Study Record: PHS Human Subjects and Clinical Trials Information form or Delayed Onset Study record. Study Record: PHS Human Subjects and Clinical Trials Information All instructions in the How to Apply - Application Guide must be followed. Delayed Onset Study Note: Delayed onset does NOT apply to a study that can be described but will not start immediately (i.e., delayed start). All instructions in the How to Apply- Application Guide must be followed."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2481933,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AwrVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application Review Information 1."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.226783,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ax7VXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Automate administrative processes and reduce workforce burden and burnout. Research Objectives Research approaches should foster data-driven discovery to accomplish NLM mission-related goals. Additionally, the following expectations should be addressed in all applications: Research should exemplify scientific rigor, feasibility, technological innovation, and the potential for significant impact across biomedical and clinical domains. Outputs should be transformative and generalizable across diseases and biological systems; use of specific biological systems may be permissible for proof-of-concept and initial methodology development, but applicants must demonstrate broad applicability beyond that. Products should be durable with the potential to inform and advance further research. Intended use cases must be clearly stated and evaluated, with approaches expected to be wide-reaching. Detailed descriptions of approaches are expected, with metrics provided for the scope and scale of the study. Improvements over comparable existing approaches must be documented, and any limitations, trade-offs or risks resulting from the proposed innovative approach must be described and addressed. Applicants must describe a plan to account for accuracy of the product(s), to maintain the product(s), and to capture and communicate considerations for downstream use. All awardees are expected to widely disseminate the results of their research, including software products, datasets, resources and platforms. For applications that incorporate the aggregation of public or non-controlled-access data, applicants are expected to address methods for mitigating privacy concerns that may arise from such aggregated data. Privacy protections for human subjects are expected to be long-term and must extend beyond the funding period. Applications Not Responsive to this NOFO The following types of projects will be considered non-responsive to the scope of NLMs Research Grants in Clinical Informatics program: Projects that do not align with current NIH or Department of Health and Human Services priorities, including projects that partially incorporate non-aligning activities. Projects not centrally focused on, or not clearly pertaining to, clinical informatics. Projects focused on social determinants of health (SDOH), or ethical, legal and social issues (ELSI). Projects that duplicate NLM products and databases. Projects that do not produce open-access datasets, methods, resources or tools. Projects focused on mere incremental improvements of, or on the maintenance of, existing tools, resources or platforms; significant innovation and advancement is expected from this initiative. Projects with most of the effort devoted to experimental research; only a small portion of the budget may be permitted for experimental validation of computational approaches. Projects narrowly focused on specific diseases and with limited potential to yield broadly applicable tools. Non-responsive applications will not be reviewed."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1814245,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AubVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applicants must read and follow all application instructions in the Application Guide as well as any program-specific instructions noted in Section IV. When the program-specific instructions deviate from those in the Application Guide, follow the program-specific instructions. Applications that do not comply with these instructions may be delayed or not accepted for review. There are several options available to submit your application through Grants.gov to NIH and Department of Health and Human Services partners. You must use one of these submission options to access the application forms for this opportunity. Use the NIH ASSIST system to prepare, submit and track your application online. Use an institutional system-to-system (S2S) solution to prepare and submit your application to Grants.gov and eRA Commons to track your application. Check with your institutional officials regarding availability. Use Grants.gov Workspace to prepare and submit your application and eRA Commons to track your application. Table of Contents Part 1."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1536932,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AtbVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Resubmissions As applicable, evaluate the full application as now presented. Renewals As applicable, evaluate the progress made in the last funding period. Revisions As applicable, evaluate the appropriateness of the proposed expansion of the scope of the project. Additional Review Considerations As applicable for the project proposed, reviewers will consider each of the following items, but will not give scores for these items, and should not consider them in providing an overall impact score. Authentication of Key Biological and/or Chemical Resources For projects involving key biological and/or chemical resources, evaluate the brief plans proposed for identifying and ensuring the validity of those resources. Budget and Period of Support Evaluate whether the budget and the requested period of support are fully justified and reasonable in relation to the proposed research. 2. Review and Selection Process Applications will be evaluated for scientific and technical merit by (an) appropriate Scientific Review Group(s), convened by CSR, in accordance with NIH peer review policies and practices , using the stated review criteria. Assignment to a Scientific Review Group will be shown in the eRA Commons. As part of the scientific peer review, all applications will receive a written critique. Applications may undergo a selection process in which only those applications deemed to have the highest scientific and technical merit (generally the top half of applications under review) will be discussed and assigned an overall impact score. Applications will be assigned on the basis of established PHS referral guidelines to the appropriate NIH Institute or Center. Applications will compete for available funds with all other recommended applications. Following initial peer review, recommended applications will receive a second level of review by the NLM Board of Regents. The following will be considered in making funding decisions: Scientific and technical merit of the proposed project as determined by scientific peer review. Availability of funds. Relevance of the proposed project to program priorities. If the application is under consideration for funding, NIH will request \"just-in-time\" information from the applicant as described in the NIH Grants Policy Statement Section 2.5.1. Just-in-Time Procedures . This request is not a Notice of Award nor should it be construed to be an indicator of possible funding. Prior to making an award, NIH reviews an applicants federal award history in SAM.gov to ensure sound business practices. An applicant can review and comment on any information in the Responsibility/Qualification records available in SAM.gov."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1399972,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ay7VXYKEBbayybwJOCOnR"
+    }
+   }
+  ]
+ },
+ "6f6a083e79b2a58c": {
+  "query": "application due date submission deadline",
+  "filter": "7be5d1b67532bc4b",
+  "retrievalResults": []
+ },
+ "9c23275bf07965a1": {
+  "query": "software sharing plan",
+  "filter": "7be5d1b67532bc4b",
+  "retrievalResults": []
+ },
+ "b22a7e0378ac2dd2": {
+  "query": "application due date submission deadline",
+  "filter": "d9059046a70d4472",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applicants are encouraged to submit applications before the due date to ensure they have time to make any application corrections that might be necessary for successful submission. When a submission date falls on a weekend or Federal holiday , the application deadline is automatically extended to the next business day. Organizations must submit applications to Grants.gov (the online portal to find and apply for grants across all Federal agencies). Applicants must then complete the submission process by tracking the status of the application in the eRA Commons , NIHs electronic system for grants administration. NIH and Grants.gov systems check the application against many of the application instructions upon submission. Errors must be corrected and a changed/corrected application must be submitted to Grants.gov on or before the application due date and time. If a Changed/Corrected application is submitted after the deadline, the application will be considered late. Applications that miss the due date and time are subjected to the NIH Grants Policy Statement Section 2.3.9.2 Electronically Submitted Applications . Applicants are responsible for viewing their application before the due date in the eRA Commons to ensure accurate and successful submission. Information on the submission process and a definition of on-time submission are provided in the How to Apply-Application Guide. 5. Intergovernmental Review (E.O. 12372) This initiative is not subject to intergovernmental review. 6. Funding Restrictions All NIH awards are subject to the terms and conditions, cost principles, and other considerations described in the NIH Grants Policy Statement . Pre-award costs are allowable only as described in the NIH Grants Policy Statement Section 7.9.1 Selected Items of Cost. 7. Other Submission Requirements and Information Applications must be submitted electronically following the instructions described in the How to Apply Application Guide. Paper applications will not be accepted. Applicants must complete all required registrations before the application due date. Section III. Eligibility Information contains information about registration. For assistance with your electronic application or for more information on the electronic submission process, visit How to Apply &ndash; Application Guide . If you encounter a system issue beyond your control that threatens your ability to complete the submission process on-time, you must follow the Dealing with System Issues guidance. For assistance with application submission, contact the Application Submission Contacts in Section VII. Important reminders: All PD(s)/PI(s) must include their eRA Commons ID in the Credential field of the Senior/Key Person Profile form ."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4435762,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AxLVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application Due Dates Review and Award Cycles New Renewal / Resubmission / Revision (as allowed) AIDS - New/Renewal/Resubmission/Revision, as allowed Scientific Merit Review Advisory Council Review Earliest Start Date June 05, 2026 * July 05, 2026 * Not Applicable November 2026 January 2027 April 2027 October 05, 2026 * November 05, 2026 * Not Applicable March 2027 May 2027 July 2027 February 05, 2027 * March 05, 2027 * Not Applicable July 2027 October 2027 December 2027 June 05, 2027 * July 05, 2027 * Not Applicable November 2027 January 2028 April 2028 October 05, 2027 * November 05, 2027 * Not Applicable March 2028 May 2028 July 2028 February 05, 2028 * March 05, 2028 * Not Applicable July 2028 October 2028 December 2028 June 05, 2028 * July 05, 2028 * Not Applicable November 2028 January 2029 April 2029 October 05, 2028 * November 05, 2028 * Not Applicable March 2029 May 2029 July 2029 February 05, 2029 * March 05, 2029 * Not Applicable July 2029 October 2029 December 2029 All applications are due by 5:00 PM local time of applicant organization. Applicants are encouraged to apply early to allow adequate time to make any corrections to errors found in the application during the submission process by the due date. Due Dates for E.O. 12372 Not Applicable Expiration Date March 06, 2029 Required Application Instructions It is critical that applicants follow the instructions in the Research (R) Instructions in the How to Apply - Application Guide , except where instructed to do otherwise (in this NOFO or in a Notice from NIH Guide for Grants and Contracts ). Conformance to all requirements (both in the Application Guide and the NOFO) is required and strictly enforced."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4011719,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AtLVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application Review Information 1."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2673507,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ax7VXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "NIH will consider any comments by the applicant in the Responsibility/Qualification records in SAM.gov to ascertain the applicants integrity, business ethics, and performance record of managing Federal awards per 2 CFR Part 200.206 Federal awarding agency review of risk posed by applicants. This provision will apply to all NIH grants and cooperative agreements except fellowships. 3. Anticipated Announcement and Award Dates After the peer review of the application is completed, the PD/PI will be able to access his or her Summary Statement (written critique) via the eRA Commons . Refer to Part 1 for dates for peer review, advisory council review, and earliest start date. Information regarding the disposition of applications is available in the NIH Grants Policy Statement Section 2.4.4 Disposition of Applications . Section VI."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2627312,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AzLVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "See more tips for avoiding common errors. Upon receipt, applications will be evaluated for completeness and compliance with application instructions by the Center for Scientific Review and responsiveness by components of participating organizations, NIH. Applications that are incomplete, non-compliant and/or nonresponsive will not be reviewed. Mandatory Disclosure Recipients or subrecipients must submit any information related to violations of federal criminal law involving fraud, bribery, or gratuity violations potentially affecting the federal award. See Mandatory Disclosures, 2 CFR 200.113 and NIH Grants Policy Statement Section 4.1.35 . Send written disclosures to the NIH Chief Grants Management Officer listed on the Notice of Award for the IC that funded the award and to the HHS Office of Inspector Grant Self Disclosure Program at grantdisclosures@oig.hhs.gov . Post Submission Materials Applicants are required to follow the instructions for post-submission materials, as described in the policy Section V."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2559175,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AxrVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applicants must read and follow all application instructions in the Application Guide as well as any program-specific instructions noted in Section IV. When the program-specific instructions deviate from those in the Application Guide, follow the program-specific instructions. Applications that do not comply with these instructions may be delayed or not accepted for review. There are several options available to submit your application through Grants.gov to NIH and Department of Health and Human Services partners. You must use one of these submission options to access the application forms for this opportunity. Use the NIH ASSIST system to prepare, submit and track your application online. Use an institutional system-to-system (S2S) solution to prepare and submit your application to Grants.gov and eRA Commons to track your application. Check with your institutional officials regarding availability. Use Grants.gov Workspace to prepare and submit your application and eRA Commons to track your application. Table of Contents Part 1."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2407116,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AtbVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application and Submission Information 1. Requesting an Application Package The application forms package specific to this opportunity must be accessed through ASSIST, Grants.gov Workspace or an institutional system-to-system solution. Links to apply using ASSIST or Grants.gov Workspace are available in Part 1 of this NOFO. See your administrative office for instructions if you plan to use an institutional system-to-system solution. 2. Content and Form of Application Submission It is critical that applicants follow the instructions in the Research (R) Instructions in the How to Apply - Application Guide except where instructed in this notice of funding opportunity to do otherwise (in this NOFO, in a policy notice , or other notice from NIH Guide for Grants and Contracts ). Conformance to the requirements in the Application Guide is required and strictly enforced. Applications that are out of compliance with these instructions may be delayed or not accepted for review. Page Limitations All page limitations described in the How to Apply- Application Guide and the Table of Page Limits must be followed. Instructions for Application Submission The following section supplements the instructions found in the How to Apply- Application Guide and should be used for preparing an application to this NOFO. SF424(R&R) Cover All instructions in the How to Apply - Application Guide must be followed. SF424(R&R) Project/Performance Site Locations All instructions in the How to Apply- Application Guide must be followed. SF424(R&R) Other Project Information All instructions in the How to Apply- Application Guide must be followed. SF424(R&R) Senior/Key Person Profile All instructions in the How to Apply- Application Guide must be followed. R&R or Modular Budget All instructions in the How to Apply- Application Guide must be followed. R&R Subaward Budget All instructions in the How to Apply - Application Guide must be followed. PHS 398 Cover Page Supplement All instructions in the How to Apply - Application Guide must be followed. PHS 398 Research Plan All instructions in the How to Apply - Application Guide must be followed, with the following additional instructions: Applicants are also expected to demonstrate the potential for scalability and generalizability of the proposed tool or approach beyond the specific use case, including how proposed innovations could enhance applicability and adoption across diverse biomedical domains and settings (see Factor 1&mdash;Importance of the Research [Significance and Innovation])."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.20367,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AwLVXYKEBbayybwJOCOnR"
+    }
+   }
+  ]
+ },
+ "bc3955a815dabb8c": {
+  "query": "maximum annual budget direct costs per year",
+  "filter": "7be5d1b67532bc4b",
+  "retrievalResults": []
+ },
+ "cdac0369f575f763": {
+  "query": "key dates receipt dates council review earliest start date",
+  "filter": "d9059046a70d4472",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application Due Dates Review and Award Cycles New Renewal / Resubmission / Revision (as allowed) AIDS - New/Renewal/Resubmission/Revision, as allowed Scientific Merit Review Advisory Council Review Earliest Start Date June 05, 2026 * July 05, 2026 * Not Applicable November 2026 January 2027 April 2027 October 05, 2026 * November 05, 2026 * Not Applicable March 2027 May 2027 July 2027 February 05, 2027 * March 05, 2027 * Not Applicable July 2027 October 2027 December 2027 June 05, 2027 * July 05, 2027 * Not Applicable November 2027 January 2028 April 2028 October 05, 2027 * November 05, 2027 * Not Applicable March 2028 May 2028 July 2028 February 05, 2028 * March 05, 2028 * Not Applicable July 2028 October 2028 December 2028 June 05, 2028 * July 05, 2028 * Not Applicable November 2028 January 2029 April 2029 October 05, 2028 * November 05, 2028 * Not Applicable March 2029 May 2029 July 2029 February 05, 2029 * March 05, 2029 * Not Applicable July 2029 October 2029 December 2029 All applications are due by 5:00 PM local time of applicant organization. Applicants are encouraged to apply early to allow adequate time to make any corrections to errors found in the application during the submission process by the due date. Due Dates for E.O. 12372 Not Applicable Expiration Date March 06, 2029 Required Application Instructions It is critical that applicants follow the instructions in the Research (R) Instructions in the How to Apply - Application Guide , except where instructed to do otherwise (in this NOFO or in a Notice from NIH Guide for Grants and Contracts ). Conformance to all requirements (both in the Application Guide and the NOFO) is required and strictly enforced."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3564318,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AtLVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "NIH will consider any comments by the applicant in the Responsibility/Qualification records in SAM.gov to ascertain the applicants integrity, business ethics, and performance record of managing Federal awards per 2 CFR Part 200.206 Federal awarding agency review of risk posed by applicants. This provision will apply to all NIH grants and cooperative agreements except fellowships. 3. Anticipated Announcement and Award Dates After the peer review of the application is completed, the PD/PI will be able to access his or her Summary Statement (written critique) via the eRA Commons . Refer to Part 1 for dates for peer review, advisory council review, and earliest start date. Information regarding the disposition of applications is available in the NIH Grants Policy Statement Section 2.4.4 Disposition of Applications . Section VI."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2281857,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AzLVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Resubmissions As applicable, evaluate the full application as now presented. Renewals As applicable, evaluate the progress made in the last funding period. Revisions As applicable, evaluate the appropriateness of the proposed expansion of the scope of the project. Additional Review Considerations As applicable for the project proposed, reviewers will consider each of the following items, but will not give scores for these items, and should not consider them in providing an overall impact score. Authentication of Key Biological and/or Chemical Resources For projects involving key biological and/or chemical resources, evaluate the brief plans proposed for identifying and ensuring the validity of those resources. Budget and Period of Support Evaluate whether the budget and the requested period of support are fully justified and reasonable in relation to the proposed research. 2. Review and Selection Process Applications will be evaluated for scientific and technical merit by (an) appropriate Scientific Review Group(s), convened by CSR, in accordance with NIH peer review policies and practices , using the stated review criteria. Assignment to a Scientific Review Group will be shown in the eRA Commons. As part of the scientific peer review, all applications will receive a written critique. Applications may undergo a selection process in which only those applications deemed to have the highest scientific and technical merit (generally the top half of applications under review) will be discussed and assigned an overall impact score. Applications will be assigned on the basis of established PHS referral guidelines to the appropriate NIH Institute or Center. Applications will compete for available funds with all other recommended applications. Following initial peer review, recommended applications will receive a second level of review by the NLM Board of Regents. The following will be considered in making funding decisions: Scientific and technical merit of the proposed project as determined by scientific peer review. Availability of funds. Relevance of the proposed project to program priorities. If the application is under consideration for funding, NIH will request \"just-in-time\" information from the applicant as described in the NIH Grants Policy Statement Section 2.5.1. Just-in-Time Procedures . This request is not a Notice of Award nor should it be construed to be an indicator of possible funding. Prior to making an award, NIH reviews an applicants federal award history in SAM.gov to ensure sound business practices. An applicant can review and comment on any information in the Responsibility/Qualification records available in SAM.gov."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1967232,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ay7VXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application Review Information 1."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1962959,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ax7VXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Applicants are encouraged to submit applications before the due date to ensure they have time to make any application corrections that might be necessary for successful submission. When a submission date falls on a weekend or Federal holiday , the application deadline is automatically extended to the next business day. Organizations must submit applications to Grants.gov (the online portal to find and apply for grants across all Federal agencies). Applicants must then complete the submission process by tracking the status of the application in the eRA Commons , NIHs electronic system for grants administration. NIH and Grants.gov systems check the application against many of the application instructions upon submission. Errors must be corrected and a changed/corrected application must be submitted to Grants.gov on or before the application due date and time. If a Changed/Corrected application is submitted after the deadline, the application will be considered late. Applications that miss the due date and time are subjected to the NIH Grants Policy Statement Section 2.3.9.2 Electronically Submitted Applications . Applicants are responsible for viewing their application before the due date in the eRA Commons to ensure accurate and successful submission. Information on the submission process and a definition of on-time submission are provided in the How to Apply-Application Guide. 5. Intergovernmental Review (E.O. 12372) This initiative is not subject to intergovernmental review. 6. Funding Restrictions All NIH awards are subject to the terms and conditions, cost principles, and other considerations described in the NIH Grants Policy Statement . Pre-award costs are allowable only as described in the NIH Grants Policy Statement Section 7.9.1 Selected Items of Cost. 7. Other Submission Requirements and Information Applications must be submitted electronically following the instructions described in the How to Apply Application Guide. Paper applications will not be accepted. Applicants must complete all required registrations before the application due date. Section III. Eligibility Information contains information about registration. For assistance with your electronic application or for more information on the electronic submission process, visit How to Apply &ndash; Application Guide . If you encounter a system issue beyond your control that threatens your ability to complete the submission process on-time, you must follow the Dealing with System Issues guidance. For assistance with application submission, contact the Application Submission Contacts in Section VII. Important reminders: All PD(s)/PI(s) must include their eRA Commons ID in the Credential field of the Senior/Key Person Profile form ."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1851729,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AxLVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Overview Information Key Dates Part 2. Full Text of Announcement Section I. Notice of Funding Opportunity Description Section II. Award Information Section III. Eligibility Information Section IV. Application and Submission Information Section V. Application Review Information Section VI. Award Administration Information Section VII. Agency Contacts Section VIII. Other Information Part 2."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1699641,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AtrVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "N, &#x00a7; 405, Pub."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1542971,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Az7VXYKEBbayybwJOCOnR"
+    }
+   }
+  ]
+ },
+ "dd671b71a21b39b7": {
+  "query": "key dates receipt dates council review earliest start date",
+  "filter": "7be5d1b67532bc4b",
+  "retrievalResults": []
+ },
+ "f1c3db52012b6a01": {
+  "query": "maximum annual budget direct costs per year",
+  "filter": "d9059046a70d4472",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Only those application types listed here are allowed for this NOFO. Clinical Trial? Optional: Accepting applications that either propose or do not propose clinical trial(s). Need help determining whether you are doing a clinical trial? Funds Available and Anticipated Number of Awards The number of awards is contingent upon NIH appropriations and the submission of a sufficient number of meritorious applications. Award Budget Application budgets are limited to $250,000 per year in direct costs and need to reflect the actual needs of the proposed project. Award Project Period The scope of the proposed project should determine the project period. The maximum project period is 4 years. NIH grants policies as described in the NIH Grants Policy Statement will apply to the applications submitted and awards made from this NOFO. Section III."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1669794,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AvLVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "If the PD/PI is also the organizational Signing Official, they must have two distinct eRA Commons accounts, one for each role. Obtaining an eRA Commons account can take up to 2 weeks. Eligible Individuals (Program Director/Principal Investigator) Any individual(s) with the skills, knowledge, and resources necessary to carry out the proposed research as the Program Director(s)/Principal Investigator(s) (PD(s)/PI(s)) is invited to work with their organization to develop an application for support. For institutions/organizations proposing multiple PDs/PIs, visit the Multiple Program Director/Principal Investigator Policy and submission details in the Senior/Key Person Profile (Expanded) Component of the How to Apply-Application Guide. 2. Cost Sharing This NOFO does not require cost sharing as defined in the NIH Grants Policy Statement Section 1.2 Definition of Terms . 3. Additional Information on Eligibility Number of Applications Applicant organizations may submit more than one application, provided that each application is scientifically distinct. The NIH will not accept duplicate or highly overlapping applications under review at the same time, per NIH Grants Policy Statement Section 2.3.7.4 Submission of Resubmission Application . This means that the NIH will not accept: A new (A0) application that is submitted before issuance of the summary statement from the review of an overlapping new (A0) or resubmission (A1) application. A resubmission (A1) application that is submitted before issuance of the summary statement from the review of the previous new (A0) application. An application that has substantial overlap with another application pending appeal of initial peer review (see NIH Grants Policy Statement 2.3.9.4 Similar, Essentially Identical, or Identical Applications ). Section IV."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.1120026,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Av7VXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Overview Information Key Dates Part 2. Full Text of Announcement Section I. Notice of Funding Opportunity Description Section II. Award Information Section III. Eligibility Information Section IV. Application and Submission Information Section V. Application Review Information Section VI. Award Administration Information Section VII. Agency Contacts Section VIII. Other Information Part 2."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.0780743,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AtrVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Other Information for award authorities and regulations. Section II. Award Information Funding Instrument Grant: A financial assistance mechanism providing money, property, or both to an eligible entity to carry out an approved project or activity. Application Types Allowed New Renewal Resubmission Revision The OER Glossary and the How to Apply Application Guide provide details on these application types."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.0502372,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Au7VXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application and Submission Information 1. Requesting an Application Package The application forms package specific to this opportunity must be accessed through ASSIST, Grants.gov Workspace or an institutional system-to-system solution. Links to apply using ASSIST or Grants.gov Workspace are available in Part 1 of this NOFO. See your administrative office for instructions if you plan to use an institutional system-to-system solution. 2. Content and Form of Application Submission It is critical that applicants follow the instructions in the Research (R) Instructions in the How to Apply - Application Guide except where instructed in this notice of funding opportunity to do otherwise (in this NOFO, in a policy notice , or other notice from NIH Guide for Grants and Contracts ). Conformance to the requirements in the Application Guide is required and strictly enforced. Applications that are out of compliance with these instructions may be delayed or not accepted for review. Page Limitations All page limitations described in the How to Apply- Application Guide and the Table of Page Limits must be followed. Instructions for Application Submission The following section supplements the instructions found in the How to Apply- Application Guide and should be used for preparing an application to this NOFO. SF424(R&R) Cover All instructions in the How to Apply - Application Guide must be followed. SF424(R&R) Project/Performance Site Locations All instructions in the How to Apply- Application Guide must be followed. SF424(R&R) Other Project Information All instructions in the How to Apply- Application Guide must be followed. SF424(R&R) Senior/Key Person Profile All instructions in the How to Apply- Application Guide must be followed. R&R or Modular Budget All instructions in the How to Apply- Application Guide must be followed. R&R Subaward Budget All instructions in the How to Apply - Application Guide must be followed. PHS 398 Cover Page Supplement All instructions in the How to Apply - Application Guide must be followed. PHS 398 Research Plan All instructions in the How to Apply - Application Guide must be followed, with the following additional instructions: Applicants are also expected to demonstrate the potential for scalability and generalizability of the proposed tool or approach beyond the specific use case, including how proposed innovations could enhance applicability and adoption across diverse biomedical domains and settings (see Factor 1&mdash;Importance of the Research [Significance and Innovation])."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.0491068,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AwLVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "AI tools and methods with a focus on benefits to patients and health systems/workflow, patient satisfaction, costs, operational efficiency. Research to improve quality and outcomes of patient care, for example, for enabling clinicians to monitor patients' conditions for changes or detect undiagnosed diseases earlier."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.0488963,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AuLVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Agency Contacts We encourage inquiries concerning this funding opportunity and welcome the opportunity to answer questions from potential applicants. Application Submission Contacts eRA Service Desk - Questions regarding ASSIST, eRA Commons, application errors and warnings, documenting system problems that threaten submission by the due date, and post-submission issues. Grants.gov Support Center - Questions regarding Grants.gov registration and services (e.g., Workspace, subscriptions). Scientific/Research Contact(s) NLM Extramural Programs NLMProgram@nih.gov Peer Review Contact(s) Center for Scientific Review (CSR) Email: NOFOReviewContact@csr.nih.gov Financial/Grants Management Contact(s) NLM Grants Management NLMGrants@nih.gov Section VIII. Other Information Recently issued trans-NIH policy notices may affect your application submission. A full list of policy notices published by NIH is provided in the NIH Guide for Grants and Contracts . All awards are subject to the terms and conditions, cost principles, and other considerations described in the NIH Grants Policy Statement . Authority and Regulations Awards are made under the authorization of Sections 301 and 405 of the Public Health Service Act as amended (42 USC 241 and 284) and under Federal Regulations 42 CFR Part 52 and 2 CFR Part 200."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.0393753,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A0bVXYKEBbayybwJOCOnR"
+    }
+   }
+  ]
+ },
+ "f773f086fb97075a": {
+  "query": "resource sharing plan software dissemination open source",
+  "filter": "7be5d1b67532bc4b",
+  "retrievalResults": []
+ },
+ "fc0566730614a9fa": {
+  "query": "award ceiling and project period budget limits",
+  "filter": "d9059046a70d4472",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Only those application types listed here are allowed for this NOFO. Clinical Trial? Optional: Accepting applications that either propose or do not propose clinical trial(s). Need help determining whether you are doing a clinical trial? Funds Available and Anticipated Number of Awards The number of awards is contingent upon NIH appropriations and the submission of a sufficient number of meritorious applications. Award Budget Application budgets are limited to $250,000 per year in direct costs and need to reflect the actual needs of the proposed project. Award Project Period The scope of the proposed project should determine the project period. The maximum project period is 4 years. NIH grants policies as described in the NIH Grants Policy Statement will apply to the applications submitted and awards made from this NOFO. Section III."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.5186391,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AvLVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Award Administration Information 1. Award Notices A Notice of Award (NoA) is the official authorizing document notifying the applicant that an award has been made and that funds may be requested from the designated HHS payment system or office. The NoA is signed by the Grants Management Officer and emailed to the recipients business official. In accepting the award, the recipient agrees that any activities under the award are subject to all provisions currently in effect or implemented during the period of the award, other Department regulations and policies in effect at the time of the award, and applicable statutory provisions. Recipients must comply with any funding restrictions described in Section IV.6. Funding Restrictions. Any pre-award costs incurred before receipt of the NoA are at the applicant's own risk. For more information on the Notice of Award, please refer to the NIH Grants Policy Statement Section 5. The Notice of Award and NIH Grants & Funding website, see Award Process. Individual awards are based on the application submitted to, and as approved by, the NIH and are subject to the IC-specific terms and conditions identified in the NoA. ClinicalTrials.gov: If an award provides for one or more clinical trials. By law (Title VIII, Section 801 of Public Law 110-85), the \"responsible party\" must register and submit results information for certain applicable clinical trials on the ClinicalTrials.gov Protocol Registration and Results System Information Website ( https://register.clinicaltrials.gov ). NIH expects registration and results reporting of all trials whether required under the law or not. For more information, see https://grants.nih.gov/policy/clinical-trials/reporting/index.htm Institutional Review Board or Independent Ethics Committee Approval: Recipient institutions must ensure that all protocols are reviewed by their IRB or IEC. To help ensure the safety of participants enrolled in NIH-funded studies, the recipient must provide NIH copies of documents related to all major changes in the status of ongoing protocols. Data and Safety Monitoring Requirements: The NIH policy for data and safety monitoring requires oversight and monitoring of all NIH-conducted or -supported human biomedical and behavioral intervention studies (clinical trials) to ensure the safety of participants and the validity and integrity of the data. Further information concerning these requirements is found at http://grants.nih.gov/grants/policy/hs/data_safety.htm and in the application instructions (SF424 (R&R) and PHS 398)."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2693651,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AzbVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application Due Dates Review and Award Cycles New Renewal / Resubmission / Revision (as allowed) AIDS - New/Renewal/Resubmission/Revision, as allowed Scientific Merit Review Advisory Council Review Earliest Start Date June 05, 2026 * July 05, 2026 * Not Applicable November 2026 January 2027 April 2027 October 05, 2026 * November 05, 2026 * Not Applicable March 2027 May 2027 July 2027 February 05, 2027 * March 05, 2027 * Not Applicable July 2027 October 2027 December 2027 June 05, 2027 * July 05, 2027 * Not Applicable November 2027 January 2028 April 2028 October 05, 2027 * November 05, 2027 * Not Applicable March 2028 May 2028 July 2028 February 05, 2028 * March 05, 2028 * Not Applicable July 2028 October 2028 December 2028 June 05, 2028 * July 05, 2028 * Not Applicable November 2028 January 2029 April 2029 October 05, 2028 * November 05, 2028 * Not Applicable March 2029 May 2029 July 2029 February 05, 2029 * March 05, 2029 * Not Applicable July 2029 October 2029 December 2029 All applications are due by 5:00 PM local time of applicant organization. Applicants are encouraged to apply early to allow adequate time to make any corrections to errors found in the application during the submission process by the due date. Due Dates for E.O. 12372 Not Applicable Expiration Date March 06, 2029 Required Application Instructions It is critical that applicants follow the instructions in the Research (R) Instructions in the How to Apply - Application Guide , except where instructed to do otherwise (in this NOFO or in a Notice from NIH Guide for Grants and Contracts ). Conformance to all requirements (both in the Application Guide and the NOFO) is required and strictly enforced."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2577345,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AtLVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Other Information for award authorities and regulations. Section II. Award Information Funding Instrument Grant: A financial assistance mechanism providing money, property, or both to an eligible entity to carry out an approved project or activity. Application Types Allowed New Renewal Resubmission Revision The OER Glossary and the How to Apply Application Guide provide details on these application types."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2451835,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Au7VXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Resubmissions As applicable, evaluate the full application as now presented. Renewals As applicable, evaluate the progress made in the last funding period. Revisions As applicable, evaluate the appropriateness of the proposed expansion of the scope of the project. Additional Review Considerations As applicable for the project proposed, reviewers will consider each of the following items, but will not give scores for these items, and should not consider them in providing an overall impact score. Authentication of Key Biological and/or Chemical Resources For projects involving key biological and/or chemical resources, evaluate the brief plans proposed for identifying and ensuring the validity of those resources. Budget and Period of Support Evaluate whether the budget and the requested period of support are fully justified and reasonable in relation to the proposed research. 2. Review and Selection Process Applications will be evaluated for scientific and technical merit by (an) appropriate Scientific Review Group(s), convened by CSR, in accordance with NIH peer review policies and practices , using the stated review criteria. Assignment to a Scientific Review Group will be shown in the eRA Commons. As part of the scientific peer review, all applications will receive a written critique. Applications may undergo a selection process in which only those applications deemed to have the highest scientific and technical merit (generally the top half of applications under review) will be discussed and assigned an overall impact score. Applications will be assigned on the basis of established PHS referral guidelines to the appropriate NIH Institute or Center. Applications will compete for available funds with all other recommended applications. Following initial peer review, recommended applications will receive a second level of review by the NLM Board of Regents. The following will be considered in making funding decisions: Scientific and technical merit of the proposed project as determined by scientific peer review. Availability of funds. Relevance of the proposed project to program priorities. If the application is under consideration for funding, NIH will request \"just-in-time\" information from the applicant as described in the NIH Grants Policy Statement Section 2.5.1. Just-in-Time Procedures . This request is not a Notice of Award nor should it be construed to be an indicator of possible funding. Prior to making an award, NIH reviews an applicants federal award history in SAM.gov to ensure sound business practices. An applicant can review and comment on any information in the Responsibility/Qualification records available in SAM.gov."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2441204,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ay7VXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Law 114-113, 6 USC &#x00a7; 1533(d), the HHS Secretary has established a common set of voluntary, consensus-based, and industry-led guidelines, best practices, methodologies, procedures, and processes. Successful recipients under this NOFO agree that: When recipients, subrecipients, or third-party entities have: ongoing and consistent access to HHS owned or operated information or operational technology systems; and receive, maintain, transmit, store, access, exchange, process, or utilize personal identifiable information (PII) or personal health information (PHI) obtained from the awarding HHS agency for the purposes of executing the award. Recipients shall develop plans and procedures, modeled after the NIST Cybersecurity framework , to protect HHS systems and data. Please refer to NIH Post-Award Monitoring and Reporting for additional information. Cooperative Agreement Terms and Conditions of Award Not Applicable 3. Data Management and Sharing Consistent with the 2023 NIH Policy for Data Management and Sharing, when data management and sharing is applicable to the award, recipients will be required to adhere to the Data Management and Sharing requirements as outlined in the NIH Grants Policy Statement . Upon the approval of a Data Management and Sharing Plan, it is required for recipients to implement the plan as described. 4. Reporting When multiple years are involved, recipients will be required to submit the Research Performance Progress Report (RPPR) annually and financial statements as required in the NIH Grants Policy Statement Section 8.4.1 Reporting. To learn more about post-award monitoring and reporting, see the NIH Grants & Funding website, see Post-Award Monitoring and Reporting . A final RPPR, invention statement, and the expenditure data portion of the Federal Financial Report are required for closeout of an award, as described in the NIH Grants Policy Statement Section 8.6 Closeout . NIH NOFOs outline intended research goals and objectives. Post award, NIH will review and measure performance based on the details and outcomes that are shared within the RPPR, as described at 2 CFR Part 200.301. Section VII."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2433327,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A0LVXYKEBbayybwJOCOnR"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Overview Information Key Dates Part 2. Full Text of Announcement Section I. Notice of Funding Opportunity Description Section II. Award Information Section III. Eligibility Information Section IV. Application and Submission Information Section V. Application Review Information Section VI. Award Administration Information Section VII. Agency Contacts Section VIII. Other Information Part 2."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2353865,
+    "metadata": {
+     "documentIdentifier": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Research Grants in Clinical Informatics (R01 Clinical Trial Optional)/NOFO-File-TXT",
+     "nofoName": "Research Grants in Clinical Informatics (R01 Clinical Trial Optional)",
+     "agency": "National Institutes of Health",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:20:40.131Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AtrVXYKEBbayybwJOCOnR"
+    }
+   }
+  ]
+ }
+}

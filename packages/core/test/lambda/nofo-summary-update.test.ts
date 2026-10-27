@@ -14,6 +14,7 @@ let handler: (event: any) => Promise<{ statusCode: number; body: string }>;
 let reviewFlagResolved: (flag: any, summary: any) => boolean;
 beforeAll(async () => {
   vi.stubEnv("BUCKET", "nofos-bucket");
+  vi.stubEnv("ARTIFACTS_BUCKET", "grant-artifacts");
   vi.stubEnv("NOFO_METADATA_TABLE_NAME", "nofos");
   vi.stubEnv("ENABLE_DYNAMODB_CACHE", "true");
   vi.stubEnv("SUPPORTED_STATES", JSON.stringify([{ code: "MA", name: "Massachusetts" }]));
@@ -45,6 +46,20 @@ beforeEach(() => {
   lambda.on(InvokeCommand).resolves({ StatusCode: 202 });
   vi.spyOn(console, "log").mockImplementation(() => {});
   vi.spyOn(console, "warn").mockImplementation(() => {});
+});
+
+describe("nofo-summary-update storage", () => {
+  it("saves requirements to the artifacts bucket without re-syncing the Knowledge Base", async () => {
+    given({}, { ProjectNarrativeSections: [section("Need")] });
+
+    const res = await save({ ProjectNarrativeSections: [section("Need"), section("Budget")] });
+
+    expect(res.statusCode).toBe(200);
+    expect(s3.commandCalls(PutObjectCommand).map((c) => [c.args[0].input.Bucket, c.args[0].input.Key])).toEqual([
+      ["grant-artifacts", "Grant A/summary.json"],
+    ]);
+    expect(lambda.commandCalls(InvokeCommand)).toHaveLength(0);
+  });
 });
 
 describe("nofo-summary-update review flag", () => {

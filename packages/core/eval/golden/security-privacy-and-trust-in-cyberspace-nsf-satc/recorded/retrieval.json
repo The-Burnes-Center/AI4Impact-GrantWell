@@ -1,0 +1,1202 @@
+{
+ "28802a454b93beed": {
+  "query": "project description page limit",
+  "filter": "e1b861ce1f04776a",
+  "retrievalResults": []
+ },
+ "37218f45189af31e": {
+  "query": "project description page limit",
+  "filter": "72ec84906113796f",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Project Summary: Keywords All RES and SEED proposals must include a prioritized list of 1-6 keywords that describe the general area(s) of the investigation, to assist in identifying reviewers with appropriate knowledge and expertise to review the proposal. The list of keywords should be the last paragraph of the Overview section of the Project Summary. The first keyword must (and other keywords may) be drawn from the following list of topic areas that correspond to key areas of study: authentication and access control; biometrics and human sensing; cryptography; cyber-physical systems; data science, ML, and AI; digital forensics; education; formal methods; hardware security; human-centric computing; information protection; programming language; mathematics and statistics; privacy; secure software development; social, behavioral, and economic sciences; systems; usable security and privacy; and wired and wireless networking. Project Description: The project description for proposals submitted to the RES and EDU designations is limited to 15 pages, and 10 pages for the SEED designation. See also Section II, Program Description, in this solicitation for additional guidance."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.32606,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A6LViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Single Copy Documents: Collaborators and Other Affiliations Information: Proposers should follow the guidance specified in PAPPG Chapter II.D.2. Note the distinction to item (1) under Supplementary Documents above: the listing of all project participants is collected by the project lead and entered as a Supplementary Document, which is then automatically included with all proposals in a project. The Collaborators and Other Affiliations are entered for each participant within each proposal and, as Single Copy Documents, are available only to NSF staff. Submission Checklist: In an effort to assist proposal preparation, the following checklist is provided as a summary reminder of the solicitation-specific items that should be checked before submitting a proposal to this solicitation. For the items marked with Returned without Review (RWR), the proposal may be returned without review if the required item is non-compliant as of the date of proposal submission. The last paragraph of the Overview section of the Project Summary must consist of a prioritized list of 1-6 keywords, separated by semi-colons. (RWR) The maximum budget shown on the Cover Sheet and on the budget sheets must not exceed $300,000 for SEED proposals, $1,200,000 for RES proposals (including the budget for the optional TTE plan), and $500,000 ($600,000 if special conditions listed above are met) for EDU proposals. (RWR) If more than one PI is involved, a collaboration plan (up to 2 pages) must be provided for all projects with a budget greater than $600,000 as a Supplementary Document, even if all investigators are affiliated with the same organization. (RWR) All projects with a total budget greater than $600,000 that include an organization (department, school, or institute) that primarily carries out research and education in computer science, computer engineering, information science, and/or other closely related fields, must include a BPC plan submitted as a Supplementary Document. In the case of separately submitted collaborative proposals, the BPC plan should be submitted by the lead organization. A Project Personnel and Partner Institutions list included as a Supplementary Document. All EDU proposals must have detailed plans for assessment and evaluation that are clearly aligned with the project's stated goals based on appropriate metrics. Proposals that do not comply with the requirements marked as RWR will be returned without review."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.302336,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A7bViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "EDU: The Education (EDU) designation is used to identify proposals focusing on education and workforce training in building trust in security, privacy, and resilience of cyberspace. EDU proposals are limited to $500,000 in total budget, with durations of up to three years. EDU proposals that primarily focus on education research with demonstrated collaboration, as reflected in the PI team between cybersecurity subject matter experts and education researcher(s), may request an additional $100,000 beyond the $500,000 limit. SEED: The Seedling (SEED) category is intended for special topics defined by accompanying Dear Colleague Letters. SEED projects are limited to $300,000 in total budget, with durations of up to two years. Broadening Participation In STEM NSF has a mandate to broaden participation in science and engineering, as articulated and reaffirmed in law since 1950. Congress has charged NSF to \"develop intellectual capital, both people and ideas, with particular emphasis on groups and regions that traditionally have not participated fully in science, mathematics, and engineering.\""
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2624863,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AzbViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Collaboration plans are optional for proposals with a budget of $600,000 or less and EDU proposals with multiple investigators and/or organizations. 3. Letters of collaboration: Letter of collaboration from academic or industry partners are welcome to document specific contributions they will make to the project. Letters should explicitly describe the resources (e.g., hardware, software, test facilities, data, research expertise) to be provided by the collaborating entity. Any collaboration letter may be no longer than a single page, with fonts and margins with the requirements in PAPPG Chapter II.C.2. 4. Data Management and Sharing Plan (required): Proposals must include a Supplementary Document of no more than two pages labeled \"Data Management and Sharing Plan.\" The data management and sharing plan must be substantive and specific to the project and should address all project-relevant aspects of data privacy and security. In addition to addressing how the project will conform to NSF's policy on the dissemination and sharing of research results, the Data Management and Sharing Plan should address the following topics if they are relevant to the project: Handling of sensitive data : This includes sensitivity of the data to be collected, ethics of data collection and identification of harms that could arise from its collection or inadvertent dissemination, techniques that will be used to protect the privacy of individuals and organizations associated with the data, and plans to request Institutional Review Board (IRB) approval for data collection, aggregation, and analysis. Data sharing: This covers methods for providing other researchers with controlled access to datasets and the time period during which data will be available. If the project will develop software or hardware, the Data Management and Sharing Plan should discuss not only what access other researchers will have to source code or hardware design artifacts (e.g., specific open source licenses) and the physical location of the data repository (e.g., commercial cloud, private server, campus server), but also the method by which other researchers may access these products of the project (e.g., GitHub repository). Authorization for data access and protection of data: This addresses policies for authorizing access to the data and techniques (including security protections) that will be used to prevent the unauthorized dissemination of the data. Source and provenance of the data: This specifies the type of data (synthetic vs. real data), the source of the generated data (whether it was generated by any LLM/synthetic or collected/produced via real means/methods), and methods to tag data and its origin for provenance, accountability and reproducibility."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2619934,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A6rViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Questions regarding the TTE designation should be addressed directly to satc-EDU Program Officers via satc-EDU@nsf.gov Broadening Participation in Computing (BPC) Plans in RES Proposals All projects with a total budget greater than $600,000 that include an organization (department, school, or institute) that primarily carries out research and education in computer science, computer engineering, information science, and/or other closely related fields, must include a BPC plan (see details in Section V.A. Proposal Preparation). For projects where none of the PIs or co-PIs are from computing organizations as described above, a BPC plan is not required. To emphasize this point, PIs are encouraged to include a statement titled \"Broadening Participation in Computing Plan\" and the text \"no PI on this project is in a computing organization, so no BPC plan is required\". CISE has long been committed to Broadening Participation in Computing (BPC). This commitment means addressing the underrepresentation of many groups in CISE relative to their participation in postsecondary education ( https://ncses.nsf.gov/pubs/nsb20223/data ). Broadening participation will require a range of measures, including institutional programs and activities as well as culture changes across colleges, departments, classes, and research groups. CISE continues the BPC effort started in 2018 that encourages the research community to engage in meaningful BPC activities. Specifically: Each project with a total budget greater than $600,000 must include a BPC plan. CISE encourages the use of the resources available at the NSF-funded BPCnet Resource Portal ( https://bpcnet.org/ ). BPCnet provides BPC plan templates, suggested activities, opportunities for consultant services, and publicly available data to support PIs and departments in creating their BPC Plans. CISE encourages PIs to leverage Departmental BPC Plans verified by BPCnet which coordinate efforts within their institution. BPC plans must include roles for all PIs and co-PIs and be included as a Supplementary Document, following the guidelines as described in the Proposal Preparation Instructions. A meaningful BPC plan can answer positively to the following five elements: Goal and Context: Does the plan describe a goal and the data from your institution(s) or local community that justifies that goal? Intended population(s): Does the plan identify the characteristics of participants, including school level? Strategy: Does the plan describe activities that address the stated goal(s) and intended population(s)?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2373346,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A3bViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "For additional information on the Dissemination and Sharing of Research Results, see: https://www.nsf.gov/bfa/dias/policy/dmp.jsp . 5. Broadening Participation in Computing (BPC) Plans for projects with budgets greater than $600,000: Each project with a budget greater than $600,000 and with a lead or non-lead organization (department, school, or institute) that primarily carries out research and education in computer science, computer engineering, information science, and/or other closely related field must include a BPC plan as a supplementary document at the time of submission. Each plan should begin with the heading \"Broadening Participation in Computing (BPC) Plan &ndash;\" followed by either \" Standalone\" or \"Connected\" . A Standalone BPC Plan does not include Departmental BPC Plans. Instead, the BPC activities of all PIs are listed in a single document that is up to 3 pages for the whole project and specifically addresses all five elements of a BPC plan: (1) the goal and context of the proposed activity, (2) intended population(s), (3) strategy, (4) measurement, and (5) PI engagement. This option must be used if one or more of the collaborating institutions do not have a Departmental BPC Plan verified by BPCnet . A Connected BPC Plan may be used when each PI and co-PI will engage in an activity listed in a Verified Departmental BPC Plan from their institution. Note that the (1) goal and context, (2) intended population, (3) strategy, and (4) measurement are already addressed in Verified Departmental BPC Plans. Therefore, a Connected BPC Plan is a document that only has to address the following, organized as: up to 2 pages that describe (5) what strategies in the departmental plan the PI and co-PIs will focus on, their specific roles, and their preparation for their work; followed by the verified Departmental BPC Plans from each institution. The BPC plans should be submitted as one document (including departmental plans for Connected BPC plans) under the \"Supplementary Documents\" section by the lead institution. The BPC plan should not be utilized as a space to elaborate on other broader impact activities unrelated to addressing members of groups underrepresented in computing."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2345504,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A67ViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Special Instructions for International Branch Campuses of U.S. IHEs: If the proposal includes funding to be provided to an international branch campus of a US institution of higher education (including through use of sub-awards and consultant arrangements), the proposer must explain the benefit(s) to the project of performance at the international branch campus, and justify why the project activities cannot be performed at the US campus. Non-profit, non-academic organizations: Independent museums, observatories, research laboratories, professional societies and similar organizations located in the U.S. that are directly associated with educational or research activities. Who May Serve as PI: As of the date the proposal is submitted, any PI, co-PI, or other Senior/Key project personnel must hold either: a tenured or tenure-track position, or a primary, full-time, paid appointment in a research or teaching position at a US-based campus of an organization eligible to submit to this solicitation (see above), with exceptions granted for family or medical leave, as determined by the submitting organization. Individuals with primary appointments at for-profit non-academic organizations or at overseas branch campuses of U.S. institutions of higher education are not eligible. Limit on Number of Proposals per Organization: There are no restrictions or limits. Limit on Number of Proposals per PI or co-PI: 4 During any contiguous 12-month period, an individual may not participate as PI, co-PI, or Senior/Key Personnel in more than four proposals. There is a limit of: two proposals designated as RES; one proposal designated as EDU; and one proposal designated as SEED. This limit is applied beginning with this SaTC 2.0 solicitation and future versions of the SaTC 2.0 solicitation, unless noted otherwise. These eligibility constraints will be strictly enforced in order to treat everyone fairly and consistently . Any proposal that exceeds this limit at the time of submission for any PI, co-PI, or other Senior/Key Personnel will be returned without review. No exceptions will be made . Proposals that are withdrawn prior to commencement of merit review, or those that are returned without review by NSF, will not count against this proposal limit. Proposers are strongly encouraged to verify the dates of prior SaTC 2.0 submissions for all personnel on their teams to avoid their proposals being deemed non-compliant. Proposal Preparation and Submission Instructions A."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2309853,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A0rViYKEBbayybwJO2_oU"
+    }
+   }
+  ]
+ },
+ "3ffa8f0bfa7733f2": {
+  "query": "RES proposal budget maximum amount and project duration",
+  "filter": "e1b861ce1f04776a",
+  "retrievalResults": []
+ },
+ "5468689b099d7cb3": {
+  "query": "Research Experiences for Students RES supplement request limit",
+  "filter": "e1b861ce1f04776a",
+  "retrievalResults": []
+ },
+ "7746d1f3dc635657": {
+  "query": "Project Description maximum pages proposal preparation",
+  "filter": "72ec84906113796f",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Single Copy Documents: Collaborators and Other Affiliations Information: Proposers should follow the guidance specified in PAPPG Chapter II.D.2. Note the distinction to item (1) under Supplementary Documents above: the listing of all project participants is collected by the project lead and entered as a Supplementary Document, which is then automatically included with all proposals in a project. The Collaborators and Other Affiliations are entered for each participant within each proposal and, as Single Copy Documents, are available only to NSF staff. Submission Checklist: In an effort to assist proposal preparation, the following checklist is provided as a summary reminder of the solicitation-specific items that should be checked before submitting a proposal to this solicitation. For the items marked with Returned without Review (RWR), the proposal may be returned without review if the required item is non-compliant as of the date of proposal submission. The last paragraph of the Overview section of the Project Summary must consist of a prioritized list of 1-6 keywords, separated by semi-colons. (RWR) The maximum budget shown on the Cover Sheet and on the budget sheets must not exceed $300,000 for SEED proposals, $1,200,000 for RES proposals (including the budget for the optional TTE plan), and $500,000 ($600,000 if special conditions listed above are met) for EDU proposals. (RWR) If more than one PI is involved, a collaboration plan (up to 2 pages) must be provided for all projects with a budget greater than $600,000 as a Supplementary Document, even if all investigators are affiliated with the same organization. (RWR) All projects with a total budget greater than $600,000 that include an organization (department, school, or institute) that primarily carries out research and education in computer science, computer engineering, information science, and/or other closely related fields, must include a BPC plan submitted as a Supplementary Document. In the case of separately submitted collaborative proposals, the BPC plan should be submitted by the lead organization. A Project Personnel and Partner Institutions list included as a Supplementary Document. All EDU proposals must have detailed plans for assessment and evaluation that are clearly aligned with the project's stated goals based on appropriate metrics. Proposals that do not comply with the requirements marked as RWR will be returned without review."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4706788,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A7bViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Supplementary Documents: In the Supplementary Documents Section, upload the following: 1. (required) A list of Project Personnel and Partner Institutions (required. Note: in collaborative proposals, the lead institution should provide this information for all participants): Provide current, accurate information for all personnel and institutions involved in the project. NSF staff will use this information in the merit review process to manage reviewer selection. The list must include all PIs, co-PIs, Senior/Key Personnel, funded/unfunded Consultants or Collaborators, Sub-awardees, Postdocs, and project-level advisory committee members. This list should be numbered and include (in this order) Full name, Organization(s), and Role in the project, with each item separated by a semi-colon. Each person listed should start a new numbered line. For example: Mei Lin; XYZ University; PI Jak Jabes; University of PQR; Senior/Key Personnel Jane Brown; XYZ University; Postdoctoral Researcher Rakel Ademas; ABC Inc.; Funded Consultant Maria Wan; Welldone Institution; Unfunded Collaborator Rimon Greene; ZZZ University; Subawardee 2. Collaboration Plan (required for all projects with more than one PI and a budget of more than $600,000): Because the success of collaborative research efforts is known to depend on thoughtful coordination mechanisms that regularly bring together the various participants of the project, all proposals with more than one investigator and a total of more than $600,000 must include a Collaboration Plan of up to 2 pages. The length of and degree of detail provided in the Collaboration Plan should be commensurate with the complexity of the proposed project. Where appropriate, the Collaboration Plan might include: 1) the specific roles of the project participants in all organizations involved; 2) information on how the project will be managed across all the investigators, organizations, and/or disciplines; 3) identification of the specific coordination mechanisms that will enable cross-investigator, cross-organization, and/or cross-discipline scientific integration (e.g., yearly conferences, graduate student exchange, project meetings at conferences, use of regular video conferences, software repositories, etc.), and 4) specific references to the budget line items that support collaboration and coordination mechanisms. If a proposal with a budget exceeding $600,000 and more than one investigator does not include a Collaboration Plan of up to 2 pages, that proposal will be returned without review."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3366714,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A6bViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Proposal Preparation And Submission Instructions A. Proposal Preparation Instructions Full Proposal Preparation Instructions : Proposers may opt to submit proposals in response to this Program Solicitation via Research.gov or Grants.gov. Full Proposals submitted via Research.gov: Proposals submitted in response to this program solicitation should be prepared and submitted in accordance with the general guidelines contained in the NSF Proposal and Award Policies and Procedures Guide (PAPPG). The complete text of the PAPPG is available electronically on the NSF website at: https://www.nsf.gov/publications/pub_summ.jsp?ods_key=pappg . Paper copies of the PAPPG may be obtained from the NSF Publications Clearinghouse, telephone (703) 292-8134 or by e-mail from nsfpubs@nsf.gov . The Prepare New Proposal setup will prompt you for the program solicitation number. Full proposals submitted via Grants.gov: Proposals submitted in response to this program solicitation via Grants.gov should be prepared and submitted in accordance with the NSF Grants.gov Application Guide: A Guide for the Preparation and Submission of NSF Applications via Grants.gov . The complete text of the NSF Grants.gov Application Guide is available on the Grants.gov website and on the NSF website at: ( https://www.nsf.gov/publications/pub_summ.jsp?ods_key=grantsgovguide ). To obtain copies of the Application Guide and Application Forms Package, click on the Apply tab on the Grants.gov site, then click on the Apply Step 1: Download a Grant Application Package and Application Instructions link and enter the funding opportunity number, (the program solicitation number without the NSF prefix) and press the Download Package button. Paper copies of the Grants.gov Application Guide also may be obtained from the NSF Publications Clearinghouse, telephone (703) 292-8134 or by e-mail from nsfpubs@nsf.gov . In determining which method to utilize in the electronic preparation and submission of the proposal, please note the following: Collaborative Proposals. All collaborative proposals submitted as separate submissions from multiple organizations must be submitted via Research.gov. PAPPG Chapter II.E.3 provides additional information on collaborative proposals. See PAPPG Chapter II.D.2 for guidance on the required sections of a full research proposal submitted to NSF. Please note that the proposal preparation instructions provided in this program solicitation may deviate from the PAPPG instructions."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.318232,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A5rViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Special Instructions for International Branch Campuses of U.S. IHEs: If the proposal includes funding to be provided to an international branch campus of a US institution of higher education (including through use of sub-awards and consultant arrangements), the proposer must explain the benefit(s) to the project of performance at the international branch campus, and justify why the project activities cannot be performed at the US campus. Non-profit, non-academic organizations: Independent museums, observatories, research laboratories, professional societies and similar organizations located in the U.S. that are directly associated with educational or research activities. Who May Serve as PI: As of the date the proposal is submitted, any PI, co-PI, or other Senior/Key project personnel must hold either: a tenured or tenure-track position, or a primary, full-time, paid appointment in a research or teaching position at a US-based campus of an organization eligible to submit to this solicitation (see above), with exceptions granted for family or medical leave, as determined by the submitting organization. Individuals with primary appointments at for-profit non-academic organizations or at overseas branch campuses of U.S. institutions of higher education are not eligible. Limit on Number of Proposals per Organization: There are no restrictions or limits. Limit on Number of Proposals per PI or co-PI: 4 During any contiguous 12-month period, an individual may not participate as PI, co-PI, or Senior/Key Personnel in more than four proposals. There is a limit of: two proposals designated as RES; one proposal designated as EDU; and one proposal designated as SEED. This limit is applied beginning with this SaTC 2.0 solicitation and future versions of the SaTC 2.0 solicitation, unless noted otherwise. These eligibility constraints will be strictly enforced in order to treat everyone fairly and consistently . Any proposal that exceeds this limit at the time of submission for any PI, co-PI, or other Senior/Key Personnel will be returned without review. No exceptions will be made . Proposals that are withdrawn prior to commencement of merit review, or those that are returned without review by NSF, will not count against this proposal limit. Proposers are strongly encouraged to verify the dates of prior SaTC 2.0 submissions for all personnel on their teams to avoid their proposals being deemed non-compliant. Proposal Preparation and Submission Instructions A."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.317821,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A0rViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Project Summary: Keywords All RES and SEED proposals must include a prioritized list of 1-6 keywords that describe the general area(s) of the investigation, to assist in identifying reviewers with appropriate knowledge and expertise to review the proposal. The list of keywords should be the last paragraph of the Overview section of the Project Summary. The first keyword must (and other keywords may) be drawn from the following list of topic areas that correspond to key areas of study: authentication and access control; biometrics and human sensing; cryptography; cyber-physical systems; data science, ML, and AI; digital forensics; education; formal methods; hardware security; human-centric computing; information protection; programming language; mathematics and statistics; privacy; secure software development; social, behavioral, and economic sciences; systems; usable security and privacy; and wired and wireless networking. Project Description: The project description for proposals submitted to the RES and EDU designations is limited to 15 pages, and 10 pages for the SEED designation. See also Section II, Program Description, in this solicitation for additional guidance."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3126533,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A6LViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "IV. Eligibility Information Who May Submit Proposals: Proposals may only be submitted by the following: Institutions of Higher Education (IHEs): Two- and four-year IHEs (including community colleges) accredited in, and having a campus located in the U.S., acting on behalf of their faculty members. Special Instructions for International Branch Campuses of US IHEs: If the proposal includes funding to be provided to an international branch campus of a US institution of higher education (including through use of sub-awards and consultant arrangements), the proposer must explain the benefit(s) to the project of performance at the international branch campus, and justify why the project activities cannot be performed at the US campus. Non-profit, non-academic organizations: Independent museums, observatories, research laboratories, professional societies and similar organizations located in the U.S. that are directly associated with educational or research activities. Who May Serve as PI: As of the date the proposal is submitted, any PI, co-PI, or other Senior/Key project personnel must hold either: a tenured or tenure-track position, or a primary, full-time, paid appointment in a research or teaching position at a US-based campus of an organization eligible to submit to this solicitation (see above), with exceptions granted for family or medical leave, as determined by the submitting organization. Individuals with primary appointments at for-profit non-academic organizations or at overseas branch campuses of U.S. institutions of higher education are not eligible. Limit on Number of Proposals per Organization: There are no restrictions or limits. Limit on Number of Proposals per PI or co-PI: 4 During any contiguous 12-month period, an individual may not participate as PI, co-PI, or Senior/Key Personnel in more than four proposals. There is a limit of: two proposals designated as RES; one proposal designated as EDU; and one proposal designated as SEED. This limit is applied beginning with this SaTC 2.0 solicitation and future versions of the SaTC 2.0 solicitation, unless noted otherwise. These eligibility constraints will be strictly enforced in order to treat everyone fairly and consistently . Any proposal that exceeds this limit at the time of submission for any PI, co-PI, or other Senior/Key Personnel will be returned without review. No exceptions will be made . Proposals that are withdrawn prior to commencement of merit review, or those that are returned without review by NSF, will not count against this proposal limit."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3104104,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A5LViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Proposal Preparation Instructions Letters of Intent: Not required Preliminary Proposal Submission: Not required Full Proposals: Full Proposals submitted via Research.gov: NSF Proposal and Award Policies and Procedures Guide (PAPPG) guidelines apply. The complete text of the PAPPG is available electronically on the NSF website at: https://www.nsf.gov/publications/pub_summ.jsp?ods_key=pappg . Full Proposals submitted via Grants.gov: NSF Grants.gov Application Guide: A Guide for the Preparation and Submission of NSF Applications via Grants.gov guidelines apply (Note: The NSF Grants.gov Application Guide is available on the Grants.gov website and on the NSF website at: https://www.nsf.gov/publications/pub_summ.jsp?ods_key=grantsgovguide )."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3007185,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A07ViYKEBbayybwJO2_oU"
+    }
+   }
+  ]
+ },
+ "7b771c4e4bd5cb67": {
+  "query": "Research Experiences for Students RES supplement request limit",
+  "filter": "72ec84906113796f",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Proposals focused on transition of research into practice may be more appropriate for one of several programs in the Technology, Innovation, and Partnership Directorate (TIP), such as Privacy-Preserving Data Sharing in Practice (PDaSP). The SATC 2.0 program spans the interests of NSF's Directorates for Computer and Information Science and Engineering (CISE), Mathematical and Physical Sciences (MPS), Social, Behavioral and Economic Sciences (SBE), and STEM Education (EDU). Proposals must be submitted pursuant to one of the following designations, each of which may have additional requirements: RES: This designation is the focus of the SaTC 2.0 research program. EDU: This designation is used to identify proposals focusing on education and training in cybersecurity and/or privacy. SEED: This designation is intended for special topics defined by accompanying Dear Colleague Letters. RESEARCH (RES) PROJECT DESIGNATION RES Projects are limited to total budgets up to $1,200,000 for durations of up to four years. This designation is intended for all research projects that range from single-investigator studies and/or studies of exploratory concepts to multi-investigator integrated efforts with larger-scale activities. The budget request must be commensurate with the complexity, scope, and scientific and societal impact of the proposed project. SaTC 2.0 will maintain a balanced portfolio of awards at all budget levels so proposers should tailor their budget to the needs of the proposed activities rather than tailoring their proposed activities to a specific budget number. Projects with budgets above $600,000 have additional requirements as detailed in section V.A. RES proposals may include an optional Transition to Education (TTE) plan with a budget allocation of up to $50,000 within the RES total budget request to co-evolve novel educational initiatives in the context of the proposed research. All RES proposals should (a) clearly articulate the notion of trust that the research will focus on; (b) include a clear and concise description of the specific risk(s), malicious intent or applicable threat scenario or model that the proposed research addresses; (c) discuss the generalizable contributions that will be developed beyond the state of the art (theories, research methods, empirical understanding, capabilities, tools and datasets, or other contributions appropriate to the project and the intellectual communities the project speaks to); and (d) discuss evaluation, reproducibility, trade-offs, and countermeasures involved in the project as appropriate."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.373861,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A2bViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "For multi-investigator RES projects with a budget greater than $600,000, reviewers will be asked to comment on: the degree to which the Collaboration Plan adequately demonstrates that the participating investigators will work synergistically to accomplish the project objectives; and whether key personnel, and especially lead PIs, have allocated adequate time for both their individual technical contributions and the leadership of collaborative activities necessary to realize the synergistic effects of larger-scale research. For RES projects with a TTE Plan, reviewers will be asked to comment on whether the TTE plan meaningfully addresses: the need and novelty of the educational content; how the research or technology will be transitioned into education and impact the cybersecurity workforce; the identification of an intended population that will serve as an early adopter of the proposed educational content; the deployment plan for implementing the pilot into an educational setting; the post-grant, long-term sustainability of the deployed educational content; and the extent to which learning experiences will feed back into research (if applicable). For projects that are required to include a BPC plan , reviewer will be asked to comment on whether the Broadening Participation in Computing (BPC) plan meaningfully addresses the five elements of a BPC Plan: the goal and context of the proposed activity; intended population(s); strategy; measurement; and PI engagement. B."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3203412,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A9LViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "EDU: The Education (EDU) designation is used to identify proposals focusing on education and workforce training in building trust in security, privacy, and resilience of cyberspace. EDU proposals are limited to $500,000 in total budget, with durations of up to three years. EDU proposals that primarily focus on education research with demonstrated collaboration, as reflected in the PI team between cybersecurity subject matter experts and education researcher(s), may request an additional $100,000 beyond the $500,000 limit. SEED: The Seedling (SEED) category is intended for special topics defined by accompanying Dear Colleague Letters. SEED projects are limited to $300,000 in total budget, with durations of up to two years. Broadening Participation In STEM NSF has a mandate to broaden participation in science and engineering, as articulated and reaffirmed in law since 1950. Congress has charged NSF to \"develop intellectual capital, both people and ideas, with particular emphasis on groups and regions that traditionally have not participated fully in science, mathematics, and engineering.\""
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.307994,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AzbViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "III. Award Information Anticipated Type of Award: Continuing Grant or Standard Grant Estimated Number of Awards: 75 NSF anticipates approximately 15 EDU awards, 60 RES awards. Anticipated Funding Amount: $60,000,000 per year, dependent on the availability of funds."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2995555,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A47ViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Single Copy Documents: Collaborators and Other Affiliations Information: Proposers should follow the guidance specified in PAPPG Chapter II.D.2. Note the distinction to item (1) under Supplementary Documents above: the listing of all project participants is collected by the project lead and entered as a Supplementary Document, which is then automatically included with all proposals in a project. The Collaborators and Other Affiliations are entered for each participant within each proposal and, as Single Copy Documents, are available only to NSF staff. Submission Checklist: In an effort to assist proposal preparation, the following checklist is provided as a summary reminder of the solicitation-specific items that should be checked before submitting a proposal to this solicitation. For the items marked with Returned without Review (RWR), the proposal may be returned without review if the required item is non-compliant as of the date of proposal submission. The last paragraph of the Overview section of the Project Summary must consist of a prioritized list of 1-6 keywords, separated by semi-colons. (RWR) The maximum budget shown on the Cover Sheet and on the budget sheets must not exceed $300,000 for SEED proposals, $1,200,000 for RES proposals (including the budget for the optional TTE plan), and $500,000 ($600,000 if special conditions listed above are met) for EDU proposals. (RWR) If more than one PI is involved, a collaboration plan (up to 2 pages) must be provided for all projects with a budget greater than $600,000 as a Supplementary Document, even if all investigators are affiliated with the same organization. (RWR) All projects with a total budget greater than $600,000 that include an organization (department, school, or institute) that primarily carries out research and education in computer science, computer engineering, information science, and/or other closely related fields, must include a BPC plan submitted as a Supplementary Document. In the case of separately submitted collaborative proposals, the BPC plan should be submitted by the lead organization. A Project Personnel and Partner Institutions list included as a Supplementary Document. All EDU proposals must have detailed plans for assessment and evaluation that are clearly aligned with the project's stated goals based on appropriate metrics. Proposals that do not comply with the requirements marked as RWR will be returned without review."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.297492,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A7bViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "IV. Eligibility Information Who May Submit Proposals: Proposals may only be submitted by the following: Institutions of Higher Education (IHEs): Two- and four-year IHEs (including community colleges) accredited in, and having a campus located in the U.S., acting on behalf of their faculty members. Special Instructions for International Branch Campuses of US IHEs: If the proposal includes funding to be provided to an international branch campus of a US institution of higher education (including through use of sub-awards and consultant arrangements), the proposer must explain the benefit(s) to the project of performance at the international branch campus, and justify why the project activities cannot be performed at the US campus. Non-profit, non-academic organizations: Independent museums, observatories, research laboratories, professional societies and similar organizations located in the U.S. that are directly associated with educational or research activities. Who May Serve as PI: As of the date the proposal is submitted, any PI, co-PI, or other Senior/Key project personnel must hold either: a tenured or tenure-track position, or a primary, full-time, paid appointment in a research or teaching position at a US-based campus of an organization eligible to submit to this solicitation (see above), with exceptions granted for family or medical leave, as determined by the submitting organization. Individuals with primary appointments at for-profit non-academic organizations or at overseas branch campuses of U.S. institutions of higher education are not eligible. Limit on Number of Proposals per Organization: There are no restrictions or limits. Limit on Number of Proposals per PI or co-PI: 4 During any contiguous 12-month period, an individual may not participate as PI, co-PI, or Senior/Key Personnel in more than four proposals. There is a limit of: two proposals designated as RES; one proposal designated as EDU; and one proposal designated as SEED. This limit is applied beginning with this SaTC 2.0 solicitation and future versions of the SaTC 2.0 solicitation, unless noted otherwise. These eligibility constraints will be strictly enforced in order to treat everyone fairly and consistently . Any proposal that exceeds this limit at the time of submission for any PI, co-PI, or other Senior/Key Personnel will be returned without review. No exceptions will be made . Proposals that are withdrawn prior to commencement of merit review, or those that are returned without review by NSF, will not count against this proposal limit."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2720146,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A5LViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Special Instructions for International Branch Campuses of U.S. IHEs: If the proposal includes funding to be provided to an international branch campus of a US institution of higher education (including through use of sub-awards and consultant arrangements), the proposer must explain the benefit(s) to the project of performance at the international branch campus, and justify why the project activities cannot be performed at the US campus. Non-profit, non-academic organizations: Independent museums, observatories, research laboratories, professional societies and similar organizations located in the U.S. that are directly associated with educational or research activities. Who May Serve as PI: As of the date the proposal is submitted, any PI, co-PI, or other Senior/Key project personnel must hold either: a tenured or tenure-track position, or a primary, full-time, paid appointment in a research or teaching position at a US-based campus of an organization eligible to submit to this solicitation (see above), with exceptions granted for family or medical leave, as determined by the submitting organization. Individuals with primary appointments at for-profit non-academic organizations or at overseas branch campuses of U.S. institutions of higher education are not eligible. Limit on Number of Proposals per Organization: There are no restrictions or limits. Limit on Number of Proposals per PI or co-PI: 4 During any contiguous 12-month period, an individual may not participate as PI, co-PI, or Senior/Key Personnel in more than four proposals. There is a limit of: two proposals designated as RES; one proposal designated as EDU; and one proposal designated as SEED. This limit is applied beginning with this SaTC 2.0 solicitation and future versions of the SaTC 2.0 solicitation, unless noted otherwise. These eligibility constraints will be strictly enforced in order to treat everyone fairly and consistently . Any proposal that exceeds this limit at the time of submission for any PI, co-PI, or other Senior/Key Personnel will be returned without review. No exceptions will be made . Proposals that are withdrawn prior to commencement of merit review, or those that are returned without review by NSF, will not count against this proposal limit. Proposers are strongly encouraged to verify the dates of prior SaTC 2.0 submissions for all personnel on their teams to avoid their proposals being deemed non-compliant. Proposal Preparation and Submission Instructions A."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2637699,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A0rViYKEBbayybwJO2_oU"
+    }
+   }
+  ]
+ },
+ "8ee9052a9c7163b8": {
+  "query": "Project Description maximum pages proposal preparation",
+  "filter": "e1b861ce1f04776a",
+  "retrievalResults": []
+ },
+ "a7a64112c61664ab": {
+  "query": "proposal submission deadline dates",
+  "filter": "e1b861ce1f04776a",
+  "retrievalResults": []
+ },
+ "b84e190175e9d7ea": {
+  "query": "RES proposal budget maximum amount and project duration",
+  "filter": "72ec84906113796f",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Single Copy Documents: Collaborators and Other Affiliations Information: Proposers should follow the guidance specified in PAPPG Chapter II.D.2. Note the distinction to item (1) under Supplementary Documents above: the listing of all project participants is collected by the project lead and entered as a Supplementary Document, which is then automatically included with all proposals in a project. The Collaborators and Other Affiliations are entered for each participant within each proposal and, as Single Copy Documents, are available only to NSF staff. Submission Checklist: In an effort to assist proposal preparation, the following checklist is provided as a summary reminder of the solicitation-specific items that should be checked before submitting a proposal to this solicitation. For the items marked with Returned without Review (RWR), the proposal may be returned without review if the required item is non-compliant as of the date of proposal submission. The last paragraph of the Overview section of the Project Summary must consist of a prioritized list of 1-6 keywords, separated by semi-colons. (RWR) The maximum budget shown on the Cover Sheet and on the budget sheets must not exceed $300,000 for SEED proposals, $1,200,000 for RES proposals (including the budget for the optional TTE plan), and $500,000 ($600,000 if special conditions listed above are met) for EDU proposals. (RWR) If more than one PI is involved, a collaboration plan (up to 2 pages) must be provided for all projects with a budget greater than $600,000 as a Supplementary Document, even if all investigators are affiliated with the same organization. (RWR) All projects with a total budget greater than $600,000 that include an organization (department, school, or institute) that primarily carries out research and education in computer science, computer engineering, information science, and/or other closely related fields, must include a BPC plan submitted as a Supplementary Document. In the case of separately submitted collaborative proposals, the BPC plan should be submitted by the lead organization. A Project Personnel and Partner Institutions list included as a Supplementary Document. All EDU proposals must have detailed plans for assessment and evaluation that are clearly aligned with the project's stated goals based on appropriate metrics. Proposals that do not comply with the requirements marked as RWR will be returned without review."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4404956,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A7bViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Proposals focused on transition of research into practice may be more appropriate for one of several programs in the Technology, Innovation, and Partnership Directorate (TIP), such as Privacy-Preserving Data Sharing in Practice (PDaSP). The SATC 2.0 program spans the interests of NSF's Directorates for Computer and Information Science and Engineering (CISE), Mathematical and Physical Sciences (MPS), Social, Behavioral and Economic Sciences (SBE), and STEM Education (EDU). Proposals must be submitted pursuant to one of the following designations, each of which may have additional requirements: RES: This designation is the focus of the SaTC 2.0 research program. EDU: This designation is used to identify proposals focusing on education and training in cybersecurity and/or privacy. SEED: This designation is intended for special topics defined by accompanying Dear Colleague Letters. RESEARCH (RES) PROJECT DESIGNATION RES Projects are limited to total budgets up to $1,200,000 for durations of up to four years. This designation is intended for all research projects that range from single-investigator studies and/or studies of exploratory concepts to multi-investigator integrated efforts with larger-scale activities. The budget request must be commensurate with the complexity, scope, and scientific and societal impact of the proposed project. SaTC 2.0 will maintain a balanced portfolio of awards at all budget levels so proposers should tailor their budget to the needs of the proposed activities rather than tailoring their proposed activities to a specific budget number. Projects with budgets above $600,000 have additional requirements as detailed in section V.A. RES proposals may include an optional Transition to Education (TTE) plan with a budget allocation of up to $50,000 within the RES total budget request to co-evolve novel educational initiatives in the context of the proposed research. All RES proposals should (a) clearly articulate the notion of trust that the research will focus on; (b) include a clear and concise description of the specific risk(s), malicious intent or applicable threat scenario or model that the proposed research addresses; (c) discuss the generalizable contributions that will be developed beyond the state of the art (theories, research methods, empirical understanding, capabilities, tools and datasets, or other contributions appropriate to the project and the intellectual communities the project speaks to); and (d) discuss evaluation, reproducibility, trade-offs, and countermeasures involved in the project as appropriate."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4329373,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A2bViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "For multi-investigator RES projects with a budget greater than $600,000, reviewers will be asked to comment on: the degree to which the Collaboration Plan adequately demonstrates that the participating investigators will work synergistically to accomplish the project objectives; and whether key personnel, and especially lead PIs, have allocated adequate time for both their individual technical contributions and the leadership of collaborative activities necessary to realize the synergistic effects of larger-scale research. For RES projects with a TTE Plan, reviewers will be asked to comment on whether the TTE plan meaningfully addresses: the need and novelty of the educational content; how the research or technology will be transitioned into education and impact the cybersecurity workforce; the identification of an intended population that will serve as an early adopter of the proposed educational content; the deployment plan for implementing the pilot into an educational setting; the post-grant, long-term sustainability of the deployed educational content; and the extent to which learning experiences will feed back into research (if applicable). For projects that are required to include a BPC plan , reviewer will be asked to comment on whether the Broadening Participation in Computing (BPC) plan meaningfully addresses the five elements of a BPC Plan: the goal and context of the proposed activity; intended population(s); strategy; measurement; and PI engagement. B."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3717984,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A9LViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Project Summary: Keywords All RES and SEED proposals must include a prioritized list of 1-6 keywords that describe the general area(s) of the investigation, to assist in identifying reviewers with appropriate knowledge and expertise to review the proposal. The list of keywords should be the last paragraph of the Overview section of the Project Summary. The first keyword must (and other keywords may) be drawn from the following list of topic areas that correspond to key areas of study: authentication and access control; biometrics and human sensing; cryptography; cyber-physical systems; data science, ML, and AI; digital forensics; education; formal methods; hardware security; human-centric computing; information protection; programming language; mathematics and statistics; privacy; secure software development; social, behavioral, and economic sciences; systems; usable security and privacy; and wired and wireless networking. Project Description: The project description for proposals submitted to the RES and EDU designations is limited to 15 pages, and 10 pages for the SEED designation. See also Section II, Program Description, in this solicitation for additional guidance."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3075941,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A6LViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "EDU: The Education (EDU) designation is used to identify proposals focusing on education and workforce training in building trust in security, privacy, and resilience of cyberspace. EDU proposals are limited to $500,000 in total budget, with durations of up to three years. EDU proposals that primarily focus on education research with demonstrated collaboration, as reflected in the PI team between cybersecurity subject matter experts and education researcher(s), may request an additional $100,000 beyond the $500,000 limit. SEED: The Seedling (SEED) category is intended for special topics defined by accompanying Dear Colleague Letters. SEED projects are limited to $300,000 in total budget, with durations of up to two years. Broadening Participation In STEM NSF has a mandate to broaden participation in science and engineering, as articulated and reaffirmed in law since 1950. Congress has charged NSF to \"develop intellectual capital, both people and ideas, with particular emphasis on groups and regions that traditionally have not participated fully in science, mathematics, and engineering.\""
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2991884,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AzbViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Questions regarding the TTE designation should be addressed directly to satc-EDU Program Officers via satc-EDU@nsf.gov Broadening Participation in Computing (BPC) Plans in RES Proposals All projects with a total budget greater than $600,000 that include an organization (department, school, or institute) that primarily carries out research and education in computer science, computer engineering, information science, and/or other closely related fields, must include a BPC plan (see details in Section V.A. Proposal Preparation). For projects where none of the PIs or co-PIs are from computing organizations as described above, a BPC plan is not required. To emphasize this point, PIs are encouraged to include a statement titled \"Broadening Participation in Computing Plan\" and the text \"no PI on this project is in a computing organization, so no BPC plan is required\". CISE has long been committed to Broadening Participation in Computing (BPC). This commitment means addressing the underrepresentation of many groups in CISE relative to their participation in postsecondary education ( https://ncses.nsf.gov/pubs/nsb20223/data ). Broadening participation will require a range of measures, including institutional programs and activities as well as culture changes across colleges, departments, classes, and research groups. CISE continues the BPC effort started in 2018 that encourages the research community to engage in meaningful BPC activities. Specifically: Each project with a total budget greater than $600,000 must include a BPC plan. CISE encourages the use of the resources available at the NSF-funded BPCnet Resource Portal ( https://bpcnet.org/ ). BPCnet provides BPC plan templates, suggested activities, opportunities for consultant services, and publicly available data to support PIs and departments in creating their BPC Plans. CISE encourages PIs to leverage Departmental BPC Plans verified by BPCnet which coordinate efforts within their institution. BPC plans must include roles for all PIs and co-PIs and be included as a Supplementary Document, following the guidelines as described in the Proposal Preparation Instructions. A meaningful BPC plan can answer positively to the following five elements: Goal and Context: Does the plan describe a goal and the data from your institution(s) or local community that justifies that goal? Intended population(s): Does the plan identify the characteristics of participants, including school level? Strategy: Does the plan describe activities that address the stated goal(s) and intended population(s)?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2759546,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A3bViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Any organizational resources that support BPC activities should also be described in the Facilities, Equipment and Other Resources section of the proposal (for additional information about Facilities, Equipment and Other Resources, see PAPPG Chapter II.D.2) if not already described in a linked departmental plan. For projects where none of the PIs or co-PIs are from computing organizations as described above, a BPC plan is not required. To emphasize this point, PIs are encouraged to include a statement titled \"Broadening Participation in Computing Plan\" and the text \"no PI on this project is in a computing organization, so no BPC plan is required\". 6. Optional TTE Plan for RES proposals: The TTE plan should be labeled as \"Transition to Education Plan\" and should not exceeding 2 pages. The TTE plan should contain the following components: (a) the description of the educational need to be addressed; (b) the novelty of the educational content; (c) how the research or technology will be transitioned into education and its impact on the cybersecurity workforce; (d) the identification of an intended population that will serve as early adopters of the proposed educational content; (e) the deployment plan for implementing/piloting the educational materials; (f) the explanation of the post-grant, long-term sustainability of the educational content; (g) the extent to which learning experiences will feed back into research (if applicable); and (h) the justification of the TTE budget for the effort, which may include up to $50,000 within the RES total budget request. No other Supplementary Documents, except as permitted by the NSF Proposal & Award Policies & Procedures Guide (such as RUI Certifications and RUI Impact Statements), are allowed."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.2719325,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A7LViYKEBbayybwJO2_oU"
+    }
+   }
+  ]
+ },
+ "dbb5afd87ced4bf9": {
+  "query": "full proposal window SaTC deadline",
+  "filter": "e1b861ce1f04776a",
+  "retrievalResults": []
+ },
+ "e655e30c36faae2d": {
+  "query": "full proposal window SaTC deadline",
+  "filter": "72ec84906113796f",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "B. Budgetary Information Cost Sharing: Inclusion of voluntary committed cost sharing is prohibited. Other Budgetary Limitations: Project budgets must include funding for one or more project representatives (PI/co-PI/senior researcher or NSF-approved replacement) to attend the first SaTC PI meeting held after the beginning of the award. The first PI meeting for awards made under this solicitation is expected to be held in Fall 2024, and approximately every two years thereafter. These requirements for PI meeting attendance apply to collaborative proposals as a whole, not to each part of a project. C. Due Dates Full Proposal Target Date(s) : September 29, 2025 Last Monday in September, Annually Thereafter January 26, 2026 Last Monday in January, Annually Thereafter Proposers are highly encouraged to submit by a target date. Proposals will be accepted anytime, but they may miss a particular panel or committee meeting."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.6585408,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A7rViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Proposers are strongly encouraged to verify the dates of prior SaTC 2.0 submissions for all personnel on their teams to avoid their proposals being deemed non-compliant. Additional Eligibility Info: Sub-awards are not permitted to overseas campuses/offices of US-based proposing organizations. V."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.5246003,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A5bViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Investigators seeking to submit SEED proposals in response to a DCL may be required to (a) submit concept outlines (as described in the PAPPG Chapter I.D.1) to be evaluated by the SaTC 2.0 Program and invited for proposal submission; or (b) have a specific team composition intended to foster multi- and/or interdisciplinary research. The accompanying DCLs will only solicit proposals within specified submission windows and all active DCLs will be listed on the SaTC 2.0 Program web page . SEED proposals are expected to follow all applicable proposal preparation guidelines for RES submissions (as described in Section V.A). SaTC 2.0 PI Meetings The SaTC 2.0 program plans to host PI meetings every other year with participation from all active SaTC 2.0 projects. This meeting will be a community-wide event with representatives from federal agencies, academia, industry, and international institutions. Principal investigators from all solicitation designations are encouraged to participate in these meetings. The first PI meeting is expected to be held in Fall 2026, and approximately every two years thereafter. For all SaTC 2.0 awards of duration less than or equal to 3 years, at least one project representative (PI/co-PI/senior researcher or NSF-approved replacement) from each organization should attend the first PI meeting held after the award date. For awards of duration greater than 3 years, at least one project representative (PI/co-PI/senior researcher or NSF-approved replacement) from each organization should attend one PI meeting every two years for the duration of the project. PIs are explicitly required to budget for travel to the PI meetings. Access to Experimental Research Infrastructure PIs may consider utilizing NSF-supported research infrastructure (such as the Platforms for Advanced Wireless Research 6 , FABRIC 7 , Chameleon 8 , CloudLab 9 , and National Artificial Intelligence Research Resource (NAIRR) Pilot 10 ) when formulating their research plans and submitting proposals. Descriptions of the capabilities of each system and their availability can be found at websites. 6 https://advancedwireless.org/ . 7 https://portal.fabric-testbed.net/ . 8 https://www.chameleoncloud.org/ . 9 https://cloudlab.us/ . 10 https://nairrpilot.org/ ."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.5180418,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A4rViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "All NSF grants and cooperative agreements are subject to the applicable set of NSF award terms and conditions . NSF has updated its research security policies for NSF funded projects. NSF 25-515: Security, Privacy, and Trust in Cyberspace (SaTC 2.0) Program Solicitation Document Information Document History Posted: December 5, 2024 Replaces: NSF 24-504 Create a PDF To save a PDF of this solicitation, select Print to PDF in your browser's print options. View the program page Program Solicitation NSF 25-515 U.S. National Science Foundation Directorate for Computer and Information Science and Engineering Division of Information and Intelligent Systems Office of Advanced Cyberinfrastructure Directorate for Social, Behavioral and Economic Sciences Division of Social and Economic Sciences Division of Behavioral and Cognitive Sciences Directorate for Mathematical and Physical Sciences Division of Mathematical Sciences Directorate for STEM Education Division of Graduate Education Full Proposal Target Date(s) : September 29, 2025 Last Monday in September, Annually Thereafter January 26, 2026 Last Monday in January, Annually Thereafter Proposers are highly encouraged to submit by a target date. Proposals will be accepted anytime, but they may miss a particular panel or committee meeting."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4921838,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AyrViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "IV. Eligibility Information Who May Submit Proposals: Proposals may only be submitted by the following: Institutions of Higher Education (IHEs): Two- and four-year IHEs (including community colleges) accredited in, and having a campus located in the U.S., acting on behalf of their faculty members. Special Instructions for International Branch Campuses of US IHEs: If the proposal includes funding to be provided to an international branch campus of a US institution of higher education (including through use of sub-awards and consultant arrangements), the proposer must explain the benefit(s) to the project of performance at the international branch campus, and justify why the project activities cannot be performed at the US campus. Non-profit, non-academic organizations: Independent museums, observatories, research laboratories, professional societies and similar organizations located in the U.S. that are directly associated with educational or research activities. Who May Serve as PI: As of the date the proposal is submitted, any PI, co-PI, or other Senior/Key project personnel must hold either: a tenured or tenure-track position, or a primary, full-time, paid appointment in a research or teaching position at a US-based campus of an organization eligible to submit to this solicitation (see above), with exceptions granted for family or medical leave, as determined by the submitting organization. Individuals with primary appointments at for-profit non-academic organizations or at overseas branch campuses of U.S. institutions of higher education are not eligible. Limit on Number of Proposals per Organization: There are no restrictions or limits. Limit on Number of Proposals per PI or co-PI: 4 During any contiguous 12-month period, an individual may not participate as PI, co-PI, or Senior/Key Personnel in more than four proposals. There is a limit of: two proposals designated as RES; one proposal designated as EDU; and one proposal designated as SEED. This limit is applied beginning with this SaTC 2.0 solicitation and future versions of the SaTC 2.0 solicitation, unless noted otherwise. These eligibility constraints will be strictly enforced in order to treat everyone fairly and consistently . Any proposal that exceeds this limit at the time of submission for any PI, co-PI, or other Senior/Key Personnel will be returned without review. No exceptions will be made . Proposals that are withdrawn prior to commencement of merit review, or those that are returned without review by NSF, will not count against this proposal limit."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4136982,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A5LViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The Seedling (SEED) category is intended for special topics that will be announced through the use of Dear Colleague Letters (DCLs). The accompanying DCLs will only solicit proposals within specified submission windows and all active DCLs will be listed on the SaTC 2.0 Program web page . SEED proposals are expected to follow all applicable proposal preparation guidelines for RES submissions and the SEED-specific guidance below. See Section II, Program Description, for additional information. Proposal Title: Proposal titles must begin with the acronym SaTC 2.0, followed by a colon, and the acronym that indicates the designation. Select the designation acronym from the following list: SaTC 2.0 core research designation: RES ; SaTC 2.0 seedling designation: SEED ; or Cybersecurity Education designation: EDU . Research proposals can be RES or SEED. The acronym, RES, should be followed by a colon, and then the title of the proposed project. For example, if you are submitting a Seeding proposal, the title of your proposal would be SaTC 2.0: SEED: Title, and if you are submitting a RES proposal with a TTE option, the title of your proposal would be SaTC 2.0: RES: TTE: Title. If you submit a proposal as part of a set of collaborative proposals, the words \"Collaborative Research\" followed by a colon should appear at the beginning of the title, before the \"SaTC 2.0\" acronym. For example, if you are submitting a collaborative set of proposals to the SaTC 2.0 EDU designation, the title of each proposal would be Collaborative Research: SaTC 2.0: EDU: Title. Please note that if submitting via Research.gov, the system will automatically insert the prepended title \"Collaborative Research\" when the collaborative set of proposals is created. Start Date: To avoid overdue reports blocking award actions during the end of a fiscal year, organizations are discouraged from seeking project start dates between July 2 and September 30 of a given year. Recipient organizations may incur allowable pre-award costs within the 90-day period immediately preceding the start date of the grant subject to the conditions specified in the PAPPG; this will allow support for students or other relevant activities to begin over this period."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4126713,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A57ViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "C. Due Dates Full Proposal Target Date(s) : September 29, 2025 Last Monday in September, Annually Thereafter January 26, 2026 Last Monday in January, Annually Thereafter Proposers are highly encouraged to submit by a target date. Proposals will be accepted anytime, but they may miss a particular panel or committee meeting. Proposal Review Information Criteria Merit Review Criteria: National Science Board approved criteria. Additional merit review criteria apply. Please see the full text of this solicitation for further information. Award Administration Information Award Conditions: Additional award conditions apply. Please see the full text of this solicitation for further information. Reporting Requirements: Additional reporting requirements apply. Please see the full text of this solicitation for further information. Table Of Contents Summary of Program Requirements Introduction Program Description Award Information Eligibility Information Proposal Preparation and Submission Instructions Proposal Preparation Instructions Budgetary Information Due Dates Research.gov/Grants.gov Requirements NSF Proposal Processing and Review Procedures Merit Review Principles and Criteria Review and Selection Process Award Administration Information Notification of the Award Award Conditions Reporting Requirements Agency Contacts Other Information I. Introduction Society relies on a complex cyber ecosystem for vital communications, economic prosperity, individual well-being, resilient societal infrastructures, physical safety, and the advancement of knowledge. With this reliance comes an increase in the severity and nature of threats targeting the ecosystem with deleterious consequences, as noted in the 2023 Federal Cybersecurity Research and Development Strategic Plan 1 : \"the structure of the digital ecosystem and its components remains prone to disruption or unintentional human-errors, vulnerable to exploitation, and is often co-opted by malicious actors.\" Society's confidence in this complex cyberspace depends on cybersecurity, broadly defined &mdash; thus constituting a national priority that integrates the technical, legal, and normative proscription, prevention, and mitigation of cyber-attacks, intrusions on privacy, and other cyber-facilitated harms, particularly those that fall on vulnerable groups. Compounding the potential for attacks and harm are rapidly evolving computing-based technologies, our interactions with them, and the ways they are deployed in society. Emerging capabilities such as artificial intelligence, computing in the post Moore's law era, quantum computing, and immersive technologies such as brain-computer interfaces and virtual reality raise new risks, vulnerabilities, attack scenarios, and harms. Advances in computing and its deployment throughout the cyber ecosystem also offer opportunities for a more secure, private, and resilient cyberspace."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4027476,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A1bViYKEBbayybwJO2_oU"
+    }
+   }
+  ]
+ },
+ "fe4502139b0995e3": {
+  "query": "proposal submission deadline dates",
+  "filter": "72ec84906113796f",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "C. Due Dates Full Proposal Target Date(s) : September 29, 2025 Last Monday in September, Annually Thereafter January 26, 2026 Last Monday in January, Annually Thereafter Proposers are highly encouraged to submit by a target date. Proposals will be accepted anytime, but they may miss a particular panel or committee meeting. Proposal Review Information Criteria Merit Review Criteria: National Science Board approved criteria. Additional merit review criteria apply. Please see the full text of this solicitation for further information. Award Administration Information Award Conditions: Additional award conditions apply. Please see the full text of this solicitation for further information. Reporting Requirements: Additional reporting requirements apply. Please see the full text of this solicitation for further information. Table Of Contents Summary of Program Requirements Introduction Program Description Award Information Eligibility Information Proposal Preparation and Submission Instructions Proposal Preparation Instructions Budgetary Information Due Dates Research.gov/Grants.gov Requirements NSF Proposal Processing and Review Procedures Merit Review Principles and Criteria Review and Selection Process Award Administration Information Notification of the Award Award Conditions Reporting Requirements Agency Contacts Other Information I. Introduction Society relies on a complex cyber ecosystem for vital communications, economic prosperity, individual well-being, resilient societal infrastructures, physical safety, and the advancement of knowledge. With this reliance comes an increase in the severity and nature of threats targeting the ecosystem with deleterious consequences, as noted in the 2023 Federal Cybersecurity Research and Development Strategic Plan 1 : \"the structure of the digital ecosystem and its components remains prone to disruption or unintentional human-errors, vulnerable to exploitation, and is often co-opted by malicious actors.\" Society's confidence in this complex cyberspace depends on cybersecurity, broadly defined &mdash; thus constituting a national priority that integrates the technical, legal, and normative proscription, prevention, and mitigation of cyber-attacks, intrusions on privacy, and other cyber-facilitated harms, particularly those that fall on vulnerable groups. Compounding the potential for attacks and harm are rapidly evolving computing-based technologies, our interactions with them, and the ways they are deployed in society. Emerging capabilities such as artificial intelligence, computing in the post Moore's law era, quantum computing, and immersive technologies such as brain-computer interfaces and virtual reality raise new risks, vulnerabilities, attack scenarios, and harms. Advances in computing and its deployment throughout the cyber ecosystem also offer opportunities for a more secure, private, and resilient cyberspace."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.519552,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A1bViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "B. Budgetary Information Cost Sharing: Inclusion of voluntary committed cost sharing is prohibited. Other Budgetary Limitations: Project budgets must include funding for one or more project representatives (PI/co-PI/senior researcher or NSF-approved replacement) to attend the first SaTC PI meeting held after the beginning of the award. The first PI meeting for awards made under this solicitation is expected to be held in Fall 2024, and approximately every two years thereafter. These requirements for PI meeting attendance apply to collaborative proposals as a whole, not to each part of a project. C. Due Dates Full Proposal Target Date(s) : September 29, 2025 Last Monday in September, Annually Thereafter January 26, 2026 Last Monday in January, Annually Thereafter Proposers are highly encouraged to submit by a target date. Proposals will be accepted anytime, but they may miss a particular panel or committee meeting."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4902608,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A7rViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "When submitting via Grants.gov, NSF strongly recommends applicants initiate proposal submission at least five business days in advance of a deadline to allow adequate time to address NSF compliance errors and resubmissions by 5:00 p.m. submitting organization's local time on the deadline. Please note that some errors cannot be corrected in Grants.gov. Once a proposal passes pre-checks but fails any post-check, an applicant can only correct and submit the in-progress proposal in Research.gov. Proposers that submitted via Research.gov may use Research.gov to verify the status of their submission to NSF. For proposers that submitted via Grants.gov, until an application has been received and validated by NSF, the Authorized Organizational Representative may check the status of an application on Grants.gov. After proposers have received an e-mail notification from NSF, Research.gov should be used to check the status of an application. VI. NSF Proposal Processing And Review Procedures Proposals received by NSF are assigned to the appropriate NSF program for acknowledgment and, if they meet NSF requirements, for review. All proposals are carefully reviewed by a scientist, engineer, or educator serving as an NSF Program Officer, and usually by three to ten other persons outside NSF either as ad hoc reviewers, panelists, or both, who are experts in the particular fields represented by the proposal. These reviewers are selected by Program Officers charged with oversight of the review process. Proposers are invited to suggest names of persons they believe are especially well qualified to review the proposal and/or persons they would prefer not review the proposal. These suggestions may serve as one source in the reviewer selection process at the Program Officer's discretion. Submission of such names, however, is optional. Care is taken to ensure that reviewers have no conflicts of interest with the proposal. In addition, Program Officers may obtain comments from site visits before recommending final action on proposals. Senior NSF staff further review recommendations for awards. A flowchart that depicts the entire NSF proposal and award process (and associated timeline) is included in PAPPG Exhibit III-1. A comprehensive description of the Foundation's merit review process is available on the NSF website at: https://www.nsf.gov/bfa/dias/policy/merit_review/ . Proposers should also be aware of core strategies that are essential to the fulfillment of NSF's mission, as articulated in Leading the World in Discovery and Innovation, STEM Talent Development and the Delivery of Benefits from Research - NSF Strategic Plan for Fiscal Years (FY) 2022 - 2026 ."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.4868355,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A8LViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "All NSF grants and cooperative agreements are subject to the applicable set of NSF award terms and conditions . NSF has updated its research security policies for NSF funded projects. NSF 25-515: Security, Privacy, and Trust in Cyberspace (SaTC 2.0) Program Solicitation Document Information Document History Posted: December 5, 2024 Replaces: NSF 24-504 Create a PDF To save a PDF of this solicitation, select Print to PDF in your browser's print options. View the program page Program Solicitation NSF 25-515 U.S. National Science Foundation Directorate for Computer and Information Science and Engineering Division of Information and Intelligent Systems Office of Advanced Cyberinfrastructure Directorate for Social, Behavioral and Economic Sciences Division of Social and Economic Sciences Division of Behavioral and Cognitive Sciences Directorate for Mathematical and Physical Sciences Division of Mathematical Sciences Directorate for STEM Education Division of Graduate Education Full Proposal Target Date(s) : September 29, 2025 Last Monday in September, Annually Thereafter January 26, 2026 Last Monday in January, Annually Thereafter Proposers are highly encouraged to submit by a target date. Proposals will be accepted anytime, but they may miss a particular panel or committee meeting."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.407973,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AyrViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Proposal Preparation And Submission Instructions A. Proposal Preparation Instructions Full Proposal Preparation Instructions : Proposers may opt to submit proposals in response to this Program Solicitation via Research.gov or Grants.gov. Full Proposals submitted via Research.gov: Proposals submitted in response to this program solicitation should be prepared and submitted in accordance with the general guidelines contained in the NSF Proposal and Award Policies and Procedures Guide (PAPPG). The complete text of the PAPPG is available electronically on the NSF website at: https://www.nsf.gov/publications/pub_summ.jsp?ods_key=pappg . Paper copies of the PAPPG may be obtained from the NSF Publications Clearinghouse, telephone (703) 292-8134 or by e-mail from nsfpubs@nsf.gov . The Prepare New Proposal setup will prompt you for the program solicitation number. Full proposals submitted via Grants.gov: Proposals submitted in response to this program solicitation via Grants.gov should be prepared and submitted in accordance with the NSF Grants.gov Application Guide: A Guide for the Preparation and Submission of NSF Applications via Grants.gov . The complete text of the NSF Grants.gov Application Guide is available on the Grants.gov website and on the NSF website at: ( https://www.nsf.gov/publications/pub_summ.jsp?ods_key=grantsgovguide ). To obtain copies of the Application Guide and Application Forms Package, click on the Apply tab on the Grants.gov site, then click on the Apply Step 1: Download a Grant Application Package and Application Instructions link and enter the funding opportunity number, (the program solicitation number without the NSF prefix) and press the Download Package button. Paper copies of the Grants.gov Application Guide also may be obtained from the NSF Publications Clearinghouse, telephone (703) 292-8134 or by e-mail from nsfpubs@nsf.gov . In determining which method to utilize in the electronic preparation and submission of the proposal, please note the following: Collaborative Proposals. All collaborative proposals submitted as separate submissions from multiple organizations must be submitted via Research.gov. PAPPG Chapter II.E.3 provides additional information on collaborative proposals. See PAPPG Chapter II.D.2 for guidance on the required sections of a full research proposal submitted to NSF. Please note that the proposal preparation instructions provided in this program solicitation may deviate from the PAPPG instructions."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3924272,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A5rViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Investigators seeking to submit SEED proposals in response to a DCL may be required to (a) submit concept outlines (as described in the PAPPG Chapter I.D.1) to be evaluated by the SaTC 2.0 Program and invited for proposal submission; or (b) have a specific team composition intended to foster multi- and/or interdisciplinary research. The accompanying DCLs will only solicit proposals within specified submission windows and all active DCLs will be listed on the SaTC 2.0 Program web page . SEED proposals are expected to follow all applicable proposal preparation guidelines for RES submissions (as described in Section V.A). SaTC 2.0 PI Meetings The SaTC 2.0 program plans to host PI meetings every other year with participation from all active SaTC 2.0 projects. This meeting will be a community-wide event with representatives from federal agencies, academia, industry, and international institutions. Principal investigators from all solicitation designations are encouraged to participate in these meetings. The first PI meeting is expected to be held in Fall 2026, and approximately every two years thereafter. For all SaTC 2.0 awards of duration less than or equal to 3 years, at least one project representative (PI/co-PI/senior researcher or NSF-approved replacement) from each organization should attend the first PI meeting held after the award date. For awards of duration greater than 3 years, at least one project representative (PI/co-PI/senior researcher or NSF-approved replacement) from each organization should attend one PI meeting every two years for the duration of the project. PIs are explicitly required to budget for travel to the PI meetings. Access to Experimental Research Infrastructure PIs may consider utilizing NSF-supported research infrastructure (such as the Platforms for Advanced Wireless Research 6 , FABRIC 7 , Chameleon 8 , CloudLab 9 , and National Artificial Intelligence Research Resource (NAIRR) Pilot 10 ) when formulating their research plans and submitting proposals. Descriptions of the capabilities of each system and their availability can be found at websites. 6 https://advancedwireless.org/ . 7 https://portal.fabric-testbed.net/ . 8 https://www.chameleoncloud.org/ . 9 https://cloudlab.us/ . 10 https://nairrpilot.org/ ."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.3549187,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A4rViYKEBbayybwJO2_oU"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Review and Selection Process Proposals submitted in response to this program solicitation will be reviewed by Ad hoc Review and/or Panel Review, or Internal NSF Review. The program will use ad-hoc, panel or internal review. Reviewers will be asked to evaluate proposals using two National Science Board approved merit review criteria and, if applicable, additional program specific criteria. A summary rating and accompanying narrative will be completed and submitted by each reviewer. The Program Officer assigned to manage the proposal's review will consider the advice of reviewers and will formulate a recommendation. After scientific, technical and programmatic review and consideration of appropriate factors, the NSF Program Officer recommends to the cognizant Division Director whether the proposal should be declined or recommended for award. NSF strives to be able to tell proposers whether their proposals have been declined or recommended for funding within six months. Large or particularly complex proposals or proposals from new recipients may require additional review and processing time. The time interval begins on the deadline or target date, or receipt date, whichever is later. The interval ends when the Division Director acts upon the Program Officer's recommendation. After programmatic approval has been obtained, the proposals recommended for funding will be forwarded to the Division of Grants and Agreements or the Division of Acquisition and Cooperative Support for review of business, financial, and policy implications. After an administrative review has occurred, Grants and Agreements Officers perform the processing and issuance of a grant or other agreement. Proposers are cautioned that only a Grants and Agreements Officer may make commitments, obligations or awards on behalf of NSF or authorize the expenditure of funds. No commitment on the part of NSF should be inferred from technical or budgetary discussions with a NSF Program Officer. A Principal Investigator or organization that makes financial or personnel commitments in the absence of a grant or cooperative agreement signed by the NSF Grants and Agreements Officer does so at their own risk. Once an award or declination decision has been made, Principal Investigators are provided feedback about their proposals. In all cases, reviews are treated as confidential documents. Verbatim copies of reviews, excluding the names of the reviewers or any reviewer-identifying information, are sent to the Principal Investigator/Project Director by the Program Officer. In addition, the proposer will receive an explanation of the decision to award or decline funding. VII. Award Administration Information A. Notification of the Award Notification of the award is made to the submitting organization by an NSF Grants and Agreements Officer."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT"
+     }
+    },
+    "score": 1.348864,
+    "metadata": {
+     "documentIdentifier": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Security, Privacy, and Trust in Cyberspace (NSF SaTC)/NOFO-File-TXT",
+     "nofoName": "Security, Privacy, and Trust in Cyberspace (NSF SaTC)",
+     "agency": "U.S. National Science Foundation",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:25.987Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Science, Technology, and Other Research and Development",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A9bViYKEBbayybwJO2_oU"
+    }
+   }
+  ]
+ }
+}

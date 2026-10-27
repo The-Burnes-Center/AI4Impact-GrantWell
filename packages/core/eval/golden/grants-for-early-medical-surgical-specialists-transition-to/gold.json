@@ -1,0 +1,441 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "NIH",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "New applications due November 10, 2026",
+      "date": "2026-11-10",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": false,
+      "quote": "Earliest Start Date November 10, 2026 November 16, 2026 * Not Applicable March 2027 May 2027 July 2027"
+    },
+    {
+      "kind": "application",
+      "label": "Resubmission applications due November 16, 2026",
+      "date": "2026-11-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": false,
+      "quote": "Earliest Start Date November 10, 2026 November 16, 2026 * Not Applicable March 2027 May 2027 July 2027"
+    },
+    {
+      "kind": "application",
+      "label": "New applications due June 16, 2027",
+      "date": "2027-06-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": false,
+      "quote": "July 2027 June 16, 2027 * July 16, 2027 * Not Applicable November 2027 January 2028 April 2028"
+    },
+    {
+      "kind": "application",
+      "label": "Resubmission applications due July 16, 2027",
+      "date": "2027-07-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": false,
+      "quote": "July 2027 June 16, 2027 * July 16, 2027 * Not Applicable November 2027 January 2028 April 2028"
+    },
+    {
+      "kind": "application",
+      "label": "New applications due June 16, 2028",
+      "date": "2028-06-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": false,
+      "quote": "April 2028 June 16, 2028 * July 16, 2028 * Not Applicable November 2028 January 2029 April 2029 All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Resubmission applications due July 16, 2028",
+      "date": "2028-07-16",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": false,
+      "quote": "April 2028 June 16, 2028 * July 16, 2028 * Not Applicable November 2028 January 2029 April 2029 All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "other",
+      "label": "Expiration Date",
+      "date": "2028-07-17",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Due Dates for E.O. 12372 Not Applicable Expiration Date July 17, 2028"
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": null,
+    "periodMonths": 24,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [
+      {
+        "what": "direct costs per year (modular, in multiples of $25,000)",
+        "value": 125000
+      }
+    ],
+    "match": {
+      "required": false,
+      "ratio": null,
+      "appliesTo": null,
+      "quote": "This NOFO does not require cost sharing as defined in the NIH Grants Policy Statement Section 1.2 Definition of Terms ."
+    },
+    "quote": "Application budgets are limited to $125,000 in direct costs per year."
+  },
+  "sections": [
+    {
+      "name": "Professional Development Plan",
+      "order": 1,
+      "limit": {
+        "type": "pages",
+        "value": 5
+      },
+      "conditional": null,
+      "component": "SF424(R&R) Other Project Information: Other Attachments",
+      "quote": "Applicants must include an attachment titled \"Professional Development Plan\" (PDP) that describes an individualized plan to garner resources, activities, collaborations, and/or didactic or practical experiences"
+    },
+    {
+      "name": "Research Strategy",
+      "order": 2,
+      "limit": null,
+      "conditional": null,
+      "component": "PHS 398 Research Plan",
+      "quote": "Research Strategy: In accordance with the goals of the GEMSSTAR program, the Research Strategy should emphasize how the candidate's proposed research will advance the understanding of aging- or geriatrics-related science"
+    },
+    {
+      "name": "Data Management and Sharing Plan",
+      "order": 3,
+      "limit": null,
+      "conditional": "Research that will generate scientific data",
+      "component": "PHS 398 Research Plan: Other Plan(s)",
+      "quote": "A Data Management and Sharing Plan (DMS Plan) is required for any NIH-funded or conducted research that will generate scientific data."
+    },
+    {
+      "name": "Recruitment and Retention Plan",
+      "order": 4,
+      "limit": null,
+      "conditional": "Human subjects research",
+      "component": "Study Record: PHS Human Subjects and Clinical Trials Information, Section 2.5",
+      "quote": "The recruitment and retention plan must: Describe potential barriers to participation and plans to minimize these barriers. Describe a plan to leverage existing relationships with and/or conduct outreach to a broad range of community groups."
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Factor 1. Importance of the Research (Significance and Innovation)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy"
+      ],
+      "quote": "Factor 1. Importance of the Research (Significance and Innovation) Significance Evaluate the importance of the proposed research in the context of current scientific challenges and opportunities"
+    },
+    {
+      "name": "Factor 2. Rigor and Feasibility (Approach)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy"
+      ],
+      "quote": "Factor 2. Rigor and Feasibility (Approach) Approach Evaluate the scientific quality of the proposed work."
+    },
+    {
+      "name": "Factor 3. Expertise and Resources (Investigator(s) and Environment)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Factor 3. Expertise and Resources (Investigator(s) and Environment) Investigator(s) Evaluate whether the investigator(s) have demonstrated background, training, and expertise"
+    },
+    {
+      "name": "Protections for Human Subjects",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For research that involves human subjects but does not involve one of the categories of research that are exempt under 45 CFR Part 46, evaluate the justification for involvement of human subjects"
+    },
+    {
+      "name": "Vertebrate Animals",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "When the proposed research includes Vertebrate Animals, evaluate the involvement of live vertebrate animals according to the following criteria"
+    },
+    {
+      "name": "Biohazards",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "When the proposed research includes Biohazards, evaluate whether specific materials or procedures that will be used are significantly hazardous to research personnel and/or the environment"
+    },
+    {
+      "name": "Resubmissions",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Resubmissions As applicable, evaluate the full application as now presented."
+    },
+    {
+      "name": "Renewals",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Renewals As applicable, evaluate the progress made in the last funding period."
+    },
+    {
+      "name": "Revisions",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Revisions As applicable, evaluate the appropriateness of the proposed expansion of the scope of the project."
+    },
+    {
+      "name": "Professional Development Plan",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Professional Development Plan"
+      ],
+      "quote": "Professional Development Plan Evaluate the extent to which the Professional Development Plan promotes the candidate's knowledge and skills in geriatrics- or aging-related research."
+    },
+    {
+      "name": "Authentication of Key Biological and/or Chemical Resources",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For projects involving key biological and/or chemical resources, evaluate the brief plans proposed for identifying and ensuring the validity of those resources."
+    },
+    {
+      "name": "Budget and Period of Support",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Evaluate whether the budget and the requested period of support are fully justified and reasonable in relation to the proposed research."
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Follow all page limits in the How to Apply Application Guide and Table of Page Limits",
+      "Only limited Appendix materials allowed: no publications or other material except blank questionnaires or blank surveys",
+      "DMS Plan must use the NIH DMS Plan Format Page; no extra narrative where it asks Yes or No"
+    ],
+    "quote": "No publications or other material, with the exception of blank questionnaires or blank surveys, may be included in the Appendix."
+  },
+  "eligibility": [
+    {
+      "item": "Eligible organizations: higher education institutions, nonprofits, for-profits (incl. small businesses), state/county/city/township/special district governments, tribal governments, eligible federal agencies, U.S. territories, independent school districts, public/Indian housing authorities, tribal organizations, faith- or community-based organizations, regional organizations",
+      "quote": "Higher Education Institutions - Includes all types Public/State Controlled Institutions of Higher Education Private Institutions of Higher Education"
+    },
+    {
+      "item": "Non-domestic (non-U.S.) entities are not eligible",
+      "quote": "Non-domestic (non-U.S.) Entities (Foreign Organizations) are not eligible to apply."
+    },
+    {
+      "item": "Non-domestic components of U.S. organizations are not eligible",
+      "quote": "Non-domestic (non-U.S.) components of U.S. Organizations are not eligible to apply."
+    },
+    {
+      "item": "Foreign components, as defined in the NIH Grants Policy Statement, are allowed",
+      "quote": "Foreign components, as defined in the NIH Grants Policy Statement , are allowed."
+    },
+    {
+      "item": "Applications involving foreign subawards/subcontracts are noncompliant and will not be funded",
+      "quote": "Applications involving foreign subawards/subcontracts submitted in response to this NOFO will be deemed noncompliant and will not be considered for funding."
+    },
+    {
+      "item": "All organizational registrations must be completed before submission (allow 6 weeks or more)",
+      "quote": "All registrations must be completed prior to the application being submitted. Registration can take 6 weeks or more"
+    },
+    {
+      "item": "Maintain an active SAM registration, renewed at least annually",
+      "quote": "System for Award Management (SAM) &ndash; Applicants must complete and maintain an active registration, which requires renewal at least annually ."
+    },
+    {
+      "item": "Use the same UEI for all registrations and on the application",
+      "quote": "The same UEI must be used for all registrations, as well as on the grant application."
+    },
+    {
+      "item": "Organization must register in eRA Commons with at least one Signing Official and one PD/PI account",
+      "quote": "eRA Commons requires organizations to identify at least one Signing Official (SO) and at least one Program Director/Principal Investigator (PD/PI) account in order to submit an application."
+    },
+    {
+      "item": "Organization must complete Grants.gov registration (requires active SAM registration)",
+      "quote": "Grants.gov &ndash; Applicants must have an active SAM registration in order to complete the Grants.gov registration."
+    },
+    {
+      "item": "PD/PI must have an eRA Commons account affiliated with the applicant organization",
+      "quote": "All PD(s)/PI(s) must have an eRA Commons account. PD(s)/PI(s) should work with their organizational officials to either create a new account or to affiliate their existing account"
+    },
+    {
+      "item": "PD/PI eRA Commons profile must be linked to a valid ORCID ID",
+      "quote": "All PD(s)/PI(s) must be registered with ORCID . The personal profile associated with the PD(s)/PI(s) eRA Commons account must be linked to a valid ORCID ID."
+    },
+    {
+      "item": "PD/PI must enter their eRA Commons ID in the Credential field of the Senior/Key Person Profile form",
+      "quote": "All PD(s)/PI(s) must include their eRA Commons ID in the Credential field of the Senior/Key Person Profile form ."
+    },
+    {
+      "item": "Candidate must hold a clinical doctoral degree (e.g., MD, DO, DDS, DMD, PharmD, DNP, DPT, DVM); research doctorates such as the PhD are generally ineligible",
+      "quote": "Candidates for this award must have a clinical doctoral degree. Such degrees include, but are not limited to, the MD, DO, DDS, DMD, OD, DC, PharmD"
+    },
+    {
+      "item": "Not open to candidates already funded as PI on an NIH aging-related career development (excluding K38 and K99) or research award; institutional awards (KL2, R25, NIA P30 REC) do not disqualify",
+      "quote": "This award is not intended for candidates who have already received funding as a principal investigator on an NIH aging-related career development (excluding K38 and K99) or research award"
+    },
+    {
+      "item": "Candidates with a prior non-aging NIH individual award may apply but must justify a meaningful shift toward aging-related science",
+      "quote": "However, such individuals must provide strong justification in their application explaining how their proposed research will entail a meaningful shift towards aging-related science"
+    },
+    {
+      "item": "Candidate must have, or will have, a faculty appointment at the start of funding; appointments contingent on the award are not acceptable",
+      "quote": "Eligibility is limited to candidates who have, or will have, a faculty appointment at the start of GEMSSTAR funding."
+    },
+    {
+      "item": "Applications are expected to have a single PD/PI; other personnel are collaborators or consultants",
+      "quote": "It is expected that GEMSSTAR applications will have a single PD/PI and that other personnel will be listed as collaborators or consultants."
+    },
+    {
+      "item": "A concurrent mentored K application must not have aims overlapping the GEMSSTAR application",
+      "quote": "The aims of the two applications must not overlap per NIH submission policies."
+    },
+    {
+      "item": "Only New and Resubmission application types are allowed",
+      "quote": "Application Types Allowed New Resubmission The OER Glossary and the How to Apply Application Guide provide details on these application types."
+    },
+    {
+      "item": "Clinical trials are optional",
+      "quote": "Optional: Accepting applications that either propose or do not propose clinical trial(s)."
+    },
+    {
+      "item": "Non-participating ICOs (only NIA, NIDCR, NINR, NIMHD participate) will not consider applications",
+      "quote": "ICOs that do not participate in this announcement will not consider applications for funding."
+    },
+    {
+      "item": "Organizations may submit more than one application only if each is scientifically distinct",
+      "quote": "Applicant organizations may submit more than one application, provided that each application is scientifically distinct."
+    },
+    {
+      "item": "A new (A0) application is not accepted before the summary statement issues for an overlapping A0 or A1 application",
+      "quote": "A new (A0) application that is submitted before issuance of the summary statement from the review of an overlapping new (A0) or resubmission (A1) application."
+    },
+    {
+      "item": "A resubmission (A1) is not accepted before the summary statement issues for the previous A0 application",
+      "quote": "A resubmission (A1) application that is submitted before issuance of the summary statement from the review of the previous new (A0) application."
+    },
+    {
+      "item": "An application substantially overlapping another application pending appeal of initial peer review is not accepted",
+      "quote": "An application that has substantial overlap with another application pending appeal of initial peer review"
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "SF424(R&R) Cover form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Cover All instructions in the How to Apply - Application Guide must be followed."
+    },
+    {
+      "item": "SF424(R&R) Project/Performance Site Locations form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Project/Performance Site Locations All instructions in the How to Apply- Application Guide must be followed."
+    },
+    {
+      "item": "SF424(R&R) Other Project Information form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Other Project Information All instructions in the How to Apply- Application Guide must be followed."
+    },
+    {
+      "item": "SF424(R&R) Senior/Key Person Profile, with biographical sketches",
+      "userWrites": true,
+      "quote": "SF424(R&R) Senior/Key Person Profile All instructions in the How to Apply- Application Guide must be followed."
+    },
+    {
+      "item": "R&R or Modular Budget (annual direct costs in multiples of $25,000 up to $125,000)",
+      "userWrites": false,
+      "quote": "R&R or Modular Budget All instructions in the How to Apply- Application Guide must be followed."
+    },
+    {
+      "item": "R&R Subaward Budget",
+      "userWrites": false,
+      "quote": "R&R Subaward Budget All instructions in the How to Apply - Application Guide must be followed."
+    },
+    {
+      "item": "PHS 398 Cover Page Supplement",
+      "userWrites": false,
+      "quote": "PHS 398 Cover Page Supplement All instructions in the How to Apply - Application Guide must be followed."
+    },
+    {
+      "item": "PHS 398 Research Plan form",
+      "userWrites": false,
+      "quote": "PHS 398 Research Plan All instructions in the How to Apply - Application Guide must be followed, with the following additional instructions"
+    },
+    {
+      "item": "At least one human subjects study record (or Delayed Onset Study record) if human subjects are involved",
+      "userWrites": true,
+      "quote": "you must include at least one human subjects study record using the Study Record: PHS Human Subjects and Clinical Trials Information form or Delayed Onset Study record."
+    },
+    {
+      "item": "PHS Assignment Request Form",
+      "userWrites": false,
+      "quote": "PHS Assignment Request Form All instructions in the How to Apply- Application Guide must be followed."
+    },
+    {
+      "item": "Bibliography & References Cited",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Facilities & Other Resources",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Equipment",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Biographical Sketch",
+      "userWrites": true,
+      "quote": null
+    }
+  ],
+  "libraryRequired": [
+    "Project Summary/Abstract",
+    "Project Narrative",
+    "Specific Aims",
+    "Resource Sharing Plan"
+  ]
+}

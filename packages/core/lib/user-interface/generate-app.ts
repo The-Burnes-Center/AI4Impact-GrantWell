@@ -6,7 +6,7 @@ import * as s3 from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 import { ChatBotApi } from "../chatbot-api";
 import { NagSuppressions } from "cdk-nag";
-import { SPA_ROUTING_CODE } from "./spa-routing";
+import { spaRoutingCode } from "./spa-routing";
 
 
 export interface WebsiteProps {  
@@ -17,6 +17,7 @@ export interface WebsiteProps {
   readonly spaRoutingFunctionName: string;
   readonly customDomain?: string;
   readonly certificateArn?: string;
+  readonly redirectDomains?: string[];
 }
 
 export class Website extends Construct {
@@ -81,11 +82,15 @@ export class Website extends Construct {
       functionName: props.spaRoutingFunctionName,
       comment: "App routes to /index.html; missing files stay 404",
       runtime: cf.FunctionRuntime.JS_2_0,
-      code: cf.FunctionCode.fromInline(SPA_ROUTING_CODE),
+      code: cf.FunctionCode.fromInline(
+        spaRoutingCode(certificate && props.customDomain && props.redirectDomains?.length
+          ? { from: props.redirectDomains, to: props.customDomain }
+          : undefined)
+      ),
     });
 
     const distribution = new cf.Distribution(this, "Distribution", {
-      domainNames: certificate && props.customDomain ? [props.customDomain] : undefined,
+      domainNames: certificate && props.customDomain ? [props.customDomain, ...(props.redirectDomains ?? [])] : undefined,
       certificate,
       minimumProtocolVersion: cf.SecurityPolicyProtocol.TLS_V1_2_2021,
       defaultRootObject: "index.html",

@@ -1,0 +1,59 @@
+{
+  "query": "Generate all sections for the grant application",
+  "projectBasics": {
+    "projectName": "Millbrook Leak Detection and Smart Meter Pilot",
+    "organizationName": "Town of Millbrook Department of Public Works",
+    "requestedAmount": "$180,000",
+    "location": "Millbrook, MA",
+    "zipCode": "01999",
+    "contactName": "Dana Ruiz, DPW Director",
+    "contactEmail": "druiz@millbrook-ma.example"
+  },
+  "questionnaireAnswers": [
+    {
+      "question": "Describe your project in a concise overview, stating its goals and objectives and explaining how it reduces indoor or outdoor water use, improves water loss control, or improves drought planning and resiliency across Massachusetts.",
+      "answer": "We'll do an acoustic leak survey of the whole distribution system and put in 400 smart meters in the Elm Hill neighborhood as a pilot. Unaccounted-for water was 17% last year, well above the state's 10% standard. Goal is to get it under 12% in two years."
+    },
+    {
+      "question": "Describe the specific activities, tasks, and methods you will use to achieve your goals, and identify which eligible project type from the program's examples your project falls under.",
+      "answer": "Water loss control project: contractor-led acoustic leak detection on about 62 miles of main, then AMI smart meters on 400 of our 4,100 service connections, with leak alerts to customers."
+    },
+    {
+      "question": "Describe how you will share project details and outcomes with the public, and confirm that EEA will be acknowledged for project funding.",
+      "answer": "Results go on the town website and to the Select Board in a public meeting. We'll credit EEA on the website and in any press release."
+    },
+    {
+      "question": "Describe the individuals and organizations involved in your project, including any collaboration among municipalities, public water suppliers, or nonprofit organizations, and how the project will operate at a regional scale.",
+      "answer": "DPW runs it with our water superintendent. The neighboring Town of Ashby Falls will get our survey method and results; no formal partnership yet."
+    },
+    {
+      "question": "What measurable outcomes will your project achieve, such as gallons of water saved, percentage reduction in unaccounted-for water, or drought resiliency improvements, and what specific metrics will you use to monitor and evaluate success?",
+      "answer": "Gallons saved from repaired leaks (we estimate 90,000 gallons a day), unaccounted-for water percentage from the annual statistical report, and number of customer leak alerts resolved."
+    },
+    {
+      "question": "Describe your budget with a detailed breakdown of personnel, materials, equipment, and other costs, and explain how each cost is necessary and reasonable relative to expected outcomes, referencing vendor quotes and cost estimates you will attach.",
+      "answer": "Roughly $95K for the leak survey contractor, $70K for 400 meters and installation, $15K for staff time. We have a vendor quote for the meters."
+    },
+    {
+      "question": "Present a work plan with key tasks, deliverables, milestones, and a realistic timeline that is completed within the contract period ending June 30, 2027, and confirm that all costs will be incurred only during that period.",
+      "answer": "Survey in winter, repairs and meter installs in spring, data review in fall. We'd like to start the leak survey in January."
+    },
+    {
+      "question": "Describe how you will sustain project benefits beyond the grant period through maintenance plans or funding strategies, and explain how your deliverables can be transferred to and adopted by other communities.",
+      "answer": "Meters are covered under our existing meter replacement budget after the grant. The water enterprise fund pays for future surveys every 3 years."
+    },
+    {
+      "question": "How will you ensure readiness and feasibility, including your ability to submit the Progress Report and Final Report, deliver a presentation to the Massachusetts Water Resources Commission, and confirm your MBTA Communities Act compliance under G.L. c. 40A, \u00a7 3A?",
+      "answer": "We've done state grants before and can do the reports and a presentation to the Water Resources Commission. Millbrook is compliant with the MBTA Communities Act."
+    }
+  ],
+  "additionalInfo": "",
+  "userState": "MA",
+  "note": "Rebuilt 2026-10-21 from the 2026-10-16 review's applicant profile; the original answers were deleted with the drafts.",
+  "traps": [
+    "Requested $180,000 against a stated target award of up to $50,000; the fit check should flag it.",
+    "Required cost breakdown is part of a scored criterion; a draft that skips it loses those points.",
+    "Pilot covers 400 meters; any section claiming all 4,100 connections contradicts the inputs.",
+    "Work plan must not start before the contract start date; costs only within the contract period."
+  ]
+}

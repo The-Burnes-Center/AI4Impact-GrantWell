@@ -30,6 +30,8 @@ import {
   buildDigest,
   selectDigestSections,
   makeUnsubscribeToken,
+  scopeFromClaims,
+  canSeeEveryState,
 } from "grantwell-shared";
 
 const region = process.env.AWS_REGION || "us-east-1";
@@ -112,9 +114,19 @@ export const handler = async (event) => {
   for (const prefs of users) {
     stats.candidates++;
     try {
+      const attributes = await resolveAttributes(prefs.user_id);
+      if (!attributes) {
+        stats.errors++;
+        continue;
+      }
+      // Role and state come from Cognito, not prefs, so the email shows only grants the user could
+      // open on the site, even if their state changed after they saved their prefs.
+      const scope = scopeFromClaims(attributes);
       // Sends when there's any relevant content (new OR closing-soon OR still-open); the watermark
       // advances either way so the window moves on.
-      const sections = selectDigestSections(activeNofos, prefs, frequency, now);
+      const sections = selectDigestSections(activeNofos, { ...prefs, state: scope.state }, frequency, now, {
+        allStates: canSeeEveryState(scope),
+      });
       const sendArgs =
         sections.total > 0
           ? { sections, dateRange: { from: sections.since.toISOString(), to: watermarkISO } }
@@ -127,7 +139,7 @@ export const handler = async (event) => {
         continue;
       }
 
-      const email = await resolveEmail(prefs.user_id);
+      const email = attributes.email;
       if (!email) {
         stats.errors++;
         continue;
@@ -232,15 +244,14 @@ async function queryActiveNofos() {
   return out;
 }
 
-async function resolveEmail(userId) {
+async function resolveAttributes(userId) {
   try {
     const res = await cognitoClient.send(
       new AdminGetUserCommand({ UserPoolId: USER_POOL_ID, Username: userId })
     );
-    const attr = (res.UserAttributes || []).find((a) => a.Name === "email");
-    return attr?.Value || null;
+    return Object.fromEntries((res.UserAttributes || []).map((a) => [a.Name, a.Value]));
   } catch (error) {
-    console.error(`Could not resolve email for ${userId}:`, error);
+    console.error(`Could not resolve user ${userId}:`, error);
     return null;
   }
 }

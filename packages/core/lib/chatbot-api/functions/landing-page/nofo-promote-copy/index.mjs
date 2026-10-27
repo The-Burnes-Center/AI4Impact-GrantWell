@@ -13,7 +13,7 @@
 import { S3Client, ListObjectsV2Command, CopyObjectCommand } from "@aws-sdk/client-s3";
 import { DynamoDBClient, GetItemCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
-import { requireAdmin, resolveCallerScope, jsonResponse, stateNameFromCode } from "grantwell-shared";
+import { requireAdmin, resolveCallerScope, jsonResponse, stateNameFromCode, copyArtifacts } from "grantwell-shared";
 
 const s3Client = new S3Client({ requestChecksumCalculation: "WHEN_REQUIRED" });
 const dynamoClient = new DynamoDBClient();
@@ -52,6 +52,7 @@ export const handler = async (event) => {
     }
 
     await copyS3Folder(nofoName, newName);
+    await copyArtifacts(s3Client, nofoName, newName);
     await writeStateCopyRow(newName, targetState, sourceRow);
 
     return jsonResponse(200, { newName, state: targetState });

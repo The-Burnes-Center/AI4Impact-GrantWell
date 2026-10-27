@@ -5,11 +5,10 @@
  * Agency, Category) without re-running the full processing pipeline.
  */
 
-import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client } from '@aws-sdk/client-s3';
 import { DynamoDBClient, UpdateItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
-import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
-import { requireAdmin, assertCanEditNofoOr403, withSectionIds } from 'grantwell-shared';
+import { requireAdmin, assertCanEditNofoOr403, withSectionIds, getArtifact, putArtifact } from 'grantwell-shared';
 
 const scopeDeps = { client: new DynamoDBClient(), GetItemCommand, marshall, unmarshall };
 
@@ -119,14 +118,9 @@ export const handler = async (event) => {
 
     const summaryKey = `${nofoName}/summary.json`;
 
-    const getCommand = new GetObjectCommand({
-      Bucket: s3Bucket,
-      Key: summaryKey,
-    });
-
     let existingSummary;
     try {
-      const getResult = await s3Client.send(getCommand);
+      const getResult = await getArtifact(s3Client, summaryKey, s3Bucket);
       const fileContent = await streamToString(getResult.Body);
       existingSummary = JSON.parse(fileContent);
     } catch (error) {
@@ -157,35 +151,11 @@ export const handler = async (event) => {
       existingSummary.ProjectNarrativeSections = withSectionIds(existingSummary.ProjectNarrativeSections);
     }
 
-    const putCommand = new PutObjectCommand({
-      Bucket: s3Bucket,
-      Key: summaryKey,
-      Body: JSON.stringify(existingSummary, null, 2),
-      ContentType: 'application/json',
-    });
-
-    await s3Client.send(putCommand);
+    await putArtifact(s3Client, summaryKey, JSON.stringify(existingSummary, null, 2), 'application/json');
     console.log(`Updated summary.json content for ${nofoName}`);
 
     if (enableDynamoDBCache && tableName) {
       await syncMetadataToDynamoDB(tableName, nofoName, existingSummary);
-    }
-
-    const syncFunctionName = process.env.SYNC_KB_FUNCTION_NAME;
-    if (syncFunctionName) {
-      try {
-        const lambdaClient = new LambdaClient();
-        await lambdaClient.send(
-          new InvokeCommand({
-            FunctionName: syncFunctionName,
-            InvocationType: 'Event',
-            Payload: JSON.stringify({ syncSource: 'nofo' }),
-          })
-        );
-        console.log('Triggered KB sync after summary update');
-      } catch (error) {
-        console.error('Failed to invoke KB sync:', error);
-      }
     }
 
     return {

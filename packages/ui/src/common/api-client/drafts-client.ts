@@ -757,12 +757,13 @@ export class DraftsClient {
     console.log('DOCX generation response status:', response.status);
 
     if (response.status !== 200) {
+      const errorText = await response.text();
       let errorMessage;
       try {
-        const errorData = await response.json();
+        const errorData = JSON.parse(errorText);
         errorMessage = errorData.error || errorData.message || 'Failed to generate DOCX';
-      } catch (e) {
-        errorMessage = await response.text() || `Failed to generate DOCX: HTTP ${response.status}`;
+      } catch {
+        errorMessage = errorText || `Failed to generate DOCX: HTTP ${response.status}`;
       }
       console.error('DOCX generation error:', errorMessage);
       throw new Error(errorMessage);
@@ -843,13 +844,12 @@ export class DraftsClient {
     console.log('PDF generation response headers:', Object.fromEntries(response.headers.entries()));
     
     if (response.status !== 200) {
+      const errorText = await response.text();
       let errorMessage;
       try {
-        const errorData = await response.json();
+        const errorData = JSON.parse(errorText);
         errorMessage = errorData.error || errorData.message || 'Failed to generate PDF';
-      } catch (e) {
-        // If response is not JSON, try to get text
-        const errorText = await response.text();
+      } catch {
         errorMessage = errorText || `Failed to generate PDF: HTTP ${response.status}`;
       }
       console.error('PDF generation error:', errorMessage);

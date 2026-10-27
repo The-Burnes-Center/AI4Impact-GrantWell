@@ -1,0 +1,302 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "CA state",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "Project Proposal (Step One) due date set in the solicitation notice, not in these guidelines",
+      "date": null,
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Applicants should refer to the solicitation notice for due dates."
+    }
+  ],
+  "award": {
+    "ceiling": 500000,
+    "floor": 25000,
+    "periodMonths": null,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [
+      {
+        "what": "indirect costs, percent of grant-funded direct costs",
+        "value": 15
+      },
+      {
+        "what": "contingency, percent of the grant request",
+        "value": 10
+      }
+    ],
+    "match": null,
+    "quote": "The maximum award for an individual project is $500,000. The minimum award is $25,000."
+  },
+  "sections": [
+    {
+      "name": "Project Description",
+      "order": 1,
+      "limit": {
+        "type": "chars",
+        "value": 2000
+      },
+      "conditional": null,
+      "component": "Project Proposal Signature Form (Appendix B)",
+      "quote": "Project Description (limited to 2,000 characters)"
+    },
+    {
+      "name": "The Project",
+      "order": 2,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Proposal Questions Form",
+      "quote": "1. Describe the discrete project the grant would fund. The information provided should include grant deliverables and support the cost estimate submitted with the proposal."
+    },
+    {
+      "name": "Requirements & Project Need",
+      "order": 3,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Proposal Questions Form",
+      "quote": "1. How many youth will be served by the project funded with the grant and across what time period?"
+    },
+    {
+      "name": "Funding Priorities",
+      "order": 4,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Proposal Questions Form",
+      "quote": "11. Describe any youth leadership opportunities during project development and/or implementation."
+    },
+    {
+      "name": "Project Readiness",
+      "order": 5,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Proposal Questions Form",
+      "quote": "17. Describe the immediate steps to be taken post-grant award and timeline for implementation and completion of each."
+    },
+    {
+      "name": "Organizational Capacity & Collaboration",
+      "order": 6,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Proposal Questions Form",
+      "quote": "22. Describe the applicant's ability and experience with fundraising (e.g., grants, donations, etc.)."
+    },
+    {
+      "name": "Additional Project Characteristics",
+      "order": 7,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Proposal Questions Form",
+      "quote": "27. Describe other project characteristics not previously discussed that would assist in evaluating the proposal. (No response or an answer of \"Not Applicable\" will be given a score of zero)."
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Requirements & Project Need",
+      "scored": true,
+      "points": 35,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Requirements & Project Need"
+      ],
+      "quote": "Requirements & Project Need 0-35"
+    },
+    {
+      "name": "Funding Priorities",
+      "scored": true,
+      "points": 25,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Funding Priorities"
+      ],
+      "quote": "Funding Priorities 0-25"
+    },
+    {
+      "name": "Project Readiness",
+      "scored": true,
+      "points": 20,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Readiness"
+      ],
+      "quote": "Project Readiness 0-20"
+    },
+    {
+      "name": "Organizational Capacity & Collaboration",
+      "scored": true,
+      "points": 15,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Organizational Capacity & Collaboration"
+      ],
+      "quote": "Organizational Capacity & Collaboration 0-15"
+    },
+    {
+      "name": "Additional Project Characteristics",
+      "scored": true,
+      "points": 5,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Additional Project Characteristics"
+      ],
+      "quote": "Additional Project Characteristics 0-5"
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Submit online through RAPTR; no hard copy Project Proposals are required",
+      "Answer every project question; write \"Not Applicable\" with a brief explanation rather than leaving a field blank",
+      "Supporting Documentation upload is limited to 8 pages"
+    ],
+    "quote": "If a question does not apply to the project, indicate \"Not Applicable\" with a brief explanation. Do not leave blank fields."
+  },
+  "eligibility": [
+    {
+      "item": "Eligible applicants: local, state, and federal agencies; nonprofit organizations; and federally recognized Native American tribes",
+      "quote": "Eligible applicants include local, state, and federal agencies; nonprofit organizations; and federally recognized Native American tribes."
+    },
+    {
+      "item": "Nonprofits must be 501(c)(3) public benefit corporations formed under California Nonprofit Corporation Law, incorporated at least two years, and qualified to do business in California",
+      "quote": "incorporated for a minimum of two years, qualified to do business in California, and qualified as a tax-exempt 501(c)(3) organization under the US Internal Revenue Code."
+    },
+    {
+      "item": "Nonprofits must be active with the California Secretary of State and current with the Attorney General Registry of Charities and Fundraisers",
+      "quote": "all nonprofit organizations must be active with the California Secretary of State and current with the registration and reporting requirements of the California Department of Justice"
+    },
+    {
+      "item": "A fiscal sponsor may apply for a nonprofit that is not a qualified 501(c)(3), but the fiscal sponsor must be the applicant",
+      "quote": "A fiscal sponsor may apply on behalf of a nonprofit that is not a qualified 501(c)(3) organization, but the fiscal sponsor, not the nonprofit, must be the grant applicant."
+    },
+    {
+      "item": "Projects must serve youth (birth to 26 years old)",
+      "quote": "Projects must serve youth. For the purposes of this program, youth is defined as a person between the ages of birth and 26 years old."
+    },
+    {
+      "item": "Projects must directly support youth access to natural or cultural resources",
+      "quote": "Projects must directly support youth access to either natural or cultural resources."
+    },
+    {
+      "item": "Projects must include design features and program elements promoting youth health, safety, well-being, and comfort",
+      "quote": "Projects must include design features and program elements to promote youth health, safety, well-being, and comfort."
+    },
+    {
+      "item": "At least 80% of youth participants must be from low-income communities/households AND from underserved communities of color or vulnerable populations",
+      "quote": "At least eighty percent (80%) of the youth participants must meet the criteria for low- income and underserved and vulnerable communities."
+    },
+    {
+      "item": "Development projects must have at least 80% of the project footprint in a low-income community",
+      "quote": "If the project is a Development project (see definition in Appendix O), 80% or more of the project's footprint must be located in the low-income community."
+    },
+    {
+      "item": "Projects must comply with all labor laws; Development Projects must also comply with CEQA",
+      "quote": "Projects must comply with all labor laws. In addition, Development Projects (see Appendix O for definition) must comply with the California Environmental Quality Act (CEQA)"
+    },
+    {
+      "item": "Each Project Proposal may include only one project (an applicant may submit more than one proposal)",
+      "quote": "Project Proposals that include more than one project (however, more than one Project Proposal can be submitted by an applicant)"
+    },
+    {
+      "item": "Development Projects may not be contingent on a future land acquisition",
+      "quote": "Development Projects contingent on a future land acquisition for project implementation"
+    },
+    {
+      "item": "The applicant may not subgrant or regrant to another entity to implement the project",
+      "quote": "Projects where applicant intends to subgrant or regrant to another entity to implement the project"
+    },
+    {
+      "item": "Vehicle acquisitions must be clean vehicles primarily dedicated to transporting youth to natural or cultural resources",
+      "quote": "Acquisitions of eco-friendly or clean vehicles that are not primarily dedicated to transporting youth on excursions to natural or cultural resources"
+    },
+    {
+      "item": "Individuals who helped plan or set priorities for this solicitation, beyond public comment, are ineligible to receive or benefit from its funds",
+      "quote": "Any individual who has participated in planning or setting priorities for a specific solicitation over and above the public comment process"
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "Project Proposal Signature Page, signed by the Authorized Representative named in the resolution or certification letter",
+      "userWrites": false,
+      "quote": "Proposal Form Signature Page - The signature page of the completed Project Proposal Form should be electronically signed (See Appendix B)."
+    },
+    {
+      "item": "Project Proposal Questions Form with responses to all questions",
+      "userWrites": true,
+      "quote": "Project Proposal Questions Form - The Project Proposal Questions Form contains the project proposal questions and a space for responses."
+    },
+    {
+      "item": "Low-Income Community Documentation (Outdoor Equity Fact Finder map, DWR mapping tool map, or other evidence)",
+      "userWrites": false,
+      "quote": "Low-Income Community Documentation - Provide evidence the project meets the low-income community eligibility requirement. Submit at least one of the following:"
+    },
+    {
+      "item": "Cost Estimate with grant-funded and other-funded costs in separate columns (Appendix D format)",
+      "userWrites": true,
+      "quote": "Cost Estimate - Provide a cost estimate reflecting all costs associated with the project. Identify costs to be funded by the grant and costs covered by other funding sources in separate columns."
+    },
+    {
+      "item": "Nonprofit Questionnaire (nonprofit applicants only)",
+      "userWrites": false,
+      "quote": "Nonprofit Questionnaire - Nonprofit applicants provide a completed questionnaire. (See Appendix F)."
+    },
+    {
+      "item": "Supporting Documentation, up to eight pages (brochures, curriculum samples, workplans, logic models, photos, etc.)",
+      "userWrites": false,
+      "quote": "Supporting Documentation - Submit up to eight pages of documentation that helps illustrate and support the proposed project"
+    },
+    {
+      "item": "Site Plan (Development Projects only)",
+      "userWrites": false,
+      "quote": "Site Plan - Submit a drawing or schematic of the proposed changes to land or structures to support youth access to natural or cultural resources"
+    },
+    {
+      "item": "Signed Authorizing Resolution (Appendix G) or Certification Letter (Appendix H) (Step Three, qualifying projects only)",
+      "userWrites": false,
+      "quote": "Signed Authorizing Resolution or Certification Letter - Provide a signed authorizing resolution from the applicant's governing board."
+    },
+    {
+      "item": "Nonprofit eligibility evidence: IRS 501(c)(3) determination, Secretary of State Active status, and AG Registry Current status (Step Three)",
+      "userWrites": false,
+      "quote": "Eligibility for Nonprofit Applicants - Provide evidence:"
+    },
+    {
+      "item": "Timeline of major project milestones (Step Three)",
+      "userWrites": true,
+      "quote": "Timeline - Provide an estimated timeline for major project milestones."
+    },
+    {
+      "item": "Assurance Statement signed by the Authorized Representative on the 80% youth requirement, plus clean vehicle use if applicable (Step Three)",
+      "userWrites": true,
+      "quote": "Assurance Statement - Provide a statement signed by the applicant's Authorized Representative attesting that if the project is awarded funding, at least 80 percent or more of youth participants will be from low-income communities"
+    },
+    {
+      "item": "Work Plan with schedule, activities, goals, objectives, benchmarks, evaluation, timeframe, resources, and responsibilities (Step Three)",
+      "userWrites": true,
+      "quote": "Work Plan - Provide an outline of the program schedule and work plan including activities. List goals objectives, benchmarks, evaluation, timeframe, resources, and who is responsible for tasks."
+    },
+    {
+      "item": "STD 204 Payee Data Record (nonprofits) or Government Agency Taxpayer ID Form (government agencies) (Step Three)",
+      "userWrites": false,
+      "quote": "Payee Data Record/Government Agency Taxpayer ID Form - Nonprofit applicants must provide a completed and signed STD 204 Payee Data Record form."
+    },
+    {
+      "item": "CEQA documentation (Notice of Exemption, Negative Declaration, or Final EIR, as applicable) before funds are approved (Development Projects)",
+      "userWrites": false,
+      "quote": "prior to the State approving funding for a proposed project, one of the following must be submitted."
+    }
+  ],
+  "libraryRequired": []
+}

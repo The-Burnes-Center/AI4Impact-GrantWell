@@ -1,0 +1,396 @@
+{
+  "schemaVersion": 1,
+  "status": "confirmed",
+  "family": "MA state",
+  "deadlines": [
+    {
+      "kind": "other",
+      "label": "Acquisition projects: contact Melissa Cryan to coordinate the appraisal process",
+      "date": "2026-12-04",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "All applicants applying for an acquisition project must be in touch with Melissa Cryan no later than December 4, 2026 in order to coordinate the appraisal process."
+    },
+    {
+      "kind": "other",
+      "label": "Written questions to be answered on the DCS website",
+      "date": "2026-12-22",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "The workshop presentation and answers to any questions received in writing by Tuesday, December 22, 2026 will be posted on the DCS website. Any questions received after that date cannot be answered"
+    },
+    {
+      "kind": "application",
+      "label": "Application due via EEA Grant Management System (hard copy postmarked by the same deadline)",
+      "date": "2027-01-05",
+      "time": "23:59",
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Applications must be submitted via GMS by Tuesday, January 5, 2027 at 11:59 pm. Any application received after the deadline will be rejected."
+    },
+    {
+      "kind": "other",
+      "label": "Acquisition projects: completed Yellow Book appraisal emailed to melissa.cryan@mass.gov",
+      "date": "2027-03-01",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "The completed appraisal must be emailed to melissa.cryan@mass.gov no later than March 1, 2027."
+    },
+    {
+      "kind": "other",
+      "label": "Any required federal permits provided to DCS",
+      "date": "2027-04-14",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Any required permit(s) must be provided to DCS by April 14, 2027 per LWCF requirements. Applicants unable to provide federal permits by this date will be ineligible"
+    },
+    {
+      "kind": "other",
+      "label": "All land purchased, construction completed, and project costs expended (contract end)",
+      "date": "2029-12-31",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "All land must be purchased on or before December 31, 2029 and all construction work must be completed on or before December 31, 2029 to be eligible for reimbursement."
+    }
+  ],
+  "award": {
+    "ceiling": 1000000,
+    "floor": 50000,
+    "periodMonths": null,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [
+      {
+        "what": "grant reimbursement as a percent of total eligible project cost",
+        "value": 50,
+        "quote": "Please note that LWCF grants have a maximum 50% reimbursement rate with a maximum $1,000,000 and minimum $50,000 grant request."
+      }
+    ],
+    "match": {
+      "required": false,
+      "ratio": null,
+      "appliesTo": null,
+      "quote": "LWCF is a reimbursement program, not a match program; therefore, the total project cost must be raised or appropriated through current tax levy or borrowed"
+    },
+    "quote": "The maximum grant award is $1,000,000. The minimum grant award is $50,000. In rare circumstances, at the Secretary's discretion, the maximum grant award for an individual project may be higher than $1,000,000"
+  },
+  "sections": [
+    {
+      "name": "Project Description",
+      "order": 1,
+      "limit": {
+        "type": "pages",
+        "value": 2
+      },
+      "conditional": null,
+      "component": "Attachment A Application Form",
+      "quote": "Briefly describe the project on TWO attached pages (writing should be no smaller than single spaced, 11-point font, 3/4\" margins). Use the LWCF Rating System as an outline for the description"
+    },
+    {
+      "name": "Leases, Rights, and Restrictions",
+      "order": 2,
+      "limit": null,
+      "conditional": null,
+      "component": "Attachment A Application Form",
+      "quote": "Leases, Rights, and Restrictions Describe outstanding leases, restrictions or other rights or interests held by others in the project site and enclose copy of the same."
+    },
+    {
+      "name": "Structures",
+      "order": 3,
+      "limit": null,
+      "conditional": "Acquisition projects only, if there are buildings or structures on the property",
+      "component": "Attachment A Application Form",
+      "quote": "If yes, list each one, including the estimated value and current use, as well as its intended use if this project is funded."
+    },
+    {
+      "name": "Municipal Open Space and Recreation Plan",
+      "order": 4,
+      "limit": null,
+      "conditional": "Municipal applicants",
+      "component": "Attachment A Application Form",
+      "quote": "Describe how your project meets the recommendations in your current OSRP. To receive points in this category, you must cite specific goals, objectives, and/or actions from the Action Plan and the associated page number references."
+    },
+    {
+      "name": "Enhanced Outreach to Environmental Justice Populations",
+      "order": 5,
+      "limit": null,
+      "conditional": null,
+      "component": "Attachment A Application Form",
+      "quote": "Describe how Environmental Justice Populations in your community (or neighboring communities) were able to participate in the project selection and design process."
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Relevance to Statewide Comprehensive Outdoor Recreation Plan",
+      "scored": true,
+      "points": 8,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Description"
+      ],
+      "quote": "Relevance to Statewide Comprehensive 8 for 4 goals"
+    },
+    {
+      "name": "Relevance to Open Space and Recreation Plan (for municipalities only)",
+      "scored": true,
+      "points": 5,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Municipal Open Space and Recreation Plan"
+      ],
+      "quote": "Relevance to Open Space and 5 for specific"
+    },
+    {
+      "name": "Relevance to agency's land acquisition or recreation capital plan (for state agencies only)",
+      "scored": true,
+      "points": 5,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Description"
+      ],
+      "quote": "Relevance to agency's land acquisition 5 for specific"
+    },
+    {
+      "name": "Environmental Justice",
+      "scored": true,
+      "points": 12,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Description",
+        "Enhanced Outreach to Environmental Justice Populations"
+      ],
+      "quote": "Environmental Justice - does the 4 points per EJ"
+    },
+    {
+      "name": "Access for People with Disabilities",
+      "scored": true,
+      "points": 8,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Description"
+      ],
+      "quote": "Access for People with Disabilities - Up to 8 points for"
+    },
+    {
+      "name": "Availability of Water-based Recreation",
+      "scored": true,
+      "points": 10,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Description"
+      ],
+      "quote": "Availability of Water-based Recreation 10 points for the"
+    },
+    {
+      "name": "Trails",
+      "scored": true,
+      "points": 7,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Description"
+      ],
+      "quote": "Trails - does the project facilitate the 7 points for land"
+    },
+    {
+      "name": "Climate resiliency",
+      "scored": true,
+      "points": 10,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Description"
+      ],
+      "quote": "Climate resiliency - how much of the 10 pts"
+    },
+    {
+      "name": "Access to open space",
+      "scored": true,
+      "points": 10,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Description"
+      ],
+      "quote": "Access to open space - is the land in a 5 points for each"
+    },
+    {
+      "name": "Stewardship",
+      "scored": true,
+      "points": 6,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Description"
+      ],
+      "quote": "Stewardship - does the applicant have a Up to 6 points"
+    },
+    {
+      "name": "Application quality",
+      "scored": true,
+      "points": 6,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Application quality - how thorough is 4 points for"
+    },
+    {
+      "name": "Project quality",
+      "scored": true,
+      "points": 18,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Project Description"
+      ],
+      "quote": "Project quality - how well does the Up 18 points"
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": "3/4\"",
+    "font": null,
+    "fontSizePt": 11,
+    "lineSpacing": "single",
+    "overallPageLimit": null,
+    "other": [
+      "Project description: no smaller than single spaced, 11-point font, 3/4\" margins",
+      "Uploaded files must be Microsoft Office compatible format or unlocked Adobe Acrobat",
+      "Hard copy should be double sided, except maps and graphics, bound with a binder clip, with the package marked FY27LAND0025",
+      "Label all attachments"
+    ],
+    "quote": "Briefly describe the project on TWO attached pages (writing should be no smaller than single spaced, 11-point font, 3/4\" margins)."
+  },
+  "eligibility": [
+    {
+      "item": "Eligible applicants: municipalities with an approved (or under review) Open Space and Recreation Plan; the Department of Conservation and Recreation; the Department of Fish and Game; and federally recognized Indian tribes",
+      "quote": "Applications will be accepted from municipalities that have Open Space and Recreation Plans that are approved or currently under review (see further detail on eligible applicants in section 2A). Also eligible are the Departments of Conservation and Recreation and Fish and Game, as well as federally recognized Indian tribes."
+    },
+    {
+      "item": "Municipal applicants must have an approved OSRP on file with DCS by the application deadline, or file a draft OSRP with the application after a rigorous public participation process with all plan sections; final OSRP approval is a condition of final payment",
+      "quote": "Municipal Applicants must have an approved OSRP on file with DCS by the application deadline. A draft OSRP may be filed with the application by the deadline as well, provided that the applicant has completed a rigorous public participation process and the draft contains all plan sections."
+    },
+    {
+      "item": "Submit the application before acquiring the property; land already owned by the applicant is not eligible for acquisition",
+      "quote": "Submit an application prior to acquisition of the subject property (land already owned by the Applicant is not eligible)."
+    },
+    {
+      "item": "Land already owned by a 501(c)(3) or other conservation/recreation entity is ineligible unless purchased no earlier than one year before the bid posting solely to pre-acquire it for the applicant, and not paid for by the future grantee",
+      "quote": "Land subject to a LWCF application cannot be already be owned by a 501(c)(3) non-profit environmental or conservation organization or other entity for conservation or recreation purposes unless it was purchased no earlier than one year prior to the posting date of this bid document"
+    },
+    {
+      "item": "No land purchase or development/renovation work may start, and no costs are reimbursable, before an executed contract or ISA",
+      "quote": "The land must not be purchased, or park development or renovation must not be started, until the selected Applicant has executed a contract with the Commonwealth or Interagency Service Agreement (ISA) with EEA in the case of state agencies."
+    },
+    {
+      "item": "Applicant must have no unresolved protected open space conversion issues with EEA",
+      "quote": "Have no unresolved protected open space conversion issues with the Executive Office of Energy and Environmental Affairs."
+    },
+    {
+      "item": "Grantee must be able to certify compliance with M.G.L. c. 40A, § 3A (MBTA Communities Act)",
+      "quote": "being able to certify that it will comply with the Massachusetts General Laws, including M.G.L. C. 40A, $ 3A (the MBTA Communities Act)."
+    },
+    {
+      "item": "Acquisition projects must include an appraisal done to federal Yellow Book standards, with the Statement of Work",
+      "quote": "All LWCF applications must include an appraisal done to Yellow Book standards."
+    },
+    {
+      "item": "Applications solely for designs or construction documents are not eligible",
+      "quote": "Note that applications solely for designs or construction documents are not eligible for funding."
+    },
+    {
+      "item": "Unrelated renovations and unrelated, separate landholdings must be submitted as individual applications",
+      "quote": "Unrelated renovations must be submitted as individual applications. Landholdings that are in a single, contiguous tract may be packaged in the same application. Unrelated, separate landholdings must be submitted as individual applications."
+    },
+    {
+      "item": "Funded properties must be open to the general public (not local residents only) and become protected Article 97 open space",
+      "quote": "All properties for which grant assistance is provided must be open to the general public (not local residents only) for appropriate passive or active recreational use and will become protected open space under Article 97"
+    },
+    {
+      "item": "Selected municipal applicants need a City Council or Town Meeting vote appropriating 100% of total project cost; DCR and DFG need EEA capital budget approval for 100%; tribal applicants must show ability to pay upfront",
+      "quote": "municipal applicants selected to receive grant funding must have a successful City Council or Town Meeting vote that appropriates 100% of the total project cost. DCR and DFG must have capital budget approval from EEA for 100% of the eligible project budget. Tribal applicants must demonstrate their ability to pay for the project upfront."
+    },
+    {
+      "item": "Applicants unable to provide required federal permits by April 14, 2027 are ineligible this year",
+      "quote": "Check if the following permits are required (Any required permit(s) must be provided to DCS by April 14, 2027 per LWCF requirements. Applicants unable to provide federal permits by this date will be ineligible"
+    },
+    {
+      "item": "At least one representative of the municipality, department, or tribe must have a validated EEA Grant Management System account",
+      "quote": "Please note that at least one representative from the municipality, department, or tribe must have a valid account to apply for the grant."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "Application Form submitted using the EEA Grant Management System (Attachment A)",
+      "userWrites": false,
+      "quote": "Project proposals must include the following: Application Form submitted using the GMS"
+    },
+    {
+      "item": "Hard copy of the complete application, one original bound with a binder clip, postmarked by the deadline to EEA (marked FY27LAND0025)",
+      "userWrites": false,
+      "quote": "A hard copy of the application must also be postmarked to the address below by the grant deadline. The outside of the package should be marked FY27LAND0025."
+    },
+    {
+      "item": "Municipalities: Open Space and Recreation Plan, if not already on file with DCS",
+      "userWrites": false,
+      "quote": "Municipalities - Open Space and Recreation Plan (if not already on file with DCS)"
+    },
+    {
+      "item": "Acquisition projects: Yellow Book appraisal report(s), including Statement of Work (Attachment F)",
+      "userWrites": false,
+      "quote": "Acquisition projects - appraisal report(s), including Statement of Work (note that the appraisal(s) deadline is March 1, 2027)"
+    },
+    {
+      "item": "One-page description of the proposed project budget: sources of local funding (including donations and CPA funds), donation details, and other funding partners and contributions",
+      "userWrites": true,
+      "quote": "Attach a one-page description of the proposed project budget including: The source of all local funding including donations and Community Preservation Act funds."
+    },
+    {
+      "item": "Scope and Budget template, downloaded, completed, and re-uploaded in GMS",
+      "userWrites": false,
+      "quote": "In the \"Upload Documentation\" section, download, complete, and re-upload the required Scope and Budget template."
+    },
+    {
+      "item": "Development and renovation projects: site development plans and cost estimates detailed enough for an accurate cost estimate",
+      "userWrites": false,
+      "quote": "Development & Renovation Projects - site development plans and cost estimates. The site plans must be detailed enough so that an accurate cost estimate may be developed."
+    },
+    {
+      "item": "Certification of the Chief Executive Officer's legal authorization to execute contracts",
+      "userWrites": false,
+      "quote": "The Chief Executive Officer's legal authorization to execute contracts. This is a resolution, motion, or similar action that has been duly adopted or passed as an official act of the community's governing body"
+    },
+    {
+      "item": "Authorization for Application letter, signed by the Chief Executive Officer, using the provided language",
+      "userWrites": false,
+      "quote": "Authorization for Application: Copy and paste this language into a letter and upload it as a part of this application"
+    },
+    {
+      "item": "Copies of outstanding leases, restrictions, or other rights or interests held by others in the site (if any)",
+      "userWrites": false,
+      "quote": "Copies of current leases, restrictions, or other rights or interests held by others in the property."
+    },
+    {
+      "item": "Copy of the fee system (if fees are charged or proposed for the site)",
+      "userWrites": false,
+      "quote": "Are fees currently charged or proposed for this site? If yes, please attach a copy of the fee system."
+    },
+    {
+      "item": "Required federal permits or permit applications (if any)",
+      "userWrites": false,
+      "quote": "If any of the above federal permits are required, the permit or application for the permit must be submitted."
+    }
+  ],
+  "libraryRequired": []
+}

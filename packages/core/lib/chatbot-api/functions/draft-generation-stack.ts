@@ -33,6 +33,7 @@ import {
 
 export interface DraftGenerationStackProps extends cdk.NestedStackProps {
   readonly ffioNofosBucket: s3.Bucket;
+  readonly grantArtifactsBucket: s3.Bucket;
   readonly draftTable: Table;
   readonly draftGenerationJobsTable: Table;
   /** Knowledge base owned by the parent; each section step only retrieves from it. */
@@ -63,6 +64,7 @@ export class DraftGenerationStack extends cdk.NestedStack {
         layers: [props.jsSharedLayer],
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
           DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
         },
         timeout: cdk.Duration.seconds(60),
@@ -75,6 +77,9 @@ export class DraftGenerationStack extends cdk.NestedStack {
 
     draftPrepareFunction.addToRolePolicy(
       s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn)
+    );
+    draftPrepareFunction.addToRolePolicy(
+      s3ReadOnlyPolicy(props.grantArtifactsBucket.bucketArn)
     );
     draftPrepareFunction.addToRolePolicy(
       dynamoUpdateItemPolicy(props.draftGenerationJobsTable.tableArn)

@@ -1,0 +1,1244 @@
+{
+ "184649c8b03b20b8": {
+  "query": "proposal due date and time",
+  "filter": "5e3ac386da9323f8",
+  "retrievalResults": []
+ },
+ "290537868a8c93c6": {
+  "query": "formatting requirements font size margins page length",
+  "filter": "972e5db49e22b51a",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The EBiz\n\n POC must authorize people who are able to make legally binding commitments on behalf of the\n\n organization as a user with the AOR role; this step is often missed, and it is crucial for valid\n\n and timely submissions.\n\n \n\n Proposal Narrative: All proposals must be submitted in English or they will be rejected.\n\n \n\n Formatting Requirements:\n\n \n\n • Font: Times New Roman, 12 point\n\n • Margins: 1 inch on all sides\n\n • Paper size: 8 ½ by 11\"\n\n • Single-spaced\n\n \n\n Required Documents: All elements and forms listed below are required, except as stated, for a\n\n proposal to be determined complete and must be submitted in English.\n\n \n\n Technical Narrative (Not to exceed 45 pages):\n\n Cover Page - Should include the words “Technical Narrative” as well as the following:\n\n 1) Funding Opportunity number\n\n 2) Targeted Country\n\n 3) Title of Proposal\n\n 4) Identity of Prime Respondent and complete list of subcontractors, if applicable\n\n 5) Technical Contact (name, title, address, phone, fax and e-mail)\n\n 6) Administrative/Business Contact (name, title, address, phone, fax and e-mail)\n\n 7) Duration of effort\n\n 8) Table of Contents: Section, Title and page numbers are required\n\n \n\n Project Abstract – Concise, single-spaced abstract, not to exceed 4000 characters, summarizing\n\n the proposed program effort, including the name of the Offeror institution/organization,\n\n anticipated public benefit, type of substantial involvement by the Government objectives, assessed\n\n need, and anticipated impact and results. Applications with abstracts exceeding 4000 characters\n\n will be withdrawn from consideration.\n\n \n\n The project abstract must contain a summary of the proposed activity suitable for dissemination to\n\n the public. It should be a self-contained description of the project and should contain a statement\n\n of objectives and methods to be employed. It should be informative to other persons working in\n\n the same or related fields and insofar as possible, understandable to the technically literate lay\n\n reader. This abstract must not include any proprietary/confidential information.\n\n \n\n Section I: Technical Approach. The following items shall be addressed:\n\n \n\n \n\n \n  https://www.grants.gov/applicants/applicant-registration/9\n\n Executive Summary (Not to exceed two pages). Brief description of proposed activities, goals,\n\n purposes, and anticipated results. Briefly describe technical and managerial resources of your\n\n organization."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3280325,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AK7VgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Schedule and milestones (Not to exceed two pages). Provide a schedule and description of\n\n major milestones or tasks to be accomplished in the proposed program by quarter (e.g., by 3-\n\n month period). No set number of milestones is required; the number and nature of the milestones\n\n will depend on your program and objectives. This section should include the sequencing of key\n\n activities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2155693,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ALrVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Program Description for reference.\n\n \n\n Work Plan (Not to exceed six pages). Provide expanded detail on activities contributing to\n\n approach and sequencing. Clearly detail the scope and plan of the effort. Describe the specific\n\n methods (e.g., surveys, interviews, surveillance, etc.) you will use to accomplish the proposed\n\n objectives. All anticipated work must be aligned with the national guidelines of the host country.\n\n If the plan includes a training/education program or other intervention, please describe these in\n\n detail. Training should be aligned with national standards where possible. It is anticipated that the\n\n proposed plan will be incorporated as an attachment to the resultant award instrument. To this\n\n end, such proposals must include a severable self-standing plan without any proprietary\n\n restrictions that can be attached to the agreement award.\n\n \n\n Data Management Plan (Not to exceed two pages). Data Management Plan should include:\n\n a) The types of data, guidance, physical data collections, software, training materials, and\n\n other materials to be used or produced in the course of the project;\n\n b) The standards to be used for data and metadata format and content (where existing\n\n standards are absent or deemed inadequate, this should be documented along with any\n\n proposed solutions or remedies);\n\n c) Data governance policies for access and sharing including provisions for appropriate\n\n protection of privacy, confidentiality, security, intellectual property, or other rights or\n\n requirements; in cases where Personal Health Information is collected, identify appropriate\n\n national/international standard to be used for data protection. Data is considered property\n\n of the military partner.\n\n d) Policies and provisions for re-use, re-distribution, and the production of derivatives; and\n\n e) Plans for archiving data and other information products (reports), and for preservation of\n\n access to them.10\n\n f) A valid Data Management Plan may include only the statement that no detailed plan is\n\n needed, as long as the statement is accompanied by a clear justification.\n\n \n\n Monitoring and Evaluation (Not to exceed five pages, inclusive of table of indicators). State\n\n how you will demonstrate that the proposed program will have an impact on military members\n\n and/or their families and state the specific PEPFAR Monitoring, Evaluation, and Reporting\n\n (MER) indicators of performance that will be used. Indicators of performance and associated\n\n targets need to be specific and measurable (e.g., 100 military members will receive Voluntary\n\n Counseling and Testing (VCT) counseling, 2 laboratories will be established). Also, state how you\n\n will collect this information."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2139711,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ALbVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "In the Excel workbook provided by the program office, provide a summary of\n\n the planned activities for each program area or intervention requirement indicated in the Program\n\n Announcement for each year. A sample Statement of Work template for Year 1 and Years 2-4 is\n\n available on Grants.gov with this Program Announcement.\n\n \n\n The following SF 424 forms and attachments, as applicable are required for all\n\n applications:\n\n \n\n SF-424 Research and Related, Application for Federal Assistance - (included in the application\n\n package available on grants.gov posted with this Program Announcement). This form must be sent\n\n as the cover page for all proposals. Complete all required fields in accordance with the “pop-up”\n\n instructions on the form and the following instructions for specific fields. Please complete the SF-\n\n 424 first, as some fields on the SF-424 are used to auto-populate fields on other forms.\n\n \n\n SF-424 Research and Related Budget - included in the application package available on\n\n grants.gov posted with this Program Announcement. Please ensure there is a submission for each\n\n budget year.\n\n \n\n Budget Narrative Attachment Form – Attach the Budget justification the SF424 R&R as\n\n required under Section L of the SF424 (R&R) form.\n\n \n\n SF-424B, Assurances - Nonconstruction Programs - (included in the application package available\n\n on grants.gov posted with this Program Announcement).\n\n The program described in Section I above includes non-construction elements. Therefore, the\n\n mandatory forms for non-construction programs must be completed. Non-construction activity\n\n costs should be included on the SF-424A.\n\n \n\n Project Abstract Form – The project abstract must identify the problem and objectives, technical\n\n approaches, anticipated outcome of the effort, if successful, and impact on the DoW capabilities.\n\n Use only characters available on a standard QWERTY keyboard."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2092041,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AM7VgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 13,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Department of State and Ghana.\n\n Implementers should be familiar with these strategic guidance documents and include means of\n\n addressing them in submitted proposals. Please see base Program Announcement section D for\n\n complete detailed list of application, format and submission requirements."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1786915,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AubVgYKEBbayybwJOZ_P6",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 85,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Department of State and Angola.\n\n Implementers should be familiar with these strategic guidance documents and include means of\n\n addressing them in submitted proposals. Please see base Program Announcement section D for\n\n complete detailed list of application, format and submission requirements."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.175484,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ASbVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 26,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Department of State and Burundi.\n\n Implementers should be familiar with these strategic guidance documents and include means of\n\n addressing them in submitted proposals. Please see base Program Announcement section D for\n\n complete detailed list of application, format and submission requirements."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.1749777,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AbbVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 45,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ },
+ "4cb86a97a92ef37b": {
+  "query": "application submission deadline",
+  "filter": "972e5db49e22b51a",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The project abstract must be marked by\n\n the applicant as “Approved for Public Release”. Abstracts of all funded projects will be posted on\n\n the public DTIC website: https://discover.dtic.mil/grant/\n\n \n\n Any modifications to the Project Narrative or Budget Form require submission of a changed/\n\n corrected Grants.gov application package to Grants.gov prior to the application submission\n\n deadline.\n\n \n\n \n\n \n  https://discover.dtic.mil/grant/14\n\n Submission Dates and Times: Applications must be received by 5:00 p.m. Eastern Time (ET),\n\n on the date specified in the country specific narrative in Attachment 1.\n\n \n\n Applicants are responsible for submitting their applications in sufficient time to allow them to\n\n reach Grants.gov by the time specified in this announcement. If the application is received by\n\n Grants.gov after the exact time and date specified as the deadline for receipt, it will be\n\n considered “late” and will not be considered for review. Acceptable evidence to establish the\n\n time of receipt by Grants.gov includes documentary evidence of receipt maintained by\n\n Grants.gov.\n\n \n\n To avoid the possibility of late receipt, which will render the application ineligible for\n\n consideration, it is strongly recommended that applications be uploaded at least 24-48 hours\n\n days before the deadline. This will help avoid problems caused by high system usage or any\n\n potential technical and/or input problems involving the applicant’s own equipment.\n\n \n\n DHAPP cannot make allowances/exceptions to its policies for submission problems\n\n encountered by the applicant organization using system-to-system interfaces with Grants.gov.\n\n If an emergency or unanticipated event interrupts normal federal government processes so that\n\n applications cannot be received by Grants.gov by the exact time specified in this announcement,\n\n and the situation precludes amendment of the announcement closing date, the time specified for\n\n receipt of applications will be deemed to be extended to the same time of day specified in this\n\n announcement on the first work day on which normal federal government processes resume.\n\n \n\n Application Receipt Notices: After an application is submitted to Grants.gov, the Authorized\n\n Representative (listed in Block #19 of the SF-424) will receive a series of three e-mails from\n\n Grants.gov. The first e-mail will confirm receipt of the application by the Grants.gov system.\n\n The second e-mail will indicate that the application has either been successfully validated by the\n\n system prior to transmission to DoW or has been rejected due to errors. This second email will\n\n also determine if the proposal is late based on the aforementioned receipt time."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.5225109,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ANrVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 13,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The third e-mail\n\n should be received once DoW has confirmed receipt of the application usually within 10 days\n\n from the application due date. The last e-mail will indicate that the application has been\n\n received and provide the assigned tracking number. Applicants can track the status of their\n\n applications at https://grants.gov/applicants/grant-applications/track-my-application.\n\n \n\n Funding Restrictions:\n\n Information regarding funding restrictions can be found in the country specific narrative in\n\n Attachment 1.\n\n \n\n Other Submission Information:\n\n \n\n Applicant Support: Grants.gov provides applicants 24/7 support via the toll-free number 1-\n\n 800- 518-4726 and email at support@grants.gov. For questions related to the specific grant\n\n opportunity, contact the number listed in the application package of the grant you are applying\n\n for.\n\n \n\n \n  https://grants.gov/applicants/grant-applications/track-my-application\n \n\n \n  mailto:support@grants.gov15\n\n \n\n If you are experiencing difficulties with your submission, it is best to call the Grants.gov Support\n\n Center and get a ticket number. The Support Center ticket number will assist the DoW with\n\n tracking your issue and understanding background information on the issue.\n\n \n\n Timely Receipt Requirements and Proof of Timely Submission:\n\n \n\n The AOR who submitted the application will receive an acknowledgement of receipt and a\n\n tracking number (GRANTXXXXXXXX) from Grants.gov with the successful transmission of\n\n their application. This AOR will also receive the official date/time stamp and Grants.gov\n\n tracking number in an email serving as proof of their timely submission.\n\n \n\n When DoW successfully retrieves the application from Grants.gov, and acknowledges the\n\n download of submissions, Grants.gov will provide an electronic acknowledgment of receipt of\n\n the application to the email address of the AOR who submitted the application. Again, proof of\n\n timely submission shall be the official date and time that Grants.gov receives your application.\n\n \n\n Applicants using slow internet, such as dial-up connections, should be aware that transmission\n\n can take some time before Grants.gov receives your application. Again, Grants.gov will provide\n\n either an error or a successfully received transmission in the form of an email sent the AOR\n\n attempting to submit the application. The Grants.gov Support Center reports that some\n\n applicants end the transmission because they think that nothing is occurring during the\n\n transmission process. Please be patient and give the system time to process the application."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3630375,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AN7VgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 14,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The Grantee shall submit quarterly indicator reports in accordance with the\n\n format provided by the Program Office within 45 calendar days following the end of the reporting\n\n period: 3/31, 6/30, 9/30 and 12/31. The Recipient shall provide reports in accordance with the\n\n guidance and template provided by DHA.\n\n \n\n DHAPP Strategic Information Reporting Requirements: The grantee is expected to promptly\n\n prepare and submit data results that accurately reflect the contributions of those involved, and all\n\n significant findings from work conducted under DHAPP awards. Data reporting deadlines and\n\n requirements are clearly communicated by DHAPP to all grantees on a routine basis.\n\n DHAPP award recipients are required to:\n\n \n\n • If applicable, submit routine program indicator targets and results (e.g. Monitoring, Evaluation\n\n and Reporting (MER) Indicators) that reflect expected and achieved results through activities\n\n supported by DHAPP awards. Military program indicator data at the Implementing Mechanism\n\n level (not at a military site-level) are to be submitted on a quarterly, semi-annual and annual basis\n\n into the OGAC hosted system Data for Accountability Transparency and Impact Monitoring\n\n (DATIM), within the deadlines established by OGAC. Instructions will be provided after award.\n\n Military program indicator data at the site-level must also be submitted to DHAPP, using the\n\n required DHAPP templates, within the deadlines established by DHAPP. DHAPP will provide all\n\n orientation and training related to the reporting of site-level data.\n\n \n\n • Implementing Partners are responsible for ensuring the quality of data from the point of data\n\n collection through report submission, and should make every attempt to either fix or document and\n\n communicate to DHAPP data quality issues.22\n\n • Implementing Partners are responsible for following the standards defined in the Site\n\n Improvement through Monitoring System (SIMS) and are required to participate in program quality\n\n assurance and improvement activities, per guidance provided by OGAC and DHAPP.\n\n \n\n 3) FINAL TECHNICAL REPORT\n\n Within 120 calendar days of completion or termination of this Agreement, the Recipient shall\n\n submit a Final Report addressing the technical achievements of the program. The report should\n\n provide a synopsis of the accomplishments made under the Agreement."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3444667,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AQrVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 21,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application Withdrawal: An applicant may withdraw an application at any time before award\n\n by written notice or by email. Notice of withdrawal shall be sent to the Grants Officer identified\n\n in this announcement. Withdrawals are effective upon receipt of notice by the Grants Officer.\n\n \n\n E. Application Review Information\n\n Review Criteria:\n\n Proposals will be selected through a technical and business decision-making process with\n\n technical considerations being most important. The following scored criteria are listed in\n\n descending order of importance.\n\n \n\n a."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2991573,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AOLVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Issued: September 2022\n\n Revised: April 2026Table of Contents\n\n A. Program Description… ....................................................................................................... 3\n\n • Background… ......................................................................................................... 3\n\n • Program Objective ................................................................................................... 4\n\n B. Federal Award Information… ............................................................................................. 5\n\n C. Eligibility Information… ..................................................................................................... 5\n\n D. Application and Submission Information… ........................................................................ 6\n\n • Submitting a Proposal .............................................................................................. 6\n\n • Proposal Narrative ................................................................................................... 8\n\n • Formatting Requirements ........................................................................................ 8\n\n • Required Documents ............................................................................................... 8\n\n • Submission Dates and Times ................................................................................. 13\n\n • Application Receipt Notices .................................................................................. 14\n\n • Funding Restrictions .............................................................................................. 14\n\n • Other Submission Information ............................................................................... 14\n\n E. Application Review Information… ................................................................................... 15\n\n • Review Criteria ...................................................................................................... 15\n\n • Review and Selection Process ............................................................................... 16\n\n • Anticipated Announcement and Federal Award Dates........................................... 17\n\n • Recipient Qualification .......................................................................................... 17\n\n F. Federal Award Administration Information… .................................................................. 17\n\n • Federal Award Notices .......................................................................................... 18\n\n • Administrative and National Policy Requirements ................................................ 18\n\n • Reporting… ........................................................................................................... 20\n\n G. Federal Award Agency Contacts ....................................................................................... 22\n\n H."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2717416,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AHLVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Department of State and Burundi.\n\n Implementers should be familiar with these strategic guidance documents and include means of\n\n addressing them in submitted proposals. Please see base Program Announcement section D for\n\n complete detailed list of application, format and submission requirements."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.216486,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AbbVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 45,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Work Plans\n\n \n\n The implementer must submit annual, programmatic and financial, work plans to the DHAPP Program\n\n Manager and DHAPP HQ (budget breakdown per activity and for program management is required).\n\n Work plans should include an Activities Implementation Timeline as well as Monitoring and EvaluationTimeline. A full list of reporting requirements can be found in the base Program Announcement and will\n\n be disclosed in the award terms and conditions.Uganda: DHAPP- UPDF Partnership for Resilient Military Health Systems for Readiness\n\n \n\n NOTE: Application submissions for this narrative are due by 12pm EST on 15 May 2026. Submissions received after the deadline will not be considered for funding.\n\n \n\n Call for Proposals\n\n \n\n Proposals are requested to support the Uganda Peoples Defence Force (UPDF) to reach sustainable\n\n control of the HIV epidemic through the lens of the America First Global Health Strategy, as well as the\n\n UNAIDS HIV Treatment 95-95-95; Vertical Transmission 95 targets; and TB prevention 90 and in\n\n alignment with the National Security Strategy (NSS) and the National Defense Strategy (NDS) goals to\n\n protect the homeland, deter China, and increase burden sharing. Further, proposals must be aligned with\n\n any existing Memorandum of Understanding [MOU] between the U.S. Department of State and Uganda\n\n Implementers should be familiar with these strategic guidance documents and include means of\n\n addressing them in submitted proposals. Please see base Program Announcement section D for\n\n complete detailed list of application, format and submission requirements."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2086453,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AhbVgYKEBbayybwJOa_QL",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 195,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ },
+ "7d5889746e50c9bf": {
+  "query": "eligible applicants who may apply",
+  "filter": "5e3ac386da9323f8",
+  "retrievalResults": []
+ },
+ "83b16110d02ff9a4": {
+  "query": "eligibility requirements organization type",
+  "filter": "5e3ac386da9323f8",
+  "retrievalResults": []
+ },
+ "b04ffc19020087af": {
+  "query": "proposal due date and time",
+  "filter": "972e5db49e22b51a",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The project abstract must be marked by\n\n the applicant as “Approved for Public Release”. Abstracts of all funded projects will be posted on\n\n the public DTIC website: https://discover.dtic.mil/grant/\n\n \n\n Any modifications to the Project Narrative or Budget Form require submission of a changed/\n\n corrected Grants.gov application package to Grants.gov prior to the application submission\n\n deadline.\n\n \n\n \n\n \n  https://discover.dtic.mil/grant/14\n\n Submission Dates and Times: Applications must be received by 5:00 p.m. Eastern Time (ET),\n\n on the date specified in the country specific narrative in Attachment 1.\n\n \n\n Applicants are responsible for submitting their applications in sufficient time to allow them to\n\n reach Grants.gov by the time specified in this announcement. If the application is received by\n\n Grants.gov after the exact time and date specified as the deadline for receipt, it will be\n\n considered “late” and will not be considered for review. Acceptable evidence to establish the\n\n time of receipt by Grants.gov includes documentary evidence of receipt maintained by\n\n Grants.gov.\n\n \n\n To avoid the possibility of late receipt, which will render the application ineligible for\n\n consideration, it is strongly recommended that applications be uploaded at least 24-48 hours\n\n days before the deadline. This will help avoid problems caused by high system usage or any\n\n potential technical and/or input problems involving the applicant’s own equipment.\n\n \n\n DHAPP cannot make allowances/exceptions to its policies for submission problems\n\n encountered by the applicant organization using system-to-system interfaces with Grants.gov.\n\n If an emergency or unanticipated event interrupts normal federal government processes so that\n\n applications cannot be received by Grants.gov by the exact time specified in this announcement,\n\n and the situation precludes amendment of the announcement closing date, the time specified for\n\n receipt of applications will be deemed to be extended to the same time of day specified in this\n\n announcement on the first work day on which normal federal government processes resume.\n\n \n\n Application Receipt Notices: After an application is submitted to Grants.gov, the Authorized\n\n Representative (listed in Block #19 of the SF-424) will receive a series of three e-mails from\n\n Grants.gov. The first e-mail will confirm receipt of the application by the Grants.gov system.\n\n The second e-mail will indicate that the application has either been successfully validated by the\n\n system prior to transmission to DoW or has been rejected due to errors. This second email will\n\n also determine if the proposal is late based on the aforementioned receipt time."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.4107711,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ANrVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 13,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The EBiz\n\n POC must authorize people who are able to make legally binding commitments on behalf of the\n\n organization as a user with the AOR role; this step is often missed, and it is crucial for valid\n\n and timely submissions.\n\n \n\n Proposal Narrative: All proposals must be submitted in English or they will be rejected.\n\n \n\n Formatting Requirements:\n\n \n\n • Font: Times New Roman, 12 point\n\n • Margins: 1 inch on all sides\n\n • Paper size: 8 ½ by 11\"\n\n • Single-spaced\n\n \n\n Required Documents: All elements and forms listed below are required, except as stated, for a\n\n proposal to be determined complete and must be submitted in English.\n\n \n\n Technical Narrative (Not to exceed 45 pages):\n\n Cover Page - Should include the words “Technical Narrative” as well as the following:\n\n 1) Funding Opportunity number\n\n 2) Targeted Country\n\n 3) Title of Proposal\n\n 4) Identity of Prime Respondent and complete list of subcontractors, if applicable\n\n 5) Technical Contact (name, title, address, phone, fax and e-mail)\n\n 6) Administrative/Business Contact (name, title, address, phone, fax and e-mail)\n\n 7) Duration of effort\n\n 8) Table of Contents: Section, Title and page numbers are required\n\n \n\n Project Abstract – Concise, single-spaced abstract, not to exceed 4000 characters, summarizing\n\n the proposed program effort, including the name of the Offeror institution/organization,\n\n anticipated public benefit, type of substantial involvement by the Government objectives, assessed\n\n need, and anticipated impact and results. Applications with abstracts exceeding 4000 characters\n\n will be withdrawn from consideration.\n\n \n\n The project abstract must contain a summary of the proposed activity suitable for dissemination to\n\n the public. It should be a self-contained description of the project and should contain a statement\n\n of objectives and methods to be employed. It should be informative to other persons working in\n\n the same or related fields and insofar as possible, understandable to the technically literate lay\n\n reader. This abstract must not include any proprietary/confidential information.\n\n \n\n Section I: Technical Approach. The following items shall be addressed:\n\n \n\n \n\n \n  https://www.grants.gov/applicants/applicant-registration/9\n\n Executive Summary (Not to exceed two pages). Brief description of proposed activities, goals,\n\n purposes, and anticipated results. Briefly describe technical and managerial resources of your\n\n organization."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3246244,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AK7VgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Issued: September 2022\n\n Revised: April 2026Table of Contents\n\n A. Program Description… ....................................................................................................... 3\n\n • Background… ......................................................................................................... 3\n\n • Program Objective ................................................................................................... 4\n\n B. Federal Award Information… ............................................................................................. 5\n\n C. Eligibility Information… ..................................................................................................... 5\n\n D. Application and Submission Information… ........................................................................ 6\n\n • Submitting a Proposal .............................................................................................. 6\n\n • Proposal Narrative ................................................................................................... 8\n\n • Formatting Requirements ........................................................................................ 8\n\n • Required Documents ............................................................................................... 8\n\n • Submission Dates and Times ................................................................................. 13\n\n • Application Receipt Notices .................................................................................. 14\n\n • Funding Restrictions .............................................................................................. 14\n\n • Other Submission Information ............................................................................... 14\n\n E. Application Review Information… ................................................................................... 15\n\n • Review Criteria ...................................................................................................... 15\n\n • Review and Selection Process ............................................................................... 16\n\n • Anticipated Announcement and Federal Award Dates........................................... 17\n\n • Recipient Qualification .......................................................................................... 17\n\n F. Federal Award Administration Information… .................................................................. 17\n\n • Federal Award Notices .......................................................................................... 18\n\n • Administrative and National Policy Requirements ................................................ 18\n\n • Reporting… ........................................................................................................... 20\n\n G. Federal Award Agency Contacts ....................................................................................... 22\n\n H."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3184265,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AHLVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 1,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The Grantee shall submit quarterly indicator reports in accordance with the\n\n format provided by the Program Office within 45 calendar days following the end of the reporting\n\n period: 3/31, 6/30, 9/30 and 12/31. The Recipient shall provide reports in accordance with the\n\n guidance and template provided by DHA.\n\n \n\n DHAPP Strategic Information Reporting Requirements: The grantee is expected to promptly\n\n prepare and submit data results that accurately reflect the contributions of those involved, and all\n\n significant findings from work conducted under DHAPP awards. Data reporting deadlines and\n\n requirements are clearly communicated by DHAPP to all grantees on a routine basis.\n\n DHAPP award recipients are required to:\n\n \n\n • If applicable, submit routine program indicator targets and results (e.g. Monitoring, Evaluation\n\n and Reporting (MER) Indicators) that reflect expected and achieved results through activities\n\n supported by DHAPP awards. Military program indicator data at the Implementing Mechanism\n\n level (not at a military site-level) are to be submitted on a quarterly, semi-annual and annual basis\n\n into the OGAC hosted system Data for Accountability Transparency and Impact Monitoring\n\n (DATIM), within the deadlines established by OGAC. Instructions will be provided after award.\n\n Military program indicator data at the site-level must also be submitted to DHAPP, using the\n\n required DHAPP templates, within the deadlines established by DHAPP. DHAPP will provide all\n\n orientation and training related to the reporting of site-level data.\n\n \n\n • Implementing Partners are responsible for ensuring the quality of data from the point of data\n\n collection through report submission, and should make every attempt to either fix or document and\n\n communicate to DHAPP data quality issues.22\n\n • Implementing Partners are responsible for following the standards defined in the Site\n\n Improvement through Monitoring System (SIMS) and are required to participate in program quality\n\n assurance and improvement activities, per guidance provided by OGAC and DHAPP.\n\n \n\n 3) FINAL TECHNICAL REPORT\n\n Within 120 calendar days of completion or termination of this Agreement, the Recipient shall\n\n submit a Final Report addressing the technical achievements of the program. The report should\n\n provide a synopsis of the accomplishments made under the Agreement."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2895243,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AQrVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 21,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Offeror shall also describe its organizational capability in\n\n collaborating with the host country military, donors, and NGOs to strengthen health and\n\n HIV/AIDS systems, and to improve the quality and use of data for decision making and advance\n\n organizational capacity building. The Applicant should also describe the organizational\n\n knowledge, capability, and experience of the other proposed team members (sub-contractors\n\n and/or grantees) in successfully managing similar programs.\n\n \n\n Current and Pending Support (Not to exceed five pages) – The applicant must provide\n\n information on all current and pending projects, including subsequent funding in the case of\n\n continuing contracts, grants and other assistance agreements and proposals that involve the\n\n proposed Technical Program Manager. All current project support from whatever source (e.g.,\n\n Federal, State, local or foreign government agencies, public or private foundations, industrial or\n\n other commercial organizations) must be listed.\n\n \n\n The information must also be provided for all pending proposals already submitted concurrently\n\n to other possible sponsors, including DHA. Concurrent submission of a proposal to other\n\n organizations will not prejudice its review by DHA. Provide a chart relaying the following\n\n information for all current and pending support:\n\n \n\n • Title of award or project title;\n\n • Source and amount of funding (annual direct costs; provide award numbers for all current\n\n awards);\n\n • Percentage effort devoted to each project;\n\n • Technical contact (name, address, phone, e-mail);\n\n • Administrative/Business contact (name, address, phone, e-mail);\n\n • Period of performance;\n\n • The proposed project and all other projects or activities requiring a portion of time of the\n\n proposed Technical Program Manager and other proposed senior personnel must be\n\n included, even if they receive no salary support from the project(s); The total award\n\n amount for the entire award period covered (including indirect costs) must be shown as\n\n well as the number of person-months or labor hours per year to be devoted to the project,\n\n regardless of the source of support;\n\n • Commitment proposed for the Technical Program Manager in terms of person-months per\n\n year for each year.13\n\n All submissions will be protected from unauthorized disclosure in accordance with applicable\n\n law and DoW regulations. You are expected to appropriately mark each page of the\n\n submission that contains proprietary information.\n\n \n\n Statement of Work (SOW) File: Proposals must include a supplementary document for\n\n Statement of Work."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2885685,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AMrVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Proposals must align with anyexisting country-specific MOU timelines"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2805363,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3Ai7VgYKEBbayybwJOa_QL",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 198,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • The Period of Performance for these awards is 4 years.\n\n • Information regarding program funding amounts as well as total cost limitations within\n\n the application can be found in the country specific narrative outlined in Attachment 1.\n\n • Investigators on collaborative projects should each write and submit separate, unique\n\n proposals, and provide the name and title of their collaborator’s proposal within the\n\n project narrative of the application."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2802114,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AJbVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ },
+ "b517720985163236": {
+  "query": "technical narrative page limit",
+  "filter": "972e5db49e22b51a",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "The EBiz\n\n POC must authorize people who are able to make legally binding commitments on behalf of the\n\n organization as a user with the AOR role; this step is often missed, and it is crucial for valid\n\n and timely submissions.\n\n \n\n Proposal Narrative: All proposals must be submitted in English or they will be rejected.\n\n \n\n Formatting Requirements:\n\n \n\n • Font: Times New Roman, 12 point\n\n • Margins: 1 inch on all sides\n\n • Paper size: 8 ½ by 11\"\n\n • Single-spaced\n\n \n\n Required Documents: All elements and forms listed below are required, except as stated, for a\n\n proposal to be determined complete and must be submitted in English.\n\n \n\n Technical Narrative (Not to exceed 45 pages):\n\n Cover Page - Should include the words “Technical Narrative” as well as the following:\n\n 1) Funding Opportunity number\n\n 2) Targeted Country\n\n 3) Title of Proposal\n\n 4) Identity of Prime Respondent and complete list of subcontractors, if applicable\n\n 5) Technical Contact (name, title, address, phone, fax and e-mail)\n\n 6) Administrative/Business Contact (name, title, address, phone, fax and e-mail)\n\n 7) Duration of effort\n\n 8) Table of Contents: Section, Title and page numbers are required\n\n \n\n Project Abstract – Concise, single-spaced abstract, not to exceed 4000 characters, summarizing\n\n the proposed program effort, including the name of the Offeror institution/organization,\n\n anticipated public benefit, type of substantial involvement by the Government objectives, assessed\n\n need, and anticipated impact and results. Applications with abstracts exceeding 4000 characters\n\n will be withdrawn from consideration.\n\n \n\n The project abstract must contain a summary of the proposed activity suitable for dissemination to\n\n the public. It should be a self-contained description of the project and should contain a statement\n\n of objectives and methods to be employed. It should be informative to other persons working in\n\n the same or related fields and insofar as possible, understandable to the technically literate lay\n\n reader. This abstract must not include any proprietary/confidential information.\n\n \n\n Section I: Technical Approach. The following items shall be addressed:\n\n \n\n \n\n \n  https://www.grants.gov/applicants/applicant-registration/9\n\n Executive Summary (Not to exceed two pages). Brief description of proposed activities, goals,\n\n purposes, and anticipated results. Briefly describe technical and managerial resources of your\n\n organization."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3344058,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AK7VgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 8,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Review all documents within the package to ensure consistency in information, budgets, targets,\n\n and numbering:\n\n a. Use numbered lists, including numbered or alphabetized sub-lists, for activities for easier\n\n reference and monitoring, especially the scope of work (SOW) Narrative column.\n\n 2. Ensure all activities in the Technical Narrative are also listed concisely in the SOW file.\n\n 3. Activities must be specific; Do not write “ensure” or “support” or a similar verb as a narrative\n\n activity without defining what that means. Each activity must say specifically what the\n\n implementer will be doing. It must be measurable and answer the questions Who? What?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3290548,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AMbVgYKEBbayybwJOafSq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 152,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Ensure all activities in the Technical Narrative are also listed concisely in the SOW file.\n\n 3. Activities must be specific; Do not write “ensure” or “support” or a similar verb as a narrative\n\n activity without defining what that means. Each activity must say specifically what the\n\n implementer will be doing. It must be measurable and answer the questions Who? What?"
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3214447,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3A5rVgYKEBbayybwJOafOq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 108,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Schedule and milestones (Not to exceed two pages). Provide a schedule and description of\n\n major milestones or tasks to be accomplished in the proposed program by quarter (e.g., by 3-\n\n month period). No set number of milestones is required; the number and nature of the milestones\n\n will depend on your program and objectives. This section should include the sequencing of key\n\n activities."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2688115,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ALrVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 10,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Program Description for reference.\n\n \n\n Work Plan (Not to exceed six pages). Provide expanded detail on activities contributing to\n\n approach and sequencing. Clearly detail the scope and plan of the effort. Describe the specific\n\n methods (e.g., surveys, interviews, surveillance, etc.) you will use to accomplish the proposed\n\n objectives. All anticipated work must be aligned with the national guidelines of the host country.\n\n If the plan includes a training/education program or other intervention, please describe these in\n\n detail. Training should be aligned with national standards where possible. It is anticipated that the\n\n proposed plan will be incorporated as an attachment to the resultant award instrument. To this\n\n end, such proposals must include a severable self-standing plan without any proprietary\n\n restrictions that can be attached to the agreement award.\n\n \n\n Data Management Plan (Not to exceed two pages). Data Management Plan should include:\n\n a) The types of data, guidance, physical data collections, software, training materials, and\n\n other materials to be used or produced in the course of the project;\n\n b) The standards to be used for data and metadata format and content (where existing\n\n standards are absent or deemed inadequate, this should be documented along with any\n\n proposed solutions or remedies);\n\n c) Data governance policies for access and sharing including provisions for appropriate\n\n protection of privacy, confidentiality, security, intellectual property, or other rights or\n\n requirements; in cases where Personal Health Information is collected, identify appropriate\n\n national/international standard to be used for data protection. Data is considered property\n\n of the military partner.\n\n d) Policies and provisions for re-use, re-distribution, and the production of derivatives; and\n\n e) Plans for archiving data and other information products (reports), and for preservation of\n\n access to them.10\n\n f) A valid Data Management Plan may include only the statement that no detailed plan is\n\n needed, as long as the statement is accompanied by a clear justification.\n\n \n\n Monitoring and Evaluation (Not to exceed five pages, inclusive of table of indicators). State\n\n how you will demonstrate that the proposed program will have an impact on military members\n\n and/or their families and state the specific PEPFAR Monitoring, Evaluation, and Reporting\n\n (MER) indicators of performance that will be used. Indicators of performance and associated\n\n targets need to be specific and measurable (e.g., 100 military members will receive Voluntary\n\n Counseling and Testing (VCT) counseling, 2 laboratories will be established). Also, state how you\n\n will collect this information."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2533934,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ALbVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 9,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Missing Narrative."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2459859,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3ARrVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 23,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Offeror shall also describe its organizational capability in\n\n collaborating with the host country military, donors, and NGOs to strengthen health and\n\n HIV/AIDS systems, and to improve the quality and use of data for decision making and advance\n\n organizational capacity building. The Applicant should also describe the organizational\n\n knowledge, capability, and experience of the other proposed team members (sub-contractors\n\n and/or grantees) in successfully managing similar programs.\n\n \n\n Current and Pending Support (Not to exceed five pages) – The applicant must provide\n\n information on all current and pending projects, including subsequent funding in the case of\n\n continuing contracts, grants and other assistance agreements and proposals that involve the\n\n proposed Technical Program Manager. All current project support from whatever source (e.g.,\n\n Federal, State, local or foreign government agencies, public or private foundations, industrial or\n\n other commercial organizations) must be listed.\n\n \n\n The information must also be provided for all pending proposals already submitted concurrently\n\n to other possible sponsors, including DHA. Concurrent submission of a proposal to other\n\n organizations will not prejudice its review by DHA. Provide a chart relaying the following\n\n information for all current and pending support:\n\n \n\n • Title of award or project title;\n\n • Source and amount of funding (annual direct costs; provide award numbers for all current\n\n awards);\n\n • Percentage effort devoted to each project;\n\n • Technical contact (name, address, phone, e-mail);\n\n • Administrative/Business contact (name, address, phone, e-mail);\n\n • Period of performance;\n\n • The proposed project and all other projects or activities requiring a portion of time of the\n\n proposed Technical Program Manager and other proposed senior personnel must be\n\n included, even if they receive no salary support from the project(s); The total award\n\n amount for the entire award period covered (including indirect costs) must be shown as\n\n well as the number of person-months or labor hours per year to be devoted to the project,\n\n regardless of the source of support;\n\n • Commitment proposed for the Technical Program Manager in terms of person-months per\n\n year for each year.13\n\n All submissions will be protected from unauthorized disclosure in accordance with applicable\n\n law and DoW regulations. You are expected to appropriately mark each page of the\n\n submission that contains proprietary information.\n\n \n\n Statement of Work (SOW) File: Proposals must include a supplementary document for\n\n Statement of Work."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2211454,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AMrVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 12,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ },
+ "c31b2a5e8922abb7": {
+  "query": "application submission deadline",
+  "filter": "5e3ac386da9323f8",
+  "retrievalResults": []
+ },
+ "cb7630c191b864b4": {
+  "query": "technical narrative page limit",
+  "filter": "5e3ac386da9323f8",
+  "retrievalResults": []
+ },
+ "d04120b218b9c98e": {
+  "query": "eligibility requirements organization type",
+  "filter": "972e5db49e22b51a",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Technical Approach\n\n • Goals and Objectives. The proposal clearly states the overall goal(s) of the\n\n program and has specific, measurable objectives. The proposal is relevant to\n\n established DHAPP priority activities\n\n • Work Plan: The proposal contains sound scientific methods, an appropriate work\n\n plan described in sufficient detail and appropriate deliverables.\n\n • Methodology for monitoring and evaluation procedures. The proposed plan\n\n includes a description of how the program will have an impact on the country’s\n\n military and clearly states the indicators of performance that will be used to16\n\n monitor effectiveness.\n\n • Schedule and milestones. The proposed plan for HIV prevention efforts is\n\n feasible and contains concrete, achievable schedule and milestones.\n\n • Relevance to the host country’s military. The proposal clearly describes the\n\n involvement of the host country military and the relevance of the proposed\n\n program to the needs, priorities, and circumstances of the host country’s\n\n military.\n\n b. Qualifications\n\n • Key Personnel are qualified and eligible to perform the work.\n\n \n\n In addition, the following unscored criteria will also contribute to the overall evaluation of\n\n the application:\n\n \n\n Whether the applicant qualifies as a local partner. To be considered a local\n\n partner, the applicant must submit supporting documentation demonstrating their\n\n organization meets at least one of the criteria listed below at the time of\n\n application. In the below definition, a region is defined as one of the 2020 State\n\n Department / ForeignAssistance.gov Sub Regional groupings\n\n A. Individual: an individual must be a citizen or lawfully admitted permanent\n\n resident of, and have his/her principal place of business in the country served\n\n by the PEPFAR program with which the individual is or may become\n\n involved, and a sole proprietorship must be owned by such an individual; or\n\n B. An entity (e.g., a corporation or partnership): Entity of a sole proprietorship\n\n (such as, a corporation or not-for-profit) must meet all three areas of\n\n eligibility:\n\n • Must be incorporated or legally organized under the laws of, and have its\n\n principal place of business in, the country served by the PEPFAR\n\n program with which the entity is or may become involved; or\n\n Must exist in the region where the entity’s funded PEPFAR programs are\n\n implemented."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3247164,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AObVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Awards will be made on an open continuous basis. Refer to your country specific\n\n narrative in Attachment 1 for more details. Cooperative agreements will be awarded under\n\n this announcement.\n\n \n\n \n\n C. Eligibility Information6\n\n Eligible Applicants: All responsible sources from academia, industry, and non-\n\n governmental organizations may submit proposals under this announcement. No grants,\n\n contracts or cooperative agreements may be awarded directly to foreign military\n\n establishments. All respondents must demonstrate the active support of the in-country\n\n military and the DoW representative in the corresponding U.S. Embassy in the\n\n planning and submission of their proposals.\n\n \n\n Other information:\n\n \n\n • The Federal Assistance Certifications Report (completed as part of the SAM\n\n registration) is a required attestation that the entity will abide by the requirements of the\n\n U.S. laws and regulations; therefore, as applicable, you are still required to submit any\n\n documentation, including the SF LLL Disclosure of Lobbying Activities (if applicable),\n\n and informing DoW of unpaid delinquent tax liability or a felony conviction under any\n\n Federal law. If applicable, the SF LLL should be submitted with the SF 424 form. See\n\n Section F."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.3026984,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AJrVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "h) Other Personnel: Applicant has the discretion to determine the proper number and mix of\n\n additional key personnel, short-term technical staff, and others to meet award\n\n requirements.\n\n i) Consultants: Applicant may propose a mix of international and local advisors and\n\n specialists to cover the full range of objectives and activities. The management plan shall\n\n also demonstrate how the applicant will use in-country experts and resources. All\n\n personnel must demonstrate written and oral communications skills in English. Familiarity\n\n and demonstrated experience with the political, social, economic and cultural context of\n\n the country is required.\n\n \n\n The application should support the organization’s effectiveness and provide partnership\n\n arrangements. The applicant should propose how they will coordinate with the host country\n\n military as well as with other district partners and/or PEPFAR partners working across program\n\n areas. If the applicant intends to develop institutional partnerships/teaming arrangements for\n\n implementation of the cooperative agreement (sub-recipients or alliances), the application must\n\n specify the nature of organizational linkages. This includes their relationships between each other,\n\n lines of authority and accountability, and patterns for utilizing and sharing resources. Applicants\n\n that intend to utilize sub-awards should indicate the extent intended, the method of identifying\n\n sub-awardees, and the tasks/functions they will be performing. Applicants that plan to team up\n\n with other organizations, or government agencies for the implementation of the agreement should\n\n outline the services to be provided by each agency or organization and should discuss how the12\n\n collaboration with these partners fits into the Applicant’s proposed management plan. Applicant\n\n should state whether or not they have any existing relationships with the proposed partners and, if\n\n so, should include the Memoranda of Understanding (MOUs) in the Attachment/Annex. It is not\n\n expected at this time that offerors should include host country military letters of support or MOUs\n\n as these will be negotiated after award once district and sub-district allocation are finalized.\n\n \n\n The Organization’s Qualifications (Not to exceed five pages) - In this section, the applicant\n\n should describe its organizational knowledge, capability and experience in managing similar\n\n programs. Include the organization’s history, mission and structure of organization. This includes\n\n activities in institutional capacity building, HIV and AIDS policy development and\n\n implementation, delivery of integrated, comprehensive district-based HIV-related services for care\n\n and treatment and collaborations with donors, host country governments, and NGOs to strengthen\n\n health and HIV and AIDS systems."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2838838,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AMbVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 11,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": ".\n\n • DoW required certifications: By checking “I agree” in block 17 of the SF 424 (see below)\n\n and signing the application as the authorizing official, you are certifying that your\n\n institution will be in compliance with these additional requirements:\n\n o Institutions of higher education must certify compliance with 10 U.S.C 983, Institutions Of Higher Education That Prevent ROTC Access Or Military\n\n Recruiting On Campus: Denial Of Grants And Contracts From Department Of Defense, Department Of Education, And Certain Other Departments And\n\n Agencies, and 32 C.F.R. 216 Military Recruiting And Reserve Officer Training Corps Program Access To Institutions Of Higher Education.\n\n o Recipient will not require any of its employees, contractors, or sub-\n\n recipients seeking to report fraud, waste, or abuse to sign or comply with\n\n internal confidentiality agreements or statements prohibiting or\n\n otherwise restricting those employees, contractors, sub-recipients from\n\n lawfully reporting that waste, fraud, or abuse to a designated\n\n investigative or law enforcement representative of a Federal department\n\n or agency authorized to receive such information."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2767766,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AKLVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 6,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Must be at 75% beneficially owned by individuals who are citizens or\n\n lawfully admitted permanent residents of that same country; or\n\n At least 75% of the entity’s staff (senior, mid-level, support) must be\n\n citizens or lawfully admitted permanent residents of that same country\n\n • Where an entity has a Board of Directors, at least 51% of the members of\n\n the Board must also be citizens or lawfully admitted permanent residents\n\n of such country.\n\n \n\n Review and Selection Process: Proposals will not be evaluated against each other but will be\n\n scored based on the criteria listed above. DHAPP’s intent is to review proposals as soon as\n\n possible after they arrive; however, proposals may be reviewed periodically for administrative\n\n reasons.17\n\n The ultimate recommendation for award of proposals is made by DHAPP or other technical\n\n experts. Recommended proposals will then be forwarded to the Defense Health Agency\n\n Contracting Authority (DHACA). Any notification received from DHACA indicating the\n\n Applicant’s proposal has been recommended does not ultimately guarantee an award will be\n\n made. This notice indicates that the proposal has been selected in accordance with the\n\n evaluation criteria stated above and has been sent to the DHACA Grants Division to conduct\n\n cost analysis, determine the Applicant’s responsibility, to confirm whether funds are\n\n available, and to take other relevant steps necessary prior to making the award.\n\n \n\n Anticipated Announcement and Federal Award Dates: Decisions are expected to be\n\n announced by acceptance/declination letters via email. All awards are expected to be in place as\n\n specified in the country specific narrative in Attachment 1.\n\n \n\n Recipient Qualification: The Office of Management and Budget (OMB) has issued final\n\n guidance implementing section 872 of the Duncan Hunter National Defense Authorization Act\n\n for Fiscal Year 2009 as it applies to grants. As required by section 872, OMB and the General\n\n Services Administration have established the Federal Awardee Performance and Integrity\n\n Information System (FAPIIS) as a repository for government-wide data related to the integrity\n\n and performance of entities awarded federal grants, cooperative agreements, and contracts.\n\n This final guidance implements reporting requirements for recipients and awarding agencies;\n\n requires awarding agencies to consider information in FAPIIS before awarding a grant or\n\n cooperative agreement to a non-federal entity; and addresses how FAPIIS and other\n\n information may be used in assessing recipient integrity.\n\n \n\n a."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2692909,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AOrVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 16,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Current SAM.gov registrants are\n\n assigned their UEI and can view it within SAM.gov.\n\n \n\n 2) Create a Grants.gov Account: The next step is to register an account with Grants.gov.\n\n Follow the on-screen instructions or refer to the detailed instructions at\n\n https://www.grants.gov/applicants/applicant-registration/\n\n \n\n 3) Add a Profile to a Grants.gov Account: A profile in Grants.gov corresponds to a\n\n single applicant organization the user represents (i.e., an applicant) or an individual\n\n applicant. If you work for or consult with multiple organizations and have a profile for\n\n each, you may log in to one Grants.gov account to access all your grant applications. To\n\n add an organizational profile to your Grants.gov account, enter the UEI Number for the\n\n organization in the UEI field while adding a profile. For more detailed instructions about\n\n creating a profile on Grants.gov, refer\n\n to: https://www.grants.gov/applicants/applicant-registration/\n\n \n\n 4) EBiz POC Authorized Profile Roles: After you register with Grants.gov and create an\n\n Organization Applicant Profile, the organization applicant's request for Grants.gov roles\n\n and access is sent to the EBiz POC. The EBiz POC will then log in to Grants.gov and\n\n authorize the appropriate roles, which may include the Authorized Organization\n\n Representative (AOR) role, thereby giving you permission to complete and submit\n\n applications on behalf of the organization. You will be able to submit your application\n\n online any time after you have been assigned the AOR role. For more detailed\n\n instructions about creating a profile on Grants.gov, refer to:\n\n https://www.grants.gov/web/grants/applicants/registration/authorize-roles.html\n\n \n\n \n\n \n  https://www.grants.gov/applicants/applicant-registration/\n \n\n \n  https://www.grants.gov/applicants/applicant-registration/\n \n\n \n  https://www.grants.gov/web/grants/applicants/registration/authorize-roles.html8\n\n 5) Track Role Status: To track your role request, refer to: https://www.grants.gov/applicants/applicant-registration/\n\n \n\n Electronic Signature: When applications are submitted through Grants.gov, the name of the\n\n organization applicant with the AOR role that submitted the application is inserted into the\n\n signature line of the application, serving as the electronic signature."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2468276,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AKrVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 7,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Representations\n\n \n\n All extramural applicants are required to complete the representations below and\n\n submit with each application. The form for completion and submission is posted in\n\n eBRAP (https://ebrap.org/eBRAP/public/Program.htm). Upload the form into\n\n Grants.gov under Attachments.\n\n \n\n Representations Regarding Unpaid Federal Tax Liabilities and Conviction of\n\n Felony Criminal Violations Under Any Federal Law\n\n \n\n At the time of application submission, the applicant organization represents that it:\n\n \n\n (1) Is Is not a Corporation (“Corporation” means any entity, including any\n\n institution of higher education, other non-profit organization, or for-profit entity\n\n that has filed articles of incorporation). If the organization is a corporation,\n\n complete (2) and (3) below.\n\n \n\n (2) Is Is not a Corporation that has any unpaid Federal tax liability that has\n\n been assessed, for which all judicial and administrative remedies have been\n\n exhausted or have lapsed, and that is not being paid in a timely manner pursuant\n\n to an agreement with the authority responsible for collecting the tax liability.\n\n \n\n (3) Is Is not a Corporation that was convicted of a criminal violation under\n\n \n\n \n  https://ebrap.org/eBRAP/public/Program.htm20\n\n any\n\n Federal law within the preceding 24 months.\n\n \n\n NOTE: If the applicant organization responds in the affirmative to either (2) or (3)\n\n of the above representations, the applicant is ineligible to receive an award unless\n\n the agency suspension and debarment official has considered suspension or\n\n debarment and determined that further action is not required to protect the\n\n Government’s interests. The applicant organization therefore will be required to\n\n provide information about its tax liability and/or conviction, upon request, to the\n\n Grants Officer, to facilitate completion of the required consideration before award\n\n decisions are made.\n\n \n\n In accordance with DoW appropriations, the following representation is required. The\n\n applicant, by its signature on the SF424, represents:\n\n \n\n Representation Regarding the Prohibition on Using Funds Under Grants and\n\n Cooperative Agreements with Entities That Require Certain Internal\n\n Confidentiality Agreements."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2379153,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AP7VgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 19,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ },
+ "e49ecf8696d71178": {
+  "query": "eligible applicants who may apply",
+  "filter": "972e5db49e22b51a",
+  "retrievalResults": [
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Awards will be made on an open continuous basis. Refer to your country specific\n\n narrative in Attachment 1 for more details. Cooperative agreements will be awarded under\n\n this announcement.\n\n \n\n \n\n C. Eligibility Information6\n\n Eligible Applicants: All responsible sources from academia, industry, and non-\n\n governmental organizations may submit proposals under this announcement. No grants,\n\n contracts or cooperative agreements may be awarded directly to foreign military\n\n establishments. All respondents must demonstrate the active support of the in-country\n\n military and the DoW representative in the corresponding U.S. Embassy in the\n\n planning and submission of their proposals.\n\n \n\n Other information:\n\n \n\n • The Federal Assistance Certifications Report (completed as part of the SAM\n\n registration) is a required attestation that the entity will abide by the requirements of the\n\n U.S. laws and regulations; therefore, as applicable, you are still required to submit any\n\n documentation, including the SF LLL Disclosure of Lobbying Activities (if applicable),\n\n and informing DoW of unpaid delinquent tax liability or a felony conviction under any\n\n Federal law. If applicable, the SF LLL should be submitted with the SF 424 form. See\n\n Section F."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2966948,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AJrVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 5,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "• Must be at 75% beneficially owned by individuals who are citizens or\n\n lawfully admitted permanent residents of that same country; or\n\n At least 75% of the entity’s staff (senior, mid-level, support) must be\n\n citizens or lawfully admitted permanent residents of that same country\n\n • Where an entity has a Board of Directors, at least 51% of the members of\n\n the Board must also be citizens or lawfully admitted permanent residents\n\n of such country.\n\n \n\n Review and Selection Process: Proposals will not be evaluated against each other but will be\n\n scored based on the criteria listed above. DHAPP’s intent is to review proposals as soon as\n\n possible after they arrive; however, proposals may be reviewed periodically for administrative\n\n reasons.17\n\n The ultimate recommendation for award of proposals is made by DHAPP or other technical\n\n experts. Recommended proposals will then be forwarded to the Defense Health Agency\n\n Contracting Authority (DHACA). Any notification received from DHACA indicating the\n\n Applicant’s proposal has been recommended does not ultimately guarantee an award will be\n\n made. This notice indicates that the proposal has been selected in accordance with the\n\n evaluation criteria stated above and has been sent to the DHACA Grants Division to conduct\n\n cost analysis, determine the Applicant’s responsibility, to confirm whether funds are\n\n available, and to take other relevant steps necessary prior to making the award.\n\n \n\n Anticipated Announcement and Federal Award Dates: Decisions are expected to be\n\n announced by acceptance/declination letters via email. All awards are expected to be in place as\n\n specified in the country specific narrative in Attachment 1.\n\n \n\n Recipient Qualification: The Office of Management and Budget (OMB) has issued final\n\n guidance implementing section 872 of the Duncan Hunter National Defense Authorization Act\n\n for Fiscal Year 2009 as it applies to grants. As required by section 872, OMB and the General\n\n Services Administration have established the Federal Awardee Performance and Integrity\n\n Information System (FAPIIS) as a repository for government-wide data related to the integrity\n\n and performance of entities awarded federal grants, cooperative agreements, and contracts.\n\n This final guidance implements reporting requirements for recipients and awarding agencies;\n\n requires awarding agencies to consider information in FAPIIS before awarding a grant or\n\n cooperative agreement to a non-federal entity; and addresses how FAPIIS and other\n\n information may be used in assessing recipient integrity.\n\n \n\n a."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2674062,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AOrVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 16,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Technical Approach\n\n • Goals and Objectives. The proposal clearly states the overall goal(s) of the\n\n program and has specific, measurable objectives. The proposal is relevant to\n\n established DHAPP priority activities\n\n • Work Plan: The proposal contains sound scientific methods, an appropriate work\n\n plan described in sufficient detail and appropriate deliverables.\n\n • Methodology for monitoring and evaluation procedures. The proposed plan\n\n includes a description of how the program will have an impact on the country’s\n\n military and clearly states the indicators of performance that will be used to16\n\n monitor effectiveness.\n\n • Schedule and milestones. The proposed plan for HIV prevention efforts is\n\n feasible and contains concrete, achievable schedule and milestones.\n\n • Relevance to the host country’s military. The proposal clearly describes the\n\n involvement of the host country military and the relevance of the proposed\n\n program to the needs, priorities, and circumstances of the host country’s\n\n military.\n\n b. Qualifications\n\n • Key Personnel are qualified and eligible to perform the work.\n\n \n\n In addition, the following unscored criteria will also contribute to the overall evaluation of\n\n the application:\n\n \n\n Whether the applicant qualifies as a local partner. To be considered a local\n\n partner, the applicant must submit supporting documentation demonstrating their\n\n organization meets at least one of the criteria listed below at the time of\n\n application. In the below definition, a region is defined as one of the 2020 State\n\n Department / ForeignAssistance.gov Sub Regional groupings\n\n A. Individual: an individual must be a citizen or lawfully admitted permanent\n\n resident of, and have his/her principal place of business in the country served\n\n by the PEPFAR program with which the individual is or may become\n\n involved, and a sole proprietorship must be owned by such an individual; or\n\n B. An entity (e.g., a corporation or partnership): Entity of a sole proprietorship\n\n (such as, a corporation or not-for-profit) must meet all three areas of\n\n eligibility:\n\n • Must be incorporated or legally organized under the laws of, and have its\n\n principal place of business in, the country served by the PEPFAR\n\n program with which the entity is or may become involved; or\n\n Must exist in the region where the entity’s funded PEPFAR programs are\n\n implemented."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2538784,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AObVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Department of State and [Senegal].\n\n Implementers should be familiar with these strategic guidance documents and include means of\n\n addressing them in submitted proposals. Please see base Program Announcement section D for\n\n complete detailed list of application, format and submission requirements."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2239927,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3APLVgYKEBbayybwJOafSq",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 156,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "h) Other Personnel: Applicant has the discretion to determine the proper number and mix of\n\n additional key personnel, short-term technical staff, and others to meet award\n\n requirements.\n\n i) Consultants: Applicant may propose a mix of international and local advisors and\n\n specialists to cover the full range of objectives and activities. The management plan shall\n\n also demonstrate how the applicant will use in-country experts and resources. All\n\n personnel must demonstrate written and oral communications skills in English. Familiarity\n\n and demonstrated experience with the political, social, economic and cultural context of\n\n the country is required.\n\n \n\n The application should support the organization’s effectiveness and provide partnership\n\n arrangements. The applicant should propose how they will coordinate with the host country\n\n military as well as with other district partners and/or PEPFAR partners working across program\n\n areas. If the applicant intends to develop institutional partnerships/teaming arrangements for\n\n implementation of the cooperative agreement (sub-recipients or alliances), the application must\n\n specify the nature of organizational linkages. This includes their relationships between each other,\n\n lines of authority and accountability, and patterns for utilizing and sharing resources. Applicants\n\n that intend to utilize sub-awards should indicate the extent intended, the method of identifying\n\n sub-awardees, and the tasks/functions they will be performing. Applicants that plan to team up\n\n with other organizations, or government agencies for the implementation of the agreement should\n\n outline the services to be provided by each agency or organization and should discuss how the12\n\n collaboration with these partners fits into the Applicant’s proposed management plan. Applicant\n\n should state whether or not they have any existing relationships with the proposed partners and, if\n\n so, should include the Memoranda of Understanding (MOUs) in the Attachment/Annex. It is not\n\n expected at this time that offerors should include host country military letters of support or MOUs\n\n as these will be negotiated after award once district and sub-district allocation are finalized.\n\n \n\n The Organization’s Qualifications (Not to exceed five pages) - In this section, the applicant\n\n should describe its organizational knowledge, capability and experience in managing similar\n\n programs. Include the organization’s history, mission and structure of organization. This includes\n\n activities in institutional capacity building, HIV and AIDS policy development and\n\n implementation, delivery of integrated, comprehensive district-based HIV-related services for care\n\n and treatment and collaborations with donors, host country governments, and NGOs to strengthen\n\n health and HIV and AIDS systems."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2225649,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AMbVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 11,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Department of State and Ghana.\n\n Implementers should be familiar with these strategic guidance documents and include means of\n\n addressing them in submitted proposals. Please see base Program Announcement section D for\n\n complete detailed list of application, format and submission requirements."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2220532,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AubVgYKEBbayybwJOZ_P6",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 85,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   },
+   {
+    "content": {
+     "type": "TEXT",
+     "text": "Application Withdrawal: An applicant may withdraw an application at any time before award\n\n by written notice or by email. Notice of withdrawal shall be sent to the Grants Officer identified\n\n in this announcement. Withdrawals are effective upon receipt of notice by the Grants Officer.\n\n \n\n E. Application Review Information\n\n Review Criteria:\n\n Proposals will be selected through a technical and business decision-making process with\n\n technical considerations being most important. The following scored criteria are listed in\n\n descending order of importance.\n\n \n\n a."
+    },
+    "location": {
+     "type": "S3",
+     "s3Location": {
+      "uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF"
+     }
+    },
+    "score": 1.2205886,
+    "metadata": {
+     "documentIdentifier": "Department of Defense HIV-AIDS Prevention Program",
+     "agency": "Dept. of the Army -- USAMRAA",
+     "documentType": "NOFO",
+     "x-amz-bedrock-kb-data-source-id": "FB8H9OSPHZ",
+     "x-amz-bedrock-kb-chunk-id": "1%3A0%3AOLVgYKEBbayybwJOZvNR",
+     "bucket": "nofo",
+     "x-amz-bedrock-kb-source-uri": "s3://grantwell-burnes-staging-chatbotapiffionofosdownlo-uaxwdwccmuwn/Department of Defense HIV-AIDS Prevention Program/NOFO-File-PDF",
+     "nofoName": "Department of Defense HIV-AIDS Prevention Program",
+     "x-amz-bedrock-kb-document-page-number": 15,
+     "scope": "federal",
+     "processedAt": "2026-10-21T21:27:39.687Z",
+     "x-amz-bedrock-kb-source-file-modality": "TEXT",
+     "category": "Health"
+    }
+   }
+  ]
+ },
+ "f7cd00c414120062": {
+  "query": "formatting requirements font size margins page length",
+  "filter": "5e3ac386da9323f8",
+  "retrievalResults": []
+ }
+}

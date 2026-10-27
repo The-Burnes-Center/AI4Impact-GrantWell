@@ -16,7 +16,7 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { safeJsonParse, httpResponse } from "../shared/json.mjs";
-import { readS3Text } from "../shared/s3.mjs";
+import { readRawText } from "../shared/s3.mjs";
 import { documentSampleOf, generateQuestions, hasQuestions } from "../shared/questions.mjs";
 import {
   requireAdmin,
@@ -27,6 +27,7 @@ import {
   compareByDeadline,
   readGrantMetadata,
   OPEN_REVIEW_STATUSES,
+  deleteArtifacts,
 } from "grantwell-shared";
 
 const dynamoClient = new DynamoDBClient();
@@ -406,7 +407,7 @@ async function regenerateQuestions(summary, rawTextKey) {
   let documentSample = "";
   if (rawTextKey) {
     try {
-      documentSample = documentSampleOf(await readS3Text(process.env.BUCKET, rawTextKey));
+      documentSample = documentSampleOf(await readRawText(process.env.BUCKET, rawTextKey));
     } catch (error) {
       console.warn(`Could not read ${rawTextKey}, generating questions from the summary only:`, error.message);
     }
@@ -479,6 +480,12 @@ async function rejectReview(nofoName, event) {
       console.error(`Failed to delete S3 objects for ${nofoName}:`, error);
       // Continue - we still want to return success; the review is marked rejected
     }
+  }
+
+  try {
+    await deleteArtifacts(s3Client, nofoName);
+  } catch (error) {
+    console.error(`Failed to delete derived files for ${nofoName}:`, error);
   }
 
   // Delete metadata table entry if it exists

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When is the Highlands base funding application due?",
+    "expected": "Applications close 10/31/2026 and must be submitted electronically no later than 11:59 PM ET on that date.",
+    "quote": "Electronically submitted applications must be submitted no later than 11:59 PM, ET, on the",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "award",
+    "question": "How much can a state request?",
+    "expected": "Each State may request up to $2,293,362 in Base funding (award floor $25,000), and the federal request cannot exceed 50% of total project cost.",
+    "quote": "Each State may request up to $2,293,362 in Base funding.",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "documents",
+    "question": "Do I need to include maps of the land?",
+    "expected": "Yes. The Location section must include at minimum an aerial map of the proposed properties and a map showing their location relative to the Highlands Region boundary.",
+    "quote": "minimum an aerial map of the proposed properties and a map showing the location of proposed",
+    "confirmed": false
+  }
+]

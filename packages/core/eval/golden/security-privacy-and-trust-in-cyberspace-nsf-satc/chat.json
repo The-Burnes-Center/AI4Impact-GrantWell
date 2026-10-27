@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "when is the next satc deadline?",
+    "expected": "SaTC has no hard deadline: the full proposal target dates are the last Monday in September and the last Monday in January each year (September 29, 2025 and January 26, 2026 as written), and proposals are accepted anytime but may miss a panel. No time or time zone is given for the target dates.",
+    "quote": "Full Proposal Target Date(s) : September 29, 2025 Last Monday in September, Annually Thereafter January 26, 2026 Last Monday in January, Annually Thereafter Proposers are highly encouraged to submit by a target date.",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "award",
+    "question": "how much can we ask for on a RES proposal and for how long",
+    "expected": "A RES proposal is limited to $1,200,000 total budget for up to four years (any TTE plan counts within that); budgets over $600,000 add Collaboration Plan and BPC plan requirements.",
+    "quote": "RES projects are limited to $1,200,000 in total budget, with durations of up to four years. Proposals with a total budget of more than $600,000 have additional requirements including Broadening Participation in Computing and collaboration plans.",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "limits",
+    "question": "What's the page limit on the project description?",
+    "expected": "The Project Description is limited to 15 pages for RES and EDU proposals and 10 pages for SEED proposals.",
+    "quote": "The project description for proposals submitted to the RES and EDU designations is limited to 15 pages, and 10 pages for the SEED designation.",
+    "confirmed": false
+  }
+]

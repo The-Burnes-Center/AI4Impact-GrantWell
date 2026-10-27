@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When is the full application due?",
+    "expected": "The full application is due by 11:59 p.m. ET, October 22, 2026, and requires a pre-application first (due 5:00 p.m. ET, July 27, 2026); the application verification period ends 5:00 p.m. ET, October 27, 2026.",
+    "quote": "Application Submission Deadline: 11:59 p.m. ET, October 22, 2026",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "award",
+    "question": "What's the most I can ask for?",
+    "expected": "Total costs (direct plus indirect) for the whole period of performance should not exceed $750,000, with a maximum period of performance of 3 years.",
+    "quote": "Cost Cap: The application's total costs budgeted for the entire period of performance should not",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "limits",
+    "question": "How long can the project narrative be?",
+    "expected": "The Project Narrative is limited to 8 pages for projects without a clinical trial and 15 pages for projects with a clinical trial component.",
+    "quote": "Projects with a clinical trial component: 15-page limit",
+    "confirmed": false
+  }
+]

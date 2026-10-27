@@ -1,0 +1,361 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "DOD",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "Open until superseded; proposals accepted and reviewed at any time (some topics recommend specific target dates)",
+      "date": null,
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "This announcement remains open until superseded. We review and evaluate proposals as they are received. You may submit proposals at any time; however, some specific topic instructions may recommend submission by specific dates that align with funding expectations."
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": null,
+    "periodMonths": 60,
+    "expectedAwards": null,
+    "range": {
+      "min": 100000,
+      "max": 300000,
+      "quote": "Research proposals typically are funded between $100,000 and $300,000 per year."
+    },
+    "caps": [],
+    "match": {
+      "required": false,
+      "ratio": null,
+      "appliesTo": null,
+      "quote": "We do not require cost sharing for proposals under this announcement (except as may be required for transactions other than contracts, grants, and cooperative agreements entered into under 10 U.S.C. 4021)."
+    },
+    "quote": "Approximately $200 million is anticipated to be available for support of actions awarded under this announcement, subject to the availability of funds. Research proposals typically are funded between $100,000 and $300,000 per year. Most of our awards are three (3) years in duration. Awards may be proposed for not more than five (5) years."
+  },
+  "sections": [
+    {
+      "name": "Publicly Releasable Project Summary / Abstract",
+      "order": 1,
+      "limit": {
+        "type": "words",
+        "value": 300
+      },
+      "conditional": null,
+      "component": "R&R Other Project Information Form, field 7",
+      "quote": "You must provide a concise abstract of 300 words or less with your proposal (no more than 2000 characters). You must mark this abstract publicly releasable."
+    },
+    {
+      "name": "Statement of Objectives",
+      "order": 2,
+      "limit": {
+        "type": "pages",
+        "value": 1
+      },
+      "conditional": null,
+      "component": "Project Narrative",
+      "quote": "You must summarize your proposed research on a single page titled \"Statement of Objectives.\""
+    },
+    {
+      "name": "Research Effort",
+      "order": 3,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative",
+      "quote": "You should describe the research you plan in detail. State the research objectives and approach, and the relationship and comparable objectives to research progress elsewhere."
+    },
+    {
+      "name": "Principal Investigator (PI) and Senior Personnel Time",
+      "order": 4,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative",
+      "quote": "You must provide estimate of time the principal investigator and other senior professional personnel will devote to the research."
+    },
+    {
+      "name": "Your Facilities",
+      "order": 5,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative",
+      "quote": "Describe the facilities available for performing the proposed research, and any additional facilities or equipment the organization proposes to acquire at its own expense for the work."
+    },
+    {
+      "name": "Your Demonstrated Success Implementing Gold Standard Science",
+      "order": 6,
+      "limit": null,
+      "conditional": null,
+      "component": "Project Narrative",
+      "quote": "Your Demonstrated Success Implementing Gold Standard Science Describe your key personnel's and institution's demonstrated success in implementing Gold Standard Science"
+    },
+    {
+      "name": "High Performance Computing Requirements",
+      "order": 7,
+      "limit": null,
+      "conditional": "If DoD high performance computing cycles are needed",
+      "component": "Project Narrative",
+      "quote": "You should address utilization of this program if you need high performance computing cycles to meet the needs of your research."
+    },
+    {
+      "name": "Sprint Phase",
+      "order": 8,
+      "limit": null,
+      "conditional": "If Sprints are proposed",
+      "component": "Project Narrative",
+      "quote": "If Sprints are proposed, there should be a Sprint Phase section to include specifics as to what would be accomplished during the \"Sprint Phase\" and specific travel duration/location explicitly stated in the proposal."
+    },
+    {
+      "name": "Data Management Plan",
+      "order": 9,
+      "limit": {
+        "type": "pages",
+        "value": 2
+      },
+      "conditional": "If the effort generates scientific data",
+      "component": "R&R Other Project Information Form, field 12",
+      "quote": "Your \"Data Management Plan\" should be two (2) pages or less in length and discuss:"
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Step 1: Initial Screening (Go/No Go Criteria)",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Your Demonstrated Success Implementing Gold Standard Science"
+      ],
+      "quote": "Step 1: Initial Screening (Go/No Go Criteria) (1) Proposal demonstrates success in implementing Gold Standard Science in addition to making a commitment to complying with administration policies, procedures, and guidance respecting Gold Standard Science."
+    },
+    {
+      "name": "Technical merits of the proposed research and development",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Effort",
+        "Statement of Objectives"
+      ],
+      "quote": "(1) Technical merits of the proposed research and development. (2) Potential relationship of the proposed research and development to DOD missions."
+    },
+    {
+      "name": "Potential relationship of the proposed research and development to DOD missions",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Effort"
+      ],
+      "quote": "(2) Potential relationship of the proposed research and development to DOD missions."
+    },
+    {
+      "name": "The applicant's capabilities integral to achieving U.S. Air Force and Space Force objectives",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Principal Investigator (PI) and Senior Personnel Time",
+        "Your Facilities"
+      ],
+      "quote": "The applicant's capabilities integral to achieving U.S. Air Force and Space Force objectives. This includes principal investigator's, team leaders, or key personnel's qualifications, related experience, facilities, or techniques"
+    },
+    {
+      "name": "Strength of the Data Management Plan",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Data Management Plan"
+      ],
+      "quote": "and the potential risk of this effort to the U.S. Air Force and Space Force. (2) Strength of the Data Management Plan."
+    },
+    {
+      "name": "Cost/Price realism",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "F.2.c. Other Selection Criteria: Cost/Price: While of less importance to the Primary and Additional Evaluation criteria above, the realism of the proposed cost (to include cost sharing (if applicable), consideration of proposed budgets, and funding profiles), will be evaluated."
+    }
+  ],
+  "format": {
+    "pageSize": "8.5 x 11-inch",
+    "margins": "1 inch",
+    "font": "Times New Roman or Garamond",
+    "fontSizePt": 10,
+    "lineSpacing": "Single, 1.5, or 2.0-line spacing",
+    "overallPageLimit": null,
+    "other": [
+      "Font size 10, 11, or 12 point",
+      "No page limit, but no elaborate brochures, reprints, or presentations beyond those needed",
+      "Attachments in PDF; do not password protect any attachments",
+      "SF 424 (R&R) must be the cover page; no pages may precede it",
+      "Mark the application with the announcement number",
+      "Abstract entered as a single block of plain text: no line breaks, tables, superscript/subscript, or special characters; header includes the Program Officer's name and office symbol",
+      "Mark proprietary or confidential sections with the FAR 52.215-1 protective legend"
+    ],
+    "quote": "Spacing - Single, 1.5, or 2.0-line spacing iv. Font - Times New Roman or Garamond, 10, 11, or 12point V. Page Limitation - None. However, unnecessarily elaborate or lengthy proposals are not desirable"
+  },
+  "eligibility": [
+    {
+      "item": "Eligible applicants: all qualified, responsible organizational applicants from academia, the non-profit sector, and industry, including University Affiliated Research Centers unless precluded by their DoD operating contract",
+      "quote": "and industry are eligible to submit research proposals. This includes University Affiliated Research Centers unless precluded from submitting a proposal by their Department of Defense operating contract."
+    },
+    {
+      "item": "FFRDCs, individual persons, and federal agencies are not eligible as primary award recipients",
+      "quote": "None of the following entity types are eligible to submit proposals as primary award recipients under this announcement. Federally Funded Research and Development Centers (FFRDCs) Individual persons or people Federal agencies"
+    },
+    {
+      "item": "Only unclassified, fundamental basic research is funded",
+      "quote": "We invite unclassified proposals that do not contain proprietary information for research in many broad areas. We expect to fund only fundamental research."
+    },
+    {
+      "item": "Applicant must accept the acknowledgement of support and disclaimer requirements",
+      "quote": "You must include the G.2.g. Acknowledgement of Research Support on all materials created or produced under our awards."
+    },
+    {
+      "item": "Applicant must accept public dissemination of research results and provide copies of peer-reviewed publications to the Program Officer",
+      "quote": "You must provide a copy of all peer-reviewed publications developed or produced from research conducted with Air Force and Space Force funds to our Program Officer. You are not eligible to submit a proposal if you cannot accept these terms"
+    },
+    {
+      "item": "Proposals must include clear benchmarks for success and a commitment to Gold Standard Science, identify demonstrated success implementing it, and commit to complying with administration GSS policies",
+      "quote": "To meet GSS, applications/proposals shall: (1) Include clear benchmarks for measuring success and progress towards relevant goals and a commitment to achieving GSS;"
+    },
+    {
+      "item": "All current and pending research support must be disclosed at proposal time for all covered individuals",
+      "quote": "This announcement requires that all current and pending research support, as defined by Section 223 of the FY21 National Defense Authorization Act must be disclosed at the time of proposal, for all covered individuals."
+    },
+    {
+      "item": "Disclose any potential or actual conflicts of interest, including for any subrecipient",
+      "quote": "You and your organization must disclose any potential or actual scientific or non- scientific Conflict of Interest(s) to us. You must also disclose any potential or actual conflict(s) of interest for any subrecipient you include in your proposal."
+    },
+    {
+      "item": "All covered individuals must complete research security training within the 12 months before proposal submission",
+      "quote": "AFOSR requires all Covered Individuals listed on the application for a research and development award to take the training in the 12 months prior to proposal submission."
+    },
+    {
+      "item": "Institution must attest that covered individuals are not in a malign foreign talent recruitment program and not collaborating with a Section 1286 Prohibited Entity",
+      "quote": "not actively participating in a malign foreign talent recruitment program (MFTRP); and, (2) not involved in active collaboration on fundamental research with a Section 1286 Prohibited Entity or employee of a Prohibited Entity."
+    },
+    {
+      "item": "All individuals on the Senior/Key Person form must have an ORCID entered in the Credential field",
+      "quote": "All individuals listed on the Senior/Key Person form must have an Open Researcher and Contributor ID (ORCID). Please enter this information in the Research and Related Senior/Key Personnel Form (Expanded) under \"Credential, e.g., agency login:\" field."
+    },
+    {
+      "item": "Be registered in SAM.gov before submitting, with a valid UEI and a CAGE code on the application; no SAM exemptions",
+      "quote": "You must comply with SAM registration requirements and include a UEI and CAGE code on your application or we cannot make an award."
+    },
+    {
+      "item": "Proposals must be submitted electronically through Grants.gov by an Authorized Organizational Representative",
+      "quote": "You must submit your proposal electronically through Grants.gov. We will not accept or evaluate any proposal submitted by any means other than through Grants.gov."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "SF 424 (R&R) Application for Federal Assistance, as the cover page, with an authorized signature",
+      "userWrites": false,
+      "quote": "The SF 424 (R&R) Application for Federal assistance form must be your cover page. No pages may precede the SF 424 (R&R)."
+    },
+    {
+      "item": "SF-LLL Disclosure of Lobbying Activities (if the grant exceeds $100,000 and there is lobbying activity to disclose)",
+      "userWrites": false,
+      "quote": "You must attach the completed SF-LLL Disclosure of Lobbying Activities if your grant amount exceeds $100,000 and have lobbying activity to disclose."
+    },
+    {
+      "item": "R&R Other Project Information Form, with required attachments",
+      "userWrites": false,
+      "quote": "D.4.b. R&R Other Project Information Form Complete this form as indicated. You must include all necessary attachments."
+    },
+    {
+      "item": "AFOSR Abstract form (Grants.gov Related Documents tab)",
+      "userWrites": false,
+      "quote": "You must submit the \"AFOSR Abstract\" as an attachment with the proposal submission, this form's located on the \"Related Documents\" tab of grants.gov."
+    },
+    {
+      "item": "Bibliography and References Cited (field 9)",
+      "userWrites": false,
+      "quote": "You must attach your narrative Bibliography and References to field 9 of the R&R Other Project Information Form."
+    },
+    {
+      "item": "R&R Senior/Key Person Profile (Expanded) Form for all research personnel positions and covered individuals, with Degree Type and Degree Year for PD/PI and Co-PD/PI",
+      "userWrites": false,
+      "quote": "You must list all key persons proposed for the research on the R&R Senior/Key Person Profile (Expanded) Form."
+    },
+    {
+      "item": "Biographical sketch and list of significant publications for each Senior/Key Person",
+      "userWrites": true,
+      "quote": "D.4.f. R&R Senior/Key Person Profile (Expanded) Form You must attach a short biographical sketch and list of significant publications (vitae)"
+    },
+    {
+      "item": "Current and Pending (Other) Support for each covered individual",
+      "userWrites": true,
+      "quote": "Common Disclosure Forms: Biosketch, Current and Pending (Other) Support, and Collaborators and Other Affiliations (to be submitted with SF-424);"
+    },
+    {
+      "item": "Collaborators and Other Affiliations for each covered individual (submitted as PDF)",
+      "userWrites": false,
+      "quote": "If you are using a Microsoft Excel document, you must submit it as a PDF document through Grants.gov."
+    },
+    {
+      "item": "Certification(s) of covered individuals' research security training",
+      "userWrites": false,
+      "quote": "(5) Certification(s) of Covered Individual's Research Security Training."
+    },
+    {
+      "item": "Compliance Attestation on official university letterhead",
+      "userWrites": false,
+      "quote": "You must certify your institution's compliance with OUSW's Research Protection policies as articulated in the most up to date OUSW DoD Component Decision Matrix to Inform Research Proposal Mitigation Decisions on official university letterhead"
+    },
+    {
+      "item": "Security Program Questionnaire (Appendix 1)",
+      "userWrites": false,
+      "quote": "(3) Security Program Questionnaire (See Appendix 1);"
+    },
+    {
+      "item": "Privacy Act Statement consent form for each covered individual, also signed by the applicant as sponsor (Appendix 2)",
+      "userWrites": false,
+      "quote": "\"Privacy Act Statement\" consent form for each Covered Individual that is also signed by the Applicants/Recipients as the Individual's Sponsors"
+    },
+    {
+      "item": "R&R Personal Data Form (name fields of PD/PI and Co-PD/PIs completed)",
+      "userWrites": false,
+      "quote": "Each application must include this form with the name fields of the Project Director/Principal Investigator and any Co-Project Director(s)/Co-Principal Investigator(s) completed"
+    },
+    {
+      "item": "R&R Budget Form with separate annual budgets",
+      "userWrites": false,
+      "quote": "You must categorize funds by year and provide separate annual budgets for projects lasting more than one year. A budget justification must be included."
+    },
+    {
+      "item": "Budget Justification: detailed, stand-alone for each year, itemized travel, materials/supplies, and equipment, in a single file attached to field L of the R&R Budget Form",
+      "userWrites": true,
+      "quote": "You must provide a detailed budget justification for each year that clearly explains the need for each item."
+    },
+    {
+      "item": "Equipment quotes or vendor agreements (if purchasing equipment)",
+      "userWrites": false,
+      "quote": "Proposals including request to purchase equipment must include equipment quotes or vendor agreements."
+    },
+    {
+      "item": "Signed DHHS or ONR rate agreement (if proposing government-negotiated indirect or fringe rates)",
+      "userWrites": false,
+      "quote": "If you use a Government rate agreement to propose indirect cost rates and/or fringe benefit rates, you must attach a signed DHHS or ONR copy of the agreement"
+    },
+    {
+      "item": "R&R Subaward Budget Attachments and subaward budget justifications (if subawards are proposed)",
+      "userWrites": true,
+      "quote": "You must provide a budget at the same level of detail as your Prime budget for each proposed subaward. A subaward budget justification must be attached."
+    },
+    {
+      "item": "R&R Project / Performance Site Locations Form with ZIP+4 for each location",
+      "userWrites": false,
+      "quote": "You must complete all information as requested. You must include the ZIP+4 for each performance location you list."
+    }
+  ],
+  "libraryRequired": []
+}

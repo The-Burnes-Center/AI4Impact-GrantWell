@@ -12,6 +12,7 @@ import { Construct } from "constructs";
 export class S3BucketStack extends cdk.Stack {
   public readonly ffioNofosBucket: s3.Bucket;
   public readonly userDocumentsBucket: s3.Bucket;
+  public readonly grantArtifactsBucket: s3.Bucket;
 
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -50,6 +51,13 @@ export class S3BucketStack extends cdk.Stack {
         allowedOrigins: ['*'],
         allowedHeaders: ["*"]
       }]
+    });
+
+    // raw-text.txt, summary.json and questions.json per grant; kept out of ffioNofosBucket, which the KB indexes.
+    this.grantArtifactsBucket = new s3.Bucket(scope, 'GrantArtifactsBucket', {
+      versioned: true,
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
+      autoDeleteObjects: false,
     });
 
     // Grant permission for CDK custom resource handler to configure bucket notifications

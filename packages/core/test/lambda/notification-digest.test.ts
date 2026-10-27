@@ -119,3 +119,60 @@ describe("notification digest", () => {
     expect(ses.calls()).toHaveLength(0);
   });
 });
+
+describe("notification digest: other states' grants", () => {
+  const ENV_MULTI = {
+    ...ENV,
+    SUPPORTED_STATES: JSON.stringify([
+      { code: "CO", name: "Colorado" },
+      { code: "MA", name: "Massachusetts" },
+    ]),
+  };
+  const created_at = new Date().toISOString();
+  const federal = { nofo_name: "Federal Bridge Grant", status: "active", category: "Transportation", created_at };
+  const colorado = { nofo_name: "CDOT Bridge Grant", status: "active", category: "Transportation", scope: "state", state: "CO", created_at };
+  const massachusetts = { nofo_name: "MassDOT Bridge Grant", status: "active", category: "Transportation", scope: "state", state: "MA", created_at };
+
+  function given(userPrefs: Record<string, unknown>, nofos: object[], attributes: Record<string, string>) {
+    ddb.on(QueryCommand, { TableName: "prefs" }).resolves({ Items: [marshall({ user_id: "user-1", frequency: "daily", ...userPrefs })] });
+    ddb.on(QueryCommand, { TableName: "nofos" }).resolves({ Items: nofos.map((n) => marshall(n)) });
+    cognito.on(AdminGetUserCommand).resolves({
+      UserAttributes: Object.entries({ email: "ana@example.org", ...attributes }).map(([Name, Value]) => ({ Name, Value })),
+    });
+  }
+  const sentHtml = () => ses.commandCalls(SendEmailCommand).map((c) => c.args[0].input.Content!.Simple!.Body!.Html!.Data!).join("\n");
+
+  it("sends a user with no state federal grants only", async () => {
+    given({ state: "", categories: ["Transportation"] }, [federal, colorado], {});
+    const res = await (await load(ENV_MULTI))({ frequency: "daily" });
+
+    expect(res.stats).toMatchObject({ sent: 1 });
+    expect(sentHtml()).toContain("Federal Bridge Grant");
+    expect(sentHtml()).not.toContain("CDOT Bridge Grant");
+  });
+
+  it("does not widen to another state's grants when a user's filters match nothing", async () => {
+    given({ state: "MA", categories: ["Health"] }, [colorado], { "custom:state": "MA" });
+    const res = await (await load(ENV_MULTI))({ frequency: "daily" });
+
+    expect(res.stats).toMatchObject({ sent: 0, empty: 1 });
+    expect(ses.calls()).toHaveLength(0);
+  });
+
+  it("sends a Developer with no state every state's grants", async () => {
+    given({ state: "", categories: ["Transportation"] }, [colorado], { "custom:role": '["Developer"]' });
+    const res = await (await load(ENV_MULTI))({ frequency: "daily" });
+
+    expect(res.stats).toMatchObject({ sent: 1 });
+    expect(sentHtml()).toContain("CDOT Bridge Grant");
+  });
+
+  it("uses the user's current Cognito state, not the one saved with their prefs", async () => {
+    given({ state: "MA", categories: ["Transportation"] }, [colorado, massachusetts], { "custom:state": "CO" });
+    const res = await (await load(ENV_MULTI))({ frequency: "daily" });
+
+    expect(res.stats).toMatchObject({ sent: 1 });
+    expect(sentHtml()).toContain("CDOT Bridge Grant");
+    expect(sentHtml()).not.toContain("MassDOT Bridge Grant");
+  });
+});

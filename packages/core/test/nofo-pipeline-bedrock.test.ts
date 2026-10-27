@@ -27,7 +27,9 @@ vi.mock("@aws-sdk/client-s3", () => ({
   GetObjectCommand: aws.command("GetObjectCommand"),
   PutObjectCommand: aws.command("PutObjectCommand"),
 }));
+vi.mock("grantwell-shared", async () => import("../lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/grantwell-shared/artifacts.mjs"));
 
+process.env.ARTIFACTS_BUCKET = "grant-artifacts";
 process.env.HAIKU_MODEL_ID = "haiku";
 process.env.SONNET_MODEL_ID = "sonnet";
 

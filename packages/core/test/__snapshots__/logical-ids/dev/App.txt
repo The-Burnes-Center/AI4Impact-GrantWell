@@ -72,6 +72,7 @@ ChatbotAPIGetS3APIHandlerFunctionForNOFOsServiceRoleDefaultPolicy0704970B	AWS::I
 ChatbotAPIGetS3FilesHandlerFunction92AA0BD0	AWS::Lambda::Function
 ChatbotAPIGetS3FilesHandlerFunctionServiceRole3738EA84	AWS::IAM::Role
 ChatbotAPIGetS3FilesHandlerFunctionServiceRoleDefaultPolicyD70D342E	AWS::IAM::Policy
+ChatbotAPIGrantArtifactsBucketE67E060E	AWS::S3::Bucket
 ChatbotAPIHaikuNofoInferenceProfile18C3AD97	AWS::Bedrock::ApplicationInferenceProfile
 ChatbotAPIHaikuScraperInferenceProfile35A1CE0B	AWS::Bedrock::ApplicationInferenceProfile
 ChatbotAPIIndexFunctionRole550B215D	AWS::IAM::Role

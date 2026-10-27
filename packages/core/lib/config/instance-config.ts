@@ -69,7 +69,12 @@ interface InstanceConfigBase {
   };
   /** Public site URL, no trailing slash. */
   siteUrl: string;
-  customDomain?: { domainName: string; certificateArn: string };
+  customDomain?: {
+    domainName: string;
+    certificateArn: string;
+    /** Extra hostnames (e.g. www) that 301 to domainName. The certificate must cover them too. */
+    redirectDomains?: string[];
+  };
   auth: {
     mfaRequired: boolean;
     /** "off" turns MFA off entirely (no authenticator setup); otherwise mfaRequired picks required or optional. */
@@ -174,6 +179,10 @@ export function validateInstanceConfig(config: InstanceConfig): void {
   if (config.siteUrl.endsWith("/")) problems.push("siteUrl has a trailing slash");
   if (config.customDomain && config.siteUrl !== `https://${config.customDomain.domainName}`) {
     problems.push(`siteUrl must be https://${config.customDomain.domainName} when customDomain is set`);
+  }
+  const redirectDomains = config.customDomain?.redirectDomains ?? [];
+  if (redirectDomains.some((d) => d !== d.toLowerCase() || d === config.customDomain?.domainName || d.includes("/"))) {
+    problems.push("customDomain.redirectDomains must be lowercase hostnames other than domainName");
   }
   const ses = sesEmail(config);
   if (ses ? "cognitoDefault" in config.email : (config.email as { cognitoDefault?: unknown }).cognitoDefault !== true) {

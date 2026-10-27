@@ -1,0 +1,654 @@
+{
+  "schemaVersion": 1,
+  "status": "checked",
+  "family": "NIH",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "New applications due June 12, 2024",
+      "date": "2024-06-12",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Renewal/Resubmission/Revision (as allowed) applications due July 12, 2024",
+      "date": "2024-07-12",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New applications due October 12, 2024",
+      "date": "2024-10-12",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Renewal/Resubmission/Revision (as allowed) applications due November 12, 2024",
+      "date": "2024-11-12",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New applications due February 12, 2025",
+      "date": "2025-02-12",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Renewal/Resubmission/Revision (as allowed) applications due March 12, 2025",
+      "date": "2025-03-12",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New applications due June 12, 2025",
+      "date": "2025-06-12",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Renewal/Resubmission/Revision (as allowed) applications due July 12, 2025",
+      "date": "2025-07-12",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New applications due October 12, 2025",
+      "date": "2025-10-12",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Renewal/Resubmission/Revision (as allowed) applications due November 12, 2025",
+      "date": "2025-11-12",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New applications due February 12, 2026",
+      "date": "2026-02-12",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Renewal/Resubmission/Revision (as allowed) applications due March 12, 2026",
+      "date": "2026-03-12",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New applications due June 12, 2026",
+      "date": "2026-06-12",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Renewal/Resubmission/Revision (as allowed) applications due July 12, 2026",
+      "date": "2026-07-12",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New applications due October 12, 2026",
+      "date": "2026-10-12",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Renewal/Resubmission/Revision (as allowed) applications due November 12, 2026",
+      "date": "2026-11-12",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "New applications due February 12, 2027",
+      "date": "2027-02-12",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "application",
+      "label": "Renewal/Resubmission/Revision (as allowed) applications due March 12, 2027",
+      "date": "2027-03-12",
+      "time": "17:00",
+      "tzAsWritten": "local time of applicant organization",
+      "fromBrokenTable": true,
+      "quote": "All applications are due by 5:00 PM local time of applicant organization."
+    },
+    {
+      "kind": "other",
+      "label": "Expiration Date",
+      "date": "2027-05-08",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Expiration Date May 8, 2027 Due Dates for E.O. 12372 Not Applicable"
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": null,
+    "periodMonths": 60,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [],
+    "match": {
+      "required": false,
+      "ratio": null,
+      "appliesTo": null,
+      "quote": "This NOFO does not require cost sharing as defined in the NIH Grants Policy Statement Section 1.2 Definitions of"
+    },
+    "quote": "Award Budget Award budgets are composed of salary and other program-related expenses, as described below. Award Project Period The total project period may not exceed 5 years."
+  },
+  "sections": [
+    {
+      "name": "Candidate's Background",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": "PHS 398 Career Development Award Supplemental Form: Candidate Information and Goals for Career Development",
+      "quote": "Candidate's Background Describe the candidate's commitment to an academic career in Patient-Oriented Research (POR)."
+    },
+    {
+      "name": "Career Goals and Objectives",
+      "order": 2,
+      "limit": null,
+      "conditional": null,
+      "component": "PHS 398 Career Development Award Supplemental Form: Candidate Information and Goals for Career Development",
+      "quote": "Career Goals and Objectives Describe a systematic plan: (1) that shows a logical progression from prior research and training experiences to the research and career development experiences"
+    },
+    {
+      "name": "Candidate's Plan for Career Development/Training Activities During Award Period",
+      "order": 3,
+      "limit": null,
+      "conditional": null,
+      "component": "PHS 398 Career Development Award Supplemental Form: Candidate Information and Goals for Career Development",
+      "quote": "Candidate's Plan for Career Development/Training Activities During Award Period The candidate and the mentor(s) are jointly responsible for the preparation of the career development plan."
+    },
+    {
+      "name": "Research Strategy",
+      "order": 4,
+      "limit": null,
+      "conditional": null,
+      "component": "PHS 398 Career Development Award Supplemental Form: Research Plan",
+      "quote": "Research Strategy A sound research project that is consistent with the candidate's level of research development and objectives of their career development plan must be provided."
+    },
+    {
+      "name": "Plans and Statements of Mentor and Co-mentor(s)",
+      "order": 5,
+      "limit": null,
+      "conditional": null,
+      "component": "PHS 398 Career Development Award Supplemental Form: Mentor, Co-Mentor, Consultant, Collaborators",
+      "quote": "The application must include a statement from the mentor providing: 1) information on his/her research qualifications and previous experience as a research supervisor;"
+    },
+    {
+      "name": "Description of Institutional Environment",
+      "order": 6,
+      "limit": null,
+      "conditional": null,
+      "component": "PHS 398 Career Development Award Supplemental Form: Environment & Institutional Commitment to the Candidate",
+      "quote": "Description of Institutional Environment The sponsoring institution must document a strong, well-established research and career development program related to the candidate's area of interest"
+    },
+    {
+      "name": "Data Management and Sharing Plan",
+      "order": 7,
+      "limit": null,
+      "conditional": "Research that will generate scientific data",
+      "component": "PHS 398 Career Development Award Supplemental Form: Other Plan(s)",
+      "quote": "A Data Management and Sharing Plan (DMS Plan) is required for any NIH-funded or conducted research that will generate scientific data. Applicants must submit the DMS Plan at the time of application using the NIH DMS Plan Format Page."
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Overall Impact",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Reviewers should provide their assessment of the likelihood that the proposed career development and research plan will enhance the candidate's potential for a productive, independent scientific research career"
+    },
+    {
+      "name": "Candidate",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Candidate's Background"
+      ],
+      "quote": "Candidate Does the candidate have the potential to develop as an independent and productive researcher?"
+    },
+    {
+      "name": "Career Development Plan/Career Goals and Objectives/Plan to Provide Mentoring",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Career Goals and Objectives",
+        "Candidate's Plan for Career Development/Training Activities During Award Period",
+        "Plans and Statements of Mentor and Co-mentor(s)"
+      ],
+      "quote": "Career Development Plan/Career Goals and Objectives/Plan to Provide Mentoring What is the likelihood that the plan will contribute substantially to the scientific development of the candidate"
+    },
+    {
+      "name": "Research Plan",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Specific Aims",
+        "Research Strategy"
+      ],
+      "quote": "Research Plan Are the proposed research question, design, and methodology of significant scientific and technical merit?"
+    },
+    {
+      "name": "Mentor(s), Co-Mentor(s), Consultant(s), Collaborator(s)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Plans and Statements of Mentor and Co-mentor(s)"
+      ],
+      "quote": "Mentor(s), Co-Mentor(s), Consultant(s), Collaborator(s) Are the qualifications of the mentor(s) in the area of the proposed research appropriate?"
+    },
+    {
+      "name": "Environment & Institutional Commitment to the Candidate",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Description of Institutional Environment"
+      ],
+      "quote": "Environment & Institutional Commitment to the Candidate Is there clear commitment of the sponsoring institution to ensure that the required minimum of the candidate's effort will be devoted directly to the research"
+    },
+    {
+      "name": "Study Timeline for Clinical Trials",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Research Strategy"
+      ],
+      "quote": "Study Timeline for Clinical Trials Is the study timeline described in detail, taking into account start-up activities, the anticipated rate of enrollment, and planned follow-up assessment?"
+    },
+    {
+      "name": "Protections for Human Subjects",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For research that involves human subjects but does not involve one of the categories of research that are exempt under 45 CFR Part 46, the committee will evaluate the justification for involvement of human subjects"
+    },
+    {
+      "name": "Inclusion of Women, Racial and Ethnic Minorities, and Individuals Across the Lifespan",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "When the proposed project involves human subjects and/or NIH-defined clinical research, the committee will evaluate the proposed plans for the inclusion (or exclusion) of individuals on the basis of sex, race, and ethnicity"
+    },
+    {
+      "name": "Vertebrate Animals",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "The committee will evaluate the involvement of live vertebrate animals as part of the scientific assessment according to the following three points:"
+    },
+    {
+      "name": "Biohazards",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Reviewers will assess whether materials or procedures proposed are potentially hazardous to research personnel and/or the environment, and if needed, determine whether adequate protection is proposed."
+    },
+    {
+      "name": "Resubmissions",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For Resubmissions, the committee will evaluate the application as now presented, taking into consideration the responses to comments from the previous scientific review group and changes made to the project."
+    },
+    {
+      "name": "Revisions",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For Revisions, the committee will consider the appropriateness of the proposed expansion of the scope of the project."
+    },
+    {
+      "name": "Resource Sharing Plans",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Reviewers will comment on whether the Resource Sharing Plan(s) (i.e., Sharing Model Organisms"
+    },
+    {
+      "name": "Training in the Responsible Conduct of Research",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [
+        "Training in the Responsible Conduct of Research"
+      ],
+      "quote": "the reviewers will evaluate the adequacy of the proposed RCR training in relation to the following five required components: 1) Format - the required format of instruction"
+    },
+    {
+      "name": "Select Agent Research",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Reviewers will assess the information provided in this section of the application, including 1) the Select Agent(s) to be used in the proposed research"
+    },
+    {
+      "name": "Authentication of Key Biological and/or Chemical Resources",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "For projects involving key biological and/or chemical resources, reviewers will comment on the brief plans proposed for identifying and ensuring the validity of those resources."
+    },
+    {
+      "name": "Budget and Period of Support",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Reviewers will consider whether the budget and the requested period of support are fully justified and reasonable in relation to the proposed research."
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Follow all page limitations in the How to Apply Application Guide and the Table of Page Limits",
+      "Use the NIH DMS Plan Format Page; where it requires a Yes or No response, no additional narrative is allowed",
+      "Limited items are allowed in the Appendix, per the How to Apply Application Guide",
+      "Applications must be submitted electronically; paper applications will not be accepted",
+      "Reference letters are submitted through the eRA Commons Submit Referee Information link, not through Grants.gov"
+    ],
+    "quote": "All page limitations described in the How to Apply Application Guide"
+  },
+  "eligibility": [
+    {
+      "item": "Eligible organizations: public/state and private institutions of higher education; nonprofits with or without 501(c)(3) status; for-profit organizations including small businesses; state, county, city/township and special district governments; federally recognized and other Indian/Native American tribal governments; federal governments; U.S. territories; independent school districts; public/Indian housing authorities; Native American tribal organizations; faith-based or community-based organizations; regional organizations",
+      "quote": "Eligible Organizations Higher Education Institutions Public/State Controlled Institutions of Higher Education Private Institutions of Higher Education Nonprofits Other Than Institutions of Higher Education"
+    },
+    {
+      "item": "Non-domestic (non-U.S.) entities and non-domestic components of U.S. organizations are not eligible; foreign components are allowed",
+      "quote": "Non-domestic (non-U.S.) Entities (Foreign Organizations) are not eligible to apply. Non-domestic (non-U.S.) components of U.S. Organizations are not eligible to apply."
+    },
+    {
+      "item": "Applications involving foreign subawards/subcontracts are noncompliant and will not be considered",
+      "quote": "Applications involving foreign subawards/subcontracts submitted in response to this NOFO will be deemed noncompliant and will not be considered for funding."
+    },
+    {
+      "item": "Must propose an independent clinical trial (or clinical trial feasibility study or separate ancillary trial) led by the candidate; otherwise apply to companion PA-24-185",
+      "quote": "Required: Only accepting applications that propose an independent clinical trial(s)."
+    },
+    {
+      "item": "Applications must fall within the mission of a participating Institute/Center; non-participating ICs will not consider applications",
+      "quote": "ICs that do not participate in this announcement will not consider applications for funding."
+    },
+    {
+      "item": "Only New, Resubmission and Revision application types are allowed",
+      "quote": "Application Types Allowed New Resubmission Revision"
+    },
+    {
+      "item": "Organization must complete all registrations (SAM with annual renewal, UEI, eRA Commons, Grants.gov) before submission; allow 6 weeks or more",
+      "quote": "All registrations must be completed prior to the application being submitted. Registration can take 6 weeks or more, so applicants should begin the registration process as soon as possible."
+    },
+    {
+      "item": "Use the same UEI for all registrations, on the application and in the eRA Commons profile",
+      "quote": "The same UEI must be used for all registrations, as well as on the grant application."
+    },
+    {
+      "item": "eRA Commons registration requires at least one Signing Official and one PD/PI account",
+      "quote": "eRA Commons requires organizations to identify at least one Signing Official (SO) and at least one Program Director/Principal Investigator (PD/PI) account in order to submit an application."
+    },
+    {
+      "item": "PD/PI must have an eRA Commons account affiliated with the applicant organization (two distinct accounts if also the Signing Official)",
+      "quote": "All PD(s)/PI(s) must have an eRA Commons account. PD(s)/PI(s) should work with their organizational officials to either create a new account or to affiliate their existing account"
+    },
+    {
+      "item": "PD/PI must be registered with ORCID and linked to the eRA Commons personal profile",
+      "quote": "All PD(s)/PI(s) must be registered with ORCID (https://orcid.org/). The personal profile associated with the PD(s)/PI(s) eRA Commons account must be linked to a valid ORCID ID."
+    },
+    {
+      "item": "PD/PI must enter their eRA Commons ID in the Credential field of the Senior/Key Person Profile form",
+      "quote": "All PD(s)/PI(s) must include their eRA Commons ID in the Credential field of the Senior/Key Person Profile form."
+    },
+    {
+      "item": "Multiple PDs/PIs are not allowed",
+      "quote": "Multiple PDs/PIs are not allowed."
+    },
+    {
+      "item": "By time of award, candidate must be a U.S. citizen, non-citizen national, or lawful permanent resident",
+      "quote": "By the time of award, the individual must be a citizen or a non-citizen national of the United States or have been lawfully admitted for permanent residence"
+    },
+    {
+      "item": "Current and former PDs/PIs of R01, P01, P50, other major individual K awards (e.g., K01, K07, K08, K22, K23, K25, K76, K99/R00) or equivalent are not eligible; R03, R21/R33, R34/U34, R36, SBIR/STTR, K38, K12 and KL2 remain eligible",
+      "quote": "Current and former PDs/PIs on NIH research project (R01), program project (P01), center grants (P50), Project Leads of program project (P01), or center grants (P50), other major individual career development awards"
+    },
+    {
+      "item": "Candidate must have a health-professional doctoral degree or a PhD/doctorate in a clinical discipline",
+      "quote": "Candidates for the K23 award must have a health-professional doctoral degree. Such degrees include, but are not limited to, the MD, DO, DDS, DMD, OD, DC, PharmD, ND (Doctor of Naturopathy)"
+    },
+    {
+      "item": "Candidate must complete clinical training (including specialty/subspecialty) before award, but may apply before completing it",
+      "quote": "Candidates also must have completed their clinical training, including specialty and, if applicable, subspecialty training prior to receiving an award. However, candidates may submit an application prior to the completion of clinical training."
+    },
+    {
+      "item": "Candidate must hold a full-time appointment at the academic institution at the time of award",
+      "quote": "At the time of award, the candidate must have a \"full-time\" appointment at the academic institution."
+    },
+    {
+      "item": "Candidate must commit at least 75% of full-time professional effort (9 person-months) to career development",
+      "quote": "Candidates are required to commit a minimum of 75% of full-time professional effort (i.e., a minimum of 9 person-months) to their program of career development."
+    },
+    {
+      "item": "VA appointment effort cannot count toward the full-time requirement at the applicant institution",
+      "quote": "Candidates who have VA appointments may not consider part of the VA effort toward satisfying the full time requirement at the applicant institution."
+    },
+    {
+      "item": "Candidate must identify a mentor (one primary mentor if a team) before submitting",
+      "quote": "Before submitting the application, the candidate must identify a mentor who will supervise the proposed career development and research experience."
+    },
+    {
+      "item": "Applicant institution must have a strong, well-established record of research and career development activities and qualified mentors",
+      "quote": "The applicant institution must have a strong, well-established record of research and career development activities and faculty qualified to serve as mentors in biomedical, behavioral, or clinical research."
+    },
+    {
+      "item": "Organizations may submit more than one application only if each is scientifically distinct and from a different candidate",
+      "quote": "Applicant organizations may submit more than one application, provided that each application is scientifically distinct, and each is from a different candidate."
+    },
+    {
+      "item": "An individual may not have two or more competing NIH career development applications pending review concurrently",
+      "quote": "An individual may not have two or more competing NIH career development applications pending review concurrently."
+    },
+    {
+      "item": "A new (A0) application is not accepted before the summary statement issues for an overlapping A0 or A1 application",
+      "quote": "A new (A0) application that is submitted before issuance of the summary statement from the review of an overlapping new (A0) or resubmission (A1) application."
+    },
+    {
+      "item": "A resubmission (A1) is not accepted before the summary statement issues for the previous A0 application",
+      "quote": "A resubmission (A1) application that is submitted before issuance of the summary statement from the review of the previous new (A0) application."
+    },
+    {
+      "item": "An application substantially overlapping another application pending appeal of initial peer review is not accepted",
+      "quote": "An application that has substantial overlap with another application pending appeal of initial peer review."
+    },
+    {
+      "item": "Concurrent research project grant applications may not substantially overlap the career award application scientifically or budgetarily",
+      "quote": "Candidates may submit research project grant (RPG) applications concurrently with the K application. However, any concurrent RPG application may not have substantial scientific and/or budgetary overlap with the career award application."
+    },
+    {
+      "item": "Applications lacking the required reference letters will not be reviewed",
+      "quote": "Applications lacking the appropriate required reference letters will not be reviewed."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "SF424(R&R) Cover form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Cover All instructions in the How to Apply-Application Guide"
+    },
+    {
+      "item": "SF424(R&R) Project/Performance Site Locations form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Project/Performance Site Locations All instructions in the How to Apply - Application Guide"
+    },
+    {
+      "item": "Other Project Information form",
+      "userWrites": false,
+      "quote": "Other Project Information All instructions in the How to Apply - Application Guide"
+    },
+    {
+      "item": "SF424(R&R) Senior/Key Person Profile Expanded form",
+      "userWrites": false,
+      "quote": "SF424(R&R) Senior/Key Person Profile Expanded All instructions in the How to Apply - Application uide"
+    },
+    {
+      "item": "R&R Budget, with budget justification",
+      "userWrites": true,
+      "quote": "R&R Budget All instructions in the How to Apply - Application Guide"
+    },
+    {
+      "item": "PHS 398 Cover Page Supplement form",
+      "userWrites": false,
+      "quote": "PHS 398 Cover Page Supplement All instructions in the How to Apply - Application Guide"
+    },
+    {
+      "item": "Signed letters of support from all collaborators and/or consultants confirming participation and describing their roles",
+      "userWrites": false,
+      "quote": "Signed statements must be provided by all collaborators and/or consultants confirming their participation in the project and describing their specific roles."
+    },
+    {
+      "item": "Signed statements from each advisory committee member (if applicable)",
+      "userWrites": false,
+      "quote": "Advisory committee members (if applicable): Signed statements must be provided by each member of the proposed advisory committee."
+    },
+    {
+      "item": "Institutional Commitment to the Candidate's Research Career Development statement from the sponsoring institution",
+      "userWrites": false,
+      "quote": "The sponsoring institution must provide a statement of commitment to the candidate's development into a productive, independent investigator and to meeting the requirements of this award."
+    },
+    {
+      "item": "At least one human subjects study record (PHS Human Subjects and Clinical Trials Information) or Delayed Onset Study record if human subjects are involved",
+      "userWrites": true,
+      "quote": "you must include at least one human subjects study record using the Study Record: PHS Human Subjects and Clinical Trials Information form or Delayed Onset Study record."
+    },
+    {
+      "item": "PHS Assignment Request Form",
+      "userWrites": false,
+      "quote": "PHS Assignment Request Form All instructions in the How to Apply - Application uide"
+    },
+    {
+      "item": "Reference letters, submitted by referees through eRA Commons",
+      "userWrites": false,
+      "quote": "Reference letters are submitted directly through the eRA Commons Submit Referee Information link and not through Grants.gov."
+    },
+    {
+      "item": "Bibliography & References Cited",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Facilities & Other Resources",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Equipment",
+      "userWrites": true,
+      "quote": null
+    },
+    {
+      "item": "Biographical Sketch",
+      "userWrites": true,
+      "quote": null
+    }
+  ],
+  "libraryRequired": [
+    "Project Summary/Abstract",
+    "Project Narrative",
+    "Specific Aims",
+    "Training in the Responsible Conduct of Research"
+  ]
+}

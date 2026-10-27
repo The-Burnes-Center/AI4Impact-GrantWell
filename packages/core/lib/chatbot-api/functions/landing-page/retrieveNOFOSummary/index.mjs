@@ -1,7 +1,7 @@
-import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client } from '@aws-sdk/client-s3';
 import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
-import { recordEvent, touchLastActive, withSectionIds } from 'grantwell-shared';
+import { getArtifact, recordEvent, touchLastActive, withSectionIds } from 'grantwell-shared';
 
 // SUPPORTED_STATES injected as [{code,name}] (from config.states via supportedStatesEnv in lib/config/instance-config.ts).
 const SUPPORTED_STATES = (() => {
@@ -155,13 +155,7 @@ export const handler = async (event) => {
       throw authError;
     }
 
-    const fileName = `${basePath}/summary.json`;
-    const command = new GetObjectCommand({
-      Bucket: s3Bucket,
-      Key: fileName,
-    });
-
-    const result = await s3Client.send(command);
+    const result = await getArtifact(s3Client, `${basePath}/summary.json`, s3Bucket);
     const fileContent = await streamToString(result.Body);
     const summary = JSON.parse(fileContent);
     // Summaries written before section ids existed derive the same ids on every read.
