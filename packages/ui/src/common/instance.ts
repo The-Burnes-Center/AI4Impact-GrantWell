@@ -24,6 +24,7 @@ interface StagedInstance {
   turnstile?: false;
   tenancy?: "single";
   mfa?: "off";
+  regions?: string[];
 }
 
 // Written by core's UserInterface construct at synth; absent in standalone builds (neutral fallback).
@@ -49,4 +50,6 @@ export const TURNSTILE_ENABLED: boolean = staged?.turnstile !== false;
 export const SINGLE_STATE: UsState | null = staged?.tenancy === "single" ? staged.states[0] ?? null : null;
 /** False when the deployment turns MFA off: no setup prompt, no two-step settings, no resets. */
 export const MFA_ENABLED: boolean = staged?.mfa !== "off";
+/** The Region question's choices; empty when the deployment asks none. */
+export const REGIONS: readonly string[] = staged?.regions ?? [];
 export const MFA_DEADLINE: number | null = MFA_DEADLINE_ISO ? Date.parse(MFA_DEADLINE_ISO) : null;

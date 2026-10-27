@@ -13,6 +13,7 @@ import { useApiClient } from "../../hooks/use-api-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import { useFocusTrap } from "../../hooks/use-focus-trap";
 import { SINGLE_STATE, stateNameFromCode } from "../../common/states";
+import { REGIONS } from "../../common/instance";
 import Button from "../ui/Button";
 import "./profile-gate.css";
 
@@ -74,6 +75,8 @@ export default function ProfileGate({ children }: ProfileGateProps) {
     organization: false,
     jobTitle: false,
   });
+  const [region, setRegion] = useState("");
+  const [regionTouched, setRegionTouched] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -92,6 +95,7 @@ export default function ProfileGate({ children }: ProfileGateProps) {
           organization: profile.organization || "",
           jobTitle: profile.jobTitle || "",
         });
+        setRegion(REGIONS.includes(profile.region) ? profile.region : "");
         setProfileState(profile.state || "");
         setNeedsProfile(!profile.profileComplete);
       } catch {
@@ -107,8 +111,8 @@ export default function ProfileGate({ children }: ProfileGateProps) {
   }, [apiClient]);
 
   const allFilled = useMemo(
-    () => FIELDS.every((f) => values[f.key].trim().length > 0),
-    [values]
+    () => FIELDS.every((f) => values[f.key].trim().length > 0) && (REGIONS.length === 0 || region !== ""),
+    [values, region]
   );
 
   const setField = (key: FieldKey, value: string) =>
@@ -129,8 +133,9 @@ export default function ProfileGate({ children }: ProfileGateProps) {
     async (e: React.FormEvent) => {
       e.preventDefault();
       setTouched({ agency: true, organization: true, jobTitle: true });
+      setRegionTouched(true);
       if (!allFilled) {
-        setError("Please complete all three fields.");
+        setError(REGIONS.length ? "Please complete all four fields." : "Please complete all three fields.");
         return;
       }
       setSaving(true);
@@ -140,6 +145,7 @@ export default function ProfileGate({ children }: ProfileGateProps) {
           agency: values.agency.trim(),
           organization: values.organization.trim(),
           jobTitle: values.jobTitle.trim(),
+          ...(REGIONS.length && { region }),
         });
         setNeedsProfile(false);
       } catch (err) {
@@ -150,7 +156,7 @@ export default function ProfileGate({ children }: ProfileGateProps) {
         setSaving(false);
       }
     },
-    [apiClient, allFilled, values]
+    [apiClient, allFilled, values, region]
   );
 
   if (!checking && !needsProfile) {
@@ -251,6 +257,45 @@ export default function ProfileGate({ children }: ProfileGateProps) {
                     </div>
                   );
                 })}
+
+                {REGIONS.length > 0 && (
+                  <div className="profile-gate__field">
+                    <label className="profile-gate__label" htmlFor="gate-region">
+                      Region <span className="profile-gate__req">*</span>
+                    </label>
+                    <div
+                      className={`profile-gate__input-wrap ${
+                        regionTouched && !region ? "profile-gate__input-wrap--error" : ""
+                      }`}
+                    >
+                      <span className="profile-gate__field-icon" aria-hidden="true">
+                        <LuMapPin size={16} />
+                      </span>
+                      <select
+                        id="gate-region"
+                        value={region}
+                        onChange={(e) => setRegion(e.target.value)}
+                        onBlur={() => setRegionTouched(true)}
+                        required
+                        aria-invalid={regionTouched && !region}
+                        aria-describedby={regionTouched && !region ? "gate-region-err" : undefined}
+                      >
+                        <option value="">Select a region</option>
+                        {REGIONS.map((r) => (
+                          <option key={r} value={r}>
+                            {r}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    {regionTouched && !region && (
+                      <p className="profile-gate__field-error" id="gate-region-err">
+                        <LuTriangleAlert size={13} aria-hidden="true" />
+                        Region is required
+                      </p>
+                    )}
+                  </div>
+                )}
 
                 <div className="profile-gate__field">
                   <label className="profile-gate__label" htmlFor="gate-state">

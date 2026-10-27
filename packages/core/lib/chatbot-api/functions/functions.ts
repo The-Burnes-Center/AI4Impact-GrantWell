@@ -11,6 +11,7 @@ import {
   limits,
   processingQueueEmailEnabled,
   queueEmailRecipientsParameter,
+  regions,
   sesEmail,
   singleState,
   supportedStatesEnv,
@@ -1479,6 +1480,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       layers: [jsSharedLayer],
       environment: {
         ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
+        ...(regions(config).length && { REGIONS: JSON.stringify(regions(config)) }),
       },
       timeout: cdk.Duration.seconds(30),
     });

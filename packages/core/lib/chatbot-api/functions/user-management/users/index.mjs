@@ -7,13 +7,19 @@ import {
   CognitoIdentityProviderClient,
   ListUsersCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
+import { BatchGetItemCommand, DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { deleteUserData } from "./user-data.mjs";
 
 const cognitoClient = new CognitoIdentityProviderClient({
   region: process.env.AWS_REGION || "us-east-1",
 });
+const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION || "us-east-1" });
 
 const USER_POOL_ID = process.env.USER_POOL_ID;
+const ANALYTICS_TABLE_NAME = process.env.ANALYTICS_TABLE_NAME;
+// The deployment asks a Region question; each listed user then carries the region from their profile row.
+const REGIONS_ENABLED = process.env.REGIONS_ENABLED === "true";
 const ALLOWED_ROLE_PRESETS = new Map([
   ["user", ["User"]],
   ["admin", ["Admin"]],
@@ -542,10 +548,13 @@ async function listUsers(limit, paginationToken) {
     })
   );
 
-  const users = (response.Users || [])
-    .map((user) => mapCognitoUser(user))
-    .filter((user) => Boolean(user.email))
-    .sort((a, b) => a.email.localeCompare(b.email));
+  const users = (
+    await withRegions(
+      (response.Users || [])
+        .map((user) => ({ user: mapCognitoUser(user), sub: subOf(user) }))
+        .filter(({ user }) => Boolean(user.email))
+    )
+  ).sort((a, b) => a.email.localeCompare(b.email));
 
   return {
     users,
@@ -579,7 +588,7 @@ async function scanUsers(include) {
     for (const user of response.Users || []) {
       const mapped = mapCognitoUser(user);
       if (mapped.email && include(mapped)) {
-        collected.push(mapped);
+        collected.push({ user: mapped, sub: subOf(user) });
       }
     }
     paginationToken = response.PaginationToken;
@@ -592,7 +601,47 @@ async function scanUsers(include) {
     );
   }
 
-  return collected.sort((a, b) => a.email.localeCompare(b.email));
+  return (await withRegions(collected)).sort((a, b) => a.email.localeCompare(b.email));
+}
+
+function subOf(cognitoUser) {
+  return (cognitoUser.Attributes || []).find((attribute) => attribute.Name === "sub")?.Value || "";
+}
+
+const BATCH_GET_SIZE = 100;
+const BATCH_GET_ATTEMPTS = 5;
+
+// A failed lookup shows blank regions rather than failing the whole list.
+async function withRegions(entries) {
+  if (!REGIONS_ENABLED) return entries.map(({ user }) => user);
+  const regionBySub = new Map();
+  try {
+    const subs = [...new Set(entries.map(({ sub }) => sub).filter(Boolean))];
+    for (let i = 0; i < subs.length; i += BATCH_GET_SIZE) {
+      let keys = subs.slice(i, i + BATCH_GET_SIZE).map((sub) => marshall({ pk: `USER#${sub}`, sk: "PROFILE" }));
+      for (let attempt = 0; keys.length && attempt < BATCH_GET_ATTEMPTS; attempt += 1) {
+        const response = await dynamoClient.send(
+          new BatchGetItemCommand({
+            RequestItems: {
+              [ANALYTICS_TABLE_NAME]: {
+                Keys: keys,
+                ProjectionExpression: "pk, #rg",
+                ExpressionAttributeNames: { "#rg": "region" },
+              },
+            },
+          })
+        );
+        for (const raw of response.Responses?.[ANALYTICS_TABLE_NAME] || []) {
+          const item = unmarshall(raw);
+          if (typeof item.region === "string") regionBySub.set(String(item.pk).slice("USER#".length), item.region);
+        }
+        keys = response.UnprocessedKeys?.[ANALYTICS_TABLE_NAME]?.Keys || [];
+      }
+    }
+  } catch (error) {
+    console.error("Region lookup failed:", error);
+  }
+  return entries.map(({ user, sub }) => ({ ...user, region: regionBySub.get(sub) || "" }));
 }
 
 async function getTargetUser(username) {

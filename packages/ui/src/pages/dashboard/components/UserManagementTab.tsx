@@ -3,7 +3,7 @@ import { LuKeyRound, LuTrash, LuUserPlus } from "react-icons/lu";
 import type { ApiClient } from "../../../common/api-client/api-client";
 import type { ManagedUser, UserRolePreset } from "../../../common/types/user-management";
 import { SUPPORTED_STATES } from "../../../common/types/user-management";
-import { MFA_ENABLED, SINGLE_STATE } from "../../../common/instance";
+import { MFA_ENABLED, REGIONS, SINGLE_STATE } from "../../../common/instance";
 import { Modal } from "../../../components/common/Modal";
 import PaginationControls from "./PaginationControls";
 import RowActionsMenu, { type RowAction } from "./RowActionsMenu";
@@ -385,13 +385,14 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                 <th scope="col">Status</th>
                 <th scope="col">Role</th>
                 {!SINGLE_STATE && <th scope="col">State</th>}
+                {REGIONS.length > 0 && <th scope="col">Region</th>}
                 <th scope="col" className="user-management-table__actions">Action</th>
               </tr>
             </thead>
             <tbody>
               {!loading && users.length === 0 ? (
                 <tr>
-                  <td colSpan={SINGLE_STATE ? 4 : 5} className="user-management-table__empty">
+                  <td colSpan={(SINGLE_STATE ? 4 : 5) + (REGIONS.length > 0 ? 1 : 0)} className="user-management-table__empty">
                     {hasActiveSearch ? "No matching users found." : "No users yet."}
                   </td>
                 </tr>
@@ -471,6 +472,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                       </select>
                     </td>
                     )}
+                    {REGIONS.length > 0 && <td>{user.region || "Not set"}</td>}
                     <td className="user-management-table__actions">
                       <div className="user-management-actions-cell">
                         {(hasChanges || isSaving) && (

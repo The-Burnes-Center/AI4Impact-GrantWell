@@ -64,6 +64,8 @@ export async function signIn(page: Page, isRetry: boolean): Promise<void> {
   await expect(gate.or(home)).toBeVisible({ timeout: 45_000 });
   if (await gate.isVisible()) {
     for (const [label, value] of Object.entries(PROFILE)) await gate.getByLabel(label).fill(value);
+    const region = gate.getByLabel("Region");
+    if (await region.count()) await region.selectOption({ index: 1 });
     await gate.getByRole("button", { name: "Save and continue" }).click();
     await expect(gate).toBeHidden();
   }

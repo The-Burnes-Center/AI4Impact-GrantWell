@@ -19,6 +19,7 @@ const defaults = (): Flags => ({
   SINGLE_STATE: null,
   MFA_ENABLED: true,
   MFA_DEADLINE: null,
+  REGIONS: [],
 });
 
 /**
