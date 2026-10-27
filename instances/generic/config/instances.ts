@@ -30,7 +30,6 @@ export const instances: InstanceConfig[] = [
     customDomain: {
       domainName: "grantwell.us",
       certificateArn: "arn:aws:acm:us-east-1:530075910224:certificate/a8daa5c0-d5cf-4ef8-af39-373944dc5454",
-      redirectDomains: ["www.grantwell.us"],
     },
     auth: { mfaRequired: false, mfaDeadline: "2026-11-02T00:00:00-05:00" },
     email: { sender: "no-reply@grantwell.us", manageSenderIdentity: true },
