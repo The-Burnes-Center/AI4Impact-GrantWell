@@ -74,3 +74,35 @@ describe("ProfilePage notification preferences", () => {
     expect(net.to(PREFS)).toHaveLength(0);
   });
 });
+
+describe("ProfilePage region", () => {
+  const SAVE_PROFILE = "PUT /user-profile";
+  const saved = { agency: "DOT", organization: "Denver", jobTitle: "Manager", region: "Region 1", state: "CO", profileComplete: true };
+
+  function renderWithProfile() {
+    const net = stubFetch({
+      [PROFILE]: json(saved),
+      [PREFS]: json(savedPrefs),
+      [SAVE_PROFILE]: (req) => json({ ...saved, ...(req.body as object) }),
+    });
+    return { net, ...renderApp(<ProfilePage />, { route: "/profile" }) };
+  }
+
+  it("shows no region field on a deployment without regions", async () => {
+    renderWithProfile();
+    await screen.findByLabelText("Department");
+    expect(screen.queryByLabelText("Region")).toBeNull();
+  });
+
+  it("changes the region with the other organization details", async () => {
+    instance.REGIONS = ["Region 1", "Region 2"];
+    const { net, user } = renderWithProfile();
+    const region = await screen.findByLabelText("Region");
+    await screen.findByDisplayValue("DOT");
+    expect(region).toHaveValue("Region 1");
+    await user.selectOptions(region, "Region 2");
+    await user.click(screen.getByRole("button", { name: "Save changes" }));
+    expect(await screen.findByText("Organization details saved.")).toBeInTheDocument();
+    expect(net.to(SAVE_PROFILE)[0].body).toEqual({ agency: "DOT", organization: "Denver", jobTitle: "Manager", region: "Region 2" });
+  });
+});

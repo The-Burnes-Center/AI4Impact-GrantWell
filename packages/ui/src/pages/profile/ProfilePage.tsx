@@ -14,7 +14,7 @@ import Button from "../../components/ui/Button";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import MfaSetupPanel from "../../components/auth/MfaSetupPanel";
 import { clearMfaPromptSnooze } from "../../common/mfa-snooze";
-import { EMAIL_DIGEST, MFA_DEADLINE_ISO, MFA_ENABLED } from "../../common/instance";
+import { EMAIL_DIGEST, MFA_DEADLINE_ISO, MFA_ENABLED, REGIONS } from "../../common/instance";
 import { deadlineDateText } from "../../common/mfa-deadline";
 import Breadcrumbs from "../../components/common/Breadcrumbs";
 import { SINGLE_STATE, stateNameFromCode } from "../../common/states";
@@ -76,7 +76,8 @@ export default function ProfilePage() {
   const [orgAgency, setOrgAgency] = useState("");
   const [orgOrganization, setOrgOrganization] = useState("");
   const [orgJobTitle, setOrgJobTitle] = useState("");
-  const [orgBaseline, setOrgBaseline] = useState({ agency: "", organization: "", jobTitle: "" });
+  const [orgRegion, setOrgRegion] = useState("");
+  const [orgBaseline, setOrgBaseline] = useState({ agency: "", organization: "", jobTitle: "", region: "" });
   const [orgSaving, setOrgSaving] = useState(false);
   const [orgError, setOrgError] = useState<string | null>(null);
   const [orgSaved, setOrgSaved] = useState(false);
@@ -90,10 +91,13 @@ export default function ProfilePage() {
         setOrgAgency(p.agency || "");
         setOrgOrganization(p.organization || "");
         setOrgJobTitle(p.jobTitle || "");
+        const region = REGIONS.includes(p.region) ? p.region : "";
+        setOrgRegion(region);
         setOrgBaseline({
           agency: p.agency || "",
           organization: p.organization || "",
           jobTitle: p.jobTitle || "",
+          region,
         });
       })
       .catch(() => {});
@@ -105,12 +109,13 @@ export default function ProfilePage() {
   const orgDirty =
     orgAgency.trim() !== orgBaseline.agency.trim() ||
     orgOrganization.trim() !== orgBaseline.organization.trim() ||
-    orgJobTitle.trim() !== orgBaseline.jobTitle.trim();
+    orgJobTitle.trim() !== orgBaseline.jobTitle.trim() ||
+    orgRegion !== orgBaseline.region;
 
   const onSaveOrg = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!orgAgency.trim() || !orgOrganization.trim() || !orgJobTitle.trim()) {
-      setOrgError("Please complete all three fields.");
+    if (!orgAgency.trim() || !orgOrganization.trim() || !orgJobTitle.trim() || (REGIONS.length > 0 && !orgRegion)) {
+      setOrgError(REGIONS.length ? "Please complete all four fields." : "Please complete all three fields.");
       return;
     }
     setOrgSaving(true);
@@ -121,11 +126,13 @@ export default function ProfilePage() {
         agency: orgAgency.trim(),
         organization: orgOrganization.trim(),
         jobTitle: orgJobTitle.trim(),
+        ...(REGIONS.length && { region: orgRegion }),
       });
       setOrgBaseline({
         agency: orgAgency.trim(),
         organization: orgOrganization.trim(),
         jobTitle: orgJobTitle.trim(),
+        region: orgRegion,
       });
       setOrgSaved(true);
     } catch {
@@ -282,7 +289,7 @@ export default function ProfilePage() {
 
                 <h3 className="profile-subheading">Organization details</h3>
                 <p className="profile-hint">
-                  Your department, organization, and role. Used to understand who&apos;s
+                  Your department, organization, {REGIONS.length > 0 ? "role, and region" : "and role"}. Used to understand who&apos;s
                   using GrantWell.
                 </p>
                 {orgError && (
@@ -344,6 +351,29 @@ export default function ProfilePage() {
                       placeholder="e.g. Grants Manager"
                     />
                   </div>
+                  {REGIONS.length > 0 && (
+                    <div className="profile-section">
+                      <label className="profile-field-label" htmlFor="profile-region">
+                        Region
+                      </label>
+                      <select
+                        id="profile-region"
+                        value={orgRegion}
+                        onChange={(e) => {
+                          setOrgRegion(e.target.value);
+                          setOrgSaved(false);
+                        }}
+                        className="profile-input"
+                      >
+                        <option value="">Select a region</option>
+                        {REGIONS.map((r) => (
+                          <option key={r} value={r}>
+                            {r}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                   <div className="profile-actions">
                     <Button type="submit" loading={orgSaving} disabled={!orgDirty}>
                       Save changes

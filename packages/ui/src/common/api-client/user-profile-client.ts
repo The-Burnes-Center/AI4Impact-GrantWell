@@ -6,6 +6,8 @@ export interface UserProfile {
   agency: string;
   organization: string;
   jobTitle: string;
+  /** Empty when unset or when the deployment asks no Region question. */
+  region: string;
   state: string;
   profileComplete: boolean;
 }
@@ -13,7 +15,7 @@ export interface UserProfile {
 export type UserProfileInput = Pick<
   UserProfile,
   "agency" | "organization" | "jobTitle"
->;
+> & { region?: string };
 
 export interface RecentlyViewedItem {
   label: string;

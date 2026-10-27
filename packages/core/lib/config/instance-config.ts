@@ -102,6 +102,8 @@ interface InstanceConfigBase {
   seo?: { indexable: boolean };
   /** https URL the in-app feedback form is forwarded to; unset, feedback is only logged. */
   feedbackFormUrl?: string;
+  /** Choices for a required Region question on the user's profile, stored on the profile row. Unset or empty, no question. */
+  regions?: string[];
   /** Abuse and cost limits; every key is optional, `limits(config)` fills in the defaults. */
   limits?: Partial<Limits>;
   /** Dev only. These accounts may sign in past Turnstile with the token in SSM at `e2eBypassParameter(config)`. */
@@ -199,6 +201,14 @@ export function validateInstanceConfig(config: InstanceConfig): void {
   if (config.feedbackFormUrl !== undefined && !config.feedbackFormUrl.startsWith("https://")) {
     problems.push("feedbackFormUrl must start with https://");
   }
+  if (config.regions !== undefined) {
+    const names = Array.isArray(config.regions) ? config.regions : [];
+    if (!Array.isArray(config.regions) || names.some((r) => typeof r !== "string" || !r.trim() || r !== r.trim() || r.length > 200)) {
+      problems.push("regions must be a list of trimmed, non-empty names of at most 200 characters");
+    } else if (new Set(names.map((r) => r.toLowerCase())).size !== names.length) {
+      problems.push("regions has duplicates");
+    }
+  }
   const deadline = config.auth.mfaDeadline;
   if (deadline !== undefined && !(/(Z|[+-]\d{2}:\d{2})$/.test(deadline) && Number.isFinite(Date.parse(deadline)))) {
     problems.push("auth.mfaDeadline must be an ISO timestamp with an offset, e.g. 2026-11-02T00:00:00-05:00");
@@ -273,6 +283,11 @@ export function monitoringPrefix(config: InstanceConfig): string {
 }
 
 /** [{code,name}] so handlers get both membership checks and display names from one env var. */
+/** The Region question's choices; empty when the deployment asks none. */
+export function regions(config: InstanceConfig): string[] {
+  return config.regions ?? [];
+}
+
 export function supportedStatesEnv(config: InstanceConfig): string {
   return JSON.stringify(config.states.map((s) => ({ code: s.code, name: s.name })));
 }
