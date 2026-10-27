@@ -2,7 +2,7 @@
 
 **Last Updated:** October 15, 2026
 
-This release makes it easier to write and keep track of your applications. You can now pick a grant from a list when you start a new chat or application, look back through earlier versions of an application and restore them, and protect your account with two-step verification. Grant search returns better matches, chats and AI-written applications use a newer AI model, and Word and PDF exports keep their formatting. We have also made the wording and navigation consistent across GrantWell and made the landing page load faster. Since then, grant summaries also use the newer AI model, deadlines show on the right day, GrantWell works better on a phone, two-step verification is quicker, more new grants arrive with the right document, and administrators can search users and see which waiting grants are due soonest. This update also keeps your information safer, keeps your edits while the AI writes, and makes the AI writer use everything you give it.
+This release makes it easier to write and keep track of your applications. You can now pick a grant from a list when you start a new chat or application, look back through earlier versions of an application and restore them, and protect your account with two-step verification. Grant search returns better matches, chats and AI-written applications use a newer AI model, and Word and PDF exports keep their formatting. We have also made the wording and navigation consistent across GrantWell and made the landing page load faster. Since then, grant summaries also use the newer AI model, deadlines show on the right day, GrantWell works better on a phone, two-step verification is quicker, more new grants arrive with the right document, and administrators can search users and see which waiting grants are due soonest. This update also keeps your information safer, keeps your edits while the AI writes, and makes the AI writer use everything you give it. You can now also record how each application turned out, and GrantWell asks once a grant's deadline has passed.
 
 ## Highlights
 
@@ -13,9 +13,17 @@ This release makes it easier to write and keep track of your applications. You c
 - **Better AI-written applications**: your edits are kept while the AI writes, it uses everything you give it including your supporting documents, and Word and PDF exports keep their formatting
 - **Correct deadlines**: a deadline late in the day no longer shows as the next day
 - **Easier to use**: pages fit a phone, long chats open quickly, navigation and wording are consistent, and the landing page is faster
-- **For admins**: search users, grants in the processing queue sorted by deadline, a weekday email when grants are waiting, and fewer grants that need review
+- **For admins**: search users, grants in the processing queue sorted by deadline, a weekday email when grants are waiting, fewer grants that need review, and every recorded application outcome with a CSV export
 
 ## New in this release
+
+### Application Outcomes
+
+- On **My Applications**, each application now has an **Outcome**: submitted, awarded (with the amount), not awarded, withdrawn, or not submitted
+- Choose **Update outcome** to record or change it; GrantWell asks only for the dates or amount that outcome needs
+- Once a grant's deadline has passed, GrantWell asks after you sign in how your application went (for grants with no deadline, 90 days after you last worked on it). Answer the ones you know and leave the rest; GrantWell asks again in 60 days, and keeps asking about a submitted application until you hear back
+- Only applications you work on from now on are asked about; you can record an outcome for an older one on My Applications at any time
+- Outcomes help show what GrantWell applications achieve. If you delete your account, your outcomes stay without your name, email or application title
 
 ### Application Version History
 
@@ -166,6 +174,13 @@ This release makes it easier to write and keep track of your applications. You c
 - **Search users** by any part of their email address or username; state admins see only users in their own state
 - If User Management can't load, it shows the reason instead of a general error
 
+### Application Outcomes (Admin)
+
+- **Analytics** has a new **Application outcomes** section: how many outcomes were recorded, how many were awarded and the total awarded, and a table you can filter by outcome or search
+- **Export CSV** downloads the outcomes shown, with each user's email, organization, region, grant, application, outcome, amounts and dates
+- State admins see outcomes for their own state only
+- Where a deployment asks for a region, User Management shows each user's region
+
 ### Grants (Admin)
 
 - A grant can no longer be published without application questions; if questions could not be created, it goes to **Needs attention**, and approving it creates the questions
@@ -196,6 +211,7 @@ This release makes it easier to write and keep track of your applications. You c
 ## Behind the Scenes
 
 - GrantWell deployments run by state governments can use their own header, footer and sign-in page, show an official-website banner and their seal, choose whether to use two-step verification, and send sign-in emails without setting up their own email service
+- A deployment can ask users for their region when they complete their profile, from a list it chooses; users can change it on their Profile page
 - A new deployment with no grants yet shows an empty list instead of an error
 - GrantWell checks every day that its AI models answer, and alerts the team within 15 minutes if any part of GrantWell fails to start, or if chats start showing errors instead of answers
 - Many more automated tests run before every update reaches you
