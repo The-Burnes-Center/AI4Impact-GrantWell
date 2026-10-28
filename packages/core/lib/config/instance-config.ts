@@ -114,8 +114,13 @@ interface InstanceConfigBase {
 }
 
 export interface SesEmail {
-  /** Its domain is the SES identity auth and digest mail send from. */
+  /** Auth and digest mail send from this address. */
   sender: string;
+  /**
+   * The SES identity behind `sender`: its domain (the default) or the address itself, for a sender
+   * whose domain's DNS the deployment can't change. An address identity is verified by hand.
+   */
+  identity?: "domain" | "address";
   /** False when another deployment in the same account and region already owns the identity. */
   manageSenderIdentity: boolean;
 }
@@ -190,6 +195,11 @@ export function validateInstanceConfig(config: InstanceConfig): void {
   if (ses ? "cognitoDefault" in config.email : (config.email as { cognitoDefault?: unknown }).cognitoDefault !== true) {
     problems.push("email must be either { sender, manageSenderIdentity } or { cognitoDefault: true }");
   } else if (ses && !ses.sender.includes("@")) problems.push("email.sender is not an address");
+  if (ses?.identity !== undefined && ses.identity !== "domain" && ses.identity !== "address") {
+    problems.push('email.identity must be "domain" or "address"');
+  } else if (ses?.identity === "address" && ses.manageSenderIdentity) {
+    problems.push('email.identity "address" needs manageSenderIdentity: false (verify the address in SES by hand)');
+  }
   const queueEmail = config.notifications?.processingQueueEmail;
   if (queueEmail !== undefined && typeof queueEmail !== "boolean") {
     problems.push("notifications.processingQueueEmail must be true or false");

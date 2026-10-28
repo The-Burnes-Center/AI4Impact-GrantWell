@@ -99,7 +99,7 @@ export class AuthorizationStack extends Construct {
             fromName: 'GrantWell',
             replyTo: config.branding.supportEmail,
             sesRegion,
-            sesVerifiedDomain: sesConfig.sender.split('@')[1],
+            sesVerifiedDomain: sesConfig.identity === 'address' ? undefined : sesConfig.sender.split('@')[1],
             configurationSetName: authEmailConfigurationSet.configurationSetName,
           })
         : cognito.UserPoolEmail.withCognito(config.branding.supportEmail),
