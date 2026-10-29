@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -33,22 +33,30 @@ interface AnalyticsTabProps {
   userState: string;
 }
 
-// GrantWell brand palette (tokens.css). Two-series charts pair brand green with the amber
-// highlight — distinct hues (validated CVD ΔE 37.7 / normal-vision 37.7), backed by direct value
-// labels + a table equivalent for the low-contrast amber (dataviz relief rule).
-const SERIES_REGISTERED = "#23776C"; // --mk-green
-const SERIES_ACTIVE = "#F6C51B"; // --gw-color-highlight (amber)
-const SERIES_SINGLE = "#23776C";
-// Sequential green ramp for the ordered funnel (light → dark, brand greens).
-const FUNNEL_RAMP = [
-  "#8CC0B7",
-  "#5BA294",
-  "#388557",
-  "#23776C",
-  "#1F6A54",
-  "#195C53",
-  "#244140",
-];
+// Recharts needs literal colors, so the branded tokens are read at render. Two-series charts pair the
+// primary with the highlight (distinct hues on the default palette: CVD ΔE 37.7), backed by direct
+// value labels + a table equivalent for the low-contrast highlight.
+const cssVar = (name: string, fallback: string) =>
+  getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+
+function chartColors() {
+  const primary = cssVar("--gw-color-primary", "#23776C");
+  return {
+    registered: primary,
+    active: cssVar("--gw-color-highlight", "#F6C51B"),
+    single: primary,
+    // Sequential ramp for the ordered funnel, light → dark.
+    funnel: [
+      cssVar("--gw-color-primary-soft", "#8CC0B7"),
+      cssVar("--gw-color-primary-mid", "#5BA294"),
+      cssVar("--gw-color-accent", "#388557"),
+      primary,
+      cssVar("--gw-color-primary-deep", "#1B5D54"),
+      cssVar("--gw-color-primary-hover", "#195C53"),
+      cssVar("--gw-color-primary-active", "#244140"),
+    ],
+  };
+}
 const AXIS_INK = "#52514e";
 const GRID = "#e1e0d9";
 
@@ -77,6 +85,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
     isStateAdmin ? userState : ""
   );
   const [loading, setLoading] = useState(true);
+  const colors = useMemo(chartColors, []);
 
   const fetchAnalytics = useCallback(
     async (w: AnalyticsWindow, state: string) => {
@@ -195,10 +204,10 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
                 <YAxis allowDecimals={false} tick={{ fill: AXIS_INK, fontSize: 12 }} />
                 <Tooltip cursor={{ fill: "rgba(11,11,11,0.04)" }} />
                 <Legend />
-                <Bar dataKey="Registered" fill={SERIES_REGISTERED} radius={[4, 4, 0, 0]} maxBarSize={44}>
+                <Bar dataKey="Registered" fill={colors.registered} radius={[4, 4, 0, 0]} maxBarSize={44}>
                   <LabelList dataKey="Registered" position="top" style={{ fill: AXIS_INK, fontSize: 11 }} />
                 </Bar>
-                <Bar dataKey="Active" fill={SERIES_ACTIVE} radius={[4, 4, 0, 0]} maxBarSize={44}>
+                <Bar dataKey="Active" fill={colors.active} radius={[4, 4, 0, 0]} maxBarSize={44}>
                   <LabelList dataKey="Active" position="top" style={{ fill: AXIS_INK, fontSize: 11 }} />
                 </Bar>
               </BarChart>
@@ -245,7 +254,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
                 <Tooltip cursor={{ fill: "rgba(11,11,11,0.04)" }} />
                 <Bar dataKey="count" radius={[0, 4, 4, 0]} maxBarSize={28}>
                   {data.draftFunnel.stages.map((_, i) => (
-                    <Cell key={i} fill={FUNNEL_RAMP[i] || SERIES_SINGLE} />
+                    <Cell key={i} fill={colors.funnel[i] || colors.single} />
                   ))}
                   <LabelList dataKey="count" position="right" style={{ fill: AXIS_INK, fontSize: 12 }} />
                 </Bar>
