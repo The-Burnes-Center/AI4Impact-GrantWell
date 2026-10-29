@@ -16,6 +16,21 @@ export interface LogoLink extends Link {
   className?: string;
 }
 
+/** A line of text with optional links, e.g. ["Developed by ", { label: "AI for Impact", href }, "."]. */
+export type RichLine = (string | Link)[];
+
+export interface HomeCopy {
+  /** "state" for tenancy "single", otherwise "marketing". A chrome PublicHome replaces both. */
+  layout?: "state" | "marketing";
+  tagline?: string;
+  description?: string;
+  /** Exactly three cards, in the order of their icons: discover, understand, draft. */
+  features?: { title: string; text: string }[];
+  trust?: { title: string; text: string };
+  /** Replaces the default credit and support-email lines. */
+  attribution?: RichLine[];
+}
+
 export interface Branding {
   appName: string;
   orgName: string;
@@ -31,6 +46,8 @@ export interface Branding {
   };
   logo: string;
   favicon: string;
+  shortName?: string;
+  home?: HomeCopy;
   footer: {
     /** Footer wordmark image; omit to fall back to `logo`. */
     wordmark?: string;
@@ -38,6 +55,10 @@ export interface Branding {
     madeBy?: LogoLink;
     /** Partner/consortium links + logos. Empty for neutral core. */
     partners: LogoLink[];
+    links?: Link[];
+    /** Holder in the "© <year> <holder>" line. */
+    copyright?: string;
+    disclaimer?: string;
   };
   /**
    * Text links for the "This is a tool by:" strip (OmniHeader) on landing/login. Distinct from
@@ -45,7 +66,7 @@ export interface Branding {
    */
   omniPartners: Link[];
   /** A government deployment's identity: a strip above every page (logo + label, linking to href) and the logo beside the app logo. */
-  govHeader?: { logo: string; label: string; href: string };
+  govHeader?: { logo: string; label: string; href: string; sealBesideLogo?: boolean };
   analyticsId?: string;
   seo?: {
     title?: string;
