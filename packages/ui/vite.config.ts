@@ -4,6 +4,7 @@ import path from "path";
 import react from "@vitejs/plugin-react";
 import { heroImages } from "./vite/hero-images";
 import { instanceHtml } from "./vite/instance-html";
+import { coreCssLayer } from "./vite/core-css-layer";
 
 const isDev = process.env.NODE_ENV === "staging";
 
@@ -20,6 +21,7 @@ export default defineConfig({
   plugins: [
     instanceHtml(stagedInstancePath),
     heroImages(),
+    coreCssLayer(),
     isDev && {
       name: "aws-exports",
       writeBundle() {

@@ -84,7 +84,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
             background-color: #1f2937;
             color: #ffffff;
             border-radius: 6px;
-            font-family: 'Noto Sans', sans-serif;
+            font-family: var(--gw-font-family);
             font-size: 12px;
             font-weight: 400;
             white-space: pre-line;
@@ -274,7 +274,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                   justifyContent: "center",
                   cursor: clickable ? "pointer" : "default",
                   transition: "all 0.2s ease",
-                  fontFamily: "'Noto Sans', sans-serif",
+                  fontFamily: "var(--gw-font-family)",
                   fontSize: "14px",
                   fontWeight: 600,
                   padding: 0,
@@ -322,7 +322,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
               >
                 <div
                   style={{
-                    fontFamily: "'Noto Sans', sans-serif",
+                    fontFamily: "var(--gw-font-family)",
                     fontSize: "15px",
                     fontWeight: active ? 600 : 500,
                     color: active ? "var(--gw-color-primary)" : completed ? "var(--gw-color-text-muted)" : "var(--gw-color-text-status)",
@@ -337,7 +337,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                 {step.description && (
                   <div
                     style={{
-                      fontFamily: "'Noto Sans', sans-serif",
+                      fontFamily: "var(--gw-font-family)",
                       fontSize: "13px",
                       color: "#4b5563",
                       marginTop: "4px",
@@ -359,7 +359,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
           style={{
             textAlign: "center",
             marginTop: "12px",
-            fontFamily: "'Noto Sans', sans-serif",
+            fontFamily: "var(--gw-font-family)",
             fontSize: "12px",
             color: "#6b7280",
             fontWeight: 500,

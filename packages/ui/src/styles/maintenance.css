@@ -22,7 +22,7 @@
 }
 
 .maintenance-title {
-  font-family: "Noto Sans", sans-serif;
+  font-family: var(--gw-font-family);
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--gw-color-primary);
@@ -31,7 +31,7 @@
 }
 
 .maintenance-message {
-  font-family: "Noto Sans", sans-serif;
+  font-family: var(--gw-font-family);
   font-size: 1.05rem;
   color: #333;
   margin: 0 0 1rem;
@@ -39,7 +39,7 @@
 }
 
 .maintenance-submessage {
-  font-family: "Noto Sans", sans-serif;
+  font-family: var(--gw-font-family);
   font-size: 0.9rem;
   color: #666;
   margin: 0;

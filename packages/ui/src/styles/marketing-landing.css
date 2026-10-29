@@ -27,7 +27,7 @@
   display: flex;
   align-items: center;
   gap: 40px;
-  font-family: 'Public Sans', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-marketing);
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
