@@ -3,7 +3,7 @@
   border-bottom: 1px solid #d9d9d9;
   width: 100%;
   padding: 4px 60px;
-  font-family: 'Public Sans', 'Inter', system-ui, sans-serif;
+  font-family: var(--gw-font-marketing);
   font-size: 13px;
   line-height: 20px;
 }
