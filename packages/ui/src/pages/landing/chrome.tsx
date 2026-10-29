@@ -102,7 +102,8 @@ export function LandingNavbar() {
   );
 }
 
-function AppSkipLink() {
+/** First focusable element on pages without the marketing navbar. */
+export function SkipLink() {
   const handleSkipNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const mainContent = document.getElementById("main-content");
@@ -131,7 +132,7 @@ export function AppNavbar() {
 
   // The docked sidebar carries its own logo, so the bar is only needed as the drawer's toggle,
   // which a chrome Header shows itself.
-  if (!showMenuButton || CHROME.Header) return <AppSkipLink />;
+  if (!showMenuButton || CHROME.Header) return null;
 
   const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) {
@@ -143,7 +144,6 @@ export function AppNavbar() {
 
   return (
     <nav className="marketing__nav marketing__nav--app" aria-label="Site header">
-      <AppSkipLink />
       <div className="marketing__nav-lead">
         <button
           type="button"

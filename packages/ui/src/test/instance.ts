@@ -1,4 +1,5 @@
 import { defaultBranding } from "../common/branding";
+import { resolveHome } from "../common/home-copy";
 import type * as Instance from "../common/instance";
 
 type Flags = {
@@ -20,6 +21,7 @@ const defaults = (): Flags => ({
   MFA_ENABLED: true,
   MFA_DEADLINE: null,
   REGIONS: [],
+  HOME: resolveHome(defaultBranding, null),
 });
 
 /**

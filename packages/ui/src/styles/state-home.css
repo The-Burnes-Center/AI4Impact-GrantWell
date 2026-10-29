@@ -1,0 +1,178 @@
+/* The single-state public home (pages/landing/StateHome.tsx): light page, brand band, sign-in card,
+   feature cards under a highlight rule and a tinted trust panel. Colours and type come from tokens.css. */
+.state-home {
+  background: var(--gw-color-white, #fff);
+  color: var(--gw-color-text);
+  font-family: var(--gw-font-family);
+}
+
+.state-home__band {
+  height: 8px;
+  background: var(--gw-color-primary);
+}
+
+.state-home__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--gw-spacing-3xl) var(--gw-spacing-xl) 48px;
+}
+
+.state-home__hero {
+  display: grid;
+  gap: var(--gw-spacing-3xl);
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .state-home__hero {
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 440px);
+    gap: 56px;
+  }
+}
+
+.state-home__title {
+  display: flex;
+  align-items: center;
+  gap: var(--gw-spacing-lg);
+  margin: 0 0 var(--gw-spacing-xl);
+  color: var(--gw-color-heading);
+  font-family: var(--gw-font-display);
+  font-size: var(--gw-font-size-3xl);
+}
+
+.state-home__seal {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  flex: none;
+}
+
+.state-home__logo {
+  display: block;
+  max-width: 100%;
+  height: 56px;
+  width: auto;
+}
+
+.state-home__tagline {
+  margin: 0 0 var(--gw-spacing-md);
+  color: var(--gw-color-heading);
+  font-family: var(--gw-font-display);
+  font-size: var(--gw-font-size-2xl);
+  font-weight: var(--gw-font-weight-bold);
+  line-height: 1.3;
+}
+
+.state-home__description {
+  margin: 0;
+  max-width: 60ch;
+  color: var(--gw-color-text-secondary);
+  font-size: var(--gw-font-size-lg);
+  line-height: 1.6;
+}
+
+.state-home__sign-in .auth-login-card {
+  border: 1px solid var(--gw-color-primary-border);
+  border-radius: var(--gw-radius-lg);
+  box-shadow: var(--gw-shadow-sm);
+}
+
+.state-home__features {
+  margin-top: 56px;
+  padding-top: var(--gw-spacing-3xl);
+  border-top: 4px solid var(--gw-color-highlight);
+}
+
+.state-home__feature-list {
+  display: grid;
+  gap: var(--gw-spacing-2xl);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 768px) {
+  .state-home__feature-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.state-home__feature {
+  padding: var(--gw-spacing-2xl);
+  background: var(--gw-color-background);
+  border: 1px solid var(--gw-color-border);
+  border-radius: var(--gw-radius-lg);
+}
+
+.state-home__feature-icon {
+  width: 32px;
+  height: 32px;
+  color: var(--gw-color-primary);
+}
+
+.state-home__feature-title {
+  margin: var(--gw-spacing-md) 0 var(--gw-spacing-sm);
+  color: var(--gw-color-heading);
+  font-family: var(--gw-font-display);
+  font-size: var(--gw-font-size-xl);
+}
+
+.state-home__feature-text {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.state-home__trust {
+  display: flex;
+  gap: var(--gw-spacing-2xl);
+  align-items: flex-start;
+  margin-top: 40px;
+  padding: var(--gw-spacing-3xl);
+  background: var(--gw-color-primary-light);
+  border-radius: var(--gw-radius-lg);
+}
+
+.state-home__trust-icon {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  color: var(--gw-color-primary);
+}
+
+.state-home__trust-title {
+  margin: 0 0 var(--gw-spacing-sm);
+  color: var(--gw-color-heading);
+  font-family: var(--gw-font-display);
+  font-size: var(--gw-font-size-xl);
+}
+
+.state-home__trust-text {
+  margin: 0;
+  max-width: 80ch;
+  line-height: 1.6;
+}
+
+.state-home__attribution {
+  margin-top: 40px;
+  text-align: center;
+  color: var(--gw-color-text-secondary);
+  font-size: var(--gw-font-size-sm, 14px);
+}
+
+.state-home__attribution-line {
+  margin: 0 0 var(--gw-spacing-sm);
+}
+
+.state-home__link {
+  color: var(--gw-color-primary);
+  text-decoration: underline;
+}
+
+.state-home__link:hover {
+  color: var(--gw-color-primary-hover);
+}
+
+.state-home__link:focus-visible {
+  outline: 3px solid var(--gw-color-focus-light);
+  outline-offset: 2px;
+}

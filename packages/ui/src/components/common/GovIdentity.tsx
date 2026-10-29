@@ -20,6 +20,6 @@ export function GovBanner() {
 /** The government seal beside the app logo; decorative, since GovBanner already names it. */
 export function GovSeal() {
   const { govHeader } = useBranding();
-  if (!govHeader) return null;
+  if (!govHeader || govHeader.sealBesideLogo === false) return null;
   return <img className="gov-seal" src={govHeader.logo} alt="" />;
 }
