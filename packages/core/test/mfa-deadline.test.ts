@@ -20,12 +20,12 @@ const resources = (env: keyof typeof ENVS): Resource[] =>
     .flatMap((f) => Object.values(JSON.parse(fs.readFileSync(path.join(outDir(env), f), "utf8")).Resources ?? {}) as Resource[]);
 
 describe("auth.mfaDeadline", () => {
-  it("is midnight Eastern on 2026-11-02 for Generic prod, whose pool now requires MFA", () => {
+  it("is midnight Eastern on 2026-11-02 for Generic prod, which keeps MFA optional until then", () => {
     expect(configFor("prod").auth.mfaDeadline).toBe("2026-11-02T00:00:00-05:00");
     expect(Date.parse(configFor("prod").auth.mfaDeadline!)).toBe(Date.UTC(2026, 10, 2, 5));
-    expect(configFor("prod").auth.mfaRequired).toBe(true);
+    expect(configFor("prod").auth.mfaRequired).toBe(false);
     const pools = resources("prod").filter((r) => r.Type === "AWS::Cognito::UserPool");
-    expect(pools.map((p) => p.Properties?.MfaConfiguration)).toEqual(["ON"]);
+    expect(pools.map((p) => p.Properties?.MfaConfiguration)).toEqual(["OPTIONAL"]);
   });
 
   it("must parse and carry an offset", () => {
