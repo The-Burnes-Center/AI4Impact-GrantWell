@@ -13,7 +13,7 @@ import { ChatBotApi } from "../chatbot-api";
 import { Website } from "./generate-app"
 import { NagSuppressions } from "cdk-nag";
 import { Utils } from "../shared/utils"
-import { InstanceConfig, regions, sesEmail, singleState, turnstileEnabled } from "../config/instance-config";
+import { InstanceConfig, regions, sesEmail, singleState, stateSites, turnstileEnabled } from "../config/instance-config";
 import { applyChromeOverlay, applyPublicOverlay, checkBrandingImages } from "./public-overlay";
 import { resolveSeo, writeSeoFiles } from "./seo-files";
 
@@ -127,6 +127,7 @@ export class UserInterface extends Construct {
           ...(singleState(props.config) && { tenancy: "single" }),
           ...(props.config.auth.mfa === "off" && { mfa: "off" }),
           ...(regions(props.config).length && { regions: regions(props.config) }),
+          ...(stateSites(props.config).length && { stateSites: stateSites(props.config) }),
         },
         null,
         2

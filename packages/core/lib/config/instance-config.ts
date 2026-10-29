@@ -73,6 +73,13 @@ export interface Branding {
   };
 }
 
+export interface StateSite {
+  /** Two-letter code of one of this deployment's states. */
+  state: string;
+  /** The state's site, an https origin like https://colorado.grantwell.us. */
+  url: string;
+}
+
 export interface UsState {
   code: string;
   name: string;
@@ -131,6 +138,8 @@ interface InstanceConfigBase {
   feedbackFormUrl?: string;
   /** Choices for a required Region question on the user's profile, stored on the profile row. Unset or empty, no question. */
   regions?: string[];
+  /** Multi-state only: states that have their own GrantWell site. Sign-up for them goes there; their existing users see a notice. */
+  stateSites?: StateSite[];
   /** Abuse and cost limits; every key is optional, `limits(config)` fills in the defaults. */
   limits?: Partial<Limits>;
   /** Dev only. These accounts may sign in past Turnstile with the token in SSM at `e2eBypassParameter(config)`. */
@@ -281,6 +290,16 @@ export function validateInstanceConfig(config: InstanceConfig): void {
       problems.push("regions has duplicates");
     }
   }
+  if (config.stateSites !== undefined) {
+    const sites = Array.isArray(config.stateSites) ? config.stateSites : [];
+    const codes = new Set(config.states.map((s) => s.code));
+    if (config.tenancy !== "multi") problems.push("stateSites is for multi-state deployments");
+    if (!Array.isArray(config.stateSites) || sites.some((s) => !codes.has(s?.state) || !/^https:\/\/[a-z0-9.-]+$/.test(s?.url ?? ""))) {
+      problems.push("stateSites entries need one of this deployment's state codes and an https origin with no path, e.g. https://colorado.grantwell.us");
+    } else if (new Set(sites.map((s) => s.state)).size !== sites.length) {
+      problems.push("stateSites lists a state twice");
+    }
+  }
   problems.push(...brandingProblems(config.branding));
   const deadline = config.auth.mfaDeadline;
   if (deadline !== undefined && !(/(Z|[+-]\d{2}:\d{2})$/.test(deadline) && Number.isFinite(Date.parse(deadline)))) {
@@ -359,6 +378,10 @@ export function monitoringPrefix(config: InstanceConfig): string {
 /** The Region question's choices; empty when the deployment asks none. */
 export function regions(config: InstanceConfig): string[] {
   return config.regions ?? [];
+}
+
+export function stateSites(config: InstanceConfig): StateSite[] {
+  return config.stateSites ?? [];
 }
 
 export function supportedStatesEnv(config: InstanceConfig): string {

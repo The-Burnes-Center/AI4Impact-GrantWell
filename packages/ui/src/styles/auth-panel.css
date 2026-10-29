@@ -236,6 +236,20 @@
   box-shadow: 0 4px 14px color-mix(in srgb, var(--gw-color-primary) 40%, transparent);
 }
 
+a.login-submit-button {
+  text-decoration: none;
+}
+
+.auth-state-site-note {
+  margin: var(--gw-spacing-sm) 0 0;
+  padding: var(--gw-spacing-sm) var(--gw-spacing-md);
+  background: var(--gw-color-primary-light);
+  border-left: 3px solid var(--gw-color-primary);
+  border-radius: var(--gw-radius-sm);
+  color: var(--gw-color-text);
+  font-size: var(--gw-font-size-sm, 14px);
+}
+
 .login-submit-button:hover {
   background: linear-gradient(135deg, var(--gw-color-primary-hover) 0%, var(--gw-color-primary-active) 100%);
   box-shadow: 0 6px 20px color-mix(in srgb, var(--gw-color-primary) 50%, transparent);
