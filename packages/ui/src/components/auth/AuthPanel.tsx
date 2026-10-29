@@ -46,6 +46,7 @@ import "../../styles/auth-panel.css";
 import { BrandLogo } from "../common/BrandLogo";
 import { TURNSTILE_SITE_KEY } from "./turnstile-config";
 import { SINGLE_STATE } from "../../common/instance";
+import { readSignUpHandoff } from "../../common/state-sites";
 
 interface AuthPanelProps {
   onAuthenticated: () => void;
@@ -170,8 +171,9 @@ export default function AuthPanel({
   headingLevel = 1,
 }: AuthPanelProps) {
   const branding = useBranding();
-  const [view, setView] = useState<AuthView>("sign-in");
-  const [email, setEmail] = useState("");
+  const [handoff] = useState(() => readSignUpHandoff(window.location.hash));
+  const [view, setView] = useState<AuthView>(handoff ? "sign-up" : "sign-in");
+  const [email, setEmail] = useState(handoff?.email ?? "");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -211,6 +213,10 @@ export default function AuthPanel({
     () => getPasswordRequirements(newPassword),
     [newPassword],
   );
+
+  useEffect(() => {
+    if (handoff) window.history.replaceState(window.history.state, "", window.location.pathname + window.location.search);
+  }, [handoff]);
 
   // Focus follows a switch between views; on first render it stays where the page put it.
   const shownView = useRef(view);

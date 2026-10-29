@@ -27,6 +27,7 @@ import { AppSidebar } from "./navigation/UnifiedNavigation";
 import ProfileGate from "./profile-gate/ProfileGate";
 import MfaGate from "./auth/MfaGate";
 import SignInNotices from "./SignInNotices";
+import StateSiteNotice from "./StateSiteNotice";
 import LandingPage from "../pages/landing/LandingPage";
 import LoginPage from "../pages/landing/LoginPage";
 import {
@@ -286,6 +287,7 @@ function AppLayoutContent({
           <div className="marketing__app-body">
             <AppSidebar />
             <div className="marketing__app-main">
+              <StateSiteNotice />
               <MfaGate>
                 <ProfileGate>
                   <MaintenanceGate>

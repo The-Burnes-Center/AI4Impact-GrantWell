@@ -6,7 +6,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as ses from 'aws-cdk-lib/aws-ses';
 import * as path from 'path';
-import { InstanceConfig, e2eBypassParameter, sesEmail, singleState, supportedStatesEnv } from '../config/instance-config';
+import { InstanceConfig, e2eBypassParameter, sesEmail, singleState, stateSites, supportedStatesEnv } from '../config/instance-config';
 
 export interface AuthorizationStackProps {
   readonly config: InstanceConfig;
@@ -116,6 +116,7 @@ export class AuthorizationStack extends Construct {
         SUPPORTED_STATES: supportedStatesEnv(config),
         ...(props.turnstileSecretKey ? { TURNSTILE_SECRET_KEY: props.turnstileSecretKey } : { TURNSTILE_DISABLED: 'true' }),
         ...(singleState(config) && { SINGLE_STATE: singleState(config)!.code }),
+        ...(stateSites(config).length && { STATE_SITES: JSON.stringify(stateSites(config)) }),
       },
       // Under Cognito's fixed 5 s budget, so the Lambda times out (and reports it) before Cognito gives up.
       timeout: cdk.Duration.seconds(4),

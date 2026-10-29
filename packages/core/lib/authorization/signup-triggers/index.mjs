@@ -13,10 +13,15 @@ const cognitoClient = new CognitoIdentityProviderClient({
   requestHandler: { connectionTimeout: 1000, requestTimeout: 2000 },
 });
 
-const SUPPORTED_STATE_CODES = new Set(
-  JSON.parse(process.env.SUPPORTED_STATES || "[]").map((s) =>
-    String(s.code).toUpperCase()
-  )
+const SUPPORTED_STATES = JSON.parse(process.env.SUPPORTED_STATES || "[]");
+const SUPPORTED_STATE_CODES = new Set(SUPPORTED_STATES.map((s) => String(s.code).toUpperCase()));
+
+// States with their own GrantWell site: sign-up for them happens there, not here.
+const STATE_SITES = new Map(
+  JSON.parse(process.env.STATE_SITES || "[]").map((s) => [
+    String(s.state).toUpperCase(),
+    { url: s.url, name: SUPPORTED_STATES.find((st) => String(st.code).toUpperCase() === String(s.state).toUpperCase())?.name ?? s.state },
+  ])
 );
 
 // Set on a deployment with no bot check; a missing secret without it still rejects (fail closed).
@@ -50,6 +55,8 @@ export const handler = async (event) => {
     if (rejectsUnsupportedState(event.request.clientMetadata)) {
       throw new Error("Select a supported state.");
     }
+    const site = STATE_SITES.get(normalizeState(event.request.clientMetadata));
+    if (site) throw new Error(`${site.name} has its own GrantWell site. Create your account at ${site.url}.`);
     return event;
   }
 
