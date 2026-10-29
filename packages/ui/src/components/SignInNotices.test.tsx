@@ -4,6 +4,7 @@ import { LATEST_RELEASE } from "../common/release-notes";
 import { auth, mfaEnrolled, signedInAs } from "../test/amplify";
 import { instance, withMfaDeadline } from "../test/instance";
 import { renderApp } from "../test/render";
+import { json, stubFetch } from "../test/fetch-routes";
 import SignInNotices from "./SignInNotices";
 
 const MFA_PROMPT = "Add two-step verification";
@@ -41,6 +42,19 @@ describe("SignInNotices", () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     renderApp(<SignInNotices />);
     expect(await screen.findByRole("dialog", { name: WHATS_NEW })).toBeInTheDocument();
+  });
+
+  it("asks about due application outcomes only after What's new closes", async () => {
+    mfaEnrolled(true);
+    stubFetch({
+      "GET /application-outcomes/due": json({
+        due: [{ sessionId: "a", title: "Fiber plan", grant: "Broadband", deadline: null, status: null, submittedDate: null }],
+      }),
+    });
+    const { user } = renderApp(<SignInNotices />);
+    await user.click(await screen.findByRole("button", { name: "Got it" }));
+    expect(await screen.findByRole("dialog", { name: "What happened with your applications?" })).toHaveTextContent("Fiber plan");
+    expect(dialog(WHATS_NEW)).not.toBeInTheDocument();
   });
 
   it("snoozes the prompt for 30 days after Not now", async () => {

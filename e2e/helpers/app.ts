@@ -64,6 +64,8 @@ export async function signIn(page: Page, isRetry: boolean): Promise<void> {
   await expect(gate.or(home)).toBeVisible({ timeout: 45_000 });
   if (await gate.isVisible()) {
     for (const [label, value] of Object.entries(PROFILE)) await gate.getByLabel(label).fill(value);
+    const region = gate.getByLabel("Region");
+    if (await region.count()) await region.selectOption({ index: 1 });
     await gate.getByRole("button", { name: "Save and continue" }).click();
     await expect(gate).toBeHidden();
   }
@@ -71,8 +73,17 @@ export async function signIn(page: Page, isRetry: boolean): Promise<void> {
   // release's What's new always opens after sign-in.
   const whatsNew = page.getByRole("dialog", { name: "What's new in GrantWell" });
   await expect(whatsNew).toBeVisible();
+  // Closing What's new asks for due outcomes; applications a failed run left behind can be due.
+  const dueChecked = page.waitForResponse((r) => r.url().includes("/application-outcomes/due"));
   await whatsNew.getByRole("button", { name: "Got it" }).click();
   await expect(whatsNew).toBeHidden();
+  const due = await (await dueChecked).json().catch(() => ({ due: [] }));
+  const reminder = page.getByRole("dialog", { name: "What happened with your applications?" });
+  if (due.due?.length) {
+    await expect(reminder).toBeVisible();
+    await reminder.getByRole("button", { name: "Not now" }).click();
+    await expect(reminder).toBeHidden();
+  }
   await expect(page).toHaveURL(/\/home/);
 }
 

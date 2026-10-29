@@ -11,6 +11,7 @@ import {
   limits,
   processingQueueEmailEnabled,
   queueEmailRecipientsParameter,
+  regions,
   sesEmail,
   singleState,
   supportedStatesEnv,
@@ -78,6 +79,7 @@ interface LambdaFunctionStackProps {
   readonly nofoStateOverlayTable: Table;
   readonly analyticsTable: Table;
   readonly dailyUsageTable: Table;
+  readonly applicationOutcomeTable: Table;
   readonly ffioNofosBucket: s3.Bucket;
   readonly grantArtifactsBucket: s3.Bucket;
   readonly userDocumentsBucket: s3.Bucket;
@@ -142,6 +144,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly nofoPromoteCopyFunction: lambda.Function;
   public readonly userProfileFunction: lambda.Function;
   public readonly analyticsFunction: lambda.Function;
+  public readonly applicationOutcomesFunction: lambda.Function;
   public readonly bedrockModels: BedrockModelUse[];
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
@@ -1479,6 +1482,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       layers: [jsSharedLayer],
       environment: {
         ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
+        ...(regions(config).length && { REGIONS: JSON.stringify(regions(config)) }),
       },
       timeout: cdk.Duration.seconds(30),
     });
@@ -1507,6 +1511,31 @@ export class LambdaFunctionStack extends cdk.Stack {
     props.draftTable.grantReadData(analyticsFunction);
     props.userPool.grant(analyticsFunction, "cognito-idp:ListUsers");
     this.analyticsFunction = analyticsFunction;
+
+    // Application outcomes: users record and are reminded about them; admins read them all.
+    const applicationOutcomesFunction = new lambda.Function(scope, "ApplicationOutcomesFunction", {
+      runtime: lambda.Runtime.NODEJS_24_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "application-outcomes")),
+      handler: "index.handler",
+      layers: [jsSharedLayer],
+      environment: {
+        OUTCOME_TABLE_NAME: props.applicationOutcomeTable.tableName,
+        DRAFT_TABLE_NAME: props.draftTable.tableName,
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+        ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
+        USER_POOL_ID: props.userPool.userPoolId,
+        SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+        LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+      },
+      timeout: cdk.Duration.seconds(30),
+      memorySize: 512,
+    });
+    props.applicationOutcomeTable.grantReadWriteData(applicationOutcomesFunction);
+    props.draftTable.grantReadData(applicationOutcomesFunction);
+    props.nofoMetadataTable.grantReadData(applicationOutcomesFunction);
+    props.analyticsTable.grantReadData(applicationOutcomesFunction);
+    props.userPool.grant(applicationOutcomesFunction, "cognito-idp:ListUsers");
+    this.applicationOutcomesFunction = applicationOutcomesFunction;
 
     // Feedback proxy Lambda — optionally forwards user feedback to an external form.
     // If feedbackFormUrl is unset, the Lambda logs the feedback and returns success.

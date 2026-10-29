@@ -16,6 +16,8 @@ export interface ManagedUser {
   enabled: boolean;
   roles: string[];
   state: string;
+  /** Present only when the deployment asks a Region question. */
+  region?: string;
 }
 
 export interface ManagedUsersResponse {

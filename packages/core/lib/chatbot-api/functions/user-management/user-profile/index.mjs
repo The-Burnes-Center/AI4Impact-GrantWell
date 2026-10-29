@@ -11,6 +11,8 @@ const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION || "us-
 const TABLE_NAME = process.env.ANALYTICS_TABLE_NAME;
 const PROFILE_SK = "PROFILE";
 const MAX_FIELD = 200;
+// The deployment's Region choices; empty means no Region question.
+const REGIONS = JSON.parse(process.env.REGIONS || "[]");
 // Must match MAX_RECENTLY_VIEWED in the web app's recently-viewed helper.
 const MAX_RECENTLY_VIEWED = 6;
 const MAX_RECENTLY_VIEWED_INPUT = 25;
@@ -106,13 +108,22 @@ function cleanField(value, label) {
   return v.slice(0, MAX_FIELD);
 }
 
-// Agency, Organization and Role/Title are all required (hard-block profile gate).
+// Agency, Organization and Role/Title are all required (hard-block profile gate), and Region too
+// when the deployment asks it.
 function validateProfile(body) {
-  return {
+  const fields = {
     agency: cleanField(body.agency, "Agency"),
     organization: cleanField(body.organization, "Organization"),
     jobTitle: cleanField(body.jobTitle, "Role/Title"),
   };
+  if (REGIONS.length === 0) return fields;
+  const region = cleanField(body.region, "Region");
+  if (!REGIONS.includes(region)) {
+    const error = new Error("Region must be one of the listed regions");
+    error.statusCode = 400;
+    throw error;
+  }
+  return { ...fields, region };
 }
 
 async function getProfile(userId) {
@@ -126,13 +137,15 @@ async function getProfile(userId) {
   const agency = typeof item.agency === "string" ? item.agency : "";
   const organization = typeof item.organization === "string" ? item.organization : "";
   const jobTitle = typeof item.job_title === "string" ? item.job_title : "";
+  const region = typeof item.region === "string" ? item.region : "";
   return {
     agency,
     organization,
     jobTitle,
+    region,
     state: typeof item.state === "string" ? item.state : "",
-    // Complete only once all three collected fields are present.
-    profileComplete: Boolean(agency && organization && jobTitle),
+    // A region dropped from the config counts as missing, so the user picks again.
+    profileComplete: Boolean(agency && organization && jobTitle && (REGIONS.length === 0 || REGIONS.includes(region))),
   };
 }
 
@@ -145,8 +158,9 @@ async function putProfile(userId, fields) {
       TableName: TABLE_NAME,
       Key: marshall({ pk: `USER#${userId}`, sk: PROFILE_SK }),
       UpdateExpression:
-        "SET agency = :a, organization = :o, job_title = :j, #st = :s, profile_completed_at = :t, updated_at = :t",
-      ExpressionAttributeNames: { "#st": "state" },
+        "SET agency = :a, organization = :o, job_title = :j, #st = :s, profile_completed_at = :t, updated_at = :t" +
+        (fields.region ? ", #rg = :r" : ""),
+      ExpressionAttributeNames: { "#st": "state", ...(fields.region && { "#rg": "region" }) },
       ExpressionAttributeValues: marshall(
         {
           ":a": fields.agency,
@@ -154,6 +168,7 @@ async function putProfile(userId, fields) {
           ":j": fields.jobTitle,
           ":s": fields.state || "",
           ":t": iso,
+          ":r": fields.region,
         },
         { removeUndefinedValues: true }
       ),

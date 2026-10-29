@@ -27,7 +27,7 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as logs from "aws-cdk-lib/aws-logs";
 import * as path from "path";
-import { InstanceConfig, limits, singleState, supportedStatesEnv } from "../config/instance-config";
+import { InstanceConfig, limits, regions, singleState, supportedStatesEnv } from "../config/instance-config";
 
 // See the matching constant in functions/functions.ts: while "true", a legacy stateless Admin
 // still resolves to platform-wide. Flip both to "false" only after migrating every pool.
@@ -85,6 +85,7 @@ export class ChatBotApi extends Construct {
       nofoStateOverlayTable: tables.nofoStateOverlayTable,
       analyticsTable: tables.analyticsTable,
       dailyUsageTable: tables.dailyUsageTable,
+      applicationOutcomeTable: tables.applicationOutcomeTable,
       knowledgeBase: knowledgeBase.knowledgeBase,
       knowledgeBaseSource: knowledgeBase.dataSource,
       userDocumentsDataSource: knowledgeBase.userDocumentsDataSource,
@@ -455,6 +456,7 @@ export class ChatBotApi extends Construct {
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
       LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         ...(singleState(props.config) && { SINGLE_STATE: singleState(props.config)!.code }),
+        ...(regions(props.config).length && { REGIONS_ENABLED: "true" }),
         CHAT_HISTORY_TABLE_NAME: tables.historyTable.tableName,
         DRAFT_TABLE_NAME: tables.draftTable.tableName,
         DRAFT_VERSION_TABLE_NAME: tables.draftVersionTable.tableName,
@@ -462,10 +464,18 @@ export class ChatBotApi extends Construct {
         USER_NOTIFICATION_PREFS_TABLE_NAME: tables.userNotificationPrefsTable.tableName,
         USER_DOCUMENTS_BUCKET: buckets.userDocumentsBucket.bucketName,
         SYNC_KB_FUNCTION_NAME: lambdaFunctions.syncKBFunction.functionName,
+        OUTCOME_TABLE_NAME: tables.applicationOutcomeTable.tableName,
       },
       timeout: cdk.Duration.seconds(30),
     });
 
+    // Account deletion re-keys recorded outcomes (Put + Delete in one transaction) and drops snoozes.
+    manageUsersFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ["dynamodb:Query", "dynamodb:PutItem", "dynamodb:DeleteItem", "dynamodb:BatchWriteItem"],
+        resources: [tables.applicationOutcomeTable.tableArn],
+      })
+    );
     manageUsersFunction.addToRolePolicy(
       new iam.PolicyStatement({
         actions: ["dynamodb:Query", "dynamodb:BatchWriteItem"],
@@ -478,7 +488,7 @@ export class ChatBotApi extends Construct {
     );
     manageUsersFunction.addToRolePolicy(
       new iam.PolicyStatement({
-        actions: ["dynamodb:Query", "dynamodb:UpdateItem", "dynamodb:DeleteItem"],
+        actions: ["dynamodb:Query", "dynamodb:UpdateItem", "dynamodb:DeleteItem", ...(regions(props.config).length ? ["dynamodb:BatchGetItem"] : [])],
         resources: [tables.analyticsTable.tableArn],
       })
     );
@@ -643,6 +653,25 @@ export class ChatBotApi extends Construct {
       integration: analyticsIntegration,
       authorizer: httpAuthorizer,
     });
+
+    const applicationOutcomesIntegration = new HttpLambdaIntegration(
+      "ApplicationOutcomesIntegration",
+      lambdaFunctions.applicationOutcomesFunction
+    );
+    for (const [routePath, methods] of [
+      ["/application-outcomes", [apigwv2.HttpMethod.GET]],
+      ["/application-outcomes/due", [apigwv2.HttpMethod.GET]],
+      ["/application-outcomes/snooze", [apigwv2.HttpMethod.POST]],
+      ["/application-outcomes/{sessionId}", [apigwv2.HttpMethod.PUT]],
+      ["/admin/application-outcomes", [apigwv2.HttpMethod.GET]],
+    ] as const) {
+      restBackend.restAPI.addRoutes({
+        path: routePath,
+        methods: [...methods],
+        integration: applicationOutcomesIntegration,
+        authorizer: httpAuthorizer,
+      });
+    }
 
     // Developer-only: render the real digest template against real data (the caller's prefs and the
     // live active NOFO pool); POST can also send the rendered digest to the caller as a test.

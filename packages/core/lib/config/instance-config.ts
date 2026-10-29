@@ -102,6 +102,8 @@ interface InstanceConfigBase {
   seo?: { indexable: boolean };
   /** https URL the in-app feedback form is forwarded to; unset, feedback is only logged. */
   feedbackFormUrl?: string;
+  /** Choices for a required Region question on the user's profile, stored on the profile row. Unset or empty, no question. */
+  regions?: string[];
   /** Abuse and cost limits; every key is optional, `limits(config)` fills in the defaults. */
   limits?: Partial<Limits>;
   /** Dev only. These accounts may sign in past Turnstile with the token in SSM at `e2eBypassParameter(config)`. */
@@ -112,8 +114,13 @@ interface InstanceConfigBase {
 }
 
 export interface SesEmail {
-  /** Its domain is the SES identity auth and digest mail send from. */
+  /** Auth and digest mail send from this address. */
   sender: string;
+  /**
+   * The SES identity behind `sender`: its domain (the default) or the address itself, for a sender
+   * whose domain's DNS the deployment can't change. An address identity is verified by hand.
+   */
+  identity?: "domain" | "address";
   /** False when another deployment in the same account and region already owns the identity. */
   manageSenderIdentity: boolean;
 }
@@ -188,6 +195,11 @@ export function validateInstanceConfig(config: InstanceConfig): void {
   if (ses ? "cognitoDefault" in config.email : (config.email as { cognitoDefault?: unknown }).cognitoDefault !== true) {
     problems.push("email must be either { sender, manageSenderIdentity } or { cognitoDefault: true }");
   } else if (ses && !ses.sender.includes("@")) problems.push("email.sender is not an address");
+  if (ses?.identity !== undefined && ses.identity !== "domain" && ses.identity !== "address") {
+    problems.push('email.identity must be "domain" or "address"');
+  } else if (ses?.identity === "address" && ses.manageSenderIdentity) {
+    problems.push('email.identity "address" needs manageSenderIdentity: false (verify the address in SES by hand)');
+  }
   const queueEmail = config.notifications?.processingQueueEmail;
   if (queueEmail !== undefined && typeof queueEmail !== "boolean") {
     problems.push("notifications.processingQueueEmail must be true or false");
@@ -198,6 +210,14 @@ export function validateInstanceConfig(config: InstanceConfig): void {
   }
   if (config.feedbackFormUrl !== undefined && !config.feedbackFormUrl.startsWith("https://")) {
     problems.push("feedbackFormUrl must start with https://");
+  }
+  if (config.regions !== undefined) {
+    const names = Array.isArray(config.regions) ? config.regions : [];
+    if (!Array.isArray(config.regions) || names.some((r) => typeof r !== "string" || !r.trim() || r !== r.trim() || r.length > 200)) {
+      problems.push("regions must be a list of trimmed, non-empty names of at most 200 characters");
+    } else if (new Set(names.map((r) => r.toLowerCase())).size !== names.length) {
+      problems.push("regions has duplicates");
+    }
   }
   const deadline = config.auth.mfaDeadline;
   if (deadline !== undefined && !(/(Z|[+-]\d{2}:\d{2})$/.test(deadline) && Number.isFinite(Date.parse(deadline)))) {
@@ -273,6 +293,11 @@ export function monitoringPrefix(config: InstanceConfig): string {
 }
 
 /** [{code,name}] so handlers get both membership checks and display names from one env var. */
+/** The Region question's choices; empty when the deployment asks none. */
+export function regions(config: InstanceConfig): string[] {
+  return config.regions ?? [];
+}
+
 export function supportedStatesEnv(config: InstanceConfig): string {
   return JSON.stringify(config.states.map((s) => ({ code: s.code, name: s.name })));
 }
