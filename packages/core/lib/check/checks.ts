@@ -3,6 +3,7 @@ import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
 import type { InstanceConfig } from "../config/instance-config";
+import { findContrastFailures } from "../config/palette";
 
 export interface Finding {
   level: "fail" | "warn";
@@ -72,6 +73,113 @@ export function checkChromeTokens(chromeDir: string, uiAppDir: string): Finding[
     }
   }
   return findings;
+}
+
+/** Every distinct palette must clear the UI's contrast rules once its missing shades are derived. */
+export function checkBrandContrast(instances: InstanceConfig[]): Finding[] {
+  const seen = new Set<string>();
+  return instances.flatMap((instance) => {
+    const key = JSON.stringify(instance.branding.colors);
+    if (seen.has(key)) return [];
+    seen.add(key);
+    const failures = findContrastFailures(instance.branding.colors);
+    if (!failures.length) return [];
+    return [
+      fail(
+        `${instance.id}: branding.colors fails WCAG contrast in ${failures.length} place(s) ` +
+          `(shades you leave out are derived from primary):\n` +
+          failures.map((f) => `  ${f.ratio}:1, needs ${f.required}:1 — ${f.fg} on ${f.bg}, ${f.usage}`).join("\n")
+      ),
+    ];
+  });
+}
+
+const stripCss = (css: string) => css.replace(/\/\*[\s\S]*?\*\//g, "").replace(/url\([^)]*\)/g, "").replace(/(["'])(?:\\.|(?!\1).)*\1/g, '""');
+
+/** Class names in a stylesheet's selectors, not in its values or at-rule conditions. */
+export function selectorClasses(css: string): Set<string> {
+  const classes = new Set<string>();
+  for (const prelude of stripCss(css).split(/[{};]/).map((p) => p.trim())) {
+    if (!prelude || prelude.startsWith("@") || /^[\w-]+\s*:/.test(prelude)) continue;
+    for (const [, name] of prelude.matchAll(/\.(-?[_a-zA-Z][\w-]*)/g)) classes.add(name);
+  }
+  return classes;
+}
+
+const quotedWords = (source: string) =>
+  (source.match(/(["'`])(?:\\.|(?!\1)[\s\S])*?\1/g) ?? []).flatMap((s) => s.slice(1, -1).match(/-?[_a-zA-Z][\w-]*/g) ?? []);
+
+/** CHROME_CLASSES (kept for instances to target) and CHROME_CLASSES_RETIRED (old name → what to use) from the UI's chrome-api.ts. */
+export function chromeClassContract(uiAppDir: string): { kept: Set<string>; retired: Map<string, string> } {
+  const source = fs.readFileSync(path.join(uiAppDir, "src", "common", "chrome-api.ts"), "utf8");
+  const kept = source.match(/export const CHROME_CLASSES = \[([\s\S]*?)\]/)?.[1] ?? "";
+  const retired = source.match(/export const CHROME_CLASSES_RETIRED[^=]*= \{([\s\S]*?)\}/)?.[1] ?? "";
+  return {
+    kept: new Set([...kept.matchAll(/"([^"]+)"/g)].map((m) => m[1])),
+    retired: new Map([...retired.matchAll(/"([^"]+)"\s*:\s*"([^"]*)"/g)].map((m) => [m[1], m[2]])),
+  };
+}
+
+const classNameWords = (source: string) =>
+  [...source.matchAll(/className\s*[=:]\s*\{?\s*(["'`])((?:\\.|(?!\1)[\s\S])*?)\1/g)].flatMap(
+    (m) => m[2].replace(/\$\{[^}]*\}/g, " ").match(/-?[_a-zA-Z][\w-]*/g) ?? []
+  );
+
+/**
+ * Class names the GrantWell UI uses: `styled` from its CSS selectors and className values, and
+ * `mentioned`, a looser superset (any quoted word) for classes a dependency renders, like Bootstrap's.
+ */
+export function coreClasses(uiAppDir: string): { styled: Set<string>; mentioned: Set<string> } {
+  const styled = new Set<string>();
+  const mentioned = new Set<string>();
+  for (const file of walk(path.join(uiAppDir, "src"), new Set(["node_modules", "instance-chrome", "generated"]))) {
+    const text = fs.readFileSync(file, "utf8");
+    if (/\.(css|scss)$/.test(file)) selectorClasses(text).forEach((c) => styled.add(c));
+    else if (/\.(ts|tsx)$/.test(file)) {
+      classNameWords(text).forEach((c) => styled.add(c));
+      quotedWords(text).forEach((c) => mentioned.add(c));
+    }
+  }
+  styled.forEach((c) => mentioned.add(c));
+  return { styled, mentioned };
+}
+
+/**
+ * Warns when chrome CSS styles a GrantWell class outside CHROME_CLASSES (it can change without notice)
+ * or one GrantWell has retired or stopped rendering (the rule no longer applies). Classes the
+ * chrome renders itself are its own business.
+ */
+export function checkChromeClasses(chromeDir: string, uiAppDir: string): Finding[] {
+  const { kept, retired } = chromeClassContract(uiAppDir);
+  const core = coreClasses(uiAppDir);
+  const files = walk(chromeDir);
+  const own = new Set(files.filter((f) => /\.(ts|tsx)$/.test(f)).flatMap((f) => quotedWords(fs.readFileSync(f, "utf8"))));
+  return files
+    .filter((f) => /\.(css|scss)$/.test(f))
+    .flatMap((file) => {
+      const name = `chrome/${path.relative(chromeDir, file)}`;
+      const targeted = [...selectorClasses(fs.readFileSync(file, "utf8"))].filter((c) => !own.has(c)).sort();
+      const gone = targeted.filter((c) => retired.has(c) || (kept.has(c) && !core.mentioned.has(c)));
+      const offContract = targeted.filter((c) => core.styled.has(c) && !kept.has(c) && !retired.has(c));
+      const findings: Finding[] = [];
+      if (gone.length) {
+        findings.push(
+          warn(
+            `${name} styles ${gone.map((c) => `.${c}${retired.get(c) ? ` (${retired.get(c)})` : ""}`).join(", ")}, ` +
+              `which this GrantWell release no longer renders, so those rules no longer apply.`
+          )
+        );
+      }
+      if (offContract.length) {
+        findings.push(
+          warn(
+            `${name} styles ${offContract.map((c) => `.${c}`).join(", ")}, GrantWell classes outside CHROME_CLASSES ` +
+              `(the UI's src/common/chrome-api.ts), which can change in any release.`
+          )
+        );
+      }
+      return findings;
+    });
 }
 
 export interface CompileOptions {

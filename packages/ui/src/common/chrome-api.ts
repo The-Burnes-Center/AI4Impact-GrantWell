@@ -7,6 +7,63 @@ import type { ComponentType, ReactNode } from "react";
  */
 export const CHROME_API_VERSION = 1;
 
+/**
+ * Class names chrome CSS (theme.css and anything chrome imports) may style. GrantWell keeps these
+ * across releases; one it drops moves to CHROME_CLASSES_RETIRED. grantwell-check warns about chrome
+ * CSS that styles any other GrantWell class, since those can change in any release.
+ */
+export const CHROME_CLASSES = [
+  // Page shells and navigation
+  "marketing",
+  "marketing__app-main",
+  "gov-banner",
+  "gov-seal",
+  "active",
+  "tab-controls",
+  "tab-button",
+  "checklist-tabs",
+  "checklist-tab",
+  "checklist-tab--active",
+  // Sign-in and create-account panel
+  "auth-card-logo",
+  "auth-tabs",
+  "auth-login-card",
+  "auth-card-header",
+  "auth-card-title",
+  "auth-card-subtitle",
+  "auth-card-content",
+  "auth-form-description",
+  "auth-footer-prompt",
+  "login-form",
+  "login-form-actions",
+  "login-form-options",
+  "login-form-footer",
+  "login-form-footer--center",
+  "login-form-footer--split",
+  "login-submit-button",
+  "forgot-password-link",
+  "create-account-link",
+  "create-account-link--inline",
+  "show-password-checkbox",
+  "password-requirements",
+  "password-requirement",
+  "requirement-icon",
+  "form-input",
+  "form-label",
+  // Bootstrap classes GrantWell renders
+  "alert",
+  "btn",
+  "btn-link",
+  "form-control",
+  "form-check-input",
+  "form-check-label",
+  "text-muted",
+  "text-success",
+] as const;
+
+/** Classes dropped from CHROME_CLASSES, each with what to style instead. */
+export const CHROME_CLASSES_RETIRED: Record<string, string> = {};
+
 export interface ChromeLink {
   label: string;
   href: string;
