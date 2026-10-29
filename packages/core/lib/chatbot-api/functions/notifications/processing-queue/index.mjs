@@ -12,6 +12,7 @@ import {
   OPEN_REVIEW_STATUSES,
   compareByDeadline,
   deadlineLabel,
+  emailLogoWidth,
   escapeDigestHtml,
   grantDeadline,
   readGrantMetadata,
@@ -51,6 +52,7 @@ export const handler = async () => {
     appName: process.env.DIGEST_APP_NAME,
     brandColor: process.env.DIGEST_BRAND_COLOR,
     logoUrl: process.env.DIGEST_LOGO_URL,
+    logoWidth: process.env.DIGEST_LOGO_WIDTH,
     siteUrl: process.env.DEPLOYMENT_URL,
     deploymentId: process.env.DEPLOYMENT_ID,
   });
@@ -142,6 +144,7 @@ export function buildQueueEmail(grants, opts = {}) {
   const appName = opts.appName || "GrantWell";
   const brandColor = /^#[0-9a-fA-F]{3,8}$/.test(opts.brandColor || "") ? opts.brandColor : "#195C53";
   const logoUrl = /^https?:\/\//.test(opts.logoUrl || "") ? opts.logoUrl : "";
+  const logoWidth = emailLogoWidth(opts.logoWidth);
   const siteUrl = (opts.siteUrl || "").replace(/\/+$/, "");
   const queueUrl = siteUrl ? `${siteUrl}/admin?view=needs-attention` : "";
   let host = siteUrl;
@@ -215,7 +218,7 @@ export function buildQueueEmail(grants, opts = {}) {
     ? `<p style="margin:20px 0 4px;"><a href="${escapeDigestHtml(queueUrl)}" style="display:inline-block;background:${brandColor};color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;padding:10px 18px;border-radius:6px;">Open the processing queue</a></p>`
     : "";
   const logoImg = logoUrl
-    ? `<img src="${escapeDigestHtml(logoUrl)}" alt="${escapeDigestHtml(appName)}" width="141" height="28" style="width:141px;height:28px;vertical-align:middle;border:0;" />`
+    ? `<img src="${escapeDigestHtml(logoUrl)}" alt="${escapeDigestHtml(appName)}" width="${logoWidth}" height="28" style="width:${logoWidth}px;height:28px;vertical-align:middle;border:0;" />`
     : "";
   const titleHtml = `<span style="color:#fff;font-size:20px;font-weight:700;letter-spacing:.01em;vertical-align:middle;${logoImg ? "margin-left:10px;" : ""}">Processing queue</span>`;
 

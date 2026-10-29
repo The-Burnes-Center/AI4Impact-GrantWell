@@ -37,6 +37,8 @@ export interface ChatbotAPIProps {
   readonly config: InstanceConfig;
   readonly authentication: AuthorizationStack;
   readonly grantsGovApiKey: string;
+  /** Email header logo width at 28 px high. */
+  readonly digestLogoWidth: number;
 }
 
 export class ChatBotApi extends Construct {
@@ -93,6 +95,7 @@ export class ChatBotApi extends Construct {
       grantArtifactsBucket: buckets.grantArtifactsBucket,
       userDocumentsBucket: buckets.userDocumentsBucket,
       grantsGovApiKey: props.grantsGovApiKey,
+      digestLogoWidth: props.digestLogoWidth,
       openSearchCollection: openSearch.openSearchCollection,
       userPool: props.authentication.userPool,
     });
