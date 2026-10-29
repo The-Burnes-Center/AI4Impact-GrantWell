@@ -87,6 +87,7 @@ interface LambdaFunctionStackProps {
   readonly knowledgeBaseSource: bedrock.CfnDataSource;
   readonly userDocumentsDataSource?: bedrock.CfnDataSource;
   readonly grantsGovApiKey: string;
+  readonly digestLogoWidth: number;
   readonly openSearchCollection: opensearchserverless.CfnCollection;
   readonly userPool: cdk.aws_cognito.UserPool;
 }
@@ -1357,6 +1358,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     const notifications = new NotificationsStack(scope, "NotificationsStack", {
       siteUrl: config.siteUrl,
       branding: config.branding,
+      digestLogoWidth: props.digestLogoWidth,
       userNotificationPrefsTable: props.userNotificationPrefsTable,
       nofoMetadataTable: props.nofoMetadataTable,
       digestSendLogTable: props.digestSendLogTable,

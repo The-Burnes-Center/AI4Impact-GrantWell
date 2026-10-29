@@ -60,6 +60,11 @@ describe("generated site files", () => {
     });
   });
 
+  it("uses branding.shortName for the manifest's short name", () => {
+    const named = { ...prod, branding: { ...prod.branding, shortName: "GW Colorado" } } as InstanceConfig;
+    expect(JSON.parse(seoFiles(named)["manifest.json"]).short_name).toBe("GW Colorado");
+  });
+
   it("fails when the instance ships its own copy", () => {
     const appPath = fs.mkdtempSync(path.join(os.tmpdir(), "seo-"));
     fs.mkdirSync(path.join(appPath, "public"));

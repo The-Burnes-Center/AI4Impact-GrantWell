@@ -174,4 +174,12 @@ describe("processing-queue email", () => {
     expect(html).toContain("&lt;b&gt;Grant&lt;/b&gt;");
     expect(html).not.toContain("<b>Grant</b>");
   });
+
+  it("sizes the header logo from the measured wordmark width", async () => {
+    const { buildQueueEmail } = await load();
+    const grant = { nofo_name: "G", status: "pending_review", created_at: "2026-10-01", deadline: null, daysLeft: null, urgency: null };
+    const sized = buildQueueEmail([grant], { logoUrl: "https://grantwell.us/w.svg", logoWidth: "182" });
+    expect(sized.html).toContain('width="182" height="28" style="width:182px;height:28px;');
+    expect(buildQueueEmail([grant], { logoUrl: "https://grantwell.us/w.svg" }).html).toContain('width="141" height="28"');
+  });
 });
