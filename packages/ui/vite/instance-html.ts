@@ -2,12 +2,15 @@ import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 import type { Plugin } from "vite";
+import type { OutputAsset, OutputBundle } from "rollup";
 import { renderToStaticMarkup } from "react-dom/server";
 import { parseReleaseNotes } from "../src/common/release-notes-parse";
 import { notesMarkdown } from "../src/components/whats-new/notes-markdown";
 import { MARKETING_TAGLINE } from "../src/pages/landing/marketing-copy";
-import { resolveHome, type ResolvedHome } from "../src/common/home-copy";
-import type { Branding, RichLine } from "../src/common/branding";
+import { resolveHome } from "../src/common/home-copy";
+import type { Branding } from "../src/common/branding";
+import { brandColorVars, brandTintsCss, TINTS_STYLE_ID } from "../src/common/brand-style";
+import { stateFallback } from "../src/pages/landing/state-fallback";
 import type { Seo } from "../src/common/instance";
 
 export interface Staged {
@@ -161,25 +164,31 @@ export function chromeHasPublicHome(source: string): boolean {
   return /\bPublicHome\b/.test(code);
 }
 
-const richLine = (line: RichLine) =>
-  line.map((part) => (typeof part === "string" ? attr(part) : `<a href="${attr(part.href)}">${attr(part.label)}</a>`)).join("");
+/**
+ * Starts the runtime config download with the page instead of after the app's JavaScript. Added after
+ * Vite's HTML pass, which would otherwise inline a local aws-exports.json into the page.
+ */
+export const CONFIG_PRELOAD = tag("link", { rel: "preload", href: "/aws-exports.json", as: "fetch", crossorigin: "anonymous" });
 
-/** Plain, readable markup of the state home page for crawlers and visitors without JavaScript. */
-export function stateFallback(appName: string, home: ResolvedHome): string {
-  const p = (text: string) => `<p>${attr(text)}</p>`;
-  return (
-    `<div class="gw-state-fallback" style="max-width: 960px; margin: 0 auto; padding: 32px 24px; line-height: 1.5">` +
-    `<main id="main-content" tabindex="-1">` +
-    `<h1>${attr(appName)}</h1>${p(home.tagline)}${p(home.description)}` +
-    `<noscript><p>${attr(appName)} needs JavaScript to sign in. Please enable it and reload this page.</p></noscript>` +
-    `<p><a href="/login">Sign in</a></p>` +
-    `<section aria-labelledby="features-heading"><h2 id="features-heading">Key features</h2>` +
-    home.features.map((f) => `<h3>${attr(f.title)}</h3>${p(f.text)}`).join("") +
-    `</section>` +
-    `<section aria-labelledby="trust-heading"><h2 id="trust-heading">${attr(home.trust.title)}</h2>${p(home.trust.text)}</section>` +
-    (home.attribution.length ? `<footer>${home.attribution.map((line) => `<p>${richLine(line)}</p>`).join("")}</footer>` : "") +
-    `</main></div>`
-  );
+/**
+ * index.html in the brand's colours from the first paint, set exactly as BrandingProvider sets them
+ * (inline on <html>, tints in the core layer), so React applying them changes nothing.
+ */
+export function withBrandColors(html: string, colors: Branding["colors"]): string {
+  const vars = brandColorVars(colors).map(([name, color]) => `${name}: ${color}`).join("; ");
+  const tints = brandTintsCss(colors.primary);
+  return html
+    .replace(/<html lang="en">/, `<html lang="en" style="${attr(vars)}">`)
+    .replace("</head>", `${tints ? `  <style id="${TINTS_STYLE_ID}">${tints}</style>
+  ` : ""}</head>`);
+}
+
+/** Preloads for the instance's own upright web fonts, which theme.css would otherwise request late. */
+export function instanceFontPreloads(bundle: OutputBundle | undefined, base: string): string[] {
+  return Object.values(bundle ?? {})
+    .filter((file): file is OutputAsset => file.type === "asset" && file.fileName.endsWith(".woff2"))
+    .filter((file) => file.originalFileNames.some((name) => name.includes("instance-chrome/")) && !/italic/i.test(file.fileName))
+    .map((file) => tag("link", { rel: "preload", href: `${base}${file.fileName}`, as: "font", type: "font/woff2", crossorigin: "anonymous" }));
 }
 
 /** index.html with #root's landing fallback replaced by `inner`, keeping the route script whats-new.html relies on. */
@@ -241,7 +250,7 @@ export function landingFallback(indexHtml: string, staged: Staged | undefined, c
   if (!staged) return indexHtml;
   const single = staged.tenancy === "single" ? staged.states?.[0]?.name ?? null : null;
   const home = resolveHome(staged.branding, single);
-  return home.layout === "state" ? withRootFallback(indexHtml, stateFallback(staged.branding.appName, home)) : indexHtml;
+  return home.layout === "state" ? withRootFallback(indexHtml, stateFallback(staged.branding, home)) : indexHtml;
 }
 
 /** Fills index.html from the instance core staged at synth: favicon, head tags, JSON-LD and the static landing fallback. */
@@ -249,9 +258,11 @@ export function instanceHtml(stagedInstancePath: string): Plugin {
   let publicDir = "";
   let root = "";
   let outDir = "";
+  let base = "/";
   return {
     name: "instance-html",
     configResolved(config) {
+      base = config.base;
       publicDir = config.publicDir;
       root = config.root;
       outDir = path.resolve(config.root, config.build.outDir);
@@ -265,15 +276,15 @@ export function instanceHtml(stagedInstancePath: string): Plugin {
       fs.writeFileSync(path.join(outDir, "whats-new.html"), whatsNewHtml(index, notes, staged?.siteUrl, omniHeader(staged?.branding ?? UNSTAGED)));
       fs.writeFileSync(path.join(outDir, "404.html"), notFoundHtml(staged?.branding ?? UNSTAGED));
     },
-    async transformIndexHtml(html) {
+    async transformIndexHtml(html, ctx) {
       const staged: Staged | undefined = fs.existsSync(stagedInstancePath)
         ? JSON.parse(fs.readFileSync(stagedInstancePath, "utf8"))
         : undefined;
       const branding: PageBranding = staged?.branding ?? UNSTAGED;
-      const head = await headTags(staged, publicDir);
+      const head = [CONFIG_PRELOAD, ...(await headTags(staged, publicDir)), ...instanceFontPreloads(ctx.bundle, base)];
       const chromeIndex = path.join(root, "src", "instance-chrome", "index.tsx");
       const chromePublicHome = fs.existsSync(chromeIndex) && chromeHasPublicHome(fs.readFileSync(chromeIndex, "utf8"));
-      return landingFallback(html, staged, chromePublicHome)
+      return withBrandColors(landingFallback(html, staged, chromePublicHome), branding.colors)
         .replace("<!-- %GW_ICON% -->", iconLink(branding.favicon))
         .replace("<!-- %GW_HEAD% -->", head.join("\n    "))
         .replace("%GW_OMNI%", omniHeader(branding))

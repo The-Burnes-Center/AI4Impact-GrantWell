@@ -6,3 +6,6 @@ import StateHome from "./StateHome";
 export const publicHome = () => CHROME.PublicHome ?? (HOME.layout === "state" ? StateHome : undefined);
 
 export const hasPublicHome = () => publicHome() !== undefined;
+
+/** The core state layout (not a chrome PublicHome), whose page the build pre-renders into index.html. */
+export const isStateHome = () => !CHROME.PublicHome && HOME.layout === "state";

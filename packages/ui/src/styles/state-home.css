@@ -20,7 +20,7 @@
 .state-home__hero {
   display: grid;
   gap: var(--gw-spacing-3xl);
-  align-items: center;
+  align-items: start;
 }
 
 @media (min-width: 900px) {
@@ -49,9 +49,12 @@
 
 .state-home__logo {
   display: block;
+  min-width: 0;
   max-width: 100%;
   height: 56px;
   width: auto;
+  object-fit: contain;
+  object-position: left center;
 }
 
 .state-home__tagline {
@@ -71,10 +74,74 @@
   line-height: 1.6;
 }
 
+.state-home__identity {
+  padding-top: var(--gw-spacing-2xl);
+}
+
 .state-home__sign-in .auth-login-card {
+  padding: var(--gw-spacing-3xl);
   border: 1px solid var(--gw-color-primary-border);
   border-radius: var(--gw-radius-lg);
   box-shadow: var(--gw-shadow-sm);
+}
+
+/* The page heading already shows the logo. */
+.state-home__sign-in .auth-card-logo {
+  display: none;
+}
+
+.state-home__sign-in .auth-tabs {
+  display: flex;
+  padding: 4px;
+  margin-bottom: var(--gw-spacing-2xl);
+  background: var(--gw-color-primary-light);
+  border-radius: var(--gw-radius-pill);
+}
+
+.state-home__sign-in .auth-tab {
+  flex: 1 1 0;
+  padding: var(--gw-spacing-md) var(--gw-spacing-2xl);
+  border: none;
+  background: transparent;
+  color: var(--gw-color-primary);
+  font-family: var(--gw-font-button);
+  font-size: var(--gw-font-size-sm, 14px);
+  font-weight: var(--gw-font-weight-semibold);
+  border-radius: var(--gw-radius-pill);
+  cursor: pointer;
+}
+
+.state-home__sign-in .auth-tab--active {
+  background: var(--gw-color-primary);
+  color: var(--gw-color-white, #fff);
+}
+
+.state-home__sign-in .auth-tab:focus-visible {
+  outline: 3px solid var(--gw-color-focus-light);
+  outline-offset: 2px;
+}
+
+.state-home__sign-in .auth-card-header {
+  margin-bottom: var(--gw-spacing-2xl);
+  padding: 0;
+  border: none;
+}
+
+/* Holds the place of the card it stands in for, so nothing moves when sign-in loads. */
+.state-home__sign-in-pending {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 572px;
+  text-align: center;
+  color: var(--gw-color-text-secondary);
+}
+
+@media (max-width: 480px) {
+  .state-home__sign-in-pending {
+    min-height: 596px;
+  }
 }
 
 .state-home__features {

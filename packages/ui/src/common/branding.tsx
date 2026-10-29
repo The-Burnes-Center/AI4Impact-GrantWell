@@ -1,5 +1,6 @@
 import { createContext, useContext, useLayoutEffect, ReactNode } from "react";
-import { derivedTints, findContrastFailures, resolvePalette, type BrandColor } from "./palette";
+import { findContrastFailures } from "./palette";
+import { brandColorVars, brandTintsCss, TINTS_STYLE_ID } from "./brand-style";
 
 /**
  * Copy of the Branding contract in packages/core/lib/config/instance-config.ts; keep the two in
@@ -101,18 +102,6 @@ export const defaultBranding: Branding = {
 
 const BrandingContext = createContext<Branding>(defaultBranding);
 
-const TINTS_STYLE_ID = "gw-derived-tints";
-
-/** Maps branding.colors onto the --gw-color-* CSS variables defined in tokens.css. */
-const COLOR_VARS: Record<BrandColor, string> = {
-  primary: "--gw-color-primary",
-  primaryHover: "--gw-color-primary-hover",
-  primaryActive: "--gw-color-primary-active",
-  primaryLight: "--gw-color-primary-light",
-  accent: "--gw-color-accent",
-  accentHover: "--gw-color-accent-hover",
-};
-
 export function BrandingProvider({
   value = defaultBranding,
   analytics = false,
@@ -127,18 +116,17 @@ export function BrandingProvider({
   // touching component code; shades the palette leaves out are derived from its primary.
   useLayoutEffect(() => {
     const root = document.documentElement;
-    const palette = resolvePalette(value.colors);
-    (Object.keys(COLOR_VARS) as BrandColor[]).forEach((key) => root.style.setProperty(COLOR_VARS[key], palette[key]));
+    brandColorVars(value.colors).forEach(([name, color]) => root.style.setProperty(name, color));
   }, [value]);
 
   // The extra tints go in the core layer, not inline, so an instance's theme.css can still set them.
   useLayoutEffect(() => {
     document.getElementById(TINTS_STYLE_ID)?.remove();
-    const tints = derivedTints(value.colors.primary);
-    if (!tints) return;
+    const css = brandTintsCss(value.colors.primary);
+    if (!css) return;
     const style = document.createElement("style");
     style.id = TINTS_STYLE_ID;
-    style.textContent = `@layer gw-core { :root { ${Object.entries(tints).map(([k, v]) => `${k}: ${v};`).join(" ")} } }`;
+    style.textContent = css;
     document.head.appendChild(style);
   }, [value.colors.primary]);
 

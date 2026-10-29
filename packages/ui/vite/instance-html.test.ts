@@ -10,9 +10,11 @@ import {
   landingFallback,
   notFoundHtml,
   whatsNewHtml,
+  withBrandColors,
   withoutLandingFallback,
   type Staged,
 } from "./instance-html";
+import { brandColorVars, TINTS_STYLE_ID } from "../src/common/brand-style";
 
 const notes = fs.readFileSync(path.join(__dirname, "..", "RELEASE_NOTES.md"), "utf8");
 const releases = parseReleaseNotes(notes);
@@ -116,19 +118,27 @@ describe("landingFallback", () => {
       false
     );
     expect(html).not.toContain("marketing__hero");
-    expect(html).toContain("<h1>GrantWell</h1>");
-    expect(html).toContain("<p>Grants for &lt;Colorado&gt;</p>");
+    expect(html).toContain('<a href="#main-content" class="marketing__skip-nav">Skip to main content</a>');
+    expect(html).toContain('<main id="main-content" tabindex="-1"><div class="state-home">');
+    expect(html).toMatch(/<h1 id="state-home-title" class="state-home__title"><span class="state-home__logo">GrantWell<\/span><\/h1>/);
+    expect(html).toContain('<p class="state-home__tagline">Grants for &lt;Colorado&gt;</p>');
     expect(html).toContain("GrantWell helps Colorado organizations discover");
-    expect(html.match(/<h3>/g)).toHaveLength(3);
-    expect(html).toContain('<h2 id="trust-heading">AI-powered, with you in control</h2>');
-    expect(html).toContain('Developed by <a href="https://example.org/a?b=1&amp;c=2">AI for Impact</a>.');
-    expect(html).toContain('<a href="/login">Sign in</a>');
+    expect(html.match(/<h3 class="state-home__feature-title">/g)).toHaveLength(3);
+    expect(html).toContain("AI-powered, with you in control</h2>");
+    expect(html).toContain('href="https://example.org/a?b=1&amp;c=2"');
+    expect(html).toContain('class="auth-login-card state-home__sign-in-pending"');
+    expect(html).toContain("needs JavaScript to sign in");
     expect(html).toContain('// Only "/" is the landing page');
+  });
+
+  it("adds the gov banner above the page when the branding has one", () => {
+    const html = landingFallback(index, staged({ govHeader: { logo: "/c.svg", label: "State of Colorado", href: "https://colorado.gov" } }, "Colorado"), false);
+    expect(html.indexOf('class="gov-banner"')).toBeLessThan(html.indexOf('id="main-content"'));
   });
 
   it("follows an explicit layout over the tenancy default", () => {
     expect(landingFallback(index, staged({ home: { layout: "marketing" } }, "Colorado"), false)).toBe(index);
-    expect(landingFallback(index, staged({ home: { layout: "state" } }), false)).toContain("<h1>GrantWell</h1>");
+    expect(landingFallback(index, staged({ home: { layout: "state" } }), false)).toContain('class="state-home"');
   });
 });
 
@@ -158,5 +168,21 @@ describe("notFoundHtml", () => {
 
   it("falls back to the default colour for anything that isn't a hex colour", () => {
     expect(notFoundHtml({ appName: "X", colors: { primary: "red; } body { display: none" } })).toContain("color: #23776C");
+  });
+});
+
+describe("withBrandColors", () => {
+  const html = '<!doctype html>\n<html lang="en">\n  <head>\n    <title>x</title>\n  </head>\n</html>';
+
+  it("sets the brand variables on <html> exactly as the app does, so the first paint is in the brand's colours", () => {
+    const out = withBrandColors(html, { primary: "#001970", accent: "#245D38" });
+    const style = out.match(/<html lang="en" style="([^"]*)">/)![1];
+    expect(style).toBe(brandColorVars({ primary: "#001970", accent: "#245D38" }).map(([n, c]) => `${n}: ${c}`).join("; "));
+    expect(style).toContain("--gw-color-primary: #001970");
+    expect(out).toMatch(new RegExp(`<style id="${TINTS_STYLE_ID}">@layer gw-core \\{ :root \\{ --gw-color-primary-deep: #[0-9a-fA-F]{6};`));
+  });
+
+  it("adds no tints for the default palette, whose tints are hand-tuned in tokens.css", () => {
+    expect(withBrandColors(html, { primary: "#23776C" })).not.toContain(TINTS_STYLE_ID);
   });
 });

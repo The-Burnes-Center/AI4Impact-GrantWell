@@ -37,7 +37,7 @@ import {
 import "../styles/marketing-landing.css";
 import { AppSiteHeader, SiteBanner, SiteFooter } from "./common/ChromeSlots";
 import PublicHomePage from "../pages/landing/PublicHomePage";
-import { hasPublicHome } from "../pages/landing/public-home";
+import { hasPublicHome, isStateHome } from "../pages/landing/public-home";
 
 const WhatsNewPage = lazy(() => import("../pages/whats-new/WhatsNewPage"));
 
@@ -192,13 +192,13 @@ export default function AppConfigured() {
     };
   }, [theme]);
 
-  // The page's static fallback already shows the landing; keep it on screen instead of a spinner.
-  // A deployment's own public home needs the config for its sign-in panel, so it waits instead.
-  if (!config && !error && window.location.pathname === "/" && !hasPublicHome()) {
+  // The page's static fallback already shows the landing or the state home; render the same page
+  // instead of a spinner. A chrome PublicHome needs the config for its sign-in panel, so it waits.
+  if (!config && !error && window.location.pathname === "/" && (isStateHome() || !hasPublicHome())) {
     return (
       <BrandingProvider value={activeBranding}>
         <BrowserRouter>
-          <LandingPage />
+          {isStateHome() ? <PublicHomePage onAuthenticated={() => {}} signInPending /> : <LandingPage />}
         </BrowserRouter>
       </BrandingProvider>
     );
@@ -301,6 +301,10 @@ function AppLayoutContent({
         </div>
       </NavigationProvider>
     );
+  }
+
+  if (!configured && pathname === "/" && isStateHome()) {
+    return <PublicHomePage onAuthenticated={onAuthenticated} signInPending />;
   }
 
   if (!configured && pathname === "/" && !hasPublicHome()) {

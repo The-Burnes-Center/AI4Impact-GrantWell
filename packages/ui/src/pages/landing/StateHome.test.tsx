@@ -7,6 +7,7 @@ import { resolveHome } from "../../common/home-copy";
 import { instance } from "../../test/instance";
 import PublicHomePage from "./PublicHomePage";
 import { hasPublicHome } from "./public-home";
+import { stateFallback } from "./state-fallback";
 
 const colorado: Branding = {
   ...defaultBranding,
@@ -80,5 +81,23 @@ describe("state home page", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "Create account" }));
     expect(screen.getByRole("heading", { level: 2, name: /create/i })).toHaveFocus();
+  });
+
+  it("first renders exactly the page the build pre-renders, so the hand-over changes nothing on screen", () => {
+    instance.activeBranding = colorado;
+    instance.SINGLE_STATE = { code: "CO", name: "Colorado" };
+    instance.HOME = resolveHome(colorado, "Colorado");
+    const { container } = render(
+      <BrandingProvider value={colorado}>
+        <MemoryRouter>
+          <PublicHomePage onAuthenticated={() => {}} signInPending />
+        </MemoryRouter>
+      </BrandingProvider>
+    );
+    // React does not render <noscript> contents in the browser, and the app adds the footer below.
+    const withoutNoscript = (html: string) => html.replace(/<noscript>[\s\S]*?<\/noscript>/g, "<noscript></noscript>");
+    const parsed = document.createElement("div");
+    parsed.innerHTML = stateFallback(colorado, instance.HOME);
+    expect(withoutNoscript(container.innerHTML).startsWith(withoutNoscript(parsed.innerHTML))).toBe(true);
   });
 });
