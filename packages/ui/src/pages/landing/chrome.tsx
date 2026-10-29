@@ -174,7 +174,7 @@ export function AppNavbar() {
 
 export function LandingFooter() {
   const { footer, logo } = useBranding();
-  const { madeBy, partners } = footer;
+  const { madeBy, partners, links = [], copyright, disclaimer } = footer;
 
   return (
     <footer className="marketing__footer">
@@ -202,7 +202,7 @@ export function LandingFooter() {
               href={madeBy.href}
               target="_blank"
               rel="noreferrer"
-              aria-label="AI for Impact"
+              aria-label={madeBy.label || "AI for Impact"}
             >
               <AiForImpactWordmark />
             </a>
@@ -236,6 +236,27 @@ export function LandingFooter() {
               </a>
             ))}
           </div>
+        </div>
+      )}
+      {(links.length > 0 || copyright || disclaimer) && (
+        <div className="marketing__footer-legal">
+          {links.length > 0 && (
+            <nav aria-label="Footer">
+              <ul className="marketing__footer-links">
+                {links.map((l) => (
+                  <li key={l.href}>
+                    <a href={l.href}>{l.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+          {copyright && (
+            <p className="marketing__footer-copyright">
+              © {new Date().getFullYear()} {copyright}
+            </p>
+          )}
+          {disclaimer && <p className="marketing__footer-disclaimer">{disclaimer}</p>}
         </div>
       )}
     </footer>

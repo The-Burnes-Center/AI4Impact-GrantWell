@@ -619,9 +619,52 @@
   width: 100%;
   padding: 80px;
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
   gap: 40px;
+}
+
+.marketing__footer-legal {
+  flex-basis: 100%;
+  padding: 24px 10px 0;
+  border-top: 1px solid color-mix(in srgb, var(--mk-off-white) 30%, transparent);
+  font-family: var(--gw-font-family);
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--mk-off-white);
+}
+
+.marketing__footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 32px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.marketing__footer-links a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.marketing__footer-links a:focus-visible {
+  outline: 2px solid var(--mk-off-white);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.marketing__footer-copyright,
+.marketing__footer-disclaimer {
+  margin: 0;
+}
+
+.marketing__footer-disclaimer {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 20px;
 }
 
 .marketing__footer-brand {
