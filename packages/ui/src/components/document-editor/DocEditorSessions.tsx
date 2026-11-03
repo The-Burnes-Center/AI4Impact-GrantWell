@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useId } from "react";
+import React, { useState, useEffect, useContext, useId, useRef } from "react";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import { getCurrentUser } from "aws-amplify/auth";
@@ -46,6 +46,8 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
   const [pageSize, setPageSize] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
   const [showModalDelete, setShowModalDelete] = useState(false);
+  const [listNotice, setListNotice] = useState("");
+  const headingRef = useRef<HTMLHeadingElement>(null);
   const [showGrantPicker, setShowGrantPicker] = useState(false);
   const [startingDraft, setStartingDraft] = useState(false);
   const startDraft = useStartDraft();
@@ -95,6 +97,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
     if (!appContext) return;
 
     const loadSessions = async () => {
+      setListNotice("");
       setIsLoading(true);
       await getSessions();
       setIsLoading(false);
@@ -123,6 +126,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
     if (!appContext) return;
 
     try {
+      setListNotice("");
       setIsLoading(true);
       const apiClient = new ApiClient(appContext);
       const username = (await getCurrentUser()).username;
@@ -139,10 +143,18 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
 
       setSelectedItems([]);
       setShowModalDelete(false);
+      // The dialog would hand focus back to Delete, which is now disabled.
+      headingRef.current?.focus();
+      addNotification(
+        "success",
+        selectedItems.length === 1 ? "Application deleted." : `${selectedItems.length} applications deleted.`
+      );
       await getSessions();
     } catch (e) {
       console.error("Error deleting sessions:", e);
-      // You might want to show an error notification here
+      setShowModalDelete(false);
+      addNotification("error", "The applications could not be deleted. Please try again.");
+      await getSessions();
     } finally {
       setIsLoading(false);
     }
@@ -177,13 +189,16 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
   );
 
   const getSortIcon = (field: "title" | "last_modified") => {
-    if (sortField !== field) return <LuArrowUpDown size={14} />;
-    return sortDirection === "asc" ? <LuArrowUp size={14} /> : <LuArrowDown size={14} />;
+    if (sortField !== field) return <LuArrowUpDown size={14} aria-hidden="true" />;
+    return sortDirection === "asc" ? <LuArrowUp size={14} aria-hidden="true" /> : <LuArrowDown size={14} aria-hidden="true" />;
   };
 
   const formatSessionTime = (timestamp: string) => {
     return Utils.formatTimestamp(timestamp);
   };
+
+  // Titles repeat ("Application for <grant>"), so row control names carry the date.
+  const rowName = (item: Session) => `${item.title}, last modified ${formatSessionTime(item.last_modified)}`;
 
   const getStatusLabel = (status?: DraftStatus): string => {
     switch (status) {
@@ -303,7 +318,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       {/* Header section */}
       <div className="dashboard-header dashboard-header--wrap">
         <div>
-          <h1>My Applications</h1>
+          <h1 ref={headingRef} tabIndex={-1}>My Applications</h1>
           <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
             Manage and continue your saved grant applications
           </p>
@@ -320,7 +335,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             }}
             aria-label="Create new application"
           >
-            <LuPlus size={16} className="button-icon" />
+            <LuPlus size={16} className="button-icon" aria-hidden="true" />
             <span>New Application</span>
           </button>
           {hasDocId && onToggleShowAllNOFOs && (
@@ -346,17 +361,21 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             aria-label={selectedItems.length === 0 ? "Delete applications (no applications selected)" : `Delete ${selectedItems.length} selected application${selectedItems.length > 1 ? 's' : ''}`}
             aria-disabled={selectedItems.length === 0}
           >
-            <LuTrash size={16} className="button-icon" />
+            <LuTrash size={16} className="button-icon" aria-hidden="true" />
             <span>Delete</span>
           </button>
           <button
             className="action-button refresh-button"
             onClick={async () => {
+              if (isLoading) return;
+              setListNotice("");
               setIsLoading(true);
               await getSessions();
               setIsLoading(false);
+              setListNotice("Applications updated");
             }}
-            disabled={isLoading}
+            // aria-disabled, not disabled: disabling the focused button would drop focus to the page.
+            aria-disabled={isLoading}
             aria-label="Refresh applications list"
             aria-busy={isLoading}
           >
@@ -364,7 +383,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
               <span className="refresh-loading">Refreshing...</span>
             ) : (
               <>
-                <LuRefreshCw size={16} className="button-icon refresh-icon" />
+                <LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" />
                 <span>Refresh</span>
               </>
             )}
@@ -378,6 +397,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
         <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "48px 2fr 1.3fr 1.5fr 1fr 1.4fr" }}>
           <div role="row" style={{ display: "contents" }}>
             <div className="header-cell" role="columnheader">
+              <span className="visually-hidden">Select</span>
               <input
                 type="checkbox"
                 checked={selectedItems.length === sessions.length && sessions.length > 0}
@@ -441,7 +461,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                       (i) => i.draft_id === item.draft_id
                     )}
                     onChange={(e) => handleSelectItem(item, e)}
-                    aria-label={`Select application: ${item.title}`}
+                    aria-label={`Select application: ${rowName(item)}`}
                     style={{ cursor: "pointer" }}
                   />
                 </div>
@@ -452,7 +472,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                         props.onSessionSelect(item.draft_id);
                       }
                     }}
-                    aria-label={`Open application: ${item.title}`}
+                    aria-label={`Open application: ${rowName(item)}`}
                     style={{
                       color: "var(--gw-color-primary-hover)",
                       background: "none",
@@ -496,7 +516,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                     <button
                       type="button"
                       onClick={() => setOutcomeTarget({ sessionId: item.draft_id, title: item.title })}
-                      aria-label={`Update outcome for ${item.title}`}
+                      aria-label={`Update outcome for ${rowName(item)}`}
                       style={{
                         color: "var(--gw-color-primary-hover)",
                         background: "none",
@@ -519,7 +539,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       </TableScrollRegion>
 
       <div role="status" aria-live="polite" className="visually-hidden">
-        {isLoading ? "Loading applications" : ""}
+        {isLoading ? "Loading applications" : listNotice}
       </div>
 
       {/* Pagination */}

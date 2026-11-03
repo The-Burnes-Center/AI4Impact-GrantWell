@@ -65,6 +65,7 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
     display: "flex",
     justifyContent: justify,
     alignItems: "center",
+    flexWrap: "wrap",
     gap: spacing.lg,
     marginTop: spacing["2xl"],
   };

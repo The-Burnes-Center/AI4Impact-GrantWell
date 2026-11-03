@@ -16,7 +16,7 @@
  * />
  */
 
-import React from "react";
+import React, { useRef } from "react";
 import { colors, typography, spacing } from "./styles";
 
 export type SaveStatus = "idle" | "pending" | "saving" | "saved" | "error";
@@ -40,6 +40,8 @@ export interface AutoSaveIndicatorProps {
   announce?: boolean;
   /** Offers a retry button alongside the error state */
   onRetry?: () => void;
+  /** "onPrimary" for placement on the teal card header. */
+  variant?: "default" | "onPrimary";
 }
 
 const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
@@ -51,10 +53,15 @@ const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
   idleText,
   announce = true,
   onRetry,
+  variant = "default",
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
   if (status === "idle" && !idleText) {
     return null;
   }
+
+  const onPrimary = variant === "onPrimary";
 
   const containerStyle: React.CSSProperties = {
     display: "flex",
@@ -63,14 +70,14 @@ const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
     fontSize: typography.fontSize.sm,
     fontFamily: typography.fontFamily,
     fontWeight: typography.fontWeight.medium,
-    color: status === "error" ? colors.error : colors.textSecondary,
+    color: onPrimary ? colors.white : status === "error" ? colors.error : colors.textSecondary,
   };
 
   const spinnerStyle: React.CSSProperties = {
     width: "14px",
     height: "14px",
-    border: `2px solid ${colors.borderLight}`,
-    borderTopColor: colors.primary,
+    border: `2px solid ${onPrimary ? "rgba(255, 255, 255, 0.4)" : colors.borderLight}`,
+    borderTopColor: onPrimary ? colors.white : colors.primary,
     borderRadius: "50%",
     animation: "autosave-spin 0.8s linear infinite",
   };
@@ -82,12 +89,19 @@ const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
         @keyframes autosave-spin {
           to { transform: rotate(360deg); }
         }
+        .autosave--on-primary:focus-visible,
+        .autosave--on-primary button:focus-visible {
+          outline: 2px solid #ffffff;
+          outline-offset: 2px;
+        }
       `}</style>
       {/* With idleText the region mounts before the first save: one created with its message is not announced. */}
       <div
+        ref={containerRef}
+        className={onPrimary ? "autosave--on-primary" : undefined}
         style={containerStyle}
         {...(announce
-          ? { role: "status", "aria-live": "polite" as const }
+          ? { role: "status", "aria-live": "polite" as const, tabIndex: -1 }
           : { "aria-hidden": true })}
       >
         {status === "idle" && idleText && <span>{idleText}</span>}
@@ -120,7 +134,7 @@ const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
         )}
 
         {status === "saved" && (
-          <span style={{ display: "flex", alignItems: "center", gap: "6px", color: colors.success }}>
+          <span style={{ display: "flex", alignItems: "center", gap: "6px", color: onPrimary ? colors.white : colors.success }}>
             <svg
               width="14"
               height="14"
@@ -159,12 +173,16 @@ const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
             {onRetry && (
               <button
                 type="button"
-                onClick={onRetry}
+                onClick={() => {
+                  // The button unmounts once the retry starts; the status keeps focus in place.
+                  containerRef.current?.focus();
+                  onRetry();
+                }}
                 style={{
                   background: "none",
                   border: "none",
                   padding: 0,
-                  color: colors.error,
+                  color: onPrimary ? colors.white : colors.error,
                   font: "inherit",
                   fontWeight: typography.fontWeight.semibold,
                   textDecoration: "underline",

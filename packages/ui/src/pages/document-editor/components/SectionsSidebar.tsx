@@ -53,20 +53,21 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
   const getStatusIcon = (section: Section, idx: number) => {
     switch (getStatus(section, idx)) {
       case "completed":
-        return <LuCircleCheckBig size={16} className="se-sidebar__check" aria-label={`${section.name}: completed`} />;
+        return <LuCircleCheckBig size={16} className="se-sidebar__check" role="img" aria-label={`${section.name}: completed`} />;
       case "failed":
-        return <LuCircleAlert size={16} style={{ color: 'var(--gw-color-danger-icon)' }} aria-label={`${section.name}: failed`} />;
+        return <LuCircleAlert size={16} style={{ color: 'var(--gw-color-danger-icon)' }} role="img" aria-label={`${section.name}: failed`} />;
       case "generating":
         return (
           <LuLoader
             size={16}
             className="se-sidebar__spinner"
             style={{ color: 'var(--gw-color-primary)', animation: 'spin 1s linear infinite' }}
+            role="img"
             aria-label={`${section.name}: generating`}
           />
         );
       case "pending":
-        return <LuLock size={14} style={{ color: 'var(--gw-color-text-muted)' }} aria-label={`${section.name}: pending`} />;
+        return <LuLock size={14} style={{ color: 'var(--gw-color-text-muted)' }} role="img" aria-label={`${section.name}: pending`} />;
       default:
         return null;
     }

@@ -145,7 +145,8 @@ const FormErrorSummary: React.FC<FormErrorSummaryProps> = ({
       tabIndex={-1}
       style={containerStyle}
     >
-      <h2 style={titleStyle}>{title || defaultTitle}</h2>
+      {/* Rendered inside a card whose title is the h2. */}
+      <h3 style={titleStyle}>{title || defaultTitle}</h3>
       <ul style={listStyle}>
         {activeErrors.map(([fieldName, message]) => (
           <li key={fieldName} style={listItemStyle}>

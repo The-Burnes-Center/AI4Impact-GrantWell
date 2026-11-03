@@ -1,8 +1,10 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { json, stubFetch, type RouteRequest } from "../../test/fetch-routes";
 import { renderApp } from "../../test/render";
 import { useDraftSave } from "../../hooks/use-draft-save";
+import { NotificationProvider } from "../../components/notifications/NotificationManager";
+import NotificationBar from "../../components/notifications/NotificationBar";
 import SectionEditor from "./SectionsEditor";
 
 const DRAFT = "POST /user-draft";
@@ -39,6 +41,7 @@ interface Fake {
   row: Record<string, unknown>;
   job?: Record<string, unknown>;
   itemBytes?: number;
+  versionStatus?: number;
 }
 
 function stubServer(fake: Fake, grant: unknown = GRANT) {
@@ -61,6 +64,8 @@ function stubServer(fake: Fake, grant: unknown = GRANT) {
           });
         case "list_draft_versions":
           return json({ versions: [] });
+        case "create_draft_version":
+          return json({ rev: 3, label: null, oversize: false }, fake.versionStatus ?? 200);
         default:
           return json({});
       }
@@ -150,6 +155,38 @@ describe("SectionsEditor sections", () => {
       sections: { "statement-of-need": "Old text" },
       section_order: ORDER,
     });
+  });
+});
+
+describe("SectionsEditor versions", () => {
+  const saveVersion = async (versionStatus: number) => {
+    const fake: Fake = {
+      row: { session_id: "s1", status: "editing_sections", sections: { budget: "x" }, section_order: ORDER, rev: 1 },
+      versionStatus,
+    };
+    stubServer(fake);
+    const { user } = renderApp(
+      <NotificationProvider>
+        <NotificationBar />
+        <Editor />
+      </NotificationProvider>
+    );
+    await screen.findByRole("textbox", { name: "Statement of Need" });
+    await user.click(screen.getByRole("button", { name: "Save version" }));
+    const dialog = await screen.findByRole("dialog", { name: "Save a version" });
+    await user.click(within(dialog).getByRole("button", { name: "Save version" }));
+  };
+
+  it("announces a saved version", async () => {
+    await saveVersion(200);
+    const message = await screen.findByText("Version saved.");
+    expect(screen.getAllByRole("status").some((region) => region.contains(message))).toBe(true);
+  });
+
+  it("announces a version that could not be saved", async () => {
+    await saveVersion(500);
+    const message = await screen.findByText("The version could not be saved. Please try again.");
+    expect(screen.getAllByRole("alert").some((region) => region.contains(message))).toBe(true);
   });
 });
 
