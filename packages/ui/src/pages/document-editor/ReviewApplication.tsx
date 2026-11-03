@@ -45,6 +45,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   const [exportError, setExportError] = useState<string | null>(null);
   const [includeContactDetails, setIncludeContactDetails] = useState(false);
   const exportDropdownRef = useRef<HTMLDivElement>(null);
+  const exportTriggerRef = useRef<HTMLButtonElement>(null);
   const exportInFlightRef = useRef(false);
   const apiClient = useApiClient();
 
@@ -205,6 +206,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
     const label = EXPORT_LABELS[format];
     const filename = `grant-application.${format}`;
     setExportDropdownOpen(false);
+    exportTriggerRef.current?.focus();
     setExportingFormat(format);
     setExportError(null);
     setExportStatus(`Generating ${label}. This may take a moment.`);
@@ -437,8 +439,13 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
         <div className="ra-export-dropdown" ref={exportDropdownRef}>
           <button
             id="ra-export-trigger"
-            onClick={() => setExportDropdownOpen((o) => !o)}
-            disabled={!completenessPassed || exportingFormat !== null}
+            ref={exportTriggerRef}
+            onClick={() => {
+              if (exportingFormat === null) setExportDropdownOpen((o) => !o);
+            }}
+            disabled={!completenessPassed}
+            // Stays focusable while busy: export moves focus here once the menu closes.
+            aria-disabled={exportingFormat !== null || undefined}
             className="ra-export-pdf-btn"
             aria-haspopup="menu"
             aria-expanded={exportDropdownOpen}

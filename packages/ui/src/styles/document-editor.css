@@ -708,8 +708,8 @@ html:has(.document-editor-root) {
   transform: none;
 }
 
-.ra-export-pdf-btn:disabled[aria-busy="true"],
-.ra-export-pdf-btn:disabled[aria-busy="true"]:hover {
+.ra-export-pdf-btn[aria-busy="true"],
+.ra-export-pdf-btn[aria-busy="true"]:hover {
   background-color: var(--gw-color-primary);
   border-color: var(--gw-color-primary);
   color: var(--gw-color-white, #ffffff);
