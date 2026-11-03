@@ -301,7 +301,7 @@ const StatTile: React.FC<{ label: string; value: number }> = ({
   label,
   value,
 }) => (
-  <div className="metric-card" aria-label={`${label}: ${value}`}>
+  <div className="metric-card">
     <div className="metric-card__value">{value.toLocaleString()}</div>
     <div className="metric-card__label">{label}</div>
   </div>

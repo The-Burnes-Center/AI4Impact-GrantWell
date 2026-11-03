@@ -194,7 +194,7 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
 
 function Tile({ label, value }: { label: string; value: string }) {
   return (
-    <div className="metric-card" aria-label={`${label}: ${value}`}>
+    <div className="metric-card">
       <div className="metric-card__value">{value}</div>
       <div className="metric-card__label">{label}</div>
     </div>

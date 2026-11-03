@@ -462,19 +462,21 @@ const NOFOsTab = React.memo(function NOFOsTab({
             <div className="header-cell" role="columnheader">Actions</div>
           </div>
         </div>
-        <div className="table-body" role={nofos.length === 0 ? undefined : "rowgroup"}>
+        <div className="table-body" role="rowgroup">
           {nofos.length === 0 && (
-            <div className="no-data">
-              <LuFileX size={24} className="no-data-icon" />
-              <p>No grants found</p>
+            <div role="row">
+              <div className="no-data" role="cell" aria-colspan={4}>
+                <LuFileX size={24} className="no-data-icon" aria-hidden="true" />
+                <p>No grants found</p>
+              </div>
             </div>
           )}
           {nofos.map((nofo) => (
             <div key={nofo.id} className="table-row" role="row">
-              <div className="row-cell" role="cell">
+              <div className="row-cell" role="rowheader">
                 <span className="nofo-name">{nofo.name}</span>
                 {nofo.isPinned && (
-                  <span className="pinned-badge" aria-label="Pinned"><LuPin size={14} aria-hidden="true" /><span>Pinned</span></span>
+                  <span className="pinned-badge"><LuPin size={14} aria-hidden="true" /><span>Pinned</span></span>
                 )}
                 {nofo.processingStatus === "quarantined" ? (
                   <button

@@ -577,6 +577,11 @@ body {
   background: var(--gw-color-white);
 }
 
+.user-management-table tbody th {
+  font-weight: inherit;
+  background: none;
+}
+
 .user-management-user-cell {
   display: flex;
   flex-direction: column;

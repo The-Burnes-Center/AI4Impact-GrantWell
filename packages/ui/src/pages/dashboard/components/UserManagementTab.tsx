@@ -436,12 +436,12 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
 
                 return (
                   <tr key={user.username}>
-                    <td>
+                    <th scope="row">
                       <div className="user-management-user-cell">
                         <span className="user-management-user-email">{user.email}</span>
                         <span className="user-management-user-username">{user.username}</span>
                       </div>
-                    </td>
+                    </th>
                     <td>
                       <span className={`user-management-status-pill ${user.enabled ? "is-enabled" : "is-disabled"}`}>
                         {user.enabled ? user.status : "DISABLED"}

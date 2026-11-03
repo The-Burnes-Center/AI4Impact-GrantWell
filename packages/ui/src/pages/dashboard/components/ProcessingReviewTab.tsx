@@ -469,15 +469,17 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
             </div>
           </div>
           {loaded && (
-            <div className="table-body" role={reviews.length === 0 ? undefined : "rowgroup"}>
+            <div className="table-body" role="rowgroup">
               {reviews.length === 0 ? (
-                <div className="no-data">
-                  <LuFileX size={24} className="no-data-icon" />
-                  <p>
-                    {statusFilter === "pending_review"
-                      ? "No grants pending review"
-                      : `No reviews with status "${STATUS_LABELS[statusFilter]}"`}
-                  </p>
+                <div role="row">
+                  <div className="no-data" role="cell" aria-colspan={TABLE_COLUMN_COUNT}>
+                    <LuFileX size={24} className="no-data-icon" aria-hidden="true" />
+                    <p>
+                      {statusFilter === "pending_review"
+                        ? "No grants pending review"
+                        : `No reviews with status "${STATUS_LABELS[statusFilter]}"`}
+                    </p>
+                  </div>
                 </div>
               ) : (
                 sortedReviews.map((review) => {

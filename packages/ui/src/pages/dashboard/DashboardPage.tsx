@@ -579,11 +579,10 @@ const Dashboard: React.FC = () => {
                     >
                       Processing
                       {processingCount > 0 && (
-                        <span
-                          className="grants-segment__badge"
-                          aria-label={`${processingCount} grants processing`}
-                        >
-                          <span aria-hidden="true">{processingCount > 99 ? "99+" : processingCount}</span>
+                        <span className="grants-segment__badge">
+                          <span className="visually-hidden">, </span>
+                          {processingCount > 99 ? "99+" : processingCount}
+                          <span className="visually-hidden"> {processingCount === 1 ? "grant" : "grants"}</span>
                         </span>
                       )}
                     </button>
@@ -594,11 +593,10 @@ const Dashboard: React.FC = () => {
                     >
                       Needs attention
                       {pendingReviewCount > 0 && (
-                        <span
-                          className={`grants-segment__badge ${pendingReviewCount >= 25 ? "grants-segment__badge--high" : ""}`}
-                          aria-label={`${pendingReviewCount} items need review`}
-                        >
-                          <span aria-hidden="true">{pendingReviewCount > 99 ? "99+" : pendingReviewCount}</span>
+                        <span className={`grants-segment__badge ${pendingReviewCount >= 25 ? "grants-segment__badge--high" : ""}`}>
+                          <span className="visually-hidden">, </span>
+                          {pendingReviewCount > 99 ? "99+" : pendingReviewCount}
+                          <span className="visually-hidden"> {pendingReviewCount === 1 ? "item" : "items"}</span>
                         </span>
                       )}
                     </button>
@@ -667,9 +665,9 @@ const Dashboard: React.FC = () => {
 
                     <div className="filter-container" onBlur={handleFilterFocusOut}>
                       <button ref={filterButtonRef} className={`filter-button ${filterCount > 0 ? "active" : ""}`}
-                        onClick={toggleFilterMenu} onKeyDown={handleFilterMenuKeyDown} onBlur={handleFilterFocusOut} aria-label="Filter grants" aria-expanded={filterMenuOpen} aria-haspopup="menu">
-                        <LuFilter size={18} />
-                        {filterCount > 0 && <span className="filter-badge" aria-label={`${filterCount} filter(s) active`}>{filterCount}</span>}
+                        onClick={toggleFilterMenu} onKeyDown={handleFilterMenuKeyDown} onBlur={handleFilterFocusOut} aria-label={filterCount > 0 ? `Filter grants, ${filterCount} active` : "Filter grants"} aria-expanded={filterMenuOpen} aria-haspopup="menu">
+                        <LuFilter size={18} aria-hidden="true" />
+                        {filterCount > 0 && <span className="filter-badge" aria-hidden="true">{filterCount}</span>}
                       </button>
 
                       {filterMenuOpen && (
