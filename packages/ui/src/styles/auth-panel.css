@@ -204,7 +204,8 @@
 .create-account-link.btn-link:focus,
 .create-account-link.btn:focus-visible,
 .create-account-link.btn-link:focus-visible,
-.login-submit-button:focus-visible {
+/* .btn so this outranks Bootstrap's .btn:focus-visible { outline: 0 }, which loads later. */
+.btn.login-submit-button:focus-visible {
   outline: 3px solid var(--gw-color-primary);
   outline-offset: 2px;
   border-radius: 2px;
