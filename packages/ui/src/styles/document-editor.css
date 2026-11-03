@@ -9,6 +9,19 @@
   background: #f5f7fa;
 }
 
+/* WCAG 2.4.11: DocumentEditorPage measures the pinned header and stepper. */
+html:has(.document-editor-root) {
+  scroll-padding-top: calc(var(--gw-editor-sticky-height, 0px) + 16px);
+}
+
+/* On short viewports the two pinned bars would cover most of the page. */
+@media (max-height: 500px) {
+  .document-editor-header,
+  .progress-stepper-container {
+    position: static !important;
+  }
+}
+
 .document-editor-workspace {
   padding: 24px;
   background: #f5f7fa;
@@ -862,6 +875,7 @@
   font-weight: 700;
   color: #111827;
   margin: 0;
+  scroll-margin-top: 16px;
 }
 
 .se-section-title:focus-visible {

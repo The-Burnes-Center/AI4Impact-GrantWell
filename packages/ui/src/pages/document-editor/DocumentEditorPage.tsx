@@ -106,6 +106,8 @@ const DocumentEditor: React.FC = () => {
   const navigate = useNavigate();
   const stepLeaveGuardRef = useRef<StepLeaveGuard | null>(null);
   const stepRestoredForRef = useRef<string | null>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const { sessionId } = useParams();
   const [searchParams] = useSearchParams();
 
@@ -306,6 +308,34 @@ const DocumentEditor: React.FC = () => {
 
   const activeStep = stepToIndex(currentStep);
 
+  // WCAG 2.4.11: the header wraps on long grant names, so the stepper's offset
+  // and the page's scroll padding follow the pinned bars' real heights.
+  useEffect(() => {
+    const root = rootRef.current;
+    const header = headerRef.current;
+    if (!root || !header) return;
+    const stepper = root.querySelector<HTMLElement>(".progress-stepper-container");
+    const pinnedHeight = (el: HTMLElement | null) =>
+      el && getComputedStyle(el).position === "sticky" ? el.offsetHeight : 0;
+    const update = () => {
+      root.style.setProperty("--gw-editor-header-height", `${header.offsetHeight}px`);
+      document.documentElement.style.setProperty(
+        "--gw-editor-sticky-height",
+        `${pinnedHeight(header) + pinnedHeight(stepper)}px`
+      );
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(header);
+    if (stepper) observer.observe(stepper);
+    window.addEventListener("resize", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+      document.documentElement.style.removeProperty("--gw-editor-sticky-height");
+    };
+  }, [welcomeModalOpen, error]);
+
   if (error) {
     return (
       <div className="checklist-error" style={{ padding: 40 }}>
@@ -317,13 +347,13 @@ const DocumentEditor: React.FC = () => {
   }
 
   return (
-    <div className="document-editor-root" style={{ display: "flex", alignItems: "stretch", flex: "1 0 auto", width: "100%", margin: 0, padding: 0 }}>
+    <div ref={rootRef} className="document-editor-root" style={{ display: "flex", alignItems: "stretch", flex: "1 0 auto", width: "100%", margin: 0, padding: 0 }}>
       <UnifiedNavigation documentIdentifier={selectedNofo} currentStep={currentStep} furthestStepIndex={furthestStepIndex} onNavigate={navigateToStep} />
 
       <div className="document-content" style={{ flex: 1, display: "flex", flexDirection: "column", margin: 0, padding: 0 }}>
         {!welcomeModalOpen && (
           <>
-            <div className="document-editor-header" style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", position: "sticky", top: 0, zIndex: 101, boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
+            <div ref={headerRef} className="document-editor-header" style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", position: "sticky", top: 0, zIndex: 101, boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
               <div style={{ padding: 16 }}>
                 <h1 className="document-editor-nofo-title" style={{ margin: 0, fontSize: "22px", fontWeight: 600, lineHeight: 1.4, wordBreak: "break-word" }}>
                   {isNofoLoading ? "Loading..." : nofoName || "Write Application"}
