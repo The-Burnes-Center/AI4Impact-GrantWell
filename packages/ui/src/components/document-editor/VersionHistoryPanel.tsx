@@ -272,7 +272,8 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
                       onFocus={() => setFocusedIndex(index)}
                       onKeyDown={(e) => handleRowKeyDown(e, index)}
                       onClick={() => openVersion(version)}
-                      disabled={version.oversize}
+                      // Not disabled: a disabled row could hold the roving tab stop and trap the arrow keys.
+                      aria-disabled={version.oversize || undefined}
                       aria-current={selected?.rev === version.rev}
                       className={`vh-row${selected?.rev === version.rev ? " vh-row--active" : ""}`}
                     >

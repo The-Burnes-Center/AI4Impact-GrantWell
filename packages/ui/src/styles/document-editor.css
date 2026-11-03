@@ -1010,11 +1010,11 @@ html:has(.document-editor-root) {
   font: inherit;
 }
 
-.vh-row:hover:not(:disabled) {
+.vh-row:hover:not([aria-disabled="true"]) {
   background: var(--gw-color-background, #f9fafb);
 }
 
-.vh-row:disabled {
+.vh-row[aria-disabled="true"] {
   cursor: not-allowed;
   opacity: 0.65;
 }
