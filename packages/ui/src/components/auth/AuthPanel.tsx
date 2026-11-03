@@ -276,12 +276,23 @@ export default function AuthPanel({
     document.title = `${cardCopy.title} – ${branding.appName}`;
   }, [cardCopy.title, branding.appName]);
 
+  const errorTimer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(errorTimer.current), []);
+
   const setStepError = (message: string, fields: AuthErrorField[] = []) => {
-    setError(message);
+    window.clearTimeout(errorTimer.current);
     setErrorFields(fields);
+    if (message !== error) {
+      setError(message);
+      return;
+    }
+    // The live region only speaks when its text changes, so the same message is cleared first.
+    setError(null);
+    errorTimer.current = window.setTimeout(() => setError(message), 100);
   };
 
   const clearError = () => {
+    window.clearTimeout(errorTimer.current);
     setError(null);
     setErrorFields([]);
   };

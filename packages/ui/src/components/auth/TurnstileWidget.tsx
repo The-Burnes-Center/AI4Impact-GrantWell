@@ -106,7 +106,7 @@ export default function TurnstileWidget({
       <div className="turnstile-widget" ref={containerRef} />
       <div aria-live="polite" aria-atomic="true">
         {failed && (
-          <Alert variant="danger" className="mb-0 mt-2">
+          <Alert variant="danger" className="mb-0 mt-2" transition={false} role={undefined}>
             Security check could not load. Refresh the page and try again.
           </Alert>
         )}

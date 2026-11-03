@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router";
 import { describe, expect, it } from "vitest";
@@ -83,6 +83,21 @@ describe("state home page", () => {
     await userEvent.click(screen.getByRole("button", { name: "Create account" }));
     expect(screen.getByRole("heading", { level: 2, name: /create/i })).toHaveFocus();
     expect(document.title).toBe("Create account – GrantWell");
+  });
+
+  it("announces the same error again when the form is sent again", async () => {
+    renderHome(colorado);
+    const user = userEvent.setup();
+    const submit = within(screen.getByRole("form", { name: "Sign in form" })).getByRole("button", { name: "Sign in" });
+
+    await user.click(submit);
+    const region = document.querySelector(".auth-card-content > [aria-live]") as HTMLElement;
+    const message = region.textContent ?? "";
+    expect(message).not.toBe("");
+
+    fireEvent.click(submit);
+    expect(region).toHaveTextContent(/^$/);
+    await waitFor(() => expect(region).toHaveTextContent(message));
   });
 
   it("first renders exactly the page the build pre-renders, so the hand-over changes nothing on screen", () => {
