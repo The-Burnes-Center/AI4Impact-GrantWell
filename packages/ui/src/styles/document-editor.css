@@ -23,7 +23,7 @@ html:has(.document-editor-root) {
 }
 
 .document-editor-workspace {
-  padding: 24px;
+  padding: 20px;
   background: #f5f7fa;
   width: 100%;
   max-width: var(--gw-content-max-width, 1400px);
@@ -1452,7 +1452,9 @@ html:has(.document-editor-root) {
 /* Bottom actions */
 .se-actions-bar {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
+  gap: 12px;
 }
 
 .se-save-btn,
@@ -1491,6 +1493,7 @@ html:has(.document-editor-root) {
 
 .se-nav-buttons {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -1689,5 +1692,13 @@ html:has(.document-editor-root) {
 
   .se-suggestions-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .se-save-btn,
+  .se-prev-btn,
+  .se-next-btn {
+    white-space: normal;
   }
 }

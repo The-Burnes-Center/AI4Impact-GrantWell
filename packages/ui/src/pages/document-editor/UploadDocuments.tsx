@@ -850,6 +850,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
+        flexWrap: "wrap",
         gap: spacing.lg,
         marginTop: spacing["2xl"],
       }}>
@@ -859,7 +860,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           justify="flex-start"
         />
 
-        <div style={{ display: "flex", gap: spacing.md, alignItems: "center" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: spacing.md, alignItems: "center" }}>
           {hasExistingDraft && (
             <button
               type="button"

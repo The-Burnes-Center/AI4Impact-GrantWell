@@ -379,7 +379,7 @@ const DocumentEditor: React.FC = () => {
               showProgress
             />
 
-            <div className="document-editor-workspace" style={{ flex: 1, padding: 20 }}>
+            <div className="document-editor-workspace" style={{ flex: 1 }}>
               {/* Outlives the loading view, so both the wait and its end are announced. */}
               <div role="status" aria-live="polite" className="visually-hidden">
                 {isLoading ? loadingMessage : documentData ? "Application ready." : ""}

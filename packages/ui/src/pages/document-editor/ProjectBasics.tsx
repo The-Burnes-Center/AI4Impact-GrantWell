@@ -438,7 +438,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
           />
 
           <div style={{ display: "flex", gap: spacing.lg, marginBottom: spacing.xl, flexWrap: "wrap" }}>
-            <div style={{ flex: "1", minWidth: "260px" }}>
+            <div style={{ flex: "1", minWidth: "min(260px, 100%)" }}>
               <InputField
                 name="location"
                 label="Location"
@@ -453,7 +453,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 onBlur={handleBlur}
               />
             </div>
-            <div style={{ flex: "1", minWidth: "260px" }}>
+            <div style={{ flex: "1", minWidth: "min(260px, 100%)" }}>
               <InputField
                 name="zipCode"
                 label="Zip Code"
