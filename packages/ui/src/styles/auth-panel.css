@@ -139,6 +139,10 @@
   flex-shrink: 0;
 }
 
+.show-password-checkbox .form-check-input:not(:checked) {
+  border-color: #767676;
+}
+
 .show-password-checkbox .form-check-input:focus-visible {
   outline: 3px solid var(--gw-color-primary);
   outline-offset: 2px;
