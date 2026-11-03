@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useId, useRef } from "react";
 import {
   LuPin, LuPinOff, LuFileX, LuUpload, LuInfo, LuFile, LuLoader, LuTriangleAlert, LuPlus, LuTrash,
 } from "react-icons/lu";
@@ -94,6 +94,23 @@ const NOFOsTab = React.memo(function NOFOsTab({
 
   const [promoteModalOpen, setPromoteModalOpen] = useState(false);
   const [promoting, setPromoting] = useState(false);
+  const reviewFlagIdPrefix = useId();
+
+  const tableRef = useRef<HTMLDivElement>(null);
+  // Pin re-sorts, archive/delete remove the row: keep focus on the control or fall back to the table.
+  const focusBeforeUpdate = useRef<Element | null>(null);
+  const updateNofosKeepingFocus = useCallback((updater: (nofos: NOFO[]) => NOFO[]) => {
+    focusBeforeUpdate.current = document.activeElement;
+    updateNofos(updater);
+  }, [updateNofos]);
+
+  useEffect(() => {
+    const previous = focusBeforeUpdate.current;
+    if (!previous) return;
+    focusBeforeUpdate.current = null;
+    if (document.activeElement && document.activeElement !== document.body) return;
+    (previous instanceof HTMLElement && previous.isConnected ? previous : tableRef.current)?.focus();
+  }, [nofos]);
 
   const handleEditSummary = useCallback(async (nofo: NOFO) => {
     setSelectedNofo(nofo);
@@ -243,7 +260,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
     event?.stopPropagation();
     try {
       await apiClient.landingPage.updateNOFOStatus(nofo.name, undefined, true);
-      updateNofos((allNofos) =>
+      updateNofosKeepingFocus((allNofos) =>
         allNofos.map((item) => item.id === nofo.id ? { ...item, isPinned: true } : item)
       );
       addNotification("success", `Grant "${nofo.name}" pinned successfully`);
@@ -256,7 +273,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
     event?.stopPropagation();
     try {
       await apiClient.landingPage.updateNOFOStatus(nofo.name, undefined, false);
-      updateNofos((allNofos) =>
+      updateNofosKeepingFocus((allNofos) =>
         allNofos.map((item) => item.id === nofo.id ? { ...item, isPinned: false } : item)
       );
       addNotification("info", `Grant "${nofo.name}" unpinned`);
@@ -335,7 +352,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
     const newStatus = nofo.status === "active" ? "archived" : "active";
     try {
       await apiClient.landingPage.updateNOFOStatus(nofo.name, newStatus);
-      updateNofos((allNofos) =>
+      updateNofosKeepingFocus((allNofos) =>
         allNofos.map((item) => item.id === nofo.id ? { ...item, status: newStatus } : item)
       );
       addNotification("success", `Grant status changed to ${newStatus}`);
@@ -348,7 +365,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
     if (!selectedNofo) return;
     try {
       await apiClient.landingPage.deleteNOFO(selectedNofo.name);
-      updateNofos((allNofos) => allNofos.filter((nofo) => nofo.id !== selectedNofo.id));
+      updateNofosKeepingFocus((allNofos) => allNofos.filter((nofo) => nofo.id !== selectedNofo.id));
       addNotification("success", `Grant "${selectedNofo.name}" deleted successfully`);
       setDeleteModalOpen(false);
       setSelectedNofo(null);
@@ -436,7 +453,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
   return (
     <div className="tab-content">
       <TableScrollRegion label="Grants table" minWidth={640}>
-      <div className="table-container" role="table" aria-label="Grants">
+      <div className="table-container" role="table" aria-label="Grants" ref={tableRef} tabIndex={-1}>
         <div className="table-header" role="rowgroup">
           <div role="row" style={{ display: "contents" }}>
             <div className="header-cell" role="columnheader">Name</div>
@@ -445,19 +462,21 @@ const NOFOsTab = React.memo(function NOFOsTab({
             <div className="header-cell" role="columnheader">Actions</div>
           </div>
         </div>
-        <div className="table-body" role={nofos.length === 0 ? undefined : "rowgroup"}>
+        <div className="table-body" role="rowgroup">
           {nofos.length === 0 && (
-            <div className="no-data">
-              <LuFileX size={24} className="no-data-icon" />
-              <p>No grants found</p>
+            <div role="row">
+              <div className="no-data" role="cell" aria-colspan={4}>
+                <LuFileX size={24} className="no-data-icon" aria-hidden="true" />
+                <p>No grants found</p>
+              </div>
             </div>
           )}
           {nofos.map((nofo) => (
             <div key={nofo.id} className="table-row" role="row">
-              <div className="row-cell" role="cell">
+              <div className="row-cell" role="rowheader">
                 <span className="nofo-name">{nofo.name}</span>
                 {nofo.isPinned && (
-                  <span className="pinned-badge" aria-label="Pinned"><LuPin size={14} aria-hidden="true" /><span>Pinned</span></span>
+                  <span className="pinned-badge"><LuPin size={14} aria-hidden="true" /><span>Pinned</span></span>
                 )}
                 {nofo.processingStatus === "quarantined" ? (
                   <button
@@ -474,15 +493,23 @@ const NOFOsTab = React.memo(function NOFOsTab({
                     {PROCESSING_LABELS[nofo.processingStatus] || "Processing"}
                   </span>
                 ) : nofo.reviewFlag ? (
-                  <button
-                    type="button"
-                    className="grant-review-link grant-review-link--suggested"
-                    onClick={() => handleEditSummary(nofo)}
-                    title={reviewFlagTitle(nofo.reviewFlag)}
-                  >
-                    <LuInfo size={12} aria-hidden="true" />
-                    Review suggested
-                  </button>
+                  <>
+                    <button
+                      type="button"
+                      className="grant-review-link grant-review-link--suggested"
+                      onClick={() => handleEditSummary(nofo)}
+                      title={reviewFlagTitle(nofo.reviewFlag)}
+                      aria-describedby={reviewFlagTitle(nofo.reviewFlag) ? `${reviewFlagIdPrefix}-${nofo.id}` : undefined}
+                    >
+                      <LuInfo size={12} aria-hidden="true" />
+                      Review suggested
+                    </button>
+                    {reviewFlagTitle(nofo.reviewFlag) && (
+                      <span id={`${reviewFlagIdPrefix}-${nofo.id}`} className="visually-hidden">
+                        {reviewFlagTitle(nofo.reviewFlag)}
+                      </span>
+                    )}
+                  </>
                 ) : null}
               </div>
               <div className="row-cell" role="cell">
@@ -634,7 +661,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
         title={`Edit Requirements — ${selectedNofo?.name || ""}`}
         maxWidth="800px"
       >
-        <div className="modal-form" style={{ maxHeight: "70vh", overflowY: "auto" }}>
+        <div className="modal-form">
           <div role="status" aria-live="polite" className="visually-hidden">
             {summaryLoading ? "Loading grant requirements" : ""}
           </div>
@@ -802,17 +829,17 @@ const NOFOsTab = React.memo(function NOFOsTab({
         <div className="modal-form">
           <p className="modal-description">Upload a grant document in PDF, TXT, or DOCX format.</p>
           <div className="info-box">
-            <LuInfo size={18} className="info-icon" />
+            <LuInfo size={18} className="info-icon" aria-hidden="true" />
             <span>After you upload, the grant appears in the list above and processes automatically (about 5&ndash;7 minutes). You can watch each stage on its row &mdash; most grants publish on their own, and only ones that need a closer look are flagged for review.</span>
           </div>
           <div className="form-group">
             <label htmlFor="file-upload">Select File</label>
             <div className="file-upload-container">
               <input id="file-upload" type="file" accept=".pdf,.txt,.docx" onChange={handleFileSelect} className="file-input" />
-              <div className="file-upload-button"><LuUpload size={16} className="button-icon" /><span>Select File</span></div>
+              <div className="file-upload-button"><LuUpload size={16} className="button-icon" aria-hidden="true" /><span>Select File</span></div>
             </div>
             {selectedFile && (
-              <div className="selected-file"><LuFile size={16} className="file-icon" /><span>{selectedFile.name}</span></div>
+              <div className="selected-file"><LuFile size={16} className="file-icon" aria-hidden="true" /><span>{selectedFile.name}</span></div>
             )}
           </div>
           {selectedFile && (
@@ -897,7 +924,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 !uploadCategory
               }
             >
-              <LuUpload size={16} className="button-icon" /><span>Upload Grant</span>
+              <LuUpload size={16} className="button-icon" aria-hidden="true" /><span>Upload Grant</span>
             </button>
           </div>
         </div>

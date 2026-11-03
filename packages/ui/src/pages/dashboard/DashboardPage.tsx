@@ -66,6 +66,15 @@ const Dashboard: React.FC = () => {
   const rolloutsTabRef = useRef<HTMLButtonElement>(null);
   const userManagementTabRef = useRef<HTMLButtonElement>(null);
   const digestPreviewTabRef = useRef<HTMLButtonElement>(null);
+  const tabRefs = {
+    grants: grantsTabRef,
+    analytics: analyticsTabRef,
+    "feature-rollouts": rolloutsTabRef,
+    "user-management": userManagementTabRef,
+    "digest-preview": digestPreviewTabRef,
+  };
+  const processingSegmentRef = useRef<HTMLButtonElement>(null);
+  const [resultsAnnouncement, setResultsAnnouncement] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -163,7 +172,9 @@ const Dashboard: React.FC = () => {
     }
   }, [isAdmin, roleLoading]);
 
-  const handleRefresh = useCallback(() => fetchNofos(true), [fetchNofos]);
+  const handleRefresh = useCallback(() => {
+    if (!isRefreshing) fetchNofos(true);
+  }, [fetchNofos, isRefreshing]);
 
   // Deep-link a quarantined grant's row into the review queue (stable identity so
   // it doesn't defeat NOFOsTab's memo).
@@ -308,7 +319,6 @@ const Dashboard: React.FC = () => {
     // The green success banner already announces this; a toast here would double the same message.
     setAddedGrantName(grantName);
     setShowGrantBanner(true);
-    setTimeout(() => setShowGrantBanner(false), 5000);
     fetchNofos();
   }, [fetchNofos]);
 
@@ -391,6 +401,22 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => { setCurrentPage(1); }, [statusFilter, grantTypeFilter, searchQuery]);
 
+  // Announce the match count once typing or filtering settles, not on first render or on polls.
+  const filteredCount = useRef(0);
+  filteredCount.current = filteredNofos.length;
+  const filtersTouched = useRef(false);
+  useEffect(() => {
+    if (!filtersTouched.current) {
+      filtersTouched.current = true;
+      return;
+    }
+    const timer = setTimeout(() => {
+      const n = filteredCount.current;
+      setResultsAnnouncement(`${n} grant${n === 1 ? "" : "s"} found`);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [statusFilter, grantTypeFilter, searchQuery]);
+
   useEffect(() => {
     if (currentPage > paginatedData.totalPages && paginatedData.totalPages > 0) {
       setCurrentPage(paginatedData.totalPages);
@@ -445,7 +471,7 @@ const Dashboard: React.FC = () => {
               <button
                 className="action-button refresh-button"
                 onClick={handleRefresh}
-                disabled={isRefreshing}
+                aria-disabled={isRefreshing}
                 aria-busy={isRefreshing}
               >
                 {isRefreshing ? (
@@ -473,7 +499,14 @@ const Dashboard: React.FC = () => {
           {showGrantBanner && (
             <div className="success-banner">
               <div className="success-banner-content"><LuCheck size={20} className="success-icon" aria-hidden="true" /><span>Success! Grant &quot;{addedGrantName}&quot; has been added</span></div>
-              <button onClick={() => setShowGrantBanner(false)} className="banner-close-button" aria-label="Close notification"><LuX size={18} aria-hidden="true" /></button>
+              <button
+                onClick={() => {
+                  setShowGrantBanner(false);
+                  tabRefs[activeTab].current?.focus();
+                }}
+                className="banner-close-button"
+                aria-label="Close notification"
+              ><LuX size={18} aria-hidden="true" /></button>
             </div>
           )}
 
@@ -571,17 +604,17 @@ const Dashboard: React.FC = () => {
                       All grants
                     </button>
                     <button
+                      ref={processingSegmentRef}
                       className={`grants-segment__btn ${grantsSegment === "processing" ? "grants-segment__btn--active" : ""}`}
                       onClick={() => { setGrantsSegment("processing"); setReviewFocus(null); }}
                       aria-pressed={grantsSegment === "processing"}
                     >
                       Processing
                       {processingCount > 0 && (
-                        <span
-                          className="grants-segment__badge"
-                          aria-label={`${processingCount} grants processing`}
-                        >
-                          <span aria-hidden="true">{processingCount > 99 ? "99+" : processingCount}</span>
+                        <span className="grants-segment__badge">
+                          <span className="visually-hidden">, </span>
+                          {processingCount > 99 ? "99+" : processingCount}
+                          <span className="visually-hidden"> {processingCount === 1 ? "grant" : "grants"}</span>
                         </span>
                       )}
                     </button>
@@ -592,16 +625,22 @@ const Dashboard: React.FC = () => {
                     >
                       Needs attention
                       {pendingReviewCount > 0 && (
-                        <span
-                          className={`grants-segment__badge ${pendingReviewCount >= 25 ? "grants-segment__badge--high" : ""}`}
-                          aria-label={`${pendingReviewCount} items need review`}
-                        >
-                          <span aria-hidden="true">{pendingReviewCount > 99 ? "99+" : pendingReviewCount}</span>
+                        <span className={`grants-segment__badge ${pendingReviewCount >= 25 ? "grants-segment__badge--high" : ""}`}>
+                          <span className="visually-hidden">, </span>
+                          {pendingReviewCount > 99 ? "99+" : pendingReviewCount}
+                          <span className="visually-hidden"> {pendingReviewCount === 1 ? "item" : "items"}</span>
                         </span>
                       )}
                     </button>
                   </div>
                 )}
+
+                <h2 className="visually-hidden">
+                  {grantsSegment === "attention" ? "Needs attention" : grantsSegment === "processing" ? "Processing" : "All grants"}
+                </h2>
+                <div role="status" className="visually-hidden">
+                  {grantsSegment === "all" ? resultsAnnouncement : ""}
+                </div>
 
                 {isAdmin && grantsSegment === "attention" ? (
                   <ProcessingReviewTab
@@ -637,14 +676,20 @@ const Dashboard: React.FC = () => {
                     <button
                       type="button"
                       className="processing-banner__view"
-                      onClick={() => setGrantsSegment("processing")}
+                      onClick={() => {
+                        setGrantsSegment("processing");
+                        processingSegmentRef.current?.focus();
+                      }}
                     >
                       View <LuArrowRight size={13} aria-hidden="true" />
                     </button>
                     <button
                       type="button"
                       className="processing-banner__dismiss"
-                      onClick={() => setProcessingBannerDismissed(true)}
+                      onClick={() => {
+                        setProcessingBannerDismissed(true);
+                        document.getElementById("grant-search")?.focus();
+                      }}
                       aria-label="Dismiss processing notice"
                     >
                       <LuX size={14} aria-hidden="true" />
@@ -654,16 +699,16 @@ const Dashboard: React.FC = () => {
                 <div className="search-actions-container">
                   <div className="search-filter-container">
                     <div className="search-input-wrapper">
-                      <LuSearch className="search-icon" size={18} />
+                      <LuSearch className="search-icon" size={18} aria-hidden="true" />
                       <label htmlFor="grant-search" className="visually-hidden">Search grants</label>
                       <input id="grant-search" type="text" className="search-input" placeholder="Search grants..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                     </div>
 
                     <div className="filter-container" onBlur={handleFilterFocusOut}>
                       <button ref={filterButtonRef} className={`filter-button ${filterCount > 0 ? "active" : ""}`}
-                        onClick={toggleFilterMenu} onKeyDown={handleFilterMenuKeyDown} onBlur={handleFilterFocusOut} aria-label="Filter grants" aria-expanded={filterMenuOpen} aria-haspopup="menu">
-                        <LuFilter size={18} />
-                        {filterCount > 0 && <span className="filter-badge" aria-label={`${filterCount} filter(s) active`}>{filterCount}</span>}
+                        onClick={toggleFilterMenu} onKeyDown={handleFilterMenuKeyDown} onBlur={handleFilterFocusOut} aria-label={filterCount > 0 ? `Filter grants, ${filterCount} active` : "Filter grants"} aria-expanded={filterMenuOpen} aria-haspopup="menu">
+                        <LuFilter size={18} aria-hidden="true" />
+                        {filterCount > 0 && <span className="filter-badge" aria-hidden="true">{filterCount}</span>}
                       </button>
 
                       {filterMenuOpen && (
@@ -711,10 +756,10 @@ const Dashboard: React.FC = () => {
 
                   <div className="action-buttons">
                     <button className="action-button add-button" onClick={() => setUploadNofoModalOpen(true)}>
-                      <LuUpload size={16} className="button-icon" /><span>Add Grant</span>
+                      <LuUpload size={16} className="button-icon" aria-hidden="true" /><span>Add Grant</span>
                     </button>
-                    <button className="action-button scraper-button" onClick={() => setScrapeConfirmModalOpen(true)} disabled={isScraping} aria-label="Auto-scrape grants from grants.gov" aria-busy={isScraping}>
-                      <LuDownload size={16} className="button-icon" aria-hidden="true" /><span>{isScraping ? "Scraping..." : "Auto-Scrape Grants"}</span>
+                    <button className="action-button scraper-button" onClick={() => !isScraping && setScrapeConfirmModalOpen(true)} aria-disabled={isScraping} aria-busy={isScraping}>
+                      <LuDownload size={16} className="button-icon" aria-hidden="true" /><span>{isScraping ? "Scraping..." : "Auto-Scrape Grants"}</span><span className="visually-hidden"> from grants.gov</span>
                     </button>
                   </div>
                 </div>
@@ -722,7 +767,7 @@ const Dashboard: React.FC = () => {
                 <Modal isOpen={scrapeConfirmModalOpen} onClose={() => setScrapeConfirmModalOpen(false)} title="Confirm Auto-Scrape">
                   <div className="modal-form">
                     <div className="delete-confirmation">
-                      <LuInfo size={32} className="warning-icon dashboard-info-icon" />
+                      <LuInfo size={32} className="warning-icon dashboard-info-icon" aria-hidden="true" />
                       <p>Are you sure you want to scrape grants now?</p>
                     </div>
                     <p className="warning-text">This will search for new grants on grants.gov and add them to the system. This process may take a few minutes.</p>
@@ -765,6 +810,7 @@ const Dashboard: React.FC = () => {
                 aria-labelledby="dashboard-tab-analytics"
                 tabIndex={0}
               >
+                <h2 className="visually-hidden">Analytics</h2>
                 <AnalyticsTab
                   apiClient={apiClient}
                   addNotification={addNotification}

@@ -11,12 +11,17 @@ interface SummaryField {
 interface SummaryEditorProps {
   editedSummary: Record<string, unknown>;
   onSummaryChange: (updated: Record<string, unknown>) => void;
+  /** Level of the editor's own heading; section headings sit one below it. */
+  headingLevel?: 3 | 4;
 }
 
 const SummaryEditor: React.FC<SummaryEditorProps> = ({
   editedSummary,
   onSummaryChange,
+  headingLevel = 3,
 }) => {
+  const Heading = `h${headingLevel}` as const;
+  const SectionHeading = `h${headingLevel + 1}` as "h4" | "h5";
   const handleAddItem = (fieldName: string) => {
     const items = (editedSummary[fieldName] as SummaryField[] | undefined) || [];
     const newItem: SummaryField = { item: "", description: "", confidence: "medium" };
@@ -35,7 +40,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
     return (
       <div className="summary-field">
         <div className="summary-field__label" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span>{label} ({items.filter((i) => !i.removed).length})</span>
+          <SectionHeading className="summary-field__heading">{label} ({items.filter((i) => !i.removed).length})</SectionHeading>
           <button
             type="button"
             className="review-add-item-btn"
@@ -50,9 +55,18 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
               color: "var(--gw-color-text)",
             }}
           >
-            + Add Item
+            <span aria-hidden="true">+ </span>Add Item<span className="visually-hidden"> to {label}</span>
           </button>
         </div>
+        {items.length > 0 && (
+          <div className="summary-field__item summary-field__columns" aria-hidden="true">
+            <span className="summary-field__columns-spacer" />
+            <span className="summary-field__text" style={{ display: "flex", gap: "8px", flex: 1 }}>
+              <span style={{ flex: "0 0 30%" }}>Name</span>
+              <span style={{ flex: 1 }}>Description</span>
+            </span>
+          </div>
+        )}
         {items.map((item, idx) => (
           <div
             key={idx}
@@ -67,7 +81,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
                 updated[idx] = { ...updated[idx], removed: !updated[idx].removed };
                 onSummaryChange({ ...editedSummary, [fieldName]: updated });
               }}
-              aria-label={`${item.removed ? "Include" : "Exclude"} ${item.item}`}
+              aria-label={`Include ${item.item.trim() || `${label} item ${idx + 1}`}`}
             />
             <span className="summary-field__text" style={{ display: "flex", gap: "8px", flex: 1 }}>
               <input
@@ -102,7 +116,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
 
   return (
     <div className="review-summary-card">
-      <h3
+      <Heading
         style={{
           margin: "0 0 12px 0",
           fontSize: "14px",
@@ -110,7 +124,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
         }}
       >
         Extracted Requirements (Editable)
-      </h3>
+      </Heading>
 
       <div style={{ marginBottom: "12px" }}>
         <label
