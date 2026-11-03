@@ -33,13 +33,13 @@ function ScrollToTop(): null {
   const { appName, analyticsId } = useBranding();
 
   useEffect(() => {
-    const mainContent = document.getElementById("main-content");
-    if (mainContent) {
-      mainContent.focus({ preventScroll: true });
-    }
-
     const fullPath = pathname + search;
     const routeChanged = prevPathRef.current !== fullPath;
+
+    // Not on a hash-only change: in-page jump links and the Requirements tabs write the hash.
+    if (routeChanged) {
+      document.getElementById("main-content")?.focus({ preventScroll: true });
+    }
 
     // Wizard steps navigate by query string only, so the browser keeps the previous offset.
     if (routeChanged && !hash) {
