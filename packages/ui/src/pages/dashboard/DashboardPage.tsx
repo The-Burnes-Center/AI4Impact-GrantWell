@@ -603,6 +603,10 @@ const Dashboard: React.FC = () => {
                   </div>
                 )}
 
+                <h2 className="visually-hidden">
+                  {grantsSegment === "attention" ? "Needs attention" : grantsSegment === "processing" ? "Processing" : "All grants"}
+                </h2>
+
                 {isAdmin && grantsSegment === "attention" ? (
                   <ProcessingReviewTab
                     apiClient={apiClient}
@@ -765,6 +769,7 @@ const Dashboard: React.FC = () => {
                 aria-labelledby="dashboard-tab-analytics"
                 tabIndex={0}
               >
+                <h2 className="visually-hidden">Analytics</h2>
                 <AnalyticsTab
                   apiClient={apiClient}
                   addNotification={addNotification}

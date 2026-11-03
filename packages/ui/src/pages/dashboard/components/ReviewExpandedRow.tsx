@@ -31,12 +31,13 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   const [detail, setDetail] = useState<ReviewDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [adminNotes, setAdminNotes] = useState("");
-  const [notesError, setNotesError] = useState(false);
+  const [notesError, setNotesError] = useState<string | null>(null);
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [editedSummary, setEditedSummary] = useState<Record<string, unknown> | null>(null);
   const [showDiff, setShowDiff] = useState(false);
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const notesRef = useRef<HTMLTextAreaElement>(null);
 
   // The panel is rendered inside an ARIA table, which may only own rows, so it
   // presents as a full-width row rather than a bare region.
@@ -110,14 +111,18 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
     }
   };
 
-  const handleRejectClick = () => {
-    if (!adminNotes.trim()) {
-      setNotesError(true);
-      addNotification("error", "Please provide a reason for rejection");
-      return;
+  const requireNotes = (message: string) => {
+    if (adminNotes.trim()) {
+      setNotesError(null);
+      return true;
     }
-    setNotesError(false);
-    setRejectModalOpen(true);
+    setNotesError(message);
+    notesRef.current?.focus();
+    return false;
+  };
+
+  const handleRejectClick = () => {
+    if (requireNotes("Please provide a reason for rejection.")) setRejectModalOpen(true);
   };
 
   const confirmReject = async () => {
@@ -148,12 +153,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   };
 
   const handleNeedsReupload = async () => {
-    if (!adminNotes.trim()) {
-      setNotesError(true);
-      addNotification("error", "Please provide notes explaining why re-upload is needed");
-      return;
-    }
-    setNotesError(false);
+    if (!requireNotes("Please provide notes explaining why re-upload is needed.")) return;
     setActionInProgress("needs_reupload");
     try {
       await apiClient.landingPage.markNeedsReupload(review.nofo_name, adminNotes, review.review_id);
@@ -254,10 +254,10 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
             borderLeft: `4px solid ${detail.adminGuidance.severity === "critical" ? "var(--gw-color-danger)" : "var(--gw-color-warning)"}`,
           }}
         >
-          <strong>{detail.adminGuidance.title}</strong>
+          <h4 className="review-dlq-alert__title">{detail.adminGuidance.title}</h4>
           <p style={{ margin: "8px 0 0" }}>{detail.adminGuidance.message}</p>
           <div className="review-dlq-guidance">
-            <strong>Recommended actions:</strong>
+            <h5 className="review-dlq-guidance__title">Recommended actions:</h5>
             <ol>
               {detail.adminGuidance.actions.map((action, i) => (
                 <li key={i}>{action}</li>
@@ -274,7 +274,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
 
       {review.status === "needs_reupload" && (
         <div className="review-dlq-alert" style={{ borderLeft: "4px solid var(--gw-color-warning)" }}>
-          <strong>Awaiting Document Re-upload</strong>
+          <h4 className="review-dlq-alert__title">Awaiting Document Re-upload</h4>
           <p style={{ margin: "8px 0 0" }}>
             This grant has been marked as needing a new document upload. Upload a corrected grant document to trigger reprocessing.
           </p>
@@ -285,10 +285,10 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
         <div className="review-dlq-alert">
           {review.source === "dlq" && (
             <>
-              <strong>Processing Failed (Dead Letter Queue)</strong>
+              <h4 className="review-dlq-alert__title">Processing Failed (Dead Letter Queue)</h4>
               <p style={{ margin: "8px 0 0" }}>This grant failed processing and was moved to the Dead Letter Queue.</p>
               <div className="review-dlq-guidance">
-                <strong>What to do:</strong>
+                <h5 className="review-dlq-guidance__title">What to do:</h5>
                 <ol>
                   <li>Check the error details below to identify the failure reason.</li>
                   <li>Reject this entry to clean up the failed attempt.</li>
@@ -299,10 +299,10 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           )}
           {review.source === "duplicate" && (
             <>
-              <strong>Duplicate Document Detected</strong>
+              <h4 className="review-dlq-alert__title">Duplicate Document Detected</h4>
               <p style={{ margin: "8px 0 0" }}>This grant was flagged as a duplicate of an existing document already in the system.</p>
               <div className="review-dlq-guidance">
-                <strong>What to do:</strong>
+                <h5 className="review-dlq-guidance__title">What to do:</h5>
                 <ol>
                   <li>Check if the existing version is already published and up to date.</li>
                   <li>If this is an updated version, reject this entry, then delete the old grant and re-upload the new document.</li>
@@ -313,10 +313,10 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           )}
           {review.source === "quality" && (
             <>
-              <strong>Source Document Quality Check Failed</strong>
+              <h4 className="review-dlq-alert__title">Source Document Quality Check Failed</h4>
               <p style={{ margin: "8px 0 0" }}>The uploaded file did not pass the quality check. This usually means the document is not a valid grant document, is corrupted, or contains mostly non-text content (e.g., scanned images without OCR).</p>
               <div className="review-dlq-guidance">
-                <strong>What to do:</strong>
+                <h5 className="review-dlq-guidance__title">What to do:</h5>
                 <ol>
                   <li>Go to the original source (e.g., Grants.gov or the agency website) and download a clean copy of the grant document.</li>
                   <li>Make sure the file is a text-based PDF (not a scanned image). If the PDF is image-based, use an OCR tool to convert it first.</li>
@@ -328,10 +328,10 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           )}
           {review.source === "pipeline" && detail.errorMessage && (
             <>
-              <strong>Processing Error</strong>
+              <h4 className="review-dlq-alert__title">Processing Error</h4>
               <p style={{ margin: "8px 0 0" }}>This grant encountered an error during pipeline processing.</p>
               <div className="review-dlq-guidance">
-                <strong>What to do:</strong>
+                <h5 className="review-dlq-guidance__title">What to do:</h5>
                 <ol>
                   <li>Check the error details below to understand what went wrong.</li>
                   <li>If the error is transient (e.g., timeout, throttling), reject and re-upload the document to retry.</li>
@@ -365,11 +365,13 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
             <SummaryDiff
               original={detail.extractedSummary as Record<string, unknown>}
               edited={editedSummary}
+              headingLevel={4}
             />
           ) : (
             <SummaryEditor
               editedSummary={editedSummary}
               onSummaryChange={setEditedSummary}
+              headingLevel={4}
             />
           )}
         </>
@@ -386,9 +388,9 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
 
       {isResolved ? (
         <div style={{ marginBottom: "16px" }}>
-          <span className="summary-field__label">
+          <h4 className="summary-field__label">
             Admin Notes
-          </span>
+          </h4>
           {adminNotes ? (
             <div
               style={{
@@ -424,18 +426,18 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
               <span className="review-field-required">(Required for rejection)</span>
             </label>
             <textarea
+              ref={notesRef}
               id={`admin-notes-${review.review_id}`}
               className={`review-admin-notes ${notesError ? "review-admin-notes--error" : ""}`}
               value={adminNotes}
               onChange={(e) => {
                 setAdminNotes(e.target.value);
-                if (notesError) setNotesError(false);
+                if (notesError) setNotesError(null);
               }}
               placeholder="Add notes about this review..."
               rows={2}
-              aria-required="true"
               aria-describedby={notesError ? `admin-notes-error-${review.review_id}` : undefined}
-              aria-invalid={notesError}
+              aria-invalid={notesError !== null}
             />
             {notesError && (
               <p
@@ -443,7 +445,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
                 className="review-field-error"
                 role="alert"
               >
-                Please provide a reason for rejection.
+                {notesError}
               </p>
             )}
           </div>
@@ -521,7 +523,6 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
             onReprocess={handleReprocess}
             onReupload={handleReuploadClick}
             onNeedsReupload={handleNeedsReupload}
-            rejectDisabled={!adminNotes.trim()}
           />
         </>
       )}

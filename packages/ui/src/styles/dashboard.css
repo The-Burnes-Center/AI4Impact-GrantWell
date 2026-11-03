@@ -3121,9 +3121,11 @@ select.form-input {
   line-height: 1.6;
 }
 
-.review-dlq-alert > strong {
+.review-dlq-alert__title {
+  margin: 0;
   color: var(--gw-color-danger);
   font-size: 14px;
+  font-weight: 700;
 }
 
 .review-dlq-guidance {
@@ -3134,7 +3136,9 @@ select.form-input {
   border-radius: 4px;
 }
 
-.review-dlq-guidance > strong {
+.review-dlq-guidance__title {
+  margin: 0;
+  font-weight: 700;
   color: var(--gw-color-heading);
   font-size: 13px;
 }
@@ -3382,6 +3386,7 @@ select.form-input {
   font-size: 13px;
   font-weight: 600;
   color: var(--gw-color-heading);
+  margin-top: 0;
   margin-bottom: 6px;
 }
 
@@ -3390,6 +3395,24 @@ select.form-input {
   align-items: center;
   gap: 8px;
   padding: 4px 0;
+}
+
+.summary-field__heading {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
+
+.summary-field__columns {
+  padding-bottom: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gw-color-text-secondary);
+}
+
+.summary-field__columns-spacer {
+  flex: 0 0 24px;
 }
 
 .summary-field__item--removed {

@@ -127,6 +127,21 @@ describe("ProcessingReviewTab", () => {
     expect(names()).toEqual(QUEUE.map((r) => r.nofo_name));
   });
 
+  it("reports a partial selection as mixed on the select-all checkbox", async () => {
+    const { user } = renderTab(json({ reviews: QUEUE, expiredOpenCount: 1 }));
+    await screen.findByText("Today Grant");
+    const selectAll = screen.getByRole("checkbox", { name: "Select all reviews" }) as HTMLInputElement;
+    expect(screen.getByRole("columnheader", { name: /^Select/ })).toContainElement(selectAll);
+
+    await user.click(screen.getByRole("checkbox", { name: "Select Soon Grant" }));
+    expect(selectAll.indeterminate).toBe(true);
+    expect(selectAll).not.toBeChecked();
+
+    await user.click(selectAll);
+    expect(selectAll.indeterminate).toBe(false);
+    expect(selectAll).toBeChecked();
+  });
+
   it("disables Close all expired when no open review is for an expired grant", async () => {
     renderTab();
     await screen.findByText("Pending Grant");

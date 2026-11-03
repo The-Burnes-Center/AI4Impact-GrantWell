@@ -396,8 +396,12 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
           <div className="table-header review-table-grid-select" role="rowgroup">
             <div role="row" style={{ display: "contents" }}>
               <div className="header-cell review-checkbox-cell" role="columnheader">
+                <span className="visually-hidden">Select</span>
                 <input
                   type="checkbox"
+                  ref={(el) => {
+                    if (el) el.indeterminate = selected.size > 0 && selected.size < reviews.length;
+                  }}
                   checked={reviews.length > 0 && selected.size === reviews.length}
                   onChange={toggleSelectAll}
                   aria-label="Select all reviews"

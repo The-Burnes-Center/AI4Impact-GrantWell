@@ -14,7 +14,6 @@ interface ReviewActionsProps {
   onReprocess: () => void;
   onReupload: () => void;
   onNeedsReupload: () => void;
-  rejectDisabled?: boolean;
 }
 
 /**
@@ -46,7 +45,6 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
   onReprocess,
   onReupload,
   onNeedsReupload,
-  rejectDisabled = false,
 }) => {
   const busy = actionInProgress !== null;
 
@@ -68,8 +66,8 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
         <button
           className="review-btn review-btn--reject"
           onClick={onReject}
-          disabled={busy || rejectDisabled}
-          aria-label={rejectDisabled ? "Reject this grant (admin notes required)" : "Reject this grant"}
+          disabled={busy}
+          aria-label="Reject this grant"
         >
           <LuX size={14} aria-hidden="true" />
           {actionInProgress === "reject" ? "Rejecting..." : "Reject"}
@@ -141,8 +139,8 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
       key="reject"
       className={`review-btn ${recommended === "reject" ? "review-btn--reject review-btn--recommended" : "review-btn--reject"}`}
       onClick={onReject}
-      disabled={busy || rejectDisabled}
-      aria-label={rejectDisabled ? "Reject this grant (admin notes required)" : rec("reject", "Reject this grant")}
+      disabled={busy}
+      aria-label={rec("reject", "Reject this grant")}
     >
       <LuX size={14} aria-hidden="true" />
       {actionInProgress === "reject" ? "Rejecting..." : "Reject"}

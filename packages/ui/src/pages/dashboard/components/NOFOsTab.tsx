@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useId } from "react";
 import {
   LuPin, LuPinOff, LuFileX, LuUpload, LuInfo, LuFile, LuLoader, LuTriangleAlert, LuPlus, LuTrash,
 } from "react-icons/lu";
@@ -94,6 +94,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
 
   const [promoteModalOpen, setPromoteModalOpen] = useState(false);
   const [promoting, setPromoting] = useState(false);
+  const reviewFlagIdPrefix = useId();
 
   const handleEditSummary = useCallback(async (nofo: NOFO) => {
     setSelectedNofo(nofo);
@@ -474,15 +475,23 @@ const NOFOsTab = React.memo(function NOFOsTab({
                     {PROCESSING_LABELS[nofo.processingStatus] || "Processing"}
                   </span>
                 ) : nofo.reviewFlag ? (
-                  <button
-                    type="button"
-                    className="grant-review-link grant-review-link--suggested"
-                    onClick={() => handleEditSummary(nofo)}
-                    title={reviewFlagTitle(nofo.reviewFlag)}
-                  >
-                    <LuInfo size={12} aria-hidden="true" />
-                    Review suggested
-                  </button>
+                  <>
+                    <button
+                      type="button"
+                      className="grant-review-link grant-review-link--suggested"
+                      onClick={() => handleEditSummary(nofo)}
+                      title={reviewFlagTitle(nofo.reviewFlag)}
+                      aria-describedby={reviewFlagTitle(nofo.reviewFlag) ? `${reviewFlagIdPrefix}-${nofo.id}` : undefined}
+                    >
+                      <LuInfo size={12} aria-hidden="true" />
+                      Review suggested
+                    </button>
+                    {reviewFlagTitle(nofo.reviewFlag) && (
+                      <span id={`${reviewFlagIdPrefix}-${nofo.id}`} className="visually-hidden">
+                        {reviewFlagTitle(nofo.reviewFlag)}
+                      </span>
+                    )}
+                  </>
                 ) : null}
               </div>
               <div className="row-cell" role="cell">
