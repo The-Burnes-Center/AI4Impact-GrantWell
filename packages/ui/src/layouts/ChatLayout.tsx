@@ -1,20 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import UnifiedNavigation from "../components/navigation/UnifiedNavigation";
 import { useInert } from "../hooks/use-inert";
 import { useNavigationChrome } from "../components/navigation/navigation-context";
 
 const DRAWER_NAVBAR_HEIGHT = 60;
+const MIN_CONTENT_HEIGHT = 360;
 
-const useViewportWidth = () => {
-  const [width, setWidth] = useState(window.innerWidth);
+const useViewportSize = () => {
+  const [size, setSize] = useState({ width: window.innerWidth, height: window.innerHeight });
 
   useEffect(() => {
-    const handleResize = () => setWidth(window.innerWidth);
+    const handleResize = () => setSize({ width: window.innerWidth, height: window.innerHeight });
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  return width;
+  return size;
+};
+
+const useElementHeight = <T extends HTMLElement>() => {
+  const ref = useRef<T>(null);
+  const [height, setHeight] = useState(0);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(() => setHeight(el.offsetHeight));
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return [ref, height] as const;
 };
 
 interface BaseAppLayoutProps {
@@ -140,12 +156,16 @@ export default function BaseAppLayout({
   sessionId,
   modalOpen = false,
 }: BaseAppLayoutProps) {
-  const viewportWidth = useViewportWidth();
+  const { width: viewportWidth, height: viewportHeight } = useViewportSize();
   const isNarrowViewport = viewportWidth <= 320;
   // Callers render their modals as siblings of this layout, so everything the
   // layout owns is background while one is open.
   const inertRootRef = useInert<HTMLDivElement>(modalOpen);
   const topChromeHeight = useNavigationChrome()?.isDocked === false ? DRAWER_NAVBAR_HEIGHT : 0;
+  const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
+  const availableHeight = `calc(100vh - ${topChromeHeight}px)`;
+  // Zoomed or short windows: the page scrolls and the chat gets a viewport of its own.
+  const scrollPage = viewportHeight - topChromeHeight - headerHeight < MIN_CONTENT_HEIGHT;
 
   return (
     <div
@@ -153,8 +173,9 @@ export default function BaseAppLayout({
       aria-hidden={modalOpen || undefined}
       style={{
         ...styles.container,
-        height: `calc(100vh - ${topChromeHeight}px)`,
-        maxHeight: `calc(100vh - ${topChromeHeight}px)`,
+        ...(scrollPage
+          ? { height: "auto", minHeight: availableHeight, overflow: "visible" }
+          : { height: availableHeight, maxHeight: availableHeight }),
         width: "100%",
         margin: 0,
         padding: 0,
@@ -164,7 +185,7 @@ export default function BaseAppLayout({
         style={{
           display: "flex",
           flex: 1,
-          overflow: "hidden",
+          overflow: scrollPage ? "visible" : "hidden",
           alignItems: "stretch",
           flexDirection: isNarrowViewport ? "column" : "row",
           minHeight: 0,
@@ -178,7 +199,7 @@ export default function BaseAppLayout({
             flex: 1,
             display: "flex",
             flexDirection: "column",
-            overflow: "hidden",
+            overflow: scrollPage ? "visible" : "hidden",
             margin: 0,
             padding: 0,
             minHeight: 0,
@@ -187,12 +208,15 @@ export default function BaseAppLayout({
           }}
         >
           {/* Header area */}
-          {header}
+          <div ref={headerRef} style={{ flexShrink: 0 }}>
+            {header}
+          </div>
 
           {/* Main content area */}
           <div style={{
             ...styles.mainContainer,
             flexDirection: isNarrowViewport ? 'column' : 'row',
+            ...(scrollPage && { flex: "none", height: availableHeight, minHeight: MIN_CONTENT_HEIGHT }),
           }}>
             {/* Primary content */}
             <div style={{
