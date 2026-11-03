@@ -83,10 +83,10 @@ function ScrollToTop(): null {
     const baseTitle = !label
       ? appName
       : home
-      ? `${appName} - ${label}`
+      ? `${label} – ${appName}`
       : step
       ? `${step.label} – ${label} – ${appName}`
-      : `${label} - ${appName}`;
+      : `${label} – ${appName}`;
     document.title = baseTitle;
 
     const fullUrl = window.location.origin + fullPath;
