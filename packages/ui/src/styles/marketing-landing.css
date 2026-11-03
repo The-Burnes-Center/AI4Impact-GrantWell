@@ -73,6 +73,25 @@
   padding: 0 80px;
 }
 
+.marketing__nav--signin {
+  background-color: var(--mk-off-white);
+}
+
+/* Out of <main> so the skip link bypasses it, but still drawn over the hero photo. */
+.marketing__hero-frame {
+  position: relative;
+}
+
+.marketing__nav--over-hero {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.marketing__hero--under-nav {
+  padding-top: 100px;
+}
+
 .marketing__nav-links {
   display: flex;
   align-items: center;

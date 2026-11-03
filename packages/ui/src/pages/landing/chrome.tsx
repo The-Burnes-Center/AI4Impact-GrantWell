@@ -58,25 +58,9 @@ export function OmniHeader({ position = "top" }: { position?: "top" | "bottom" }
   );
 }
 
-export function LandingNavbar() {
-  const handleSkipNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const mainContent = document.getElementById("main-content");
-    if (mainContent) {
-      mainContent.focus();
-      mainContent.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
-
+export function LandingNavbar({ className }: { className?: string }) {
   return (
-    <nav className="marketing__nav" aria-label="Primary">
-      <a
-        href="#main-content"
-        onClick={handleSkipNavClick}
-        className="marketing__skip-nav"
-      >
-        Skip to main content
-      </a>
+    <nav className={className ? `marketing__nav ${className}` : "marketing__nav"} aria-label="Primary">
       <div className="marketing__nav-links">
         <NavLink
           to="/"
@@ -102,7 +86,7 @@ export function LandingNavbar() {
   );
 }
 
-/** First focusable element on pages without the marketing navbar. */
+/** The first focusable element on every page. */
 export function SkipLink() {
   const handleSkipNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
