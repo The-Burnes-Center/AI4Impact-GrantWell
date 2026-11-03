@@ -406,6 +406,10 @@ export default function Chat(props: {
     }
   };
 
+  let replyCount = 0;
+  const replyNumber = (message: ChatBotHistoryItem) =>
+    message.type === ChatBotMessageType.AI ? ++replyCount : undefined;
+
   return (
     <section aria-label="GrantWell assistant chat" style={styles.chatContainer}>
       {/* Not role="log": every streamed chunk rewrites the last turn, so a live
@@ -446,13 +450,13 @@ export default function Chat(props: {
 
           {olderMessages.map((message, idx) => (
             <li key={`older-${olderMessages.length - idx}`}>
-              <ChatMessage message={message} documentIdentifier={props.documentIdentifier} />
+              <ChatMessage message={message} documentIdentifier={props.documentIdentifier} replyNumber={replyNumber(message)} />
             </li>
           ))}
 
           {messageHistory.map((message, idx) => (
             <li key={idx}>
-              <ChatMessage message={message} documentIdentifier={props.documentIdentifier} />
+              <ChatMessage message={message} documentIdentifier={props.documentIdentifier} replyNumber={replyNumber(message)} />
             </li>
           ))}
 
