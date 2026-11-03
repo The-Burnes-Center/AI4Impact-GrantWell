@@ -634,7 +634,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
         title={`Edit Requirements — ${selectedNofo?.name || ""}`}
         maxWidth="800px"
       >
-        <div className="modal-form" style={{ maxHeight: "70vh", overflowY: "auto" }}>
+        <div className="modal-form">
           <div role="status" aria-live="polite" className="visually-hidden">
             {summaryLoading ? "Loading grant requirements" : ""}
           </div>

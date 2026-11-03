@@ -36,6 +36,8 @@ body {
 /* Dashboard header styles */
 .dashboard-header {
   display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
@@ -53,6 +55,7 @@ body {
 
 .dashboard-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 15px;
 }
 
@@ -83,6 +86,7 @@ body {
 /* Tab controls */
 .tab-controls {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   margin-bottom: 20px;
   padding-bottom: 12px;
@@ -120,6 +124,7 @@ body {
 /* Segmented control inside the Grants tab: browse vs. triage */
 .grants-segment {
   display: inline-flex;
+  flex-wrap: wrap;
   gap: 4px;
   margin-bottom: 16px;
   padding: 4px;
@@ -1690,6 +1695,23 @@ body {
   background-color: white !important;
 }
 
+/* On a short viewport only the body would scroll, a few pixels tall; let the whole dialog scroll. */
+@media (max-height: 480px) {
+  .modal-overlay {
+    align-items: flex-start !important;
+    overflow-y: auto;
+  }
+
+  .modal-content {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .modal-body {
+    overflow-y: visible !important;
+  }
+}
+
 .modal-form {
   margin-bottom: 15px;
 }
@@ -2083,6 +2105,8 @@ select.form-input {
 /* Pagination */
 .pagination-container {
   display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
   justify-content: space-between;
   align-items: center;
   margin-top: 25px;
@@ -2096,8 +2120,14 @@ select.form-input {
   line-height: 1.4;
 }
 
+.pagination-container > div {
+  flex-wrap: wrap;
+  row-gap: 12px;
+}
+
 .pagination-controls {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 5px;
 }
@@ -2774,8 +2804,27 @@ select.form-input {
   border-top: 1px solid var(--gw-color-border);
 }
 
+/* The detail panel sits in the 960px-wide table, so it is pinned to the scroller's visible width
+   and reflows there instead of scrolling sideways with the columns (WCAG 1.4.10). */
+.review-table-scroll {
+  container-type: inline-size;
+}
+
+.review-table-scroll .table-container {
+  overflow: clip;
+}
+
+.review-table-scroll .review-expanded-row {
+  position: sticky;
+  left: 0;
+  box-sizing: border-box;
+  width: calc(100cqi - 2px);
+}
+
 .review-expanded-row__header {
   display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
@@ -2892,6 +2941,7 @@ select.form-input {
 
 .review-bulk-bar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 16px;
   padding: 10px 16px;
@@ -2910,6 +2960,7 @@ select.form-input {
 
 .review-bulk-bar__actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
 }

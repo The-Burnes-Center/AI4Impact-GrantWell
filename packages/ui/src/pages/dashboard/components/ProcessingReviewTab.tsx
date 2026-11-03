@@ -390,7 +390,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
         </div>
       )}
 
-      <TableScrollRegion label="Processing reviews table" minWidth={960}>
+      <TableScrollRegion label="Processing reviews table" minWidth={960} className="table-scroll review-table-scroll">
       <div className="table-container">
         <div role="table" aria-label="Processing reviews">
           <div className="table-header review-table-grid-select" role="rowgroup">
