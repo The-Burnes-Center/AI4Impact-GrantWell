@@ -373,13 +373,13 @@ export default function AuthPanel({
     event.preventDefault();
     if (loading) return;
 
-    const validationError =
-      getSignInValidationError(email, password) ??
-      getTurnstileValidationError(turnstileToken);
+    const fieldError = getSignInValidationError(email, password);
+    const validationError = fieldError ?? getTurnstileValidationError(turnstileToken);
     if (validationError) {
-      setStepError(validationError, [
-        getEmailValidationError(email) ? "email" : "password",
-      ]);
+      setStepError(
+        validationError,
+        fieldError ? [getEmailValidationError(email) ? "email" : "password"] : [],
+      );
       setSuccess(null);
       return;
     }
@@ -486,11 +486,10 @@ export default function AuthPanel({
     event.preventDefault();
     if (loading) return;
 
-    const validationError =
-      getSignUpValidationError(email, password, confirmPassword) ??
-      getTurnstileValidationError(turnstileToken);
+    const fieldError = getSignUpValidationError(email, password, confirmPassword);
+    const validationError = fieldError ?? getTurnstileValidationError(turnstileToken);
     if (validationError) {
-      setStepError(validationError, signUpValidationFields(email, password));
+      setStepError(validationError, fieldError ? signUpValidationFields(email, password) : []);
       setSuccess(null);
       return;
     }
@@ -532,13 +531,13 @@ export default function AuthPanel({
 
     // The token here is for the auto sign-in below, not for confirmSignUp itself — so it is only
     // required when a password is still in hand to sign in with.
+    const fieldError = getVerifySignUpValidationError(email, verificationCode);
     const validationError =
-      getVerifySignUpValidationError(email, verificationCode) ??
-      (password ? getTurnstileValidationError(turnstileToken) : null);
+      fieldError ?? (password ? getTurnstileValidationError(turnstileToken) : null);
     if (validationError) {
       setStepError(
         validationError,
-        getEmailValidationError(email) ? [] : ["verificationCode"],
+        fieldError && !getEmailValidationError(email) ? ["verificationCode"] : [],
       );
       setSuccess(null);
       return;
