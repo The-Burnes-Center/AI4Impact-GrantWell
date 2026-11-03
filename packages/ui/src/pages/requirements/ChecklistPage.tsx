@@ -21,10 +21,10 @@ const TAB_IDS = ["eligibility", "documents", "narrative", "deadlines"] as const;
 type TabId = typeof TAB_IDS[number];
 
 const TAB_CONFIG: { id: TabId; label: string; icon: React.ReactNode }[] = [
-  { id: "eligibility", label: "Eligibility", icon: <LuUser size={18} /> },
-  { id: "documents", label: "Required Documents", icon: <LuFileText size={18} /> },
-  { id: "narrative", label: "Narrative Sections", icon: <LuList size={18} /> },
-  { id: "deadlines", label: "Key Deadlines", icon: <LuClock size={18} /> },
+  { id: "eligibility", label: "Eligibility", icon: <LuUser size={18} aria-hidden="true" /> },
+  { id: "documents", label: "Required Documents", icon: <LuFileText size={18} aria-hidden="true" /> },
+  { id: "narrative", label: "Narrative Sections", icon: <LuList size={18} aria-hidden="true" /> },
+  { id: "deadlines", label: "Key Deadlines", icon: <LuClock size={18} aria-hidden="true" /> },
 ];
 
 const Checklists: React.FC = () => {
@@ -209,9 +209,9 @@ const Checklists: React.FC = () => {
                     background: "var(--gw-color-surface-subtle, #f6f8fa)",
                   }}
                 >
-                  <strong style={{ display: "block", marginBottom: "6px" }}>
+                  <h2 style={{ margin: "0 0 6px", fontSize: "inherit", fontWeight: 700, lineHeight: "inherit" }}>
                     Additional guidance for {stateGuidance.stateName}
-                  </strong>
+                  </h2>
                   <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{stateGuidance.note}</p>
                 </div>
               )}
@@ -256,9 +256,9 @@ const Checklists: React.FC = () => {
 
                       {tabId === "eligibility" && (
                         <div className="checklist-info-box">
-                          <LuInfo size={22} color="var(--gw-color-primary)" />
+                          <LuInfo size={22} color="var(--gw-color-primary)" aria-hidden="true" />
                           <div>
-                            <p className="checklist-info-box__title">Not sure if your organization qualifies?</p>
+                            <h2 className="checklist-info-box__title">Not sure if your organization qualifies?</h2>
                             <p className="checklist-info-box__text">
                               Chat with AI can help assess your organization&#39;s eligibility based on
                               these criteria. Click &quot;Chat with AI&quot; in the navigation panel

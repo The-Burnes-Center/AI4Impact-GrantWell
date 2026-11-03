@@ -145,6 +145,7 @@
 
 .pg-modal {
   width: 650px;
+  max-width: calc(100vw - 32px);
   background-color: var(--gw-color-white, #ffffff);
   border-radius: 12px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);

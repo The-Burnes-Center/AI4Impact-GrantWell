@@ -91,6 +91,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
   const [restoreScope, setRestoreScope] = useState<"all" | "section" | null>(null);
   const [restoring, setRestoring] = useState(false);
   const [labelDraft, setLabelDraft] = useState("");
+  const [notice, setNotice] = useState("");
   const rowRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   const currentTotal = Object.values(currentSections || {}).reduce(
@@ -116,6 +117,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
     setSelected(null);
     setScopeSection(null);
     setFocusedIndex(0);
+    setNotice("");
     loadVersions();
   }, [isOpen, loadVersions]);
 
@@ -170,6 +172,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
   const handleRestore = async () => {
     if (!selected || !restoreScope) return;
     setRestoring(true);
+    setNotice("");
     try {
       await apiClient.drafts.restoreVersion({
         sessionId,
@@ -179,6 +182,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
       await onRestored();
       await loadVersions();
       setSelected(null);
+      setNotice(restoreScope === "section" ? `Restored "${scopeName}".` : "Application restored.");
     } catch (err) {
       console.error("Restore failed:", err);
       // The server explains refusals precisely (empty version, missing section);
@@ -192,6 +196,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
 
   const handleLabel = async () => {
     if (!selected) return;
+    setNotice("");
     try {
       await apiClient.drafts.labelVersion({
         sessionId,
@@ -200,6 +205,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
       });
       setSelected({ ...selected, label: labelDraft.trim() || undefined });
       await loadVersions();
+      setNotice(labelDraft.trim() ? "Label saved." : "Label removed.");
     } catch (err) {
       console.error("Could not label that version:", err);
       setError("The label could not be saved.");
@@ -241,6 +247,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
 
         <div className="vh-body">
           {error && <p role="alert" className="vh-error">{error}</p>}
+          <p role="status" className="visually-hidden">{notice}</p>
 
           {loading ? (
             <p className="vh-status" role="status">Loading versions...</p>
@@ -265,7 +272,8 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
                       onFocus={() => setFocusedIndex(index)}
                       onKeyDown={(e) => handleRowKeyDown(e, index)}
                       onClick={() => openVersion(version)}
-                      disabled={version.oversize}
+                      // Not disabled: a disabled row could hold the roving tab stop and trap the arrow keys.
+                      aria-disabled={version.oversize || undefined}
                       aria-current={selected?.rev === version.rev}
                       className={`vh-row${selected?.rev === version.rev ? " vh-row--active" : ""}`}
                     >

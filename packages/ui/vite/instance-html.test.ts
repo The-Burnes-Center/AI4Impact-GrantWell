@@ -41,7 +41,7 @@ describe("whatsNewHtml", () => {
   const html = whatsNewHtml(index, notes, "https://grantwell.us");
 
   it("gets its own title, description, canonical and share tags, without the app's JSON-LD", () => {
-    expect(html).toContain("<title>What's new - GrantWell</title>");
+    expect(html).toContain("<title>What's new – GrantWell</title>");
     expect(html).toContain('<meta name="description" content="New features and improvements in each GrantWell release." />');
     expect(html).toContain('<link rel="canonical" href="https://grantwell.us/whats-new" />');
     expect(html).toContain('<meta property="og:url" content="https://grantwell.us/whats-new" />');
@@ -160,7 +160,7 @@ describe("favicon", () => {
 describe("notFoundHtml", () => {
   it("names the deployment, uses its primary colour and has no scripts", () => {
     const html = notFoundHtml({ appName: "GrantWell <CO>", colors: { primary: "#001970" } });
-    expect(html).toContain("<title>Page not found - GrantWell &lt;CO&gt;</title>");
+    expect(html).toContain("<title>Page not found – GrantWell &lt;CO&gt;</title>");
     expect(html).toContain("Go to the GrantWell &lt;CO&gt; home page");
     expect(html).toContain("color: #001970");
     expect(html).not.toContain("<script");

@@ -100,6 +100,17 @@ export default function RowActionsMenu({
     else if (e.key === "ArrowUp") focus(current - 1);
     else if (e.key === "Home") focus(0);
     else if (e.key === "End") focus(items.length - 1);
+    else if (e.key === "Tab") {
+      // Close and hand focus back to the trigger, so Tab moves on from the row, not the page end.
+      if (e.shiftKey) e.preventDefault();
+      closeMenu();
+    }
+  };
+
+  const handleMenuBlur = (e: React.FocusEvent<HTMLDivElement>) => {
+    const next = e.relatedTarget as Node | null;
+    if (next && (popupRef.current?.contains(next) || wrapperRef.current?.contains(next))) return;
+    setIsOpen(false);
   };
 
   if (actions.length === 0) return null;
@@ -128,6 +139,7 @@ export default function RowActionsMenu({
             tabIndex={-1}
             aria-label={label}
             onKeyDown={handleMenuKeyDown}
+            onBlur={handleMenuBlur}
           >
             {actions.map((action) => (
               <button
@@ -139,6 +151,7 @@ export default function RowActionsMenu({
                 }}
                 className={`dropdown-menu-item${action.danger ? " delete-item" : ""}`}
                 role="menuitem"
+                tabIndex={-1}
               >
                 <span className="menu-icon" aria-hidden="true">{action.icon}</span>
                 <span>{action.label}</span>

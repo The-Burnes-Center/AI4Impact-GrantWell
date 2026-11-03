@@ -39,7 +39,7 @@ export default function NewPasswordStep({
             placeholder="Enter new password"
             value={newPassword}
             onChange={(event) => onNewPasswordChange(event.target.value)}
-            disabled={loading}
+            readOnly={loading}
             autoComplete="new-password"
             required
             className="form-input"
@@ -70,7 +70,7 @@ export default function NewPasswordStep({
           <Button
             variant="primary"
             type="submit"
-            disabled={loading}
+            aria-disabled={loading || undefined}
             className="login-submit-button"
             aria-busy={loading}
           >

@@ -45,7 +45,7 @@ export default function ResetPasswordStep({
             placeholder="Enter 6-digit code"
             value={verificationCode}
             onChange={(event) => onVerificationCodeChange(event.target.value)}
-            disabled={loading}
+            readOnly={loading}
             required
             className="form-input"
             inputMode="numeric"
@@ -65,7 +65,7 @@ export default function ResetPasswordStep({
             placeholder="Enter new password"
             value={newPassword}
             onChange={(event) => onNewPasswordChange(event.target.value)}
-            disabled={loading}
+            readOnly={loading}
             autoComplete="new-password"
             required
             className="form-input"
@@ -96,7 +96,7 @@ export default function ResetPasswordStep({
           <Button
             variant="primary"
             type="submit"
-            disabled={loading}
+            aria-disabled={loading || undefined}
             className="login-submit-button"
             aria-busy={loading}
           >

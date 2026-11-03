@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { LuDownload } from "react-icons/lu";
 import type { ApiClient } from "../../../common/api-client/api-client";
 import type { AdminOutcome } from "../../../common/api-client/outcomes-client";
@@ -37,6 +37,8 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
   const [status, setStatus] = useState<OutcomeStatus | "">("");
   const [query, setQuery] = useState("");
   const [shown, setShown] = useState(PAGE);
+  const [resultsAnnouncement, setResultsAnnouncement] = useState("");
+  const filtersTouched = useRef(false);
 
   useEffect(() => {
     let active = true;
@@ -62,6 +64,20 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
         (!q || [o.email, o.organization, o.grant, o.title, o.region].some((v) => v.toLowerCase().includes(q)))
     );
   }, [rows, status, query]);
+
+  const filteredCount = useRef(0);
+  filteredCount.current = filtered.length;
+  useEffect(() => {
+    if (!filtersTouched.current) {
+      filtersTouched.current = true;
+      return;
+    }
+    const timer = setTimeout(() => {
+      const n = filteredCount.current;
+      setResultsAnnouncement(`${n} outcome${n === 1 ? "" : "s"} found`);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [status, query]);
 
   const totals = useMemo(() => {
     const all = rows ?? [];
@@ -95,8 +111,11 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
         </button>
       </div>
 
+      <div role="status" className="visually-hidden">
+        {rows === null ? "Loading outcomes" : resultsAnnouncement}
+      </div>
       {rows === null ? (
-        <div role="status" className="no-data">
+        <div className="no-data" aria-hidden="true">
           Loading outcomes
         </div>
       ) : rows.length === 0 ? (
@@ -194,7 +213,7 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
 
 function Tile({ label, value }: { label: string; value: string }) {
   return (
-    <div className="metric-card" aria-label={`${label}: ${value}`}>
+    <div className="metric-card">
       <div className="metric-card__value">{value}</div>
       <div className="metric-card__label">{label}</div>
     </div>

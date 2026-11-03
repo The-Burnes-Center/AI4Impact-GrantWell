@@ -49,7 +49,7 @@ export default function MfaSetupStep({
           <Button
             variant="primary"
             type="submit"
-            disabled={loading}
+            aria-disabled={loading || undefined}
             className="login-submit-button"
           >
             {loading ? (

@@ -96,6 +96,7 @@ export default function DocumentManager({
   const duplicateTitleId = useId();
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const tabRefs = useRef<Record<"upload" | "view", HTMLButtonElement | null>>({ upload: null, view: null });
 
   /** The sequence number is what makes a repeat of the *same* error announce
    * again — identical text alone is not a DOM change. */
@@ -670,7 +671,7 @@ export default function DocumentManager({
         <div className="dm-header">
           <h2 id={titleId} className="dm-title">Supporting Documents</h2>
           <button className="dm-close-btn" onClick={onClose} aria-label="Close supporting documents">
-            <LuX size={20} />
+            <LuX size={20} aria-hidden="true" />
           </button>
         </div>
 
@@ -682,27 +683,20 @@ export default function DocumentManager({
           onKeyDown={(e) => {
             const tabs = ["upload", "view"] as const;
             const currentIdx = tabs.indexOf(activeTab as typeof tabs[number]);
-            if (e.key === "ArrowRight") {
-              e.preventDefault();
-              const next = tabs[(currentIdx + 1) % tabs.length];
-              setActiveTab(next);
-              if (next === "view") fetchExistingFiles();
-            } else if (e.key === "ArrowLeft") {
-              e.preventDefault();
-              const prev = tabs[(currentIdx - 1 + tabs.length) % tabs.length];
-              setActiveTab(prev);
-              if (prev === "view") fetchExistingFiles();
-            } else if (e.key === "Home") {
-              e.preventDefault();
-              setActiveTab(tabs[0]);
-            } else if (e.key === "End") {
-              e.preventDefault();
-              setActiveTab(tabs[tabs.length - 1]);
-              if (tabs[tabs.length - 1] === "view") fetchExistingFiles();
-            }
+            let target: typeof tabs[number];
+            if (e.key === "ArrowRight") target = tabs[(currentIdx + 1) % tabs.length];
+            else if (e.key === "ArrowLeft") target = tabs[(currentIdx - 1 + tabs.length) % tabs.length];
+            else if (e.key === "Home") target = tabs[0];
+            else if (e.key === "End") target = tabs[tabs.length - 1];
+            else return;
+            e.preventDefault();
+            setActiveTab(target);
+            if (target === "view") fetchExistingFiles();
+            tabRefs.current[target]?.focus();
           }}
         >
           <button
+            ref={(el) => { tabRefs.current.upload = el; }}
             className="dm-tab"
             onClick={() => setActiveTab("upload")}
             role="tab"
@@ -714,6 +708,7 @@ export default function DocumentManager({
             Upload New Documents
           </button>
           <button
+            ref={(el) => { tabRefs.current.view = el; }}
             className="dm-tab"
             onClick={() => { setActiveTab("view"); fetchExistingFiles(); }}
             role="tab"
@@ -834,7 +829,7 @@ export default function DocumentManager({
                   disabled={loadingFiles || !isOpen}
                   aria-label="Refresh document list"
                 >
-                  <LuRefreshCw size={14} />
+                  <LuRefreshCw size={14} aria-hidden="true" />
                   {loadingFiles ? "Loading..." : "Refresh"}
                 </button>
               </div>
@@ -966,7 +961,7 @@ export default function DocumentManager({
                       {downloadingFile === file.name ? (
                         <div className="dm-download-spinner" />
                       ) : (
-                        <LuDownload size={16} />
+                        <LuDownload size={16} aria-hidden="true" />
                       )}
                     </button>
                     <button

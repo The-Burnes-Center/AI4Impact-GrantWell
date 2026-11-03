@@ -5,6 +5,7 @@ import Button from "../ui/Button";
 import MfaSetupPanel from "./MfaSetupPanel";
 import MfaRecoveryNote from "./MfaRecoveryNote";
 import { useFocusTrap } from "../../hooks/use-focus-trap";
+import { useBranding } from "../../common/branding";
 import { MFA_DEADLINE_ISO } from "../../common/instance";
 import { deadlineDateText, mfaDeadlinePhase } from "../../common/mfa-deadline";
 import "../profile-gate/profile-gate.css";
@@ -20,6 +21,16 @@ export default function MfaGate({ children }: { children: React.ReactNode }) {
   const [email, setEmail] = useState("");
   const [expanded, setExpanded] = useState(false);
   const dialogRef = useFocusTrap<HTMLDivElement>({ isOpen: blocked });
+  const { appName } = useBranding();
+
+  useEffect(() => {
+    if (!blocked) return;
+    const previous = document.title;
+    document.title = `Set up two-step verification – ${appName}`;
+    return () => {
+      document.title = previous;
+    };
+  }, [blocked, appName]);
 
   useEffect(() => {
     if (phase !== "after") return;

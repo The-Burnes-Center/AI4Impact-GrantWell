@@ -24,7 +24,7 @@ describe("Not Found", () => {
     expect(await screen.findByRole("heading", { level: 1, name: "Page not found" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Find grants on the home page" })).toHaveAttribute("href", "/home");
     expect(screen.getByTestId("where")).toHaveTextContent("/requirements/a/b");
-    expect(document.title).toBe("Page not found - GrantWell");
+    expect(document.title).toBe("Page not found – GrantWell");
   });
 
   it("sends a signed-in user on the sign-in address to the home page", async () => {

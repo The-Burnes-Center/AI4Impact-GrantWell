@@ -385,6 +385,7 @@
 
 .dm-refresh-btn:hover {
   background-color: var(--gw-color-primary-light);
+  color: var(--gw-color-primary-hover);
 }
 
 .dm-refresh-btn:focus-visible {
@@ -792,13 +793,13 @@
 .dm-sort-btn:hover {
   background: var(--gw-color-primary-light);
   border-color: var(--gw-color-primary);
-  color: var(--gw-color-primary);
+  color: var(--gw-color-primary-hover);
 }
 
 .dm-sort-btn.dm-sort-active {
   background: var(--gw-color-primary-light);
   border-color: var(--gw-color-primary);
-  color: var(--gw-color-primary);
+  color: var(--gw-color-primary-hover);
   font-weight: var(--gw-font-weight-medium, 500);
 }
 

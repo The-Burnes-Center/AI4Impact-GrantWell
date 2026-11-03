@@ -8,6 +8,8 @@ interface PaginationControlsBaseProps {
   itemsPerPageOptions?: number[];
   itemLabel?: string;
   selectId?: string;
+  /** Announce the "Showing x to y" range when it changes (for lists that page in place). */
+  live?: boolean;
 }
 
 interface NumberedPaginationControlsProps extends PaginationControlsBaseProps {
@@ -34,6 +36,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = React.memo(({
   itemsPerPageOptions = [5, 10, 25, 50],
   itemLabel = "grants",
   selectId,
+  live = false,
   ...paginationProps
 }) => {
   const generatedSelectId = useId();
@@ -52,13 +55,16 @@ const PaginationControls: React.FC<PaginationControlsProps> = React.memo(({
     : Math.min(currentPage * itemsPerPage, totalItems);
 
   const pageButtons: React.ReactNode[] = [];
+  // aria-disabled, not disabled: reaching the first or last page must not drop focus to <body>.
+  const prevDisabled = currentPage === 1;
+  const nextDisabled = isTokenMode ? !paginationProps.hasNextPage : currentPage === totalPages;
 
   pageButtons.push(
     <button
       key="prev"
       className="pagination-button"
-      onClick={() => onPageChange(currentPage - 1)}
-      disabled={currentPage === 1}
+      onClick={() => !prevDisabled && onPageChange(currentPage - 1)}
+      aria-disabled={prevDisabled}
       aria-label="Previous page"
     >
       &lsaquo;
@@ -125,8 +131,8 @@ const PaginationControls: React.FC<PaginationControlsProps> = React.memo(({
     <button
       key="next"
       className="pagination-button"
-      onClick={() => onPageChange(currentPage + 1)}
-      disabled={isTokenMode ? !paginationProps.hasNextPage : currentPage === totalPages}
+      onClick={() => !nextDisabled && onPageChange(currentPage + 1)}
+      aria-disabled={nextDisabled}
       aria-label="Next page"
     >
       &rsaquo;
@@ -135,7 +141,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = React.memo(({
 
   return (
     <nav className="pagination-container" aria-label="Pagination">
-      <div className="pagination-info">
+      <div className="pagination-info" role={live ? "status" : undefined}>
         {isTokenMode
           ? `Showing ${startItem} to ${endItem} ${itemLabel} on page ${currentPage}`
           : `Showing ${startItem} to ${endItem} of ${totalItems} ${itemLabel}`}

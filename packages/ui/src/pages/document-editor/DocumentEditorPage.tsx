@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useDraftsClient } from "../../hooks/use-drafts-client";
 import { useDraftSave } from "../../hooks/use-draft-save";
@@ -104,8 +104,11 @@ const DocumentEditor: React.FC = () => {
   const [activeJobId, setActiveJobId] = useState<string | undefined>(undefined);
   const [isGeneratingDraft, setIsGeneratingDraft] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const stepLeaveGuardRef = useRef<StepLeaveGuard | null>(null);
   const stepRestoredForRef = useRef<string | null>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const { sessionId } = useParams();
   const [searchParams] = useSearchParams();
 
@@ -305,6 +308,37 @@ const DocumentEditor: React.FC = () => {
   };
 
   const activeStep = stepToIndex(currentStep);
+  const draftsPath = selectedNofo
+    ? `/document-editor/drafts?grant=${encodeURIComponent(selectedNofo)}`
+    : "/document-editor/drafts";
+
+  // WCAG 2.4.11: the header wraps on long grant names, so the stepper's offset
+  // and the page's scroll padding follow the pinned bars' real heights.
+  useEffect(() => {
+    const root = rootRef.current;
+    const header = headerRef.current;
+    if (!root || !header) return;
+    const stepper = root.querySelector<HTMLElement>(".progress-stepper-container");
+    const pinnedHeight = (el: HTMLElement | null) =>
+      el && getComputedStyle(el).position === "sticky" ? el.offsetHeight : 0;
+    const update = () => {
+      root.style.setProperty("--gw-editor-header-height", `${header.offsetHeight}px`);
+      document.documentElement.style.setProperty(
+        "--gw-editor-sticky-height",
+        `${pinnedHeight(header) + pinnedHeight(stepper)}px`
+      );
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(header);
+    if (stepper) observer.observe(stepper);
+    window.addEventListener("resize", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+      document.documentElement.style.removeProperty("--gw-editor-sticky-height");
+    };
+  }, [welcomeModalOpen, error]);
 
   if (error) {
     return (
@@ -317,13 +351,13 @@ const DocumentEditor: React.FC = () => {
   }
 
   return (
-    <div className="document-editor-root" style={{ display: "flex", alignItems: "stretch", flex: "1 0 auto", width: "100%", margin: 0, padding: 0 }}>
+    <div ref={rootRef} className="document-editor-root" style={{ display: "flex", alignItems: "stretch", flex: "1 0 auto", width: "100%", margin: 0, padding: 0 }}>
       <UnifiedNavigation documentIdentifier={selectedNofo} currentStep={currentStep} furthestStepIndex={furthestStepIndex} onNavigate={navigateToStep} />
 
       <div className="document-content" style={{ flex: 1, display: "flex", flexDirection: "column", margin: 0, padding: 0 }}>
         {!welcomeModalOpen && (
           <>
-            <div className="document-editor-header" style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", position: "sticky", top: 0, zIndex: 101, boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
+            <div ref={headerRef} className="document-editor-header" style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", position: "sticky", top: 0, zIndex: 101, boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
               <div style={{ padding: 16 }}>
                 <h1 className="document-editor-nofo-title" style={{ margin: 0, fontSize: "22px", fontWeight: 600, lineHeight: 1.4, wordBreak: "break-word" }}>
                   {isNofoLoading ? "Loading..." : nofoName || "Write Application"}
@@ -341,11 +375,11 @@ const DocumentEditor: React.FC = () => {
                 return false;
               }}
               onStepClick={(idx) => navigateToStep(EDITOR_STEPS[idx].id)}
-              completedSteps={Array.from({ length: activeStep }, (_, i) => i)}
+              completedSteps={Array.from({ length: furthestStepIndex }, (_, i) => i)}
               showProgress
             />
 
-            <div className="document-editor-workspace" style={{ flex: 1, padding: 20 }}>
+            <div className="document-editor-workspace" style={{ flex: 1 }}>
               {/* Outlives the loading view, so both the wait and its end are announced. */}
               <div role="status" aria-live="polite" className="visually-hidden">
                 {isLoading ? loadingMessage : documentData ? "Application ready." : ""}
@@ -371,7 +405,11 @@ const DocumentEditor: React.FC = () => {
 
       <WelcomeModal
         isOpen={welcomeModalOpen}
-        onClose={() => setWelcomeModalOpen(false)}
+        onClose={() => {
+          // There is no draft behind this modal yet, so closing it leaves the page.
+          if (location.key !== "default") navigate(-1);
+          else navigate(draftsPath);
+        }}
         onGetStarted={() => {
           setWelcomeModalOpen(false);
           if (selectedNofo) startNewDocument(selectedNofo);
@@ -379,7 +417,7 @@ const DocumentEditor: React.FC = () => {
         }}
         onViewDrafts={() => {
           setWelcomeModalOpen(false);
-          navigate(selectedNofo ? `/document-editor/drafts?grant=${encodeURIComponent(selectedNofo)}` : "/document-editor/drafts");
+          navigate(draftsPath);
         }}
       />
       <GrantPickerModal

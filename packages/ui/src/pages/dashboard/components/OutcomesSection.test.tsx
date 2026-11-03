@@ -20,10 +20,10 @@ function renderSection(state = "") {
 
 describe("OutcomesSection", () => {
   it("sums outcomes and lists them, marking deleted accounts", async () => {
-    renderSection();
-    expect(await screen.findByLabelText("Total awarded: $50,000")).toBeInTheDocument();
-    expect(screen.getByLabelText("Awarded: 2")).toBeInTheDocument();
-    expect(screen.getByLabelText("Waiting to hear: 1")).toBeInTheDocument();
+    const { container } = renderSection();
+    await screen.findByRole("table");
+    const tiles = [...container.querySelectorAll(".metric-card")].map((tile) => tile.textContent);
+    expect(tiles).toEqual(expect.arrayContaining(["$50,000Total awarded", "2Awarded", "1Waiting to hear"]));
     const table = screen.getByRole("table");
     expect(within(table).getByText("Deleted account")).toBeInTheDocument();
     expect(within(table).getAllByRole("row")).toHaveLength(4);

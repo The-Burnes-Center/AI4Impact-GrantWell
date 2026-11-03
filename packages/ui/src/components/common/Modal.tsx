@@ -105,7 +105,7 @@ export const Modal = React.memo<ModalProps>(
                 onClick={onClose}
                 aria-label="Close modal"
               >
-                <LuX size={20} />
+                <LuX size={20} aria-hidden="true" />
               </button>
             )}
           </div>

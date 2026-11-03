@@ -22,11 +22,12 @@
   background-color: var(--mk-green);
   color: var(--mk-white);
   width: 100%;
-  height: 45px;
+  min-height: 45px;
   padding: 0 60px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 40px;
+  gap: 0 40px;
   font-family: var(--gw-font-marketing);
   font-size: 14px;
   font-weight: 400;
@@ -35,7 +36,6 @@
 
 .marketing__omni-label {
   color: var(--mk-white);
-  white-space: nowrap;
 }
 
 .marketing__omni-link {
@@ -45,7 +45,6 @@
   padding: 10px 0;
   color: var(--mk-off-white);
   text-decoration: none;
-  white-space: nowrap;
   transition: color 0.15s ease;
 }
 
@@ -71,6 +70,25 @@
   align-items: center;
   justify-content: center;
   padding: 0 80px;
+}
+
+.marketing__nav--signin {
+  background-color: var(--mk-off-white);
+}
+
+/* Out of <main> so the skip link bypasses it, but still drawn over the hero photo. */
+.marketing__hero-frame {
+  position: relative;
+}
+
+.marketing__nav--over-hero {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.marketing__hero--under-nav {
+  padding-top: 100px;
 }
 
 .marketing__nav-links {
@@ -810,4 +828,11 @@
   .marketing__footer-partners { max-width: 100%; }
   .marketing__footer-wordmark { width: 280px; }
   .marketing__footer-partners-grid { width: 100%; gap: 24px 40px; }
+}
+
+@media (max-width: 480px) {
+  .marketing__signin { padding: 24px 0; }
+  .marketing__signin-inner { padding: 16px 16px 48px; }
+  .marketing__signin .auth-login-card { padding: 24px 16px; }
+  .marketing__signin .auth-tab { padding: 10px 12px; }
 }

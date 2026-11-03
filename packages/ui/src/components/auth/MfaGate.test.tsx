@@ -27,6 +27,7 @@ describe("MfaGate", () => {
     expect(screen.queryByText("App content")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Not now" })).not.toBeInTheDocument();
     expect(screen.getByText(/Since November 2, 2026/)).toBeInTheDocument();
+    await waitFor(() => expect(document.title).toBe("Set up two-step verification – GrantWell"));
 
     await userEvent.keyboard("{Escape}");
     expect(gate()).toBeInTheDocument();
@@ -45,6 +46,7 @@ describe("MfaGate", () => {
     await screen.findByText("SECRET123");
     await user.click(screen.getByLabelText("Digit 1 of 6"));
     await user.keyboard("123456");
+    await user.click(screen.getByRole("button", { name: "Turn on two-step verification" }));
 
     expect(await screen.findByText("App content")).toBeInTheDocument();
     expect(gate()).not.toBeInTheDocument();

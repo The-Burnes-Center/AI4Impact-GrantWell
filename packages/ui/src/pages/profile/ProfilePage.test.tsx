@@ -30,14 +30,14 @@ describe("ProfilePage notification preferences", () => {
     await prefsLoaded();
     expect(screen.getByRole("radio", { name: "Weekly digest" })).toBeChecked();
     expect(screen.getByRole("checkbox", { name: "Arts" })).toBeChecked();
-    expect(screen.getByLabelText("Comma-separated")).toHaveValue("broadband");
+    expect(screen.getByLabelText("Keywords (comma-separated)")).toHaveValue("broadband");
     expect(screen.getByRole("button", { name: "Save preferences" })).toBeDisabled();
   });
 
   it("saves keywords as a trimmed list and confirms", async () => {
     const { net, user } = renderProfile();
     await prefsLoaded();
-    const keywords = screen.getByLabelText("Comma-separated");
+    const keywords = screen.getByLabelText("Keywords (comma-separated)");
     await user.clear(keywords);
     await user.type(keywords, " broadband,  workforce , ");
     await user.click(screen.getByRole("checkbox", { name: "Agriculture" }));
@@ -104,5 +104,32 @@ describe("ProfilePage region", () => {
     await user.click(screen.getByRole("button", { name: "Save changes" }));
     expect(await screen.findByText("Organization details saved.")).toBeInTheDocument();
     expect(net.to(SAVE_PROFILE)[0].body).toEqual({ agency: "DOT", organization: "Denver", jobTitle: "Manager", region: "Region 2" });
+  });
+});
+
+describe("ProfilePage form semantics", () => {
+  it("groups the frequency radios and the categories under their legends", async () => {
+    renderProfile();
+    await prefsLoaded();
+    expect(within(screen.getByRole("group", { name: "Email frequency" })).getByRole("radio", { name: "Weekly digest" })).toBeChecked();
+    expect(within(screen.getByRole("group", { name: "Categories" })).getByRole("checkbox", { name: "Arts" })).toBeChecked();
+  });
+
+  it("autocompletes the organization fields and shows the password rules with a show-password toggle", async () => {
+    const { user } = renderProfile();
+    expect(await screen.findByLabelText("Organization")).toHaveAttribute("autocomplete", "organization");
+    expect(screen.getByLabelText("Role / Title")).toHaveAttribute("autocomplete", "organization-title");
+
+    await user.click(screen.getByRole("button", { name: "Change password" }));
+    const current = screen.getByLabelText("Current password");
+    const next = screen.getByLabelText("New password");
+    expect(current).toHaveAttribute("autocomplete", "current-password");
+    expect(next).toHaveAttribute("autocomplete", "new-password");
+    expect(screen.getByLabelText("Confirm new password")).toHaveAttribute("autocomplete", "new-password");
+    expect(next).toHaveAccessibleDescription(/at least 8 characters/);
+
+    await user.click(screen.getByRole("checkbox", { name: "Show passwords" }));
+    expect(current).toHaveAttribute("type", "text");
+    expect(next).toHaveAttribute("type", "text");
   });
 });

@@ -80,7 +80,7 @@ function UnauthenticatedRouteEffects(): null {
   const { appName } = useBranding();
 
   useEffect(() => {
-    document.title = pathname === "/login" ? `Sign in - ${appName}` : SEO_TITLE;
+    document.title = pathname === "/login" ? `Sign in – ${appName}` : SEO_TITLE;
   }, [pathname, appName]);
 
   useEffect(() => {

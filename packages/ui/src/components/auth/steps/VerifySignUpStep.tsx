@@ -41,7 +41,7 @@ export default function VerifySignUpStep({
             placeholder="Enter 6-digit code"
             value={verificationCode}
             onChange={(event) => onVerificationCodeChange(event.target.value)}
-            disabled={loading}
+            readOnly={loading}
             required
             className="form-input"
             inputMode="numeric"
@@ -56,7 +56,7 @@ export default function VerifySignUpStep({
           <Button
             variant="primary"
             type="submit"
-            disabled={loading}
+            aria-disabled={loading || undefined}
             className="login-submit-button"
           >
             {loading ? (
@@ -76,7 +76,7 @@ export default function VerifySignUpStep({
           variant="link"
           type="button"
           onClick={onResendCode}
-          disabled={loading}
+          aria-disabled={loading || undefined}
           className="create-account-link"
         >
           Resend code

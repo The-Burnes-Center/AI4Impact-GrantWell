@@ -45,7 +45,7 @@ export default function SignInStep({
             placeholder="Enter your email"
             value={email}
             onChange={(event) => onEmailChange(event.target.value)}
-            disabled={loading}
+            readOnly={loading}
             autoComplete="email"
             required
             className="form-input"
@@ -64,7 +64,7 @@ export default function SignInStep({
             placeholder="Enter password"
             value={password}
             onChange={(event) => onPasswordChange(event.target.value)}
-            disabled={loading}
+            readOnly={loading}
             autoComplete="current-password"
             required
             className="form-input"
@@ -97,7 +97,7 @@ export default function SignInStep({
           <Button
             variant="primary"
             type="submit"
-            disabled={loading}
+            aria-disabled={loading || undefined}
             className="login-submit-button"
             aria-busy={loading}
           >

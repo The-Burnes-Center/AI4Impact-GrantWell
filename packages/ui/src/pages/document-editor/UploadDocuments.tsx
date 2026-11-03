@@ -452,9 +452,9 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               animation: "spin 1s linear infinite",
             }}
           />
-          <h2 style={{ fontSize: typography.fontSize["2xl"], fontWeight: typography.fontWeight.bold, color: colors.heading, margin: "0 0 8px" }}>
+          <p style={{ fontSize: typography.fontSize["2xl"], fontWeight: typography.fontWeight.bold, color: colors.heading, margin: "0 0 8px" }}>
             Preparing sections...
-          </h2>
+          </p>
           <p style={{ fontSize: typography.fontSize.base, color: colors.textSecondary, margin: 0 }}>
             {draftProgress}
           </p>
@@ -502,7 +502,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             color: "#065f46",
           }}
         >
-          <span style={{ fontSize: "18px", flexShrink: 0 }}>&#10003;</span>
+          <span style={{ fontSize: "18px", flexShrink: 0 }} aria-hidden="true">&#10003;</span>
           <span>
             Your progress is automatically saved. You can close this page and come back anytime — your application will be here.
           </span>
@@ -536,7 +536,14 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
 
       <Card
         header="Additional Information"
-        headerActions={<AutoSaveIndicator status={draftSave.saveStatus} onRetry={draftSave.retry} />}
+        headerActions={
+          <AutoSaveIndicator
+            status={draftSave.saveStatus}
+            idleText={draftSave.lastSavedAt ? "Saved" : "Changes save automatically"}
+            onRetry={draftSave.retry}
+            variant="onPrimary"
+          />
+        }
       >
         <p style={{ color: colors.textSecondary, marginBottom: spacing["2xl"], fontFamily: typography.fontFamily }}>
           Upload supporting documents and share any additional context to help
@@ -611,15 +618,16 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
 
           {files.length > 0 && (
             <div style={{ marginTop: spacing.lg }}>
-              <p style={{
+              <h4 style={{
                 fontSize: typography.fontSize.sm,
                 fontWeight: typography.fontWeight.semibold,
                 color: colors.text,
+                marginTop: 0,
                 marginBottom: spacing.md,
                 fontFamily: typography.fontFamily,
               }}>
                 Selected Documents ({files.length})
-              </p>
+              </h4>
               {files.map((file, index) => (
                 <div
                   key={index}
@@ -761,7 +769,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           )}
         </div>
 
-        {/* Additional Information */}
+        {/* Additional Context */}
         <div>
           <h3 style={{
             fontSize: typography.fontSize.lg,
@@ -770,7 +778,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             marginBottom: spacing.sm,
             fontFamily: typography.fontFamily,
           }}>
-            Additional Information
+            Additional Context
           </h3>
           <p style={{
             fontSize: typography.fontSize.sm,
@@ -843,6 +851,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
+        flexWrap: "wrap",
         gap: spacing.lg,
         marginTop: spacing["2xl"],
       }}>
@@ -852,7 +861,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           justify="flex-start"
         />
 
-        <div style={{ display: "flex", gap: spacing.md, alignItems: "center" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: spacing.md, alignItems: "center" }}>
           {hasExistingDraft && (
             <button
               type="button"

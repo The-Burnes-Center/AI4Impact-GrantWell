@@ -9,6 +9,7 @@ import {
 import {
   LandingNavbar,
   OmniHeader,
+  SkipLink,
 } from "./chrome";
 import { BrandLogo } from "../../components/common/BrandLogo";
 import { PublicSiteHeader, SiteBanner, SiteFooter } from "../../components/common/ChromeSlots";
@@ -44,14 +45,19 @@ export default function LandingPage() {
 
   return (
     <div className="marketing">
+      <SkipLink />
       <SiteBanner />
       <PublicSiteHeader />
       <OmniHeader />
 
+      <div className="marketing__hero-frame">
+      {!HAS_CHROME_HEADER && <LandingNavbar className="marketing__nav--over-hero" />}
       <main id="main-content" tabIndex={-1}>
-      <section className="marketing__hero" aria-labelledby="hero-title">
+      <section
+        className={"marketing__hero" + (HAS_CHROME_HEADER ? "" : " marketing__hero--under-nav")}
+        aria-labelledby="hero-title"
+      >
         <div className="marketing__hero-bg" aria-hidden="true" />
-        {!HAS_CHROME_HEADER && <LandingNavbar />}
         <div className="marketing__hero-row">
           <div className="marketing__hero-content">
             <h1 className="marketing__hero-title" id="hero-title">
@@ -146,6 +152,7 @@ export default function LandingPage() {
         <div className="marketing__band-spacer" aria-hidden="true" />
       </section>
       </main>
+      </div>
 
       <SiteFooter signedIn={false} />
 

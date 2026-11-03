@@ -7,14 +7,15 @@
   inset: 0;
   z-index: 1000;
   display: flex;
-  align-items: center;
   justify-content: center;
   padding: 24px;
   background: rgba(40, 40, 40, 0.55);
   overflow-y: auto;
 }
 
+/* Auto margins, not align-items: center, so a panel taller than the viewport keeps its top reachable. */
 .profile-gate__panel {
+  margin: auto;
   width: 100%;
   max-width: 440px;
   background: #fff;

@@ -5,7 +5,7 @@ import { useBranding } from "../../common/branding";
 export default function MaintenancePage() {
   const { appName } = useBranding();
   useEffect(() => {
-    document.title = `Site under maintenance — ${appName}`;
+    document.title = `Site under maintenance – ${appName}`;
   }, [appName]);
 
   return (

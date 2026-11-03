@@ -194,6 +194,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
             status={saveStatus}
             idleText={autoSaveIdleText}
             onRetry={onRetrySave}
+            variant="onPrimary"
           />
         }
       >
@@ -203,9 +204,18 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
           later.
         </p>
 
-        <div style={{ background: colors.white, borderRadius: "8px", padding: "24px" }}>
-          {questions.map((questionItem, index) => (
-            <div key={questionItem.id} style={{ marginBottom: "24px" }}>
+        <ol
+          style={{
+            background: colors.white,
+            borderRadius: "8px",
+            padding: "24px 24px 24px calc(24px + 1.5em)",
+            margin: 0,
+            color: colors.text,
+            fontFamily: typography.fontFamily,
+          }}
+        >
+          {questions.map((questionItem) => (
+            <li key={questionItem.id} style={{ marginBottom: "24px" }}>
               <label
                 htmlFor={`question_${questionItem.id}`}
                 style={{
@@ -217,7 +227,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
                   fontFamily: typography.fontFamily,
                 }}
               >
-                {index + 1}. {questionItem.question}
+                {questionItem.question}
                 {questionItem.source === "custom" && (
                   <span
                     style={{
@@ -264,9 +274,9 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
                 {questionItem.helpText || "Provide a detailed answer. You can edit this later in the Section Editor."}
                 {` (${characterCount(formData[`question_${questionItem.id}`] || "")})`}
               </span>
-            </div>
+            </li>
           ))}
-        </div>
+        </ol>
       </Card>
 
       <div style={{ marginTop: "24px" }}>

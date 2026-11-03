@@ -94,7 +94,8 @@
 }
 
 .auth-login-card .form-input:disabled,
-.auth-login-card .form-control.form-input:disabled {
+.auth-login-card .form-control.form-input:disabled,
+.auth-login-card .form-control.form-input[readonly] {
   color: #64748b;
   background: #f1f5f9;
   opacity: 1;
@@ -137,6 +138,10 @@
   height: 20px;
   accent-color: var(--gw-color-primary);
   flex-shrink: 0;
+}
+
+.show-password-checkbox .form-check-input:not(:checked) {
+  border-color: #767676;
 }
 
 .show-password-checkbox .form-check-input:focus-visible {

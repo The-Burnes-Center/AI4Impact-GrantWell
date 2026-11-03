@@ -512,7 +512,6 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                 className={`landing-table-row ${isArchived ? "archived" : ""}`}
                 style={{
                   cursor: isArchived ? "not-allowed" : "pointer",
-                  opacity: isArchived ? 0.7 : 1,
                   backgroundColor: isArchived ? "#f9f9f9" : undefined,
                 }}
               >
@@ -522,7 +521,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                       size={14}
                       className="landing-pinned-icon"
                       role="img"
-                      aria-label="Pinned grant"
+                      aria-label="Pinned — featured by an administrator"
                       title="Pinned — featured by an administrator"
                     />
                   )}
@@ -542,12 +541,9 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                     </span>
                   </button>
                   {stateBadge && (
-                    <span
-                      className="landing-state-badge"
-                      title={`Maintained by ${stateBadge}`}
-                      style={{ opacity: isArchived ? 0.6 : 1 }}
-                    >
-                      {nofo.state}
+                    <span className="landing-state-badge" title={`Maintained by ${stateBadge}`}>
+                      <span aria-hidden="true">{nofo.state}</span>
+                      <span className="visually-hidden">Maintained by {stateBadge}</span>
                     </span>
                   )}
                   {!isArchived && isRecentlyAdded(nofo.createdAt) && (
@@ -556,6 +552,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                       title={`Added within the last ${NEW_GRANT_WINDOW_DAYS} days`}
                     >
                       New
+                      <span className="visually-hidden">: added within the last {NEW_GRANT_WINDOW_DAYS} days</span>
                     </span>
                   )}
                   {isArchived && (
@@ -564,6 +561,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                       title="This grant has expired and is no longer accepting applications"
                     >
                       Expired
+                      <span className="visually-hidden">: no longer accepting applications</span>
                     </span>
                   )}
                 </div>
@@ -581,13 +579,12 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                         backgroundColor: `${GRANT_TYPES[nofo.grantType].color}15`,
                         color: GRANT_TYPES[nofo.grantType].color,
                         borderColor: `${GRANT_TYPES[nofo.grantType].color}40`,
-                        opacity: isArchived ? 0.6 : 1,
                       }}
                     >
                       {GRANT_TYPES[nofo.grantType].label}
                     </span>
                   ) : (
-                    <span className="landing-grant-type-badge unset" style={{ opacity: isArchived ? 0.6 : 1 }}>Unset</span>
+                    <span className="landing-grant-type-badge unset">Unset</span>
                   )}
                 </div>
                 <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "#6b7280" : undefined }}>

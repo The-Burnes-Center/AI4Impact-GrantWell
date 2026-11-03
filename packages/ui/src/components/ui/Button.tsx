@@ -30,7 +30,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: ButtonSize;
   /** Whether the button takes full width */
   fullWidth?: boolean;
-  /** Loading state - shows spinner and disables button */
+  /** Loading state - shows spinner and ignores clicks, but stays focusable */
   loading?: boolean;
   /** Children elements */
   children: React.ReactNode;
@@ -43,6 +43,10 @@ const hoverColors: Record<ButtonVariant, string> = {
   ghost: colors.primaryLight,
 };
 
+const hoverTextColors: Partial<Record<ButtonVariant, string>> = {
+  ghost: colors.primaryHover,
+};
+
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
@@ -53,6 +57,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       disabled,
       children,
       style,
+      onClick,
       onMouseEnter,
       onMouseLeave,
       ...props
@@ -71,9 +76,18 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ...style,
     };
 
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (loading) {
+        e.preventDefault();
+        return;
+      }
+      onClick?.(e);
+    };
+
     const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
       if (!isDisabled) {
         e.currentTarget.style.backgroundColor = hoverColors[variant];
+        if (hoverTextColors[variant]) e.currentTarget.style.color = hoverTextColors[variant];
       }
       onMouseEnter?.(e);
     };
@@ -82,6 +96,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       if (!isDisabled) {
         e.currentTarget.style.backgroundColor =
           buttonStyles.variants[variant].backgroundColor || "";
+        if (hoverTextColors[variant]) e.currentTarget.style.color = String(baseStyle.color ?? "");
       }
       onMouseLeave?.(e);
     };
@@ -90,7 +105,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         style={baseStyle}
-        disabled={isDisabled}
+        disabled={disabled}
+        onClick={handleClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         aria-disabled={isDisabled}

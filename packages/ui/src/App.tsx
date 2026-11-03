@@ -11,6 +11,7 @@ import NotificationBar from "./components/notifications/NotificationBar";
 import { AccessDeniedProvider } from "./components/access-denied/AccessDeniedManager";
 import { useBranding } from "./common/branding";
 import { IS_PROD } from "./common/instance";
+import { EDITOR_STEPS } from "./common/helpers/document-editor-utils";
 import NotFoundPage from "./pages/not-found/NotFoundPage";
 import "./styles/app.scss";
 
@@ -32,13 +33,13 @@ function ScrollToTop(): null {
   const { appName, analyticsId } = useBranding();
 
   useEffect(() => {
-    const mainContent = document.getElementById("main-content");
-    if (mainContent) {
-      mainContent.focus({ preventScroll: true });
-    }
-
     const fullPath = pathname + search;
     const routeChanged = prevPathRef.current !== fullPath;
+
+    // Not on a hash-only change: in-page jump links and the Requirements tabs write the hash.
+    if (routeChanged) {
+      document.getElementById("main-content")?.focus({ preventScroll: true });
+    }
 
     // Wizard steps navigate by query string only, so the browser keeps the previous offset.
     if (routeChanged && !hash) {
@@ -76,11 +77,16 @@ function ScrollToTop(): null {
 
     const label = getPageLabel(pathname);
     const home = pathname === "/" || pathname === "/home";
+    const step =
+      label === "Write Application" &&
+      EDITOR_STEPS.find((s) => s.id === new URLSearchParams(search).get("step"));
     const baseTitle = !label
       ? appName
       : home
-      ? `${appName} - ${label}`
-      : `${label} - ${appName}`;
+      ? `${label} – ${appName}`
+      : step
+      ? `${step.label} – ${label} – ${appName}`
+      : `${label} – ${appName}`;
     document.title = baseTitle;
 
     const fullUrl = window.location.origin + fullPath;

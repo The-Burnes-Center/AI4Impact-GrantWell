@@ -31,7 +31,7 @@ export default function ForgotPasswordStep({
             placeholder="Enter your email"
             value={email}
             onChange={(event) => onEmailChange(event.target.value)}
-            disabled={loading}
+            readOnly={loading}
             autoComplete="email"
             required
             className="form-input"
@@ -44,7 +44,7 @@ export default function ForgotPasswordStep({
           <Button
             variant="primary"
             type="submit"
-            disabled={loading}
+            aria-disabled={loading || undefined}
             className="login-submit-button"
             aria-busy={loading}
           >
