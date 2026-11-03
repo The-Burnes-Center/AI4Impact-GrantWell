@@ -58,9 +58,6 @@ export default function HomePage() {
   const searchPlaceholder = canUseAIGrantSearch
     ? "Search by keyword, category, or describe what you need..."
     : "Search by grant name, agency, or category...";
-  const searchAriaLabel = canUseAIGrantSearch
-    ? "Search grants by name, agency, category, or described need"
-    : "Search grants by name, agency, or category";
 
   const handleSearch = useCallback(
     (query: string, committed = false) => {
@@ -332,7 +329,6 @@ export default function HomePage() {
           onClearSearch={handleClearSearch}
           onSearchPendingChange={canUseAIGrantSearch ? setIsSearchPending : undefined}
           searchPlaceholder={searchPlaceholder}
-          searchAriaLabel={searchAriaLabel}
         />
 
         {/* Screen reader announcement */}
