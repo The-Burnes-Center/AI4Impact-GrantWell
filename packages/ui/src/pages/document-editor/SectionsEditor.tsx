@@ -565,7 +565,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                 fontSize: '13px',
                 color: '#065f46',
               }}>
-                <span style={{ fontSize: '15px', flexShrink: 0 }}>&#10003;</span>
+                <span style={{ fontSize: '15px', flexShrink: 0 }} aria-hidden="true">&#10003;</span>
                 Your progress is automatically saved. You can leave and come back anytime.
               </div>
             </div>
@@ -664,7 +664,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               onClick={() => setLabelPromptOpen(true)}
               disabled={savingVersion || generating}
             >
-              <LuSave size={18} className="se-icon--left" />
+              <LuSave size={18} className="se-icon--left" aria-hidden="true" />
               {savingVersion ? "Saving version..." : "Save version"}
             </button>
             <span role="status" aria-live="polite" className="visually-hidden">
@@ -680,7 +680,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                   className="se-prev-btn"
                   onClick={() => setActiveSection(activeSection - 1)}
                 >
-                  <LuChevronLeft size={18} className="se-icon--left" />
+                  <LuChevronLeft size={18} className="se-icon--left" aria-hidden="true" />
                   Previous
                 </button>
               )}
@@ -692,7 +692,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                 {activeSection < sections.length - 1
                   ? "Save section & continue"
                   : "Save section & review application"}
-                <LuChevronRight size={18} className="se-icon--right" />
+                <LuChevronRight size={18} className="se-icon--right" aria-hidden="true" />
               </button>
             </div>
           </div>

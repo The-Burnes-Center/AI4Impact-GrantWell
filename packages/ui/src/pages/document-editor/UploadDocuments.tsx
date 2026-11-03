@@ -502,7 +502,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             color: "#065f46",
           }}
         >
-          <span style={{ fontSize: "18px", flexShrink: 0 }}>&#10003;</span>
+          <span style={{ fontSize: "18px", flexShrink: 0 }} aria-hidden="true">&#10003;</span>
           <span>
             Your progress is automatically saved. You can close this page and come back anytime — your application will be here.
           </span>
