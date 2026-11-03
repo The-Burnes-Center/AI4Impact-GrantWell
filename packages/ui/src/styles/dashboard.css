@@ -868,6 +868,12 @@ body {
   background-color: var(--gw-color-primary-light);
 }
 
+/* Drafts status badges tint the row behind them; on the brand tint some drop below 4.5:1. */
+.table-container[aria-label="Applications"] .table-row:hover {
+  background-color: var(--gw-color-white);
+  box-shadow: inset 3px 0 0 var(--gw-color-primary);
+}
+
 .row-cell {
   padding: 12px 16px;
   display: flex;
@@ -1080,7 +1086,7 @@ body {
   margin-left: 8px;
   font-size: 12px;
   font-weight: 500;
-  color: var(--gw-color-primary);
+  color: var(--gw-color-primary-hover);
   vertical-align: middle;
 }
 
@@ -2649,6 +2655,7 @@ select.form-input {
 
 .review-btn--apply-all:hover:not(:disabled) {
   background-color: var(--gw-color-primary-light);
+  color: var(--gw-color-primary-hover);
 }
 
 .review-btn--apply-all:disabled {
@@ -2897,7 +2904,7 @@ select.form-input {
 
 .review-bulk-bar__count {
   font-weight: 600;
-  color: var(--gw-color-primary);
+  color: var(--gw-color-primary-hover);
   white-space: nowrap;
 }
 
@@ -3040,7 +3047,7 @@ select.form-input {
   gap: 4px;
   font-size: var(--gw-font-size-xs);
   font-weight: var(--gw-font-weight-medium);
-  color: var(--gw-color-primary);
+  color: var(--gw-color-primary-hover);
   white-space: nowrap;
 }
 
