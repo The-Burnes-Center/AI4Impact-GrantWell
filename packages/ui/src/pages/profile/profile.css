@@ -165,7 +165,8 @@
 .profile-section:last-child {
   margin-bottom: 0;
 }
-.profile-section > h3 {
+.profile-section > h3,
+.profile-legend > h3 {
   font-size: var(--gw-font-size-lg, 18px);
   font-weight: var(--gw-font-weight-semibold, 600);
   margin: 0 0 var(--gw-spacing-sm, 8px);
@@ -175,10 +176,20 @@
 .profile-fieldset {
   border: none;
   padding: 0;
-  margin: 0;
+  margin-inline: 0;
 }
 .profile-fieldset[disabled] {
   opacity: 0.5;
+}
+.profile-legend {
+  padding: 0;
+}
+
+.profile-show-password {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gw-spacing-sm, 8px);
+  cursor: pointer;
 }
 
 .profile-alert {
@@ -192,7 +203,7 @@
 }
 .profile-alert--success {
   background: var(--gw-color-success-light, #d4edda);
-  color: var(--gw-color-success, #047857);
+  color: #065f46;
 }
 
 .profile-actions {

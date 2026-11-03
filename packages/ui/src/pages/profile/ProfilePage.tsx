@@ -13,6 +13,8 @@ import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import MfaSetupPanel from "../../components/auth/MfaSetupPanel";
+import PasswordRequirementsList from "../../components/auth/PasswordRequirementsList";
+import { getPasswordRequirements } from "../../components/auth/auth-utils";
 import { clearMfaPromptSnooze } from "../../common/mfa-snooze";
 import { EMAIL_DIGEST, MFA_DEADLINE_ISO, MFA_ENABLED, REGIONS } from "../../common/instance";
 import { deadlineDateText } from "../../common/mfa-deadline";
@@ -326,6 +328,7 @@ export default function ProfilePage() {
                     <input
                       id="profile-org"
                       type="text"
+                      autoComplete="organization"
                       value={orgOrganization}
                       onChange={(e) => {
                         setOrgOrganization(e.target.value);
@@ -342,6 +345,7 @@ export default function ProfilePage() {
                     <input
                       id="profile-title"
                       type="text"
+                      autoComplete="organization-title"
                       value={orgJobTitle}
                       onChange={(e) => {
                         setOrgJobTitle(e.target.value);
@@ -402,8 +406,8 @@ export default function ProfilePage() {
                     <p role="status">Loading…</p>
                   ) : (
                     <form onSubmit={onSave}>
-                      <div className="profile-section">
-                        <h3>Email frequency</h3>
+                      <fieldset className="profile-section profile-fieldset">
+                        <legend className="profile-legend"><h3>Email frequency</h3></legend>
                         <div className="profile-frequency">
                           {FREQUENCIES.map((f) => (
                             <label key={f.value}>
@@ -421,7 +425,7 @@ export default function ProfilePage() {
                             </label>
                           ))}
                         </div>
-                      </div>
+                      </fieldset>
 
                       <fieldset className="profile-fieldset" disabled={frequency === "off"}>
                         <div className="profile-section">
@@ -431,8 +435,8 @@ export default function ProfilePage() {
                           </p>
                         </div>
 
-                        <div className="profile-section">
-                          <h3>Categories</h3>
+                        <fieldset className="profile-section profile-fieldset">
+                          <legend className="profile-legend"><h3>Categories</h3></legend>
                           <div className="profile-chip-toolbar">
                             <input
                               type="search"
@@ -486,12 +490,12 @@ export default function ProfilePage() {
                               ))}
                             </div>
                           )}
-                        </div>
+                        </fieldset>
 
                         <div className="profile-section">
                           <h3>Keywords</h3>
                           <label className="profile-field-label" htmlFor="profile-keywords">
-                            Comma-separated
+                            Keywords (comma-separated)
                           </label>
                           <input
                             id="profile-keywords"
@@ -621,6 +625,7 @@ function MfaSection() {
 
 function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
   const [showPw, setShowPw] = useState(false);
+  const [revealPw, setRevealPw] = useState(false);
   const [oldPw, setOldPw] = useState("");
   const [newPw, setNewPw] = useState("");
   const [confirmPw, setConfirmPw] = useState("");
@@ -643,6 +648,7 @@ function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
       setNewPw("");
       setConfirmPw("");
       setShowPw(false);
+      setRevealPw(false);
       // Cognito's ChangePassword leaves existing refresh tokens valid; only a global sign-out revokes them.
       try {
         await signOut({ global: true });
@@ -685,19 +691,26 @@ function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
         <form onSubmit={changePassword}>
           <div className="profile-section">
             <label className="profile-field-label" htmlFor="pw-old">Current password</label>
-            <input id="pw-old" type="password" value={oldPw} onChange={(e) => setOldPw(e.target.value)} required className="profile-input" />
+            <input id="pw-old" type={revealPw ? "text" : "password"} autoComplete="current-password" value={oldPw} onChange={(e) => setOldPw(e.target.value)} required className="profile-input" />
           </div>
           <div className="profile-section">
             <label className="profile-field-label" htmlFor="pw-new">New password</label>
-            <input id="pw-new" type="password" value={newPw} onChange={(e) => setNewPw(e.target.value)} required className="profile-input" />
+            <input id="pw-new" type={revealPw ? "text" : "password"} autoComplete="new-password" aria-describedby="pw-new-requirements" value={newPw} onChange={(e) => setNewPw(e.target.value)} required className="profile-input" />
+            <PasswordRequirementsList id="pw-new-requirements" requirements={getPasswordRequirements(newPw)} />
           </div>
           <div className="profile-section">
             <label className="profile-field-label" htmlFor="pw-confirm">Confirm new password</label>
-            <input id="pw-confirm" type="password" value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} required className="profile-input" />
+            <input id="pw-confirm" type={revealPw ? "text" : "password"} autoComplete="new-password" value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} required className="profile-input" />
+          </div>
+          <div className="profile-section">
+            <label className="profile-show-password">
+              <input type="checkbox" checked={revealPw} onChange={(e) => setRevealPw(e.target.checked)} />
+              Show passwords
+            </label>
           </div>
           <div className="profile-actions">
             <Button type="submit" loading={busy}>Update password</Button>
-            <Button type="button" variant="ghost" onClick={() => setShowPw(false)} disabled={busy}>Cancel</Button>
+            <Button type="button" variant="ghost" onClick={() => { setShowPw(false); setRevealPw(false); }} disabled={busy}>Cancel</Button>
           </div>
         </form>
       ) : (
