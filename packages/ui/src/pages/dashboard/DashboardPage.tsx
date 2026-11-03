@@ -699,7 +699,7 @@ const Dashboard: React.FC = () => {
                 <div className="search-actions-container">
                   <div className="search-filter-container">
                     <div className="search-input-wrapper">
-                      <LuSearch className="search-icon" size={18} />
+                      <LuSearch className="search-icon" size={18} aria-hidden="true" />
                       <label htmlFor="grant-search" className="visually-hidden">Search grants</label>
                       <input id="grant-search" type="text" className="search-input" placeholder="Search grants..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                     </div>
@@ -756,7 +756,7 @@ const Dashboard: React.FC = () => {
 
                   <div className="action-buttons">
                     <button className="action-button add-button" onClick={() => setUploadNofoModalOpen(true)}>
-                      <LuUpload size={16} className="button-icon" /><span>Add Grant</span>
+                      <LuUpload size={16} className="button-icon" aria-hidden="true" /><span>Add Grant</span>
                     </button>
                     <button className="action-button scraper-button" onClick={() => !isScraping && setScrapeConfirmModalOpen(true)} aria-disabled={isScraping} aria-busy={isScraping}>
                       <LuDownload size={16} className="button-icon" aria-hidden="true" /><span>{isScraping ? "Scraping..." : "Auto-Scrape Grants"}</span><span className="visually-hidden"> from grants.gov</span>
@@ -767,7 +767,7 @@ const Dashboard: React.FC = () => {
                 <Modal isOpen={scrapeConfirmModalOpen} onClose={() => setScrapeConfirmModalOpen(false)} title="Confirm Auto-Scrape">
                   <div className="modal-form">
                     <div className="delete-confirmation">
-                      <LuInfo size={32} className="warning-icon dashboard-info-icon" />
+                      <LuInfo size={32} className="warning-icon dashboard-info-icon" aria-hidden="true" />
                       <p>Are you sure you want to scrape grants now?</p>
                     </div>
                     <p className="warning-text">This will search for new grants on grants.gov and add them to the system. This process may take a few minutes.</p>

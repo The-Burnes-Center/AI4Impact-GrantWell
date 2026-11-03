@@ -190,9 +190,9 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
                 tabIndex={-1}
               >
                 {nofo.status === "active" ? (
-                  <><LuArchive size={16} className="menu-icon" /><span>Archive</span></>
+                  <><LuArchive size={16} className="menu-icon" aria-hidden="true" /><span>Archive</span></>
                 ) : (
-                  <><LuCheck size={16} className="menu-icon" /><span>Mark Active</span></>
+                  <><LuCheck size={16} className="menu-icon" aria-hidden="true" /><span>Mark Active</span></>
                 )}
               </button>
               <button
@@ -201,7 +201,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
                 role="menuitem"
                 tabIndex={-1}
               >
-                <LuPencil size={16} className="menu-icon" />
+                <LuPencil size={16} className="menu-icon" aria-hidden="true" />
                 <span>Edit</span>
               </button>
               <button
@@ -210,7 +210,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
                 role="menuitem"
                 tabIndex={-1}
               >
-                <LuFilePen size={16} className="menu-icon" />
+                <LuFilePen size={16} className="menu-icon" aria-hidden="true" />
                 <span>Edit Requirements</span>
               </button>
               <button
@@ -219,7 +219,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
                 role="menuitem"
                 tabIndex={-1}
               >
-                <LuTrash size={16} className="menu-icon" />
+                <LuTrash size={16} className="menu-icon" aria-hidden="true" />
                 <span>Delete</span>
               </button>
             </>
@@ -232,7 +232,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
               tabIndex={-1}
               title="Add questions applicants answer in Write Application"
             >
-              <LuListChecks size={16} className="menu-icon" />
+              <LuListChecks size={16} className="menu-icon" aria-hidden="true" />
               <span>Custom questions</span>
             </button>
           )}
@@ -245,7 +245,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
                 tabIndex={-1}
                 title="Add guidance shown only to your state's users"
               >
-                <LuMessageSquarePlus size={16} className="menu-icon" />
+                <LuMessageSquarePlus size={16} className="menu-icon" aria-hidden="true" />
                 <span>State guidance</span>
               </button>
               <button
@@ -255,7 +255,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
                 tabIndex={-1}
                 title="Create your state's own editable copy of this federal grant"
               >
-                <LuCopy size={16} className="menu-icon" />
+                <LuCopy size={16} className="menu-icon" aria-hidden="true" />
                 <span>Create state copy</span>
               </button>
             </>

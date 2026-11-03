@@ -522,13 +522,13 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                               ...(MFA_ENABLED
                                 ? [{
                                     label: "Reset two-step verification",
-                                    icon: <LuKeyRound size={16} />,
+                                    icon: <LuKeyRound size={16} aria-hidden="true" />,
                                     onSelect: () => setMfaResetTarget(user),
                                   } satisfies RowAction]
                                 : []),
                               {
                                 label: "Delete",
-                                icon: <LuTrash size={16} />,
+                                icon: <LuTrash size={16} aria-hidden="true" />,
                                 onSelect: () => setDeleteTarget(user),
                                 danger: true,
                               },

@@ -829,17 +829,17 @@ const NOFOsTab = React.memo(function NOFOsTab({
         <div className="modal-form">
           <p className="modal-description">Upload a grant document in PDF, TXT, or DOCX format.</p>
           <div className="info-box">
-            <LuInfo size={18} className="info-icon" />
+            <LuInfo size={18} className="info-icon" aria-hidden="true" />
             <span>After you upload, the grant appears in the list above and processes automatically (about 5&ndash;7 minutes). You can watch each stage on its row &mdash; most grants publish on their own, and only ones that need a closer look are flagged for review.</span>
           </div>
           <div className="form-group">
             <label htmlFor="file-upload">Select File</label>
             <div className="file-upload-container">
               <input id="file-upload" type="file" accept=".pdf,.txt,.docx" onChange={handleFileSelect} className="file-input" />
-              <div className="file-upload-button"><LuUpload size={16} className="button-icon" /><span>Select File</span></div>
+              <div className="file-upload-button"><LuUpload size={16} className="button-icon" aria-hidden="true" /><span>Select File</span></div>
             </div>
             {selectedFile && (
-              <div className="selected-file"><LuFile size={16} className="file-icon" /><span>{selectedFile.name}</span></div>
+              <div className="selected-file"><LuFile size={16} className="file-icon" aria-hidden="true" /><span>{selectedFile.name}</span></div>
             )}
           </div>
           {selectedFile && (
@@ -924,7 +924,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 !uploadCategory
               }
             >
-              <LuUpload size={16} className="button-icon" /><span>Upload Grant</span>
+              <LuUpload size={16} className="button-icon" aria-hidden="true" /><span>Upload Grant</span>
             </button>
           </div>
         </div>

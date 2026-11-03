@@ -463,7 +463,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           >
             <div className="modal-form">
               <div className="delete-confirmation">
-                <LuTriangleAlert size={32} className="warning-icon dashboard-info-icon" />
+                <LuTriangleAlert size={32} className="warning-icon dashboard-info-icon" aria-hidden="true" />
                 <p>
                   Are you sure you want to reject <strong>{review.nofo_name}</strong>?
                 </p>
