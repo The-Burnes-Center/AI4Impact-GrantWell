@@ -66,7 +66,7 @@ export default function SignUpStep({
             placeholder="Enter your email"
             value={email}
             onChange={(event) => onEmailChange(event.target.value)}
-            disabled={loading}
+            readOnly={loading}
             autoComplete="email"
             required
             className="form-input"
@@ -85,7 +85,7 @@ export default function SignUpStep({
             placeholder="Enter password"
             value={password}
             onChange={(event) => onPasswordChange(event.target.value)}
-            disabled={loading}
+            readOnly={loading}
             autoComplete="new-password"
             required
             className="form-input"
@@ -112,7 +112,7 @@ export default function SignUpStep({
             placeholder="Re-enter password"
             value={confirmPassword}
             onChange={(event) => onConfirmPasswordChange(event.target.value)}
-            disabled={loading}
+            readOnly={loading}
             autoComplete="new-password"
             required
             className="form-input"
@@ -171,7 +171,7 @@ export default function SignUpStep({
           <Button
             variant="primary"
             type="submit"
-            disabled={loading}
+            aria-disabled={loading || undefined}
             className="login-submit-button"
           >
             {loading ? (

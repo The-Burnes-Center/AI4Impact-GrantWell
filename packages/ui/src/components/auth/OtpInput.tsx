@@ -111,7 +111,7 @@ export default function OtpInput({
           onKeyDown={(event) => handleKeyDown(index, event)}
           onPaste={(event) => handlePaste(index, event)}
           onFocus={(event) => event.target.select()}
-          disabled={loading}
+          readOnly={loading}
           inputMode="numeric"
           maxLength={LENGTH}
           autoComplete={index === 0 ? "one-time-code" : "off"}

@@ -66,6 +66,23 @@ describe("MfaSetupPanel", () => {
     expect(auth.verifyTOTPSetup).not.toHaveBeenCalled();
   });
 
+  it("keeps focus on the button while the code is checked, and ignores a second press", async () => {
+    let finish: () => void = () => {};
+    auth.verifyTOTPSetup.mockReturnValue(new Promise<void>((resolve) => { finish = resolve; }));
+    const { onEnrolled, user } = renderPanel();
+    await screen.findByText("SECRET123");
+    await enterCode(user, "123456");
+    const button = screen.getByRole("button", { name: "Turn on two-step verification" });
+    await user.click(button);
+
+    expect(button).toHaveFocus();
+    expect(button).toHaveAttribute("aria-disabled", "true");
+    await user.click(button);
+    expect(auth.verifyTOTPSetup).toHaveBeenCalledTimes(1);
+    finish();
+    await waitFor(() => expect(onEnrolled).toHaveBeenCalledTimes(1));
+  });
+
   it("keeps the panel open with an error when the code is rejected", async () => {
     auth.verifyTOTPSetup.mockRejectedValue(new Error("CodeMismatchException"));
     vi.spyOn(console, "error").mockImplementation(() => {});

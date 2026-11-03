@@ -30,7 +30,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: ButtonSize;
   /** Whether the button takes full width */
   fullWidth?: boolean;
-  /** Loading state - shows spinner and disables button */
+  /** Loading state - shows spinner and ignores clicks, but stays focusable */
   loading?: boolean;
   /** Children elements */
   children: React.ReactNode;
@@ -57,6 +57,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       disabled,
       children,
       style,
+      onClick,
       onMouseEnter,
       onMouseLeave,
       ...props
@@ -73,6 +74,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       opacity: isDisabled ? 0.6 : 1,
       cursor: isDisabled ? "not-allowed" : "pointer",
       ...style,
+    };
+
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (loading) {
+        e.preventDefault();
+        return;
+      }
+      onClick?.(e);
     };
 
     const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -96,7 +105,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         style={baseStyle}
-        disabled={isDisabled}
+        disabled={disabled}
+        onClick={handleClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         aria-disabled={isDisabled}

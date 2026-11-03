@@ -94,7 +94,8 @@
 }
 
 .auth-login-card .form-input:disabled,
-.auth-login-card .form-control.form-input:disabled {
+.auth-login-card .form-control.form-input:disabled,
+.auth-login-card .form-control.form-input[readonly] {
   color: #64748b;
   background: #f1f5f9;
   opacity: 1;
