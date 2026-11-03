@@ -181,8 +181,6 @@ export default function HomePage() {
       setRedirectMessage(message);
       searchParams.delete("message");
       setSearchParams(searchParams, { replace: true });
-      const timer = setTimeout(() => setRedirectMessage(null), 5000);
-      return () => clearTimeout(timer);
     }
   }, [searchParams, setSearchParams]);
 
@@ -260,13 +258,12 @@ export default function HomePage() {
         </div>
 
         {/* Redirect message */}
-        {redirectMessage && (
-          <div className="redirect-banner">
-            {/* The message is informational, and the close button sits outside the
-                region so its label is not read as part of the announcement. */}
-            <div style={{ flex: 1 }} role="status" aria-live="polite">
-              <p className="redirect-banner__text">{redirectMessage}</p>
-            </div>
+        {/* Pre-mounted so the message is announced; the close button stays outside the region. */}
+        <div className={redirectMessage ? "redirect-banner" : undefined}>
+          <div style={{ flex: 1 }} role="status" aria-live="polite">
+            {redirectMessage && <p className="redirect-banner__text">{redirectMessage}</p>}
+          </div>
+          {redirectMessage && (
             <button
               onClick={() => setRedirectMessage(null)}
               className="redirect-banner__close"
@@ -274,8 +271,8 @@ export default function HomePage() {
             >
               &times;
             </button>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Error state */}
         {error && (
@@ -342,7 +339,8 @@ export default function HomePage() {
               Selected:{" "}
               <strong className="cta-selected__name">{selectedDocument.label}</strong>
             </p>
-            <nav
+            <div
+              role="group"
               aria-label={`Actions for ${selectedDocument.label}`}
               className={`cta-buttons-container cta-nav${highlightCTAButtons ? " highlight cta-nav--highlighted" : ""}`}
             >
@@ -355,7 +353,7 @@ export default function HomePage() {
               <button className="cta-btn" onClick={handleGetHelp}>
                 Chat with AI
               </button>
-            </nav>
+            </div>
           </div>
         )}
 
