@@ -297,8 +297,12 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       });
       setVersionLabel("");
       setLabelPromptOpen(false);
+      addNotification("success", "Version saved.");
     } catch (error) {
       console.error("Error saving version:", error);
+      // Closed so the alert is not hidden behind the modal; the label is kept for a retry.
+      setLabelPromptOpen(false);
+      addNotification("error", "The version could not be saved. Please try again.");
     } finally {
       setSavingVersion(false);
     }
