@@ -3499,6 +3499,7 @@ select.form-input {
 .digest-segment__option:focus-visible {
   outline: 2px solid var(--gw-color-primary-active);
   outline-offset: -2px;
+  box-shadow: inset 0 0 0 4px var(--gw-color-white, #fff);
 }
 
 .digest-preview {

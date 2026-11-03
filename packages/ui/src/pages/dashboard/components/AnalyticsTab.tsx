@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -18,6 +18,7 @@ import type {
   RankedItem,
 } from "../../../common/api-client/analytics-client";
 import { SINGLE_STATE, SUPPORTED_STATES, stateNameFromCode } from "../../../common/states";
+import { DEFAULT_COLORS, contrastRatio, mix } from "../../../common/palette";
 import OutcomesSection from "./OutcomesSection";
 import "../../../styles/analytics.css";
 
@@ -33,28 +34,35 @@ interface AnalyticsTabProps {
   userState: string;
 }
 
-// Recharts needs literal colors, so the branded tokens are read at render. Two-series charts pair the
-// primary with the highlight (distinct hues on the default palette: CVD ΔE 37.7), backed by direct
-// value labels + a table equivalent for the low-contrast highlight.
-const cssVar = (name: string, fallback: string) =>
-  getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+// Recharts needs literal colors, so the branded tokens are read at render. Fills are primary, primary-active
+// or a mix of the two; the palette rules hold both at 4.5:1 on white and a mix is never lighter than its ends.
+const HEX = /^#[0-9a-f]{6}$/i;
+const cssVar = (name: string, fallback: string) => {
+  const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return HEX.test(value) ? value : fallback;
+};
+
+const WHITE = "#FFFFFF"; // color-lint-allow
+const FUNNEL_STEPS = 7;
+
+/** Darkens a palette that skipped the brand contrast check until it holds 3:1 on white. */
+function onWhite(color: string): string {
+  let shade = color;
+  for (let weight = 0.1; contrastRatio(shade, WHITE) < 3 && weight <= 1; weight += 0.1) {
+    shade = mix(color, "#000000", weight); // color-lint-allow
+  }
+  return shade;
+}
 
 function chartColors() {
-  const primary = cssVar("--gw-color-primary", "#23776C");
+  const primary = onWhite(cssVar("--gw-color-primary", DEFAULT_COLORS.primary));
+  const primaryActive = onWhite(cssVar("--gw-color-primary-active", DEFAULT_COLORS.primaryActive));
   return {
-    registered: primary,
-    active: cssVar("--gw-color-highlight", "#F6C51B"),
+    registered: primaryActive,
+    active: primary,
     single: primary,
-    // Sequential ramp for the ordered funnel, light → dark.
-    funnel: [
-      cssVar("--gw-color-primary-soft", "#8CC0B7"),
-      cssVar("--gw-color-primary-mid", "#5BA294"),
-      cssVar("--gw-color-accent", "#388557"),
-      primary,
-      cssVar("--gw-color-primary-deep", "#1B5D54"),
-      cssVar("--gw-color-primary-hover", "#195C53"),
-      cssVar("--gw-color-primary-active", "#244140"),
-    ],
+    // Sequential ramp for the ordered funnel, primary → primary-active.
+    funnel: Array.from({ length: FUNNEL_STEPS }, (_, i) => mix(primary, primaryActive, i / (FUNNEL_STEPS - 1))),
   };
 }
 const AXIS_INK = "#52514e";
@@ -86,6 +94,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
   );
   const [loading, setLoading] = useState(true);
   const colors = useMemo(chartColors, []);
+  const hatchId = `analytics-hatch-${useId().replace(/:/g, "")}`;
 
   const fetchAnalytics = useCallback(
     async (w: AnalyticsWindow, state: string) => {
@@ -189,6 +198,14 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
             subtitle={`Registered and active (active = signed in within ${data.window} days)`}
             empty={data.usersByState.length === 0}
           >
+            <svg width="0" height="0" aria-hidden="true" focusable="false" style={{ position: "absolute" }}>
+              <defs>
+                <pattern id={hatchId} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                  <rect width="6" height="6" fill={colors.active} />
+                  <line x1="0" y1="0" x2="0" y2="6" stroke={WHITE} strokeWidth="2" />
+                </pattern>
+              </defs>
+            </svg>
             <ResponsiveContainer width="100%" height={280}>
               <BarChart
                 accessibilityLayer={false}
@@ -207,7 +224,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
                 <Bar dataKey="Registered" fill={colors.registered} radius={[4, 4, 0, 0]} maxBarSize={44}>
                   <LabelList dataKey="Registered" position="top" style={{ fill: AXIS_INK, fontSize: 11 }} />
                 </Bar>
-                <Bar dataKey="Active" fill={colors.active} radius={[4, 4, 0, 0]} maxBarSize={44}>
+                <Bar dataKey="Active" fill={`url(#${hatchId})`} stroke={colors.active} radius={[4, 4, 0, 0]} maxBarSize={44}>
                   <LabelList dataKey="Active" position="top" style={{ fill: AXIS_INK, fontSize: 11 }} />
                 </Bar>
               </BarChart>
