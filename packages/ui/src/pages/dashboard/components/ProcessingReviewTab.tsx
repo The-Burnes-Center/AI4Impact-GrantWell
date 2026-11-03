@@ -402,18 +402,18 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
               className="review-btn review-btn--bulk-reprocess"
               onClick={() => void handleBulkReprocess()}
               disabled={!canReprocess || bulkAction !== null}
-              aria-label={`Reprocess Selected — ${selected.size} grant${selected.size === 1 ? "" : "s"}`}
+              aria-label={`${bulkAction === "reprocess" ? "Reprocessing..." : "Reprocess Selected"} — ${selected.size} grant${selected.size === 1 ? "" : "s"}`}
             >
-              <LuRefreshCw size={14} className={bulkAction === "reprocess" ? "refresh-icon" : ""} />
+              <LuRefreshCw size={14} className={bulkAction === "reprocess" ? "refresh-icon" : ""} aria-hidden="true" />
               <span>{bulkAction === "reprocess" ? "Reprocessing..." : "Reprocess Selected"}</span>
             </button>
             <button
               className="review-btn review-btn--needs-reupload"
               onClick={() => void handleBulkNeedsReupload()}
               disabled={!canMarkReupload || bulkAction !== null}
-              aria-label={`Mark ${selected.size} selected grants as needs re-upload`}
+              aria-label={`${bulkAction === "needs_reupload" ? "Marking..." : "Needs Re-upload"} — mark ${selected.size} selected grant${selected.size === 1 ? "" : "s"} as needs re-upload`}
             >
-              <LuUpload size={14} />
+              <LuUpload size={14} aria-hidden="true" />
               <span>{bulkAction === "needs_reupload" ? "Marking..." : "Needs Re-upload"}</span>
             </button>
             <button

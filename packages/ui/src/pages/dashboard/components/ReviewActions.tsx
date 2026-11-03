@@ -47,6 +47,9 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
   onNeedsReupload,
 }) => {
   const busy = actionInProgress !== null;
+  // Accessible names start with the visible (busy) label so SC 2.5.3 holds while an action runs.
+  const rejectLabel = actionInProgress === "reject" ? "Rejecting..." : "Reject";
+  const reprocessLabel = actionInProgress === "reprocess" ? "Reprocessing..." : "Reprocess";
 
   // needs_reupload is a terminal holding state: the only meaningful moves are
   // supplying the new document or abandoning the entry.
@@ -67,10 +70,10 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
           className="review-btn review-btn--reject"
           onClick={onReject}
           disabled={busy}
-          aria-label="Reject this grant"
+          aria-label={`${rejectLabel} — reject this grant`}
         >
           <LuX size={14} aria-hidden="true" />
-          {actionInProgress === "reject" ? "Rejecting..." : "Reject"}
+          {rejectLabel}
         </button>
       </div>
     );
@@ -123,14 +126,14 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
       className={`review-btn ${recommended === "reprocess" ? "review-btn--approve review-btn--recommended" : "review-btn--reprocess"}`}
       onClick={onReprocess}
       disabled={busy}
-      aria-label={rec("reprocess", "Reprocess this grant through the pipeline")}
+      aria-label={rec("reprocess", `${reprocessLabel} — reprocess this grant through the pipeline`)}
     >
       <LuRefreshCw
         size={14}
         className={actionInProgress === "reprocess" ? "refresh-icon" : ""}
         aria-hidden="true"
       />
-      {actionInProgress === "reprocess" ? "Reprocessing..." : "Reprocess"}
+      {reprocessLabel}
     </button>
   );
 
@@ -140,10 +143,10 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
       className={`review-btn ${recommended === "reject" ? "review-btn--reject review-btn--recommended" : "review-btn--reject"}`}
       onClick={onReject}
       disabled={busy}
-      aria-label={rec("reject", "Reject this grant")}
+      aria-label={rec("reject", `${rejectLabel} — reject this grant`)}
     >
       <LuX size={14} aria-hidden="true" />
-      {actionInProgress === "reject" ? "Rejecting..." : "Reject"}
+      {rejectLabel}
     </button>
   );
 

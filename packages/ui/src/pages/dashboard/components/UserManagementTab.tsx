@@ -509,9 +509,9 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                             className="feature-rollouts-primary-button"
                             onClick={() => !isSaving && void handleSave(user)}
                             aria-disabled={isSaving}
-                            aria-label={`Save changes for ${user.email}`}
                           >
                             {isSaving ? "Saving..." : "Save"}
+                            <span className="visually-hidden"> changes for {user.email}</span>
                           </button>
                         )}
                         {!isSelf && (

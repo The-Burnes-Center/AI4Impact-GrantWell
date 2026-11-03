@@ -758,8 +758,8 @@ const Dashboard: React.FC = () => {
                     <button className="action-button add-button" onClick={() => setUploadNofoModalOpen(true)}>
                       <LuUpload size={16} className="button-icon" /><span>Add Grant</span>
                     </button>
-                    <button className="action-button scraper-button" onClick={() => !isScraping && setScrapeConfirmModalOpen(true)} aria-disabled={isScraping} aria-label="Auto-scrape grants from grants.gov" aria-busy={isScraping}>
-                      <LuDownload size={16} className="button-icon" aria-hidden="true" /><span>{isScraping ? "Scraping..." : "Auto-Scrape Grants"}</span>
+                    <button className="action-button scraper-button" onClick={() => !isScraping && setScrapeConfirmModalOpen(true)} aria-disabled={isScraping} aria-busy={isScraping}>
+                      <LuDownload size={16} className="button-icon" aria-hidden="true" /><span>{isScraping ? "Scraping..." : "Auto-Scrape Grants"}</span><span className="visually-hidden"> from grants.gov</span>
                     </button>
                   </div>
                 </div>
