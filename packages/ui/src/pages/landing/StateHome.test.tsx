@@ -78,9 +78,11 @@ describe("state home page", () => {
 
   it("moves focus to the card title when the user switches to create account", async () => {
     renderHome(colorado);
+    expect(document.title).toBe("Sign in – GrantWell");
 
     await userEvent.click(screen.getByRole("button", { name: "Create account" }));
     expect(screen.getByRole("heading", { level: 2, name: /create/i })).toHaveFocus();
+    expect(document.title).toBe("Create account – GrantWell");
   });
 
   it("first renders exactly the page the build pre-renders, so the hand-over changes nothing on screen", () => {

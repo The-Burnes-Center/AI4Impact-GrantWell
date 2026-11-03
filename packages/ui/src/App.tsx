@@ -11,6 +11,7 @@ import NotificationBar from "./components/notifications/NotificationBar";
 import { AccessDeniedProvider } from "./components/access-denied/AccessDeniedManager";
 import { useBranding } from "./common/branding";
 import { IS_PROD } from "./common/instance";
+import { EDITOR_STEPS } from "./common/helpers/document-editor-utils";
 import NotFoundPage from "./pages/not-found/NotFoundPage";
 import "./styles/app.scss";
 
@@ -76,10 +77,15 @@ function ScrollToTop(): null {
 
     const label = getPageLabel(pathname);
     const home = pathname === "/" || pathname === "/home";
+    const step =
+      label === "Write Application" &&
+      EDITOR_STEPS.find((s) => s.id === new URLSearchParams(search).get("step"));
     const baseTitle = !label
       ? appName
       : home
       ? `${appName} - ${label}`
+      : step
+      ? `${step.label} – ${label} – ${appName}`
       : `${label} - ${appName}`;
     document.title = baseTitle;
 

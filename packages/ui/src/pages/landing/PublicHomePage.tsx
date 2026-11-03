@@ -18,8 +18,8 @@ export default function PublicHomePage({
 }) {
   const { appName } = useBranding();
   useEffect(() => {
-    document.title = `Sign in - ${appName}`;
-  }, [appName]);
+    if (signInPending) document.title = `Sign in – ${appName}`;
+  }, [signInPending, appName]);
 
   const PublicHome = publicHome();
   if (!PublicHome) return null;

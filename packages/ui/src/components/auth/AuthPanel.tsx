@@ -272,6 +272,10 @@ export default function AuthPanel({
     }
   }, [view]);
 
+  useEffect(() => {
+    document.title = `${cardCopy.title} – ${branding.appName}`;
+  }, [cardCopy.title, branding.appName]);
+
   const setStepError = (message: string, fields: AuthErrorField[] = []) => {
     setError(message);
     setErrorFields(fields);

@@ -1,8 +1,6 @@
-import { useEffect } from "react";
 import "../../styles/marketing-landing.css";
 import AuthPanel from "../../components/auth/AuthPanel";
 import { clearSessionEndedNotice, hasSessionEndedNotice } from "../../common/session-ended";
-import { useBranding } from "../../common/branding";
 import {
   LandingNavbar,
   OmniHeader,
@@ -16,11 +14,6 @@ interface LoginPageProps {
 }
 
 export default function LoginPage({ onAuthenticated }: LoginPageProps) {
-  const { appName } = useBranding();
-  useEffect(() => {
-    document.title = `Sign in - ${appName}`;
-  }, [appName]);
-
   return (
     <div className="marketing">
       <SkipLink />

@@ -14,6 +14,7 @@ import { useAdminCheck } from "../../hooks/use-admin-check";
 import { useFocusTrap } from "../../hooks/use-focus-trap";
 import { SINGLE_STATE, stateNameFromCode } from "../../common/states";
 import { REGIONS } from "../../common/instance";
+import { useBranding } from "../../common/branding";
 import Button from "../ui/Button";
 import "./profile-gate.css";
 
@@ -83,6 +84,16 @@ export default function ProfileGate({ children }: ProfileGateProps) {
   const gating = !checking && needsProfile;
   // No onEscape: the gate is a hard block, so Escape must not dismiss it.
   const dialogRef = useFocusTrap<HTMLDivElement>({ isOpen: gating });
+  const { appName } = useBranding();
+
+  useEffect(() => {
+    if (!gating) return;
+    const previous = document.title;
+    document.title = `Complete your profile – ${appName}`;
+    return () => {
+      document.title = previous;
+    };
+  }, [gating, appName]);
 
   useEffect(() => {
     let active = true;

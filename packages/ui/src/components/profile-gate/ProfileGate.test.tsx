@@ -30,6 +30,7 @@ describe("ProfileGate region", () => {
   it("asks no region on a deployment without regions", async () => {
     const { net, user } = renderGate();
     await fillOrgFields(user);
+    expect(document.title).toBe("Complete your profile – GrantWell");
     expect(screen.queryByLabelText(/Region/)).toBeNull();
     await user.click(screen.getByRole("button", { name: /Save and continue/ }));
     expect(await screen.findByText("app")).toBeInTheDocument();
