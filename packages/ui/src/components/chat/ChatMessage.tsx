@@ -23,6 +23,7 @@ import "../../styles/app.scss";
 export interface ChatMessageProps {
   message: ChatBotHistoryItem;
   documentIdentifier?: string;
+  replyNumber?: number;
 }
 
 function ChatMessage(props: ChatMessageProps) {
@@ -252,19 +253,19 @@ function ChatMessage(props: ChatMessageProps) {
                         components={{
                           h1(props) {
                             const { children, ...rest } = props;
-                            return <h3 {...rest}>{children}</h3>;
+                            return <h2 {...rest}>{children}</h2>;
                           },
                           h2(props) {
                             const { children, ...rest } = props;
-                            return <h4 {...rest}>{children}</h4>;
+                            return <h3 {...rest}>{children}</h3>;
                           },
                           h3(props) {
                             const { children, ...rest } = props;
-                            return <h5 {...rest}>{children}</h5>;
+                            return <h4 {...rest}>{children}</h4>;
                           },
                           h4(props) {
                             const { children, ...rest } = props;
-                            return <h6 {...rest}>{children}</h6>;
+                            return <h5 {...rest}>{children}</h5>;
                           },
                           h5(props) {
                             const { children, ...rest } = props;
@@ -343,6 +344,11 @@ function ChatMessage(props: ChatMessageProps) {
                           onClick={() => setSourcesExpanded(!sourcesExpanded)}
                           aria-expanded={sourcesExpanded}
                           aria-controls={sourcesExpanded ? sourceListId : undefined}
+                          aria-label={
+                            props.replyNumber
+                              ? `Sources (${totalSourceCount}) for reply ${props.replyNumber}`
+                              : undefined
+                          }
                           style={{
                             display: "flex",
                             alignItems: "center",
@@ -381,7 +387,7 @@ function ChatMessage(props: ChatMessageProps) {
                                 <div aria-hidden="true" style={{
                                   fontSize: "11px",
                                   fontWeight: 600,
-                                  color: "#6b7280",
+                                  color: "var(--gw-color-text-status, #4b5563)",
                                   textTransform: "uppercase",
                                   letterSpacing: "0.5px",
                                   marginBottom: "4px",
@@ -417,7 +423,7 @@ function ChatMessage(props: ChatMessageProps) {
                                 <div aria-hidden="true" style={{
                                   fontSize: "11px",
                                   fontWeight: 600,
-                                  color: "#6b7280",
+                                  color: "var(--gw-color-text-status, #4b5563)",
                                   textTransform: "uppercase",
                                   letterSpacing: "0.5px",
                                   marginBottom: "4px",
@@ -489,7 +495,11 @@ function ChatMessage(props: ChatMessageProps) {
                       e.currentTarget.style.outline = "none";
                       e.currentTarget.style.outlineOffset = "0";
                     }}
-                    aria-label={copied ? "Copied to clipboard" : "Copy message to clipboard"}
+                    aria-label={
+                      copied
+                        ? "Copied to clipboard"
+                        : `Copy ${props.replyNumber ? `reply ${props.replyNumber}` : "message"} to clipboard`
+                    }
                   >
                     {copied ? (
                       <FaCheck size={14} aria-hidden="true" style={{ color: "#059669" }} />

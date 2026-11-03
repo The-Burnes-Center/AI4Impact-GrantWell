@@ -13,17 +13,12 @@ export const inputContainerStyle: React.CSSProperties = {
   width: "100%",
 };
 
-// Visually hidden label - accessible to screen readers
 export const labelStyle: React.CSSProperties = {
-  position: "absolute",
-  width: "1px",
-  height: "1px",
-  padding: "0",
-  margin: "-1px",
-  overflow: "hidden",
-  clip: "rect(0, 0, 0, 0)",
-  whiteSpace: "nowrap",
-  border: "0",
+  display: "block",
+  marginBottom: "6px",
+  fontSize: "16px",
+  fontWeight: 600,
+  color: "var(--gw-color-heading)",
 };
 
 export const searchIconStyle: React.CSSProperties = {

@@ -28,3 +28,23 @@ describe("ChatMessage markdown", () => {
     expect(container.innerHTML).not.toMatch(/javascript:|insecure\.example|evil\.example/);
   });
 });
+
+describe("ChatMessage reply", () => {
+  it("names its copy and sources buttons after the reply number and starts headings at h2", () => {
+    renderApp(
+      <ChatMessage
+        replyNumber={3}
+        message={{
+          type: ChatBotMessageType.AI,
+          content: "# Summary\n\n## Budget\n\nText",
+          metadata: { Sources: [{ title: "NOFO.pdf", uri: "s3://bucket/nofo.pdf" }] },
+        }}
+      />
+    );
+
+    expect(screen.getByRole("button", { name: "Copy reply 3 to clipboard" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Sources (1) for reply 3" })).toHaveTextContent("Sources (1)");
+    expect(screen.getByRole("heading", { level: 2, name: "Summary" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 3, name: "Budget" })).toBeInTheDocument();
+  });
+});

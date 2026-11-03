@@ -28,7 +28,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   onClearSearch,
   onSearchPendingChange,
   searchPlaceholder,
-  searchAriaLabel,
 }) => {
   const [internalSearchTerm, setInternalSearchTerm] = useState("");
   const [tip] = useState(() => SEARCH_TIPS[Math.floor(Math.random() * SEARCH_TIPS.length)]);
@@ -140,7 +139,6 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
         isLoading={isLoading}
         isSearching={isSearching}
         placeholder={searchPlaceholder}
-        ariaLabel={searchAriaLabel}
         disabled={isLoading}
         onChange={handleInputChange}
         onFocus={() => {}}

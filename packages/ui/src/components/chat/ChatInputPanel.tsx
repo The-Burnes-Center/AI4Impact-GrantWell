@@ -33,7 +33,7 @@ const styles = {
   inputBorder: {
     border: "2px solid #767676",
     borderRadius: "16px",
-    overflow: "hidden",
+    position: "relative" as const,
     backgroundColor: "white",
     display: "flex",
     alignItems: "flex-end",
@@ -741,7 +741,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           title="Your browser doesn't support speech recognition"
           aria-hidden="true"
         >
-          <LuMicOff size={20} />
+          <LuMicOff size={20} aria-hidden="true" />
         </span>
       )}
 
@@ -774,7 +774,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
             borderRadius: "50%",
             backgroundColor: "#ef4444",
             animation: "pulse 1.5s ease-in-out infinite",
-          }} />
+          }} aria-hidden="true" />
           Listening... Click to stop
         </div>
       )}
@@ -786,6 +786,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
         aria-describedby="chat-input-help"
         style={{
           flex: 1,
+          minWidth: 0,
           resize: "none",
           padding: "12px 8px",
           border: "none",
@@ -824,7 +825,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           aria-label="Stop generating response"
           title="Stop generating"
         >
-          <LuSquare size={16} fill="white" />
+          <LuSquare size={16} fill="white" aria-hidden="true" />
         </button>
       ) : (
         <button
@@ -848,7 +849,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           aria-label="Send message"
           title="Send message"
         >
-          <LuSend size={20} />
+          <LuSend size={20} aria-hidden="true" />
         </button>
       )}
       </div>

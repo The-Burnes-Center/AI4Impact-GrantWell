@@ -11,6 +11,7 @@ import { useNotifications } from "../notifications/NotificationManager";
 import { LuCircleHelp, LuChevronDown, LuLoader } from "react-icons/lu";
 import { parseChatHistory } from "./utils";
 import { KB_SYNC_UNKNOWN_MESSAGE, type KbSyncStatus } from "../../hooks/use-kb-sync-poll";
+import chatStyles from "../../styles/chat.module.scss";
 
 // Styles for components
 const styles: Record<string, React.CSSProperties> = {
@@ -406,6 +407,10 @@ export default function Chat(props: {
     }
   };
 
+  let replyCount = 0;
+  const replyNumber = (message: ChatBotHistoryItem) =>
+    message.type === ChatBotMessageType.AI ? ++replyCount : undefined;
+
   return (
     <section aria-label="GrantWell assistant chat" style={styles.chatContainer}>
       {/* Not role="log": every streamed chunk rewrites the last turn, so a live
@@ -417,12 +422,13 @@ export default function Chat(props: {
         aria-label="Chat transcript"
         // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- scrollable region needs keyboard access (WCAG 2.1.1)
         tabIndex={0}
+        className={chatStyles.transcript}
         style={styles.messageArea}
       >
         <ul style={{ ...styles.messageList, listStyle: "none", padding: 0, margin: 0 }}>
           {messageHistory.length === 0 && !session?.loading && (
             <li style={styles.infoAlert}>
-              <LuCircleHelp size={20} style={styles.infoIcon} />
+              <LuCircleHelp size={20} style={styles.infoIcon} aria-hidden="true" />
               <span>
                 AI Models can make mistakes. Be mindful in validating important
                 information.
@@ -446,13 +452,13 @@ export default function Chat(props: {
 
           {olderMessages.map((message, idx) => (
             <li key={`older-${olderMessages.length - idx}`}>
-              <ChatMessage message={message} documentIdentifier={props.documentIdentifier} />
+              <ChatMessage message={message} documentIdentifier={props.documentIdentifier} replyNumber={replyNumber(message)} />
             </li>
           ))}
 
           {messageHistory.map((message, idx) => (
             <li key={idx}>
-              <ChatMessage message={message} documentIdentifier={props.documentIdentifier} />
+              <ChatMessage message={message} documentIdentifier={props.documentIdentifier} replyNumber={replyNumber(message)} />
             </li>
           ))}
 
@@ -489,7 +495,7 @@ export default function Chat(props: {
             e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)";
           }}
         >
-          <LuChevronDown size={20} />
+          <LuChevronDown size={20} aria-hidden="true" />
         </button>
       )}
 
@@ -523,7 +529,7 @@ export default function Chat(props: {
             padding: "10px 20px",
             backgroundColor: "var(--gw-color-primary-light, #DFECE0)",
             borderTop: "1px solid var(--gw-color-border, #e2e8f0)",
-            color: "var(--gw-color-primary, #23776C)",
+            color: "var(--gw-color-primary-hover, #195C53)",
             fontSize: "13px",
             fontWeight: 500,
             flexShrink: 0,

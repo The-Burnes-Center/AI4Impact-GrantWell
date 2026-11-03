@@ -14,7 +14,6 @@ interface SearchInputProps {
   isLoading: boolean;
   isSearching?: boolean;
   placeholder?: string;
-  ariaLabel?: string;
   disabled: boolean;
   onChange: (value: string) => void;
   onFocus: () => void;
@@ -29,7 +28,6 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       isLoading,
       isSearching = false,
       placeholder = "Search by keyword, category, or describe what you need...",
-      ariaLabel = "Search grants by name, agency, or category",
       disabled,
       onChange,
       onFocus,
@@ -59,7 +57,6 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             type="search"
             className="gw-search-input"
             placeholder={placeholder}
-            aria-label={ariaLabel}
             aria-describedby="search-help-text"
             aria-busy={isLoading || isSearching}
             style={{

@@ -17,6 +17,7 @@ import GrantPickerModal, { type PickedGrant } from "../common/GrantPickerModal";
 import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
 import TableScrollRegion from "../ui/TableScrollRegion";
 import { v4 as uuidv4 } from "uuid";
+import { useNotifications } from "../notifications/NotificationManager";
 import "../../styles/dashboard.css";
 
 export interface SessionsProps {
@@ -42,6 +43,7 @@ export default function Sessions(props: SessionsProps) {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const pageSizeSelectId = useId();
   const navigate = useNavigate();
+  const { addNotification } = useNotifications();
 
   const { documentIdentifier } = props;
 
@@ -98,6 +100,12 @@ export default function Sessions(props: SessionsProps) {
       await getSessions();
     } catch (e) {
       console.error("Error deleting sessions:", e);
+      setShowModalDelete(false);
+      addNotification(
+        "error",
+        `Could not delete the selected chat${selectedItems.length > 1 ? "s" : ""}. Please try again.`
+      );
+      await getSessions();
     } finally {
       setIsLoading(false);
     }
@@ -150,8 +158,8 @@ export default function Sessions(props: SessionsProps) {
   }, [sortedSessions, currentPage, pageSize]);
 
   const getSortIcon = (field: "title" | "time_stamp") => {
-    if (sortField !== field) return <LuArrowUpDown size={14} />;
-    return sortDirection === "asc" ? <LuArrowUp size={14} /> : <LuArrowDown size={14} />;
+    if (sortField !== field) return <LuArrowUpDown size={14} aria-hidden="true" />;
+    return sortDirection === "asc" ? <LuArrowUp size={14} aria-hidden="true" /> : <LuArrowDown size={14} aria-hidden="true" />;
   };
 
   const formatSessionTime = (timestamp: string) => {
@@ -208,7 +216,7 @@ export default function Sessions(props: SessionsProps) {
               }
             }}
           >
-            <LuPlus size={16} className="button-icon" />
+            <LuPlus size={16} className="button-icon" aria-hidden="true" />
             <span>New Chat</span>
           </button>
           <button
@@ -221,7 +229,7 @@ export default function Sessions(props: SessionsProps) {
               cursor: selectedItems.length === 0 ? "not-allowed" : "pointer",
             }}
           >
-            <LuTrash size={16} className="button-icon" />
+            <LuTrash size={16} className="button-icon" aria-hidden="true" />
             <span>Delete</span>
           </button>
           <button
@@ -232,14 +240,14 @@ export default function Sessions(props: SessionsProps) {
               setIsLoading(false);
             }}
             disabled={isLoading}
-            aria-label="Refresh chats list"
+            aria-label={isLoading ? "Refreshing chats list" : "Refresh chats list"}
             aria-busy={isLoading}
           >
             {isLoading ? (
               <span className="refresh-loading">Refreshing...</span>
             ) : (
               <>
-                <LuRefreshCw size={16} className="button-icon refresh-icon" />
+                <LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" />
                 <span>Refresh</span>
               </>
             )}
@@ -254,6 +262,7 @@ export default function Sessions(props: SessionsProps) {
           <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "48px 2.5fr 1fr" }}>
             <div role="row" style={{ display: "contents" }}>
               <div className="header-cell" role="columnheader">
+                <span className="visually-hidden">Select</span>
                 <input
                   type="checkbox"
                   checked={
@@ -332,7 +341,7 @@ export default function Sessions(props: SessionsProps) {
                           (i) => i.session_id === item.session_id
                         )}
                         onChange={(e) => handleSelectItem(item, e)}
-                        aria-label={`Select ${item.title}`}
+                        aria-label={`Select ${item.title}, ${formatSessionTime(item.time_stamp)}`}
                         style={{ cursor: "pointer" }}
                       />
                     </div>
@@ -363,6 +372,7 @@ export default function Sessions(props: SessionsProps) {
                           fontSize: "inherit",
                           textDecoration: "underline",
                         }}
+                        aria-label={`${item.title}, ${formatSessionTime(item.time_stamp)}`}
                       >
                         {item.title}
                       </button>
@@ -407,7 +417,7 @@ export default function Sessions(props: SessionsProps) {
             {Math.min(currentPage * pageSize, sortedSessions.length)} of{" "}
             {sortedSessions.length} chats
           </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
             <div className="pagination-controls">
               <button
                 className={`pagination-button ${currentPage === 1 ? "disabled" : ""}`}
@@ -449,7 +459,6 @@ export default function Sessions(props: SessionsProps) {
                   setPageSize(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-                aria-label="Items per page"
                 className="form-input"
               >
                 <option value={10}>10</option>

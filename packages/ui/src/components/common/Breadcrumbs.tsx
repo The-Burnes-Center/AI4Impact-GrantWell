@@ -1,7 +1,9 @@
 import React from "react";
+import { Link } from "react-router";
 
 export interface BreadcrumbItem {
   label: string;
+  href?: string;
   onClick?: () => void;
 }
 
@@ -22,8 +24,12 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
               className="breadcrumb-item"
               aria-current={isLast ? "page" : undefined}
             >
-              {isLast || !item.onClick ? (
+              {isLast || (!item.href && !item.onClick) ? (
                 item.label
+              ) : item.href ? (
+                <Link to={item.href} className="breadcrumb-link">
+                  {item.label}
+                </Link>
               ) : (
                 <button type="button" className="breadcrumb-link" onClick={item.onClick}>
                   {item.label}
