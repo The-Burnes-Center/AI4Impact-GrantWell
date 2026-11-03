@@ -8,6 +8,8 @@ interface PaginationControlsBaseProps {
   itemsPerPageOptions?: number[];
   itemLabel?: string;
   selectId?: string;
+  /** Announce the "Showing x to y" range when it changes (for lists that page in place). */
+  live?: boolean;
 }
 
 interface NumberedPaginationControlsProps extends PaginationControlsBaseProps {
@@ -34,6 +36,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = React.memo(({
   itemsPerPageOptions = [5, 10, 25, 50],
   itemLabel = "grants",
   selectId,
+  live = false,
   ...paginationProps
 }) => {
   const generatedSelectId = useId();
@@ -138,7 +141,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = React.memo(({
 
   return (
     <nav className="pagination-container" aria-label="Pagination">
-      <div className="pagination-info">
+      <div className="pagination-info" role={live ? "status" : undefined}>
         {isTokenMode
           ? `Showing ${startItem} to ${endItem} ${itemLabel} on page ${currentPage}`
           : `Showing ${startItem} to ${endItem} of ${totalItems} ${itemLabel}`}

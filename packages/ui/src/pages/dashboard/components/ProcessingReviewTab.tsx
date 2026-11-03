@@ -87,6 +87,8 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
   const [expiredOpenCount, setExpiredOpenCount] = useState(0);
   const [confirmCloseExpired, setConfirmCloseExpired] = useState(false);
   const [closingExpired, setClosingExpired] = useState(false);
+  const [resultsAnnouncement, setResultsAnnouncement] = useState("");
+  const hasLoaded = useRef(false);
 
   const tableRef = useRef<HTMLDivElement>(null);
   const selectAllRef = useRef<HTMLInputElement | null>(null);
@@ -101,11 +103,16 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
       const list = await apiClient.landingPage.getProcessingReviews(statusFilter);
       setReviews(list.reviews);
       setExpiredOpenCount(list.expiredOpenCount);
+      if (hasLoaded.current) {
+        const n = list.reviews.length;
+        setResultsAnnouncement(`${n} review${n === 1 ? "" : "s"} shown`);
+      }
     } catch {
       addNotification("error", "Failed to load processing reviews");
     } finally {
       setLoading(false);
       setLoaded(true);
+      hasLoaded.current = true;
     }
   }, [apiClient, statusFilter, addNotification]);
 
@@ -561,10 +568,13 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
           )}
         </div>
         {loading && (
-          <div className="review-loading" aria-busy="true">
-            <span role="status" aria-live="polite">Loading reviews...</span>
+          <div className="review-loading" aria-hidden="true">
+            Loading reviews...
           </div>
         )}
+        <div role="status" className="visually-hidden">
+          {loading ? "Loading reviews" : resultsAnnouncement}
+        </div>
       </div>
       </TableScrollRegion>
     </div>

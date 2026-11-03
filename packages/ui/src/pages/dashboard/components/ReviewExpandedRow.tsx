@@ -38,12 +38,18 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const notesRef = useRef<HTMLTextAreaElement>(null);
+  // The live region must exist before its text does, or the loading message is not announced.
+  const [statusMounted, setStatusMounted] = useState(false);
+  useEffect(() => setStatusMounted(true), []);
 
   // The panel is rendered inside an ARIA table, which may only own rows, so it
   // presents as a full-width row rather than a bare region.
   const asTableRow = (content: React.ReactNode) => (
     <div role="row">
       <div role="cell" aria-colspan={colSpan}>
+        <span role="status" className="visually-hidden">
+          {loading && statusMounted ? "Loading review details" : ""}
+        </span>
         {content}
       </div>
     </div>
@@ -208,9 +214,9 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
     return asTableRow(
       <div
         style={{ padding: "20px", textAlign: "center", color: "var(--gw-color-text-secondary)" }}
-        aria-busy="true"
+        aria-hidden="true"
       >
-        <span role="status" aria-live="polite">Loading review details...</span>
+        Loading review details...
       </div>
     );
   }

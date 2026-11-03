@@ -88,6 +88,7 @@ describe("ProcessingReviewTab", () => {
     await screen.findByText("Pending Grant");
     await user.selectOptions(screen.getByLabelText("Filter:"), "rejected");
     expect(await screen.findByText('No reviews with status "Rejected"')).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("0 reviews shown");
   });
 
   it("raises an error notification when the queue fails to load", async () => {

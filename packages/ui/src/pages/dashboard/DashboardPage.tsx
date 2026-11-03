@@ -66,6 +66,15 @@ const Dashboard: React.FC = () => {
   const rolloutsTabRef = useRef<HTMLButtonElement>(null);
   const userManagementTabRef = useRef<HTMLButtonElement>(null);
   const digestPreviewTabRef = useRef<HTMLButtonElement>(null);
+  const tabRefs = {
+    grants: grantsTabRef,
+    analytics: analyticsTabRef,
+    "feature-rollouts": rolloutsTabRef,
+    "user-management": userManagementTabRef,
+    "digest-preview": digestPreviewTabRef,
+  };
+  const processingSegmentRef = useRef<HTMLButtonElement>(null);
+  const [resultsAnnouncement, setResultsAnnouncement] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -310,7 +319,6 @@ const Dashboard: React.FC = () => {
     // The green success banner already announces this; a toast here would double the same message.
     setAddedGrantName(grantName);
     setShowGrantBanner(true);
-    setTimeout(() => setShowGrantBanner(false), 5000);
     fetchNofos();
   }, [fetchNofos]);
 
@@ -392,6 +400,22 @@ const Dashboard: React.FC = () => {
   }, [filteredNofos, currentPage, itemsPerPage]);
 
   useEffect(() => { setCurrentPage(1); }, [statusFilter, grantTypeFilter, searchQuery]);
+
+  // Announce the match count once typing or filtering settles, not on first render or on polls.
+  const filteredCount = useRef(0);
+  filteredCount.current = filteredNofos.length;
+  const filtersTouched = useRef(false);
+  useEffect(() => {
+    if (!filtersTouched.current) {
+      filtersTouched.current = true;
+      return;
+    }
+    const timer = setTimeout(() => {
+      const n = filteredCount.current;
+      setResultsAnnouncement(`${n} grant${n === 1 ? "" : "s"} found`);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [statusFilter, grantTypeFilter, searchQuery]);
 
   useEffect(() => {
     if (currentPage > paginatedData.totalPages && paginatedData.totalPages > 0) {
@@ -475,7 +499,14 @@ const Dashboard: React.FC = () => {
           {showGrantBanner && (
             <div className="success-banner">
               <div className="success-banner-content"><LuCheck size={20} className="success-icon" aria-hidden="true" /><span>Success! Grant &quot;{addedGrantName}&quot; has been added</span></div>
-              <button onClick={() => setShowGrantBanner(false)} className="banner-close-button" aria-label="Close notification"><LuX size={18} aria-hidden="true" /></button>
+              <button
+                onClick={() => {
+                  setShowGrantBanner(false);
+                  tabRefs[activeTab].current?.focus();
+                }}
+                className="banner-close-button"
+                aria-label="Close notification"
+              ><LuX size={18} aria-hidden="true" /></button>
             </div>
           )}
 
@@ -573,6 +604,7 @@ const Dashboard: React.FC = () => {
                       All grants
                     </button>
                     <button
+                      ref={processingSegmentRef}
                       className={`grants-segment__btn ${grantsSegment === "processing" ? "grants-segment__btn--active" : ""}`}
                       onClick={() => { setGrantsSegment("processing"); setReviewFocus(null); }}
                       aria-pressed={grantsSegment === "processing"}
@@ -606,6 +638,9 @@ const Dashboard: React.FC = () => {
                 <h2 className="visually-hidden">
                   {grantsSegment === "attention" ? "Needs attention" : grantsSegment === "processing" ? "Processing" : "All grants"}
                 </h2>
+                <div role="status" className="visually-hidden">
+                  {grantsSegment === "all" ? resultsAnnouncement : ""}
+                </div>
 
                 {isAdmin && grantsSegment === "attention" ? (
                   <ProcessingReviewTab
@@ -641,14 +676,20 @@ const Dashboard: React.FC = () => {
                     <button
                       type="button"
                       className="processing-banner__view"
-                      onClick={() => setGrantsSegment("processing")}
+                      onClick={() => {
+                        setGrantsSegment("processing");
+                        processingSegmentRef.current?.focus();
+                      }}
                     >
                       View <LuArrowRight size={13} aria-hidden="true" />
                     </button>
                     <button
                       type="button"
                       className="processing-banner__dismiss"
-                      onClick={() => setProcessingBannerDismissed(true)}
+                      onClick={() => {
+                        setProcessingBannerDismissed(true);
+                        document.getElementById("grant-search")?.focus();
+                      }}
                       aria-label="Dismiss processing notice"
                     >
                       <LuX size={14} aria-hidden="true" />

@@ -560,6 +560,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
             itemsPerPageOptions={[25, 50, 60]}
             itemLabel="users"
             selectId="user-management-page-size"
+            live
           />
         )}
       </div>
