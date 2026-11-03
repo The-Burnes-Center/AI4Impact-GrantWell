@@ -194,6 +194,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
             status={saveStatus}
             idleText={autoSaveIdleText}
             onRetry={onRetrySave}
+            variant="onPrimary"
           />
         }
       >

@@ -536,7 +536,14 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
 
       <Card
         header="Additional Information"
-        headerActions={<AutoSaveIndicator status={draftSave.saveStatus} onRetry={draftSave.retry} />}
+        headerActions={
+          <AutoSaveIndicator
+            status={draftSave.saveStatus}
+            idleText={draftSave.lastSavedAt ? "Saved" : "Changes save automatically"}
+            onRetry={draftSave.retry}
+            variant="onPrimary"
+          />
+        }
       >
         <p style={{ color: colors.textSecondary, marginBottom: spacing["2xl"], fontFamily: typography.fontFamily }}>
           Upload supporting documents and share any additional context to help

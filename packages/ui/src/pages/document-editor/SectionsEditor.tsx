@@ -572,7 +572,14 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               {activeSectionName || "Section Editor"}
             </h2>
             <div className="se-section-header-actions">
-              <AutoSaveIndicator status={saveStatus} onRetry={retry} />
+              <AutoSaveIndicator
+                status={saveStatus}
+                onRetry={() => {
+                  // Without idleText the indicator unmounts once the save settles.
+                  sectionTitleRef.current?.focus();
+                  retry();
+                }}
+              />
               {undoCandidate && (
                 <button
                   type="button"

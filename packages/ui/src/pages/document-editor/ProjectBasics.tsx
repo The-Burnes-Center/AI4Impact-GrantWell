@@ -384,6 +384,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
               status={saveStatus}
               idleText={autoSaveIdleText}
               onRetry={onRetrySave}
+              variant="onPrimary"
             />
           }
         >
