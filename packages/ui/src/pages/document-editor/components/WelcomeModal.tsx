@@ -28,7 +28,6 @@ const WelcomeModal = React.memo(function WelcomeModal({
     onClose={onClose}
     title="Welcome to GrantWell"
     maxWidth="900px"
-    hideCloseButton
   >
     <div className="welcome-modal-intro">
       <h3 className="welcome-modal-subtitle">Write Application</h3>

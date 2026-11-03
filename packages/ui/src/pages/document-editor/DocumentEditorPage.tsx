@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useDraftsClient } from "../../hooks/use-drafts-client";
 import { useDraftSave } from "../../hooks/use-draft-save";
@@ -104,6 +104,7 @@ const DocumentEditor: React.FC = () => {
   const [activeJobId, setActiveJobId] = useState<string | undefined>(undefined);
   const [isGeneratingDraft, setIsGeneratingDraft] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const stepLeaveGuardRef = useRef<StepLeaveGuard | null>(null);
   const stepRestoredForRef = useRef<string | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -307,6 +308,9 @@ const DocumentEditor: React.FC = () => {
   };
 
   const activeStep = stepToIndex(currentStep);
+  const draftsPath = selectedNofo
+    ? `/document-editor/drafts?grant=${encodeURIComponent(selectedNofo)}`
+    : "/document-editor/drafts";
 
   // WCAG 2.4.11: the header wraps on long grant names, so the stepper's offset
   // and the page's scroll padding follow the pinned bars' real heights.
@@ -401,7 +405,11 @@ const DocumentEditor: React.FC = () => {
 
       <WelcomeModal
         isOpen={welcomeModalOpen}
-        onClose={() => setWelcomeModalOpen(false)}
+        onClose={() => {
+          // There is no draft behind this modal yet, so closing it leaves the page.
+          if (location.key !== "default") navigate(-1);
+          else navigate(draftsPath);
+        }}
         onGetStarted={() => {
           setWelcomeModalOpen(false);
           if (selectedNofo) startNewDocument(selectedNofo);
@@ -409,7 +417,7 @@ const DocumentEditor: React.FC = () => {
         }}
         onViewDrafts={() => {
           setWelcomeModalOpen(false);
-          navigate(selectedNofo ? `/document-editor/drafts?grant=${encodeURIComponent(selectedNofo)}` : "/document-editor/drafts");
+          navigate(draftsPath);
         }}
       />
       <GrantPickerModal
