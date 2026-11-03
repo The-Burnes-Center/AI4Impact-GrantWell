@@ -49,7 +49,7 @@ test("answers a question about the NOFO, with sources, and keeps it after a relo
   const answerText = (await answer.locator("span.sr-only + div").innerText()).trim();
   expect(answerText.length, "answer length").toBeGreaterThanOrEqual(40);
 
-  const sources = answer.getByRole("button", { name: /^Sources \(\d+\)$/ });
+  const sources = answer.getByRole("button", { name: /^Sources \(\d+\) for reply \d+$/ });
   await expect(sources).toBeVisible();
   const count = Number((await sources.innerText()).match(/\((\d+)\)/)![1]);
   expect(count, "number of sources").toBeGreaterThanOrEqual(1);
