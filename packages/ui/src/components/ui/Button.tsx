@@ -43,6 +43,10 @@ const hoverColors: Record<ButtonVariant, string> = {
   ghost: colors.primaryLight,
 };
 
+const hoverTextColors: Partial<Record<ButtonVariant, string>> = {
+  ghost: colors.primaryHover,
+};
+
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
@@ -74,6 +78,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
       if (!isDisabled) {
         e.currentTarget.style.backgroundColor = hoverColors[variant];
+        if (hoverTextColors[variant]) e.currentTarget.style.color = hoverTextColors[variant];
       }
       onMouseEnter?.(e);
     };
@@ -82,6 +87,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       if (!isDisabled) {
         e.currentTarget.style.backgroundColor =
           buttonStyles.variants[variant].backgroundColor || "";
+        if (hoverTextColors[variant]) e.currentTarget.style.color = String(baseStyle.color ?? "");
       }
       onMouseLeave?.(e);
     };
