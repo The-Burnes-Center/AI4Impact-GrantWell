@@ -203,7 +203,7 @@
 }
 .profile-alert--success {
   background: var(--gw-color-success-light, #d4edda);
-  color: #065f46;
+  color: var(--gw-color-success-text);
 }
 
 .profile-actions {
