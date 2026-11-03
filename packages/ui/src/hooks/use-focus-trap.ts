@@ -13,6 +13,29 @@ const FOCUSABLE_SELECTOR = [
 
 const trapStack: symbol[] = [];
 
+const isDisabled = (el: HTMLElement) => (el as HTMLButtonElement).disabled === true;
+
+/**
+ * Focus `target`, or when it was removed or disabled while the trap was open, the nearest of its
+ * original ancestors that can still take focus, so focus never falls back to <body>.
+ */
+function restoreFocus(target: HTMLElement, ancestors: HTMLElement[]) {
+  for (const el of [target, ...ancestors]) {
+    if (!el.isConnected || isDisabled(el)) continue;
+    if (el !== target && !el.hasAttribute("tabindex")) continue;
+    el.focus();
+    if (document.activeElement === el) return;
+  }
+}
+
+function ancestorsOf(el: HTMLElement): HTMLElement[] {
+  const chain: HTMLElement[] = [];
+  for (let node = el.parentElement; node && node !== document.body; node = node.parentElement) {
+    chain.push(node);
+  }
+  return chain;
+}
+
 interface UseFocusTrapOptions {
   /** Whether the focus trap is active */
   isOpen: boolean;
@@ -55,7 +78,9 @@ export function useFocusTrap<T extends HTMLElement = HTMLDivElement>({
   useEffect(() => {
     if (!isOpen) return;
 
-    previousFocusRef.current = document.activeElement as HTMLElement;
+    const previous = document.activeElement as HTMLElement | null;
+    previousFocusRef.current = previous;
+    const previousAncestors = previous && previous !== document.body ? ancestorsOf(previous) : [];
 
     const timer = setTimeout(() => {
       const firstFocusable =
@@ -72,11 +97,8 @@ export function useFocusTrap<T extends HTMLElement = HTMLDivElement>({
       if (lockScroll) {
         document.body.style.overflow = "";
       }
-      if (
-        previousFocusRef.current &&
-        document.body.contains(previousFocusRef.current)
-      ) {
-        previousFocusRef.current.focus();
+      if (previousFocusRef.current) {
+        restoreFocus(previousFocusRef.current, previousAncestors);
       }
     };
   }, [isOpen, lockScroll]);

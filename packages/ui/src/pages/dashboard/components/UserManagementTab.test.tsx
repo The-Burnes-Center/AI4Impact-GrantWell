@@ -57,7 +57,7 @@ describe("UserManagementTab", () => {
     await ui.click(screen.getByRole("button", { name: "Next page" }));
     expect(await screen.findByText("person3@example.org")).toBeInTheDocument();
     expect(screen.getByText("Showing 26 to 26 users on page 2")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Next page" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Next page" })).toHaveAttribute("aria-disabled", "true");
 
     await ui.click(screen.getByRole("button", { name: "Previous page" }));
     expect(await screen.findByText("person1@example.org")).toBeInTheDocument();
@@ -117,6 +117,36 @@ describe("UserManagementTab", () => {
     await ui.selectOptions(screen.getByLabelText("Role for person1@example.org"), "admin");
     expect(screen.getByRole("button", { name: "Save changes for person1@example.org" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Save changes for person0@example.org" })).not.toBeInTheDocument();
+  });
+
+  it("moves focus to the role select once a save removes the Save button", async () => {
+    stubFetch({
+      [USERS]: json({ users: [user(0), user(1)], nextPaginationToken: null, pageSize: 25 }),
+      "PATCH /user-management/users/u1/roles": json({ username: "u1", roles: ["Admin"] }),
+    });
+    const { user: ui } = renderTab();
+    await screen.findByText("person1@example.org");
+
+    await ui.selectOptions(screen.getByLabelText("Role for person1@example.org"), "admin");
+    await ui.click(screen.getByRole("button", { name: "Save changes for person1@example.org" }));
+    await waitFor(() => expect(screen.queryByRole("button", { name: /^Save/ })).not.toBeInTheDocument());
+    expect(screen.getByLabelText("Role for person1@example.org")).toHaveFocus();
+  });
+
+  it("closes a row menu on Tab and returns focus to its button", async () => {
+    stubFetch({ [USERS]: json({ users: [user(0), user(1)], nextPaginationToken: null, pageSize: 25 }) });
+    const { user: ui } = renderTab();
+    await screen.findByText("person1@example.org");
+    const trigger = screen.getByRole("button", { name: "More actions for person1@example.org" });
+
+    await ui.click(trigger);
+    const menu = await screen.findByRole("menu");
+    await waitFor(() => expect(within(menu).getAllByRole("menuitem")[0]).toHaveFocus());
+    expect(within(menu).getAllByRole("menuitem").every((item) => item.tabIndex === -1)).toBe(true);
+
+    await ui.keyboard("{Shift>}{Tab}{/Shift}");
+    expect(screen.queryByRole("menu")).not.toBeInTheDocument();
+    expect(trigger).toHaveFocus();
   });
 
   it("keeps Reset two-step verification and Delete in the row's menu, each behind its confirmation", async () => {

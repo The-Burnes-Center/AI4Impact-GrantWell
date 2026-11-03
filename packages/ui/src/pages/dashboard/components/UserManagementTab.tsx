@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { LuKeyRound, LuTrash, LuUserPlus } from "react-icons/lu";
 import type { ApiClient } from "../../../common/api-client/api-client";
 import type { ManagedUser, UserRolePreset } from "../../../common/types/user-management";
@@ -66,6 +66,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   const [draftRoles, setDraftRoles] = useState<Record<string, UserRolePreset>>({});
   const [draftStates, setDraftStates] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
+  const [loaded, setLoaded] = useState(false);
   const [savingUsername, setSavingUsername] = useState<string | null>(null);
   const [rowErrors, setRowErrors] = useState<Record<string, string>>({});
   const [pageSize, setPageSize] = useState(25);
@@ -84,6 +85,12 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   const [isDeleting, setIsDeleting] = useState(false);
   const [mfaResetTarget, setMfaResetTarget] = useState<ManagedUser | null>(null);
   const [isResettingMfa, setIsResettingMfa] = useState(false);
+
+  const tableRef = useRef<HTMLTableElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  // Set when a reload may remove the row that has focus; checked once the new rows render.
+  const refocusAfterReload = useRef(false);
+  const savedUsername = useRef<string | null>(null);
 
   const loadUsers = useCallback(async (
     page: number,
@@ -127,8 +134,24 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
       );
     } finally {
       setLoading(false);
+      setLoaded(true);
     }
   }, [apiClient, addNotification]);
+
+  useEffect(() => {
+    if (!refocusAfterReload.current || loading) return;
+    refocusAfterReload.current = false;
+    if (!document.activeElement || document.activeElement === document.body) tableRef.current?.focus();
+  }, [users, loading]);
+
+  useEffect(() => {
+    const username = savedUsername.current;
+    if (!username || savingUsername) return;
+    savedUsername.current = null;
+    if (!document.activeElement || document.activeElement === document.body) {
+      document.getElementById(`role-select-${username}`)?.focus();
+    }
+  }, [savingUsername]);
 
   useEffect(() => {
     void loadUsers(1, pageSize, [null], activeSearchQuery);
@@ -147,12 +170,14 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
 
   const handleSearchSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (loading) return;
     startSearch(searchQuery.trim());
-  }, [searchQuery, startSearch]);
+  }, [loading, searchQuery, startSearch]);
 
   const handleClearSearch = useCallback(() => {
     setSearchQuery("");
     startSearch("");
+    searchInputRef.current?.focus();
   }, [startSearch]);
 
   const hasActiveSearch = activeSearchQuery.length > 0;
@@ -220,6 +245,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               : item
           )
         );
+        savedUsername.current = user.username;
         addNotification("success", `Updated ${user.email}`);
       } catch (error) {
         console.error("Error updating user:", error);
@@ -268,6 +294,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
       await apiClient.userManagement.deleteUser(deleteTarget.username);
       addNotification("success", `Deleted ${deleteTarget.email}`);
       setDeleteTarget(null);
+      refocusAfterReload.current = true;
       reloadCurrentPage();
     } catch (error) {
       addNotification("error", error instanceof Error ? error.message : "Failed to delete user");
@@ -296,7 +323,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
     }
   }, [mfaResetTarget, apiClient, addNotification]);
 
-  if (loading) {
+  if (!loaded) {
     return (
       <div className="feature-rollouts-panel" aria-busy="true">
         <span role="status">Loading users...</span>
@@ -348,6 +375,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               Search users
             </label>
             <input
+              ref={searchInputRef}
               id="user-management-search"
               type="search"
               className="feature-rollouts-search-input"
@@ -357,7 +385,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
             />
           </div>
           <div className="feature-rollouts-search-actions">
-            <button type="submit" className="feature-rollouts-primary-button" disabled={loading}>
+            <button type="submit" className="feature-rollouts-primary-button" aria-disabled={loading}>
               Search
             </button>
             <button
@@ -377,8 +405,8 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
             : ""}
         </p>
 
-        <div className="user-management-table-wrapper">
-          <table className="user-management-table">
+        <div className="user-management-table-wrapper" aria-busy={loading}>
+          <table className="user-management-table" ref={tableRef} tabIndex={-1} aria-label="Users">
             <thead>
               <tr>
                 <th scope="col">User</th>
@@ -479,8 +507,8 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                           <button
                             type="button"
                             className="feature-rollouts-primary-button"
-                            onClick={() => void handleSave(user)}
-                            disabled={isSaving}
+                            onClick={() => !isSaving && void handleSave(user)}
+                            aria-disabled={isSaving}
                             aria-label={`Save changes for ${user.email}`}
                           >
                             {isSaving ? "Saving..." : "Save"}

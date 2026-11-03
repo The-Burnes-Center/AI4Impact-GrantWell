@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { LuArrowDown, LuArrowUp, LuArchiveX, LuChevronDown, LuFileX, LuRefreshCw, LuUpload } from "react-icons/lu";
 import { ApiClient } from "../../../common/api-client/api-client";
 import type {
@@ -77,6 +77,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
   const [reviews, setReviews] = useState<ReviewItem[]>([]);
   const [metrics, setMetrics] = useState<MetricsType | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loaded, setLoaded] = useState(false);
   const [metricsLoading, setMetricsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("pending_review");
   const [expandedNofo, setExpandedNofo] = useState<string | null>(null);
@@ -86,6 +87,12 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
   const [expiredOpenCount, setExpiredOpenCount] = useState(0);
   const [confirmCloseExpired, setConfirmCloseExpired] = useState(false);
   const [closingExpired, setClosingExpired] = useState(false);
+
+  const tableRef = useRef<HTMLDivElement>(null);
+  const selectAllRef = useRef<HTMLInputElement | null>(null);
+  const toggleRefs = useRef(new Map<string, HTMLButtonElement>());
+  // A resolved review can leave the list on reload; then focus falls back to the table.
+  const refocusAfterReload = useRef(false);
 
   const fetchData = useCallback(async () => {
     try {
@@ -98,6 +105,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
       addNotification("error", "Failed to load processing reviews");
     } finally {
       setLoading(false);
+      setLoaded(true);
     }
   }, [apiClient, statusFilter, addNotification]);
 
@@ -132,7 +140,26 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
     setExpandedNofo(focusNofo);
   }, [focusNofo]);
 
-  const handleActionComplete = () => {
+  useEffect(() => {
+    if (!refocusAfterReload.current || loading) return;
+    refocusAfterReload.current = false;
+    const active = document.activeElement as HTMLElement | null;
+    if (!active || active === document.body || (active as HTMLButtonElement).disabled) tableRef.current?.focus();
+  }, [loading, reviews]);
+
+  const focusSelectAll = () => {
+    const selectAll = selectAllRef.current;
+    (selectAll && !selectAll.disabled ? selectAll : tableRef.current)?.focus();
+  };
+
+  const collapse = (nofoName: string) => {
+    toggleRefs.current.get(nofoName)?.focus();
+    setExpandedNofo(null);
+  };
+
+  const handleActionComplete = (nofoName?: string) => {
+    if (nofoName) toggleRefs.current.get(nofoName)?.focus();
+    refocusAfterReload.current = true;
     setExpandedNofo(null);
     setSelected(new Set());
     fetchData();
@@ -210,6 +237,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
     }
 
     setBulkAction(null);
+    focusSelectAll();
     handleActionComplete();
   }, [selectedReviews, apiClient, addNotification]);
 
@@ -239,6 +267,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
     }
 
     setBulkAction(null);
+    focusSelectAll();
     handleActionComplete();
   }, [selectedReviews, apiClient, addNotification]);
 
@@ -382,7 +411,10 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
             </button>
             <button
               className="review-bulk-bar__clear"
-              onClick={() => setSelected(new Set())}
+              onClick={() => {
+                focusSelectAll();
+                setSelected(new Set());
+              }}
             >
               Clear selection
             </button>
@@ -392,7 +424,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
 
       <TableScrollRegion label="Processing reviews table" minWidth={960} className="table-scroll review-table-scroll">
       <div className="table-container">
-        <div role="table" aria-label="Processing reviews">
+        <div role="table" aria-label="Processing reviews" ref={tableRef} tabIndex={-1} aria-busy={loading}>
           <div className="table-header review-table-grid-select" role="rowgroup">
             <div role="row" style={{ display: "contents" }}>
               <div className="header-cell review-checkbox-cell" role="columnheader">
@@ -400,6 +432,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                 <input
                   type="checkbox"
                   ref={(el) => {
+                    selectAllRef.current = el;
                     if (el) el.indeterminate = selected.size > 0 && selected.size < reviews.length;
                   }}
                   checked={reviews.length > 0 && selected.size === reviews.length}
@@ -435,7 +468,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
               <div className="header-cell" role="columnheader">Details</div>
             </div>
           </div>
-          {!loading && (
+          {loaded && (
             <div className="table-body" role={reviews.length === 0 ? undefined : "rowgroup"}>
               {reviews.length === 0 ? (
                 <div className="no-data">
@@ -488,6 +521,10 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                         <div className="row-cell actions" role="cell">
                           <button
                             type="button"
+                            ref={(el) => {
+                              if (el) toggleRefs.current.set(review.nofo_name, el);
+                              else toggleRefs.current.delete(review.nofo_name);
+                            }}
                             className="review-expand-toggle"
                             onClick={() => toggleExpand(review.nofo_name)}
                             aria-expanded={expandedNofo === review.nofo_name}
@@ -508,9 +545,9 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                         <ReviewExpandedRow
                           review={review}
                           apiClient={apiClient}
-                          onActionComplete={handleActionComplete}
+                          onActionComplete={() => handleActionComplete(review.nofo_name)}
                           addNotification={addNotification}
-                          onCollapse={() => setExpandedNofo(null)}
+                          onCollapse={() => collapse(review.nofo_name)}
                           colSpan={TABLE_COLUMN_COUNT}
                         />
                       )}

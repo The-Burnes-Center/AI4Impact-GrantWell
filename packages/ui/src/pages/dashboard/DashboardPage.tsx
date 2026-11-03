@@ -163,7 +163,9 @@ const Dashboard: React.FC = () => {
     }
   }, [isAdmin, roleLoading]);
 
-  const handleRefresh = useCallback(() => fetchNofos(true), [fetchNofos]);
+  const handleRefresh = useCallback(() => {
+    if (!isRefreshing) fetchNofos(true);
+  }, [fetchNofos, isRefreshing]);
 
   // Deep-link a quarantined grant's row into the review queue (stable identity so
   // it doesn't defeat NOFOsTab's memo).
@@ -445,7 +447,7 @@ const Dashboard: React.FC = () => {
               <button
                 className="action-button refresh-button"
                 onClick={handleRefresh}
-                disabled={isRefreshing}
+                aria-disabled={isRefreshing}
                 aria-busy={isRefreshing}
               >
                 {isRefreshing ? (
@@ -717,7 +719,7 @@ const Dashboard: React.FC = () => {
                     <button className="action-button add-button" onClick={() => setUploadNofoModalOpen(true)}>
                       <LuUpload size={16} className="button-icon" /><span>Add Grant</span>
                     </button>
-                    <button className="action-button scraper-button" onClick={() => setScrapeConfirmModalOpen(true)} disabled={isScraping} aria-label="Auto-scrape grants from grants.gov" aria-busy={isScraping}>
+                    <button className="action-button scraper-button" onClick={() => !isScraping && setScrapeConfirmModalOpen(true)} aria-disabled={isScraping} aria-label="Auto-scrape grants from grants.gov" aria-busy={isScraping}>
                       <LuDownload size={16} className="button-icon" aria-hidden="true" /><span>{isScraping ? "Scraping..." : "Auto-Scrape Grants"}</span>
                     </button>
                   </div>

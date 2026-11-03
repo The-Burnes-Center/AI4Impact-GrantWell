@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useId } from "react";
+import React, { useState, useCallback, useEffect, useId, useRef } from "react";
 import {
   LuPin, LuPinOff, LuFileX, LuUpload, LuInfo, LuFile, LuLoader, LuTriangleAlert, LuPlus, LuTrash,
 } from "react-icons/lu";
@@ -95,6 +95,22 @@ const NOFOsTab = React.memo(function NOFOsTab({
   const [promoteModalOpen, setPromoteModalOpen] = useState(false);
   const [promoting, setPromoting] = useState(false);
   const reviewFlagIdPrefix = useId();
+
+  const tableRef = useRef<HTMLDivElement>(null);
+  // Pin re-sorts, archive/delete remove the row: keep focus on the control or fall back to the table.
+  const focusBeforeUpdate = useRef<Element | null>(null);
+  const updateNofosKeepingFocus = useCallback((updater: (nofos: NOFO[]) => NOFO[]) => {
+    focusBeforeUpdate.current = document.activeElement;
+    updateNofos(updater);
+  }, [updateNofos]);
+
+  useEffect(() => {
+    const previous = focusBeforeUpdate.current;
+    if (!previous) return;
+    focusBeforeUpdate.current = null;
+    if (document.activeElement && document.activeElement !== document.body) return;
+    (previous instanceof HTMLElement && previous.isConnected ? previous : tableRef.current)?.focus();
+  }, [nofos]);
 
   const handleEditSummary = useCallback(async (nofo: NOFO) => {
     setSelectedNofo(nofo);
@@ -244,7 +260,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
     event?.stopPropagation();
     try {
       await apiClient.landingPage.updateNOFOStatus(nofo.name, undefined, true);
-      updateNofos((allNofos) =>
+      updateNofosKeepingFocus((allNofos) =>
         allNofos.map((item) => item.id === nofo.id ? { ...item, isPinned: true } : item)
       );
       addNotification("success", `Grant "${nofo.name}" pinned successfully`);
@@ -257,7 +273,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
     event?.stopPropagation();
     try {
       await apiClient.landingPage.updateNOFOStatus(nofo.name, undefined, false);
-      updateNofos((allNofos) =>
+      updateNofosKeepingFocus((allNofos) =>
         allNofos.map((item) => item.id === nofo.id ? { ...item, isPinned: false } : item)
       );
       addNotification("info", `Grant "${nofo.name}" unpinned`);
@@ -336,7 +352,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
     const newStatus = nofo.status === "active" ? "archived" : "active";
     try {
       await apiClient.landingPage.updateNOFOStatus(nofo.name, newStatus);
-      updateNofos((allNofos) =>
+      updateNofosKeepingFocus((allNofos) =>
         allNofos.map((item) => item.id === nofo.id ? { ...item, status: newStatus } : item)
       );
       addNotification("success", `Grant status changed to ${newStatus}`);
@@ -349,7 +365,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
     if (!selectedNofo) return;
     try {
       await apiClient.landingPage.deleteNOFO(selectedNofo.name);
-      updateNofos((allNofos) => allNofos.filter((nofo) => nofo.id !== selectedNofo.id));
+      updateNofosKeepingFocus((allNofos) => allNofos.filter((nofo) => nofo.id !== selectedNofo.id));
       addNotification("success", `Grant "${selectedNofo.name}" deleted successfully`);
       setDeleteModalOpen(false);
       setSelectedNofo(null);
@@ -437,7 +453,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
   return (
     <div className="tab-content">
       <TableScrollRegion label="Grants table" minWidth={640}>
-      <div className="table-container" role="table" aria-label="Grants">
+      <div className="table-container" role="table" aria-label="Grants" ref={tableRef} tabIndex={-1}>
         <div className="table-header" role="rowgroup">
           <div role="row" style={{ display: "contents" }}>
             <div className="header-cell" role="columnheader">Name</div>
