@@ -15,16 +15,18 @@
     <!-- Crawler and pre-JS view of the landing page; React replaces it. Copy and box sizes match pages/landing/. -->
     <div id="root">
       <div class="marketing">
+        <a href="#main-content" class="marketing__skip-nav">Skip to main content</a>
         %GW_OMNI%
+        <div class="marketing__hero-frame">
+        <nav class="marketing__nav marketing__nav--over-hero" aria-label="Primary">
+          <div class="marketing__nav-links">
+            <a class="marketing__nav-link marketing__nav-link--active" href="/">Home</a>
+            <a class="marketing__nav-link" href="/login">Sign in</a>
+          </div>
+        </nav>
         <main id="main-content" tabindex="-1">
-          <section class="marketing__hero" aria-labelledby="hero-title">
+          <section class="marketing__hero marketing__hero--under-nav" aria-labelledby="hero-title">
             <div class="marketing__hero-bg" aria-hidden="true"></div>
-            <nav class="marketing__nav" aria-label="Primary">
-              <div class="marketing__nav-links">
-                <a class="marketing__nav-link marketing__nav-link--active" href="/">Home</a>
-                <a class="marketing__nav-link" href="/login">Sign in</a>
-              </div>
-            </nav>
             <div class="marketing__hero-row">
               <div class="marketing__hero-content">
                 <h1 class="marketing__hero-title" id="hero-title">%GW_HERO_LOGO%</h1>
@@ -68,6 +70,7 @@
             </div>
           </section>
         </main>
+        </div>
       </div>
     </div>
     <script>

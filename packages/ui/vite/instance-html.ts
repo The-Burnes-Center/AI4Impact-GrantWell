@@ -139,7 +139,7 @@ export function notFoundHtml(branding: Pick<PageBranding, "appName" | "colors">)
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
-    <title>Page not found - ${name}</title>
+    <title>Page not found – ${name}</title>
     <style>
       body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #1f1f1f; background: #ffffff; border-top: 6px solid ${primary}; }
       main { max-width: 560px; margin: 15vh auto; padding: 0 24px; line-height: 1.5; }
@@ -199,7 +199,7 @@ function withRootFallback(indexHtml: string, inner: string): string {
   return indexHtml.slice(0, rootStart) + `<div id="root">${inner}</div>\n    ` + indexHtml.slice(scriptStart);
 }
 
-const WHATS_NEW_TITLE = "What's new - GrantWell";
+const WHATS_NEW_TITLE = "What's new – GrantWell";
 const WHATS_NEW_DESCRIPTION = "New features and improvements in each GrantWell release.";
 const LANDING_ONLY_SCRIPT = '// Only "/" is the landing page';
 
@@ -216,7 +216,7 @@ export function whatsNewHtml(indexHtml: string, releaseNotes: string, siteUrl?: 
     .map((r) => `<section>${renderToStaticMarkup(notesMarkdown(r.markdown))}</section>`)
     .join("");
   const body =
-    `<div id="root"><div class="marketing">${omni}<main id="main-content" tabindex="-1">` +
+    `<div id="root"><div class="marketing"><a href="#main-content" class="marketing__skip-nav">Skip to main content</a>${omni}<main id="main-content" tabindex="-1">` +
     `<div class="whats-new"><h1>What&#x27;s new</h1>${notes}</div></main></div></div>\n    <script>\n` +
     `      // whats-new.html is only served for /whats-new; any other route would flash these notes.\n` +
     `      if (location.pathname !== "/whats-new") document.getElementById("root").replaceChildren();\n    </script>`;
