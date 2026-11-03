@@ -176,3 +176,30 @@ describe("notification digest: other states' grants", () => {
     expect(sentHtml()).not.toContain("MassDOT Bridge Grant");
   });
 });
+
+describe("digest branding", () => {
+  const build = async (branding: Record<string, string>) => {
+    const { buildDigest } = await import("grantwell-shared");
+    return buildDigest("daily", { sections: { new: [{ nofo }] }, appUrl: "https://colorado.grantwell.us", branding });
+  };
+
+  it("keeps the wordmark's proportions and names the sender before its postal address", async () => {
+    const { html, text } = await build({
+      appName: "GrantWell",
+      logoUrl: "https://colorado.grantwell.us/images/co/lockup.svg",
+      logoWidth: "234",
+      orgName: "State of Colorado",
+      postalAddress: "200 E Colfax Ave, Denver, CO 80203",
+    });
+    expect(html).toContain('width="234" height="28" style="width:234px;height:28px;');
+    expect(html).toContain("State of Colorado, 200 E Colfax Ave, Denver, CO 80203");
+    expect(text).toContain("State of Colorado, 200 E Colfax Ave, Denver, CO 80203");
+  });
+
+  it("falls back to 141 px for a missing or out-of-range width", async () => {
+    for (const logoWidth of ["", "0", "12.5", "9000"]) {
+      const { html } = await build({ appName: "GrantWell", logoUrl: "https://grantwell.us/w.svg", logoWidth });
+      expect(html).toContain('width="141" height="28"');
+    }
+  });
+});

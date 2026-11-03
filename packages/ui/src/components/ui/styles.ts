@@ -54,7 +54,7 @@ export const colors = {
 
 // Typography
 export const typography = {
-  fontFamily: "'Noto Sans', sans-serif",
+  fontFamily: "var(--gw-font-family)",
   fontSize: {
     xs: "12px",
     sm: "14px",

@@ -48,6 +48,8 @@ export interface NotificationsStackProps extends cdk.NestedStackProps {
   readonly supportedStatesEnv: string;
   readonly siteUrl: string;
   readonly branding: Branding;
+  /** Email header logo width at 28 px high. */
+  readonly digestLogoWidth: number;
   readonly nofoProcessingReviewTable: Table;
   /** Set only when the deployment has the processing-queue email on (it needs notificationSender). */
   readonly processingQueueEmail?: { recipientsParameter: string; deploymentId: string };
@@ -70,6 +72,7 @@ export class NotificationsStack extends cdk.NestedStack {
     const digestBrandEnv = {
       DIGEST_BRAND_COLOR: branding.colors.primary,
       DIGEST_LOGO_URL: `${siteUrl}${branding.footer.wordmark ?? branding.logo}`,
+      DIGEST_LOGO_WIDTH: String(props.digestLogoWidth),
       DIGEST_APP_NAME: branding.appName,
       DIGEST_ORG_NAME: branding.orgName,
       DIGEST_POSTAL_ADDRESS: branding.postalAddress,
@@ -291,6 +294,7 @@ export class NotificationsStack extends cdk.NestedStack {
         DIGEST_APP_NAME: brandEnv.DIGEST_APP_NAME,
         DIGEST_BRAND_COLOR: brandEnv.DIGEST_BRAND_COLOR,
         DIGEST_LOGO_URL: brandEnv.DIGEST_LOGO_URL,
+        DIGEST_LOGO_WIDTH: brandEnv.DIGEST_LOGO_WIDTH,
       },
       timeout: cdk.Duration.minutes(1),
       description: "Weekday email to admins when grants are waiting in the processing queue",

@@ -124,7 +124,7 @@
   margin: 0 auto;
   padding: 32px;
   font-size: 18px;
-  font-family: 'Noto Sans', sans-serif;
+  font-family: var(--gw-font-family);
   font-weight: 400;
   color: #333;
   line-height: 1.5;
@@ -154,7 +154,7 @@
 }
 
 .checklist-content__heading {
-  font-family: 'Noto Sans', sans-serif;
+  font-family: var(--gw-font-family);
   font-weight: 600;
   color: var(--gw-color-primary-active);
   letter-spacing: -0.01em;
@@ -169,7 +169,7 @@
 }
 
 .checklist-content__description {
-  font-family: 'Noto Sans', sans-serif;
+  font-family: var(--gw-font-family);
   font-size: 18px;
   line-height: 1.6;
   margin-top: 12px;
@@ -178,7 +178,7 @@
 }
 
 .checklist-content__note {
-  font-family: 'Noto Sans', sans-serif;
+  font-family: var(--gw-font-family);
   font-size: 16px;
   line-height: 1.6;
   margin-top: 12px;
@@ -230,7 +230,7 @@
   border-bottom: 1px solid #ddd;
   display: flex;
   flex-wrap: wrap;
-  font-family: 'Noto Sans', sans-serif;
+  font-family: var(--gw-font-family);
 }
 
 .checklist-tab {

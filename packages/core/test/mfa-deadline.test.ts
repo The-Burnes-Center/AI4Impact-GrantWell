@@ -24,6 +24,8 @@ describe("auth.mfaDeadline", () => {
     expect(configFor("prod").auth.mfaDeadline).toBe("2026-11-02T00:00:00-05:00");
     expect(Date.parse(configFor("prod").auth.mfaDeadline!)).toBe(Date.UTC(2026, 10, 2, 5));
     expect(configFor("prod").auth.mfaRequired).toBe(false);
+    const pools = resources("prod").filter((r) => r.Type === "AWS::Cognito::UserPool");
+    expect(pools.map((p) => p.Properties?.MfaConfiguration)).toEqual(["OPTIONAL"]);
   });
 
   it("must parse and carry an offset", () => {

@@ -59,11 +59,11 @@ function sitemapXml(config: InstanceConfig): string {
 }
 
 function manifestJson(config: InstanceConfig, seo: ResolvedSeo): string {
-  const { appName, favicon, colors } = config.branding;
+  const { appName, shortName, favicon, colors } = config.branding;
   const type = IMAGE_TYPES[path.extname(favicon).toLowerCase()];
   const manifest = {
     name: appName,
-    short_name: appName,
+    short_name: shortName ?? appName,
     description: seo.description,
     start_url: "/",
     scope: "/",

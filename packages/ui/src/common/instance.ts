@@ -1,4 +1,5 @@
 import { Branding, defaultBranding } from "./branding";
+import { resolveHome, type ResolvedHome } from "./home-copy";
 
 export interface UsState {
   code: string;
@@ -13,6 +14,12 @@ export interface Seo {
   ogImage?: { path: string; alt: string };
 }
 
+/** A state with its own GrantWell site, on a multi-state deployment. */
+export interface StateSite {
+  state: string;
+  url: string;
+}
+
 interface StagedInstance {
   stage: "prod" | "dev";
   siteUrl: string;
@@ -25,6 +32,7 @@ interface StagedInstance {
   tenancy?: "single";
   mfa?: "off";
   regions?: string[];
+  stateSites?: StateSite[];
 }
 
 // Written by core's UserInterface construct at synth; absent in standalone builds (neutral fallback).
@@ -48,8 +56,12 @@ export const EMAIL_DIGEST: boolean = staged?.emailDigest !== false;
 export const TURNSTILE_ENABLED: boolean = staged?.turnstile !== false;
 /** A single-state deployment's state: every user belongs to it and no state is ever chosen. */
 export const SINGLE_STATE: UsState | null = staged?.tenancy === "single" ? staged.states[0] ?? null : null;
+/** The public home page's layout and copy, defaults filled in. */
+export const HOME: ResolvedHome = resolveHome(activeBranding, SINGLE_STATE?.name ?? null);
 /** False when the deployment turns MFA off: no setup prompt, no two-step settings, no resets. */
 export const MFA_ENABLED: boolean = staged?.mfa !== "off";
 /** The Region question's choices; empty when the deployment asks none. */
 export const REGIONS: readonly string[] = staged?.regions ?? [];
+/** States whose sign-up happens on their own site; empty unless the deployment lists some. */
+export const STATE_SITES: readonly StateSite[] = staged?.stateSites ?? [];
 export const MFA_DEADLINE: number | null = MFA_DEADLINE_ISO ? Date.parse(MFA_DEADLINE_ISO) : null;

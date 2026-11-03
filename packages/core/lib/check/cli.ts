@@ -9,7 +9,9 @@ import * as path from "node:path";
 import type { InstanceConfig } from "../config/instance-config";
 import {
   Finding,
+  checkBrandContrast,
   checkCanaryOutput,
+  checkChromeClasses,
   checkChromeCompiles,
   checkChromeTokens,
   checkChromeVersion,
@@ -94,7 +96,9 @@ function main(argv: string[]): number {
   const results = [
     report("chrome API version", hasChrome ? checkChromeVersion(chromeDir, uiAppDir()) : "no chrome/"),
     report("chrome theme tokens", hasChrome ? checkChromeTokens(chromeDir, uiAppDir()) : "no chrome/"),
+    report("chrome class names", hasChrome ? checkChromeClasses(chromeDir, uiAppDir()) : "no chrome/"),
     report("chrome type-checks", hasChrome ? checkChromeCompiles(chromeDir, uiAppDir()) : "no chrome/"),
+    report("brand colour contrast", checkBrandContrast(instances)),
     report("model canary output", checkCanaryOutput(path.resolve(templatesDir), instances)),
     report("scripts/", fs.existsSync(shippedScripts) ? checkScripts(instanceDir, shippedScripts, version) : "this build ships no scripts/ copy"),
     report("deploy workflow", checkDeployWorkflow(instanceDir)),

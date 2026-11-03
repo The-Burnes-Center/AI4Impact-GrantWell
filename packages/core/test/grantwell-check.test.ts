@@ -5,8 +5,13 @@ import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
+  checkBrandContrast,
   checkCanaryOutput,
+  checkChromeClasses,
   checkChromeCompiles,
+  chromeClassContract,
+  coreClasses,
+  selectorClasses,
   checkChromeTokens,
   checkChromeVersion,
   checkDeployWorkflow,
@@ -96,6 +101,78 @@ describe("chrome theme tokens", () => {
   it("fails a token GrantWell doesn't have", () => {
     edit(path.join(chrome, "theme.css"), "--gw-color-primary-hover", "--gw-color-primary-hovered");
     expect(failures(checkChromeTokens(chrome, uiApp))).toEqual([expect.stringContaining("theme.css uses --gw-color-primary-hovered")]);
+  });
+});
+
+describe("chrome class names", () => {
+  const warnings = (findings: { level: string; message: string }[]) => findings.filter((f) => f.level === "warn").map((f) => f.message);
+
+  it("passes the neutral fixture, which styles only its own classes", () => {
+    expect(checkChromeClasses(chrome, uiApp)).toEqual([]);
+  });
+
+  it("passes classes in CHROME_CLASSES", () => {
+    fs.appendFileSync(path.join(chrome, "theme.css"), "\n.auth-login-card .login-submit-button { border-radius: 0; }\n.gov-seal { display: none; }\n");
+    expect(checkChromeClasses(chrome, uiApp)).toEqual([]);
+  });
+
+  it("warns, without failing, about a GrantWell class outside the contract", () => {
+    fs.appendFileSync(path.join(chrome, "theme.css"), "\n.marketing__omni { height: 60px; }\n");
+    const findings = checkChromeClasses(chrome, uiApp);
+    expect(failures(findings)).toEqual([]);
+    expect(warnings(findings)).toEqual([expect.stringContaining("theme.css styles .marketing__omni, GrantWell classes outside CHROME_CLASSES")]);
+  });
+
+  it("warns about a retired class with what to use instead", () => {
+    const ui = path.join(tmp, "ui");
+    fs.mkdirSync(path.join(ui, "src", "common"), { recursive: true });
+    fs.writeFileSync(
+      path.join(ui, "src", "common", "chrome-api.ts"),
+      'export const CHROME_CLASSES = ["auth-card"] as const;\nexport const CHROME_CLASSES_RETIRED: Record<string, string> = { "auth-login-card": "style .auth-card" };\n'
+    );
+    fs.writeFileSync(path.join(ui, "src", "common", "a.css"), ".auth-card { color: red; }\n");
+    fs.appendFileSync(path.join(chrome, "theme.css"), "\n.auth-login-card { padding: 0; }\n");
+    expect(warnings(checkChromeClasses(chrome, ui))).toEqual([
+      expect.stringContaining("theme.css styles .auth-login-card (style .auth-card), which this GrantWell release no longer renders"),
+    ]);
+  });
+
+  it("is kept by the UI: every CHROME_CLASSES entry is still rendered", () => {
+    const { kept } = chromeClassContract(uiApp);
+    const { mentioned } = coreClasses(uiApp);
+    expect(kept.size).toBeGreaterThan(0);
+    expect([...kept].filter((c) => !mentioned.has(c))).toEqual([]);
+  });
+
+  it("reads selectors, not values or at-rule conditions", () => {
+    expect([...selectorClasses("@media (min-width: 40.5em) { .a:hover > .b-c { margin: .5rem; background: url(x.png); } }")].sort()).toEqual(["a", "b-c"]);
+  });
+});
+
+describe("brand colour contrast", () => {
+  const palette = (colors: Record<string, string>) => instance({ branding: { ...instance().branding, colors: colors as any } });
+
+  it("passes the Generic, Massachusetts and Colorado palettes and a navy primary with derived shades", () => {
+    for (const colors of [
+      { primary: "#23776C", primaryHover: "#195C53", primaryActive: "#244140", primaryLight: "#DFECE0", accent: "#388557", accentHover: "#32784E" },
+      { primary: "#14558F", primaryHover: "#104472", primaryActive: "#0A2B48", primaryLight: "#F2F8FD", accent: "#388557", accentHover: "#32784E" },
+      { primary: "#001970", primaryHover: "#142A85", primaryActive: "#000F4A", primaryLight: "#E8EBF5", accent: "#245D38", accentHover: "#1B4A2C" },
+      { primary: "#001970" },
+    ]) {
+      expect(checkBrandContrast([palette(colors)])).toEqual([]);
+    }
+  });
+
+  it("fails a palette whose derived shades can't carry white text, listing each pair", () => {
+    const [finding] = checkBrandContrast([palette({ primary: "#4CAF50" })]);
+    expect(finding.level).toBe("fail");
+    expect(finding.message).toContain("state-prod: branding.colors fails WCAG contrast in 7 place(s)");
+    expect(finding.message).toContain("2.77:1, needs 4.5:1 — #FFFFFF on #4CAF50, label on filled primary buttons");
+  });
+
+  it("reports a palette shared by several deployments once", () => {
+    const bad = palette({ primary: "#4CAF50" });
+    expect(checkBrandContrast([bad, { ...bad, id: "state-dev" }])).toHaveLength(1);
   });
 });
 

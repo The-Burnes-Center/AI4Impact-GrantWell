@@ -1,0 +1,179 @@
+{
+  "cases": [
+    {
+      "name": "GrantWell default primary only",
+      "colors": {
+        "primary": "#23776C"
+      },
+      "palette": {
+        "primary": "#23776C",
+        "primaryHover": "#195C53",
+        "primaryActive": "#244140",
+        "primaryLight": "#DFECE0",
+        "accent": "#388557",
+        "accentHover": "#32784E"
+      },
+      "tints": null,
+      "failures": []
+    },
+    {
+      "name": "Generic (all six)",
+      "colors": {
+        "primary": "#23776C",
+        "primaryHover": "#195C53",
+        "primaryActive": "#244140",
+        "primaryLight": "#DFECE0",
+        "accent": "#388557",
+        "accentHover": "#32784E"
+      },
+      "palette": {
+        "primary": "#23776C",
+        "primaryHover": "#195C53",
+        "primaryActive": "#244140",
+        "primaryLight": "#DFECE0",
+        "accent": "#388557",
+        "accentHover": "#32784E"
+      },
+      "tints": null,
+      "failures": []
+    },
+    {
+      "name": "navy primary only",
+      "colors": {
+        "primary": "#001970"
+      },
+      "palette": {
+        "primary": "#001970",
+        "primaryHover": "#00145A",
+        "primaryActive": "#000E3E",
+        "primaryLight": "#E0E3EE",
+        "accent": "#001970",
+        "accentHover": "#00155F"
+      },
+      "tints": {
+        "--gw-color-primary-deep": "#001457",
+        "--gw-color-primary-border": "#BFC6DB",
+        "--gw-color-primary-muted": "#1A2652",
+        "--gw-color-primary-alt": "#00186C",
+        "--gw-color-primary-soft": "#808CB8",
+        "--gw-color-primary-mid": "#405394"
+      },
+      "failures": []
+    },
+    {
+      "name": "Colorado (all six)",
+      "colors": {
+        "primary": "#001970",
+        "primaryHover": "#142A85",
+        "primaryActive": "#000F4A",
+        "primaryLight": "#E8EBF5",
+        "accent": "#245D38",
+        "accentHover": "#1B4A2C"
+      },
+      "palette": {
+        "primary": "#001970",
+        "primaryHover": "#142A85",
+        "primaryActive": "#000F4A",
+        "primaryLight": "#E8EBF5",
+        "accent": "#245D38",
+        "accentHover": "#1B4A2C"
+      },
+      "tints": {
+        "--gw-color-primary-deep": "#001457",
+        "--gw-color-primary-border": "#BFC6DB",
+        "--gw-color-primary-muted": "#1A2652",
+        "--gw-color-primary-alt": "#00186C",
+        "--gw-color-primary-soft": "#808CB8",
+        "--gw-color-primary-mid": "#405394"
+      },
+      "failures": []
+    },
+    {
+      "name": "Massachusetts (all six)",
+      "colors": {
+        "primary": "#14558F",
+        "primaryHover": "#104472",
+        "primaryActive": "#0A2B48",
+        "primaryLight": "#F2F8FD",
+        "accent": "#388557",
+        "accentHover": "#32784E"
+      },
+      "palette": {
+        "primary": "#14558F",
+        "primaryHover": "#104472",
+        "primaryActive": "#0A2B48",
+        "primaryLight": "#F2F8FD",
+        "accent": "#388557",
+        "accentHover": "#32784E"
+      },
+      "tints": {
+        "--gw-color-primary-deep": "#104270",
+        "--gw-color-primary-border": "#C4D5E3",
+        "--gw-color-primary-muted": "#244461",
+        "--gw-color-primary-alt": "#135289",
+        "--gw-color-primary-soft": "#8AAAC7",
+        "--gw-color-primary-mid": "#4F80AB"
+      },
+      "failures": []
+    },
+    {
+      "name": "bright green primary only (fails)",
+      "colors": {
+        "primary": "#4CAF50"
+      },
+      "palette": {
+        "primary": "#4CAF50",
+        "primaryHover": "#3D8C40",
+        "primaryActive": "#2A602C",
+        "primaryLight": "#EAF5EA",
+        "accent": "#4CAF50",
+        "accentHover": "#419544"
+      },
+      "tints": {
+        "--gw-color-primary-deep": "#3B893E",
+        "--gw-color-primary-border": "#D2EBD3",
+        "--gw-color-primary-muted": "#407142",
+        "--gw-color-primary-alt": "#49A84D",
+        "--gw-color-primary-soft": "#A6D7A8",
+        "--gw-color-primary-mid": "#79C37C"
+      },
+      "failures": [
+        {
+          "usage": "text on the brand tint (hover/active rows, tabs, sort headers)",
+          "ratio": 3.73,
+          "required": 4.5
+        },
+        {
+          "usage": "primary text and links",
+          "ratio": 2.77,
+          "required": 4.5
+        },
+        {
+          "usage": "accent text",
+          "ratio": 3.74,
+          "required": 4.5
+        },
+        {
+          "usage": "label on filled primary buttons",
+          "ratio": 2.77,
+          "required": 4.5
+        },
+        {
+          "usage": "focus ring on light surfaces",
+          "ratio": 2.77,
+          "required": 3
+        },
+        {
+          "usage": "focus ring on the brand tint",
+          "ratio": 2.48,
+          "required": 3
+        },
+        {
+          "usage": "accent borders and outlines",
+          "ratio": 2.77,
+          "required": 3
+        }
+      ]
+    }
+  ]
+}

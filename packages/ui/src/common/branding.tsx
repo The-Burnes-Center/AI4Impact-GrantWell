@@ -1,4 +1,6 @@
 import { createContext, useContext, useLayoutEffect, ReactNode } from "react";
+import { findContrastFailures } from "./palette";
+import { brandColorVars, brandTintsCss, TINTS_STYLE_ID } from "./brand-style";
 
 /**
  * Copy of the Branding contract in packages/core/lib/config/instance-config.ts; keep the two in
@@ -16,6 +18,21 @@ export interface LogoLink extends Link {
   className?: string;
 }
 
+/** A line of text with optional links, e.g. ["Developed by ", { label: "AI for Impact", href }, "."]. */
+export type RichLine = (string | Link)[];
+
+export interface HomeCopy {
+  /** "state" for tenancy "single", otherwise "marketing". A chrome PublicHome replaces both. */
+  layout?: "state" | "marketing";
+  tagline?: string;
+  description?: string;
+  /** Exactly three cards, in the order of their icons: discover, understand, draft. */
+  features?: { title: string; text: string }[];
+  trust?: { title: string; text: string };
+  /** Replaces the default credit and support-email lines. */
+  attribution?: RichLine[];
+}
+
 export interface Branding {
   appName: string;
   orgName: string;
@@ -31,6 +48,8 @@ export interface Branding {
   };
   logo: string;
   favicon: string;
+  shortName?: string;
+  home?: HomeCopy;
   footer: {
     /** Footer wordmark image; omit to fall back to `logo`. */
     wordmark?: string;
@@ -38,6 +57,10 @@ export interface Branding {
     madeBy?: LogoLink;
     /** Partner/consortium links + logos. Empty for neutral core. */
     partners: LogoLink[];
+    links?: Link[];
+    /** Holder in the "© <year> <holder>" line. */
+    copyright?: string;
+    disclaimer?: string;
   };
   /**
    * Text links for the "This is a tool by:" strip (OmniHeader) on landing/login. Distinct from
@@ -45,7 +68,7 @@ export interface Branding {
    */
   omniPartners: Link[];
   /** A government deployment's identity: a strip above every page (logo + label, linking to href) and the logo beside the app logo. */
-  govHeader?: { logo: string; label: string; href: string };
+  govHeader?: { logo: string; label: string; href: string; sealBesideLogo?: boolean };
   analyticsId?: string;
   seo?: {
     title?: string;
@@ -79,66 +102,6 @@ export const defaultBranding: Branding = {
 
 const BrandingContext = createContext<Branding>(defaultBranding);
 
-type BrandColor = keyof Branding["colors"];
-
-const relativeLuminance = (hex: string): number => {
-  const h = hex.replace("#", "");
-  const channel = (i: number) => {
-    const c = parseInt(h.slice(i, i + 2), 16) / 255;
-    return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-  };
-  return 0.2126 * channel(0) + 0.7152 * channel(2) + 0.0722 * channel(4);
-};
-
-const contrastRatio = (a: string, b: string): number => {
-  const [hi, lo] = [relativeLuminance(a), relativeLuminance(b)].sort((x, y) => y - x);
-  return (hi + 0.05) / (lo + 0.05);
-};
-
-/**
- * Every brand-colour pair the UI actually paints, with the WCAG threshold it must clear
- * (4.5:1 for text, 3:1 for borders and focus rings). Because these six variables are
- * swapped per instance at runtime, a rebrand can invalidate a ratio that was certified
- * against the default palette — this is what catches that.
- */
-const CONTRAST_RULES: { fg: BrandColor | "white"; bg: BrandColor | "white"; min: number; usage: string }[] = [
-  { fg: "primaryHover", bg: "primaryLight", min: 4.5, usage: "text on the brand tint (hover/active rows, tabs, sort headers)" },
-  { fg: "primary", bg: "white", min: 4.5, usage: "primary text and links" },
-  { fg: "primaryActive", bg: "white", min: 4.5, usage: "heading text" },
-  { fg: "accentHover", bg: "white", min: 4.5, usage: "accent text" },
-  { fg: "white", bg: "primary", min: 4.5, usage: "label on filled primary buttons" },
-  { fg: "primary", bg: "white", min: 3.0, usage: "focus ring on light surfaces" },
-  { fg: "primary", bg: "primaryLight", min: 3.0, usage: "focus ring on the brand tint" },
-  { fg: "accent", bg: "white", min: 3.0, usage: "accent borders and outlines" },
-];
-
-/**
- * Checks a palette against CONTRAST_RULES. Exported so an instance can assert its own
- * branding at build time rather than discovering the problem in an audit.
- */
-export function findBrandingContrastFailures(
-  colors: Branding["colors"]
-): { usage: string; ratio: number; required: number }[] {
-  const resolve = (k: BrandColor | "white") => (k === "white" ? "#ffffff" : colors[k]);
-  return CONTRAST_RULES.flatMap(({ fg, bg, min, usage }) => {
-    const a = resolve(fg);
-    const b = resolve(bg);
-    if (!a || !b) return [];
-    const ratio = contrastRatio(a, b);
-    return ratio >= min ? [] : [{ usage, ratio: Math.round(ratio * 100) / 100, required: min }];
-  });
-}
-
-/** Maps branding.colors onto the --gw-color-* CSS variables defined in tokens.css. */
-const COLOR_VARS: Record<BrandColor, string> = {
-  primary: "--gw-color-primary",
-  primaryHover: "--gw-color-primary-hover",
-  primaryActive: "--gw-color-primary-active",
-  primaryLight: "--gw-color-primary-light",
-  accent: "--gw-color-accent",
-  accentHover: "--gw-color-accent-hover",
-};
-
 export function BrandingProvider({
   value = defaultBranding,
   analytics = false,
@@ -150,18 +113,26 @@ export function BrandingProvider({
   children: ReactNode;
 }) {
   // Push brand colors onto the CSS variables so token-based styles rebrand without
-  // touching component code. tokens.css keeps its defaults if a value is omitted.
+  // touching component code; shades the palette leaves out are derived from its primary.
   useLayoutEffect(() => {
     const root = document.documentElement;
-    (Object.keys(COLOR_VARS) as BrandColor[]).forEach((key) => {
-      const color = value.colors[key];
-      if (color) root.style.setProperty(COLOR_VARS[key], color);
-    });
+    brandColorVars(value.colors).forEach(([name, color]) => root.style.setProperty(name, color));
   }, [value]);
+
+  // The extra tints go in the core layer, not inline, so an instance's theme.css can still set them.
+  useLayoutEffect(() => {
+    document.getElementById(TINTS_STYLE_ID)?.remove();
+    const css = brandTintsCss(value.colors.primary);
+    if (!css) return;
+    const style = document.createElement("style");
+    style.id = TINTS_STYLE_ID;
+    style.textContent = css;
+    document.head.appendChild(style);
+  }, [value.colors.primary]);
 
   useLayoutEffect(() => {
     if (!import.meta.env.DEV) return;
-    const failures = findBrandingContrastFailures(value.colors);
+    const failures = findContrastFailures(value.colors);
     if (failures.length === 0) return;
     console.warn(
       `[branding] ${value.appName || "This"} palette fails WCAG contrast in ${failures.length} place(s):\n` +

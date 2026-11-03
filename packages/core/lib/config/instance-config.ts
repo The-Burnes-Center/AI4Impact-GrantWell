@@ -8,6 +8,23 @@ export interface LogoLink extends Link {
   className?: string;
 }
 
+/** A line of text with optional links, e.g. ["Developed by ", { label: "AI for Impact", href }, "."]. */
+export type RichLine = (string | Link)[];
+
+/** The public home page. Every field is optional; core supplies neutral defaults. */
+export interface HomeCopy {
+  /** "state" for tenancy "single", otherwise "marketing". A chrome PublicHome replaces both. */
+  layout?: "state" | "marketing";
+  /** One line under the app name; also the marketing page's hero line. */
+  tagline?: string;
+  description?: string;
+  /** Exactly three cards, in the order of their icons: discover, understand, draft. */
+  features?: { title: string; text: string }[];
+  trust?: { title: string; text: string };
+  /** Replaces the default credit and support-email lines. */
+  attribution?: RichLine[];
+}
+
 /** One per instance, shared by its deployments. Plain JSON: core reads it at synth for emails. */
 export interface Branding {
   appName: string;
@@ -26,15 +43,25 @@ export interface Branding {
   /** Image paths are site-root URLs, e.g. "/images/marketing/logo.svg". */
   logo: string;
   favicon: string;
+  /** Home-screen and web-manifest name; defaults to appName. */
+  shortName?: string;
+  home?: HomeCopy;
   footer: {
     /** Also the digest email header image; falls back to `logo`. */
     wordmark?: string;
     madeBy?: LogoLink;
     partners: LogoLink[];
+    links?: Link[];
+    /** Holder in the "© <year> <holder>" line. */
+    copyright?: string;
+    disclaimer?: string;
   };
   omniPartners: Link[];
-  /** A government deployment's identity: a strip above every page (logo + label, linking to href) and the logo beside the app logo. */
-  govHeader?: { logo: string; label: string; href: string };
+  /**
+   * A government deployment's identity: a strip above every page (logo + label, linking to href) and
+   * the logo beside the app logo, unless sealBesideLogo is false.
+   */
+  govHeader?: { logo: string; label: string; href: string; sealBesideLogo?: boolean };
   analyticsId?: string;
   seo?: {
     /** Home page <title>, at most 60 characters. Defaults to appName. */
@@ -44,6 +71,13 @@ export interface Branding {
     /** 1200×630 share image, a site-root path like logo. No og:image when unset. */
     ogImage?: { path: string; alt: string };
   };
+}
+
+export interface StateSite {
+  /** Two-letter code of one of this deployment's states. */
+  state: string;
+  /** The state's site, an https origin like https://colorado.grantwell.us. */
+  url: string;
 }
 
 export interface UsState {
@@ -104,6 +138,8 @@ interface InstanceConfigBase {
   feedbackFormUrl?: string;
   /** Choices for a required Region question on the user's profile, stored on the profile row. Unset or empty, no question. */
   regions?: string[];
+  /** Multi-state only: states that have their own GrantWell site. Sign-up for them goes there; their existing users see a notice. */
+  stateSites?: StateSite[];
   /** Abuse and cost limits; every key is optional, `limits(config)` fills in the defaults. */
   limits?: Partial<Limits>;
   /** Dev only. These accounts may sign in past Turnstile with the token in SSM at `e2eBypassParameter(config)`. */
@@ -173,6 +209,41 @@ export function sesEmail(config: InstanceConfig): SesEmail | undefined {
 export type InstanceConfig = InstanceConfigBase &
   ({ tenancy: "single"; states: [UsState] } | { tenancy: "multi"; states: UsState[] });
 
+const isLinkHref = (href: unknown) => typeof href === "string" && /^(https:\/\/|mailto:|\/)/.test(href);
+const isText = (value: unknown) => typeof value === "string" && value.trim() !== "";
+
+function brandingProblems(branding: Branding): string[] {
+  const problems: string[] = [];
+  const badLinks = (links: unknown[] | undefined) =>
+    (links ?? []).some((l) => !l || typeof l !== "object" || !isText((l as Link).label) || !isLinkHref((l as Link).href));
+  const home = branding.home;
+  if (home?.layout !== undefined && home.layout !== "state" && home.layout !== "marketing") {
+    problems.push('branding.home.layout must be "state" or "marketing"');
+  }
+  for (const field of ["tagline", "description"] as const) {
+    if (home?.[field] !== undefined && !isText(home[field])) problems.push(`branding.home.${field} must be non-empty text`);
+  }
+  if (home?.features !== undefined && (home.features.length !== 3 || home.features.some((f) => !isText(f?.title) || !isText(f?.text)))) {
+    problems.push("branding.home.features must be exactly three { title, text } cards");
+  }
+  if (home?.trust !== undefined && (!isText(home.trust.title) || !isText(home.trust.text))) {
+    problems.push("branding.home.trust needs a title and text");
+  }
+  if (home?.attribution?.some((line) => !Array.isArray(line) || badLinks(line.filter((part) => typeof part !== "string")))) {
+    problems.push("branding.home.attribution lines must be lists of text and { label, href } links (https://, mailto: or /)");
+  }
+  if (badLinks(branding.footer.links)) problems.push("branding.footer.links need a label and an https://, mailto: or / href");
+  for (const field of ["copyright", "disclaimer"] as const) {
+    if (branding.footer[field] !== undefined && !isText(branding.footer[field])) {
+      problems.push(`branding.footer.${field} must be non-empty text`);
+    }
+  }
+  if (branding.shortName !== undefined && (!isText(branding.shortName) || branding.shortName.length > 12)) {
+    problems.push("branding.shortName must be 1-12 characters");
+  }
+  return problems;
+}
+
 export function validateInstanceConfig(config: InstanceConfig): void {
   const problems: string[] = [];
   if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(config.id)) problems.push("id must be lowercase-kebab");
@@ -219,6 +290,17 @@ export function validateInstanceConfig(config: InstanceConfig): void {
       problems.push("regions has duplicates");
     }
   }
+  if (config.stateSites !== undefined) {
+    const sites = Array.isArray(config.stateSites) ? config.stateSites : [];
+    const codes = new Set(config.states.map((s) => s.code));
+    if (config.tenancy !== "multi") problems.push("stateSites is for multi-state deployments");
+    if (!Array.isArray(config.stateSites) || sites.some((s) => !codes.has(s?.state) || !/^https:\/\/[a-z0-9.-]+$/.test(s?.url ?? ""))) {
+      problems.push("stateSites entries need one of this deployment's state codes and an https origin with no path, e.g. https://colorado.grantwell.us");
+    } else if (new Set(sites.map((s) => s.state)).size !== sites.length) {
+      problems.push("stateSites lists a state twice");
+    }
+  }
+  problems.push(...brandingProblems(config.branding));
   const deadline = config.auth.mfaDeadline;
   if (deadline !== undefined && !(/(Z|[+-]\d{2}:\d{2})$/.test(deadline) && Number.isFinite(Date.parse(deadline)))) {
     problems.push("auth.mfaDeadline must be an ISO timestamp with an offset, e.g. 2026-11-02T00:00:00-05:00");
@@ -296,6 +378,10 @@ export function monitoringPrefix(config: InstanceConfig): string {
 /** The Region question's choices; empty when the deployment asks none. */
 export function regions(config: InstanceConfig): string[] {
   return config.regions ?? [];
+}
+
+export function stateSites(config: InstanceConfig): StateSite[] {
+  return config.stateSites ?? [];
 }
 
 export function supportedStatesEnv(config: InstanceConfig): string {

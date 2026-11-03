@@ -13,6 +13,7 @@ import {
 import { BrandLogo } from "../../components/common/BrandLogo";
 import { PublicSiteHeader, SiteBanner, SiteFooter } from "../../components/common/ChromeSlots";
 import { HAS_CHROME_HEADER } from "../../common/chrome";
+import { MARKETING_TAGLINE } from "./marketing-copy";
 
 const ArrowRight = ({ className = "mk-btn__arrow" }: { className?: string }) => (
   <svg
@@ -61,9 +62,7 @@ export default function LandingPage() {
               />
             </h1>
             <p className="marketing__hero-tagline">
-              An AI tool for municipalities and community organizations
-              that want to go after federal grants without eating up weeks of
-              staff time.
+              {branding.home?.tagline ?? MARKETING_TAGLINE}
             </p>
             <div className="marketing__hero-actions">
               <button

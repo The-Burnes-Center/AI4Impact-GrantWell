@@ -102,7 +102,8 @@ export function LandingNavbar() {
   );
 }
 
-function AppSkipLink() {
+/** First focusable element on pages without the marketing navbar. */
+export function SkipLink() {
   const handleSkipNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const mainContent = document.getElementById("main-content");
@@ -131,7 +132,7 @@ export function AppNavbar() {
 
   // The docked sidebar carries its own logo, so the bar is only needed as the drawer's toggle,
   // which a chrome Header shows itself.
-  if (!showMenuButton || CHROME.Header) return <AppSkipLink />;
+  if (!showMenuButton || CHROME.Header) return null;
 
   const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) {
@@ -143,7 +144,6 @@ export function AppNavbar() {
 
   return (
     <nav className="marketing__nav marketing__nav--app" aria-label="Site header">
-      <AppSkipLink />
       <div className="marketing__nav-lead">
         <button
           type="button"
@@ -174,7 +174,7 @@ export function AppNavbar() {
 
 export function LandingFooter() {
   const { footer, logo } = useBranding();
-  const { madeBy, partners } = footer;
+  const { madeBy, partners, links = [], copyright, disclaimer } = footer;
 
   return (
     <footer className="marketing__footer">
@@ -202,7 +202,7 @@ export function LandingFooter() {
               href={madeBy.href}
               target="_blank"
               rel="noreferrer"
-              aria-label="AI for Impact"
+              aria-label={madeBy.label || "AI for Impact"}
             >
               <AiForImpactWordmark />
             </a>
@@ -236,6 +236,27 @@ export function LandingFooter() {
               </a>
             ))}
           </div>
+        </div>
+      )}
+      {(links.length > 0 || copyright || disclaimer) && (
+        <div className="marketing__footer-legal">
+          {links.length > 0 && (
+            <nav aria-label="Footer">
+              <ul className="marketing__footer-links">
+                {links.map((l) => (
+                  <li key={l.href}>
+                    <a href={l.href}>{l.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+          {copyright && (
+            <p className="marketing__footer-copyright">
+              © {new Date().getFullYear()} {copyright}
+            </p>
+          )}
+          {disclaimer && <p className="marketing__footer-disclaimer">{disclaimer}</p>}
         </div>
       )}
     </footer>

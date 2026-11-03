@@ -19,7 +19,7 @@
   font-weight: 700;
   color: #0f172a;
   margin: 0 0 8px;
-  font-family: "Noto Sans", sans-serif;
+  font-family: var(--gw-font-family);
   outline: none;
 }
 
@@ -72,7 +72,7 @@
   background: #f8fafc;
   box-sizing: border-box;
   box-shadow: none !important;
-  font-family: "Noto Sans", sans-serif;
+  font-family: var(--gw-font-family);
   appearance: none;
 }
 
@@ -177,7 +177,7 @@
   flex: 0 0 auto;
   line-height: 1;
   box-shadow: none !important;
-  font-family: "Noto Sans", sans-serif;
+  font-family: var(--gw-font-family);
   letter-spacing: 0.01em;
 }
 
@@ -204,7 +204,8 @@
 .create-account-link.btn-link:focus,
 .create-account-link.btn:focus-visible,
 .create-account-link.btn-link:focus-visible,
-.login-submit-button:focus-visible {
+/* .btn so this outranks Bootstrap's .btn:focus-visible { outline: 0 }, which loads later. */
+.btn.login-submit-button:focus-visible {
   outline: 3px solid var(--gw-color-primary);
   outline-offset: 2px;
   border-radius: 2px;
@@ -234,6 +235,20 @@
   justify-content: center;
   gap: 14px;
   box-shadow: 0 4px 14px color-mix(in srgb, var(--gw-color-primary) 40%, transparent);
+}
+
+a.login-submit-button {
+  text-decoration: none;
+}
+
+.auth-state-site-note {
+  margin: var(--gw-spacing-sm) 0 0;
+  padding: var(--gw-spacing-sm) var(--gw-spacing-md);
+  background: var(--gw-color-primary-light);
+  border-left: 3px solid var(--gw-color-primary);
+  border-radius: var(--gw-radius-sm);
+  color: var(--gw-color-text);
+  font-size: var(--gw-font-size-sm, 14px);
 }
 
 .login-submit-button:hover {
@@ -290,7 +305,7 @@
   border-radius: 0;
   line-height: 1.2;
   box-shadow: none !important;
-  font-family: "Noto Sans", sans-serif;
+  font-family: var(--gw-font-family);
   letter-spacing: 0.01em;
   text-align: center;
 }

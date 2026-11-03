@@ -3,8 +3,10 @@
  * It sets up the authorization stack, chatbot API, and user interface, integrating them with Cognito for user authentication.
  */
 
+import * as path from 'node:path';
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import { emailLogoWidth } from "./user-interface/image-size";
 import { ChatBotApi } from "./chatbot-api";
 import { AuthorizationStack } from "./authorization";
 import { UserInterface } from "./user-interface";
@@ -48,10 +50,11 @@ export class GrantWellStack extends cdk.Stack {
     });
 
     // Create the chatbot API and pass the authentication stack
-    const chatbotAPI = new ChatBotApi(this, "ChatbotAPI", { 
+    const chatbotAPI = new ChatBotApi(this, "ChatbotAPI", {
       config: props.config,
       authentication,
-      grantsGovApiKey 
+      grantsGovApiKey,
+      digestLogoWidth: emailLogoWidth(props.config.branding, [props.publicDir, path.join(props.uiSourceDir, "public")]),
     });
 
     // Create the user interface and pass necessary properties

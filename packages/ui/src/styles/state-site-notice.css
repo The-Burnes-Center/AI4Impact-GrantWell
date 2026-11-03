@@ -1,0 +1,49 @@
+/* components/StateSiteNotice.tsx: a strip above the signed-in content. */
+.state-site-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gw-spacing-md);
+  margin: var(--gw-spacing-lg) var(--gw-spacing-lg) 0;
+  padding: var(--gw-spacing-md) var(--gw-spacing-lg);
+  background: var(--gw-color-primary-light);
+  border-left: 4px solid var(--gw-color-primary);
+  border-radius: var(--gw-radius-md);
+  color: var(--gw-color-text);
+}
+
+.state-site-notice__text {
+  flex: 1;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.state-site-notice__text a {
+  color: var(--gw-color-primary-hover);
+  font-weight: var(--gw-font-weight-semibold);
+  text-decoration: underline;
+}
+
+.state-site-notice__close {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: var(--gw-radius-full);
+  background: transparent;
+  color: var(--gw-color-text);
+  cursor: pointer;
+}
+
+.state-site-notice__close:hover {
+  background: color-mix(in srgb, var(--gw-color-primary) 12%, transparent);
+}
+
+.state-site-notice__close:focus-visible,
+.state-site-notice__text a:focus-visible {
+  outline: 3px solid var(--gw-color-focus-light);
+  outline-offset: 2px;
+}

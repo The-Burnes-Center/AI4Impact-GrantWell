@@ -21,7 +21,7 @@ div[data-amplify-theme] {
 body {
   min-height: 100%;
   background-color: #ffffff;
-  font-family: "Noto Sans", sans-serif;
+  font-family: var(--gw-font-family);
 }
 
 /* Utility classes (.visually-hidden, .sr-only, etc.) are in utilities.css */

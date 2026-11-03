@@ -59,6 +59,8 @@ const BRANDING = {
   appName: process.env.DIGEST_APP_NAME || "",
   brandColor: process.env.DIGEST_BRAND_COLOR || "",
   logoUrl: process.env.DIGEST_LOGO_URL || "",
+  logoWidth: process.env.DIGEST_LOGO_WIDTH || "",
+  orgName: process.env.DIGEST_ORG_NAME || "",
   postalAddress: process.env.DIGEST_POSTAL_ADDRESS || "",
   supportEmail: process.env.DIGEST_SUPPORT_EMAIL || "",
 };

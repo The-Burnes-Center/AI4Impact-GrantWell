@@ -2,7 +2,8 @@ import type { FormEvent, ReactNode } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
 import PasswordRequirementsList from "../PasswordRequirementsList";
 import { PasswordRequirements } from "../auth-types";
-import { SINGLE_STATE, SUPPORTED_STATES } from "../../../common/states";
+import { SINGLE_STATE, SUPPORTED_STATES, stateNameFromCode } from "../../../common/states";
+import { signUpHandoffUrl, stateSiteFor } from "../../../common/state-sites";
 
 interface SignUpStepProps {
   email: string;
@@ -45,9 +46,16 @@ export default function SignUpStep({
   confirmPasswordErrorId,
   turnstile,
 }: SignUpStepProps) {
+  const stateSite = stateSiteFor(stateCode);
+  const handoffUrl = stateSite && signUpHandoffUrl(stateSite, email);
+  const goToStateSite = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (handoffUrl) window.location.assign(handoffUrl);
+  };
+
   return (
     <div className="login-form" role="region" aria-labelledby="auth-card-title">
-      <Form onSubmit={onSubmit} aria-label="Create account form" noValidate>
+      <Form onSubmit={handoffUrl ? goToStateSite : onSubmit} aria-label="Create account form" noValidate>
         <Form.Group className="mb-3">
           <Form.Label className="form-label" htmlFor="signup-email-input">
             Email address <span aria-hidden="true">*</span>
@@ -134,6 +142,13 @@ export default function SignUpStep({
           <Form.Text id="signup-state-help" muted>
             Pick your state to see federal grants plus state-specific grants for that state.
           </Form.Text>
+          <div aria-live="polite">
+            {stateSite && (
+              <p className="auth-state-site-note" id="signup-state-site-note">
+                {stateNameFromCode(stateSite.state)} has its own GrantWell site. Create your account there.
+              </p>
+            )}
+          </div>
         </Form.Group>
         )}
         <div className="login-form-options">
@@ -146,8 +161,13 @@ export default function SignUpStep({
             className="show-password-checkbox"
           />
         </div>
-        {turnstile}
+        {!handoffUrl && turnstile}
         <div className="login-form-actions">
+          {handoffUrl ? (
+            <a href={handoffUrl} className="btn btn-primary login-submit-button" aria-describedby="signup-state-site-note">
+              Go to GrantWell {stateNameFromCode(stateSite.state)}
+            </a>
+          ) : (
           <Button
             variant="primary"
             type="submit"
@@ -164,6 +184,7 @@ export default function SignUpStep({
               "Create account"
             )}
           </Button>
+          )}
         </div>
       </Form>
       <div className="login-form-footer login-form-footer--center">

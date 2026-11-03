@@ -27,16 +27,18 @@ import { AppSidebar } from "./navigation/UnifiedNavigation";
 import ProfileGate from "./profile-gate/ProfileGate";
 import MfaGate from "./auth/MfaGate";
 import SignInNotices from "./SignInNotices";
+import StateSiteNotice from "./StateSiteNotice";
 import LandingPage from "../pages/landing/LandingPage";
 import LoginPage from "../pages/landing/LoginPage";
 import {
   AppNavbar,
   OmniHeader,
+  SkipLink,
 } from "../pages/landing/chrome";
 import "../styles/marketing-landing.css";
 import { AppSiteHeader, SiteBanner, SiteFooter } from "./common/ChromeSlots";
-import { CHROME } from "../common/chrome";
 import PublicHomePage from "../pages/landing/PublicHomePage";
+import { hasPublicHome, isStateHome } from "../pages/landing/public-home";
 
 const WhatsNewPage = lazy(() => import("../pages/whats-new/WhatsNewPage"));
 
@@ -191,13 +193,13 @@ export default function AppConfigured() {
     };
   }, [theme]);
 
-  // The page's static fallback already shows the landing; keep it on screen instead of a spinner.
-  // A deployment's own public home needs the config for its sign-in panel, so it waits instead.
-  if (!config && !error && window.location.pathname === "/" && !CHROME.PublicHome) {
+  // The page's static fallback already shows the landing or the state home; render the same page
+  // instead of a spinner. A chrome PublicHome needs the config for its sign-in panel, so it waits.
+  if (!config && !error && window.location.pathname === "/" && (isStateHome() || !hasPublicHome())) {
     return (
       <BrandingProvider value={activeBranding}>
         <BrowserRouter>
-          <LandingPage />
+          {isStateHome() ? <PublicHomePage onAuthenticated={() => {}} signInPending /> : <LandingPage />}
         </BrowserRouter>
       </BrandingProvider>
     );
@@ -278,12 +280,14 @@ function AppLayoutContent({
     return (
       <NavigationProvider>
         <div className="marketing marketing__app-shell">
+          <SkipLink />
           <SiteBanner />
           <AppSiteHeader />
           <AppNavbar />
           <div className="marketing__app-body">
             <AppSidebar />
             <div className="marketing__app-main">
+              <StateSiteNotice />
               <MfaGate>
                 <ProfileGate>
                   <MaintenanceGate>
@@ -301,7 +305,11 @@ function AppLayoutContent({
     );
   }
 
-  if (!configured && pathname === "/" && !CHROME.PublicHome) {
+  if (!configured && pathname === "/" && isStateHome()) {
+    return <PublicHomePage onAuthenticated={onAuthenticated} signInPending />;
+  }
+
+  if (!configured && pathname === "/" && !hasPublicHome()) {
     return <LandingPage />;
   }
 
@@ -330,12 +338,12 @@ function AppLayoutContent({
       <Routes>
         <Route
           path="/"
-          element={CHROME.PublicHome ? <PublicHomePage onAuthenticated={onAuthenticated} /> : <LandingPage />}
+          element={hasPublicHome() ? <PublicHomePage onAuthenticated={onAuthenticated} /> : <LandingPage />}
         />
         <Route
           path="/login"
           element={
-            CHROME.PublicHome ? <PublicHomePage onAuthenticated={onAuthenticated} /> : <LoginPage onAuthenticated={onAuthenticated} />
+            hasPublicHome() ? <PublicHomePage onAuthenticated={onAuthenticated} /> : <LoginPage onAuthenticated={onAuthenticated} />
           }
         />
         <Route

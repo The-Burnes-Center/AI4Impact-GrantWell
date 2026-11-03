@@ -46,12 +46,15 @@ import "../../styles/auth-panel.css";
 import { BrandLogo } from "../common/BrandLogo";
 import { TURNSTILE_SITE_KEY } from "./turnstile-config";
 import { SINGLE_STATE } from "../../common/instance";
+import { readSignUpHandoff } from "../../common/state-sites";
 
 interface AuthPanelProps {
   onAuthenticated: () => void;
   /** Shown above the form until dismissed, e.g. why the user was signed out. */
   notice?: string;
   onNoticeDismiss?: () => void;
+  /** 2 on a page that has its own h1. */
+  headingLevel?: 1 | 2;
 }
 
 interface CardCopy {
@@ -161,10 +164,16 @@ function clearPendingSignupState() {
   }
 }
 
-export default function AuthPanel({ onAuthenticated, notice: initialNotice, onNoticeDismiss }: AuthPanelProps) {
+export default function AuthPanel({
+  onAuthenticated,
+  notice: initialNotice,
+  onNoticeDismiss,
+  headingLevel = 1,
+}: AuthPanelProps) {
   const branding = useBranding();
-  const [view, setView] = useState<AuthView>("sign-in");
-  const [email, setEmail] = useState("");
+  const [handoff] = useState(() => readSignUpHandoff(window.location.hash));
+  const [view, setView] = useState<AuthView>(handoff ? "sign-up" : "sign-in");
+  const [email, setEmail] = useState(handoff?.email ?? "");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -185,6 +194,7 @@ export default function AuthPanel({ onAuthenticated, notice: initialNotice, onNo
 
   const errorId = useId();
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const Heading = headingLevel === 2 ? "h2" : "h1";
 
   const normalizedEmail = useMemo(() => normalizeEmail(email), [email]);
 
@@ -205,9 +215,15 @@ export default function AuthPanel({ onAuthenticated, notice: initialNotice, onNo
   );
 
   useEffect(() => {
-    if (titleRef.current) {
-      titleRef.current.focus();
-    }
+    if (handoff) window.history.replaceState(window.history.state, "", window.location.pathname + window.location.search);
+  }, [handoff]);
+
+  // Focus follows a switch between views; on first render it stays where the page put it.
+  const shownView = useRef(view);
+  useEffect(() => {
+    if (shownView.current === view) return;
+    shownView.current = view;
+    titleRef.current?.focus();
   }, [view]);
 
   const cardCopy = useMemo<CardCopy>(() => {
@@ -843,14 +859,14 @@ export default function AuthPanel({ onAuthenticated, notice: initialNotice, onNo
         </div>
       )}
       <div className="auth-card-header">
-        <h1
+        <Heading
           id="auth-card-title"
           className="auth-card-title"
           ref={titleRef}
           tabIndex={-1}
         >
           {cardCopy.title}
-        </h1>
+        </Heading>
         <p className="auth-card-subtitle">{cardCopy.subtitle}</p>
       </div>
       <div className="auth-card-content">

@@ -2,16 +2,23 @@ import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 import type { Plugin } from "vite";
+import type { OutputAsset, OutputBundle } from "rollup";
 import { renderToStaticMarkup } from "react-dom/server";
 import { parseReleaseNotes } from "../src/common/release-notes-parse";
 import { notesMarkdown } from "../src/components/whats-new/notes-markdown";
+import { MARKETING_TAGLINE } from "../src/pages/landing/marketing-copy";
+import { resolveHome } from "../src/common/home-copy";
 import type { Branding } from "../src/common/branding";
+import { brandColorVars, brandTintsCss, TINTS_STYLE_ID } from "../src/common/brand-style";
+import { stateFallback } from "../src/pages/landing/state-fallback";
 import type { Seo } from "../src/common/instance";
 
-interface Staged {
+export interface Staged {
   siteUrl?: string;
   seo?: Seo;
   branding: Branding;
+  tenancy?: "single";
+  states?: { name: string }[];
 }
 
 const attr = (s: string) =>
@@ -87,10 +94,25 @@ const ARROW =
   '<path d="M3.5 10.5L10.5 3.5M10.5 3.5H4.5M10.5 3.5V9.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
 
 /** Same markup as OmniHeader, so React's swap of the fallback doesn't move the page. */
-type PageBranding = Pick<Branding, "appName" | "logo" | "favicon" | "omniPartners">;
+type PageBranding = Pick<Branding, "appName" | "logo" | "favicon" | "omniPartners" | "home"> & {
+  colors: Pick<Branding["colors"], "primary">;
+};
 
 /** Matches defaultBranding for builds with nothing staged. */
-const UNSTAGED: PageBranding = { appName: "GrantWell", logo: "", favicon: "", omniPartners: [] };
+const UNSTAGED: PageBranding = { appName: "GrantWell", logo: "", favicon: "", omniPartners: [], colors: { primary: "#23776C" } };
+
+const ICON_TYPES: Record<string, string> = { svg: "image/svg+xml", png: "image/png", ico: "image/x-icon" };
+
+/** The favicon's MIME type from its extension; undefined for anything else. */
+export const iconType = (href: string): string | undefined =>
+  ICON_TYPES[href.split(/[?#]/)[0].split(".").pop()?.toLowerCase() ?? ""];
+
+export function iconLink(favicon: string): string {
+  // "data:," asks the browser for no favicon at all, instead of a /favicon.ico 404.
+  if (!favicon) return tag("link", { rel: "icon", href: "data:," });
+  const type = iconType(favicon);
+  return tag("link", { rel: "icon", href: favicon, ...(type ? { type } : {}) });
+}
 
 function omniHeader(branding: PageBranding): string {
   if (branding.omniPartners.length === 0) return "";
@@ -105,6 +127,76 @@ function heroLogo(branding: PageBranding): string {
   return branding.logo
     ? `<img class="marketing__hero-wordmark" src="${attr(branding.logo)}" alt="${attr(branding.appName)}" />`
     : `<span class="marketing__hero-wordmark">${attr(branding.appName)}</span>`;
+}
+
+/** The page CloudFront serves for an unknown path: static, branded, no scripts. */
+export function notFoundHtml(branding: Pick<PageBranding, "appName" | "colors">): string {
+  const name = attr(branding.appName);
+  const primary = /^#[0-9a-f]{3,8}$/i.test(branding.colors.primary) ? branding.colors.primary : UNSTAGED.colors.primary;
+  return `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Page not found - ${name}</title>
+    <style>
+      body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #1f1f1f; background: #ffffff; border-top: 6px solid ${primary}; }
+      main { max-width: 560px; margin: 15vh auto; padding: 0 24px; line-height: 1.5; }
+      h1 { font-size: 28px; margin: 0 0 12px; color: ${primary}; }
+      a { color: ${primary}; font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Page not found</h1>
+      <p>This page doesn't exist on ${name}.</p>
+      <p><a href="/">Go to the ${name} home page</a></p>
+    </main>
+  </body>
+</html>
+`;
+}
+
+/** True when chrome/index.tsx ships its own public home, the slot the app checks as CHROME.PublicHome. */
+export function chromeHasPublicHome(source: string): boolean {
+  const code = source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
+  return /\bPublicHome\b/.test(code);
+}
+
+/**
+ * Starts the runtime config download with the page instead of after the app's JavaScript. Added after
+ * Vite's HTML pass, which would otherwise inline a local aws-exports.json into the page.
+ */
+export const CONFIG_PRELOAD = tag("link", { rel: "preload", href: "/aws-exports.json", as: "fetch", crossorigin: "anonymous" });
+
+/**
+ * index.html in the brand's colours from the first paint, set exactly as BrandingProvider sets them
+ * (inline on <html>, tints in the core layer), so React applying them changes nothing.
+ */
+export function withBrandColors(html: string, colors: Branding["colors"]): string {
+  const vars = brandColorVars(colors).map(([name, color]) => `${name}: ${color}`).join("; ");
+  const tints = brandTintsCss(colors.primary);
+  return html
+    .replace(/<html lang="en">/, `<html lang="en" style="${attr(vars)}">`)
+    .replace("</head>", `${tints ? `  <style id="${TINTS_STYLE_ID}">${tints}</style>
+  ` : ""}</head>`);
+}
+
+/** Preloads for the instance's own upright web fonts, which theme.css would otherwise request late. */
+export function instanceFontPreloads(bundle: OutputBundle | undefined, base: string): string[] {
+  return Object.values(bundle ?? {})
+    .filter((file): file is OutputAsset => file.type === "asset" && file.fileName.endsWith(".woff2"))
+    .filter((file) => file.originalFileNames.some((name) => name.includes("instance-chrome/")) && !/italic/i.test(file.fileName))
+    .map((file) => tag("link", { rel: "preload", href: `${base}${file.fileName}`, as: "font", type: "font/woff2", crossorigin: "anonymous" }));
+}
+
+/** index.html with #root's landing fallback replaced by `inner`, keeping the route script whats-new.html relies on. */
+function withRootFallback(indexHtml: string, inner: string): string {
+  const rootStart = indexHtml.indexOf('<div id="root">');
+  const scriptStart = indexHtml.lastIndexOf("<script>", indexHtml.indexOf(LANDING_ONLY_SCRIPT));
+  if (rootStart < 0 || scriptStart < 0) throw new Error("index.html no longer has the #root fallback");
+  return indexHtml.slice(0, rootStart) + `<div id="root">${inner}</div>\n    ` + indexHtml.slice(scriptStart);
 }
 
 const WHATS_NEW_TITLE = "What's new - GrantWell";
@@ -144,12 +236,21 @@ export function whatsNewHtml(indexHtml: string, releaseNotes: string, siteUrl?: 
   return html;
 }
 
-/** A deployment with its own public home (chrome/) must not flash GrantWell's landing before React mounts. */
+/** A deployment with its own public home (a chrome PublicHome) must not flash GrantWell's landing before React mounts. */
 export function withoutLandingFallback(indexHtml: string): string {
-  const rootStart = indexHtml.indexOf('<div id="root">');
-  const scriptStart = indexHtml.lastIndexOf("<script>", indexHtml.indexOf(LANDING_ONLY_SCRIPT));
-  if (rootStart < 0 || scriptStart < 0) throw new Error("index.html no longer has the #root fallback");
-  return indexHtml.slice(0, rootStart) + '<div id="root"></div>\n    ' + indexHtml.slice(scriptStart);
+  return withRootFallback(indexHtml, "");
+}
+
+/**
+ * The static #root for "/": empty when chrome ships a PublicHome, the state page's copy when the
+ * resolved layout is "state", otherwise the marketing fallback already in index.html.
+ */
+export function landingFallback(indexHtml: string, staged: Staged | undefined, chromePublicHome: boolean): string {
+  if (chromePublicHome) return withoutLandingFallback(indexHtml);
+  if (!staged) return indexHtml;
+  const single = staged.tenancy === "single" ? staged.states?.[0]?.name ?? null : null;
+  const home = resolveHome(staged.branding, single);
+  return home.layout === "state" ? withRootFallback(indexHtml, stateFallback(staged.branding, home)) : indexHtml;
 }
 
 /** Fills index.html from the instance core staged at synth: favicon, head tags, JSON-LD and the static landing fallback. */
@@ -157,9 +258,11 @@ export function instanceHtml(stagedInstancePath: string): Plugin {
   let publicDir = "";
   let root = "";
   let outDir = "";
+  let base = "/";
   return {
     name: "instance-html",
     configResolved(config) {
+      base = config.base;
       publicDir = config.publicDir;
       root = config.root;
       outDir = path.resolve(config.root, config.build.outDir);
@@ -171,20 +274,22 @@ export function instanceHtml(stagedInstancePath: string): Plugin {
       const index = fs.readFileSync(path.join(outDir, "index.html"), "utf8");
       const notes = fs.readFileSync(path.join(root, "RELEASE_NOTES.md"), "utf8");
       fs.writeFileSync(path.join(outDir, "whats-new.html"), whatsNewHtml(index, notes, staged?.siteUrl, omniHeader(staged?.branding ?? UNSTAGED)));
+      fs.writeFileSync(path.join(outDir, "404.html"), notFoundHtml(staged?.branding ?? UNSTAGED));
     },
-    async transformIndexHtml(html) {
+    async transformIndexHtml(html, ctx) {
       const staged: Staged | undefined = fs.existsSync(stagedInstancePath)
         ? JSON.parse(fs.readFileSync(stagedInstancePath, "utf8"))
         : undefined;
       const branding: PageBranding = staged?.branding ?? UNSTAGED;
-      const head = await headTags(staged, publicDir);
-      if (fs.existsSync(path.join(root, "src", "instance-chrome", "index.tsx"))) html = withoutLandingFallback(html);
-      return html
-        // "data:," asks the browser for no favicon at all, instead of a /favicon.ico 404.
-        .replace("%GW_FAVICON%", attr(branding.favicon || "data:,"))
+      const head = [CONFIG_PRELOAD, ...(await headTags(staged, publicDir)), ...instanceFontPreloads(ctx.bundle, base)];
+      const chromeIndex = path.join(root, "src", "instance-chrome", "index.tsx");
+      const chromePublicHome = fs.existsSync(chromeIndex) && chromeHasPublicHome(fs.readFileSync(chromeIndex, "utf8"));
+      return withBrandColors(landingFallback(html, staged, chromePublicHome), branding.colors)
+        .replace("<!-- %GW_ICON% -->", iconLink(branding.favicon))
         .replace("<!-- %GW_HEAD% -->", head.join("\n    "))
         .replace("%GW_OMNI%", omniHeader(branding))
         .replace("%GW_HERO_LOGO%", heroLogo(branding))
+        .replace("%GW_TAGLINE%", attr(branding.home?.tagline ?? MARKETING_TAGLINE))
         .replaceAll("%GW_APP_NAME%", attr(branding.appName));
     },
   };
