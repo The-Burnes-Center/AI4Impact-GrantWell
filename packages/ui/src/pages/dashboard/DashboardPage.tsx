@@ -454,7 +454,7 @@ const Dashboard: React.FC = () => {
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <Breadcrumbs
           items={[
-            { label: "Home", onClick: () => navigate("/") },
+            { label: "Home", href: "/home" },
             { label: "Admin Dashboard" },
           ]}
         />
