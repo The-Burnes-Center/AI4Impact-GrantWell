@@ -176,7 +176,7 @@ export function LandingFooter() {
                 <img
                   className="marketing__footer-heart"
                   src={madeBy.logo}
-                  alt=""
+                  alt="love"
                 />
               )}
               <span>by</span>
