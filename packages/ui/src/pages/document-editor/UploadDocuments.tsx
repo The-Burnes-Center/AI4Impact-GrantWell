@@ -452,9 +452,9 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               animation: "spin 1s linear infinite",
             }}
           />
-          <h2 style={{ fontSize: typography.fontSize["2xl"], fontWeight: typography.fontWeight.bold, color: colors.heading, margin: "0 0 8px" }}>
+          <p style={{ fontSize: typography.fontSize["2xl"], fontWeight: typography.fontWeight.bold, color: colors.heading, margin: "0 0 8px" }}>
             Preparing sections...
-          </h2>
+          </p>
           <p style={{ fontSize: typography.fontSize.base, color: colors.textSecondary, margin: 0 }}>
             {draftProgress}
           </p>
@@ -618,15 +618,16 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
 
           {files.length > 0 && (
             <div style={{ marginTop: spacing.lg }}>
-              <p style={{
+              <h4 style={{
                 fontSize: typography.fontSize.sm,
                 fontWeight: typography.fontWeight.semibold,
                 color: colors.text,
+                marginTop: 0,
                 marginBottom: spacing.md,
                 fontFamily: typography.fontFamily,
               }}>
                 Selected Documents ({files.length})
-              </p>
+              </h4>
               {files.map((file, index) => (
                 <div
                   key={index}
@@ -768,7 +769,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           )}
         </div>
 
-        {/* Additional Information */}
+        {/* Additional Context */}
         <div>
           <h3 style={{
             fontSize: typography.fontSize.lg,
@@ -777,7 +778,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             marginBottom: spacing.sm,
             fontFamily: typography.fontFamily,
           }}>
-            Additional Information
+            Additional Context
           </h3>
           <p style={{
             fontSize: typography.fontSize.sm,

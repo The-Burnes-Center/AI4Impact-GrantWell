@@ -378,6 +378,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
         <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "48px 2fr 1.3fr 1.5fr 1fr 1.4fr" }}>
           <div role="row" style={{ display: "contents" }}>
             <div className="header-cell" role="columnheader">
+              <span className="visually-hidden">Select</span>
               <input
                 type="checkbox"
                 checked={selectedItems.length === sessions.length && sessions.length > 0}
