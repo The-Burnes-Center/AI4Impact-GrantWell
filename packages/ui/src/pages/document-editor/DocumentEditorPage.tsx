@@ -341,7 +341,7 @@ const DocumentEditor: React.FC = () => {
                 return false;
               }}
               onStepClick={(idx) => navigateToStep(EDITOR_STEPS[idx].id)}
-              completedSteps={Array.from({ length: activeStep }, (_, i) => i)}
+              completedSteps={Array.from({ length: furthestStepIndex }, (_, i) => i)}
               showProgress
             />
 
