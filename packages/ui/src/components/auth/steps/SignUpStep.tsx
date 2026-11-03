@@ -131,6 +131,7 @@ export default function SignUpStep({
             value={stateCode}
             onChange={(event) => onStateChange(event.target.value)}
             disabled={loading}
+            autoComplete="address-level1"
             className="form-input"
             aria-describedby="signup-state-help"
           >
