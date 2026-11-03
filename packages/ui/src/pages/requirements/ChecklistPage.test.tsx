@@ -47,5 +47,6 @@ describe("ChecklistPage grant summary", () => {
     }
     expect(markdown.textContent).toMatch(/js plain secure mail/);
     expect(markdown.innerHTML).not.toMatch(/javascript:|insecure\.example|evil\.example/);
+    expect(screen.getByRole("heading", { level: 2, name: "Not sure if your organization qualifies?" })).toBeInTheDocument();
   });
 });
