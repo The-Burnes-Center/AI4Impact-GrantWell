@@ -61,6 +61,14 @@ describe("reading the caller's documents", () => {
     expect((await download(event({ fileName: "user-1/Bridge Grant/x.pdf" }))).statusCode).toBe(200);
   });
 
+  it("signs downloads as attachments, so the browser saves the file", async () => {
+    const res = await download(event({ fileName: "user-1/documents/board notes.txt" }));
+    const url = new URL(JSON.parse(res.body).signedUrl);
+    expect(url.searchParams.get("response-content-disposition")).toBe(
+      `attachment; filename="board notes.txt"; filename*=UTF-8''board%20notes.txt`
+    );
+  });
+
   it("lists the caller's whole library, old grant folders included, whatever prefix is asked for", async () => {
     const at = new Date("2026-11-01T00:00:00Z");
     s3.on(ListObjectsV2Command)

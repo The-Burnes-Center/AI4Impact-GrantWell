@@ -29,9 +29,13 @@ export const handler = async (event) => {
       return forbidden('Unauthorized: Can only download your own files');
     }
 
+    const name = fileName.split('/').pop();
+    const asciiName = name.replace(/[^\x20-\x7e]|["\\]/g, '_');
     const command = new GetObjectCommand({
       Bucket: getBucketName(),
       Key: fileName,
+      // Without it a browser opens text and PDFs in the tab instead of saving them.
+      ResponseContentDisposition: `attachment; filename="${asciiName}"; filename*=UTF-8''${encodeURIComponent(name)}`,
     });
 
     const signedUrl = await getSignedUrl(getS3Client(), command, {
