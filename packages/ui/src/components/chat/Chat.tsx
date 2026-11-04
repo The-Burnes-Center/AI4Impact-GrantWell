@@ -1,9 +1,11 @@
-import React, { useContext, useEffect, useLayoutEffect, useState, useRef } from "react";
+import React, { useCallback, useContext, useEffect, useLayoutEffect, useState, useRef } from "react";
 import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
 import { getCurrentUser } from "aws-amplify/auth";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
+import type { ChatSession } from "../../common/api-client/sessions-client";
+import { Link } from "react-router";
 import ChatMessage from "./ChatMessage";
 import ChatInputPanel from "./ChatInputPanel";
 import { useBranding } from "../../common/branding";
@@ -121,6 +123,24 @@ const styles: Record<string, React.CSSProperties> = {
     opacity: 1,
     pointerEvents: "auto",
   },
+  unavailable: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    gap: "12px",
+    maxWidth: "560px",
+    margin: "24px auto",
+    padding: "16px 20px",
+    border: "1px solid var(--gw-color-border)",
+    borderRadius: "8px",
+    backgroundColor: "var(--gw-color-white)",
+    color: "var(--gw-color-text)",
+    fontSize: "15px",
+  },
+  unavailableLink: {
+    color: "var(--gw-color-primary)",
+    fontWeight: 600,
+  },
   earlierRow: {
     display: "flex",
     justifyContent: "center",
@@ -173,10 +193,29 @@ export default function Chat(props: {
   const scrollRestoreRef = useRef<{ height: number; top: number; focusTranscript: boolean } | null>(null);
   const loadOlderRef = useRef<() => Promise<void>>(async () => {});
 
+  const pendingSessionRef = useRef<ChatSession | null>(null);
+  const savingSessionRef = useRef<Promise<void> | null>(null);
+  const [unavailable, setUnavailable] = useState(false);
+
+  const ensureSession = useCallback((): Promise<void> => {
+    const pending = pendingSessionRef.current;
+    if (pending && appContext) {
+      pendingSessionRef.current = null;
+      savingSessionRef.current = new ApiClient(appContext).sessions
+        .createSession(pending)
+        .then((): void => undefined)
+        .catch((error: unknown): void => console.warn("Failed to save initial greeting:", error));
+    }
+    return savingSessionRef.current ?? Promise.resolve();
+  }, [appContext]);
+
   /** Loads session history */
   useEffect(() => {
     if (!appContext) return;
     sessionIdRef.current = props.sessionId;
+    pendingSessionRef.current = null;
+    savingSessionRef.current = null;
+    setUnavailable(false);
     setMessageHistory([]);
     setOlderMessages([]);
     setOlderCursor(null);
@@ -192,6 +231,12 @@ export default function Chat(props: {
 
       setSession({ id: props.sessionId, loading: true });
 
+      const sessionId = props.sessionId;
+      const showUnavailable = () => {
+        setUnavailable(true);
+        setSession({ id: sessionId, loading: false });
+        setRunning(false);
+      };
       const apiClient = new ApiClient(appContext);
       try {
         const username = await getCurrentUser().then(
@@ -227,11 +272,24 @@ export default function Chat(props: {
             }
           }, 100);
         } else {
-          // Session doesn't exist or has no history - create initial greeting
-          const summaryResult = await apiClient.landingPage.getNOFOSummary(
-            props.documentIdentifier
-          );
-          const grantName = summaryResult.data.GrantName;
+          if (!props.documentIdentifier) {
+            showUnavailable();
+            return;
+          }
+          let grantName: string;
+          try {
+            const summaryResult = await apiClient.landingPage.getNOFOSummary(
+              props.documentIdentifier
+            );
+            grantName = summaryResult.data.GrantName;
+          } catch (error) {
+            const status = (error as { status?: number }).status;
+            if (status === 403 || status === 404) {
+              showUnavailable();
+              return;
+            }
+            throw error;
+          }
 
           const initialMessage = {
             type: ChatBotMessageType.AI,
@@ -239,27 +297,21 @@ export default function Chat(props: {
             metadata: {},
           };
           setMessageHistory([initialMessage]);
-          
-          // Save the initial greeting to DynamoDB so it persists on refresh
-          try {
-            await apiClient.sessions.createSession({
-              sessionId: props.sessionId,
-              userId: username,
-              title: `Chat about ${grantName}`,
-              documentIdentifier: props.documentIdentifier || "",
-              chatHistory: [{ user: "", chatbot: initialMessage.content, metadata: "" }],
-            });
-          } catch (error) {
-            console.warn("Failed to save initial greeting:", error);
-            // Don't show error to user, just log it - the message is still displayed
-          }
+          // Saved with the first message, so opening a chat and leaving adds nothing to My Chats.
+          pendingSessionRef.current = {
+            sessionId: props.sessionId,
+            userId: username,
+            title: `Chat about ${grantName}`,
+            documentIdentifier: props.documentIdentifier,
+            chatHistory: [{ user: "", chatbot: initialMessage.content, metadata: "" }],
+          };
         }
         setSession({ id: props.sessionId, loading: false });
         setRunning(false);
       } catch (error) {
-        console.log(error);
-        addNotification("error", error instanceof Error ? error.message : String(error));
-        addNotification("info", "Please refresh the page");
+        console.warn("Could not load the chat:", error);
+        setSession({ id: props.sessionId, loading: false });
+        addNotification("error", "We couldn't load this chat. Refresh the page to try again.");
       }
     })();
   }, [appContext, props.sessionId, props.documentIdentifier]);
@@ -426,7 +478,7 @@ export default function Chat(props: {
         style={styles.messageArea}
       >
         <ul style={{ ...styles.messageList, listStyle: "none", padding: 0, margin: 0 }}>
-          {messageHistory.length === 0 && !session?.loading && (
+          {messageHistory.length === 0 && !session?.loading && !unavailable && (
             <li style={styles.infoAlert}>
               <LuCircleHelp size={20} style={styles.infoIcon} aria-hidden="true" />
               <span>
@@ -462,7 +514,7 @@ export default function Chat(props: {
             </li>
           ))}
 
-          {messageHistory.length === 0 && !session?.loading && (
+          {messageHistory.length === 0 && !session?.loading && !unavailable && (
             <li style={styles.welcomeText}>{branding.appName}</li>
           )}
 
@@ -470,6 +522,17 @@ export default function Chat(props: {
             <li style={styles.loadingContainer}>
               <div style={styles.spinner} aria-hidden="true"></div>
               <span>Loading chat</span>
+            </li>
+          )}
+
+          {unavailable && (
+            <li style={styles.unavailable}>
+              <p style={{ margin: 0 }}>
+                This chat isn&apos;t available. It may have been deleted, or the link is wrong.
+              </p>
+              <Link to="/chat/sessions" style={styles.unavailableLink}>
+                Go to My Chats
+              </Link>
             </li>
           )}
         </ul>
@@ -502,6 +565,8 @@ export default function Chat(props: {
       <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
         {session?.loading
           ? "Loading chat"
+          : unavailable
+          ? "This chat isn't available."
           : running
           ? "Assistant is replying"
           : replyStatus}
@@ -552,18 +617,20 @@ export default function Chat(props: {
         </div>
       )}
 
-      {/* Chat input area */}
-      <div style={styles.inputContainer}>
-        <ChatInputPanel
-          session={session}
-          running={running}
-          setRunning={setRunning}
-          messageHistory={messageHistory}
-          setMessageHistory={(history) => setMessageHistory(history)}
-          documentIdentifier={props.documentIdentifier}
-          messageAreaRef={messageAreaRef}
-        />
-      </div>
+      {!unavailable && (
+        <div style={styles.inputContainer}>
+          <ChatInputPanel
+            session={session}
+            running={running}
+            setRunning={setRunning}
+            messageHistory={messageHistory}
+            setMessageHistory={(history) => setMessageHistory(history)}
+            documentIdentifier={props.documentIdentifier}
+            messageAreaRef={messageAreaRef}
+            ensureSession={ensureSession}
+          />
+        </div>
+      )}
     </section>
   );
 }

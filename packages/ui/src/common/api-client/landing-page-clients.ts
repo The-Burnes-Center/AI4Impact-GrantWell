@@ -68,7 +68,8 @@ export class LandingPageClient {
             throw err;
           }
         }
-        throw new Error(`Error: ${response.status}`);
+        const err = Object.assign(new Error(`Error: ${response.status}`), { status: response.status });
+        throw err;
       }
 
       return await response.json();
