@@ -6,6 +6,7 @@ import {
   OUTCOME_LABELS,
   OUTCOME_STATUSES,
   formatDollars,
+  formatRequestedAmount,
   type OutcomeStatus,
 } from "../../../common/application-outcomes";
 import { REGIONS } from "../../../common/instance";
@@ -191,7 +192,7 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
                     {REGIONS.length > 0 && <td>{o.region || "—"}</td>}
                     <td>{o.deleted ? "Deleted account" : o.email || "—"}</td>
                     <td>{OUTCOME_LABELS[o.status] ?? o.status}</td>
-                    <td className="analytics__num">{o.requestedAmount || "—"}</td>
+                    <td className="analytics__num">{o.requestedAmount ? formatRequestedAmount(o.requestedAmount) : "—"}</td>
                     <td className="analytics__num">{o.amountAwarded === null ? "—" : formatDollars(o.amountAwarded)}</td>
                     <td>{o.decisionDate ? formatDeadline(o.decisionDate) : "—"}</td>
                   </tr>

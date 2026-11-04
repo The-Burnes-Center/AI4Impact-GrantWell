@@ -8,7 +8,7 @@ import type { AdminOutcome } from "../../../common/api-client/outcomes-client";
 const ADMIN = "GET /admin/application-outcomes";
 const base: Pick<AdminOutcome, "organization" | "region" | "state" | "title" | "requestedAmount" | "submittedDate" | "decisionDate" | "updatedAt"> = { organization: "Town of Lee", region: "", state: "CO", title: "Plan", requestedAmount: "", submittedDate: null, decisionDate: null, updatedAt: "2026-10-01" };
 const outcomes: AdminOutcome[] = [
-  { ...base, email: "a@x.gov", deleted: false, grant: "Broadband", status: "awarded", amountAwarded: 40000, decisionDate: "2026-10-10" },
+  { ...base, email: "a@x.gov", deleted: false, grant: "Broadband", status: "awarded", amountAwarded: 40000, decisionDate: "2026-10-10", requestedAmount: "250000" },
   { ...base, email: "b@x.gov", deleted: false, grant: "Transit", status: "submitted", amountAwarded: null },
   { ...base, email: "", deleted: true, grant: "Parks", status: "awarded", amountAwarded: 10000 },
 ];
@@ -27,6 +27,9 @@ describe("OutcomesSection", () => {
     const table = screen.getByRole("table");
     expect(within(table).getByText("Deleted account")).toBeInTheDocument();
     expect(within(table).getAllByRole("row")).toHaveLength(4);
+    const broadband = within(table).getByText("Broadband").closest("tr")!;
+    expect(within(broadband).getByText("$250,000")).toBeInTheDocument();
+    expect(within(broadband).getByText("$40,000")).toBeInTheDocument();
   });
 
   it("filters by outcome and asks for the chosen state", async () => {
