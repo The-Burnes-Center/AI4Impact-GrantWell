@@ -128,7 +128,15 @@ def record_event(event_type, user_id, state=None, nofo_name=None):
         print(f"record_event failed (non-fatal): {e}")
 
 # Define a function to add a draft or update an existing one in the DynamoDB table
-def add_draft(session_id, user_id, sections, title, document_identifier, project_basics=None, questionnaire=None, last_modified=None, status=None, additional_info=None, uploaded_files=None, last_write_source=None, reached_step=None, section_order=None):
+def _own_document_keys(keys, owner):
+    """The caller's own library keys, deduplicated; None (leave the stored selection alone) stays None."""
+    if keys is None:
+        return None
+    return [k for k in dict.fromkeys(keys)
+            if isinstance(k, str) and k.startswith(f"{owner}/") and not any(s in ('.', '..') for s in k.split('/'))]
+
+
+def add_draft(session_id, user_id, sections, title, document_identifier, project_basics=None, questionnaire=None, last_modified=None, status=None, additional_info=None, uploaded_files=None, last_write_source=None, reached_step=None, section_order=None, document_keys=None):
     try:
         # Determine default status based on what data exists
         if status is None:
@@ -152,6 +160,8 @@ def add_draft(session_id, user_id, sections, title, document_identifier, project
             "questionnaire": questionnaire or {},
             "additional_info": additional_info or "",
             "uploaded_files": uploaded_files or [],
+            # Empty, not absent: an application with no document_keys predates the library.
+            "document_keys": document_keys or [],
             "last_modified": last_modified or _now_iso(),
             "status": status,
             "rev": 1,
@@ -227,7 +237,7 @@ def get_draft(session_id, user_id):
     return _json_response(200, response.get("Item", {}))
 
 # Define a function to update a draft in the DynamoDB table
-def update_draft(session_id, user_id, sections=None, title=None, document_identifier=None, project_basics=None, questionnaire=None, last_modified=None, status=None, additional_info=None, uploaded_files=None, expected_rev=None, last_write_source=None, section_order=None):
+def update_draft(session_id, user_id, sections=None, title=None, document_identifier=None, project_basics=None, questionnaire=None, last_modified=None, status=None, additional_info=None, uploaded_files=None, expected_rev=None, last_write_source=None, section_order=None, document_keys=None):
     try:
         # Prepare update expression and attribute values
         update_parts = []
@@ -288,6 +298,11 @@ def update_draft(session_id, user_id, sections=None, title=None, document_identi
             update_parts.append("#uf = :uploaded_files")
             expression_values[":uploaded_files"] = uploaded_files
             expression_names["#uf"] = "uploaded_files"
+
+        if document_keys is not None:
+            update_parts.append("#dk = :document_keys")
+            expression_values[":document_keys"] = document_keys
+            expression_names["#dk"] = "document_keys"
 
         if last_write_source is not None:
             update_parts.append("#lws = :last_write_source")
@@ -365,6 +380,7 @@ def update_draft(session_id, user_id, sections=None, title=None, document_identi
             "questionnaire": updated_item.get("questionnaire", {}),
             "additionalInfo": updated_item.get("additional_info", ""),
             "uploadedFiles": updated_item.get("uploaded_files", []),
+            "documentKeys": updated_item.get("document_keys"),
             "lastModified": updated_item.get("last_modified", ""),
             "status": updated_item.get("status", "project_basics"),
             "reachedSteps": sorted(updated_item.get("reached_steps") or []),
@@ -898,11 +914,13 @@ def lambda_handler(event, context):
         is_apigw_invocation = bool(request_context)
         authenticated_user_id = None
         caller_state = None
+        document_owner = None
         if is_apigw_invocation:
             try:
                 claims = request_context['authorizer']['jwt']['claims']
                 authenticated_user_id = claims['sub']
                 caller_state = str(claims.get('custom:state') or '').strip().upper()
+                document_owner = claims.get('cognito:username') or claims.get('username') or authenticated_user_id
             except (KeyError, TypeError):
                 return {
                     'statusCode': 401,
@@ -937,6 +955,7 @@ def lambda_handler(event, context):
         status = request.status
         additional_info = request.additional_info
         uploaded_files = request.uploaded_files
+        document_keys = _own_document_keys(request.document_keys, document_owner or user_id)
         expected_rev = request.expected_rev
         last_write_source = request.last_write_source
         reached_step = request.reached_step
@@ -944,7 +963,7 @@ def lambda_handler(event, context):
         # Route to appropriate operation handler
         if operation == 'add_draft':
             new_title = title or f"Draft on {_now_iso()}"
-            result = add_draft(session_id, user_id, sections, new_title, document_identifier, project_basics, questionnaire, last_modified, status, additional_info, uploaded_files, last_write_source, reached_step, section_order)
+            result = add_draft(session_id, user_id, sections, new_title, document_identifier, project_basics, questionnaire, last_modified, status, additional_info, uploaded_files, last_write_source, reached_step, section_order, document_keys)
             # Creating a draft is both a draft-created event and "pursuing" its grant.
             record_event('draft_created', user_id, caller_state, document_identifier)
             if document_identifier:
@@ -970,6 +989,7 @@ def lambda_handler(event, context):
                 status=status,
                 additional_info=additional_info,
                 uploaded_files=uploaded_files,
+                document_keys=document_keys,
                 expected_rev=expected_rev,
                 last_write_source=last_write_source
             )
