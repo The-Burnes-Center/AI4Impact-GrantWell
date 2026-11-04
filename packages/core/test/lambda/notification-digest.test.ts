@@ -203,3 +203,68 @@ describe("digest branding", () => {
     }
   });
 });
+
+describe("digest accessibility and client fixes", () => {
+  const grant = (name: string) => ({
+    nofo: { nofo_name: name, agency: "Department of Transportation", category: "Transportation", expiration_date: "2099-01-01" },
+    reasons: ["Category: Transportation"],
+    daysUntil: 3,
+  });
+  const render = async (sections: Record<string, unknown>, branding: Record<string, string> = {}) => {
+    const { buildDigest } = await import("grantwell-shared");
+    return buildDigest("weekly", {
+      sections,
+      appUrl: "https://grantwell.us",
+      unsubscribeUrl: "https://api.example/unsubscribe?u=1&sig=x",
+      branding: { appName: "GrantWell", logoUrl: "https://grantwell.us/w.svg", ...branding },
+    });
+  };
+  const headingLevels = (html: string) => [...html.matchAll(/<h(\d)\b/g)].map((m) => Number(m[1]));
+
+  it("is a full document with lang on both <html> and the wrapper Gmail keeps", async () => {
+    const { html, subject } = await render({ new: [grant("Bridge Grant")] });
+    expect(html.startsWith("<!DOCTYPE html>")).toBe(true);
+    expect(html).toContain('<html lang="en" dir="ltr">');
+    expect(html).toContain(`<title>${subject}</title>`);
+    expect(html).toMatch(/<div role="article"[^>]* lang="en"/);
+    expect(html).toContain('<!--[if mso]><table role="presentation" align="center" width="600"');
+  });
+
+  it("nests headings h1 > h2 section > h3 grant when sections are labelled", async () => {
+    const { html } = await render({ new: [grant("Bridge Grant")], closingSoon: [grant("Roads Grant")] });
+    expect(headingLevels(html)).toEqual([1, 2, 3, 2, 3]);
+  });
+
+  it("uses h2 for grants when a single section shows no heading", async () => {
+    const { html } = await render({ new: [grant("Bridge Grant"), grant("Roads Grant")] });
+    expect(headingLevels(html)).toEqual([1, 2, 2]);
+  });
+
+  it("keeps all text at 14 px or larger", async () => {
+    const { html } = await render(
+      { new: [grant("Bridge Grant")], closingSoon: [grant("Roads Grant")], overflow: 3 },
+      { supportEmail: "help@grantwell.us", orgName: "Org", postalAddress: "1 Main St" }
+    );
+    const sizes = [...html.matchAll(/font-size:(\d+)px/g)].map((m) => Number(m[1]));
+    expect(sizes.length).toBeGreaterThan(0);
+    expect(Math.min(...sizes)).toBeGreaterThanOrEqual(14);
+  });
+
+  it("names the grant in each repeated call to action and hides arrows from screen readers", async () => {
+    const { html } = await render({ new: [grant("Bridge Grant"), grant("Roads & Rails")], overflow: 2 });
+    expect(html).toContain('aria-label="View grant opportunity: Bridge Grant"');
+    expect(html).toContain('aria-label="View grant opportunity: Roads &amp; Rails"');
+    expect(html.split("&rarr;").length - 1).toBe(html.split('<span aria-hidden="true">&rarr;</span>').length - 1);
+  });
+
+  it("darkens a pale brand colour to 4.5:1 on white and leaves passing colours alone", async () => {
+    const { contrastRatio, readableBrandColor } = await import("grantwell-shared");
+    expect(readableBrandColor("#23776C")).toBe("#23776C");
+    expect(readableBrandColor("#002868")).toBe("#002868");
+    const gold = readableBrandColor("#F2B705");
+    expect(contrastRatio(gold, "#ffffff")).toBeGreaterThanOrEqual(4.5);
+    const { html } = await render({ new: [grant("Bridge Grant")] }, { brandColor: "#F2B705" });
+    expect(html).not.toContain("#F2B705");
+    expect(html).toContain(`bgcolor="${gold}"`);
+  });
+});
