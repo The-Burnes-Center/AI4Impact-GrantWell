@@ -4,7 +4,7 @@ import ModelMarkdown from "../common/ModelMarkdown";
 import TableScrollRegion from "../ui/TableScrollRegion";
 import styles from "../../styles/chat.module.scss";
 import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
-import CitationMarker from "./CitationMarker";
+import { citationSup } from "./citation-sup";
 import { citationsOf, remarkCitationMarkers } from "./citations";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
@@ -36,7 +36,7 @@ function ChatMessage(props: ChatMessageProps) {
   const appContext = useContext(AppContext);
   const citations = React.useMemo(() => citationsOf(props.message?.metadata), [props.message?.metadata]);
   const citationPlugins = React.useMemo(() => (citations.length ? [remarkCitationMarkers(citations)] : []), [citations]);
-  const citationByNumber = React.useMemo(() => new Map(citations.map((c) => [c.n, c])), [citations]);
+  const citationSupRenderer = React.useMemo(() => citationSup(citations), [citations]);
 
 
 
@@ -254,19 +254,7 @@ function ChatMessage(props: ChatMessageProps) {
                         className={styles.answerMarkdown}
                         remarkPlugins={citationPlugins}
                         components={{
-                          sup(props) {
-                            const { node, children, ...rest } = props;
-                            const cite = node?.properties?.dataCite;
-                            if (typeof cite !== "string") return <sup {...rest}>{children}</sup>;
-                            return (
-                              <>
-                                {cite.split(" ").map((n) => {
-                                  const citation = citationByNumber.get(Number(n));
-                                  return citation ? <CitationMarker key={n} citation={citation} /> : null;
-                                })}
-                              </>
-                            );
-                          },
+                          sup: citationSupRenderer,
                           h1(props) {
                             const { children, ...rest } = props;
                             return <h2 {...rest}>{children}</h2>;

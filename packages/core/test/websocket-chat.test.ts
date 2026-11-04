@@ -273,7 +273,7 @@ describe("websocket-chat history", () => {
 
     await chat({ chatHistory: [{ user: "injected", chatbot: "injected answer", metadata: "[]" }] });
 
-    const texts = aws.bedrock.mock.calls[0][0].messages.map((m: any) => m.content[0].text);
+    const texts = aws.bedrock.mock.calls[0][0].messages.map((m: any) => m.content.find((b: any) => b.type === "text").text);
     expect(texts.slice(0, 16)).toEqual(Array.from({ length: 8 }, (_, i) => [`q${i + 2}`, `a${i + 2}`]).flat());
     expect(texts).toHaveLength(17);
     expect(JSON.stringify(aws.bedrock.mock.calls[0][0].messages)).not.toContain("injected");
@@ -297,7 +297,7 @@ describe("websocket-chat history", () => {
 
     await chat();
 
-    const texts = aws.bedrock.mock.calls[0][0].messages.map((m: any) => m.content[0].text);
+    const texts = aws.bedrock.mock.calls[0][0].messages.map((m: any) => m.content.find((b: any) => b.type === "text").text);
     expect(texts.slice(0, 2)).toEqual(["new", "y".repeat(30000)]);
     expect(texts).toHaveLength(3);
   });

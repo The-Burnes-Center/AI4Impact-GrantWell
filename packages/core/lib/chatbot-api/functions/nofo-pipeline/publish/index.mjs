@@ -200,6 +200,17 @@ export const handler = async (event) => {
     }
   }
 
+  const citeFunctionName = process.env.CITE_REQUIREMENTS_FUNCTION_NAME;
+  if (citeFunctionName) {
+    try {
+      await lambdaClient.send(
+        new InvokeCommand({ FunctionName: citeFunctionName, InvocationType: "Event", Payload: JSON.stringify({ nofoName }) })
+      );
+    } catch (error) {
+      console.error("Failed to start requirement citations (the nightly run will retry):", error);
+    }
+  }
+
   console.log(`Published NOFO ${nofoName} successfully`);
 
   return {

@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Link, useParams, useLocation, useNavigate, useSearchParams } from "react-router";
 import ModelMarkdown from "../../components/common/ModelMarkdown";
+import { citationSup } from "../../components/chat/citation-sup";
+import { remarkCitationMarkers } from "../../components/chat/citations";
+import { EMPTY_TAB, requirementsMarkdown, type TabText } from "./requirements-markdown";
 import { LuUser, LuFileText, LuList, LuClock, LuInfo } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useInert } from "../../hooks/use-inert";
@@ -9,12 +12,22 @@ import HelpModal from "./components/HelpModal";
 import { GRANT_TYPES, type GrantTypeId } from "../../common/types/nofo";
 import "../../styles/checklists.css";
 
+function RequirementsList({ text }: { text: TabText }) {
+  const plugins = React.useMemo(() => (text.citations.length ? [remarkCitationMarkers(text.citations)] : []), [text.citations]);
+  const sup = React.useMemo(() => citationSup(text.citations), [text.citations]);
+  return (
+    <ModelMarkdown className="custom-markdown" remarkPlugins={plugins} components={{ sup }}>
+      {text.markdown}
+    </ModelMarkdown>
+  );
+}
+
 interface LlmData {
   grantName: string;
-  eligibility: string;
-  documents: string;
-  narrative: string;
-  deadlines: string;
+  eligibility: TabText;
+  documents: TabText;
+  narrative: TabText;
+  deadlines: TabText;
 }
 
 const TAB_IDS = ["eligibility", "documents", "narrative", "deadlines"] as const;
@@ -36,7 +49,7 @@ const Checklists: React.FC = () => {
     searchParams.get("grant") ?? searchParams.get("folder") ?? searchParams.get("nofo") ?? documentIdentifier;
   const apiClient = useApiClient();
 
-  const [llmData, setLlmData] = useState<LlmData>({ grantName: "", eligibility: "", documents: "", narrative: "", deadlines: "" });
+  const [llmData, setLlmData] = useState<LlmData>({ grantName: "", eligibility: EMPTY_TAB, documents: EMPTY_TAB, narrative: EMPTY_TAB, deadlines: EMPTY_TAB });
   const [grantType, setGrantType] = useState<GrantTypeId | null>(null);
   const [stateGuidance, setStateGuidance] = useState<{ stateName: string; note: string } | null>(null);
   const [isLoading, setLoading] = useState(true);
@@ -63,21 +76,6 @@ const Checklists: React.FC = () => {
   useEffect(() => {
     if (!documentIdentifier) return;
 
-    const processApiItems = (items: Array<{ item?: unknown; description?: unknown }>) => {
-      if (!items || !Array.isArray(items)) return "";
-      return items
-        .map((section) => {
-          const itemText = section.item !== undefined
-            ? (typeof section.item === "object" ? JSON.stringify(section.item) : String(section.item))
-            : "Unknown";
-          const descText = section.description !== undefined
-            ? (typeof section.description === "object" ? JSON.stringify(section.description) : String(section.description))
-            : "No description";
-          return `- **${itemText}**: ${descText}`;
-        })
-        .join("\n");
-    };
-
     // The summary answers 403 for a grant with no metadata row, and an admin gets a 500 when its files are gone.
     const grantIsMissing = async (err: unknown) => {
       if ((err as { status?: number })?.status === 404 || (err as Error)?.message === "ACCESS_DENIED_STATE") return true;
@@ -91,7 +89,7 @@ const Checklists: React.FC = () => {
 
     const fetchData = async () => {
       try {
-        const result = await apiClient.landingPage.getNOFOSummary(documentIdentifier);
+        const result = await apiClient.landingPage.getNOFOSummary(documentIdentifier, { citations: true });
 
         try {
           const nofoResult = await apiClient.landingPage.getNOFOs();
@@ -103,10 +101,10 @@ const Checklists: React.FC = () => {
 
         setLlmData({
           grantName: result.data.GrantName || "Grant",
-          eligibility: processApiItems(result.data.EligibilityCriteria),
-          documents: processApiItems(result.data.RequiredDocuments),
-          narrative: processApiItems(result.data.ProjectNarrativeSections),
-          deadlines: processApiItems(result.data.KeyDeadlines),
+          eligibility: requirementsMarkdown(result.data.EligibilityCriteria),
+          documents: requirementsMarkdown(result.data.RequiredDocuments),
+          narrative: requirementsMarkdown(result.data.ProjectNarrativeSections),
+          deadlines: requirementsMarkdown(result.data.KeyDeadlines),
         });
 
         // Server merges the viewer's own state's overlay onto federal grants (if any).
@@ -145,7 +143,7 @@ const Checklists: React.FC = () => {
     else if (e.key === "End") { e.preventDefault(); handleTabClick(TAB_IDS[TAB_IDS.length - 1]); }
   }, [activeTabId, handleTabClick]);
 
-  const tabContents: Record<TabId, { title: string; content: string }> = {
+  const tabContents: Record<TabId, { title: string; content: TabText }> = {
     eligibility: { title: "Ensure you adhere to the extracted eligibility criteria before continuing with your application.", content: llmData.eligibility },
     documents: { title: "Include the following documents in your application.", content: llmData.documents },
     narrative: { title: "The following sections must be included in your application.", content: llmData.narrative },
@@ -276,9 +274,7 @@ const Checklists: React.FC = () => {
                   >
                     <p className="checklist-content__description">{tabContents[tabId].title}</p>
                     <div className="checklist-tabs__markdown">
-                      <ModelMarkdown className="custom-markdown">
-                        {tabContents[tabId].content}
-                      </ModelMarkdown>
+                      <RequirementsList text={tabContents[tabId].content} />
 
                       {tabId === "eligibility" && (
                         <div className="checklist-info-box">

@@ -151,6 +151,45 @@ export class NofoPipelineStack extends cdk.NestedStack {
     });
     validateFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
 
+    // Publish and the parent's summary editor invoke it by this name, so no stack references it.
+    const citeRequirementsName = `${props.stackName}-citeRequirementsFunction`;
+    const citeRequirementsArn = `arn:aws:lambda:${cdk.Stack.of(this).region}:${cdk.Stack.of(this).account}:function:${citeRequirementsName}`;
+    const citeRequirementsFunction = new lambda.Function(this, "CiteRequirementsFunction", {
+      functionName: citeRequirementsName,
+      runtime: lambda.Runtime.NODEJS_24_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
+      handler: "cite-requirements/index.handler",
+      layers: [props.jsSharedLayer],
+      environment: {
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
+        BUCKET: props.ffioNofosBucket.bucketName,
+        HAIKU_MODEL_ID: props.haikuNofoProfileArn,
+      },
+      timeout: cdk.Duration.minutes(15),
+      memorySize: 1024,
+      description: "Cites the grant passage behind each requirement on the Requirements page",
+    });
+    citeRequirementsFunction.configureAsyncInvoke({ retryAttempts: 1, maxEventAge: cdk.Duration.hours(1) });
+    citeRequirementsFunction.addToRolePolicy(s3ReadOnlyPolicy(artifactsBucketArn));
+    citeRequirementsFunction.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
+    citeRequirementsFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:PutObject"],
+        resources: [props.grantArtifactsBucket.arnForObjects("*/requirements-citations.json")],
+      })
+    );
+    citeRequirementsFunction.addToRolePolicy(bedrockInvokePolicy());
+    citeRequirementsFunction.addToRolePolicy(
+      new iam.PolicyStatement({ effect: iam.Effect.ALLOW, actions: ["lambda:InvokeFunction"], resources: [citeRequirementsArn] })
+    );
+    // 07:00 UTC, after the 06:30 search index rebuild. Also catches grants whose async call failed.
+    new events.Rule(this, "CiteRequirementsNightlyRule", {
+      schedule: events.Schedule.cron({ minute: "0", hour: "7" }),
+      description: "Cites requirements for grants whose citations are missing or stale",
+      targets: [new targets.LambdaFunction(citeRequirementsFunction, { event: events.RuleTargetInput.fromObject({ reconcile: true }) })],
+    });
+
     const publishFunction = new lambda.Function(this, "PublishFunction", {
       runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
@@ -161,10 +200,14 @@ export class NofoPipelineStack extends cdk.NestedStack {
         ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         SYNC_KB_FUNCTION_NAME: `${props.stackName}-syncKBFunction`,
+        CITE_REQUIREMENTS_FUNCTION_NAME: citeRequirementsName,
       },
       timeout: cdk.Duration.minutes(2),
       memorySize: 256,
     });
+    publishFunction.addToRolePolicy(
+      new iam.PolicyStatement({ effect: iam.Effect.ALLOW, actions: ["lambda:InvokeFunction"], resources: [citeRequirementsArn] })
+    );
     publishFunction.addToRolePolicy(s3ReadWritePolicy(props.ffioNofosBucket.bucketArn));
     publishFunction.addToRolePolicy(s3ReadWritePolicy(artifactsBucketArn));
     publishFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));

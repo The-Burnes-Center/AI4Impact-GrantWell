@@ -1,3 +1,9 @@
+CiteRequirementsFunction3E504009	AWS::Lambda::Function
+CiteRequirementsFunctionEventInvokeConfig25553111	AWS::Lambda::EventInvokeConfig
+CiteRequirementsFunctionServiceRoleDefaultPolicy3BC5868F	AWS::IAM::Policy
+CiteRequirementsFunctionServiceRoleE1F58F50	AWS::IAM::Role
+CiteRequirementsNightlyRule93A0BBFF	AWS::Events::Rule
+CiteRequirementsNightlyRuleAllowEventRulegrantwellstagingChatbotAPINofoPipelineStackCiteRequirementsFunction0EE4A21E5E3E5536	AWS::Lambda::Permission
 DLQProcessorFunctionE8C19A97	AWS::Lambda::Function
 DLQProcessorFunctionServiceRoleA0B94E60	AWS::IAM::Role
 DLQProcessorFunctionServiceRoleDefaultPolicyE3FA79EC	AWS::IAM::Policy

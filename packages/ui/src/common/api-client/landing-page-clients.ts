@@ -37,11 +37,13 @@ export class LandingPageClient {
   }
 
   // Return NOFO summary from S3 bucket
-  async getNOFOSummary(documentKey: string) {
+  /** `citations` adds each requirement's quoted sources; only the Requirements page shows them. */
+  async getNOFOSummary(documentKey: string, { citations = false }: { citations?: boolean } = {}) {
     try {
       const token = await Utils.authenticate();
       const url = new URL(`${this.API}/s3-nofo-summary`);
       url.searchParams.append("documentKey", documentKey);
+      if (citations) url.searchParams.append("citations", "1");
 
       const response = await apiFetch(url, {
         method: "GET",

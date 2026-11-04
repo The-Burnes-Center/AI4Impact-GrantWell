@@ -975,9 +975,18 @@ export class LambdaFunctionStack extends cdk.Stack {
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         ...SINGLE_STATE_ENV,
+          CITE_REQUIREMENTS_FUNCTION_NAME: `${stackName}-citeRequirementsFunction`,
         },
         timeout: cdk.Duration.seconds(30),
       }
+    );
+
+    nofoSummaryUpdateFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [`arn:aws:lambda:${region}:${account}:function:${stackName}-citeRequirementsFunction`],
+      })
     );
 
     nofoSummaryUpdateFunction.addToRolePolicy(

@@ -1,7 +1,15 @@
 import { S3Client } from '@aws-sdk/client-s3';
 import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
-import { getArtifact, recordEvent, touchLastActive, withSectionIds } from 'grantwell-shared';
+import {
+  getArtifact,
+  isMissingObject,
+  recordEvent,
+  touchLastActive,
+  withRequirementCitations,
+  withSectionIds,
+  REQUIREMENT_CITATIONS_FILE,
+} from 'grantwell-shared';
 
 // SUPPORTED_STATES injected as [{code,name}] (from config.states via supportedStatesEnv in lib/config/instance-config.ts).
 const SUPPORTED_STATES = (() => {
@@ -155,9 +163,12 @@ export const handler = async (event) => {
       throw authError;
     }
 
-    const result = await getArtifact(s3Client, `${basePath}/summary.json`, s3Bucket);
+    const [result, citationsFile] = await Promise.all([
+      getArtifact(s3Client, `${basePath}/summary.json`, s3Bucket),
+      event.queryStringParameters?.citations === "1" ? readCitations(s3Client, basePath) : null,
+    ]);
     const fileContent = await streamToString(result.Body);
-    const summary = JSON.parse(fileContent);
+    const summary = withRequirementCitations(JSON.parse(fileContent), citationsFile);
     // Summaries written before section ids existed derive the same ids on every read.
     if (Array.isArray(summary.ProjectNarrativeSections)) {
       summary.ProjectNarrativeSections = withSectionIds(summary.ProjectNarrativeSections);
@@ -207,6 +218,17 @@ export const handler = async (event) => {
     };
   }
 };
+
+/** The grant's requirement citations, or null; the page works without them. */
+async function readCitations(s3Client, basePath) {
+  try {
+    const result = await getArtifact(s3Client, `${basePath}/${REQUIREMENT_CITATIONS_FILE}`, null);
+    return JSON.parse(await streamToString(result.Body));
+  } catch (error) {
+    if (!isMissingObject(error)) console.warn(`Could not read requirement citations for ${basePath}:`, error.message);
+    return null;
+  }
+}
 
 const streamToString = (stream) => {
   return new Promise((resolve, reject) => {

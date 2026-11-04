@@ -6,6 +6,7 @@
  */
 
 import { S3Client } from '@aws-sdk/client-s3';
+import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import { DynamoDBClient, UpdateItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { requireAdmin, assertCanEditNofoOr403, withSectionIds, getArtifact, putArtifact } from 'grantwell-shared';
@@ -144,7 +145,7 @@ export const handler = async (event) => {
       if (Array.isArray(summary[field])) {
         existingSummary[field] = summary[field]
           .filter((item) => !item.removed)
-          .map(({ removed, ...rest }) => rest);
+          .map(({ removed, citations, ...rest }) => rest);
       }
     }
     if (Array.isArray(existingSummary.ProjectNarrativeSections)) {
@@ -156,6 +157,18 @@ export const handler = async (event) => {
 
     if (enableDynamoDBCache && tableName) {
       await syncMetadataToDynamoDB(tableName, nofoName, existingSummary);
+    }
+
+    if (process.env.CITE_REQUIREMENTS_FUNCTION_NAME) {
+      try {
+        await new LambdaClient().send(new InvokeCommand({
+          FunctionName: process.env.CITE_REQUIREMENTS_FUNCTION_NAME,
+          InvocationType: 'Event',
+          Payload: JSON.stringify({ nofoName }),
+        }));
+      } catch (error) {
+        console.error('Failed to start requirement citations (the nightly run will retry):', error.message);
+      }
     }
 
     return {

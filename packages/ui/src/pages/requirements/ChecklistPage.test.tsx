@@ -130,3 +130,39 @@ describe("ChecklistPage heading and tabs", () => {
     expect(eligibility).toHaveAttribute("aria-selected", "true");
   });
 });
+
+describe("ChecklistPage requirement citations", () => {
+  it("asks for citations and puts a quote button after each cited requirement", async () => {
+    localStorage.setItem("checklistsHelpSeen", "true");
+    const { calls } = stubFetch({
+      "GET /s3-nofo-summary": json({
+        data: {
+          GrantName: "Grant A",
+          EligibilityCriteria: [
+            { item: "Cities", description: "Any city may apply.", citations: [{ quote: "Eligible applicants are cities.", page: 4, lastPage: 4 }] },
+            { item: "Match", description: "A 20% match." },
+          ],
+          RequiredDocuments: [],
+          ProjectNarrativeSections: [],
+          KeyDeadlines: [],
+        },
+      }),
+      "GET /s3-nofo-bucket-data": json({ nofoData: [] }),
+    });
+
+    const { user } = renderApp(
+      <Routes>
+        <Route path="/requirements/:documentIdentifier" element={<ChecklistPage />} />
+      </Routes>,
+      { route: "/requirements/Grant%20A" }
+    );
+
+    const button = await screen.findByRole("button", { name: "Quote 1, Grant document, page 4" });
+    expect(screen.getAllByRole("button", { name: /^Quote/ })).toHaveLength(1);
+    expect(button.closest("li")?.textContent).toMatch(/^Cities: Any city may apply\.1$/);
+    await user.click(button);
+    expect(screen.getByText("“Eligible applicants are cities.”")).toBeInTheDocument();
+    const summary = calls.find((c) => c.url.pathname === "/s3-nofo-summary");
+    expect(summary?.url.searchParams.get("citations")).toBe("1");
+  });
+});

@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import styles from "../../styles/chat.module.scss";
 import { citationSource } from "./citations";
@@ -79,3 +78,4 @@ export default function CitationMarker({ citation }: { citation: ChatCitation })
     </span>
   );
 }
+
