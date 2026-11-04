@@ -315,6 +315,12 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
       return updatedData;
     });
 
+    if (name === "requestedAmount" && /[^\d,.$\s]/.test(value)) {
+      setTouched((prev) => ({ ...prev, requestedAmount: true }));
+      setFormErrors((prev) => ({ ...prev, requestedAmount: "Enter the amount in numbers only, for example 25000" }));
+      return;
+    }
+
     setTouched((prevTouched) => {
       if (prevTouched[name]) {
         const error = validateField(name, formattedValue);
