@@ -1,7 +1,8 @@
 import { screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { json, stubFetch } from "../../test/fetch-routes";
-import { instance } from "../../test/instance";
+import { mfaEnrolled } from "../../test/amplify";
+import { instance, withMfaDeadline } from "../../test/instance";
 import { renderApp } from "../../test/render";
 import ProfilePage from "./ProfilePage";
 
@@ -58,6 +59,12 @@ describe("ProfilePage notification preferences", () => {
     await user.click(screen.getByRole("radio", { name: "Off" }));
     expect(screen.getByRole("checkbox", { name: "Arts" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Save preferences" })).toBeEnabled();
+    // aria-disabled="false" would tell axe these are enabled and fail them on the dimmed fieldset's contrast.
+    for (const name of ["Select all", "Clear"]) {
+      const button = screen.getByRole("button", { name });
+      expect(button).toBeDisabled();
+      expect(button).not.toHaveAttribute("aria-disabled", "false");
+    }
   });
 
   it("says so when the preferences can't be loaded", async () => {
@@ -115,6 +122,13 @@ describe("ProfilePage form semantics", () => {
     expect(within(screen.getByRole("group", { name: "Categories" })).getByRole("checkbox", { name: "Arts" })).toBeChecked();
   });
 
+  it("stops the organization fields at the 200 characters the server keeps", async () => {
+    renderProfile();
+    for (const label of ["Department", "Organization", "Role / Title"]) {
+      expect(await screen.findByLabelText(label)).toHaveAttribute("maxlength", "200");
+    }
+  });
+
   it("autocompletes the organization fields and shows the password rules with a show-password toggle", async () => {
     const { user } = renderProfile();
     expect(await screen.findByLabelText("Organization")).toHaveAttribute("autocomplete", "organization");
@@ -131,5 +145,40 @@ describe("ProfilePage form semantics", () => {
     await user.click(screen.getByRole("checkbox", { name: "Show passwords" }));
     expect(current).toHaveAttribute("type", "text");
     expect(next).toHaveAttribute("type", "text");
+  });
+});
+
+describe("ProfilePage two-step verification", () => {
+  it("offers Turn off when MFA is optional", async () => {
+    mfaEnrolled(true);
+    renderProfile();
+    expect(await screen.findByText(/On. You are asked for a code/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Turn off" })).toBeInTheDocument();
+  });
+
+  it("can't be turned off when the pool requires MFA without a deadline", async () => {
+    instance.MFA_REQUIRED = true;
+    mfaEnrolled(true);
+    renderProfile();
+    expect(
+      await screen.findByText("On. Two-step verification is required on GrantWell, so it can't be turned off.")
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Turn off" })).toBeNull();
+  });
+
+  it("says it is required when it is off on a pool that requires MFA", async () => {
+    instance.MFA_REQUIRED = true;
+    renderProfile();
+    expect(await screen.findByText("Off. Two-step verification is required on GrantWell.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Set up two-step verification" })).toBeInTheDocument();
+  });
+
+  it("names the deadline when there is one", async () => {
+    instance.MFA_REQUIRED = true;
+    withMfaDeadline("2026-11-02T00:00:00-05:00");
+    mfaEnrolled(true);
+    renderProfile();
+    expect(await screen.findByText(/GrantWell requires it from November 2, 2026, so it can.t be turned off/)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Turn off" })).toBeNull();
   });
 });

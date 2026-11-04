@@ -70,3 +70,9 @@ export function toOutcomeInput(draft: OutcomeDraft, today = todayIso()): Outcome
 export function formatDollars(amount: number): string {
   return `$${amount.toLocaleString("en-US")}`;
 }
+
+/** The requested amount is free text from Project Basics: whole dollars are shown like awards, anything else as typed. */
+export function formatRequestedAmount(raw: string): string {
+  const amount = parseDollars(raw);
+  return amount === null ? raw.trim() : formatDollars(amount);
+}

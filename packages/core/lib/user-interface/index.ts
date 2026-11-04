@@ -13,7 +13,7 @@ import { ChatBotApi } from "../chatbot-api";
 import { Website } from "./generate-app"
 import { NagSuppressions } from "cdk-nag";
 import { Utils } from "../shared/utils"
-import { InstanceConfig, regions, sesEmail, singleState, stateSites, turnstileEnabled } from "../config/instance-config";
+import { InstanceConfig, legacyReleaseNotes, regions, sesEmail, singleState, stateSites, turnstileEnabled } from "../config/instance-config";
 import { applyChromeOverlay, applyPublicOverlay, checkBrandingImages } from "./public-overlay";
 import { resolveSeo, writeSeoFiles } from "./seo-files";
 
@@ -122,12 +122,14 @@ export class UserInterface extends Construct {
           branding: props.config.branding,
           states: props.config.states,
           ...(props.config.auth.mfaDeadline && { mfaDeadline: props.config.auth.mfaDeadline }),
+          ...(props.config.auth.mfaRequired && { mfaRequired: true }),
           ...(!sesEmail(props.config) && { emailDigest: false }),
           ...(!turnstileEnabled(props.config) && { turnstile: false }),
           ...(singleState(props.config) && { tenancy: "single" }),
           ...(props.config.auth.mfa === "off" && { mfa: "off" }),
           ...(regions(props.config).length && { regions: regions(props.config) }),
           ...(stateSites(props.config).length && { stateSites: stateSites(props.config) }),
+          ...(legacyReleaseNotes(props.config) && { legacyReleaseNotes: true }),
         },
         null,
         2

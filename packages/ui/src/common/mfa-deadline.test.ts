@@ -13,7 +13,16 @@ const HOUR = 60 * 60 * 1000;
 
 describe("mfaDeadlinePhase", () => {
   it("is none without a deadline", () => {
-    expect(mfaDeadlinePhase(DEADLINE, null)).toBe("none");
+    expect(mfaDeadlinePhase(DEADLINE, null, false)).toBe("none");
+  });
+
+  it("is after without a deadline when the pool requires MFA", () => {
+    expect(mfaDeadlinePhase(DEADLINE, null, true)).toBe("after");
+  });
+
+  it("follows the deadline when there is one, required or not", () => {
+    expect(mfaDeadlinePhase(DEADLINE - 1, DEADLINE, true)).toBe("before");
+    expect(mfaDeadlinePhase(DEADLINE, DEADLINE, true)).toBe("after");
   });
 
   it("switches to after exactly at the deadline", () => {

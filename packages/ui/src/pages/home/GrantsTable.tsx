@@ -245,12 +245,9 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
     ? (showAllAIResults ? filteredNofos : filteredNofos.slice(0, AI_INITIAL_LIMIT))
     : filteredNofos.slice(startIndex, endIndex);
 
-  // Reset dropdown filters, sort, and "show more" state when AI search returns results
+  // New AI results rank by score; the user's filters stay, so expired grants appear only under All or Archived.
   useEffect(() => {
     if (searchResults && searchResults.length > 0) {
-      setStatusFilter("all");
-      setCategoryFilter("all");
-      setGrantTypeFilter("all");
       setShowAllAIResults(false);
       setSortColumn(null);
       setSortDirection("asc");

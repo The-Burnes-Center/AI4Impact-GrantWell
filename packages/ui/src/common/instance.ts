@@ -27,12 +27,14 @@ interface StagedInstance {
   branding: Branding;
   states: UsState[];
   mfaDeadline?: string;
+  mfaRequired?: true;
   emailDigest?: false;
   turnstile?: false;
   tenancy?: "single";
   mfa?: "off";
   regions?: string[];
   stateSites?: StateSite[];
+  legacyReleaseNotes?: true;
 }
 
 // Written by core's UserInterface construct at synth; absent in standalone builds (neutral fallback).
@@ -50,6 +52,8 @@ export const IS_PROD: boolean = staged?.stage === "prod";
 export const SEO_TITLE: string = staged?.seo?.title ?? activeBranding.appName;
 /** Epoch ms from which the app requires MFA; null when this deployment sets no deadline. */
 export const MFA_DEADLINE_ISO: string | null = staged?.mfaDeadline ?? null;
+/** The user pool requires MFA, so the app does too, deadline or not. */
+export const MFA_REQUIRED: boolean = staged?.mfaRequired === true;
 /** False on deployments without SES: no digest emails, so no digest settings. */
 export const EMAIL_DIGEST: boolean = staged?.emailDigest !== false;
 /** False when the deployment runs without the Cloudflare Turnstile bot check. */
@@ -64,4 +68,6 @@ export const MFA_ENABLED: boolean = staged?.mfa !== "off";
 export const REGIONS: readonly string[] = staged?.regions ?? [];
 /** States whose sign-up happens on their own site; empty unless the deployment lists some. */
 export const STATE_SITES: readonly StateSite[] = staged?.stateSites ?? [];
+/** What's new also lists the pre-v3 releases, which describe the Massachusetts deployment. */
+export const LEGACY_RELEASE_NOTES: boolean = staged?.legacyReleaseNotes === true;
 export const MFA_DEADLINE: number | null = MFA_DEADLINE_ISO ? Date.parse(MFA_DEADLINE_ISO) : null;

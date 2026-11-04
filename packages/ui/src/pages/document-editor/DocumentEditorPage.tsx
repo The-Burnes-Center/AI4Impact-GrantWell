@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { useLocation, useNavigate, useParams, useSearchParams } from "react-router";
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useDraftsClient } from "../../hooks/use-drafts-client";
 import { useDraftSave } from "../../hooks/use-draft-save";
@@ -42,29 +42,45 @@ const useDocumentStorage = (nofoId: string | null) => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("Loading application...");
   const [error, setError] = useState<string | null>(null);
+  const [notFound, setNotFound] = useState(false);
   const { sessionId } = useParams();
+  const [searchParams] = useSearchParams();
   const draftsClient = useDraftsClient();
+  const nofoIdRef = useRef(nofoId);
+  nofoIdRef.current = nofoId;
+  const openedStepRef = useRef(searchParams.get("step"));
 
   const loadDocument = useCallback(async () => {
-    if (!nofoId || !sessionId) return;
+    if (!sessionId) return;
     setIsLoading(true);
     setError(null);
+    setNotFound(false);
     setLoadingMessage("Loading application...");
 
     try {
       const username = (await getCurrentUser()).username;
       if (username) {
-        const draft = await draftsClient.waitForDraft({
-          sessionId,
-          userId: username,
-          onProgress: (message: string, attempt: number) => {
-            setLoadingMessage(message);
-            if (attempt === 15) setLoadingMessage("Draft generation is taking longer than expected. Please wait...");
-            if (attempt === 30) setLoadingMessage("Draft generation is still in progress. This may take up to 2 minutes...");
-          },
-        });
+        // Rows are created before the editor opens, so only a failed read is worth polling for.
+        let draft: DocumentDraft | null;
+        try {
+          draft = await draftsClient.getDraft({ sessionId, userId: username });
+        } catch {
+          draft = await draftsClient.waitForDraft({
+            sessionId,
+            userId: username,
+            onProgress: (message: string, attempt: number) => {
+              setLoadingMessage(message);
+              if (attempt === 15) setLoadingMessage("Draft generation is taking longer than expected. Please wait...");
+              if (attempt === 30) setLoadingMessage("Draft generation is still in progress. This may take up to 2 minutes...");
+            },
+          });
+        }
 
-        if (draft) {
+        const openedStep = openedStepRef.current;
+        if (!draft && openedStep && stepToIndex(openedStep) > 0) {
+          setLoadedDraft(null);
+          setNotFound(true);
+        } else if (draft) {
           // Cache wins: it holds edits whose save was still pending at exit.
           const cachedSections = readDraftCache<Record<string, string>>(sessionId, "sections");
           setDocumentData({
@@ -77,7 +93,7 @@ const useDocumentStorage = (nofoId: string | null) => {
           });
           setLoadedDraft(draft);
         } else {
-          setDocumentData({ id: sessionId, nofoId, sections: {}, lastModified: new Date().toISOString() });
+          setDocumentData({ id: sessionId, nofoId: nofoIdRef.current ?? "", sections: {}, lastModified: new Date().toISOString() });
           setLoadedDraft(null);
         }
       }
@@ -87,11 +103,11 @@ const useDocumentStorage = (nofoId: string | null) => {
     } finally {
       setIsLoading(false);
     }
-  }, [nofoId, sessionId, draftsClient]);
+  }, [sessionId, draftsClient]);
 
   useEffect(() => { loadDocument(); }, [loadDocument]);
 
-  return { documentData, setDocumentData, loadedDraft, isLoading, loadingMessage, error, setError };
+  return { documentData, setDocumentData, loadedDraft, isLoading, loadingMessage, error, setError, notFound };
 };
 
 const DocumentEditor: React.FC = () => {
@@ -116,7 +132,7 @@ const DocumentEditor: React.FC = () => {
   const draftsClient = useDraftsClient();
   const startDraft = useStartDraft();
 
-  const { documentData, setDocumentData, loadedDraft, isLoading, loadingMessage, error, setError } =
+  const { documentData, setDocumentData, loadedDraft, isLoading, loadingMessage, error, setError, notFound } =
     useDocumentStorage(selectedNofo);
 
   const draftSave = useDraftSave({
@@ -129,6 +145,23 @@ const DocumentEditor: React.FC = () => {
   useEffect(() => {
     if (loadedDraft !== undefined) setBaseline(loadedDraft);
   }, [loadedDraft, setBaseline]);
+
+  useEffect(() => {
+    if (!selectedNofo && loadedDraft?.documentIdentifier) setSelectedNofo(loadedDraft.documentIdentifier);
+  }, [selectedNofo, loadedDraft]);
+
+  // Covers opening Review straight from a link; navigating there saves it already.
+  const reviewStatusSavedRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (currentStep !== "reviewApplication" || !sessionId || loadedDraft?.sessionId !== sessionId) return;
+    if (Object.keys(loadedDraft.sections || {}).length === 0) return;
+    if (reviewStatusSavedRef.current === sessionId) return;
+    reviewStatusSavedRef.current = sessionId;
+    if (loadedDraft.status === "reviewing" || loadedDraft.status === "submitted") return;
+    saveFields({ status: "reviewing" }, { source: "status_change", immediate: true }).catch((err: unknown) =>
+      console.error("Could not save the review status:", err)
+    );
+  }, [currentStep, sessionId, loadedDraft, saveFields]);
 
   useEffect(() => { sweepLegacyDraftCache(); }, []);
 
@@ -259,6 +292,7 @@ const DocumentEditor: React.FC = () => {
         { status: stepToStatus(step) },
         { source: "status_change", immediate: true }
       );
+      if (step === "reviewApplication") reviewStatusSavedRef.current = sessionId ?? null;
       setCurrentStep(step);
       recordStepReached(step);
       go();
@@ -339,6 +373,20 @@ const DocumentEditor: React.FC = () => {
       document.documentElement.style.removeProperty("--gw-editor-sticky-height");
     };
   }, [welcomeModalOpen, error]);
+
+  if (notFound) {
+    return (
+      <div style={{ maxWidth: "560px", margin: "0 auto", padding: "48px 16px", lineHeight: 1.5 }}>
+        <h1 style={{ fontSize: "1.75rem", marginBottom: "12px" }}>Application not found</h1>
+        <p>This application doesn&apos;t exist. It may have been deleted.</p>
+        <p>
+          <Link to="/document-editor/drafts" style={{ color: "var(--gw-color-primary)", fontWeight: 600 }}>
+            Go to My Applications
+          </Link>
+        </p>
+      </div>
+    );
+  }
 
   if (error) {
     return (

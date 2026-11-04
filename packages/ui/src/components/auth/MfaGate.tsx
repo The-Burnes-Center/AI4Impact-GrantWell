@@ -12,7 +12,7 @@ import "../profile-gate/profile-gate.css";
 import "../../styles/totp.css";
 
 /**
- * From the deployment's MFA deadline, blocks the app until the user enrolls. Fails open like
+ * From the deployment's MFA deadline, or always when its pool requires MFA, blocks the app until the user enrolls. Fails open like
  * ProfileGate: the user pool's own MFA requirement is the real enforcement.
  */
 export default function MfaGate({ children }: { children: React.ReactNode }) {
@@ -85,9 +85,11 @@ export default function MfaGate({ children }: { children: React.ReactNode }) {
 
         <div className="profile-gate__body">
           <p className="profile-gate__lead">
-            Since {MFA_DEADLINE_ISO ? deadlineDateText(MFA_DEADLINE_ISO, true) : "the deadline"},
-            GrantWell asks for a code from an authenticator app when you sign in. Set it up to
-            keep using GrantWell. It takes about a minute.
+            {MFA_DEADLINE_ISO
+              ? `Since ${deadlineDateText(MFA_DEADLINE_ISO, true)}, GrantWell asks`
+              : "Two-step verification is required on GrantWell. GrantWell asks"}{" "}
+            for a code from an authenticator app when you sign in. Set it up to keep using
+            GrantWell. It takes about a minute.
           </p>
 
           {expanded ? (

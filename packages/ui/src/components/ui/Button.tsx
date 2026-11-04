@@ -109,7 +109,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        aria-disabled={isDisabled}
+        aria-disabled={isDisabled || undefined}
         {...props}
       >
         {loading && <LoadingDots />}

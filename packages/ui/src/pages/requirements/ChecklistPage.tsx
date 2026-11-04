@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useParams, useLocation, useNavigate, useSearchParams } from "react-router";
+import { Link, useParams, useLocation, useNavigate, useSearchParams } from "react-router";
 import ModelMarkdown from "../../components/common/ModelMarkdown";
 import { LuUser, LuFileText, LuList, LuClock, LuInfo } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
@@ -41,6 +41,7 @@ const Checklists: React.FC = () => {
   const [stateGuidance, setStateGuidance] = useState<{ stateName: string; note: string } | null>(null);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [notFound, setNotFound] = useState(false);
   const [activeTabId, setActiveTabId] = useState<TabId>("eligibility");
   const [showHelp, setShowHelp] = useState(false);
   const inertMainRef = useInert<HTMLDivElement>(showHelp);
@@ -77,6 +78,17 @@ const Checklists: React.FC = () => {
         .join("\n");
     };
 
+    // The summary answers 403 for a grant with no metadata row, and an admin gets a 500 when its files are gone.
+    const grantIsMissing = async (err: unknown) => {
+      if ((err as { status?: number })?.status === 404 || (err as Error)?.message === "ACCESS_DENIED_STATE") return true;
+      try {
+        const nofoResult = await apiClient.landingPage.getNOFOs();
+        return Array.isArray(nofoResult?.nofoData) && !nofoResult.nofoData.some((n: { name: string }) => n.name === documentIdentifier);
+      } catch {
+        return false;
+      }
+    };
+
     const fetchData = async () => {
       try {
         const result = await apiClient.landingPage.getNOFOSummary(documentIdentifier);
@@ -102,7 +114,8 @@ const Checklists: React.FC = () => {
         setStateGuidance(guidance?.note ? { stateName: guidance.stateName || "your state", note: guidance.note } : null);
       } catch (err) {
         console.error("Error loading NOFO summary:", err);
-        setError("Failed to load grant requirements. Please try again.");
+        if (await grantIsMissing(err)) setNotFound(true);
+        else setError("Failed to load grant requirements. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -157,9 +170,19 @@ const Checklists: React.FC = () => {
                 </p>
               </div>
             </div>
+          ) : notFound ? (
+            <div className="checklist-error">
+              <h1 className="checklist-error__title">Grant not found</h1>
+              <p className="checklist-error__text">
+                We couldn&apos;t find this grant. It may have been removed, or the link is wrong.
+              </p>
+              <Link className="checklist-error__btn" to="/home">
+                Go to Home
+              </Link>
+            </div>
           ) : error ? (
             <div className="checklist-error" role="alert">
-              <h2 className="checklist-error__title">Unable to Load Requirements</h2>
+              <h1 className="checklist-error__title">Unable to Load Requirements</h1>
               <p className="checklist-error__text">{error}</p>
               <button className="checklist-error__btn" onClick={() => window.location.reload()}>
                 Try Again
@@ -170,19 +193,22 @@ const Checklists: React.FC = () => {
               <div className="checklist-content__header">
                 <div className="checklist-content__header-inner">
                   <h1 className="checklist-content__heading">
-                    <span>Requirements for </span>
+                    Requirements for{" "}
                     <span className="checklist-content__heading-accent">{llmData.grantName}</span>
                     {grantType && GRANT_TYPES[grantType] && (
-                      <span
-                        className="checklist-grant-badge"
-                        style={{
-                          backgroundColor: `${GRANT_TYPES[grantType].color}15`,
-                          color: GRANT_TYPES[grantType].color,
-                          border: `1px solid ${GRANT_TYPES[grantType].color}40`,
-                        }}
-                      >
-                        {GRANT_TYPES[grantType].label}
-                      </span>
+                      <>
+                        <span className="visually-hidden">,</span>{" "}
+                        <span
+                          className="checklist-grant-badge"
+                          style={{
+                            backgroundColor: `${GRANT_TYPES[grantType].color}15`,
+                            color: GRANT_TYPES[grantType].color,
+                            border: `1px solid ${GRANT_TYPES[grantType].color}40`,
+                          }}
+                        >
+                          {GRANT_TYPES[grantType].label}
+                        </span>
+                      </>
                     )}
                   </h1>
                   <p className="checklist-content__description">

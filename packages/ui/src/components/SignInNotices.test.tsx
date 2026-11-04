@@ -37,6 +37,14 @@ describe("SignInNotices", () => {
     expect(auth.fetchMFAPreference).not.toHaveBeenCalled();
   });
 
+  it("never offers Not now when the pool requires MFA; MfaGate handles setup", async () => {
+    instance.MFA_REQUIRED = true;
+    renderApp(<SignInNotices />);
+    expect(await screen.findByRole("dialog", { name: WHATS_NEW })).toBeInTheDocument();
+    expect(dialog(MFA_PROMPT)).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Not now" })).not.toBeInTheDocument();
+  });
+
   it("still shows What's new when the MFA check fails", async () => {
     auth.fetchMFAPreference.mockRejectedValue(new Error("network"));
     vi.spyOn(console, "error").mockImplementation(() => {});

@@ -258,14 +258,15 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
                   name: STAGE_LABELS[s.stage] || s.stage,
                   count: s.count,
                 }))}
-                margin={{ top: 8, right: 40, bottom: 4, left: 40 }}
+                margin={{ top: 8, right: 40, bottom: 4, left: 16 }}
               >
                 <CartesianGrid stroke={GRID} horizontal={false} />
                 <XAxis type="number" allowDecimals={false} tick={{ fill: AXIS_INK, fontSize: 12 }} />
+                {/* Wide enough that no stage name wraps: recharts splits a wrapped label into tspans with no space between. */}
                 <YAxis
                   type="category"
                   dataKey="name"
-                  width={120}
+                  width={150}
                   tick={{ fill: AXIS_INK, fontSize: 12 }}
                 />
                 <Tooltip cursor={{ fill: "rgba(11,11,11,0.04)" }} />

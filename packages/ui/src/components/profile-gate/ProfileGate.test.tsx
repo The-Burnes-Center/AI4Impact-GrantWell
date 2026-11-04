@@ -26,6 +26,15 @@ async function fillOrgFields(user: ReturnType<typeof renderApp>["user"]) {
   await user.type(screen.getByLabelText(/Role \/ Title/), "Grants Manager");
 }
 
+describe("ProfileGate fields", () => {
+  it("stops each field at the 200 characters the server keeps", async () => {
+    renderGate();
+    for (const label of [/Department/, /Organization/, /Role \/ Title/]) {
+      expect(await screen.findByLabelText(label)).toHaveAttribute("maxlength", "200");
+    }
+  });
+});
+
 describe("ProfileGate region", () => {
   it("asks no region on a deployment without regions", async () => {
     const { net, user } = renderGate();

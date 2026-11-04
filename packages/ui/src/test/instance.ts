@@ -15,6 +15,7 @@ const defaults = (): Flags => ({
   IS_PROD: false,
   SEO_TITLE: defaultBranding.appName,
   MFA_DEADLINE_ISO: null,
+  MFA_REQUIRED: false,
   EMAIL_DIGEST: true,
   TURNSTILE_ENABLED: false,
   SINGLE_STATE: null,
@@ -22,6 +23,7 @@ const defaults = (): Flags => ({
   MFA_DEADLINE: null,
   REGIONS: [],
   STATE_SITES: [],
+  LEGACY_RELEASE_NOTES: false,
   HOME: resolveHome(defaultBranding, null),
 });
 
