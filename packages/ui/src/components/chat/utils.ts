@@ -16,18 +16,22 @@ export function chatErrorText(frame: string): string {
   return text || CHAT_ERROR_MESSAGE;
 }
 
+export const RESET_SENTINEL = "<!RESET!>";
+
 /**
- * Assembles the chat history into a format expected by the API
+ * API Gateway's own frames on the chat socket, such as `{"message": "Endpoint request timed out",
+ * "connectionId": "…", "requestId": "…"}`. They are never part of the answer.
  */
-export function assembleHistory(history: ChatBotHistoryItem[]) {
-  const hist: Array<{ user: string; chatbot: string; metadata: string }> = [];
-  for (let i = 0; i < history.length - 1; i++) {
-    if (history[i].type == ChatBotMessageType.Human) {
-      hist.push({ "user": history[i].content, "chatbot": history[i+1].content, "metadata" : JSON.stringify(history[i+1].metadata)})
-    }
-  }   
-  
-  return hist;
+export function isGatewayErrorFrame(frame: unknown): boolean {
+  if (typeof frame !== "string" || !frame.trimStart().startsWith("{")) return false;
+  try {
+    const parsed: unknown = JSON.parse(frame);
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return false;
+    const record = parsed as Record<string, unknown>;
+    return typeof record.message === "string" && ("connectionId" in record || "requestId" in record);
+  } catch {
+    return false;
+  }
 }
 
 /**
