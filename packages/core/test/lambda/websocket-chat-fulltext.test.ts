@@ -287,6 +287,10 @@ describe("chat with the grant's full text", () => {
     expect(first).toContain('<document name=\\"board.txt\\">');
     expect(first).not.toContain("other.txt");
     expect(JSON.stringify(request().messages.at(-1))).toContain("- board.txt");
+    expect(JSON.parse(posted().at(-1)!)).toEqual([
+      { title: "Grant document", uri: "s3://grant-artifacts/Grant A/raw-text.txt" },
+      { title: "board.txt", uri: "userDocuments/board.txt" },
+    ]);
   });
 
   it("tells the model which ticked documents it could not include", async () => {

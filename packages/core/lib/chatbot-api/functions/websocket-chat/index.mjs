@@ -462,7 +462,7 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
         await post(`<!ERROR!>: ${ERROR_MESSAGE}`);
         return;
       }
-      sources = [grantSource.source];
+      sources = [grantSource.source, ...applicant.included.map((fileName) => ({ title: fileName, uri: `userDocuments/${fileName}` }))];
     }
 
     let command;
