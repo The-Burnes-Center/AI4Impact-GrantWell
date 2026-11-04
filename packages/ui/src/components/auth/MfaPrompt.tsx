@@ -20,7 +20,7 @@ import "../../styles/totp.css";
  * MFA is OPTIONAL in Cognito, so nothing here blocks access — every way of closing the
  * dialog snoozes the prompt for 30 days. Enrolment stays available from the profile page
  * either way. On a deployment with an MFA deadline the prompt names the date and returns at
- * every sign-in instead; from the deadline MfaGate takes over.
+ * every sign-in instead; from the deadline, or on a pool that requires MFA, MfaGate takes over.
  */
 /** onDone fires once: when the prompt decides not to show, or when it is closed. */
 export default function MfaPrompt({ onDone }: { onDone?: () => void }) {

@@ -2,7 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { auth, mfaEnrolled } from "../../test/amplify";
-import { withMfaDeadline } from "../../test/instance";
+import { instance, withMfaDeadline } from "../../test/instance";
 import MfaGate from "./MfaGate";
 
 const PAST = "2026-11-02T00:00:00-05:00";
@@ -60,6 +60,16 @@ describe("MfaGate", () => {
     await waitFor(() => expect(auth.fetchMFAPreference).toHaveBeenCalled());
     expect(screen.getByText("App content")).toBeInTheDocument();
     expect(gate()).not.toBeInTheDocument();
+  });
+
+  it("blocks an unenrolled user on a pool that requires MFA without a deadline", async () => {
+    instance.MFA_REQUIRED = true;
+    renderGate();
+
+    expect(await screen.findByRole("dialog", { name: "Set up two-step verification to continue" })).toBeInTheDocument();
+    expect(screen.queryByText("App content")).not.toBeInTheDocument();
+    expect(screen.getByText(/Two-step verification is required on GrantWell/)).toBeInTheDocument();
+    expect(screen.queryByText(/Since|deadline/)).not.toBeInTheDocument();
   });
 
   it("does nothing before the deadline or without one", () => {

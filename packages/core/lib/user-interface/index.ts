@@ -122,6 +122,7 @@ export class UserInterface extends Construct {
           branding: props.config.branding,
           states: props.config.states,
           ...(props.config.auth.mfaDeadline && { mfaDeadline: props.config.auth.mfaDeadline }),
+          ...(props.config.auth.mfaRequired && { mfaRequired: true }),
           ...(!sesEmail(props.config) && { emailDigest: false }),
           ...(!turnstileEnabled(props.config) && { turnstile: false }),
           ...(singleState(props.config) && { tenancy: "single" }),

@@ -1,12 +1,17 @@
-import { MFA_DEADLINE } from "./instance";
+import { MFA_DEADLINE, MFA_REQUIRED } from "./instance";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const SEEN_PREFIX = "gw.mfaDeadlinePromptSeen.";
 
 export type MfaDeadlinePhase = "none" | "before" | "after";
 
-export function mfaDeadlinePhase(now: number = Date.now(), deadline: number | null = MFA_DEADLINE): MfaDeadlinePhase {
-  if (deadline === null) return "none";
+/** A pool that requires MFA with no deadline set is past the deadline from the start. */
+export function mfaDeadlinePhase(
+  now: number = Date.now(),
+  deadline: number | null = MFA_DEADLINE,
+  required: boolean = MFA_REQUIRED
+): MfaDeadlinePhase {
+  if (deadline === null) return required ? "after" : "none";
   return now < deadline ? "before" : "after";
 }
 

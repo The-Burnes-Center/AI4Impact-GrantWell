@@ -16,7 +16,7 @@ import MfaSetupPanel from "../../components/auth/MfaSetupPanel";
 import PasswordRequirementsList from "../../components/auth/PasswordRequirementsList";
 import { getPasswordRequirements } from "../../components/auth/auth-utils";
 import { clearMfaPromptSnooze } from "../../common/mfa-snooze";
-import { EMAIL_DIGEST, MFA_DEADLINE_ISO, MFA_ENABLED, REGIONS } from "../../common/instance";
+import { EMAIL_DIGEST, MFA_DEADLINE_ISO, MFA_ENABLED, MFA_REQUIRED, REGIONS } from "../../common/instance";
 import { deadlineDateText } from "../../common/mfa-deadline";
 import Breadcrumbs from "../../components/common/Breadcrumbs";
 import { SINGLE_STATE, stateNameFromCode } from "../../common/states";
@@ -582,6 +582,10 @@ function MfaSection() {
               Two-step verification is on. GrantWell requires it from{" "}
               {deadlineDateText(MFA_DEADLINE_ISO, true)}, so it can&apos;t be turned off.
             </p>
+          ) : MFA_REQUIRED ? (
+            <p className="profile-hint">
+              On. Two-step verification is required on GrantWell, so it can&apos;t be turned off.
+            </p>
           ) : (
             <>
               <p className="profile-hint">
@@ -610,7 +614,9 @@ function MfaSection() {
           <p className="profile-hint">
             {MFA_DEADLINE_ISO
               ? `Off. GrantWell requires it from ${deadlineDateText(MFA_DEADLINE_ISO, true)}.`
-              : "Off. Recommended — it keeps your account safe if your password is ever exposed."}
+              : MFA_REQUIRED
+                ? "Off. Two-step verification is required on GrantWell."
+                : "Off. Recommended — it keeps your account safe if your password is ever exposed."}
           </p>
           <div className="profile-actions">
             <Button type="button" onClick={() => setEnrolling(true)}>

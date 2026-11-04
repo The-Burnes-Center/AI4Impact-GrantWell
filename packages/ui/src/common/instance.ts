@@ -27,6 +27,7 @@ interface StagedInstance {
   branding: Branding;
   states: UsState[];
   mfaDeadline?: string;
+  mfaRequired?: true;
   emailDigest?: false;
   turnstile?: false;
   tenancy?: "single";
@@ -50,6 +51,8 @@ export const IS_PROD: boolean = staged?.stage === "prod";
 export const SEO_TITLE: string = staged?.seo?.title ?? activeBranding.appName;
 /** Epoch ms from which the app requires MFA; null when this deployment sets no deadline. */
 export const MFA_DEADLINE_ISO: string | null = staged?.mfaDeadline ?? null;
+/** The user pool requires MFA, so the app does too, deadline or not. */
+export const MFA_REQUIRED: boolean = staged?.mfaRequired === true;
 /** False on deployments without SES: no digest emails, so no digest settings. */
 export const EMAIL_DIGEST: boolean = staged?.emailDigest !== false;
 /** False when the deployment runs without the Cloudflare Turnstile bot check. */
