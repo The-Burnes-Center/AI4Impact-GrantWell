@@ -235,12 +235,14 @@ async function readGrantArtifact(key) {
   return { text: await readArtifact(process.env.BUCKET, key), bucket: process.env.BUCKET };
 }
 
-async function readArtifact(bucket, key) {
+async function readArtifact(bucket, key, { optional = false } = {}) {
   try {
     const result = await s3Client.send(new GetObjectCommand({ Bucket: bucket, Key: key }));
     return (await result.Body?.transformToString()) ?? "";
   } catch (err) {
-    console.warn(`Could not read ${key}:`, err.name || err.message);
+    if (!(optional && (err.name === "NoSuchKey" || err.$metadata?.httpStatusCode === 404))) {
+      console.warn(`Could not read ${key}:`, err.name || err.message);
+    }
     return "";
   }
 }
@@ -254,7 +256,7 @@ async function loadGrantSource(nofoName) {
   const textKey = `${nofoName}/raw-text.txt`;
   const [{ text, bucket }, pageMapText] = await Promise.all([
     readGrantArtifact(textKey),
-    readArtifact(process.env.ARTIFACTS_BUCKET, `${nofoName}/raw-text-pages.json`),
+    readArtifact(process.env.ARTIFACTS_BUCKET, `${nofoName}/raw-text-pages.json`, { optional: true }),
   ]);
   if (text.trim() && text.length <= FULL_TEXT_MAX_CHARS) {
     let pageStarts = null;
