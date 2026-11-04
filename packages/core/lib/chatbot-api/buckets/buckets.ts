@@ -58,6 +58,13 @@ export class S3BucketStack extends cdk.Stack {
       versioned: true,
       removalPolicy: cdk.RemovalPolicy.RETAIN,
       autoDeleteObjects: false,
+      // The search index builder rewrites _search/ on every grant change; old versions are useless.
+      lifecycleRules: [{
+        id: 'ExpireOldSearchIndexVersions',
+        prefix: '_search/',
+        noncurrentVersionExpiration: cdk.Duration.days(1),
+        expiredObjectDeleteMarker: true,
+      }],
     });
 
     // Grant permission for CDK custom resource handler to configure bucket notifications

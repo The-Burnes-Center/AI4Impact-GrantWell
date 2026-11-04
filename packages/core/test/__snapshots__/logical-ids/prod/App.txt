@@ -1,3 +1,5 @@
+AWS679f53fac002430cb0da5b7982bd22872D164C4C	AWS::Lambda::Function
+AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2	AWS::IAM::Role
 AuthorizationAuthEmailConfigurationSetA60A6064	AWS::SES::ConfigurationSet
 AuthorizationAuthEmailConfigurationSetCloudWatchMetricsB1B8211B	AWS::SES::ConfigurationSetEventDestination
 AuthorizationAuthorizationFunctionB35B7A4C	AWS::Lambda::Function
@@ -76,8 +78,11 @@ ChatbotAPIGetS3FilesHandlerFunction92AA0BD0	AWS::Lambda::Function
 ChatbotAPIGetS3FilesHandlerFunctionServiceRole3738EA84	AWS::IAM::Role
 ChatbotAPIGetS3FilesHandlerFunctionServiceRoleDefaultPolicyD70D342E	AWS::IAM::Policy
 ChatbotAPIGrantArtifactsBucketE67E060E	AWS::S3::Bucket
+ChatbotAPIGrantArtifactsBucketNotifications62341AF2	Custom::S3BucketNotifications
+ChatbotAPIGrantArtifactsBucketNotificationsHandlerPolicyDCBAF66C	AWS::IAM::Policy
 ChatbotAPIHaikuNofoInferenceProfile18C3AD97	AWS::Bedrock::ApplicationInferenceProfile
 ChatbotAPIHaikuScraperInferenceProfile35A1CE0B	AWS::Bedrock::ApplicationInferenceProfile
+ChatbotAPIHaikuSearchInferenceProfileA93624B5	AWS::Bedrock::ApplicationInferenceProfile
 ChatbotAPIIndexFunctionRole550B215D	AWS::IAM::Role
 ChatbotAPIIndexFunctionRoleDefaultPolicyB576B063	AWS::IAM::Policy
 ChatbotAPIJsSharedLayerA5CB2715	AWS::Lambda::LayerVersion
@@ -307,6 +312,18 @@ ChatbotAPIS3DataSource7122E2EC	AWS::Bedrock::DataSource
 ChatbotAPIScraperDownloadDLQ9A4781FB	AWS::SQS::Queue
 ChatbotAPIScraperDownloadQueueC567C2A7	AWS::SQS::Queue
 ChatbotAPIScraperStackNestedStackScraperStackNestedStackResource70090EC0	AWS::CloudFormation::Stack
+ChatbotAPISearchIndexBuilderFunction3D696627	AWS::Lambda::Function
+ChatbotAPISearchIndexBuilderFunctionEventInvokeConfig6ED95221	AWS::Lambda::EventInvokeConfig
+ChatbotAPISearchIndexBuilderFunctionServiceRole189A9195	AWS::IAM::Role
+ChatbotAPISearchIndexBuilderFunctionServiceRoleDefaultPolicy67005540	AWS::IAM::Policy
+ChatbotAPISearchIndexBuilderFunctionSqsEventSourcegrantwellstagingChatbotAPISearchIndexQueue401BF2460793FA31	AWS::Lambda::EventSourceMapping
+ChatbotAPISearchIndexDLQC22F2A6C	AWS::SQS::Queue
+ChatbotAPISearchIndexInitialBuild434C9099	Custom::AWS
+ChatbotAPISearchIndexInitialBuildCustomResourcePolicyAEC2348F	AWS::IAM::Policy
+ChatbotAPISearchIndexNightlyRule28B0F75F	AWS::Events::Rule
+ChatbotAPISearchIndexNightlyRuleAllowEventRulegrantwellstagingChatbotAPISearchIndexBuilderFunction573E408F0E96963C	AWS::Lambda::Permission
+ChatbotAPISearchIndexQueue54B3372A	AWS::SQS::Queue
+ChatbotAPISearchIndexQueuePolicy9E69F192	AWS::SQS::QueuePolicy
 ChatbotAPISessionHandlerFunctionF969576A	AWS::Lambda::Function
 ChatbotAPISessionHandlerFunctionServiceRole9405D10E	AWS::IAM::Role
 ChatbotAPISessionHandlerFunctionServiceRoleDefaultPolicy1844E408	AWS::IAM::Policy

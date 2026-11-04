@@ -28,6 +28,8 @@ const COMMON_ALARMS: [string, string, number][] = [
   ["chat cannot search NOFOs", "medium", 3],
   ["chat answers failing", "medium", 3],
   ["grant search returning nothing", "medium", 3],
+  ["AI search index not updating", "medium", 2],
+  ["AI search index updates dropped", "medium", 1],
   ["uploaded documents not indexed", "medium", 1],
   ["document index sync failing", "medium", 3],
   ["draft history not being saved", "medium", 1],
@@ -225,13 +227,13 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
       const [id, canary] = fnNamed(`${prefix}-model-canary`);
       expect(canary.Properties.Runtime).toBe("nodejs24.x");
       const models = JSON.stringify(canary.Properties.Environment.Variables.MODELS);
-      for (const profile of ["SonnetChat", "SonnetNofo", "SonnetDraft", "HaikuNofo", "HaikuScraper", "TitanSearch"]) {
+      for (const profile of ["SonnetChat", "SonnetNofo", "SonnetDraft", "HaikuNofo", "HaikuScraper", "HaikuSearch", "TitanSearch"]) {
         expect(models, profile).toMatch(new RegExp(`ChatbotAPI${profile}InferenceProfile[0-9A-F]{8}InferenceProfileArn`));
       }
       expect(models).not.toContain("amazon.titan-embed-text-v2:0");
-      expect(models).toContain("cohere.rerank-v3-5:0");
+      expect(models).not.toContain("rerank");
       const actions = policyOf(id).map((s) => s.Action).sort();
-      expect(actions).toEqual(["bedrock:InvokeModel", "bedrock:Rerank"]);
+      expect(actions).toEqual(["bedrock:InvokeModel"]);
       expect(policyOf(id).find((s) => s.Action === "bedrock:InvokeModel").Resource).not.toContain("*");
     });
 

@@ -84,6 +84,8 @@ export class GrantWellStack extends cdk.Stack {
       draftVersionWriterFunction: fns.draftVersionWriterFunction,
       draftVersionWriterFailures: fns.draftVersionWriterFailures,
       aiGrantSearchFunction: fns.aiGrantSearchFunction,
+      searchIndexBuilderFunction: fns.searchIndexBuilderFunction,
+      searchIndexDlq: fns.searchIndexDlq,
       applicationPdfGeneratorFunction: fns.applicationPdfGeneratorFunction,
       nofoPipeline: { stateMachine: fns.nofoProcessingStateMachine, ...fns.nofoPipelineFunctions },
       draftGeneration: {

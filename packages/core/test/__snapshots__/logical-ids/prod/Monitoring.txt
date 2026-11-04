@@ -96,6 +96,11 @@ ScraperFatalFilter5B5C9263	AWS::Logs::MetricFilter
 ScraperFatalLogGroupExistsCustomResourcePolicyB6FF8DC3	AWS::IAM::Policy
 ScraperFatalLogGroupExistsFD6C87BB	Custom::AWS
 ScraperStoppedAlarmFA8847E2	AWS::CloudWatch::Alarm
+SearchIndexBuildFailedFilterA04C6C9D	AWS::Logs::MetricFilter
+SearchIndexBuildFailedLogGroupExists30ACE0EC	Custom::AWS
+SearchIndexBuildFailedLogGroupExistsCustomResourcePolicyB478359F	AWS::IAM::Policy
+SearchIndexBuildFailingAlarm46BDEEBA	AWS::CloudWatch::Alarm
+SearchIndexUpdatesLostAlarm45879B55	AWS::CloudWatch::Alarm
 SesBounceRateAlarm40102DD9	AWS::CloudWatch::Alarm
 SignInTriggerSlowAlarm997099F6	AWS::CloudWatch::Alarm
 SignUpRejectionsAlarm650572F6	AWS::CloudWatch::Alarm
