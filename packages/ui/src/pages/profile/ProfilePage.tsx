@@ -23,6 +23,7 @@ import { SINGLE_STATE, stateNameFromCode } from "../../common/states";
 import { roleLabel } from "../../common/helpers/auth-roles";
 import { GRANT_CATEGORIES } from "../../common/types/nofo";
 import type { DigestFrequency } from "../../common/api-client/notifications-client";
+import { PROFILE_FIELD_MAX_LENGTH } from "../../common/api-client/user-profile-client";
 import "../../styles/dashboard.css";
 import "./profile.css";
 
@@ -319,6 +320,7 @@ export default function ProfilePage() {
                       }}
                       className="profile-input"
                       placeholder="e.g. Department of Transportation"
+                      maxLength={PROFILE_FIELD_MAX_LENGTH}
                     />
                   </div>
                   <div className="profile-section">
@@ -336,6 +338,7 @@ export default function ProfilePage() {
                       }}
                       className="profile-input"
                       placeholder="e.g. Planning Division"
+                      maxLength={PROFILE_FIELD_MAX_LENGTH}
                     />
                   </div>
                   <div className="profile-section">
@@ -353,6 +356,7 @@ export default function ProfilePage() {
                       }}
                       className="profile-input"
                       placeholder="e.g. Grants Manager"
+                      maxLength={PROFILE_FIELD_MAX_LENGTH}
                     />
                   </div>
                   {REGIONS.length > 0 && (

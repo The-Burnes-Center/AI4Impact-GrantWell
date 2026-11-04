@@ -10,6 +10,7 @@ import {
   LuTriangleAlert,
 } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
+import { PROFILE_FIELD_MAX_LENGTH } from "../../common/api-client/user-profile-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import { useFocusTrap } from "../../hooks/use-focus-trap";
 import { SINGLE_STATE, stateNameFromCode } from "../../common/states";
@@ -251,6 +252,7 @@ export default function ProfileGate({ children }: ProfileGateProps) {
                             setTouched((prev) => ({ ...prev, [key]: true }))
                           }
                           placeholder={placeholder}
+                          maxLength={PROFILE_FIELD_MAX_LENGTH}
                           required
                           aria-invalid={showError}
                           aria-describedby={showError ? `${inputId}-err` : undefined}

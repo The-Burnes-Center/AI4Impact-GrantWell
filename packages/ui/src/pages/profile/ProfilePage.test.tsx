@@ -59,6 +59,12 @@ describe("ProfilePage notification preferences", () => {
     await user.click(screen.getByRole("radio", { name: "Off" }));
     expect(screen.getByRole("checkbox", { name: "Arts" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Save preferences" })).toBeEnabled();
+    // aria-disabled="false" would tell axe these are enabled and fail them on the dimmed fieldset's contrast.
+    for (const name of ["Select all", "Clear"]) {
+      const button = screen.getByRole("button", { name });
+      expect(button).toBeDisabled();
+      expect(button).not.toHaveAttribute("aria-disabled", "false");
+    }
   });
 
   it("says so when the preferences can't be loaded", async () => {
@@ -114,6 +120,13 @@ describe("ProfilePage form semantics", () => {
     await prefsLoaded();
     expect(within(screen.getByRole("group", { name: "Email frequency" })).getByRole("radio", { name: "Weekly digest" })).toBeChecked();
     expect(within(screen.getByRole("group", { name: "Categories" })).getByRole("checkbox", { name: "Arts" })).toBeChecked();
+  });
+
+  it("stops the organization fields at the 200 characters the server keeps", async () => {
+    renderProfile();
+    for (const label of ["Department", "Organization", "Role / Title"]) {
+      expect(await screen.findByLabelText(label)).toHaveAttribute("maxlength", "200");
+    }
   });
 
   it("autocompletes the organization fields and shows the password rules with a show-password toggle", async () => {
