@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import notes from "../../RELEASE_NOTES.md?raw";
 import { parseReleaseNotes } from "./release-notes-parse";
+import { version as uiVersion } from "../../package.json";
 
 const releases = parseReleaseNotes(notes);
 
@@ -22,8 +23,9 @@ describe("parseReleaseNotes", () => {
 });
 
 describe("RELEASE_NOTES.md", () => {
-  it("lists releases newest first", () => {
-    expect(releases.map((r) => r.version)).toEqual(["3.3.0", "2.0.0", "1.0.0"]);
+  it("holds one entry, for the current major version", () => {
+    expect(releases).toHaveLength(1);
+    expect(releases[0].version.split(".")[0]).toBe(uiVersion.split(".")[0]);
   });
 
   it("keeps every release's Highlights short enough for the dialog", () => {
