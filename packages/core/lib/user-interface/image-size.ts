@@ -27,6 +27,9 @@ const DEFAULT_EMAIL_LOGO_WIDTH = 141;
  * Width of the email header logo at 28 px high, keeping the wordmark's proportions. `publicDirs` are
  * searched in order for the site-root path; the default width stands when the file can't be measured.
  */
+/** Where the UI build writes the email wordmark as a PNG (packages/ui/vite/email-logo.ts). */
+export const EMAIL_LOGO_PNG_PATH = "/images/email/logo.png";
+
 export function emailLogoWidth(branding: Branding, publicDirs: (string | undefined)[]): number {
   const url = branding.footer.wordmark ?? branding.logo;
   const file = url

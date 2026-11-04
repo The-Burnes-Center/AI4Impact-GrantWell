@@ -24,6 +24,7 @@ import { Table } from "aws-cdk-lib/aws-dynamodb";
 
 import { Branding } from "../../config/instance-config";
 import { sesSendEmailPolicy } from "./shared-policies";
+import { EMAIL_LOGO_PNG_PATH } from "../../user-interface/image-size";
 
 export interface NotificationsStackProps extends cdk.NestedStackProps {
   readonly userNotificationPrefsTable: Table;
@@ -71,7 +72,8 @@ export class NotificationsStack extends cdk.NestedStack {
 
     const digestBrandEnv = {
       DIGEST_BRAND_COLOR: branding.colors.primary,
-      DIGEST_LOGO_URL: `${siteUrl}${branding.footer.wordmark ?? branding.logo}`,
+      // Gmail and desktop Outlook don't show SVG images, so the email uses the UI build's PNG copy.
+      DIGEST_LOGO_URL: branding.footer.wordmark ?? branding.logo ? `${siteUrl}${EMAIL_LOGO_PNG_PATH}` : "",
       DIGEST_LOGO_WIDTH: String(props.digestLogoWidth),
       DIGEST_APP_NAME: branding.appName,
       DIGEST_ORG_NAME: branding.orgName,

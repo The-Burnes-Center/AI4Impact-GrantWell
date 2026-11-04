@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import react from "@vitejs/plugin-react";
 import { heroImages } from "./vite/hero-images";
+import { emailLogo } from "./vite/email-logo";
 import { instanceHtml } from "./vite/instance-html";
 import { coreCssLayer } from "./vite/core-css-layer";
 
@@ -21,6 +22,7 @@ export default defineConfig({
   plugins: [
     instanceHtml(stagedInstancePath),
     heroImages(),
+    emailLogo(stagedInstancePath),
     coreCssLayer(),
     isDev && {
       name: "aws-exports",
