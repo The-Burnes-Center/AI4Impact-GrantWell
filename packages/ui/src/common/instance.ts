@@ -34,7 +34,6 @@ interface StagedInstance {
   mfa?: "off";
   regions?: string[];
   stateSites?: StateSite[];
-  legacyReleaseNotes?: true;
 }
 
 // Written by core's UserInterface construct at synth; absent in standalone builds (neutral fallback).
@@ -68,6 +67,4 @@ export const MFA_ENABLED: boolean = staged?.mfa !== "off";
 export const REGIONS: readonly string[] = staged?.regions ?? [];
 /** States whose sign-up happens on their own site; empty unless the deployment lists some. */
 export const STATE_SITES: readonly StateSite[] = staged?.stateSites ?? [];
-/** What's new also lists the pre-v3 releases, which describe the Massachusetts deployment. */
-export const LEGACY_RELEASE_NOTES: boolean = staged?.legacyReleaseNotes === true;
 export const MFA_DEADLINE: number | null = MFA_DEADLINE_ISO ? Date.parse(MFA_DEADLINE_ISO) : null;

@@ -17,8 +17,3 @@ export function parseReleaseNotes(md: string): ReleaseEntry[] {
     return { version: m[1], markdown, highlights: section ? section[1].trim() : "" };
   });
 }
-
-/** The pre-v3 notes describe the Massachusetts deployment, so only an instance that opts in shows them. */
-export function shownReleases(releases: ReleaseEntry[], legacyNotes: boolean): ReleaseEntry[] {
-  return legacyNotes ? releases : releases.filter((r) => Number(r.version.split(".")[0]) >= 3);
-}

@@ -140,8 +140,6 @@ interface InstanceConfigBase {
   regions?: string[];
   /** Multi-state only: states that have their own GrantWell site. Sign-up for them goes there; their existing users see a notice. */
   stateSites?: StateSite[];
-  /** What's new lists v3.0.0 and later unless legacyNotes is true; the v1.x and v2.x notes describe the Massachusetts deployment. */
-  whatsNew?: { legacyNotes?: boolean };
   /** Abuse and cost limits; every key is optional, `limits(config)` fills in the defaults. */
   limits?: Partial<Limits>;
   /** Dev only. These accounts may sign in past Turnstile with the token in SSM at `e2eBypassParameter(config)`. */
@@ -302,15 +300,6 @@ export function validateInstanceConfig(config: InstanceConfig): void {
       problems.push("stateSites lists a state twice");
     }
   }
-  if (config.whatsNew !== undefined) {
-    if (typeof config.whatsNew !== "object" || config.whatsNew === null || Array.isArray(config.whatsNew)) {
-      problems.push("whatsNew must be an object, e.g. { legacyNotes: true }");
-    } else if (Object.keys(config.whatsNew).some((k) => k !== "legacyNotes")) {
-      problems.push("whatsNew only takes legacyNotes");
-    } else if (config.whatsNew.legacyNotes !== undefined && typeof config.whatsNew.legacyNotes !== "boolean") {
-      problems.push("whatsNew.legacyNotes must be true or false");
-    }
-  }
   problems.push(...brandingProblems(config.branding));
   const deadline = config.auth.mfaDeadline;
   if (deadline !== undefined && !(/(Z|[+-]\d{2}:\d{2})$/.test(deadline) && Number.isFinite(Date.parse(deadline)))) {
@@ -393,10 +382,6 @@ export function regions(config: InstanceConfig): string[] {
 
 export function stateSites(config: InstanceConfig): StateSite[] {
   return config.stateSites ?? [];
-}
-
-export function legacyReleaseNotes(config: InstanceConfig): boolean {
-  return config.whatsNew?.legacyNotes === true;
 }
 
 export function supportedStatesEnv(config: InstanceConfig): string {

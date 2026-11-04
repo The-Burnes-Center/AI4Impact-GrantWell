@@ -42,9 +42,6 @@ Put your own images in `public/` and point `config/branding.ts` at them by their
 - **Region:** `regions: ["Region 1", "Region 2"]` adds a required Region dropdown to the one-time profile step and the Profile page. Users who already exist are asked once at their next sign-in, and again if their region is later removed from the list. Admins see each user's region in User Management; nothing else uses it.
 - **Email:** `email: { cognitoDefault: true }` sends sign-in mail from Cognito's own sender when your account has no SES set up (about 50 a day); grant digest emails are then off. If you can't add DNS records for the sender's domain, `email: { sender: "no-reply@agency.gov", identity: "address", manageSenderIdentity: false }` sends from an SES identity for that one address instead; create it in SES and click the link AWS mails to the address before you deploy.
 
-## What's new
-The public `/whats-new` page and the in-app What's new list GrantWell v3.0.0 and later. The v1.x and v2.x notes describe the original Massachusetts deployment; `whatsNew: { legacyNotes: true }` on a deployment lists them too.
-
 ## Application outcomes
 Every deployment asks users what happened with the applications they wrote: submitted, awarded (with the amount), not awarded, withdrawn or didn't submit. They answer from My Applications, or in a reminder after sign-in once the grant's deadline has passed (rolling grants: 90 days after the last edit), repeated every 60 days while no decision is in. Only applications edited after the deployment first runs this release are reminded about; older ones can still be updated from My Applications. Admins see every outcome in their scope under Analytics > Application outcomes and can export it as CSV. Outcomes stay when an application is deleted; when an account is deleted they stay without the user, email and application title.
 

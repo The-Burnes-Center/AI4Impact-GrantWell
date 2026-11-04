@@ -48,21 +48,13 @@ describe("whatsNewHtml", () => {
     expect(html).not.toContain("application/ld+json");
   });
 
-  it("pre-renders the v3+ releases in place of the landing fallback and keeps it only on /whats-new", () => {
+  it("pre-renders every release in place of the landing fallback and keeps it only on /whats-new", () => {
     expect(html).not.toContain("landing fallback");
-    expect(html.match(/<section>/g)).toHaveLength(releases.filter((r) => !/^[12]\./.test(r.version)).length);
+    expect(html.match(/<section>/g)).toHaveLength(releases.length);
     expect(html).toContain("<h2>GrantWell v3.3.0</h2>");
-    expect(html).not.toContain("GrantWell v2.0.0");
-    expect(html).not.toContain("Federal Funds and Infrastructure Office");
     expect(html).toContain('if (location.pathname !== "/whats-new")');
     expect(html).not.toContain('if (location.pathname !== "/")');
     expect(html).toContain('<script type="module" src="/assets/index-abc.js"></script>');
-  });
-
-  it("pre-renders every release on an instance with legacy notes", () => {
-    const legacy = whatsNewHtml(index, notes, "https://grantwell.us", "", true);
-    expect(legacy.match(/<section>/g)).toHaveLength(releases.length);
-    expect(legacy).toContain("GrantWell v2.0.0");
   });
 
   it("fails loudly if index.html loses the fallback it replaces", () => {
