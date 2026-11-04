@@ -61,10 +61,32 @@ describe("reading the caller's documents", () => {
     expect((await download(event({ fileName: "user-1/Bridge Grant/x.pdf" }))).statusCode).toBe(200);
   });
 
-  it("won't list outside the caller's folder", async () => {
-    s3.on(ListObjectsV2Command).resolves({ Contents: [], KeyCount: 0 });
-    expect((await list(event({ folderPrefix: "user-1/../user-2/" }))).statusCode).toBe(403);
-    expect((await list(event({ folderPrefix: "user-1/Bridge Grant/" }))).statusCode).toBe(200);
-    expect(s3.commandCalls(ListObjectsV2Command)).toHaveLength(1);
+  it("lists the caller's whole library, old grant folders included, whatever prefix is asked for", async () => {
+    const at = new Date("2026-11-01T00:00:00Z");
+    s3.on(ListObjectsV2Command)
+      .resolvesOnce({
+        IsTruncated: true,
+        NextContinuationToken: "t",
+        Contents: [
+          { Key: "user-1/documents/plan.pdf", Size: 10, LastModified: at },
+          { Key: "user-1/documents/plan.pdf.metadata.json", Size: 1, LastModified: at },
+        ],
+      })
+      .resolves({
+        Contents: [
+          { Key: "user-1/Bridge Grant//budget.xlsx", Size: 20, LastModified: at },
+          { Key: "user-1/Old Grant/letter.docx", Size: 30, LastModified: at },
+        ],
+      });
+
+    const res = await list(event({ folderPrefix: "user-2/" }));
+
+    expect(res.statusCode).toBe(200);
+    expect(s3.commandCalls(ListObjectsV2Command).map((c) => c.args[0].input.Prefix)).toEqual(["user-1/", "user-1/"]);
+    expect(JSON.parse(res.body).documents).toEqual([
+      { key: "user-1/documents/plan.pdf", name: "plan.pdf", folder: "documents", size: 10, lastModified: at.toISOString() },
+      { key: "user-1/Bridge Grant//budget.xlsx", name: "budget.xlsx", folder: "Bridge Grant", size: 20, lastModified: at.toISOString() },
+      { key: "user-1/Old Grant/letter.docx", name: "letter.docx", folder: "Old Grant", size: 30, lastModified: at.toISOString() },
+    ]);
   });
 });
