@@ -483,7 +483,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       stoppedRef.current = false;
 
       let incomingMetadata: boolean = false;
-      let sources: Record<string, Array<{ title: string; uri: string }>> = {};
+      let sources: ChatBotHistoryItem["metadata"] = {};
 
       /**If there is no response in time, warn first and only time out if the user
        * declines to extend. Any incoming chunk clears both timers. */
@@ -604,7 +604,8 @@ function ChatInputPanel(props: ChatInputPanelProps) {
         } else if (!incomingMetadata) {
           receivedData += data.data;
         } else {
-          const parsed: Array<{ title: string; uri: string }> = JSON.parse(data.data);
+          const meta = JSON.parse(data.data);
+          const parsed: Array<{ title: string; uri: string }> = Array.isArray(meta) ? meta : meta?.Sources ?? [];
           const sourceData = parsed.map((item: { title: string; uri: string }) => {
             if (item.title == "") {
               return {
@@ -617,7 +618,9 @@ function ChatInputPanel(props: ChatInputPanelProps) {
               return item;
             }
           });
-          sources = { Sources: sourceData };
+          sources = Array.isArray(meta?.Citations)
+            ? { Sources: sourceData, Citations: meta.Citations }
+            : { Sources: sourceData };
         }
 
         // Update the chat history state with the new message

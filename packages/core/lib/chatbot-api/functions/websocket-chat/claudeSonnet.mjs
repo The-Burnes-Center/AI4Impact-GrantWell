@@ -42,19 +42,29 @@ export default class ClaudeModel {
 
   /**
    * Reads a response stream into API-ready assistant content blocks, in stream order.
-   * Only text deltas of text blocks reach onText, with a blank line between text blocks; thinking blocks are kept whole
-   * (text + signature) so the tool loop can send them back unchanged.
+   * Only text deltas of text blocks reach onText. Text blocks that follow each other are one answer split at its
+   * citations, so they join as written; text after a thinking or tool block starts after a blank line. Thinking
+   * blocks are kept whole (text + signature) so the tool loop can send them back unchanged.
    *
    * @param {AsyncIterable} stream - The Bedrock response stream.
    * @param {function(string): Promise<void>} onText - Called with each answer text delta.
-   * @returns {Promise<{content: Array, stopReason: string|undefined, stopDetails: object|undefined}>}
+   * @returns {Promise<{content: Array, citations: Array<{citation: object, at: number}>, stopReason: string|undefined, stopDetails: object|undefined}>}
+   *   `at` is where the cited text ends in the text passed to onText, before any trailing whitespace.
    */
   async readStream(stream, onText) {
     const content = [];
     const toolJson = new Map();
+    const blockStart = new Map();
+    const pending = [];
     let current = null;
+    let emitted = 0;
     let stopReason;
     let stopDetails;
+
+    const emit = async (text) => {
+      emitted += text.length;
+      await onText(text);
+    };
 
     const start = (block) => {
       current = block;
@@ -71,9 +81,17 @@ export default class ClaudeModel {
         const delta = chunk.delta;
         if (delta.type == "text_delta") {
           const block = current?.type == "text" ? current : start({ type: "text", text: "" });
-          if (delta.text && !block.text && content.some((b) => b !== block && b.type == "text" && b.text)) await onText("\n\n");
+          if (delta.text && !block.text && !blockStart.has(block)) {
+            const before = content.slice(0, content.indexOf(block));
+            const lastText = before.findLastIndex((b) => b.type == "text" && b.text);
+            if (lastText != -1 && before.slice(lastText + 1).some((b) => b.type != "text")) await emit("\n\n");
+            blockStart.set(block, emitted);
+          }
           block.text = (block.text || "").concat(delta.text);
-          await onText(delta.text);
+          await emit(delta.text);
+        } else if (delta.type == "citations_delta" && current?.type == "text") {
+          (current.citations ??= []).push(delta.citation);
+          pending.push({ block: current, citation: delta.citation });
         } else if (delta.type == "thinking_delta") {
           const block = current?.type == "thinking" ? current : start({ type: "thinking", thinking: "", signature: "" });
           block.thinking = (block.thinking || "").concat(delta.thinking);
@@ -104,9 +122,15 @@ export default class ClaudeModel {
       }
     }
 
+    const citations = pending.map(({ block, citation }) => ({
+      citation,
+      at: (blockStart.get(block) ?? emitted) + (block.text || "").trimEnd().length,
+    }));
+
     // The API rejects empty or whitespace-only text blocks when they are sent back.
     return {
       content: content.filter((b) => b.type != "text" || (b.text || "").trim()),
+      citations,
       stopReason,
       stopDetails,
     };

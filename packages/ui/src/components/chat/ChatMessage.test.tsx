@@ -61,3 +61,54 @@ describe("ChatMessage reply", () => {
     expect(screen.getByRole("heading", { level: 3, name: "Budget" })).toBeInTheDocument();
   });
 });
+
+describe("ChatMessage citations", () => {
+  const content = "Applications are due **March 1, 2027**. Late ones are not read. Use `code here` too.";
+  const citations = [
+    { n: 1, at: [38], quote: "All applications must be received by March 1, 2027.", document: "Grant document", page: 12, lastPage: 12 },
+    { n: 2, at: [62, 38], quote: "Late applications will not be reviewed.", document: "board.pdf", page: 3, lastPage: 4 },
+  ];
+  const render = () =>
+    renderApp(<ChatMessage message={{ type: ChatBotMessageType.AI, content, metadata: { Sources: [], Citations: citations } }} />);
+
+  it("puts numbered quote buttons after the cited text", () => {
+    const { container } = render();
+
+    const buttons = screen.getAllByRole("button", { name: /^Quote \d/ });
+    expect(buttons.map((b) => b.getAttribute("aria-label"))).toEqual([
+      "Quote 1, Grant document, page 12",
+      "Quote 2, board.pdf, pages 3–4",
+      "Quote 2, board.pdf, pages 3–4",
+    ]);
+    expect(container.querySelector("strong")?.textContent).toBe("March 1, 202712");
+    expect(container.querySelector("code")?.textContent).toBe("code here");
+  });
+
+  it("shows the quote under its button and closes on Escape, keeping focus on the button", async () => {
+    const { user } = render();
+    const button = screen.getByRole("button", { name: "Quote 1, Grant document, page 12" });
+
+    expect(button).toHaveAttribute("aria-expanded", "false");
+    await user.click(button);
+    expect(button).toHaveAttribute("aria-expanded", "true");
+    const quote = document.getElementById(button.getAttribute("aria-controls")!);
+    expect(quote?.textContent).toBe("“All applications must be received by March 1, 2027.”Grant document, page 12");
+
+    await user.keyboard("{Escape}");
+    expect(button).toHaveAttribute("aria-expanded", "false");
+    expect(button).toHaveFocus();
+  });
+
+  it("closes when the user clicks elsewhere", async () => {
+    const { user } = render();
+    const button = screen.getByRole("button", { name: "Quote 1, Grant document, page 12" });
+    await user.click(button);
+    await user.click(document.body);
+    expect(button).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("renders older answers without citations as before", () => {
+    renderApp(<ChatMessage message={{ type: ChatBotMessageType.AI, content, metadata: {} }} />);
+    expect(screen.queryByRole("button", { name: /^Quote/ })).toBeNull();
+  });
+});

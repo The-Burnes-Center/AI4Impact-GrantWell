@@ -1,5 +1,5 @@
 import { createHash } from "crypto";
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
 import {
   TextractClient,
@@ -8,6 +8,9 @@ import {
 } from "@aws-sdk/client-textract";
 import { artifactsBucket } from "grantwell-shared";
 import { updateProcessingStatus } from "../shared/status.mjs";
+import { joinLines, pageMap, pageMapKey } from "./page-map.mjs";
+
+export { joinLines };
 
 const s3Client = new S3Client();
 const textractClient = new TextractClient({ region: process.env.AWS_REGION || 'us-east-1' });
@@ -19,9 +22,10 @@ export const handler = async (event) => {
 
   const fileName = documentKey.split("/").pop();
   let documentContent;
+  let pageStarts = null;
 
   if (fileName === "NOFO-File-PDF") {
-    documentContent = await extractPdfText(s3Bucket, documentKey);
+    ({ text: documentContent, pageStarts } = await extractPdfText(s3Bucket, documentKey));
   } else if (fileName === "NOFO-File-TXT") {
     documentContent = await extractTxtContent(s3Bucket, documentKey);
   } else {
@@ -42,6 +46,16 @@ export const handler = async (event) => {
       ContentType: "text/plain",
     },
   }).done();
+  if (pageStarts) {
+    await s3Client.send(
+      new PutObjectCommand({
+        Bucket: artifactsBucket(),
+        Key: pageMapKey(nofoName),
+        Body: JSON.stringify(pageMap(documentContent, pageStarts)),
+        ContentType: "application/json",
+      })
+    );
+  }
 
   console.log(`Extracted ${documentContent.length} chars from ${documentKey}`);
 
@@ -139,10 +153,7 @@ async function extractPdfText(bucket, key) {
     nextToken = result.NextToken;
   } while (nextToken);
 
-  return allBlocks
-    .filter((block) => block.BlockType === "LINE")
-    .map((line) => line.Text)
-    .join("\n");
+  return joinLines(allBlocks.filter((block) => block.BlockType === "LINE"));
 }
 
 async function extractTxtContent(bucket, key) {

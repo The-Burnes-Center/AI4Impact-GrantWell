@@ -17,6 +17,16 @@ export enum ChatBotMessageType {
   AI = "AI",
 }
 
+/** A quoted passage the answer cites; `at` holds offsets in the answer text where its marker goes. */
+export interface ChatCitation {
+  n: number;
+  at: number[];
+  quote: string;
+  document: string;
+  page?: number;
+  lastPage?: number;
+}
+
 export interface ChatBotHistoryItem {
   type: ChatBotMessageType;
   content: string;
@@ -30,5 +40,6 @@ export interface ChatBotHistoryItem {
     | string[]
     | string[][]
     | Array<{ title: string; uri: string }>
+    | ChatCitation[]
   >;
 }

@@ -14,10 +14,13 @@ function readPosts(posts) {
   const streamed = (end === -1 ? posts : posts.slice(0, end)).join("");
   const marker = MARKERS.find((m) => streamed.startsWith(m));
   let sources = [];
+  let citations = [];
   try {
-    sources = end === -1 ? [] : JSON.parse(posts[end + 1] ?? "[]");
+    const meta = end === -1 ? [] : JSON.parse(posts[end + 1] ?? "[]");
+    sources = Array.isArray(meta) ? meta : meta.Sources ?? [];
+    citations = Array.isArray(meta) ? [] : meta.Citations ?? [];
   } catch {}
-  return marker ? { answer: null, error: streamed, sources } : { answer: streamed, sources };
+  return marker ? { answer: null, error: streamed, sources } : { answer: streamed, sources, citations };
 }
 
 const sessionReply = (body) => ({ Payload: Buffer.from(JSON.stringify({ statusCode: 200, body: JSON.stringify(body) })) });

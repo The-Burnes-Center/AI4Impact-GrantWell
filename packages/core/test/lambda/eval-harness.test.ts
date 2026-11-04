@@ -159,7 +159,7 @@ describe("eval harness", () => {
     expect(r.output.answers[0]).toMatchObject({ id: "q1", answer: "Municipalities are eligible." });
     expect(r.output.answers[0].sources).toEqual([{ title: "Grant document", uri: "s3://eval-artifacts/Grant A/raw-text.txt" }]);
     const body = JSON.parse(bedrock.commandCalls(InvokeModelWithResponseStreamCommand)[0].args[0].input.body as string);
-    expect(JSON.stringify(body.system)).toContain("Applications are due December 1, 2026.");
+    expect(JSON.stringify(body.messages[0].content[0])).toContain("Applications are due December 1, 2026.");
     expect(body).not.toHaveProperty("tools");
     expect(r.usage.map((u: any) => [u.input, u.output, u.stop])).toEqual([[900, 12, "end_turn"]]);
     expect(r.usage.every((u: any) => u.firstTokenMs >= 0)).toBe(true);

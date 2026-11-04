@@ -115,14 +115,14 @@ describe("chat narration", () => {
     expect(saves()[0].new_chat_entry[0].chatbot).toBe(`${opening}bcd`);
   });
 
-  it("separates two text blocks of the answer with a blank line", async () => {
+  it("joins the text blocks of a cited answer as written", async () => {
     bedrock.on(InvokeModelWithResponseStreamCommand).resolves(
       stream([
         { type: "content_block_start", content_block: { type: "text", text: "" } },
-        text("First part."),
+        text("Applications are due March 1"),
         { type: "content_block_stop" },
         { type: "content_block_start", content_block: { type: "text", text: "" } },
-        text("Second part."),
+        text(", and late ones are not read."),
         { type: "content_block_stop" },
         stop("end_turn"),
       ])
@@ -130,7 +130,7 @@ describe("chat narration", () => {
 
     await handler(event());
 
-    expect(saves()[0].new_chat_entry[0].chatbot).toBe("First part.\n\nSecond part.");
+    expect(saves()[0].new_chat_entry[0].chatbot).toBe("Applications are due March 1, and late ones are not read.");
   });
 });
 

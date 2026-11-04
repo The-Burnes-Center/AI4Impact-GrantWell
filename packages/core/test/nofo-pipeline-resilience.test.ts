@@ -51,7 +51,7 @@ process.env.ARTIFACTS_BUCKET = "grant-artifacts";
 process.env.NOFO_METADATA_TABLE_NAME = "nofos";
 
 const fns = "../lib/chatbot-api/functions/nofo-pipeline";
-const { handler: extractText, MAX_TEXTRACT_WAIT_MS } = await import(`${fns}/extract-text/index.mjs`);
+const { handler: extractText, MAX_TEXTRACT_WAIT_MS, joinLines } = await import(`${fns}/extract-text/index.mjs`);
 const { handler: extract } = await import(`${fns}/extract-and-analyze/index.mjs`);
 const { handler: validate } = await import(`${fns}/validate/index.mjs`);
 const { handler: publish } = await import(`${fns}/publish/index.mjs`);
@@ -163,6 +163,46 @@ describe("extract-text Textract poll", () => {
 
     expect(error).toBeNull();
     expect(value.documentLength).toBeGreaterThan(500);
+  });
+});
+
+describe("extract-text page map", () => {
+  it("records where each page starts in the joined text", () => {
+    const lines = [
+      { Text: "Title", Page: 1 },
+      { Text: "Intro", Page: 1 },
+      { Text: "Due March 1", Page: 3 },
+    ];
+    const { text, pageStarts } = joinLines(lines);
+    expect(text).toBe("Title\nIntro\nDue March 1");
+    expect(pageStarts).toEqual([0, 12, 12]);
+    expect(text.slice(pageStarts[2])).toBe("Due March 1");
+  });
+
+  it("saves the map beside raw-text.txt for a PDF", async () => {
+    aws.s3.mockImplementation(async () => ({}));
+    let call = 0;
+    aws.textract.mockImplementation(async (name: string) => {
+      if (name === "StartDocumentTextDetectionCommand") return { JobId: "job-3" };
+      call += 1;
+      if (call === 1) return { JobStatus: "SUCCEEDED" };
+      return {
+        Blocks: [
+          { BlockType: "PAGE", Page: 1 },
+          { BlockType: "LINE", Text: "grant funding eligibility applicant ".repeat(10), Page: 1 },
+          { BlockType: "LINE", Text: "award deadline program ".repeat(10), Page: 2 },
+        ],
+      };
+    });
+
+    const { error } = await settle(extractText({ s3Bucket: "b", documentKey: "G/NOFO-File-PDF", nofoName: "G" }));
+
+    expect(error).toBeNull();
+    const put = aws.s3.mock.calls.find(([name, input]) => name === "PutObjectCommand" && input.Key === "G/raw-text-pages.json");
+    expect(put).toBeDefined();
+    const map = JSON.parse(put![1].Body);
+    const first = "grant funding eligibility applicant ".repeat(10);
+    expect(map).toEqual({ chars: first.length + 1 + "award deadline program ".repeat(10).length, pageStarts: [0, first.length + 1] });
   });
 });
 

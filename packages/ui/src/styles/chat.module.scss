@@ -147,3 +147,75 @@ div.transcript[tabindex]:focus-visible {
     transform: translateY(-3px);
   }
 }
+
+.citation {
+  position: relative;
+  display: inline;
+}
+
+.citationMarker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  margin: 0 1px 0 3px;
+  padding: 0 5px;
+  border: 1px solid var(--gw-color-primary-border);
+  border-radius: 10px;
+  background-color: var(--gw-color-primary-light);
+  color: var(--gw-color-primary-deep);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  vertical-align: 2px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--gw-color-white);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--gw-color-primary);
+    outline-offset: 1px;
+  }
+
+  &[aria-expanded="true"] {
+    background-color: var(--gw-color-primary);
+    border-color: var(--gw-color-primary);
+    color: var(--gw-color-white);
+  }
+}
+
+.citationPopover {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 20;
+  display: block;
+  width: max-content;
+  max-width: min(340px, calc(100vw - 32px));
+  padding: 10px 12px;
+  border: 1px solid var(--gw-color-border);
+  border-radius: 8px;
+  background-color: var(--gw-color-white);
+  color: var(--gw-color-text);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 14%);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.45;
+  white-space: normal;
+  text-align: left;
+}
+
+.citationQuote {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.citationSource {
+  display: block;
+  margin-top: 6px;
+  color: var(--gw-color-text-secondary);
+  font-size: 13px;
+}
