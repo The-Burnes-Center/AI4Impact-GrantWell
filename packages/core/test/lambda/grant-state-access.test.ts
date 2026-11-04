@@ -162,13 +162,17 @@ describe("chat grant access", () => {
     expect(warns).toHaveBeenCalled();
   });
 
-  it("lists the user's uploads for the grant when the identifier ends in a slash", async () => {
+  it("includes an older chat's grant-folder uploads when the identifier ends in a slash", async () => {
     signedInAs(null, "MA");
-    s3.on(ListObjectsV2Command).resolves({ Contents: [{ Key: "user-1/MA Grant/budget.pdf" }] });
+    s3.on(ListObjectsV2Command).resolves({ Contents: [{ Key: "user-1/MA Grant//budget.txt", Size: 20, LastModified: new Date("2026-10-01") }] });
+    s3.on(GetObjectCommand, { Key: "user-1/MA Grant//budget.txt" }).resolves({
+      Body: { transformToByteArray: async () => new TextEncoder().encode("Budget: $50,000") },
+    } as any);
     await chat("MA Grant/");
-    expect(s3.commandCalls(ListObjectsV2Command)[0].args[0].input.Prefix).toBe("user-1/MA Grant/");
+    expect(s3.commandCalls(ListObjectsV2Command)[0].args[0].input.Prefix).toBe("user-1/");
     const request = JSON.parse(bedrock.commandCalls(InvokeModelWithResponseStreamCommand)[0].args[0].input.body as string);
-    expect(JSON.stringify(request.messages.at(-1))).toContain("- budget.pdf");
+    expect(JSON.stringify(request.messages[0].content)).toContain("Budget: $50,000");
+    expect(JSON.stringify(request.messages.at(-1))).toContain("- budget.txt");
   });
 });
 

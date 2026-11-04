@@ -266,15 +266,40 @@ describe("chat with the grant's full text", () => {
     expect(reads).toEqual([{ operation: "get_session", user_id: "user-1", session_id: "s1", limit: 9 }]);
   });
 
-  it("passes the session's document_keys to the applicant-documents seam without loading anything yet", async () => {
+  it("includes the documents ticked for the chat after the grant text", async () => {
     lambda.on(InvokeCommand).callsFake((input) =>
-      String(input.Payload).includes("get_session") ? sessionReply({ document_keys: ["lib/budget.pdf"], chat_history: [] }) : sessionReply({})
+      String(input.Payload).includes("get_session") ? sessionReply({ document_keys: ["user-1/documents/board.txt"], chat_history: [] }) : sessionReply({})
     );
+    s3.on(ListObjectsV2Command, { Bucket: "user-docs" }).resolves({
+      Contents: [
+        { Key: "user-1/documents/board.txt", Size: 40, LastModified: new Date("2026-11-01") },
+        { Key: "user-1/documents/other.txt", Size: 40, LastModified: new Date("2026-11-02") },
+      ],
+    });
+    s3.on(GetObjectCommand, { Bucket: "user-docs", Key: "user-1/documents/board.txt" }).resolves({
+      Body: { transformToByteArray: async () => new TextEncoder().encode("The board approved a $415,000 match.") },
+    } as any);
 
     await handler(event());
 
-    expect(request().messages).toHaveLength(1);
-    expect(JSON.stringify(request().messages)).not.toContain("budget.pdf");
+    const first = JSON.stringify(request().messages[0].content);
+    expect(first).toContain("The board approved a $415,000 match.");
+    expect(first).toContain('<document name=\\"board.txt\\">');
+    expect(first).not.toContain("other.txt");
+    expect(JSON.stringify(request().messages.at(-1))).toContain("- board.txt");
+  });
+
+  it("tells the model which ticked documents it could not include", async () => {
+    lambda.on(InvokeCommand).callsFake((input) =>
+      String(input.Payload).includes("get_session") ? sessionReply({ document_keys: ["user-1/documents/photo.png"], chat_history: [] }) : sessionReply({})
+    );
+    s3.on(ListObjectsV2Command, { Bucket: "user-docs" }).resolves({
+      Contents: [{ Key: "user-1/documents/photo.png", Size: 40, LastModified: new Date("2026-11-01") }],
+    });
+
+    await handler(event());
+
+    expect(JSON.stringify(request().messages.at(-1))).toContain("photo.png (The AI can't read this file type)");
   });
 });
 
