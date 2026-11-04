@@ -1,21 +1,42 @@
-# GrantWell v3.3.0
+# GrantWell v3.3.5
 
-**Last Updated:** October 15, 2026
+**Last Updated:** November 4, 2026
 
-This release makes it easier to write and keep track of your applications. You can now pick a grant from a list when you start a new chat or application, look back through earlier versions of an application and restore them, and protect your account with two-step verification. Grant search returns better matches, chats and AI-written applications use a newer AI model, and Word and PDF exports keep their formatting. We have also made the wording and navigation consistent across GrantWell and made the landing page load faster. Since then, grant summaries also use the newer AI model, deadlines show on the right day, GrantWell works better on a phone, two-step verification is quicker, more new grants arrive with the right document, and administrators can search users and see which waiting grants are due soonest. This update also keeps your information safer, keeps your edits while the AI writes, and makes the AI writer use everything you give it. You can now also record how each application turned out, and GrantWell asks once a grant's deadline has passed.
+This release makes it easier to write and keep track of your applications. You can now pick a grant from a list when you start a new chat or application, look back through earlier versions of an application and restore them, and protect your account with two-step verification. Grant search returns better matches, chats and AI-written applications use a newer AI model, and Word and PDF exports keep their formatting. We have also made the wording and navigation consistent across GrantWell and made the landing page load faster. Since then, grant summaries also use the newer AI model, deadlines show on the right day, GrantWell works better on a phone, two-step verification is quicker, more new grants arrive with the right document, and administrators can search users and see which waiting grants are due soonest. This update also keeps your information safer, keeps your edits while the AI writes, and makes the AI writer use everything you give it. You can now also record how each application turned out, and GrantWell asks once a grant's deadline has passed. In this update, chats and the AI writer work from the whole grant, so answers are quicker, shorter and more complete; My Documents keeps your supporting documents in one place and lets you choose which ones the AI uses; AI search understands what you need in plain words; and GrantWell fixes the issues found in our partner accessibility review.
 
 ## Highlights
 
+- **Answers from the whole grant**: chats and the AI writer read the entire grant, so answers are quicker, shorter and complete, and AI search understands what you need in plain words
+- **My Documents**: keep your supporting documents in one place and choose which ones the AI uses in each chat and application
 - **Version history for applications**: save named versions, compare them, restore earlier text, and undo an AI rewrite
 - **Two-step verification**: protect your account with a code from an authenticator app; enter the 6 digits and you're signed in
 - **Safer by design**: state grants stay with their state, AI search shows only grants you may see, and deleting an account removes its chats, applications and supporting documents
-- **Better grant search and a newer AI model** for chats, grant summaries and AI-written applications
-- **Better AI-written applications**: your edits are kept while the AI writes, it uses everything you give it including your supporting documents, and Word and PDF exports keep their formatting
-- **Correct deadlines**: a deadline late in the day no longer shows as the next day
-- **Easier to use**: pages fit a phone, long chats open quickly, navigation and wording are consistent, and the landing page is faster
+- **Better AI-written applications**: your edits are kept while the AI writes, and Word and PDF exports keep their formatting
+- **Easier to use for everyone**: fixes from our partner accessibility review, pages that fit a phone, consistent navigation and wording, and deadlines that show on the right day
 - **For admins**: search users, grants in the processing queue sorted by deadline, a weekday email when grants are waiting, fewer grants that need review, and every recorded application outcome with a CSV export
 
 ## New in this release
+
+### Answers From the Whole Grant
+
+- **Chat with AI** now reads the whole grant every time you ask, instead of searching for pieces of it, so it doesn't miss tables, fine print or exceptions
+- Answers start sooner, arrive without long pauses, and go straight to the point: a sentence or two for a quick question, more only when you ask for detail
+- The AI writer in **Write Application** also works from the whole grant for every section
+- A chat appears in **My Chats** once you've asked something, not every time you open one
+- A link to a chat, grant or application that no longer exists now says so, with a way back
+
+### My Documents
+
+- **My Documents** in the sidebar holds all your supporting documents: upload, download and delete them in one place
+- In a chat or an application, open **Supporting Documents** and tick the documents the AI should use; nothing is ticked until you choose
+- Documents you uploaded before keep working in the chats and applications you used them in
+- GrantWell tells you before you start if a document is too large or a type the AI can't read
+
+### Search That Understands What You Need
+
+- Describe what you need in plain words, for example "an electric bus for our rural transit district", and AI search finds grants that fit, even when they use different words
+- Your filters stay as you set them, and expired grants only appear if you ask for them
+- Results come back as quickly as before, and grants in your state come first
 
 ### Application Outcomes
 
