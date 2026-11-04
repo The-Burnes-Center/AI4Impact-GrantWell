@@ -1,22 +1,21 @@
 /**
  * AI Grant Search Lambda
  *
- * Three-layer search: hybrid (BM25 keyword + k-NN semantic) via OpenSearch,
- * category matching via DynamoDB CategoryIndex, and name matching via DynamoDB scan.
- * Results are merged, deduplicated, and scored. Name/category matches fill gaps
- * that hybrid search misses due to chunk limits. Only grant documents the caller may
- * see (same state rule as the grant list) are scored, reranked, or returned.
+ * Three layers: hybrid (BM25 keyword + cosine semantic) over the per-grant search index the builder
+ * keeps in ARTIFACTS_BUCKET/_search/, category matching and name matching over the grant metadata.
+ * Results are merged, deduplicated, and scored. Only grants the caller may see (same state rule as
+ * the grant list) are scored or returned. The only model call is the query embedding.
  */
 
-import { createHash, createHmac } from 'node:crypto';
 import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
-import { DynamoDBClient, GetItemCommand, QueryCommand, ScanCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, GetItemCommand, ScanCommand } from '@aws-sdk/client-dynamodb';
+import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
 import { recordEvent, touchLastActive } from 'grantwell-shared';
+import { EMBEDDING_DIM, POINTER_KEY, decodeIndex, rankHybrid } from './search-core.mjs';
 
 const REGION = process.env.AWS_REGION || 'us-east-1';
-const OPENSEARCH_ENDPOINT = process.env.OPENSEARCH_ENDPOINT;
-const OPENSEARCH_INDEX = process.env.OPENSEARCH_INDEX;
+const INDEX_BUCKET = process.env.SEARCH_INDEX_BUCKET;
 const FEATURE_ROLLOUT_TABLE = process.env.FEATURE_ROLLOUT_TABLE_NAME;
 const METADATA_TABLE = process.env.NOFO_METADATA_TABLE_NAME;
 const FEATURE_KEY = 'ai-grant-search';
@@ -24,32 +23,14 @@ const CONFIG_SUBJECT_KEY = 'CONFIG';
 const FEATURE_ROLLOUT_MODES = new Set(['all', 'allowlisted', 'disabled']);
 
 const TITAN_MODEL_ID = process.env.TITAN_MODEL_ID;
-const EMBEDDING_DIM = 1024;
 const MAX_RESULTS = 50;
-const AOSS_TIMEOUT_MS = 10_000;
-const BM25_SATURATION_K = 5.0;
-const BM25_MIN_SHOULD_MATCH = '80%';
-const BM25_FUZZINESS = 'AUTO:7,10';
-const BM25_FUZZY_PREFIX_LENGTH = 2;
-const KNN_FETCH_MULTIPLIER = 3;
-const SHORT_QUERY_WORD_LIMIT = 3;
-const CATEGORY_INDEX = 'CategoryIndex';
+const INDEX_REFRESH_MS = 60_000;
 const CATEGORY_BOOST_SCORE = 0.45;
 const NAME_MATCH_SCORE = 0.55;
 const NAME_MATCH_MIN_FRACTION = 0.5;
-const RERANK_MODEL_ID = 'cohere.rerank-v3-5:0';
-const RERANK_TIMEOUT_MS = 5_000;
 const RECENCY_TIE_EPSILON = 0.05;
-const GRANT_DOCUMENT_TYPE = 'NOFO';
-
-// Short queries (≤3 words) favour BM25 keywords; longer queries favour semantic meaning
-const SCORING = {
-  short: { bm25Weight: 0.65, semanticWeight: 0.35, threshold: 0.46 },
-  long:  { bm25Weight: 0.4,  semanticWeight: 0.6,  threshold: 0.40 },
-};
-
-const CHUNK_AGG_MAX_WEIGHT = 0.7;
-const CHUNK_AGG_AVG_WEIGHT = 0.3;
+const INDEX_NOT_READY_MESSAGE =
+  'AI search is still being set up, so these results match grant names and categories only. Try again in a few minutes.';
 
 const GRANT_CATEGORIES = [
   'Recovery Act', 'Agriculture', 'Arts', 'Business and Commerce',
@@ -160,62 +141,7 @@ const LEGACY_STATELESS_ADMIN_IS_PLATFORM =
 
 const bedrockClient = new BedrockRuntimeClient({ region: REGION });
 const dynamoClient = new DynamoDBClient({ region: REGION });
-
-// ── SigV4 signing (node:crypto, zero deps) ──
-
-function sigv4Sign(method, host, path, bodyStr, service = 'aoss') {
-  const now = new Date();
-  const amzDate = now.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-  const dateStamp = amzDate.substring(0, 8);
-  const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN } = process.env;
-
-  const payloadHash = createHash('sha256').update(bodyStr).digest('hex');
-
-  const headers = {
-    'content-type': 'application/json',
-    host,
-    'x-amz-content-sha256': payloadHash,
-    'x-amz-date': amzDate,
-  };
-  if (AWS_SESSION_TOKEN) headers['x-amz-security-token'] = AWS_SESSION_TOKEN;
-
-  const sortedKeys = Object.keys(headers).sort();
-  const signedHeaders = sortedKeys.join(';');
-  const canonicalHeaders = sortedKeys.map((k) => `${k}:${headers[k]}\n`).join('');
-
-  const canonicalRequest = [method, path, '', canonicalHeaders, signedHeaders, payloadHash].join('\n');
-  const credentialScope = `${dateStamp}/${REGION}/${service}/aws4_request`;
-  const stringToSign = ['AWS4-HMAC-SHA256', amzDate, credentialScope, createHash('sha256').update(canonicalRequest).digest('hex')].join('\n');
-
-  let key = createHmac('sha256', `AWS4${AWS_SECRET_ACCESS_KEY}`).update(dateStamp).digest();
-  for (const part of [REGION, service, 'aws4_request']) key = createHmac('sha256', key).update(part).digest();
-  const signature = createHmac('sha256', key).update(stringToSign).digest('hex');
-
-  headers.authorization = `AWS4-HMAC-SHA256 Credential=${AWS_ACCESS_KEY_ID}/${credentialScope}, SignedHeaders=${signedHeaders}, Signature=${signature}`;
-  return headers;
-}
-
-async function aossRequest(method, path, body) {
-  if (!OPENSEARCH_ENDPOINT) throw new Error('OPENSEARCH_ENDPOINT not set');
-
-  const host = OPENSEARCH_ENDPOINT;
-  const bodyStr = typeof body === 'string' ? body : JSON.stringify(body);
-  const headers = sigv4Sign(method, host, path, bodyStr);
-
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), AOSS_TIMEOUT_MS);
-
-  try {
-    const response = await fetch(`https://${host}${path}`, { method, headers, body: bodyStr, signal: controller.signal });
-    if (!response.ok) {
-      const errText = await response.text();
-      throw new Error(`AOSS ${method} ${path} failed (${response.status}): ${errText}`);
-    }
-    return response.json();
-  } finally {
-    clearTimeout(timeoutId);
-  }
-}
+const s3Client = new S3Client({ region: REGION });
 
 // ── Main handler ──
 
@@ -253,11 +179,13 @@ export const handler = async (event) => {
     // fires on every debounced keystroke, so logging each call would count "trans", "transpor",
     // "transportation" as separate queries. `committed` is sent by the client for the deliberate
     // search; debounced-as-you-type calls omit it. Best-effort; never affects search results.
-    if (claims.sub && committed === true) {
-      const state = String(claims['custom:state'] || '').trim().toUpperCase();
-      await recordEvent({ eventType: 'search', userId: claims.sub, state, queryText: trimmedQuery });
-      await touchLastActive(claims.sub, state);
-    }
+    const analytics = claims.sub && committed === true
+      ? (async () => {
+        const state = String(claims['custom:state'] || '').trim().toUpperCase();
+        await recordEvent({ eventType: 'search', userId: claims.sub, state, queryText: trimmedQuery });
+        await touchLastActive(claims.sub, state);
+      })()
+      : Promise.resolve();
 
     const { statusFilter, rollingOnly, cleanedQuery } = parseIntent(trimmedQuery);
     const searchQuery = cleanedQuery.length >= 3 ? cleanedQuery : trimmedQuery;
@@ -266,20 +194,28 @@ export const handler = async (event) => {
 
     const intentFilterActive = Boolean(statusFilter || rollingOnly);
     const callerScope = resolveCallerScope(event);
-    const [metaMap, embedding] = await Promise.all([getMetadataCache(), generateEmbedding(searchQuery)]);
+    const timings = {};
+    const timed = (label, promise) => {
+      const t0 = Date.now();
+      return promise.finally(() => { timings[label] = Date.now() - t0; });
+    };
+    const [metaMap, embedding, loaded] = await Promise.all([
+      timed('metadataMs', getMetadataCache()),
+      timed('embeddingMs', generateEmbedding(searchQuery)),
+      timed('indexMs', loadSearchIndex()),
+      analytics,
+    ]);
     const isVisible = (name) => callerCanSeeGrant(callerScope, metaMap.get(name));
 
+    const rankStart = Date.now();
+    const hybridResults = loaded.index ? hybridSearch(loaded.index, searchQuery, embedding, isVisible, callerScope.state) : [];
     const matchedCategories = matchCategory(searchQuery);
-    const [hybridResults, categoryFetches, nameMatches] = await Promise.all([
-      hybridSearch(searchQuery, embedding, MAX_RESULTS, isVisible),
-      Promise.all(
-        matchedCategories.map(async (category) => ({
-          category,
-          names: (await fetchGrantsByCategory(category)).filter(isVisible),
-        }))
-      ),
-      fetchGrantsByName(searchQuery, isVisible),
-    ]);
+    const categoryFetches = matchedCategories.map((category) => ({
+      category,
+      names: grantsInCategory(metaMap, category).filter(isVisible),
+    }));
+    const nameMatches = matchGrantsByName(metaMap, searchQuery, isVisible);
+    timings.rankMs = Date.now() - rankStart;
 
     // Merge all sources, deduplicate, boost hybrid results that also matched by name.
     // Name scores scale with the fraction of query words matched, so a partial match
@@ -331,16 +267,20 @@ export const handler = async (event) => {
     });
     const finalResults = finalPool.slice(0, MAX_RESULTS);
 
-    if (nameMatches.length > 0) console.log(`Name matches: ${nameMatches.length} grants contain "${searchQuery}" in name`);
+    if (nameMatches.size > 0) console.log(`Name matches: ${nameMatches.size} grants contain "${searchQuery}" in name`);
     if (totalCategoryHits > 0) console.log(`Category matches: ${totalCategoryHits} grants across [${matchedCategories.join(', ')}]`);
 
     const searchTimeMs = Date.now() - startTime;
-    console.log('Search complete:', { resultCount: finalResults.length, filteredOut, statusFilter, rollingOnly, searchTimeMs });
+    console.log('Search complete:', {
+      resultCount: finalResults.length, filteredOut, statusFilter, rollingOnly, searchTimeMs,
+      indexStatus: loaded.status, indexBuildId: loaded.index?.buildId ?? null, ...timings,
+    });
 
     return respond(200, {
       results: finalResults,
       query: trimmedQuery,
       searchTimeMs,
+      ...(loaded.status === 'building' && { indexStatus: 'building', message: INDEX_NOT_READY_MESSAGE }),
     });
   } catch (error) {
     console.error('AI Grant Search error:', error);
@@ -352,8 +292,6 @@ export const handler = async (event) => {
       message = 'Search timed out. Please try a shorter or more specific query.';
     } else if (error.name === 'AccessDeniedException' || error.name === 'UnrecognizedClientException') {
       message = 'Search service configuration error. Please contact support.';
-    } else if (error.message?.includes('OPENSEARCH') || error.message?.includes('AOSS')) {
-      message = 'Search index is temporarily unavailable. Please try again shortly.';
     }
 
     return respond(500, { message, results: [], query: '', searchTimeMs: 0 });
@@ -522,7 +460,7 @@ async function getMetadataCache() {
         const result = await dynamoClient.send(
           new ScanCommand({
             TableName: METADATA_TABLE,
-            ProjectionExpression: 'nofo_name, #s, expiration_date, is_rolling, #scope, #state',
+            ProjectionExpression: 'nofo_name, #s, expiration_date, is_rolling, #scope, #state, category',
             ExpressionAttributeNames: { '#s': 'status', '#scope': 'scope', '#state': 'state' },
             ExclusiveStartKey: lastKey,
           })
@@ -586,44 +524,26 @@ function matchesIntentFilter(meta, statusFilter, rollingOnly) {
   return true;
 }
 
-async function fetchGrantsByCategory(category) {
-  if (!METADATA_TABLE) return [];
-  try {
-    const names = [];
-    let lastKey;
-    do {
-      const result = await dynamoClient.send(
-        new QueryCommand({
-          TableName: METADATA_TABLE,
-          IndexName: CATEGORY_INDEX,
-          KeyConditionExpression: 'category = :cat',
-          ExpressionAttributeValues: { ':cat': { S: category } },
-          ProjectionExpression: 'nofo_name',
-          ExclusiveStartKey: lastKey,
-        })
-      );
-      names.push(...(result.Items || []).map((item) => unmarshall(item).nofo_name).filter(Boolean));
-      lastKey = result.LastEvaluatedKey;
-    } while (lastKey);
-    return names;
-  } catch (err) {
-    console.error('Category lookup failed:', err.message);
-    return [];
-  }
+function grantsInCategory(metaMap, category) {
+  const names = [];
+  for (const [name, meta] of metaMap) if (meta.category === category) names.push(name);
+  return names;
 }
 
-// ── Name matching — scans DynamoDB for grants whose name contains query words (with stemming) ──
+// ── Name matching — grants whose name contains query words (with stemming) ──
 
 function stem(word) {
   if (word.length < 6) return word;
   return word.replace(/(tion|sion|ment|ness|ence|ance|ient|able|ible|ing|ity|ous|ive|ful|less|al|ly|er|ed|es|s)$/i, '');
 }
 
+const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 function nameContainsWord(lowerName, word, stemmed) {
-  const wordRegex = new RegExp(`\\b${word}`, 'i');
+  const wordRegex = new RegExp(`\\b${escapeRegex(word)}`, 'i');
   if (wordRegex.test(lowerName)) return true;
   if (stemmed !== word && stemmed.length >= 4) {
-    const stemRegex = new RegExp(`\\b${stemmed}`, 'i');
+    const stemRegex = new RegExp(`\\b${escapeRegex(stemmed)}`, 'i');
     return stemRegex.test(lowerName);
   }
   return false;
@@ -634,39 +554,23 @@ function nameContainsWord(lowerName, word, stemmed) {
  * query words. Requiring *every* word (the previous rule) collapsed to ~10% recall as soon
  * as a user added a word not in the title ("grants", a state name) — the dominant real shape.
  */
-async function fetchGrantsByName(query, isVisible) {
-  if (!METADATA_TABLE) return new Map();
-  try {
-    const allNames = [];
-    let lastKey;
-    do {
-      const result = await dynamoClient.send(
-        new ScanCommand({ TableName: METADATA_TABLE, ProjectionExpression: 'nofo_name', ExclusiveStartKey: lastKey })
-      );
-      allNames.push(...(result.Items || []).map((item) => unmarshall(item).nofo_name).filter(Boolean));
-      lastKey = result.LastEvaluatedKey;
-    } while (lastKey);
+function matchGrantsByName(metaMap, query, isVisible) {
+  const queryWords = query.toLowerCase().split(/\s+/).filter((w) => w.length > 2);
+  if (queryWords.length === 0) return new Map();
+  const queryStems = queryWords.map(stem);
 
-    const queryWords = query.toLowerCase().split(/\s+/).filter((w) => w.length > 2);
-    if (queryWords.length === 0) return new Map();
-    const queryStems = queryWords.map(stem);
-
-    const matches = new Map();
-    for (const name of allNames) {
-      if (!isVisible(name)) continue;
-      const lowerName = name.toLowerCase();
-      let hits = 0;
-      for (let i = 0; i < queryWords.length; i++) {
-        if (nameContainsWord(lowerName, queryWords[i], queryStems[i])) hits++;
-      }
-      const fraction = hits / queryWords.length;
-      if (fraction >= NAME_MATCH_MIN_FRACTION) matches.set(name, fraction);
+  const matches = new Map();
+  for (const name of metaMap.keys()) {
+    if (!isVisible(name)) continue;
+    const lowerName = name.toLowerCase();
+    let hits = 0;
+    for (let i = 0; i < queryWords.length; i++) {
+      if (nameContainsWord(lowerName, queryWords[i], queryStems[i])) hits++;
     }
-    return matches;
-  } catch (err) {
-    console.error('Name lookup failed:', err.message);
-    return new Map();
+    const fraction = hits / queryWords.length;
+    if (fraction >= NAME_MATCH_MIN_FRACTION) matches.set(name, fraction);
   }
+  return matches;
 }
 
 // ── Embedding ──
@@ -683,197 +587,89 @@ async function generateEmbedding(text) {
   return JSON.parse(new TextDecoder().decode(response.body)).embedding;
 }
 
-// ── Hybrid search — BM25 keyword + k-NN semantic via OpenSearch Serverless ──
+// ── Search index — loaded from S3, kept across warm invocations, swapped when the pointer moves ──
 
-async function hybridSearch(query, vector, k, isVisible) {
-  if (!OPENSEARCH_ENDPOINT || !OPENSEARCH_INDEX) {
-    console.warn('OpenSearch not configured, skipping hybrid search');
-    return [];
-  }
+let searchIndex = null;
+let indexCheckedAt = 0;
+let inflightIndex = null;
 
-  const searchPath = `/${OPENSEARCH_INDEX}/_search`;
-  const wordCount = query.split(/\s+/).filter(Boolean).length;
-  const profile = wordCount <= SHORT_QUERY_WORD_LIMIT ? SCORING.short : SCORING.long;
-  const { bm25Weight, semanticWeight, threshold: scoreThreshold } = profile;
+const isMissing = (e) => e?.name === 'NoSuchKey' || e?.$metadata?.httpStatusCode === 404;
+const isNotModified = (e) => e?.name === 'NotModified' || e?.$metadata?.httpStatusCode === 304;
 
+async function refreshSearchIndex() {
+  if (!INDEX_BUCKET) throw new Error('SEARCH_INDEX_BUCKET not set');
+  let pointerRes;
   try {
-    const knnSize = k * KNN_FETCH_MULTIPLIER;
-    const grantsOnly = { term: { 'documentType.keyword': GRANT_DOCUMENT_TYPE } };
-    const sourceFields = ['metadata_field', 'text_field', 'documentType', 'documentIdentifier'];
-
-    const [bm25Data, knnData] = await Promise.all([
-      aossRequest('POST', searchPath, {
-        size: k,
-        query: {
-          bool: {
-            must: { match: { text_field: { query, operator: 'or', minimum_should_match: BM25_MIN_SHOULD_MATCH, fuzziness: BM25_FUZZINESS, prefix_length: BM25_FUZZY_PREFIX_LENGTH } } },
-            filter: grantsOnly,
-          },
-        },
-        _source: sourceFields,
-      }),
-      aossRequest('POST', searchPath, {
-        size: knnSize,
-        query: { knn: { vector_field: { vector, k: knnSize, filter: grantsOnly } } },
-        _source: sourceFields,
-      }),
-    ]);
-
-    const visibleGrantHits = (hits) => hits.flatMap((hit) => {
-      if (hit._source?.documentType !== GRANT_DOCUMENT_TYPE) return [];
-      const name = grantNameOf(hit);
-      return name && isVisible(name) ? [{ ...hit, name }] : [];
-    });
-    const bm25Hits = visibleGrantHits(bm25Data?.hits?.hits || []);
-    const knnHits = visibleGrantHits(knnData?.hits?.hits || []);
-    const scoreMap = new Map();
-    // best-scoring chunk per NOFO, fed to the reranker below
-    const chunkTextByNofo = new Map();
-    for (const { name, _source } of [...knnHits, ...bm25Hits]) {
-      const text = _source?.text_field;
-      if (text && !chunkTextByNofo.has(name)) chunkTextByNofo.set(name, text);
-    }
-
-    for (const hit of bm25Hits) {
-      const { name } = hit;
-      const rawScore = hit._score || 0;
-      const existing = scoreMap.get(name) || { bm25: 0, semantic: 0 };
-      existing.bm25 = Math.max(existing.bm25, rawScore / (rawScore + BM25_SATURATION_K));
-      scoreMap.set(name, existing);
-    }
-
-    // Min-max normalize k-NN scores (AOSS cosine returns >1.0, hard clamping destroys differentiation)
-    const rawKnnScores = knnHits.map((h) => h._score || 0);
-    const knnMax = rawKnnScores.length > 0 ? Math.max(...rawKnnScores) : 1;
-    const knnMin = rawKnnScores.length > 0 ? Math.min(...rawKnnScores) : 0;
-    const knnRange = knnMax - knnMin || 1;
-
-    const semanticChunks = new Map();
-    for (const hit of knnHits) {
-      const { name } = hit;
-      const chunkScore = (hit._score - knnMin) / knnRange;
-      if (!semanticChunks.has(name)) semanticChunks.set(name, []);
-      semanticChunks.get(name).push(chunkScore);
-    }
-
-    // Aggregate per-NOFO: blend best chunk with average for both peak relevance and breadth
-    for (const [name, chunks] of semanticChunks) {
-      const aggregated = CHUNK_AGG_MAX_WEIGHT * Math.max(...chunks) + CHUNK_AGG_AVG_WEIGHT * (chunks.reduce((s, v) => s + v, 0) / chunks.length);
-      const existing = scoreMap.get(name) || { bm25: 0, semantic: 0 };
-      existing.semantic = aggregated;
-      scoreMap.set(name, existing);
-    }
-
-    const accepted = [];
-    const rejected = [];
-
-    for (const [name, scores] of scoreMap) {
-      const combined = (bm25Weight * scores.bm25) + (semanticWeight * scores.semantic);
-      const detail = {
-        name,
-        bm25: Math.round(scores.bm25 * 1000) / 1000,
-        semantic: Math.round(scores.semantic * 1000) / 1000,
-        combined: Math.round(combined * 100) / 100,
-      };
-
-      if (combined > scoreThreshold) {
-        let reason = scores.bm25 > 0 && scores.semantic > 0 ? 'Matched by keyword and meaning'
-          : scores.bm25 > 0 ? 'Matched by keyword' : 'Matched by meaning';
-        accepted.push({ name, score: detail.combined, source: 'hybrid', reason });
-      } else {
-        rejected.push(detail);
-      }
-    }
-
-    console.log(JSON.stringify({
-      event: 'score_breakdown', query, scoreThreshold,
-      accepted: accepted.map(({ name, score, reason }) => ({ name, combined: score, reason })),
-      rejected: { count: rejected.length, top: rejected.sort((a, b) => b.combined - a.combined).slice(0, 5) },
+    pointerRes = await s3Client.send(new GetObjectCommand({
+      Bucket: INDEX_BUCKET,
+      Key: POINTER_KEY,
+      ...(searchIndex && { IfNoneMatch: searchIndex.pointerEtag }),
     }));
-
-    accepted.sort((a, b) => b.score - a.score);
-    const reranked = await rerankAccepted(query, accepted, chunkTextByNofo);
-    console.log('Hybrid search summary:', {
-      bm25Hits: bm25Hits.length, knnHits: knnHits.length,
-      knnScoreRange: { min: Math.round(knnMin * 1000) / 1000, max: Math.round(knnMax * 1000) / 1000 },
-      nofosFromChunks: semanticChunks.size,
-      accepted: accepted.length, rejected: rejected.length,
-      scoreThreshold, bm25Weight, semanticWeight,
-      reranked: reranked !== accepted,
+  } catch (error) {
+    if (isNotModified(error) && searchIndex) {
+      indexCheckedAt = Date.now();
+      return searchIndex.index;
+    }
+    if (isMissing(error) && !searchIndex) return null;
+    throw error;
+  }
+  const pointer = JSON.parse(await pointerRes.Body.transformToString());
+  if (searchIndex?.indexKey !== pointer.indexKey) {
+    const t0 = Date.now();
+    const res = await s3Client.send(new GetObjectCommand({ Bucket: INDEX_BUCKET, Key: pointer.indexKey }));
+    const bytes = await res.Body.transformToByteArray();
+    const downloadMs = Date.now() - t0;
+    const index = decodeIndex(bytes);
+    console.log('Search index loaded:', {
+      buildId: index.buildId, grants: index.docs.length, bytes: bytes.byteLength, downloadMs, parseMs: Date.now() - t0 - downloadMs,
     });
+    searchIndex = { index, indexKey: pointer.indexKey, pointerEtag: pointerRes.ETag };
+  } else {
+    searchIndex.pointerEtag = pointerRes.ETag;
+  }
+  indexCheckedAt = Date.now();
+  return searchIndex.index;
+}
 
-    return reranked;
+/** {index, status}: status is 'ready', 'building' (nothing built yet) or 'unavailable'. Never throws. */
+async function loadSearchIndex() {
+  try {
+    let index = searchIndex?.index;
+    if (!index || Date.now() - indexCheckedAt >= INDEX_REFRESH_MS) {
+      inflightIndex ??= refreshSearchIndex().finally(() => { inflightIndex = null; });
+      index = await inflightIndex;
+    }
+    if (!index) {
+      console.warn('Search index not built yet; answering from names and categories');
+      return { index: null, status: 'building' };
+    }
+    return { index, status: 'ready' };
+  } catch (error) {
+    if (searchIndex) {
+      console.warn('Search index refresh failed, keeping the loaded build:', error.message);
+      indexCheckedAt = Date.now();
+      return { index: searchIndex.index, status: 'ready' };
+    }
+    console.error('Hybrid search error:', error.message);
+    return { index: null, status: 'unavailable' };
+  }
+}
+
+function hybridSearch(index, query, embedding, isVisible, userState) {
+  try {
+    const ranked = rankHybrid(index, { query, embedding, isVisible, userState: userState || null });
+    console.log(JSON.stringify({
+      event: 'score_breakdown', query, scoreThreshold: ranked.threshold, terms: ranked.terms, queryState: ranked.queryState,
+      accepted: ranked.accepted.slice(0, 10).map(({ name, score, bm25, semantic }) => ({
+        name, combined: score, bm25: Math.round(bm25 * 1000) / 1000, semantic: Math.round(semantic * 1000) / 1000,
+      })),
+      acceptedCount: ranked.accepted.length, rejectedCount: ranked.rejected,
+    }));
+    return ranked.accepted.slice(0, MAX_RESULTS).map(({ name, score, reason }) => ({ name, score, source: 'hybrid', reason }));
   } catch (error) {
     console.error('Hybrid search error:', error.message);
     return [];
   }
-}
-
-/**
- * Reorders accepted NOFOs with Cohere Rerank. Called via REST with the SigV4 signer above
- * so the Lambda needs no extra SDK client. Measured +8pts top-1 / +10pts top-3 against a
- * ground-truthed sample; on any failure we keep the original order rather than fail the search.
- */
-async function rerankAccepted(query, accepted, chunkTextByNofo) {
-  if (accepted.length < 2) return accepted;
-
-  const docs = accepted.map((a) => (chunkTextByNofo.get(a.name) || a.name).slice(0, 3000));
-  const host = `bedrock-agent-runtime.${REGION}.amazonaws.com`;
-  const body = JSON.stringify({
-    queries: [{ type: 'TEXT', textQuery: { text: query } }],
-    sources: docs.map((text) => ({
-      type: 'INLINE',
-      inlineDocumentSource: { type: 'TEXT', textDocument: { text } },
-    })),
-    rerankingConfiguration: {
-      type: 'BEDROCK_RERANKING_MODEL',
-      bedrockRerankingConfiguration: {
-        numberOfResults: accepted.length,
-        modelConfiguration: { modelArn: `arn:aws:bedrock:${REGION}::foundation-model/${RERANK_MODEL_ID}` },
-      },
-    },
-  });
-
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), RERANK_TIMEOUT_MS);
-  try {
-    const headers = sigv4Sign('POST', host, '/rerank', body, 'bedrock');
-    const response = await fetch(`https://${host}/rerank`, {
-      method: 'POST', headers, body, signal: controller.signal,
-    });
-    if (!response.ok) throw new Error(`rerank ${response.status}: ${(await response.text()).slice(0, 600)}`);
-    const { results } = await response.json();
-
-    // Keep the existing score distribution, reassign it in rerank order. This preserves how
-    // hybrid scores interleave with name/category scores downstream.
-    const scores = accepted.map((a) => a.score).sort((x, y) => y - x);
-    return results.map((r, i) => ({ ...accepted[r.index], score: scores[i] }));
-  } catch (error) {
-    console.warn('Rerank failed, keeping hybrid order:', error.message);
-    return accepted;
-  } finally {
-    clearTimeout(timeoutId);
-  }
-}
-
-function grantNameOf(hit) {
-  const identifier = hit._source?.documentIdentifier;
-  if (typeof identifier === 'string' && identifier.trim()) return identifier.trim();
-  return extractNofoName(hit);
-}
-
-function extractNofoName(hit) {
-  const metadataRaw = hit._source?.metadata_field;
-  if (!metadataRaw) return null;
-
-  let metadata;
-  try { metadata = JSON.parse(metadataRaw); } catch { return null; }
-
-  const s3Uri = metadata.source || metadata['x-amz-bedrock-kb-source-uri'] || '';
-  if (!s3Uri) return null;
-
-  const parts = s3Uri.split('/');
-  return parts.length >= 4 ? parts[3].replace(/\/$/, '') : null;
 }
 
 function respond(statusCode, body) {
