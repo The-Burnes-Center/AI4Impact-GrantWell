@@ -7,18 +7,19 @@
 import { ApiGatewayManagementApiClient, PostToConnectionCommand, DeleteConnectionCommand } from '@aws-sdk/client-apigatewaymanagementapi';
 import { BedrockAgentRuntimeClient, RetrieveCommand as KBRetrieveCommand } from "@aws-sdk/client-bedrock-agent-runtime";
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
-import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
+import { S3Client, ListObjectsV2Command, GetObjectCommand } from "@aws-sdk/client-s3";
 import { CognitoIdentityProviderClient, AdminGetUserCommand } from "@aws-sdk/client-cognito-identity-provider";
 import { DynamoDBClient, GetItemCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import ClaudeModel from "./claudeSonnet.mjs";
-import { getPromptText, retrievedPassages } from "./prompt.mjs";
+import { buildChatRequest, getPromptText, retrievedPassages } from "./prompt.mjs";
 
 const ENDPOINT = process.env.WEBSOCKET_API_ENDPOINT;
 const wsConnectionClient = new ApiGatewayManagementApiClient({ endpoint: ENDPOINT });
 const s3Client = new S3Client({ region: process.env.AWS_REGION || 'us-east-1' });
 const cognitoClient = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION || 'us-east-1' });
 const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION || 'us-east-1' });
+const lambdaClient = new LambdaClient({});
 
 // SUPPORTED_STATES is injected as [{code,name}] (from config.states via supportedStatesEnv in lib/config/instance-config.ts). Parsed inline
 // because this function does not attach the grantwell-shared Lambda layer.
@@ -52,6 +53,24 @@ const NO_GRANT_RECORD_MESSAGE =
 const CUT_OFF_NOTICE = "This answer was cut off. Ask me to continue.";
 
 const ERROR_MESSAGE = "Something went wrong while answering. Try again in a moment.";
+
+const RESET_SENTINEL = "<!RESET!>";
+
+// Text a call writes before a tool call is narration ("I'll search for..."). Holding back the start of
+// each call keeps it off screen; a call that streams past this and then calls a tool is reset instead.
+const NARRATION_HOLD_CHARS = 300;
+
+const CHAT_WORKER_MARKER = "grantwellChatWorker";
+
+const ASYNC_PAYLOAD_LIMIT_BYTES = 256 * 1024;
+
+const HISTORY_TURNS = 8;
+const HISTORY_CHAR_BUDGET = 60000;
+
+// About 150k tokens at ~4 characters a token. Past this the grant is searched instead.
+const FULL_TEXT_MAX_CHARS = 150000 * 4;
+
+const GRANT_SOURCE_TITLE = "Grant document";
 
 // Platform authority comes from the explicit PlatformAdmin role; this flag keeps pre-migration
 // stateless admins working and must stay on until every pool is migrated.
@@ -116,8 +135,9 @@ async function readNofoScope(nofoName) {
 // Returns null when allowed, else a payload for the client. This per-NOFO gate
 // reads scope/state from DynamoDB (not KB sidecars), so it always enforces —
 // independent of NOFO_STATE_FILTER_ENABLED, which only gates the KB metadata
-// filter below (that one needs indexed sidecars to be present).
-async function checkPerNofoAccess(userRoles, userState, nofoName) {
+// filter below (that one needs indexed sidecars to be present). `row` is readNofoScope's result,
+// read alongside the user's attributes.
+function checkPerNofoAccess(userRoles, userState, nofoName, row) {
   if (!nofoName) return null;
 
   const isDeveloper = userRoles.includes("Developer");
@@ -129,7 +149,6 @@ async function checkPerNofoAccess(userRoles, userState, nofoName) {
     (isAdmin && !userState && LEGACY_STATELESS_ADMIN_IS_PLATFORM);
   if (isDeveloper || isPlatformAdmin) return null;
 
-  const row = await readNofoScope(nofoName);
   const nofoState = row?.state || null;
   const effectiveScope = row ? row.scope || "federal" : null;
   if (effectiveScope === "federal") return null;
@@ -323,6 +342,119 @@ async function retrieveKBDocs(query, knowledgeBase, knowledgeBaseID, documentIde
   }
 }
 
+async function invokeSessionHandler(request) {
+  const { Payload } = await lambdaClient.send(new InvokeCommand({
+    FunctionName: process.env.SESSION_HANDLER,
+    Payload: JSON.stringify({ body: JSON.stringify(request) }),
+  }));
+  try {
+    return JSON.parse(Buffer.from(Payload).toString());
+  } catch {
+    return {};
+  }
+}
+
+/**
+ * The chat's newest saved turns, oldest first, and the supporting documents ticked for it
+ * (`document_keys` on the header; undefined on chats saved before that existed). The greeting
+ * (no user text) is left out. Within the character budget the newest turns win; a lone turn over
+ * it is shortened. Fails open to no history.
+ */
+async function loadSavedChat(userId, sessionId) {
+  const none = { turns: [], documentKeys: undefined };
+  if (!sessionId || !process.env.SESSION_HANDLER) return none;
+  try {
+    const result = await invokeSessionHandler({
+      operation: "get_session",
+      user_id: userId,
+      session_id: sessionId,
+      limit: HISTORY_TURNS + 1,
+    });
+    if (result.statusCode !== 200) {
+      console.warn("Could not load the chat history:", result.error || result.body || result.errorMessage);
+      return none;
+    }
+    const header = JSON.parse(result.body || "{}");
+    const documentKeys = Array.isArray(header.document_keys) ? header.document_keys : undefined;
+    const entries = header.chat_history || [];
+    const turns = entries
+      .filter((e) => e && typeof e.user === "string" && e.user.trim() && typeof e.chatbot === "string" && e.chatbot.trim())
+      .slice(-HISTORY_TURNS);
+    const kept = [];
+    let used = 0;
+    for (const turn of turns.reverse()) {
+      const size = turn.user.length + turn.chatbot.length;
+      if (used + size <= HISTORY_CHAR_BUDGET) {
+        kept.unshift({ user: turn.user, chatbot: turn.chatbot });
+        used += size;
+      } else {
+        if (!kept.length) {
+          const room = Math.max(0, HISTORY_CHAR_BUDGET - turn.user.length);
+          kept.unshift({ user: turn.user.slice(0, HISTORY_CHAR_BUDGET), chatbot: turn.chatbot.slice(0, room) || "(answer omitted)" });
+        }
+        break;
+      }
+    }
+    return { turns: kept, documentKeys };
+  } catch (err) {
+    console.warn("Could not load the chat history:", err.message);
+    return none;
+  }
+}
+
+/**
+ * The grant's extracted text for full-text answers, or null to fall back to search: no artifacts
+ * bucket, no or empty raw-text.txt, a read error, or more than the budget.
+ */
+async function loadGrantText(nofoName) {
+  const bucket = process.env.ARTIFACTS_BUCKET;
+  if (!bucket || !nofoName) return null;
+  const key = `${nofoName}/raw-text.txt`;
+  try {
+    const result = await s3Client.send(new GetObjectCommand({ Bucket: bucket, Key: key }));
+    const text = (await result.Body?.transformToString()) ?? "";
+    if (!text.trim()) {
+      console.warn(`${key} is empty; answering with search`);
+      return null;
+    }
+    if (text.length > FULL_TEXT_MAX_CHARS) {
+      console.warn(`${key} is ${text.length} chars, over the ${FULL_TEXT_MAX_CHARS}-char full-text budget; answering with search`);
+      return null;
+    }
+    return { text, uri: `s3://${bucket}/${key}` };
+  } catch (err) {
+    console.warn(`Could not read ${key}; answering with search:`, err.name || err.message);
+    return null;
+  }
+}
+
+async function listUploadedFileNames(userId, nofoName) {
+  if (!userId || !process.env.USER_DOCUMENTS_BUCKET) return [];
+  try {
+    const userDocsPrefix = `${userId}/${nofoName}/`;
+    const listResult = await s3Client.send(new ListObjectsV2Command({
+      Bucket: process.env.USER_DOCUMENTS_BUCKET,
+      Prefix: userDocsPrefix,
+      Delimiter: '/',
+    }));
+    return (listResult.Contents || [])
+      .map(obj => obj.Key.replace(userDocsPrefix, ''))
+      .filter(name => name && !name.endsWith('.metadata.json'));
+  } catch (e) {
+    console.warn('Could not list user documents:', e.message);
+    return [];
+  }
+}
+
+/**
+ * Claude content blocks (document or text) for the user's supporting documents, placed after the
+ * grant text by buildChatRequest. `documentKeys` is the session's `document_keys`, undefined for
+ * chats saved before it existed.
+ */
+async function loadApplicantDocuments(userId, nofoName, documentKeys) {
+  return [];
+}
+
 /**
  * Processes user messages and generates responses using AI models.
  * Retrieves relevant documents from the Bedrock Knowledge Base and updates the session history.
@@ -343,14 +475,16 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
     }
     const userId = authenticatedUserId;
     const sessionId = data.session_id;
-    const chatHistory = data.chatHistory;
     const documentIdentifier = data.documentIdentifier;
     const grantName = (documentIdentifier || "").replace(/\/+$/, "");
 
-    const { state: userState, roles: userRoles } = await resolveUserAttributes(userId);
+    const [{ state: userState, roles: userRoles }, nofoRow] = await Promise.all([
+      resolveUserAttributes(userId),
+      grantName ? readNofoScope(grantName) : null,
+    ]);
     const scopeFilter = buildScopeFilter(userState);
 
-    const accessDenied = await checkPerNofoAccess(userRoles, userState, grantName);
+    const accessDenied = checkPerNofoAccess(userRoles, userState, grantName, nofoRow);
     if (accessDenied) {
       try {
         await wsConnectionClient.send(new PostToConnectionCommand({
@@ -368,7 +502,16 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
       return;
     }
 
-    if (!userRoles.some((r) => CAP_EXEMPT_ROLES.includes(r)) && !(await takeDailyChatMessage(userId))) {
+    const nofoName = grantName.split("/").pop() || grantName;
+    // The cap is taken only once access is confirmed, alongside the loads the answer needs.
+    const [withinCap, grantText, savedChat, uploadedFileNames] = await Promise.all([
+      userRoles.some((r) => CAP_EXEMPT_ROLES.includes(r)) ? true : takeDailyChatMessage(userId),
+      loadGrantText(nofoName),
+      loadSavedChat(userId, sessionId),
+      listUploadedFileNames(userId, nofoName),
+    ]);
+
+    if (!withinCap) {
       console.warn(`${CHAT_CAP_MARKER} for ${userId}`);
       try {
         await wsConnectionClient.send(new PostToConnectionCommand({
@@ -388,116 +531,102 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
       throw new Error("Knowledge Base ID is not found.");
     }
 
-    const nofoName = grantName.split("/").pop() || grantName;
-    let uploadedFilesList = '';
-    if (userId && process.env.USER_DOCUMENTS_BUCKET) {
-      try {
-        const userDocsPrefix = `${userId}/${nofoName}/`;
-        const listResult = await s3Client.send(new ListObjectsV2Command({
-          Bucket: process.env.USER_DOCUMENTS_BUCKET,
-          Prefix: userDocsPrefix,
-          Delimiter: '/',
-        }));
-        const fileNames = (listResult.Contents || [])
-          .map(obj => obj.Key.replace(userDocsPrefix, ''))
-          .filter(name => name && !name.endsWith('.metadata.json'));
-        if (fileNames.length > 0) {
-          uploadedFilesList = `\n\nThe user has uploaded the following documents for this grant:\n${fileNames.map(f => `- ${f}`).join('\n')}\nWhen the user refers to any of these documents, use your search tool to find relevant content from them.\n`;
-        }
-      } catch (e) {
-        console.warn('Could not list user documents:', e.message);
-      }
+    const fullText = Boolean(grantText);
+    const applicantDocuments = await loadApplicantDocuments(userId, nofoName, savedChat.documentKeys);
+
+    let uploadedFilesList = "";
+    if (uploadedFileNames.length > 0) {
+      const howToUse = fullText
+        ? "Their contents are not included in this chat; do not guess what they say."
+        : "When the user refers to any of these documents, use your search tool to find relevant content from them.";
+      uploadedFilesList = `\n\nThe user has uploaded the following documents for this grant:\n${uploadedFileNames.map((f) => `- ${f}`).join("\n")}\n${howToUse}\n`;
     }
 
     let claude = new ClaudeModel();
-    const recentTurns = Array.isArray(chatHistory) ? chatHistory.slice(-2) : [];
-    
     let stopLoop = false;
     let modelResponse = '';
-    
-    let history = claude.assembleHistory(recentTurns, "Please use your search tool one or more times based on this latest prompt: ".concat(userMessage));
-    let fullDocs = { content: "", uris: [] };
-    let modelCalls = 0;
+
     const today = new Date().toLocaleDateString("en-US", { timeZone: "America/New_York", year: "numeric", month: "long", day: "numeric" });
+    const { system, messages: history } = buildChatRequest({
+      instructions: getPromptText(userState, { fullText }),
+      grantText: grantText?.text ?? null,
+      applicantDocuments,
+      context: `Active grant (documentIdentifier): ${documentIdentifier}${uploadedFilesList}\n\nToday's date is ${today} (US Eastern). Use it when a question turns on whether a deadline has passed or how much time is left.`,
+      turns: savedChat.turns,
+      question: fullText
+        ? userMessage
+        : "Please use your search tool one or more times based on this latest prompt: ".concat(userMessage),
+    });
+    let fullDocs = { content: "", uris: fullText ? [{ title: GRANT_SOURCE_TITLE, uri: grantText.uri }] : [] };
+    let modelCalls = 0;
     let refusalCategory = null;
 
+    const post = async (data) => {
+      try {
+        await wsConnectionClient.send(new PostToConnectionCommand({ ConnectionId: id, Data: data }));
+      } catch (error) {
+        console.error("Error sending chunk:", error);
+      }
+    };
+
     while (!stopLoop) {
-      history.forEach((historyItem) => {});
       modelCalls += 1;
       const lastCall = modelCalls >= MAX_MODEL_CALLS;
-      const updatedSystemPrompt = `Active grant (documentIdentifier): ${documentIdentifier}${uploadedFilesList}\n\n${getPromptText(userState)}\n\nToday's date is ${today} (US Eastern). Use it when a question turns on whether a deadline has passed or how much time is left.`;
       try {
         // tools stay defined on the last call because the history already holds tool_use blocks.
-        const stream = await claude.getStreamedResponse(updatedSystemPrompt, history, lastCall ? { type: "none" } : undefined);
+        const stream = await claude.getStreamedResponse(system, history, {
+          tools: !fullText,
+          toolChoice: lastCall && !fullText ? { type: "none" } : undefined,
+        });
+        let callText = "";
+        let streamed = false;
         const { content, stopReason, stopDetails } = await claude.readStream(stream, async (text) => {
-          modelResponse = modelResponse.concat(text);
-          try {
-            await wsConnectionClient.send(new PostToConnectionCommand({
-              ConnectionId: id,
-              Data: text,
-            }));
-          } catch (error) {
-            console.error("Error sending chunk:", error);
+          callText = callText.concat(text);
+          if (streamed) {
+            await post(text);
+          } else if (callText.length >= NARRATION_HOLD_CHARS) {
+            streamed = true;
+            await post(callText);
           }
         });
 
-        if (stopReason === "refusal") {
-          refusalCategory = stopDetails?.category ?? "none";
-          break;
-        }
-
         if (stopReason === "tool_use") {
+          if (streamed) await post(RESET_SENTINEL);
+          if (lastCall) break;
           const toolUses = content.filter((block) => block.type === "tool_use");
           if (toolUses.length > 0) {
-            const toolResults = [];
-            for (const t of toolUses) {
-              const docString = await retrieveKBDocs(
-                t.input?.query || "",
-                knowledgeBase,
-                process.env.KB_ID,
-                documentIdentifier,
-                userId,
-                scopeFilter
-              );
-              fullDocs.content = fullDocs.content.concat(docString.content);
-              fullDocs.uris = fullDocs.uris.concat(docString.uris);
-              toolResults.push({
-                type: "tool_result",
-                tool_use_id: t.id,
-                content: docString.content,
-              });
-            }
+            const docs = await Promise.all(
+              toolUses.map((t) =>
+                retrieveKBDocs(t.input?.query || "", knowledgeBase, process.env.KB_ID, documentIdentifier, userId, scopeFilter)
+              )
+            );
+            const toolResults = toolUses.map((t, i) => {
+              fullDocs.content = fullDocs.content.concat(docs[i].content);
+              fullDocs.uris = fullDocs.uris.concat(docs[i].uris);
+              return { type: "tool_result", tool_use_id: t.id, content: docs[i].content };
+            });
             history.push({ role: "assistant", content });
             history.push({ role: "user", content: toolResults });
           }
-        } else if (stopReason) {
-          stopLoop = true;
-          if (stopReason === "max_tokens") {
-            const notice = modelResponse ? `\n\n${CUT_OFF_NOTICE}` : CUT_OFF_NOTICE;
-            modelResponse = modelResponse.concat(notice);
-            try {
-              await wsConnectionClient.send(new PostToConnectionCommand({
-                ConnectionId: id,
-                Data: notice,
-              }));
-            } catch (error) {
-              console.error("Error sending chunk:", error);
-            }
-          }
+          continue;
+        }
+
+        if (!streamed && callText) await post(callText);
+        modelResponse = callText;
+        stopLoop = true;
+
+        if (stopReason === "refusal") {
+          refusalCategory = stopDetails?.category ?? "none";
+        } else if (stopReason === "max_tokens") {
+          const notice = modelResponse ? `\n\n${CUT_OFF_NOTICE}` : CUT_OFF_NOTICE;
+          modelResponse = modelResponse.concat(notice);
+          await post(notice);
         }
       } catch (error) {
         console.error("Stream processing error:", error);
-        try {
-          await wsConnectionClient.send(new PostToConnectionCommand({
-            ConnectionId: id,
-            Data: `<!ERROR!>: ${ERROR_MESSAGE}`
-          }));
-        } catch (e) {
-          console.error("Error sending stream error:", e);
-        }
+        await post(`<!ERROR!>: ${ERROR_MESSAGE}`);
         return;
       }
-      if (lastCall) stopLoop = true;
     }
 
     if (refusalCategory) {
@@ -513,6 +642,12 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
       } catch (e) {
         console.error("Error sending refusal message:", e);
       }
+      return;
+    }
+
+    if (!modelResponse) {
+      console.error("Stream processing error:", new Error(`No answer text after ${modelCalls} model calls`));
+      await post(`<!ERROR!>: ${ERROR_MESSAGE}`);
       return;
     }
 
@@ -539,26 +674,14 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
       console.error("Error sending EOF_STREAM and sources:", e);
     }
 
-    const sessionSaveRequest = {
-      body: JSON.stringify({
-        operation: "update_session",
-        user_id: userId,
-        session_id: sessionId,
-        new_chat_entry: [{ user: userMessage, chatbot: modelResponse, metadata: links }],
-        title: `Chat about ${documentIdentifier}`,
-        document_identifier: documentIdentifier,
-      })
-    };
-
-    const client = new LambdaClient({});
-    const { Payload } = await client.send(new InvokeCommand({
-      FunctionName: process.env.SESSION_HANDLER,
-      Payload: JSON.stringify(sessionSaveRequest),
-    }));
-    let saved = {};
-    try {
-      saved = JSON.parse(Buffer.from(Payload).toString());
-    } catch {}
+    const saved = await invokeSessionHandler({
+      operation: "update_session",
+      user_id: userId,
+      session_id: sessionId,
+      new_chat_entry: [{ user: userMessage, chatbot: modelResponse, metadata: links }],
+      title: `Chat about ${documentIdentifier}`,
+      document_identifier: documentIdentifier,
+    });
     if (saved.statusCode !== 200) {
       console.error("Could not save the chat turn:", saved.error || saved.body || saved.errorMessage);
     }
@@ -612,6 +735,24 @@ async function takeDailyChatMessage(userId) {
   }
 }
 
+/** True once an async copy of this function has the event; false means answer inline. */
+async function handOffToWorker(event) {
+  const functionName = process.env.AWS_LAMBDA_FUNCTION_NAME;
+  if (!functionName) return false;
+  const payload = JSON.stringify({ ...event, [CHAT_WORKER_MARKER]: true });
+  if (Buffer.byteLength(payload) > ASYNC_PAYLOAD_LIMIT_BYTES) {
+    console.warn(`Chat request is ${Buffer.byteLength(payload)} bytes, over the async limit; answering inline`);
+    return false;
+  }
+  try {
+    await lambdaClient.send(new InvokeCommand({ FunctionName: functionName, InvocationType: "Event", Payload: payload }));
+    return true;
+  } catch (err) {
+    console.error("Could not hand the chat request to a worker; answering inline:", err.message);
+    return false;
+  }
+}
+
 /**
  * Main Lambda handler function for WebSocket events.
  * Handles connecting, disconnecting, and custom routes.
@@ -647,6 +788,12 @@ export const handler = async (event) => {
             statusCode: 401,
             body: JSON.stringify({ error: "Unauthorized: missing principal" }),
           };
+        }
+        // API Gateway gives up on the integration after 29 s and pushes its own timeout frame down the
+        // socket, so the answer runs in a second, async invocation. Only a direct invoke can set the
+        // marker: clients control the body, never the top-level event.
+        if (event[CHAT_WORKER_MARKER] !== true && (await handOffToWorker(event))) {
+          return { statusCode: 200 };
         }
         await getUserResponse(connectionId, body, authenticatedUserId);
         return { statusCode: 200 };

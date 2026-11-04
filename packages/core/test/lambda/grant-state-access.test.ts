@@ -164,7 +164,7 @@ describe("chat grant access", () => {
     await chat("MA Grant/");
     expect(s3.commandCalls(ListObjectsV2Command)[0].args[0].input.Prefix).toBe("user-1/MA Grant/");
     const request = JSON.parse(bedrock.commandCalls(InvokeModelWithResponseStreamCommand)[0].args[0].input.body as string);
-    expect(JSON.stringify(request.system)).toContain("- budget.pdf");
+    expect(JSON.stringify(request.messages.at(-1))).toContain("- budget.pdf");
   });
 });
 

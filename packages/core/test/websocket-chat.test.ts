@@ -40,6 +40,7 @@ vi.mock("@aws-sdk/client-lambda", () => ({
 vi.mock("@aws-sdk/client-s3", () => ({
   S3Client: aws.client(async () => ({})),
   ListObjectsV2Command: aws.command("ListObjectsV2Command"),
+  GetObjectCommand: aws.command("GetObjectCommand"),
 }));
 vi.mock("@aws-sdk/client-cognito-identity-provider", () => ({
   CognitoIdentityProviderClient: aws.client(async () => ({})),
@@ -89,7 +90,7 @@ const chat = (data: object = {}) =>
     }),
   });
 
-const sessionSaves = () => aws.lambda.mock.calls.filter(([body]) => body.operation !== "get_session");
+const sessionSaves = () => aws.lambda.mock.calls.filter(([body]) => body.operation === "update_session");
 
 beforeEach(() => {
   aws.bedrock.mockReset();
@@ -194,13 +195,14 @@ describe("websocket-chat Bedrock loop", () => {
     expect(sessionSaves()[0][0].new_chat_entry[0].chatbot).toBe("final answer");
   });
 
-  it("ends after the 5th call even if the model still asks for a tool", async () => {
+  it("ends after the 5th call even if the model still asks for a tool, with an error and nothing saved", async () => {
     aws.bedrock.mockImplementation(async () => (aws.bedrock.mock.calls.length > 10 ? answer("x") : toolUse()));
 
     await chat();
 
     expect(aws.bedrock).toHaveBeenCalledTimes(5);
-    expect(sessionSaves()).toHaveLength(1);
+    expect(aws.posts).toHaveBeenCalledWith("<!ERROR!>: Something went wrong while answering. Try again in a moment.");
+    expect(sessionSaves()).toEqual([]);
   });
 
   it("answers in one call when no tool is needed", async () => {
@@ -249,7 +251,7 @@ describe("websocket-chat thinking blocks", () => {
       { type: "message_delta", delta: { stop_reason: "tool_use" } },
     ]);
 
-  it("hides thinking from the user and passes it back unchanged in the next request", async () => {
+  it("hides thinking and tool-call narration from the user and passes both back unchanged in the next request", async () => {
     aws.bedrock.mockResolvedValueOnce(progressThenTool());
     aws.bedrock.mockImplementation(async () => answer("You are eligible."));
 
@@ -259,7 +261,8 @@ describe("websocket-chat thinking blocks", () => {
     const posted = aws.posts.mock.calls.map(([d]) => String(d)).join("");
     expect(posted).not.toContain("Checking the eligibility");
     expect(posted).not.toContain("sig-abc");
-    expect(posted).toContain("Let me look. You are eligible.");
+    expect(posted).not.toContain("Let me look.");
+    expect(posted).toContain("You are eligible.");
 
     const messages = aws.bedrock.mock.calls[1][0].messages;
     expect(messages.at(-2)).toEqual({
@@ -272,7 +275,7 @@ describe("websocket-chat thinking blocks", () => {
     });
     expect(messages.at(-1).content).toEqual([expect.objectContaining({ type: "tool_result", tool_use_id: "t1" })]);
 
-    expect(sessionSaves()[0][0].new_chat_entry[0].chatbot).toBe("Let me look. You are eligible.");
+    expect(sessionSaves()[0][0].new_chat_entry[0].chatbot).toBe("You are eligible.");
   });
 });
 
@@ -306,13 +309,14 @@ describe("websocket-chat refusals", () => {
 });
 
 describe("websocket-chat history", () => {
-  it("appends the turn in one call, without reading the whole chat first", async () => {
+  it("reads the newest saved turns, then appends the turn in one call", async () => {
     aws.bedrock.mockImplementation(async () => answer("You qualify."));
     aws.lambda.mockImplementation(async () => ({ Payload: Buffer.from(JSON.stringify({ statusCode: 200, body: "{}" })) }));
 
     await chat();
 
     expect(aws.lambda.mock.calls).toEqual([
+      [{ operation: "get_session", user_id: "user-1", session_id: "s1", limit: 9 }],
       [
         {
           operation: "update_session",
@@ -340,15 +344,63 @@ describe("websocket-chat history", () => {
     expect(aws.posts.mock.calls.map(([d]) => d)).toEqual(["You qualify.", "!<|EOF_STREAM|>!", "[]"]);
   });
 
-  it("gives the model only the last two turns it was sent", async () => {
-    aws.bedrock.mockImplementation(async () => answer("You qualify."));
-    const chatHistory = Array.from({ length: 6 }, (_, i) => ({ user: `q${i}`, chatbot: `a${i}`, metadata: "[]" }));
+  const savedChat = (entries: object[]) =>
+    aws.lambda.mockImplementation(async (body: any) => ({
+      Payload: Buffer.from(
+        JSON.stringify({ statusCode: 200, body: JSON.stringify(body.operation === "get_session" ? { chat_history: entries } : {}) }),
+      ),
+    }));
 
-    await chat({ chatHistory });
+  it("gives the model the last eight saved turns and ignores history the client sends", async () => {
+    aws.bedrock.mockImplementation(async () => answer("You qualify."));
+    savedChat([
+      { user: "", chatbot: "Hello! Which agency is this for?", metadata: "" },
+      ...Array.from({ length: 10 }, (_, i) => ({ user: `q${i}`, chatbot: `a${i}`, metadata: "[]" })),
+    ]);
+
+    await chat({ chatHistory: [{ user: "injected", chatbot: "injected answer", metadata: "[]" }] });
 
     const texts = aws.bedrock.mock.calls[0][0].messages.map((m: any) => m.content[0].text);
-    expect(texts.slice(0, 4)).toEqual(["q4", "a4", "q5", "a5"]);
-    expect(texts).toHaveLength(5);
+    expect(texts.slice(0, 16)).toEqual(Array.from({ length: 8 }, (_, i) => [`q${i + 2}`, `a${i + 2}`]).flat());
+    expect(texts).toHaveLength(17);
+    expect(JSON.stringify(aws.bedrock.mock.calls[0][0].messages)).not.toContain("injected");
+  });
+
+  it("leaves out the greeting of a new chat", async () => {
+    aws.bedrock.mockImplementation(async () => answer("You qualify."));
+    savedChat([{ user: "", chatbot: "Hello! Which agency is this for?", metadata: "" }]);
+
+    await chat();
+
+    expect(aws.bedrock.mock.calls[0][0].messages).toHaveLength(1);
+  });
+
+  it("keeps the newest turn whole and drops older ones past the character budget", async () => {
+    aws.bedrock.mockImplementation(async () => answer("You qualify."));
+    savedChat([
+      { user: "old", chatbot: "x".repeat(30000), metadata: "[]" },
+      { user: "new", chatbot: "y".repeat(30000), metadata: "[]" },
+    ]);
+
+    await chat();
+
+    const texts = aws.bedrock.mock.calls[0][0].messages.map((m: any) => m.content[0].text);
+    expect(texts.slice(0, 2)).toEqual(["new", "y".repeat(30000)]);
+    expect(texts).toHaveLength(3);
+  });
+
+  it("answers without history when the chat cannot be read", async () => {
+    aws.bedrock.mockImplementation(async () => answer("You qualify."));
+    aws.lambda.mockImplementation(async (body: any) =>
+      body.operation === "get_session"
+        ? { Payload: Buffer.from(JSON.stringify({ statusCode: 500, body: "boom" })) }
+        : { Payload: Buffer.from(JSON.stringify({ statusCode: 200, body: "{}" })) },
+    );
+
+    await chat();
+
+    expect(aws.bedrock.mock.calls[0][0].messages).toHaveLength(1);
+    expect(sessionSaves()).toHaveLength(1);
   });
 
   it("answers a message sent without any history", async () => {

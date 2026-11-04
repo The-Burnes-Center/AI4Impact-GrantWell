@@ -139,7 +139,8 @@ describe("daily chat message cap", () => {
     await chat();
 
     expect(bedrock.commandCalls(InvokeModelWithResponseStreamCommand)).toHaveLength(0);
-    expect(lambda.commandCalls(InvokeCommand)).toHaveLength(0);
+    const saves = lambda.commandCalls(InvokeCommand).filter((c) => !String(c.args[0].input.Payload).includes("get_session"));
+    expect(saves).toHaveLength(0);
     expect(posted()).toEqual([
       "<!LIMIT!>You've reached today's limit of 100 chat messages. You can chat again tomorrow.",
     ]);
