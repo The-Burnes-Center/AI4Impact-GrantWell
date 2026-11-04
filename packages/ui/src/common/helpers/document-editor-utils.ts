@@ -10,7 +10,7 @@ export const stepToStatus = (step: string): DraftStatus => {
     questionnaire: "questionnaire",
     uploadDocuments: "uploading_documents",
     sectionEditor: "editing_sections",
-    reviewApplication: "editing_sections",
+    reviewApplication: "reviewing",
   };
   return (stepMap[step] || "project_basics") as DraftStatus;
 };
