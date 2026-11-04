@@ -155,6 +155,31 @@ export default function ProfilePage() {
   const [categories, setCategories] = useState<string[]>([]);
   const [keywords, setKeywords] = useState("");
   const [categoryQuery, setCategoryQuery] = useState("");
+  const [grantCategories, setGrantCategories] = useState<string[] | null>(null);
+
+  useEffect(() => {
+    if (!EMAIL_DIGEST) return;
+    let active = true;
+    apiClient.landingPage
+      .getNOFOs()
+      .then((result: { nofoData?: { category?: string | null }[] }) => {
+        if (!active) return;
+        setGrantCategories([...new Set((result?.nofoData ?? []).map((n) => n.category).filter((c): c is string => !!c))]);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [apiClient]);
+
+  // Categories that have grants, plus any already chosen so a saved choice never disappears.
+  const offeredCategories = useMemo<string[]>(() => {
+    if (!grantCategories) return [...GRANT_CATEGORIES];
+    const used = new Set([...grantCategories, ...baseline.categories]);
+    const known = GRANT_CATEGORIES.filter((c) => used.has(c));
+    const extra = [...used].filter((c) => !(GRANT_CATEGORIES as readonly string[]).includes(c)).sort();
+    return [...known, ...extra];
+  }, [grantCategories, baseline.categories]);
 
   useEffect(() => {
     if (!EMAIL_DIGEST) return;
@@ -198,9 +223,9 @@ export default function ProfilePage() {
 
   const visibleCategories = useMemo<string[]>(() => {
     const q = categoryQuery.trim().toLowerCase();
-    if (!q) return [...GRANT_CATEGORIES];
-    return GRANT_CATEGORIES.filter((c) => c.toLowerCase().includes(q));
-  }, [categoryQuery]);
+    if (!q) return offeredCategories;
+    return offeredCategories.filter((c) => c.toLowerCase().includes(q));
+  }, [categoryQuery, offeredCategories]);
 
   const allVisibleSelected =
     visibleCategories.length > 0 &&
@@ -473,7 +498,7 @@ export default function ProfilePage() {
                             {/* Not a live region: each checkbox already announces its own
                                 state, and this count would talk over that. */}
                             <span className="profile-chip-count">
-                              {categories.length} of {GRANT_CATEGORIES.length} selected
+                              {categories.length} of {offeredCategories.length} selected
                             </span>
                           </div>
                           {visibleCategories.length === 0 ? (

@@ -5,6 +5,7 @@ import { mfaEnrolled } from "../../test/amplify";
 import { instance, withMfaDeadline } from "../../test/instance";
 import { renderApp } from "../../test/render";
 import ProfilePage from "./ProfilePage";
+import { GRANT_CATEGORIES } from "../../common/types/nofo";
 
 vi.mock("../../components/navigation/UnifiedNavigation", () => ({ default: (): null => null }));
 
@@ -19,6 +20,7 @@ function renderProfile(prefs: Response = json(savedPrefs)) {
     [PROFILE]: json({ agency: "", organization: "", jobTitle: "" }),
     [PREFS]: prefs,
     [SAVE_PREFS]: (req) => json({ ...savedPrefs, ...(req.body as object) }),
+    "GET /s3-nofo-bucket-data": json({ nofoData: GRANT_CATEGORIES.map((category) => ({ category })) }),
   });
   return { net, ...renderApp(<ProfilePage />, { route: "/profile" }) };
 }
@@ -51,6 +53,22 @@ describe("ProfilePage notification preferences", () => {
       keywords: ["broadband", "workforce"],
     });
     expect(screen.getByRole("button", { name: "Save preferences" })).toBeDisabled();
+  });
+
+  it("offers only categories that have grants, keeping ones already chosen", async () => {
+    stubFetch({
+      [PROFILE]: json({ agency: "", organization: "", jobTitle: "" }),
+      [PREFS]: json(savedPrefs),
+      "GET /s3-nofo-bucket-data": json({ nofoData: [{ category: "Health" }, { category: "Agriculture" }, { category: "Health" }, { category: null }] }),
+    });
+    renderApp(<ProfilePage />, { route: "/profile" });
+    await prefsLoaded();
+
+    expect(await screen.findByRole("checkbox", { name: "Health" })).toBeInTheDocument();
+    expect(screen.getByRole("checkbox", { name: "Agriculture" })).toBeInTheDocument();
+    expect(screen.getByRole("checkbox", { name: "Arts" })).toBeChecked();
+    expect(screen.queryByRole("checkbox", { name: "Recovery Act" })).not.toBeInTheDocument();
+    expect(screen.getByText("1 of 3 selected")).toBeInTheDocument();
   });
 
   it("disables the filters while digests are off", async () => {
@@ -91,6 +109,7 @@ describe("ProfilePage region", () => {
       [PROFILE]: json(saved),
       [PREFS]: json(savedPrefs),
       [SAVE_PROFILE]: (req) => json({ ...saved, ...(req.body as object) }),
+      "GET /s3-nofo-bucket-data": json({ nofoData: [] }),
     });
     return { net, ...renderApp(<ProfilePage />, { route: "/profile" }) };
   }
