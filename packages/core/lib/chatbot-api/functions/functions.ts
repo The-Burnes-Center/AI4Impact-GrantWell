@@ -27,11 +27,13 @@ import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as bedrock from "aws-cdk-lib/aws-bedrock";
-import { DynamoEventSource, SqsDlq } from "aws-cdk-lib/aws-lambda-event-sources";
+import { DynamoEventSource, SqsDlq, SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as s3n from "aws-cdk-lib/aws-s3-notifications";
+import * as events from "aws-cdk-lib/aws-events";
+import * as targets from "aws-cdk-lib/aws-events-targets";
+import * as cr from "aws-cdk-lib/custom-resources";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
-import { aws_opensearchserverless as opensearchserverless } from "aws-cdk-lib";
 import { DocumentConversionStack } from "./document-conversion-stack";
 import { NotificationsStack } from "./notifications-stack";
 import { ScraperStack } from "./scraper-stack";
@@ -88,7 +90,6 @@ interface LambdaFunctionStackProps {
   readonly userDocumentsDataSource?: bedrock.CfnDataSource;
   readonly grantsGovApiKey: string;
   readonly digestLogoWidth: number;
-  readonly openSearchCollection: opensearchserverless.CfnCollection;
   readonly userPool: cdk.aws_cognito.UserPool;
 }
 
@@ -139,6 +140,8 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly notificationUnsubscribeFunction: lambda.Function;
   public readonly notificationSesFeedbackFunction: lambda.Function;
   public readonly aiGrantSearchFunction: lambda.Function;
+  public readonly searchIndexBuilderFunction: lambda.Function;
+  public readonly searchIndexDlq: sqs.Queue;
   public readonly feedbackProxyFunction: lambda.Function;
   public readonly nofoSummaryUpdateFunction: lambda.Function;
   public readonly nofoStateOverlayFunction: lambda.Function;
@@ -153,7 +156,6 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     const { config } = props;
     const stackName = config.aws.stackName;
-    const knowledgeBaseIndexName = config.aws.knowledgeBaseIndexName;
     const SUPPORTED_STATES_ENV = supportedStatesEnv(config);
     const SINGLE_STATE_ENV: Record<string, string> = singleState(config) ? { SINGLE_STATE: singleState(config)!.code } : {};
 
@@ -164,7 +166,6 @@ export class LambdaFunctionStack extends cdk.Stack {
     const SONNET_TAG = "sonnet-5-5";
     const HAIKU_TAG = "haiku-5-5";
     const TITAN_MODEL_ID = "amazon.titan-embed-text-v2:0";
-    const RERANK_MODEL_ID = "cohere.rerank-v3-5:0";
 
     const region = cdk.Stack.of(this).region;
     const account = cdk.Stack.of(this).account;
@@ -203,6 +204,9 @@ export class LambdaFunctionStack extends cdk.Stack {
     const titanSearchProfile = makeInferenceProfile(
       "TitanSearchInferenceProfile", "titan-grant-search", titanFoundationModelArn, "grant-search",
     );
+    const haikuSearchProfile = makeInferenceProfile(
+      "HaikuSearchInferenceProfile", `${HAIKU_TAG}-grant-search`, haikuSystemProfileArn, "grant-search",
+    );
 
     // A US system profile routes to its model in several regions, so the foundation model is granted in any region.
     const claude = (label: string, profile: bedrock.CfnApplicationInferenceProfile, systemProfileId: string, systemProfileArn: string): BedrockModelUse => ({
@@ -215,21 +219,20 @@ export class LambdaFunctionStack extends cdk.Stack {
         `arn:aws:bedrock:*::foundation-model/${systemProfileId.slice(systemProfileId.indexOf(".") + 1)}`,
       ],
     });
-    const rerankModelArn = `arn:aws:bedrock:${region}::foundation-model/${RERANK_MODEL_ID}`;
     this.bedrockModels = [
       claude("chat (Sonnet)", sonnetChatProfile, SONNET_MODEL_ID, sonnetSystemProfileArn),
       claude("NOFO analysis (Sonnet)", sonnetNofoProfile, SONNET_MODEL_ID, sonnetSystemProfileArn),
       claude("draft generation (Sonnet)", sonnetDraftProfile, SONNET_MODEL_ID, sonnetSystemProfileArn),
       claude("NOFO synthesis and questions (Haiku)", haikuNofoProfile, HAIKU_MODEL_ID, haikuSystemProfileArn),
       claude("grants.gov scraper (Haiku)", haikuScraperProfile, HAIKU_MODEL_ID, haikuSystemProfileArn),
-      // ai-grant-search embeds through this profile (its TITAN_MODEL_ID); invoking a profile also needs the model.
+      claude("grant search profiles (Haiku)", haikuSearchProfile, HAIKU_MODEL_ID, haikuSystemProfileArn),
+      // ai-grant-search and the index builder embed through this profile; invoking a profile also needs the model.
       {
         label: "grant search embeddings (Titan)",
         kind: "titan-embed",
         modelId: titanSearchProfile.attrInferenceProfileArn,
         invokeResources: [titanSearchProfile.attrInferenceProfileArn, titanFoundationModelArn],
       },
-      { label: "grant search reranking (Cohere)", kind: "rerank", modelId: rerankModelArn, invokeResources: [rerankModelArn] },
     ];
 
     // Create Python shared models Lambda Layer
@@ -1398,7 +1401,19 @@ export class LambdaFunctionStack extends cdk.Stack {
       notifications.notificationSesFeedbackFunction;
     this.processingQueueEmailFunction = notifications.processingQueueEmailFunction;
 
-    // AI Grant Search Lambda (hybrid BM25 + semantic via OpenSearch Serverless)
+    // AI Grant Search Lambda (hybrid BM25 + semantic over the per-grant index in the artifacts bucket)
+    const titanSearchInvoke = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ["bedrock:InvokeModel"],
+      resources: [titanFoundationModelArn, titanSearchProfile.attrInferenceProfileArn],
+    });
+    // ListBucket makes a missing index file a 404 (index still building), not a 403.
+    const listArtifacts = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ["s3:ListBucket"],
+      resources: [props.grantArtifactsBucket.bucketArn],
+    });
+
     const aiGrantSearchFunction = new lambda.Function(
       scope,
       "AIGrantSearchFunction",
@@ -1410,8 +1425,7 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "index.handler",
         layers: [jsSharedLayer], // for recordEvent / touchLastActive
         environment: {
-          OPENSEARCH_ENDPOINT: `${props.openSearchCollection.attrId}.${stack.region}.aoss.amazonaws.com`,
-          OPENSEARCH_INDEX: knowledgeBaseIndexName,
+          SEARCH_INDEX_BUCKET: props.grantArtifactsBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           FEATURE_ROLLOUT_TABLE_NAME: props.featureRolloutTable.tableName,
           TITAN_MODEL_ID: titanSearchProfile.attrInferenceProfileArn,
@@ -1420,62 +1434,153 @@ export class LambdaFunctionStack extends cdk.Stack {
           LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         },
         timeout: cdk.Duration.seconds(30),
-        memorySize: 512,
+        // Holds the decoded index (about 8 MB for 2,000 grants); more memory also means more CPU for ranking.
+        memorySize: 1024,
       }
     );
     props.analyticsTable.grantWriteData(aiGrantSearchFunction);
-
+    aiGrantSearchFunction.addToRolePolicy(titanSearchInvoke);
+    aiGrantSearchFunction.addToRolePolicy(listArtifacts);
     aiGrantSearchFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["aoss:APIAccessAll"],
-        resources: [
-          `arn:aws:aoss:${stack.region}:${stack.account}:collection/${props.openSearchCollection.attrId}`,
-        ],
+        actions: ["s3:GetObject"],
+        resources: [props.grantArtifactsBucket.arnForObjects("_search/*")],
+      })
+    );
+    aiGrantSearchFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["dynamodb:GetItem", "dynamodb:Scan"],
+        resources: [props.nofoMetadataTable.tableArn, props.featureRolloutTable.tableArn],
       })
     );
 
-    aiGrantSearchFunction.addToRolePolicy(
+    // Search index builder: summary.json changes reach it through this queue, so a burst of
+    // publishes, renames or edits becomes one incremental build.
+    const searchIndexDlq = new sqs.Queue(scope, "SearchIndexDLQ", {
+      retentionPeriod: cdk.Duration.days(14),
+    });
+    const searchIndexQueue = new sqs.Queue(scope, "SearchIndexQueue", {
+      deliveryDelay: cdk.Duration.seconds(30),
+      visibilityTimeout: cdk.Duration.minutes(20),
+      retentionPeriod: cdk.Duration.days(4),
+      deadLetterQueue: { queue: searchIndexDlq, maxReceiveCount: 3 },
+    });
+
+    const searchIndexBuilderFunction = new lambda.Function(scope, "SearchIndexBuilderFunction", {
+      runtime: lambda.Runtime.NODEJS_24_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "landing-page/ai-grant-search")),
+      handler: "builder.handler",
+      environment: {
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
+        BUCKET: props.ffioNofosBucket.bucketName,
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+        TITAN_MODEL_ID: titanSearchProfile.attrInferenceProfileArn,
+        HAIKU_MODEL_ID: haikuSearchProfile.attrInferenceProfileArn,
+        QUEUE_URL: searchIndexQueue.queueUrl,
+      },
+      timeout: cdk.Duration.minutes(15),
+      memorySize: 1024,
+      retryAttempts: 1,
+      description: "Rebuilds the per-grant AI search index in the grant artifacts bucket",
+    });
+    searchIndexBuilderFunction.addToRolePolicy(titanSearchInvoke);
+    searchIndexBuilderFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         actions: ["bedrock:InvokeModel"],
         resources: [
-          `arn:aws:bedrock:${stack.region}::foundation-model/${TITAN_MODEL_ID}`,
-          titanSearchProfile.attrInferenceProfileArn,
+          haikuSearchProfile.attrInferenceProfileArn,
+          haikuSystemProfileArn,
+          `arn:aws:bedrock:*::foundation-model/${HAIKU_MODEL_ID.slice(HAIKU_MODEL_ID.indexOf(".") + 1)}`,
         ],
       })
     );
-
-    aiGrantSearchFunction.addToRolePolicy(
+    searchIndexBuilderFunction.addToRolePolicy(listArtifacts);
+    searchIndexBuilderFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["bedrock:InvokeRerank", "bedrock:InvokeModel"],
-        resources: [
-          `arn:aws:bedrock:${stack.region}::foundation-model/${RERANK_MODEL_ID}`,
-        ],
+        actions: ["s3:GetObject"],
+        resources: [props.grantArtifactsBucket.arnForObjects("*")],
+      })
+    );
+    searchIndexBuilderFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:PutObject", "s3:DeleteObject"],
+        resources: [props.grantArtifactsBucket.arnForObjects("_search/*")],
+      })
+    );
+    // Summaries written before the artifacts bucket existed are still read from the grant bucket.
+    searchIndexBuilderFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:GetObject"],
+        resources: [props.ffioNofosBucket.arnForObjects("*/summary.json"), props.ffioNofosBucket.arnForObjects("*/raw-text.txt")],
+      })
+    );
+    searchIndexBuilderFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:ListBucket"],
+        resources: [props.ffioNofosBucket.bucketArn],
+      })
+    );
+    searchIndexBuilderFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["dynamodb:Scan"],
+        resources: [props.nofoMetadataTable.tableArn],
+      })
+    );
+    searchIndexBuilderFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["sqs:SendMessage"],
+        resources: [searchIndexQueue.queueArn],
+      })
+    );
+    searchIndexBuilderFunction.addEventSource(
+      new SqsEventSource(searchIndexQueue, {
+        batchSize: 100,
+        maxBatchingWindow: cdk.Duration.seconds(60),
+        maxConcurrency: 2,
       })
     );
 
-    aiGrantSearchFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["bedrock:Rerank"],
-        resources: ["*"],
-      })
-    );
+    // Every grant change writes or removes <grant>/summary.json: publish, admin edits, status
+    // and archive changes, rename (copy + delete), promote-copy and delete.
+    for (const eventType of [s3.EventType.OBJECT_CREATED, s3.EventType.OBJECT_REMOVED]) {
+      props.grantArtifactsBucket.addEventNotification(eventType, new s3n.SqsDestination(searchIndexQueue), { suffix: "/summary.json" });
+    }
 
-    aiGrantSearchFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["dynamodb:GetItem", "dynamodb:Query", "dynamodb:Scan"],
-        resources: [
-          props.nofoMetadataTable.tableArn,
-          `${props.nofoMetadataTable.tableArn}/index/*`,
-          props.featureRolloutTable.tableArn,
-        ],
-      })
-    );
+    // 06:30 UTC: clear of the 02:00 archive, 09:00 scrape and 14:00 Eastern digest runs.
+    new events.Rule(scope, "SearchIndexNightlyRule", {
+      schedule: events.Schedule.cron({ minute: "30", hour: "6" }),
+      description: "Nightly full rebuild of the AI grant search index",
+      targets: [new targets.LambdaFunction(searchIndexBuilderFunction, { event: events.RuleTargetInput.fromObject({ full: true }) })],
+    });
 
+    // The first deploy queues a build so the index exists soon after; bump the key to rebuild on deploy.
+    const initialBuild: cr.AwsSdkCall = {
+      service: "SQS",
+      action: "sendMessage",
+      parameters: { QueueUrl: searchIndexQueue.queueUrl, MessageBody: JSON.stringify({ deploy: "search-index-v1" }) },
+      physicalResourceId: cr.PhysicalResourceId.of("search-index-initial-build"),
+    };
+    const searchIndexInitialBuild = new cr.AwsCustomResource(scope, "SearchIndexInitialBuild", {
+      onCreate: initialBuild,
+      onUpdate: initialBuild,
+      policy: cr.AwsCustomResourcePolicy.fromStatements([
+        new iam.PolicyStatement({ actions: ["sqs:SendMessage"], resources: [searchIndexQueue.queueArn] }),
+      ]),
+      installLatestAwsSdk: false,
+    });
+    searchIndexInitialBuild.node.addDependency(searchIndexBuilderFunction);
+
+    this.searchIndexBuilderFunction = searchIndexBuilderFunction;
+    this.searchIndexDlq = searchIndexDlq;
     this.aiGrantSearchFunction = aiGrantSearchFunction;
 
     // --- User profile Lambda (self-service; profile-completion gate + last-activity) ---

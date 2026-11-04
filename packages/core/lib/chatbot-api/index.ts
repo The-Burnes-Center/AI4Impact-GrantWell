@@ -96,7 +96,6 @@ export class ChatBotApi extends Construct {
       userDocumentsBucket: buckets.userDocumentsBucket,
       grantsGovApiKey: props.grantsGovApiKey,
       digestLogoWidth: props.digestLogoWidth,
-      openSearchCollection: openSearch.openSearchCollection,
       userPool: props.authentication.userPool,
     });
     this.lambdaFunctions = lambdaFunctions;

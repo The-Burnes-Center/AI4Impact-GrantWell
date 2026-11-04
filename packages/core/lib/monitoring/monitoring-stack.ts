@@ -50,6 +50,7 @@ export const LOG_MARKERS = {
   kbRetrieveFailed: ["could not retrieve Knowledge Base documents"],
   chatAnswerFailed: ["Stream processing error:"],
   grantSearchFailed: ["Hybrid search error:"],
+  searchIndexBuildFailed: ["Search index build failed:"],
   createMetadataFailed: ["Error processing record:"],
   draftVersionWriteFailed: ["draft-version-writer failed on"],
   pipelineDispatchFailed: ["Error dispatching SQS record:"],
@@ -78,6 +79,8 @@ export interface MonitoringStackProps extends cdk.NestedStackProps {
   readonly draftVersionWriterFunction: lambda.IFunction;
   readonly draftVersionWriterFailures: sqs.IQueue;
   readonly aiGrantSearchFunction: lambda.IFunction;
+  readonly searchIndexBuilderFunction: lambda.IFunction;
+  readonly searchIndexDlq: sqs.IQueue;
   readonly applicationPdfGeneratorFunction: lambda.IFunction;
   readonly nofoPipeline: {
     readonly stateMachine: sfn.IStateMachine;
@@ -168,6 +171,7 @@ export class MonitoringStack extends cdk.NestedStack {
         { label: "knowledge base sync", fn: props.syncKBFunction, purpose: "starts indexing after uploads and NOFO changes" },
         { label: "draft history", fn: props.draftVersionWriterFunction, purpose: "saves a version each time a draft changes" },
         { label: "AI grant search", fn: props.aiGrantSearchFunction, purpose: "runs on every grant search" },
+        { label: "AI search index", fn: props.searchIndexBuilderFunction, purpose: "rebuilds the search index after grant changes, and nightly at 06:30 UTC" },
         { label: "PDF export", fn: props.applicationPdfGeneratorFunction, purpose: "runs when a user exports a PDF" },
         { label: "NOFO upload dispatch", fn: props.nofoPipeline.dispatcher, purpose: "starts processing for each uploaded NOFO" },
         { label: "NOFO text extraction", fn: props.nofoPipeline.extractText, purpose: "first step of NOFO processing" },
@@ -422,9 +426,27 @@ export class MonitoringStack extends cdk.NestedStack {
     this.alarm("GrantSearchFailingAlarm", {
       severity: "medium",
       name: "grant search returning nothing",
-      description: "AI grant search is showing users empty results because OpenSearch queries are failing.",
+      description: "AI grant search can't read or rank its search index, so users only get grant name and category matches.",
       metric: this.markerMetric("GrantSearchFailed", props.aiGrantSearchFunction, LOG_MARKERS.grantSearchFailed, cdk.Duration.minutes(15)),
       threshold: 3,
+    });
+
+    // Search keeps serving the last good index, so a broken builder shows up only as stale results.
+    this.alarm("SearchIndexBuildFailingAlarm", {
+      severity: "medium",
+      name: "AI search index not updating",
+      description: "The search index builder is failing, so new or changed grants are missing from AI search until it recovers. Its log says why.",
+      metric: this.markerMetric("SearchIndexBuildFailed", props.searchIndexBuilderFunction, LOG_MARKERS.searchIndexBuildFailed, cdk.Duration.hours(1)),
+      threshold: 2,
+    });
+
+    // Stays in alarm until someone drains the queue.
+    this.alarm("SearchIndexUpdatesLostAlarm", {
+      severity: "medium",
+      name: "AI search index updates dropped",
+      description: "Grant changes failed every rebuild attempt and were set aside. The nightly full rebuild still picks them up; drain the queue once the builder works.",
+      metric: props.searchIndexDlq.metricApproximateNumberOfMessagesVisible({ period: cdk.Duration.minutes(5), statistic: "Maximum" }),
+      threshold: 1,
     });
   }
 
