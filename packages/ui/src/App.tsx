@@ -23,6 +23,7 @@ const DocumentEditor = React.lazy(() => import("./pages/document-editor/Document
 const DocEditorSessionsPage = React.lazy(() => import("./pages/document-editor/DocEditorSessionsPage"));
 const Dashboard = React.lazy(() => import("./pages/dashboard/DashboardPage"));
 const ProfilePage = React.lazy(() => import("./pages/profile/ProfilePage"));
+const DocumentsPage = React.lazy(() => import("./pages/documents/DocumentsPage"));
 const WhatsNewContent = React.lazy(() =>
   import("./pages/whats-new/WhatsNewPage").then((m) => ({ default: m.WhatsNewContent }))
 );
@@ -56,6 +57,7 @@ function ScrollToTop(): null {
         "/chat/sessions": "My Chats",
         "/document-editor": "Write Application",
         "/document-editor/drafts": "My Applications",
+        "/documents": "My Documents",
       };
 
       if (exactMatches[path]) {
@@ -145,6 +147,7 @@ function AppContent() {
               element={<DocEditorSessionsPage />}
             />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/documents" element={<DocumentsPage />} />
             <Route path="/whats-new" element={<WhatsNewContent />} />
             <Route path="/admin" element={<Dashboard />} />
             <Route
