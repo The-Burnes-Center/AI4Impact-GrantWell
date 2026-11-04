@@ -4,8 +4,8 @@
  * that chains them. Split out of the main app stack to stay under the 500-resource
  * CloudFormation limit.
  *
- * The NOFO bucket, the draft and draft-generation-jobs tables, the knowledge base and
- * the Bedrock inference profile stay in the parent: they are shared with functions
+ * The grant, artifact and user-document buckets, the draft and draft-generation-jobs tables
+ * and the Bedrock inference profile stay in the parent: they are shared with functions
  * outside this stack or their physical identity must survive this refactor.
  *
  * The draft editor API handler and the draft version writer stay in the parent too:
@@ -38,8 +38,6 @@ export interface DraftGenerationStackProps extends cdk.NestedStackProps {
   readonly userDocumentsBucket: s3.Bucket;
   readonly draftTable: Table;
   readonly draftGenerationJobsTable: Table;
-  /** Knowledge base owned by the parent; each section step only retrieves from it. */
-  readonly knowledgeBaseId: string;
   readonly jsSharedLayer: lambda.ILayerVersion;
   /** Bedrock application inference profile owned by the parent. */
   readonly sonnetDraftProfileArn: string;
@@ -98,15 +96,16 @@ export class DraftGenerationStack extends cdk.NestedStack {
         handler: "index.handler",
         environment: {
           SONNET_MODEL_ID: props.sonnetDraftProfileArn,
-          KB_ID: props.knowledgeBaseId,
+          ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
+          BUCKET: props.ffioNofosBucket.bucketName,
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
           DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
           SUPPORTED_STATES: props.supportedStatesEnv,
           LEGACY_STATELESS_ADMIN_IS_PLATFORM: props.legacyStatelessAdminIsPlatform,
         },
         timeout: cdk.Duration.minutes(5),
-        // Holds the applicant's PDFs (up to 15 MB) and their base64 request body at once.
-        memorySize: 512,
+        // Holds the grant text, the applicant's PDFs (up to 20 MB) and their base64 request body at once.
+        memorySize: 1024,
         logGroup: new logs.LogGroup(this, "DraftGenerateSectionFunctionLogGroup", {
           retention: logs.RetentionDays.THREE_MONTHS,
         }),
@@ -117,18 +116,11 @@ export class DraftGenerationStack extends cdk.NestedStack {
       bedrockInvokePolicy()
     );
     draftGenerateSectionFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["bedrock:Retrieve", "bedrock-agent:Retrieve"],
-        resources: ["*"],
-      })
-    );
-    draftGenerateSectionFunction.addToRolePolicy(
       dynamoUpdateItemPolicy(props.draftGenerationJobsTable.tableArn)
     );
-    draftGenerateSectionFunction.addToRolePolicy(
-      s3ReadOnlyPolicy(props.userDocumentsBucket.bucketArn)
-    );
+    for (const bucket of [props.userDocumentsBucket, props.grantArtifactsBucket, props.ffioNofosBucket]) {
+      draftGenerateSectionFunction.addToRolePolicy(s3ReadOnlyPolicy(bucket.bucketArn));
+    }
 
     const draftAssembleFunction = new lambda.Function(
       this,

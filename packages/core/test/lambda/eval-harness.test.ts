@@ -124,27 +124,21 @@ describe("eval harness", () => {
     expect(r.usage[0].model).toBe(h.models.haiku);
   });
 
-  it("draft records retrieval, then replays it with the KB unreachable", async () => {
-    kb.on(RetrieveCommand).resolves({ retrievalResults: [passage("Need is scored at 30 points.")] } as any);
-    const recording = h.aws.retrieval(h.grant.recordingPath, "record");
-    const recorded = await h.draft(h.grant, { summary: SUMMARY, retrieval: recording });
-    recording.save();
-    expect(recorded.error).toBeUndefined();
-    expect(recorded.output.sections.map((s: any) => [s.name, s.content])).toEqual([
+  it("draft gives every section the grant's full text and never searches the KB", async () => {
+    kb.on(RetrieveCommand).rejects(new Error("drafting must not search the KB"));
+    const replay = h.aws.retrieval(h.grant.recordingPath, "replay");
+    const r = await h.draft(h.grant, { summary: SUMMARY, retrieval: replay });
+    expect(r.error).toBeUndefined();
+    expect(r.output.sections.map((s: any) => [s.name, s.content])).toEqual([
       ["Need", "We serve 4,200 residents."],
       ["Approach", "We serve 4,200 residents."],
     ]);
-    expect(new Set(recorded.usage.map((u: any) => u.stage)).size).toBe(2);
-    const draftPrompt = JSON.parse(bedrock.commandCalls(InvokeModelCommand)[0].args[0].input.body as string).messages[0].content;
-    expect(draftPrompt).toContain("Need is scored at 30 points.");
-
-    kb.reset();
-    h.aws.install();
-    kb.on(RetrieveCommand).rejects(new Error("KB must not be called on replay"));
-    const replay = h.aws.retrieval(h.grant.recordingPath, "replay");
-    const replayed = await h.draft(h.grant, { summary: SUMMARY, retrieval: replay });
-    expect(replayed.error).toBeUndefined();
-    expect(replay.stats).toEqual({ exact: 2, nearest: 0, live: 0 });
+    expect(new Set(r.usage.map((u: any) => u.stage)).size).toBe(2);
+    for (const call of bedrock.commandCalls(InvokeModelCommand)) {
+      const [grantBlock] = JSON.parse(call.args[0].input.body as string).messages[0].content;
+      expect(grantBlock.text).toContain("Applications are due December 1, 2026.");
+      expect(grantBlock.cache_control).toEqual({ type: "ephemeral" });
+    }
     expect(kb.commandCalls(RetrieveCommand)).toHaveLength(0);
   });
 

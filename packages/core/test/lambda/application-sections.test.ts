@@ -172,8 +172,10 @@ describe("writing a section", () => {
         JSON.stringify({ stop_reason: "end_turn", content: [{ type: "text", text: JSON.stringify({ content: "Text." }) }] })
       ),
     } as any);
+    s3.on(GetObjectCommand).resolves({ Body: { transformToString: async () => "Grant text." } } as any);
     const out = await generateSection({
       sectionItem: { id: "need-2", item: "Need", description: "d", index: 2 },
+      documentIdentifier: "Grant A/",
       jobId: "job-1",
       totalSections: 3,
       sectionNames: ["Need", "Budget", "Need"],

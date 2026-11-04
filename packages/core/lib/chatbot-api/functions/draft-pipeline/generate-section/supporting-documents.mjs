@@ -1,28 +1,42 @@
 /**
- * Loads an applicant's supporting documents for one grant straight from the user-documents
+ * Loads the documents an applicant selected from their library straight from the user-documents
  * bucket, so the model reads them in full instead of through knowledge-base search.
  *
- * Self-contained (only @aws-sdk/client-s3 and node:zlib) so it can be copied into another Lambda.
+ * Self-contained (only @aws-sdk/client-s3 and node:zlib). The copy in websocket-chat/ must stay
+ * byte-identical (test/lambda/supporting-documents.test.ts checks).
  *
- *   const docs = await loadSupportingDocuments({ s3, bucket, userId, documentIdentifier });
+ *   const docs = await loadSupportingDocuments({ s3, bucket, userId, documentKeys, documentIdentifier });
+ *   docs.selected  [key]                              what the selection resolved to
  *   docs.pdfs      [{ key, fileName, bytes, pages }]  attach with pdfContentBlocks(docs)
  *   docs.texts     [{ key, fileName, content }]       full text (DOCX, txt, csv, md, html, ...)
- *   docs.fallback  [{ key, fileName, reason }]        not loaded: search these through the KB
+ *   docs.skipped   [{ key, fileName, reason }]        not given to the model; tell the user (SKIP_REASONS)
  *
- * reason is "unsupported" | "file-too-large" | "over-budget" | "unreadable".
+ * userId is the library owner (the first key segment, the Cognito username). documentKeys is the
+ * chat's or application's stored selection; null or undefined means none was ever stored, which
+ * selects everything in that grant's pre-library folder ("<userId>/<grant>/" and "<grant>//").
+ * Selected keys no longer in the library (deleted files) are ignored.
  */
 
 import { GetObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { inflateRawSync } from 'node:zlib';
 
+// One request carries these next to the grant's text (up to ~300k tokens) inside Claude's 1M-token
+// context and Bedrock's 32 MB request: base64 makes 20 MB of PDF about 27 MB, and a PDF page costs
+// roughly 1.5k-3k tokens. packages/ui/src/common/helpers/document-budget.ts mirrors the byte caps.
 export const DEFAULT_LIMITS = Object.freeze({
-  maxPdfBytes: 15 * 1024 * 1024,
-  maxPdfFileBytes: 10 * 1024 * 1024,
-  maxPdfPages: 100,
+  maxPdfBytes: 20 * 1024 * 1024,
+  maxPdfPages: 150,
   maxTextChars: 200_000,
-  maxTextFileChars: 100_000,
-  maxDownloadBytes: 20 * 1024 * 1024,
+  maxDownloadBytes: 25 * 1024 * 1024,
   maxFiles: 25,
+});
+
+/** What a user is told about a file the AI skipped. */
+export const SKIP_REASONS = Object.freeze({
+  unsupported: "The AI can't read this file type",
+  'too-large': 'Too large for the AI to read',
+  'over-budget': 'Skipped: the other selected files used up what the AI can read at once',
+  unreadable: "The AI couldn't open this file",
 });
 
 const TEXT_EXTENSIONS = new Set(['txt', 'csv', 'tsv', 'md', 'html', 'json', 'xml', 'rtf']);
@@ -31,9 +45,20 @@ export function grantFolderName(documentIdentifier) {
   return String(documentIdentifier ?? '').replace(/\/+$/, '').split('/').pop() || '';
 }
 
-export function userDocumentsPrefix(userId, documentIdentifier) {
+/** The folder a grant's documents were uploaded to before the library; also holds its "//" keys. */
+export function legacyGrantPrefix(userId, documentIdentifier) {
   const grant = grantFolderName(documentIdentifier);
   return userId && grant ? `${userId}/${grant}/` : null;
+}
+
+/** The library objects a selection names, or for no stored selection the grant's old folder. */
+export function selectDocuments(library, { userId, documentKeys, documentIdentifier }) {
+  if (Array.isArray(documentKeys)) {
+    const wanted = new Set(documentKeys.filter((k) => typeof k === 'string' && k.startsWith(`${userId}/`)));
+    return library.filter((o) => wanted.has(o.key));
+  }
+  const prefix = legacyGrantPrefix(userId, documentIdentifier);
+  return prefix ? library.filter((o) => o.key.startsWith(prefix)) : [];
 }
 
 function kindOf(fileName) {
@@ -43,18 +68,19 @@ function kindOf(fileName) {
   return TEXT_EXTENSIONS.has(ext) ? 'text' : null;
 }
 
-async function listDocuments(s3, bucket, prefix) {
+/** Every document in the user's library, newest first, so the budget keeps recent uploads. */
+export async function listLibrary(s3, bucket, userId) {
+  const prefix = `${userId}/`;
   const objects = [];
   let ContinuationToken;
   do {
-    const page = await s3.send(new ListObjectsV2Command({ Bucket: bucket, Prefix: prefix, Delimiter: '/', ContinuationToken }));
+    const page = await s3.send(new ListObjectsV2Command({ Bucket: bucket, Prefix: prefix, ContinuationToken }));
     for (const o of page.Contents || []) {
-      if (o.Key.endsWith('.metadata.json') || o.Key === prefix || !o.Size) continue;
-      objects.push({ key: o.Key, fileName: o.Key.slice(prefix.length), size: o.Size, lastModified: new Date(o.LastModified ?? 0).getTime() });
+      if (o.Key.endsWith('.metadata.json') || o.Key.endsWith('/') || !o.Size) continue;
+      objects.push({ key: o.Key, fileName: o.Key.split('/').pop(), size: o.Size, lastModified: new Date(o.LastModified ?? 0).getTime() });
     }
     ContinuationToken = page.IsTruncated ? page.NextContinuationToken : undefined;
   } while (ContinuationToken);
-  // Newest first: when the budget runs out, the documents just uploaded for this draft still fit.
   return objects.sort((a, b) => b.lastModified - a.lastModified || a.key.localeCompare(b.key));
 }
 
@@ -114,29 +140,30 @@ export function extractDocxText(buffer) {
     .trim();
 }
 
-export async function loadSupportingDocuments({ s3, bucket, userId, documentIdentifier, limits = {} }) {
+export async function loadSupportingDocuments({ s3, bucket, userId, documentKeys, documentIdentifier, limits = {} }) {
   const caps = { ...DEFAULT_LIMITS, ...limits };
-  const result = { pdfs: [], texts: [], fallback: [] };
-  const prefix = userDocumentsPrefix(userId, documentIdentifier);
-  if (!s3 || !bucket || !prefix) return result;
+  const result = { selected: [], pdfs: [], texts: [], skipped: [] };
+  if (!s3 || !bucket || !userId) return result;
+  if (Array.isArray(documentKeys) && documentKeys.length === 0) return result;
 
   let pdfBytes = 0;
   let pdfPages = 0;
   let textChars = 0;
-  const objects = await listDocuments(s3, bucket, prefix);
+  const objects = selectDocuments(await listLibrary(s3, bucket, userId), { userId, documentKeys, documentIdentifier });
+  result.selected = objects.map((o) => o.key);
 
   for (const [index, object] of objects.entries()) {
     const { key, fileName, size } = object;
-    const skip = (reason) => result.fallback.push({ key, fileName, reason });
+    const skip = (reason) => result.skipped.push({ key, fileName, reason });
     const kind = kindOf(fileName);
     if (!kind) { skip('unsupported'); continue; }
     if (index >= caps.maxFiles) { skip('over-budget'); continue; }
 
     if (kind === 'pdf') {
-      if (size > caps.maxPdfFileBytes) { skip('file-too-large'); continue; }
+      if (size > caps.maxPdfBytes) { skip('too-large'); continue; }
       if (pdfBytes + size > caps.maxPdfBytes) { skip('over-budget'); continue; }
     } else if (size > caps.maxDownloadBytes) {
-      skip('file-too-large');
+      skip('too-large');
       continue;
     }
 
@@ -152,7 +179,7 @@ export async function loadSupportingDocuments({ s3, bucket, userId, documentIden
     if (kind === 'pdf') {
       if (bytes.subarray(0, 5).toString('latin1') !== '%PDF-') { skip('unreadable'); continue; }
       const pages = estimatePdfPages(bytes);
-      if (pdfPages + pages > caps.maxPdfPages) { skip(pages > caps.maxPdfPages ? 'file-too-large' : 'over-budget'); continue; }
+      if (pdfPages + pages > caps.maxPdfPages) { skip(pages > caps.maxPdfPages ? 'too-large' : 'over-budget'); continue; }
       pdfBytes += bytes.length;
       pdfPages += pages;
       result.pdfs.push({ key, fileName, bytes, pages });
@@ -167,7 +194,7 @@ export async function loadSupportingDocuments({ s3, bucket, userId, documentIden
     }
     if (content === null) { skip('unreadable'); continue; }
     if (!content) continue;
-    if (content.length > caps.maxTextFileChars) { skip('file-too-large'); continue; }
+    if (content.length > caps.maxTextChars) { skip('too-large'); continue; }
     if (textChars + content.length > caps.maxTextChars) { skip('over-budget'); continue; }
     textChars += content.length;
     result.texts.push({ key, fileName, content });

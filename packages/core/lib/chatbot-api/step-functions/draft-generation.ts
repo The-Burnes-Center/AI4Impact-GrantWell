@@ -40,71 +40,88 @@ export class DraftGenerationStateMachine extends Construct {
     // ── Step 2: Map — fan out N parallel section generators ─────────
     // Per-section error handler: catch failures gracefully so the Map
     // never aborts — failed sections return a stub with status "error"
-    const sectionErrorFallback = new sfn.Pass(this, "SectionErrorFallback", {
-      parameters: {
-        "sectionId.$": "$.sectionItem.id",
-        "sectionName.$": "$.sectionItem.item",
-        "status": "error",
-      },
-    });
+    const sectionTask = (suffix: string) => {
+      const sectionErrorFallback = new sfn.Pass(this, `SectionErrorFallback${suffix}`, {
+        parameters: {
+          "sectionId.$": "$.sectionItem.id",
+          "sectionName.$": "$.sectionItem.item",
+          "status": "error",
+        },
+      });
 
-    const generateSection = new tasks.LambdaInvoke(
-      this,
-      "GenerateSection",
-      {
-        lambdaFunction: props.generateSectionFunction,
-        outputPath: "$.Payload",
-        retryOnServiceExceptions: true,
-      }
-    );
+      const generateSection = new tasks.LambdaInvoke(
+        this,
+        `GenerateSection${suffix}`,
+        {
+          lambdaFunction: props.generateSectionFunction,
+          outputPath: "$.Payload",
+          retryOnServiceExceptions: true,
+        }
+      );
 
-    // Retry on Bedrock throttling
-    generateSection.addRetry({
-      errors: [
-        "ThrottlingException",
-        "TooManyRequestsException",
-        "ServiceUnavailableException",
-        "ModelTimeoutException",
-      ],
-      interval: cdk.Duration.seconds(15),
-      maxAttempts: 2,
-      backoffRate: 2,
-      jitterStrategy: sfn.JitterType.FULL,
-    });
+      // Retry on Bedrock throttling
+      generateSection.addRetry({
+        errors: [
+          "ThrottlingException",
+          "TooManyRequestsException",
+          "ServiceUnavailableException",
+          "ModelTimeoutException",
+        ],
+        interval: cdk.Duration.seconds(15),
+        maxAttempts: 2,
+        backoffRate: 2,
+        jitterStrategy: sfn.JitterType.FULL,
+      });
 
-    // Retry on general task failures
-    generateSection.addRetry({
-      errors: ["States.TaskFailed"],
-      interval: cdk.Duration.seconds(10),
-      maxAttempts: 2,
-      backoffRate: 2,
-    });
+      // Retry on general task failures
+      generateSection.addRetry({
+        errors: ["States.TaskFailed"],
+        interval: cdk.Duration.seconds(10),
+        maxAttempts: 2,
+        backoffRate: 2,
+      });
 
-    generateSection.addCatch(sectionErrorFallback, {
-      resultPath: "$.error",
+      generateSection.addCatch(sectionErrorFallback, {
+        resultPath: "$.error",
+      });
+      return generateSection;
+    };
+
+    const itemSelector = {
+      "sectionItem.$": "$$.Map.Item.Value",
+      "jobId.$": "$.jobId",
+      "query.$": "$.query",
+      "documentIdentifier.$": "$.documentIdentifier",
+      "projectBasics.$": "$.projectBasics",
+      "questionnaire.$": "$.questionnaire",
+      "questionnaireAnswers.$": "$.questionnaireAnswers",
+      "additionalInfo.$": "$.additionalInfo",
+      "sessionId.$": "$.sessionId",
+      "userId.$": "$.userId",
+      "documentOwner.$": "$.documentOwner",
+      "documentKeys.$": "$.documentKeys",
+      "userState.$": "$.userState",
+      "totalSections.$": "$.totalSections",
+      "sectionNames.$": "$.sectionNames",
+    };
+
+    // A cache entry is readable only once its first response starts, so sections started together
+    // would each write the shared grant prefix. One section writes it; the rest then read it.
+    const warmSection = new sfn.Map(this, "GenerateFirstSection", {
+      maxConcurrency: 1,
+      itemsPath: "$.warmSections",
+      resultPath: "$.warmResults",
+      itemSelector,
     });
+    warmSection.itemProcessor(sectionTask("First"));
 
     const generateAllSections = new sfn.Map(this, "GenerateAllSections", {
       maxConcurrency: 5,
-      itemsPath: "$.sections",
+      itemsPath: "$.remainingSections",
       resultPath: "$.sectionResults",
-      itemSelector: {
-        "sectionItem.$": "$$.Map.Item.Value",
-        "jobId.$": "$.jobId",
-        "query.$": "$.query",
-        "documentIdentifier.$": "$.documentIdentifier",
-        "projectBasics.$": "$.projectBasics",
-        "questionnaire.$": "$.questionnaire",
-        "questionnaireAnswers.$": "$.questionnaireAnswers",
-        "additionalInfo.$": "$.additionalInfo",
-        "sessionId.$": "$.sessionId",
-        "userId.$": "$.userId",
-        "userState.$": "$.userState",
-        "totalSections.$": "$.totalSections",
-        "sectionNames.$": "$.sectionNames",
-      },
+      itemSelector,
     });
-    generateAllSections.itemProcessor(generateSection);
+    generateAllSections.itemProcessor(sectionTask(""));
 
     // ── Step 3: Assemble ────────────────────────────────────────────
     const assembleDraft = new tasks.LambdaInvoke(this, "AssembleDraft", {
@@ -161,6 +178,7 @@ export class DraftGenerationStateMachine extends Construct {
 
     // ── Chain ───────────────────────────────────────────────────────
     const definition = prepareSections
+      .next(warmSection)
       .next(generateAllSections)
       .next(assembleDraft);
 
