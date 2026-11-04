@@ -21,6 +21,7 @@ import {
   LuCircleHelp,
   LuUser,
   LuLogOut,
+  LuFolderOpen,
 } from "react-icons/lu";
 import { signOut } from "aws-amplify/auth";
 import { useBranding } from "../../common/branding";
@@ -196,6 +197,7 @@ export const AppSidebar: React.FC = () => {
   const isDashboard = currentPath.startsWith("/admin");
   const isHome = currentPath === "/" || currentPath.startsWith("/home");
   const isProfile = currentPath.startsWith("/profile");
+  const isDocuments = currentPath === "/documents";
 
   const docId =
     chrome?.documentIdentifier ||
@@ -382,6 +384,7 @@ export const AppSidebar: React.FC = () => {
           {showLabels && !CHROME.Header && (
             <a
               href="/home"
+              aria-current={currentPath === "/home" ? "page" : undefined}
               onClick={(e) => {
                 if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
                 e.preventDefault();
@@ -473,6 +476,14 @@ export const AppSidebar: React.FC = () => {
             label="My Applications"
             icon={<LuFileText size={20} aria-hidden="true" />}
             active={isDrafts}
+            expanded={showLabels}
+          />
+
+          <NavItem
+            onClick={go(() => navigate("/documents"))}
+            label="My Documents"
+            icon={<LuFolderOpen size={20} aria-hidden="true" />}
+            active={isDocuments}
             expanded={showLabels}
           />
 

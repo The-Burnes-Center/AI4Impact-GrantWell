@@ -159,6 +159,18 @@ function requestedSectionIds(raw) {
   return ids.length > 0 ? ids : undefined;
 }
 
+/**
+ * The application's selected library documents, limited to the caller's own folder. null (not
+ * an array) means the application never stored a selection, which reads its grant's old folder.
+ */
+export function ownDocumentKeys(raw, owner) {
+  if (!Array.isArray(raw)) return null;
+  return [...new Set(raw)]
+    .filter((key) => typeof key === "string" && key.startsWith(`${owner}/`)
+      && !key.split("/").some((segment) => segment === "." || segment === ".."))
+    .slice(0, 100);
+}
+
 /** Keeps only {question, answer} pairs of strings with a non-empty answer. */
 function normalizeQuestionnaireAnswers(raw) {
   if (!Array.isArray(raw)) return [];
@@ -262,6 +274,10 @@ export const handler = async (event) => {
       };
     }
 
+    // Library keys start with the Cognito username, which can differ from sub.
+    const jwtClaims = event.requestContext?.authorizer?.jwt?.claims || {};
+    const documentOwner = jwtClaims['cognito:username'] || jwtClaims.username || userId;
+
     const callerScope = resolveCallerScope(event);
     const nofoScopeRow = await readNofoScope(String(documentIdentifier).replace(/\/+$/, ""));
     const effectiveScope = nofoScopeRow ? nofoScopeRow.scope || "federal" : null;
@@ -334,6 +350,8 @@ export const handler = async (event) => {
       additionalInfo,
       sessionId,
       userId,
+      documentOwner,
+      documentKeys: ownDocumentKeys(body.documentKeys, documentOwner),
       userState,
       nofoScope: effectiveScope,
       nofoState: effectiveState,

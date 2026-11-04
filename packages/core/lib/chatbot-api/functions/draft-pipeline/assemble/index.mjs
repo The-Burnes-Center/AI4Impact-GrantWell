@@ -17,7 +17,8 @@ const MAX_DRAFT_WRITE_ATTEMPTS = 3;
 const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION || 'us-east-1' });
 
 export const handler = async (event) => {
-  const { jobId, sessionId, userId, sectionResults, totalSections, outline } = event;
+  const { jobId, sessionId, userId, totalSections, outline } = event;
+  const sectionResults = [...(event.warmResults || []), ...(event.sectionResults || [])];
 
   console.log(`Assemble: job ${jobId} (session ${sessionId}), ${sectionResults?.length ?? 0} results`);
 

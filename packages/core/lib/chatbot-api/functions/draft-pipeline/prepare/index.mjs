@@ -19,7 +19,7 @@ const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION || 'us-
 export const handler = async (event) => {
   const {
     jobId, query, documentIdentifier, projectBasics, questionnaire, questionnaireAnswers,
-    additionalInfo, sessionId, userId, userState, sectionIds,
+    additionalInfo, sessionId, userId, userState, sectionIds, documentOwner, documentKeys,
   } = event;
 
   console.log(`Prepare: job ${jobId} for "${documentIdentifier}" (session ${sessionId})`);
@@ -61,9 +61,13 @@ export const handler = async (event) => {
     additionalInfo: typeof additionalInfo === "string" ? additionalInfo : "",
     sessionId,
     userId,
+    documentOwner: typeof documentOwner === "string" && documentOwner ? documentOwner : userId,
+    documentKeys: Array.isArray(documentKeys) ? documentKeys : null,
     userState: typeof userState === "string" ? userState : "",
     totalSections,
     sections,
+    warmSections: sections.slice(0, 1),
+    remainingSections: sections.slice(1),
     sectionNames,
     outline: outlineRefs,
   };

@@ -38,6 +38,29 @@ def test_a_new_draft_starts_at_rev_1_on_project_basics(drafts):
     assert (body["rev"], body["status"], body["title"]) == (1, "project_basics", "Bridge")
 
 
+def stored(drafts, session_id="d1"):
+    return drafts.test_table.get_item(Key={"user_id": "user-1", "session_id": session_id})["Item"]
+
+
+def test_a_new_application_starts_with_no_documents_selected(drafts):
+    create(drafts)
+
+    assert stored(drafts)["document_keys"] == []
+
+
+def test_a_selection_keeps_only_the_callers_own_keys_and_other_saves_leave_it_alone(drafts):
+    create(drafts)
+    res = drafts.lambda_handler(http_event(
+        {"operation": "update_draft", "session_id": "d1", "document_keys": ["alex/documents/a.pdf", "sam/documents/b.pdf", "alex/../sam/c.pdf"]},
+        sub="user-1", **{"cognito:username": "alex"},
+    ), None)
+    assert json.loads(res["body"])["documentKeys"] == ["alex/documents/a.pdf"]
+
+    call(drafts, {"operation": "update_draft", "session_id": "d1", "additional_info": "More."})
+
+    assert stored(drafts)["document_keys"] == ["alex/documents/a.pdf"]
+
+
 def test_a_save_with_the_current_rev_bumps_it(drafts):
     create(drafts)
 

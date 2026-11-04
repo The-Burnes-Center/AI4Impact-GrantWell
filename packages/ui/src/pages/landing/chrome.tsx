@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router";
+import { NavLink, useLocation, useNavigate } from "react-router";
 import { LuMenu } from "react-icons/lu";
 import { AiForImpactWordmark } from "./featureIllustrations";
 import { useBranding } from "../../common/branding";
@@ -110,6 +110,7 @@ export function SkipLink() {
 
 export function AppNavbar() {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const branding = useBranding();
   const { showMenuButton, isDrawerOpen, toggleDrawer } =
     useNavigationMenuButton();
@@ -143,6 +144,7 @@ export function AppNavbar() {
           href="/home"
           onClick={handleLogoClick}
           className="marketing__nav-brand"
+          aria-current={pathname === "/home" ? "page" : undefined}
         >
           <GovSeal />
           <BrandLogo

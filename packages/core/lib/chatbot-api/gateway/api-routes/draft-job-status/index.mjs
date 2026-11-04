@@ -164,6 +164,7 @@ export const handler = async (event) => {
         completedSectionCount: job.completedSectionCount,
         sections: job.sections || {},
         failedSections: job.failedSections,
+        skippedDocuments: job.skippedDocuments || [],
         createdAt: job.createdAt,
         completedAt: job.completedAt,
         error: job.error,

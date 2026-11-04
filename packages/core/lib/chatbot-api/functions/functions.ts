@@ -428,12 +428,9 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
+    // Reads the files a chat selected from the user's library (supporting-documents.mjs).
     websocketAPIFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["s3:ListBucket"],
-        resources: [props.userDocumentsBucket.bucketArn],
-      })
+      s3ReadOnlyPolicy(props.userDocumentsBucket.bucketArn)
     );
 
     websocketAPIFunction.addToRolePolicy(
@@ -1230,9 +1227,9 @@ export class LambdaFunctionStack extends cdk.Stack {
     const draftGeneration = new DraftGenerationStack(scope, "DraftGenerationStack", {
       ffioNofosBucket: props.ffioNofosBucket,
       grantArtifactsBucket: props.grantArtifactsBucket,
+      userDocumentsBucket: props.userDocumentsBucket,
       draftTable: props.draftTable,
       draftGenerationJobsTable: props.draftGenerationJobsTable,
-      knowledgeBaseId: props.knowledgeBase.attrKnowledgeBaseId,
       jsSharedLayer: jsSharedLayer,
       sonnetDraftProfileArn: sonnetDraftProfile.attrInferenceProfileArn,
       supportedStatesEnv: SUPPORTED_STATES_ENV,

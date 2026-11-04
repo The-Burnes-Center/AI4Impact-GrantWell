@@ -1,84 +1,27 @@
-import React, { useState, useRef, useEffect, useCallback, type CSSProperties } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
-import { KB_SYNC_UNKNOWN_MESSAGE, useKbSyncPoll } from "../../hooks/use-kb-sync-poll";
+import { useDocumentLibrary } from "../../hooks/use-document-library";
 import { getCurrentUser } from "aws-amplify/auth";
-import { FileUploader } from "../../common/file-uploader";
 import Card from "../../components/ui/Card";
 import NavigationButtons from "../../components/ui/NavigationButtons";
-import ConfirmationModal from "../../components/common/ConfirmationModal";
+import DocumentPicker from "../../components/documents/DocumentPicker";
 import { colors, typography, spacing, borderRadius, transitions } from "../../components/ui/styles";
 import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
 import { characterCount, MAX_INPUT_CHARS, readDraftCache, resolveQuestionnaireAnswers } from "../../common/helpers/document-editor-utils";
+import { legacySelection } from "../../common/helpers/user-documents";
 import type { useDraftSave } from "../../hooks/use-draft-save";
 import type { DocumentData } from "../../common/types/document";
 import { DailyLimitError } from "../../common/api-client/daily-limit";
 import { InputTooLongError } from "../../common/api-client/drafts-client";
 import { grantSections } from "../../common/helpers/application-sections";
 
-const MIME_TYPES: Record<string, string> = {
-  ".pdf": "application/pdf",
-  ".doc": "application/msword",
-  ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  ".xls": "application/vnd.ms-excel",
-  ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  ".ppt": "application/vnd.ms-powerpoint",
-  ".pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-  ".txt": "text/plain",
-  ".csv": "text/csv",
-  ".html": "text/html",
-  ".json": "application/json",
-  ".xml": "application/xml",
-  ".md": "text/markdown",
-  ".rtf": "application/rtf",
-  ".epub": "application/epub+zip",
-  ".odt": "application/vnd.oasis.opendocument.text",
-  ".tsv": "text/tab-separated-values",
-  ".eml": "message/rfc822",
-  ".msg": "application/vnd.ms-outlook",
-};
-
-const SUPPORTED_ACCEPT = ".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.html,.json,.xml,.md,.rtf,.epub,.odt,.tsv,.eml,.msg";
-
-const KB_INDEXING_MESSAGE = "Your documents are being indexed and will be available shortly.";
-
 // Coarse phases only: the poll below updates a percentage every 2s and those
 // must never reach a live region.
 const DRAFT_PHASE_MESSAGES: Record<string, string> = {
   preparing: "Preparing your draft.",
-  planning: "Retrieving grant requirements and planning sections.",
+  planning: "Reading the grant and your documents, and planning sections.",
   generating: "Writing your draft sections. This may take a few minutes.",
 };
-
-// Must match the server cap in generate-upload-url/index.mjs.
-const MAX_FILE_SIZE_BYTES = 100 * 1024 * 1024; // 100 MB
-const MAX_FILE_SIZE_LABEL = "100 MB";
-
-const ALLOWED_EXTENSIONS = new Set(
-  SUPPORTED_ACCEPT.split(",").map((ext) => ext.replace(/^\./, "").toLowerCase()),
-);
-
-type FileValidationResult = { accepted: File[]; rejected: string[] };
-
-function validateFiles(incoming: File[]): FileValidationResult {
-  const accepted: File[] = [];
-  const rejected: string[] = [];
-  for (const file of incoming) {
-    const ext = file.name.split(".").pop()?.toLowerCase() ?? "";
-    if (!ALLOWED_EXTENSIONS.has(ext)) {
-      rejected.push(`${file.name}: unsupported file type (.${ext || "unknown"})`);
-      continue;
-    }
-    if (file.size > MAX_FILE_SIZE_BYTES) {
-      rejected.push(`${file.name}: exceeds ${MAX_FILE_SIZE_LABEL} limit`);
-      continue;
-    }
-    accepted.push(file);
-  }
-  return { accepted, rejected };
-}
-
-/** Returns true when the step handled the exit itself and navigation must wait. */
-export type StepLeaveGuard = (step: string, proceed: () => void) => boolean;
 
 interface UploadDocumentsProps {
   selectedNofo: string | null;
@@ -87,7 +30,6 @@ interface UploadDocumentsProps {
   sessionId: string;
   documentData?: DocumentData | null;
   draftSave: ReturnType<typeof useDraftSave>;
-  onRegisterLeaveGuard?: (guard: StepLeaveGuard | null) => void;
 }
 
 const UploadDocuments: React.FC<UploadDocumentsProps> = ({
@@ -97,33 +39,19 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   sessionId,
   documentData,
   draftSave,
-  onRegisterLeaveGuard,
 }) => {
   const apiClient = useApiClient();
-  const [files, setFiles] = useState<File[]>([]);
-  const [isDragging, setIsDragging] = useState(false);
+  const library = useDocumentLibrary();
   const [additionalInfo, setAdditionalInfo] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [userId, setUserId] = useState<string | null>(null);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  // Coarse upload state for assistive tech: the progress bar streams percentages,
-  // which must not be announced, but start and completion must be.
-  const [uploadAnnouncement, setUploadAnnouncement] = useState("");
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [generatingDraft, setGeneratingDraft] = useState(false);
   const [draftProgress, setDraftProgress] = useState<string>("");
   const [generationPhase, setGenerationPhase] = useState<string>("preparing");
   const [hasExistingDraft, setHasExistingDraft] = useState(false);
-  const [pendingLeave, setPendingLeave] = useState<{ run: () => void } | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const { status: kbSyncStatus, start: startKbSync } = useKbSyncPoll(apiClient.kbSync);
-  const kbIndexing = kbSyncStatus === "indexing";
-
-  const extractNofoName = (docId: string | null): string => {
-    if (!docId) return "";
-    return docId.split("/").pop() || docId;
-  };
+  // undefined until the draft loads; null for an application saved before the library.
+  const [storedKeys, setStoredKeys] = useState<string[] | null | undefined>(undefined);
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -143,13 +71,15 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             const cached = readDraftCache<string>(sessionId, "additionalInfo");
             const restored = cached ?? draft?.additionalInfo;
             if (restored) setAdditionalInfo(restored);
+            setStoredKeys(draft ? draft.documentKeys ?? null : []);
           } catch {
             console.log("No existing draft found");
+            setStoredKeys([]);
           }
         }
       } catch (error) {
         console.error("Error getting user:", error);
-        setUploadError("Failed to authenticate user. Please refresh the page.");
+        setSubmitError("Failed to authenticate user. Please refresh the page.");
       }
     };
     fetchUserId();
@@ -161,144 +91,17 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     }
   }, [documentData]);
 
-  const hasStagedFiles = files.length > 0 && !uploading && !isLoading && !generatingDraft;
+  const selected = useMemo(() => {
+    if (storedKeys === undefined || library.loading) return null;
+    const present = new Set(library.documents.map((d) => d.key));
+    // An application saved before the library keeps reading its grant's old folder until changed.
+    const keys = storedKeys ?? legacySelection(library.documents, userId ?? "", selectedNofo);
+    return keys.filter((k) => present.has(k));
+  }, [storedKeys, library.loading, library.documents, userId, selectedNofo]);
 
-  useEffect(() => {
-    if (!onRegisterLeaveGuard) return;
-    if (!hasStagedFiles) {
-      onRegisterLeaveGuard(null);
-      return;
-    }
-    onRegisterLeaveGuard((_step, proceed) => {
-      setPendingLeave({ run: proceed });
-      return true;
-    });
-    return () => onRegisterLeaveGuard(null);
-  }, [hasStagedFiles, onRegisterLeaveGuard]);
-
-  useEffect(() => {
-    if (!hasStagedFiles) return;
-    const warn = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      event.returnValue = "";
-    };
-    window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
-  }, [hasStagedFiles]);
-
-  const addFiles = (incoming: File[]) => {
-    const { accepted, rejected } = validateFiles(incoming);
-    if (accepted.length > 0) {
-      setFiles((prev) => [...prev, ...accepted]);
-    }
-    if (rejected.length > 0) {
-      setUploadError(rejected.join("\n"));
-    } else {
-      setUploadError(null);
-    }
-  };
-
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      addFiles(Array.from(event.target.files));
-      // reset value so selecting the same file again re-triggers onChange
-      event.target.value = "";
-    }
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(false);
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      addFiles(Array.from(e.dataTransfer.files));
-    }
-  };
-
-  const openFileSelector = () => fileInputRef.current?.click();
-
-  const uploadFiles = useCallback(async (): Promise<boolean> => {
-    if (!selectedNofo || !userId || files.length === 0) return false;
-
-    setUploading(true);
-    setUploadProgress(0);
-    setUploadError(null);
-    setUploadAnnouncement("Uploading documents");
-
-    const uploader = new FileUploader();
-    const nofoName = extractNofoName(selectedNofo);
-    const totalSize = files.reduce((acc, file) => acc + file.size, 0);
-    let uploadedSize = 0;
-
-    try {
-      for (const file of files) {
-        const fileExt = "." + file.name.split(".").pop()?.toLowerCase();
-        const fileType = MIME_TYPES[fileExt] || "application/octet-stream";
-
-        try {
-          const uploadUrl = await apiClient.userDocuments.getUploadURL(
-            file.name, fileType, userId, nofoName, file.size
-          );
-          await uploader.upload(file, uploadUrl, fileType, (uploaded: number) => {
-            setUploadProgress(Math.round(((uploadedSize + uploaded) / totalSize) * 100));
-          });
-          uploadedSize += file.size;
-        } catch (error) {
-          console.error(`Error uploading file ${file.name}:`, error);
-          setUploadError(`Failed to upload ${file.name}. Please try again.`);
-          setUploadAnnouncement("");
-          setUploading(false);
-          return false;
-        }
-      }
-
-      setUploadProgress(100);
-      startKbSync();
-
-      setUploadAnnouncement("Upload complete");
-      setTimeout(() => {
-        setFiles([]);
-        setUploading(false);
-        setUploadProgress(0);
-      }, 1000);
-      return true;
-    } catch (error) {
-      console.error("Error during upload:", error);
-      setUploadError("An error occurred during upload. Please try again.");
-      setUploadAnnouncement("");
-      setUploading(false);
-      return false;
-    }
-  }, [selectedNofo, userId, files, apiClient, startKbSync]);
-
-  const uploadAndLeave = async () => {
-    const leave = pendingLeave;
-    const uploaded = await uploadFiles();
-    setPendingLeave(null);
-    if (uploaded) leave?.run();
-  };
-
-  const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024) return bytes + " bytes";
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
-    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
-  };
-
-  const getFileIcon = (fileType: string): string => {
-    if (fileType.includes("pdf")) return "\u{1F4C4}";
-    if (fileType.includes("image")) return "\u{1F5BC}\uFE0F";
-    if (fileType.includes("word") || fileType.includes("document")) return "\u{1F4DD}";
-    if (fileType.includes("excel") || fileType.includes("spreadsheet")) return "\u{1F4CA}";
-    return "\u{1F4CE}";
+  const changeSelection = (keys: string[]) => {
+    setStoredKeys(keys);
+    draftSave.saveFields({ documentKeys: keys });
   };
 
   const grantListsNoSections = async (nofo: string) => {
@@ -315,15 +118,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
 
     try {
       setIsLoading(true);
-
-      if (files.length > 0 && userId) {
-        const uploaded = await uploadFiles();
-        if (!uploaded) {
-          setIsLoading(false);
-          return;
-        }
-        await new Promise((resolve) => setTimeout(resolve, 500));
-      }
+      setSubmitError(null);
 
       const username = userId || (await getCurrentUser()).username;
       const draftToUse = await apiClient.drafts.getDraft({ sessionId, userId: username });
@@ -332,14 +127,12 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         throw new Error("Application not found. Please start a new application first.");
       }
 
-      const uploadedFileInfo = files.map((f) => ({
-        name: f.name, size: f.size, type: f.type, lastModified: f.lastModified,
-      }));
+      const documentKeys = storedKeys === undefined ? draftToUse.documentKeys ?? null : storedKeys;
 
       // Generation refuses a grant with no narrative sections; the applicant writes their own.
       if (await grantListsNoSections(selectedNofo)) {
         await draftSave.saveFields(
-          { status: "editing_sections", additionalInfo, uploadedFiles: uploadedFileInfo },
+          { status: "editing_sections", additionalInfo },
           { source: "manual", immediate: true }
         );
         onNavigate("sectionEditor");
@@ -347,11 +140,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       }
 
       await draftSave.saveFields(
-        {
-          status: "generating_draft",
-          additionalInfo,
-          uploadedFiles: uploadedFileInfo,
-        },
+        { status: "generating_draft", additionalInfo },
         { source: "manual", immediate: true }
       );
 
@@ -374,9 +163,10 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         questionnaireAnswers,
         additionalInfo,
         sessionId,
+        documentKeys,
       });
       console.log('Draft generation job started:', jobId);
-      setDraftProgress("Retrieving grant requirements and planning sections...");
+      setDraftProgress("Reading the grant and your documents, and planning sections...");
       setGenerationPhase("planning");
 
       let pollCount = 0;
@@ -406,22 +196,11 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       if (error instanceof DailyLimitError || error instanceof InputTooLongError) {
         void draftSave.saveFields({ status: "uploading_documents" }, { source: "status_change", immediate: true });
       }
-      setUploadError(error instanceof Error ? error.message : "Failed to create draft. Please try again.");
+      setSubmitError(error instanceof Error ? error.message : "Failed to create draft. Please try again.");
       setIsLoading(false);
       setGeneratingDraft(false);
       setDraftProgress("");
     }
-  };
-
-  const dropzoneStyle: React.CSSProperties = {
-    border: `2px dashed ${isDragging ? colors.primary : colors.border}`,
-    borderRadius: borderRadius.lg,
-    padding: `${spacing["3xl"]} ${spacing.xl}`,
-    textAlign: "center",
-    backgroundColor: isDragging ? colors.primaryLight : colors.background,
-    cursor: "pointer",
-    transition: transitions.normal,
-    minHeight: "44px",
   };
 
   // Rendered as the first child of both views, so React reuses the same node when
@@ -529,7 +308,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     );
   }
 
-  // ── Normal upload form ─────────────────────────────────────────────
+  // ── Normal form ────────────────────────────────────────────────────
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
       {draftPhaseRegion}
@@ -546,227 +325,18 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         }
       >
         <p style={{ color: colors.textSecondary, marginBottom: spacing["2xl"], fontFamily: typography.fontFamily }}>
-          Upload supporting documents and share any additional context to help
+          Choose supporting documents and share any additional context to help
           generate your grant application.
         </p>
 
-        {/* Upload Supporting Documents */}
         <div style={{ marginBottom: spacing["3xl"] }}>
-          <h3 style={{
-            fontSize: typography.fontSize.lg,
-            fontWeight: typography.fontWeight.semibold,
-            color: colors.text,
-            marginBottom: spacing.sm,
-            fontFamily: typography.fontFamily,
-          }}>
-            Supporting Documents
-          </h3>
-          <p style={{
-            fontSize: typography.fontSize.sm,
-            color: colors.textSecondary,
-            marginBottom: spacing.lg,
-            fontFamily: typography.fontFamily,
-          }}>
-            Upload any documents that will strengthen your application
-            (e.g., organizational details, past performance reports, budget templates).
-          </p>
-
-          <div
-            style={dropzoneStyle}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onClick={openFileSelector}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                openFileSelector();
-              }
-            }}
-            role="button"
-            tabIndex={0}
-          >
-            <p style={{
-              fontSize: typography.fontSize.base,
-              fontWeight: typography.fontWeight.medium,
-              color: colors.text,
-              margin: `0 0 ${spacing.sm}`,
-              fontFamily: typography.fontFamily,
-            }}>
-              Drag and drop files here, or{" "}
-              <span style={{ color: colors.primary, textDecoration: "underline" }}>browse files</span>
-            </p>
-            <p style={{
-              fontSize: typography.fontSize.sm,
-              color: colors.textSecondary,
-              margin: 0,
-              fontFamily: typography.fontFamily,
-            }}>
-              Supported formats: PDF, DOC, DOCX, XLSX, PPTX, TXT, CSV, and more (max {MAX_FILE_SIZE_LABEL} per file)
-            </p>
-          </div>
-
-          <input
-            ref={fileInputRef}
-            type="file"
-            multiple
-            onChange={handleFileSelect}
-            style={{ display: "none" }}
-            accept={SUPPORTED_ACCEPT}
-            aria-label="Select files to upload"
+          <DocumentPicker
+            library={library}
+            selected={selected}
+            onChange={changeSelection}
+            legend="Use in this application"
+            description="The AI reads the documents you tick when it writes this application (e.g., organizational details, past performance reports, budgets). New uploads go to My Documents."
           />
-
-          {files.length > 0 && (
-            <div style={{ marginTop: spacing.lg }}>
-              <h4 style={{
-                fontSize: typography.fontSize.sm,
-                fontWeight: typography.fontWeight.semibold,
-                color: colors.text,
-                marginTop: 0,
-                marginBottom: spacing.md,
-                fontFamily: typography.fontFamily,
-              }}>
-                Selected Documents ({files.length})
-              </h4>
-              {files.map((file, index) => (
-                <div
-                  key={index}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    padding: `${spacing.md} ${spacing.lg}`,
-                    borderRadius: borderRadius.md,
-                    backgroundColor: colors.background,
-                    border: `1px solid ${colors.border}`,
-                    marginBottom: spacing.sm,
-                    gap: spacing.md,
-                  }}
-                >
-                  <span style={{ fontSize: "20px", flexShrink: 0 }} aria-hidden="true">
-                    {getFileIcon(file.type)}
-                  </span>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <span style={{
-                      display: "block",
-                      fontSize: typography.fontSize.sm,
-                      fontWeight: typography.fontWeight.medium,
-                      color: colors.text,
-                      wordBreak: "break-all",
-                      fontFamily: typography.fontFamily,
-                    }}>
-                      {file.name}
-                    </span>
-                    <span style={{
-                      display: "block",
-                      fontSize: typography.fontSize.xs,
-                      color: colors.textSecondary,
-                      fontFamily: typography.fontFamily,
-                    }}>
-                      {formatFileSize(file.size)}
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => setFiles((prev) => prev.filter((_, i) => i !== index))}
-                    aria-label={`Remove ${file.name}`}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      color: colors.danger,
-                      cursor: "pointer",
-                      fontSize: "20px",
-                      lineHeight: 1,
-                      minWidth: "44px",
-                      minHeight: "44px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      borderRadius: borderRadius.sm,
-                      flexShrink: 0,
-                    }}
-                  >
-                    &times;
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div role="status" aria-live="polite" className="visually-hidden">
-            {uploadAnnouncement}
-          </div>
-
-          {uploading && (
-            <div style={{ marginTop: spacing.lg }}>
-              <div
-                role="progressbar"
-                aria-valuenow={uploadProgress}
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-label="File upload progress"
-                aria-valuetext={`${uploadProgress}% complete`}
-                style={{
-                  height: "6px",
-                  backgroundColor: colors.border,
-                  borderRadius: borderRadius.sm,
-                  overflow: "hidden",
-                }}
-              >
-                <div style={{
-                  height: "100%",
-                  width: `${uploadProgress}%`,
-                  backgroundColor: colors.primary,
-                  transition: transitions.slow,
-                  borderRadius: borderRadius.sm,
-                }} />
-              </div>
-              <p style={{
-                fontSize: typography.fontSize.sm,
-                color: colors.textSecondary,
-                marginTop: spacing.xs,
-                fontFamily: typography.fontFamily,
-              }}>
-                Uploading... {uploadProgress}%
-              </p>
-            </div>
-          )}
-
-          <div role="status" aria-live="polite" className="visually-hidden">
-            {uploading ? "" : kbIndexing ? KB_INDEXING_MESSAGE : kbSyncStatus === "unknown" ? KB_SYNC_UNKNOWN_MESSAGE : ""}
-          </div>
-
-          {kbSyncStatus !== "idle" && !uploading && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: spacing.md,
-                marginTop: spacing.lg,
-                padding: `${spacing.md} ${spacing.lg}`,
-                backgroundColor: colors.primaryLight,
-                borderRadius: borderRadius.md,
-                border: `1px solid ${colors.border}`,
-                fontSize: typography.fontSize.sm,
-                color: colors.primary,
-                fontFamily: typography.fontFamily,
-              } satisfies CSSProperties}
-            >
-              {kbIndexing && (
-                <div
-                  aria-hidden="true"
-                  style={{
-                    width: "14px",
-                    height: "14px",
-                    border: `2px solid ${colors.primary}`,
-                    borderTopColor: "transparent",
-                    borderRadius: "50%",
-                    animation: "spin 1s linear infinite",
-                    flexShrink: 0,
-                  }}
-                />
-              )}
-              {kbIndexing ? KB_INDEXING_MESSAGE : KB_SYNC_UNKNOWN_MESSAGE}
-            </div>
-          )}
         </div>
 
         {/* Additional Context */}
@@ -827,7 +397,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           </span>
         </div>
 
-        {uploadError && (
+        {submitError && (
           <div
             role="alert"
             style={{
@@ -842,7 +412,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               whiteSpace: "pre-line",
             }}
           >
-            {uploadError}
+            {submitError}
           </div>
         )}
       </Card>
@@ -897,41 +467,12 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
                   ? "Generate Again"
                   : "Create Draft"
             }
-            continueDisabled={isLoading}
+            continueDisabled={isLoading || library.uploading}
             continueLoading={isLoading}
             justify="flex-end"
           />
         </div>
       </div>
-
-      <ConfirmationModal
-        isOpen={pendingLeave !== null}
-        onClose={() => setPendingLeave(null)}
-        onConfirm={uploadAndLeave}
-        onCancel={() => {
-          const leave = pendingLeave;
-          setPendingLeave(null);
-          leave?.run();
-        }}
-        title="Upload before leaving?"
-        message={
-          uploading
-            ? `Uploading... ${uploadProgress}%`
-            : files.length === 1
-              ? `"${files[0].name}" has been selected but not uploaded yet.`
-              : `${files.length} selected documents have not been uploaded yet.`
-        }
-        warning="Leaving without uploading discards the selection, and you will need to pick the files again."
-        confirmLabel="Upload now and continue"
-        cancelLabel="Leave and discard"
-        confirming={uploading}
-      />
-
-      <style>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 };
