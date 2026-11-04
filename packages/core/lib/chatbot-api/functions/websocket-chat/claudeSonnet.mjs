@@ -14,6 +14,7 @@ import {
 const THINKING = { type: "between_tools" };
 const OUTPUT_CONFIG = { effort: "medium" };
 
+
 export default class ClaudeModel {
   constructor() {
     this.client = new BedrockRuntimeClient({
@@ -41,7 +42,7 @@ export default class ClaudeModel {
 
   /**
    * Reads a response stream into API-ready assistant content blocks, in stream order.
-   * Only text deltas of text blocks reach onText; thinking blocks are kept whole
+   * Only text deltas of text blocks reach onText, with a blank line between text blocks; thinking blocks are kept whole
    * (text + signature) so the tool loop can send them back unchanged.
    *
    * @param {AsyncIterable} stream - The Bedrock response stream.
@@ -70,6 +71,7 @@ export default class ClaudeModel {
         const delta = chunk.delta;
         if (delta.type == "text_delta") {
           const block = current?.type == "text" ? current : start({ type: "text", text: "" });
+          if (delta.text && !block.text && content.some((b) => b !== block && b.type == "text" && b.text)) await onText("\n\n");
           block.text = (block.text || "").concat(delta.text);
           await onText(delta.text);
         } else if (delta.type == "thinking_delta") {
@@ -113,12 +115,11 @@ export default class ClaudeModel {
   /**
    * Invokes the model with a payload and returns a streamed response.
    * 
-   * @param {string} system - The system prompt.
-   * @param {Array} history - The chat history.
-   * @param {object} [toolChoice] - Anthropic tool_choice, e.g. { type: "none" }.
+   * @param {string|Array<object>} system - The system prompt, as text or content blocks.
+   * @param {Array} history - The messages.
    * @returns {ReadableStream} - The response stream.
    */
-  async getStreamedResponse(system, history, toolChoice) {
+  async getStreamedResponse(system, history) {
     const payload = {
       "anthropic_version": "bedrock-2023-05-31",
       "system": system,
@@ -126,26 +127,7 @@ export default class ClaudeModel {
       "messages": history,
       "thinking": THINKING,
       "output_config": OUTPUT_CONFIG,
-      "tools": [
-        {
-          "name": "query_db",
-          "description": "Search the active grant's documents for passages relevant to a query. It searches only the grant document for the grant this chat is about and the supporting documents the user uploaded for that grant; it does not search the web, other grants, or regulations. It returns the text of up to about 12 matching passages joined together, drops passages below a relevance threshold, and does not guarantee section or page locators. When nothing matches it returns a short notice saying so; that notice means only that this query found nothing. Use one focused query per topic, and run several searches when a question spans several requirements.",
-          "input_schema": {
-            "type": "object",
-            "properties": {
-              "query": {
-                "type": "string",
-                "description": "A focused query naming the requirement you need, in plain words or keywords, for example 'cost share waiver conditions' or 'application submission deadline'."
-              }
-            },
-            "required": [
-              "query"
-            ]
-          }
-        }
-      ],
     };
-    if (toolChoice) payload.tool_choice = toolChoice;
 
     const command = new InvokeModelWithResponseStreamCommand({ body: JSON.stringify(payload), contentType: 'application/json', modelId: this.modelId });
     const apiResponse = await this.client.send(command);

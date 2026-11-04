@@ -382,23 +382,23 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "index.handler",
         environment: {
           WEBSOCKET_API_ENDPOINT: props.wsApiEndpoint.replace("wss", "https"),
-          KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
           SESSION_HANDLER: this.sessionFunction.functionName,
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
           SONNET_MODEL_ID: sonnetChatProfile.attrInferenceProfileArn,
           USER_POOL_ID: props.userPool.userPoolId,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
           LEGACY_STATELESS_ADMIN_IS_PLATFORM,
-          // Flip to "true" once existing NOFOs are sidecar-tagged.
-          NOFO_STATE_FILTER_ENABLED: "false",
           DAILY_USAGE_TABLE_NAME: props.dailyUsageTable.tableName,
           CHAT_MESSAGES_PER_DAY: String(limits(config).chatMessagesPerDay),
+          ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
         },
         timeout: cdk.Duration.seconds(300),
+        memorySize: 1024,
         reservedConcurrentExecutions: limits(config).chatConcurrency,
       }
     );
     props.dailyUsageTable.grant(websocketAPIFunction, "dynamodb:UpdateItem");
+    websocketAPIFunction.addToRolePolicy(s3ReadOnlyPolicy(props.grantArtifactsBucket.bucketArn));
 
     // WebSocket messages lack JWT claims, so resolve state via AdminGetUser per message.
     websocketAPIFunction.addToRolePolicy(
@@ -437,20 +437,27 @@ export class LambdaFunctionStack extends cdk.Stack {
     websocketAPIFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["bedrock:Retrieve"],
-        resources: [props.knowledgeBase.attrKnowledgeBaseArn],
-      })
-    );
-
-    websocketAPIFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
         actions: ["lambda:InvokeFunction"],
         resources: [
           this.sessionFunction.functionArn,
         ],
       })
     );
+
+    // The getChatbotResponse route hands each answer to an async copy of this function. No retries:
+    // a retried answer would stream a second time and save a duplicate turn.
+    websocketAPIFunction.configureAsyncInvoke({ retryAttempts: 0 });
+    // In the role's default policy the grant would reference the function, which already depends on
+    // that policy, and CloudFormation rejects the loop.
+    new iam.Policy(scope, "ChatHandlerSelfInvokePolicy", {
+      roles: [websocketAPIFunction.role!],
+      statements: [
+        new iam.PolicyStatement({
+          actions: ["lambda:InvokeFunction"],
+          resources: [websocketAPIFunction.functionArn],
+        }),
+      ],
+    });
 
     this.chatFunction = websocketAPIFunction;
 

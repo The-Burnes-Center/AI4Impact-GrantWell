@@ -20,7 +20,7 @@ import {
   ChatInputState,
 } from "./types";
 
-import { assembleHistory, chatErrorText } from "./utils";
+import { chatErrorText, isGatewayErrorFrame, RESET_SENTINEL } from "./utils";
 
 import { Utils } from "../../common/utils";
 import { SessionRefreshContext } from "../../common/session-refresh-context";
@@ -155,6 +155,8 @@ export interface ChatInputPanelProps {
   setMessageHistory: (history: ChatBotHistoryItem[]) => void;
   documentIdentifier: string;
   messageAreaRef?: React.RefObject<HTMLDivElement>;
+  /** Saves a chat that exists only on screen so far; called before its first message goes out. */
+  ensureSession?: () => Promise<void>;
 }
 
 export abstract class ChatScrollState {
@@ -376,6 +378,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
     try {
       const username = (await getCurrentUser()).username;
       if (!username) return;
+      await props.ensureSession?.();
       const apiClient = new ApiClient(appContext);
       await apiClient.sessions.appendChatEntry({
         sessionId: props.session.id,
@@ -467,6 +470,8 @@ function ChatInputPanel(props: ChatInputPanelProps) {
         firstTime = true;
       }
 
+      await props.ensureSession?.();
+
       const TEST_URL = appContext.wsEndpoint + "/";
 
       // Get a JWT token for the API to authenticate on
@@ -531,9 +536,6 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           action: "getChatbotResponse",
           data: {
             userMessage: messageToSend,
-            chatHistory: assembleHistory(
-              messageHistoryRef.current.slice(0, -2)
-            ).slice(-2),
             projectId: "apck1608",
             user_id: username,
             session_id: props.session.id,
@@ -545,6 +547,10 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       });
       // Event listener for incoming messages
       ws.addEventListener("message", async function incoming(data) {
+        if (isGatewayErrorFrame(data.data)) {
+          console.warn("Ignored an API Gateway frame on the chat socket:", data.data);
+          return;
+        }
         clearResponseTimeout();
         if (stoppedRef.current) return;
         if (typeof data.data === "string" && data.data.startsWith("<!ACCESS_DENIED!>")) {
@@ -593,7 +599,9 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           incomingMetadata = true;
           return;
         }
-        if (!incomingMetadata) {
+        if (data.data === RESET_SENTINEL) {
+          receivedData = "";
+        } else if (!incomingMetadata) {
           receivedData += data.data;
         } else {
           const parsed: Array<{ title: string; uri: string }> = JSON.parse(data.data);

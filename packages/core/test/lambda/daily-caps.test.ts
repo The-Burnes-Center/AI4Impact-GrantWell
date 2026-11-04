@@ -16,7 +16,7 @@ import {
 } from "@aws-sdk/client-dynamodb";
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { marshall } from "@aws-sdk/util-dynamodb";
-import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
+import { S3Client, ListObjectsV2Command, GetObjectCommand } from "@aws-sdk/client-s3";
 import { SFNClient, StartExecutionCommand } from "@aws-sdk/client-sfn";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { LOG_MARKERS } from "../../lib/monitoring/monitoring-stack";
@@ -41,6 +41,7 @@ beforeAll(async () => {
   vi.stubEnv("NOFO_METADATA_TABLE_NAME", "nofos");
   vi.stubEnv("SONNET_MODEL_ID", "arn:aws:bedrock:us-east-1:111111111111:application-inference-profile/chat");
   vi.stubEnv("DAILY_USAGE_TABLE_NAME", "usage");
+  vi.stubEnv("ARTIFACTS_BUCKET", "grant-artifacts");
   vi.stubEnv("CHAT_MESSAGES_PER_DAY", "100");
   vi.stubEnv("APPLICATIONS_PER_DAY", "10");
   vi.stubEnv("DRAFT_GENERATION_STATE_MACHINE_ARN", "arn:aws:states:us-east-1:111111111111:stateMachine:draft");
@@ -70,6 +71,7 @@ beforeEach(() => {
   ws.on(DeleteConnectionCommand).resolves({});
   kb.on(RetrieveCommand).resolves({ retrievalResults: [] });
   s3.on(ListObjectsV2Command).resolves({});
+  s3.on(GetObjectCommand).resolves({ Body: { transformToString: async () => "Grant A text." } } as any);
   ddb.on(GetItemCommand).resolves({ Item: marshall({ nofo_name: "Grant A", scope: "federal" }) });
   ddb.on(PutItemCommand).resolves({});
   ddb.on(UpdateItemCommand).resolves({});
@@ -139,7 +141,8 @@ describe("daily chat message cap", () => {
     await chat();
 
     expect(bedrock.commandCalls(InvokeModelWithResponseStreamCommand)).toHaveLength(0);
-    expect(lambda.commandCalls(InvokeCommand)).toHaveLength(0);
+    const saves = lambda.commandCalls(InvokeCommand).filter((c) => !String(c.args[0].input.Payload).includes("get_session"));
+    expect(saves).toHaveLength(0);
     expect(posted()).toEqual([
       "<!LIMIT!>You've reached today's limit of 100 chat messages. You can chat again tomorrow.",
     ]);

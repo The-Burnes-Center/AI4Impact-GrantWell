@@ -29,6 +29,19 @@ describe("ChatMessage markdown", () => {
   });
 });
 
+describe("ChatMessage waiting", () => {
+  it("shows hidden typing dots, and no copy button, until the answer has text", () => {
+    const { container } = renderApp(
+      <ChatMessage message={{ type: ChatBotMessageType.AI, content: "", metadata: {} }} />
+    );
+
+    const dots = container.querySelector("[aria-hidden='true'] > span:nth-child(3)")?.parentElement;
+    expect(dots?.children).toHaveLength(3);
+    expect(screen.getByText("Assistant is typing")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Copy/ })).not.toBeInTheDocument();
+  });
+});
+
 describe("ChatMessage reply", () => {
   it("names its copy and sources buttons after the reply number and starts headings at h2", () => {
     renderApp(

@@ -84,7 +84,11 @@ beforeEach(() => {
   });
   ddb.on(PutItemCommand).resolves({});
   s3.on(ListObjectsV2Command).resolves({});
-  s3.on(GetObjectCommand).callsFake(() => ({ Body: Readable.from([Buffer.from(JSON.stringify({ questions: [] }))]) }));
+  s3.on(GetObjectCommand).callsFake((input) =>
+    input.Key?.endsWith("/raw-text.txt")
+      ? { Body: { transformToString: async () => "Grant text." } }
+      : { Body: Readable.from([Buffer.from(JSON.stringify({ questions: [] }))]) }
+  );
   sfn.on(StartExecutionCommand).resolves({});
   vi.spyOn(console, "log").mockImplementation(() => {});
   vi.spyOn(console, "error").mockImplementation(() => {});
@@ -164,7 +168,7 @@ describe("chat grant access", () => {
     await chat("MA Grant/");
     expect(s3.commandCalls(ListObjectsV2Command)[0].args[0].input.Prefix).toBe("user-1/MA Grant/");
     const request = JSON.parse(bedrock.commandCalls(InvokeModelWithResponseStreamCommand)[0].args[0].input.body as string);
-    expect(JSON.stringify(request.system)).toContain("- budget.pdf");
+    expect(JSON.stringify(request.messages.at(-1))).toContain("- budget.pdf");
   });
 });
 

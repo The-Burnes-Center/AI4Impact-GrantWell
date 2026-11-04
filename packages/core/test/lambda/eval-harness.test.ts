@@ -148,14 +148,7 @@ describe("eval harness", () => {
     expect(kb.commandCalls(RetrieveCommand)).toHaveLength(0);
   });
 
-  it("chat collects the streamed answer and its sources, and replays a new query by nearest match", async () => {
-    const toolUse = (query: string) =>
-      stream([
-        { type: "message_start", message: { usage: { input_tokens: 500 } } },
-        { type: "content_block_start", content_block: { type: "tool_use", id: "t1", name: "query_db" } },
-        { type: "content_block_delta", delta: { type: "input_json_delta", partial_json: JSON.stringify({ query }) } },
-        { type: "message_delta", delta: { stop_reason: "tool_use" }, usage: { output_tokens: 30 } },
-      ]);
+  it("chat answers from the golden grant text, never the KB, and reports the grant as the source", async () => {
     const answer = () =>
       stream([
       { type: "message_start", message: { usage: { input_tokens: 900 } } },
@@ -163,29 +156,20 @@ describe("eval harness", () => {
       { type: "content_block_delta", delta: { type: "text_delta", text: "are eligible." } },
       { type: "message_delta", delta: { stop_reason: "end_turn" }, usage: { output_tokens: 12 } },
     ]);
-    kb.on(RetrieveCommand).resolves({ retrievalResults: [passage("Eligible applicants are municipalities.")] } as any);
-    bedrock.on(InvokeModelWithResponseStreamCommand).resolvesOnce(toolUse("eligible applicants")).resolves(answer());
-    const recording = h.aws.retrieval(h.grant.recordingPath, "record");
-    const r = await h.chat(h.grant, { retrieval: recording });
-    recording.save();
+    kb.on(RetrieveCommand).rejects(new Error("chat must not search the KB"));
+    bedrock.on(InvokeModelWithResponseStreamCommand).resolves(answer());
+
+    const r = await h.chat(h.grant);
+
     expect(r.error).toBeUndefined();
     expect(r.output.answers[0]).toMatchObject({ id: "q1", answer: "Municipalities are eligible." });
-    expect(r.output.answers[0].sources[0].uri).toBe("s3://nofos/Grant A/NOFO.pdf");
-    expect(r.usage.map((u: any) => [u.input, u.output, u.stop])).toEqual([
-      [500, 30, "tool_use"],
-      [900, 12, "end_turn"],
-    ]);
+    expect(r.output.answers[0].sources).toEqual([{ title: "Grant document", uri: "s3://eval-artifacts/Grant A/raw-text.txt" }]);
+    const body = JSON.parse(bedrock.commandCalls(InvokeModelWithResponseStreamCommand)[0].args[0].input.body as string);
+    expect(JSON.stringify(body.system)).toContain("Applications are due December 1, 2026.");
+    expect(body).not.toHaveProperty("tools");
+    expect(r.usage.map((u: any) => [u.input, u.output, u.stop])).toEqual([[900, 12, "end_turn"]]);
     expect(r.usage.every((u: any) => u.firstTokenMs >= 0)).toBe(true);
-
-    kb.reset();
-    bedrock.reset();
-    h.aws.install();
-    kb.on(RetrieveCommand).rejects(new Error("KB must not be called on replay"));
-    bedrock.on(InvokeModelWithResponseStreamCommand).resolvesOnce(toolUse("who is an eligible applicant")).resolves(answer());
-    const replay = h.aws.retrieval(h.grant.recordingPath, "replay");
-    const again = await h.chat(h.grant, { retrieval: replay });
-    expect(again.output.answers[0].answer).toBe("Municipalities are eligible.");
-    expect(replay.stats.nearest).toBeGreaterThan(0);
+    expect(kb.commandCalls(RetrieveCommand)).toHaveLength(0);
   });
 
   it("refuses any AWS call the runner did not route", async () => {

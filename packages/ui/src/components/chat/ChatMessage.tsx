@@ -128,16 +128,6 @@ function ChatMessage(props: ChatMessageProps) {
       props.message?.type === ChatBotMessageType.AI ? "15px" : "inherit",
   };
 
-  const spinnerStyle = {
-    display: "inline-block",
-    width: "20px",
-    height: "20px",
-    border: "3px solid rgba(0, 0, 0, 0.1)",
-    borderRadius: "50%",
-    borderTopColor: "var(--gw-color-primary)",
-    animation: "spin 1s linear infinite",
-  };
-
   // Keyframes for spinner animation
   useEffect(() => {
     const styleSheet = document.createElement("style");
@@ -243,13 +233,20 @@ function ChatMessage(props: ChatMessageProps) {
               <div style={aiContainerStyle}>
                 <div style={messageWrapperStyle}>
                   <div style={messageBubbleStyle}>
-                    <span className="sr-only">Assistant replied: </span>
+                    <span className="sr-only">
+                      {content.length === 0 ? "Assistant is typing" : "Assistant replied: "}
+                    </span>
                     <div style={messageContentStyle}>
-                      {content?.length === 0 ? (
-                        <div style={spinnerStyle}></div>
+                      {content.length === 0 ? (
+                        <span className={styles.typingDots} aria-hidden="true">
+                          <span />
+                          <span />
+                          <span />
+                        </span>
                       ) : null}
 
                       <ModelMarkdown
+                        className={styles.answerMarkdown}
                         components={{
                           h1(props) {
                             const { children, ...rest } = props;
