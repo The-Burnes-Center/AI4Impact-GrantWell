@@ -8,6 +8,7 @@ import { ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { extractUserId } from '../shared/auth.mjs';
 import { success, unauthorized, forbidden, serverError } from '../shared/response.mjs';
 import { getS3Client, getBucketName } from '../shared/s3.mjs';
+import { isOwnKey } from '../shared/keys.mjs';
 
 export const handler = async (event) => {
   try {
@@ -17,7 +18,7 @@ export const handler = async (event) => {
     const body = JSON.parse(event.body);
     const folderPrefix = body.folderPrefix || '';
 
-    if (!folderPrefix.startsWith(`${userId}/`)) {
+    if (!isOwnKey(folderPrefix, userId)) {
       return forbidden('Unauthorized: Can only access your own folder');
     }
 

@@ -9,6 +9,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { extractUserId } from '../shared/auth.mjs';
 import { success, unauthorized, forbidden, badRequest, serverError } from '../shared/response.mjs';
 import { getS3Client, getBucketName } from '../shared/s3.mjs';
+import { isOwnKey, hasCleanSegments } from '../shared/keys.mjs';
 
 const URL_EXPIRATION_SECONDS = 300;
 const MAX_FILE_SIZE_BYTES = 100 * 1024 * 1024; // 100 MB
@@ -54,8 +55,12 @@ export const handler = async (event) => {
       return badRequest('fileName and fileType are required');
     }
 
-    if (!fileName.startsWith(`${userId}/`)) {
+    if (!isOwnKey(fileName, userId)) {
       return forbidden('Unauthorized: Can only upload to your own folder');
+    }
+
+    if (!hasCleanSegments(fileName)) {
+      return badRequest('fileName must not contain empty, "." or ".." path segments');
     }
 
     if (!ALLOWED_MIME_TYPES.has(fileType)) {

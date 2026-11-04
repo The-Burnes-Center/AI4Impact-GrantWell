@@ -9,6 +9,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { extractUserId } from '../shared/auth.mjs';
 import { success, unauthorized, forbidden, badRequest, serverError } from '../shared/response.mjs';
 import { getS3Client, getBucketName } from '../shared/s3.mjs';
+import { isOwnKey } from '../shared/keys.mjs';
 
 const URL_EXPIRATION_SECONDS = 300;
 
@@ -24,7 +25,7 @@ export const handler = async (event) => {
       return badRequest('fileName is required');
     }
 
-    if (!fileName.startsWith(`${userId}/`)) {
+    if (!isOwnKey(fileName, userId)) {
       return forbidden('Unauthorized: Can only download your own files');
     }
 
