@@ -238,6 +238,8 @@ export async function writeProfile(modelId, name, meta, summary, rawText) {
         body: JSON.stringify({
           anthropic_version: "bedrock-2023-05-31",
           max_tokens: PROFILE_MAX_TOKENS,
+          // Haiku 5.5 thinks by default, which used up max_tokens before any profile text.
+          thinking: { type: "disabled" },
           system: PROFILE_SYSTEM,
           messages: [{ role: "user", content: profilePrompt(name, meta, summary, rawText) }],
         }),
@@ -246,6 +248,7 @@ export async function writeProfile(modelId, name, meta, summary, rawText) {
   );
   const parsed = JSON.parse(new TextDecoder().decode(res.body));
   if (parsed.stop_reason === "refusal") throw new Error(`profile refused for ${name}`);
+  if (parsed.stop_reason === "max_tokens") throw new Error(`profile cut off for ${name}`);
   const text = (parsed.content ?? []).filter((b) => b.type === "text").map((b) => b.text).join("").trim();
   if (!text) throw new Error(`empty profile for ${name}`);
   return text.slice(0, PROFILE_MAX_CHARS);

@@ -305,6 +305,7 @@ async function needQueries(metas, sample, perGrant) {
       body: JSON.stringify({
         anthropic_version: "bedrock-2023-05-31",
         max_tokens: 300,
+        thinking: { type: "disabled" },
         system: lib.NEED_SYSTEM,
         messages: [{ role: "user", content: lib.needPrompt(name, metas.get(name), summary, perGrant) }],
       }),
