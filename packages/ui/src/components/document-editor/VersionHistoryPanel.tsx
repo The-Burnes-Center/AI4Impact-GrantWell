@@ -300,9 +300,9 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
                             ? "No text in this version"
                             : delta === 0
                               ? "Same length as now"
-                              : delta > 0
-                                ? `${delta} words more than now`
-                                : `${Math.abs(delta)} words fewer than now`}
+                              : `${Math.abs(delta)} ${Math.abs(delta) === 1 ? "word" : "words"} ${
+                                  delta > 0 ? "more" : "fewer"
+                                } than now`}
                       </span>
                     </button>
                   </li>

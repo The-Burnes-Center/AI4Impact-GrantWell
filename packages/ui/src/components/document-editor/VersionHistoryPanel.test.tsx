@@ -36,4 +36,27 @@ describe("VersionHistoryPanel", () => {
     expect(rows[2]).toHaveFocus();
     expect(net.to("POST /user-draft").every((r) => (r.body as { operation: string }).operation === "list_draft_versions")).toBe(true);
   });
+
+  it("says word in the singular for a one-word difference", async () => {
+    stubFetch({
+      "POST /user-draft": json({
+        versions: [
+          { rev: 2, created_at: "2026-10-02T00:00:00Z", source: "manual", total_word_count: 4 },
+          { rev: 1, created_at: "2026-10-01T00:00:00Z", source: "manual", total_word_count: 2 },
+        ],
+      }),
+    });
+    renderApp(
+      <VersionHistoryPanel
+        isOpen
+        onClose={() => {}}
+        sessionId="s1"
+        sections={[{ id: "budget", name: "Budget" }]}
+        currentSections={{ budget: "one two three" }}
+        onRestored={() => {}}
+      />
+    );
+    expect(await screen.findByText("1 word more than now")).toBeInTheDocument();
+    expect(screen.getByText("1 word fewer than now")).toBeInTheDocument();
+  });
 });
