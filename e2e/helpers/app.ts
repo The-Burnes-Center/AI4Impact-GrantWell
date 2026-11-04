@@ -97,3 +97,41 @@ export async function selectNofo(page: Page, nofoName: string) {
   await expect(actions).toBeVisible();
   return actions;
 }
+
+export const PROJECT_NAME = "E2E Test Project";
+const PROJECT_BASICS: Record<string, string> = {
+  projectName: PROJECT_NAME,
+  organizationName: "GrantWell E2E Test Organization",
+  requestedAmount: "50000",
+  location: "Boston, MA",
+  zipCode: "02115",
+  // Letters and name punctuation only; the form rejects digits here.
+  contactName: "Test Contact",
+  contactEmail: USER_EMAIL,
+};
+
+/** From /home: starts a new application for the NOFO and returns its session id, on Project Basics. */
+export async function startApplication(page: Page, nofoName: string): Promise<string> {
+  const actions = await selectNofo(page, nofoName);
+  await actions.getByRole("button", { name: "Write Application", exact: true }).click();
+  await page.getByRole("button", { name: "Get Started" }).click();
+  await expect(page).toHaveURL(/\/document-editor\/[0-9a-f-]{36}\?.*step=projectBasics/);
+  return new URL(page.url()).pathname.split("/").pop()!;
+}
+
+/** From Project Basics: fills it, skips the questionnaire, and stops on Additional Information. */
+export async function fillToAdditionalInformation(page: Page): Promise<void> {
+  for (const [id, value] of Object.entries(PROJECT_BASICS)) await page.locator(`#${id}`).fill(value);
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await expect(page).toHaveURL(/step=questionnaire/);
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await expect(page).toHaveURL(/step=uploadDocuments/);
+}
+
+/** The Additional Information step's document checklist, once the library and the draft's selection have loaded. */
+export async function applicationPicker(page: Page) {
+  const picker = page.getByRole("group", { name: "Use in this application" });
+  await expect(picker).toBeVisible();
+  await expect(picker.getByText("Loading your documents...")).toHaveCount(0);
+  return picker;
+}

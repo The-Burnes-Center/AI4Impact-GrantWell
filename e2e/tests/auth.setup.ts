@@ -5,15 +5,17 @@
 import { expect, test as setup } from "../helpers/fixtures";
 import {
   clearRecentlyViewed,
+  deleteDocument,
   deleteDraft,
   deleteSession,
+  listDocuments,
   listDraftIds,
   listNofos,
   listSessionIds,
   nofoSummary,
 } from "../helpers/api";
 import { signIn } from "../helpers/app";
-import { AUTH_FILE, writeRunInfo } from "../helpers/config";
+import { AUTH_FILE, E2E_DOCUMENT_PREFIX, writeRunInfo } from "../helpers/config";
 
 setup.describe.configure({ mode: "serial" });
 
@@ -31,9 +33,13 @@ setup("clears the test account's leftovers and picks a NOFO", async () => {
   // Earlier runs that crashed can leave sessions and drafts behind; the account is the suite's alone.
   for (const id of await listSessionIds()) await deleteSession(id);
   for (const id of await listDraftIds()) await deleteDraft(id);
+  const leftover = async () =>
+    (await listDocuments()).filter((d) => d.folder === "documents" && d.name.startsWith(E2E_DOCUMENT_PREFIX));
+  for (const doc of await leftover()) await deleteDocument(doc.key);
   await clearRecentlyViewed();
   expect(await listSessionIds()).toEqual([]);
   expect(await listDraftIds()).toEqual([]);
+  expect(await leftover()).toEqual([]);
 
   const cutoff = new Date(Date.now() + 7 * 86_400_000).toISOString().slice(0, 10);
   const eligible = (await listNofos()).filter(
