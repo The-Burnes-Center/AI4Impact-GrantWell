@@ -44,6 +44,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   const [exportStatus, setExportStatus] = useState("");
   const [exportError, setExportError] = useState<string | null>(null);
   const [includeContactDetails, setIncludeContactDetails] = useState(false);
+  const [grantType, setGrantType] = useState<string | null>(null);
   const exportDropdownRef = useRef<HTMLDivElement>(null);
   const exportTriggerRef = useRef<HTMLButtonElement>(null);
   const exportInFlightRef = useRef(false);
@@ -79,6 +80,23 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
 
     fetchDraftData();
   }, [apiClient, selectedNofo, sessionId]);
+
+  useEffect(() => {
+    if (!selectedNofo) return;
+    let active = true;
+    apiClient.landingPage
+      .getNOFOs()
+      .then((result: { nofoData?: Array<{ name: string; grant_type?: string | null }> }) => {
+        const match = result?.nofoData?.find((n) => n.name === selectedNofo);
+        if (active) setGrantType(match?.grant_type ?? null);
+      })
+      .catch(() => {
+        /* the after-export steps fall back to the funder-neutral wording */
+      });
+    return () => {
+      active = false;
+    };
+  }, [apiClient, selectedNofo]);
 
   useEffect(() => {
     if (sections.length === 0) return;
@@ -386,12 +404,26 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             You&apos;ll download a professionally formatted PDF of your
             application
           </li>
-          <li className="ra-info-list__item">
-            Submit the PDF through the official grants.gov portal
-          </li>
-          <li className="ra-info-list__item">
-            Complete the SF-424 form separately (if required)
-          </li>
+          {grantType === "federal" ? (
+            <>
+              <li className="ra-info-list__item">
+                Submit the PDF through the official grants.gov portal
+              </li>
+              <li className="ra-info-list__item">
+                Complete the SF-424 form separately (if required)
+              </li>
+            </>
+          ) : (
+            <>
+              <li className="ra-info-list__item">
+                Submit it through the funder&apos;s own application portal or process, as
+                described in the grant&apos;s requirements
+              </li>
+              <li className="ra-info-list__item">
+                Check the grant&apos;s Key Deadlines so you submit on time
+              </li>
+            </>
+          )}
         </ul>
       </div>
 
