@@ -1221,6 +1221,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     const draftGeneration = new DraftGenerationStack(scope, "DraftGenerationStack", {
       ffioNofosBucket: props.ffioNofosBucket,
       grantArtifactsBucket: props.grantArtifactsBucket,
+      userDocumentsBucket: props.userDocumentsBucket,
       draftTable: props.draftTable,
       draftGenerationJobsTable: props.draftGenerationJobsTable,
       knowledgeBaseId: props.knowledgeBase.attrKnowledgeBaseId,

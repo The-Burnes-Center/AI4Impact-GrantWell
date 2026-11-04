@@ -34,6 +34,8 @@ import {
 export interface DraftGenerationStackProps extends cdk.NestedStackProps {
   readonly ffioNofosBucket: s3.Bucket;
   readonly grantArtifactsBucket: s3.Bucket;
+  /** Each section step reads the requesting user's supporting documents from it. */
+  readonly userDocumentsBucket: s3.Bucket;
   readonly draftTable: Table;
   readonly draftGenerationJobsTable: Table;
   /** Knowledge base owned by the parent; each section step only retrieves from it. */
@@ -97,12 +99,14 @@ export class DraftGenerationStack extends cdk.NestedStack {
         environment: {
           SONNET_MODEL_ID: props.sonnetDraftProfileArn,
           KB_ID: props.knowledgeBaseId,
+          USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
           DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
           SUPPORTED_STATES: props.supportedStatesEnv,
           LEGACY_STATELESS_ADMIN_IS_PLATFORM: props.legacyStatelessAdminIsPlatform,
         },
         timeout: cdk.Duration.minutes(5),
-        memorySize: 256,
+        // Holds the applicant's PDFs (up to 15 MB) and their base64 request body at once.
+        memorySize: 512,
         logGroup: new logs.LogGroup(this, "DraftGenerateSectionFunctionLogGroup", {
           retention: logs.RetentionDays.THREE_MONTHS,
         }),
@@ -121,6 +125,9 @@ export class DraftGenerationStack extends cdk.NestedStack {
     );
     draftGenerateSectionFunction.addToRolePolicy(
       dynamoUpdateItemPolicy(props.draftGenerationJobsTable.tableArn)
+    );
+    draftGenerateSectionFunction.addToRolePolicy(
+      s3ReadOnlyPolicy(props.userDocumentsBucket.bucketArn)
     );
 
     const draftAssembleFunction = new lambda.Function(

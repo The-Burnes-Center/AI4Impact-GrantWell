@@ -1,0 +1,184 @@
+/**
+ * Loads an applicant's supporting documents for one grant straight from the user-documents
+ * bucket, so the model reads them in full instead of through knowledge-base search.
+ *
+ * Self-contained (only @aws-sdk/client-s3 and node:zlib) so it can be copied into another Lambda.
+ *
+ *   const docs = await loadSupportingDocuments({ s3, bucket, userId, documentIdentifier });
+ *   docs.pdfs      [{ key, fileName, bytes, pages }]  attach with pdfContentBlocks(docs)
+ *   docs.texts     [{ key, fileName, content }]       full text (DOCX, txt, csv, md, html, ...)
+ *   docs.fallback  [{ key, fileName, reason }]        not loaded: search these through the KB
+ *
+ * reason is "unsupported" | "file-too-large" | "over-budget" | "unreadable".
+ */
+
+import { GetObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
+import { inflateRawSync } from 'node:zlib';
+
+export const DEFAULT_LIMITS = Object.freeze({
+  maxPdfBytes: 15 * 1024 * 1024,
+  maxPdfFileBytes: 10 * 1024 * 1024,
+  maxPdfPages: 100,
+  maxTextChars: 200_000,
+  maxTextFileChars: 100_000,
+  maxDownloadBytes: 20 * 1024 * 1024,
+  maxFiles: 25,
+});
+
+const TEXT_EXTENSIONS = new Set(['txt', 'csv', 'tsv', 'md', 'html', 'json', 'xml', 'rtf']);
+
+export function grantFolderName(documentIdentifier) {
+  return String(documentIdentifier ?? '').replace(/\/+$/, '').split('/').pop() || '';
+}
+
+export function userDocumentsPrefix(userId, documentIdentifier) {
+  const grant = grantFolderName(documentIdentifier);
+  return userId && grant ? `${userId}/${grant}/` : null;
+}
+
+function kindOf(fileName) {
+  const ext = fileName.includes('.') ? fileName.split('.').pop().toLowerCase() : '';
+  if (ext === 'pdf') return 'pdf';
+  if (ext === 'docx') return 'docx';
+  return TEXT_EXTENSIONS.has(ext) ? 'text' : null;
+}
+
+async function listDocuments(s3, bucket, prefix) {
+  const objects = [];
+  let ContinuationToken;
+  do {
+    const page = await s3.send(new ListObjectsV2Command({ Bucket: bucket, Prefix: prefix, Delimiter: '/', ContinuationToken }));
+    for (const o of page.Contents || []) {
+      if (o.Key.endsWith('.metadata.json') || o.Key === prefix || !o.Size) continue;
+      objects.push({ key: o.Key, fileName: o.Key.slice(prefix.length), size: o.Size, lastModified: new Date(o.LastModified ?? 0).getTime() });
+    }
+    ContinuationToken = page.IsTruncated ? page.NextContinuationToken : undefined;
+  } while (ContinuationToken);
+  // Newest first: when the budget runs out, the documents just uploaded for this draft still fit.
+  return objects.sort((a, b) => b.lastModified - a.lastModified || a.key.localeCompare(b.key));
+}
+
+async function readObject(s3, bucket, key) {
+  const res = await s3.send(new GetObjectCommand({ Bucket: bucket, Key: key }));
+  return Buffer.from(await res.Body.transformToByteArray());
+}
+
+/** Rough page count; object streams can hide page objects, so the model call is the backstop. */
+export function estimatePdfPages(bytes) {
+  return (bytes.toString('latin1').match(/\/Type\s*\/Page(?![a-zA-Z])/g) || []).length;
+}
+
+function zipEntry(buffer, name) {
+  let eocd = -1;
+  for (let i = buffer.length - 22; i >= Math.max(0, buffer.length - 65557); i--) {
+    if (buffer.readUInt32LE(i) === 0x06054b50) { eocd = i; break; }
+  }
+  if (eocd < 0) return null;
+  const count = buffer.readUInt16LE(eocd + 10);
+  let p = buffer.readUInt32LE(eocd + 16);
+  for (let n = 0; n < count && p + 46 <= buffer.length; n++) {
+    if (buffer.readUInt32LE(p) !== 0x02014b50) return null;
+    const method = buffer.readUInt16LE(p + 10);
+    const compressedSize = buffer.readUInt32LE(p + 20);
+    const nameLength = buffer.readUInt16LE(p + 28);
+    const extraLength = buffer.readUInt16LE(p + 30);
+    const commentLength = buffer.readUInt16LE(p + 32);
+    const localOffset = buffer.readUInt32LE(p + 42);
+    if (buffer.toString('utf8', p + 46, p + 46 + nameLength) === name) {
+      const dataStart = localOffset + 30 + buffer.readUInt16LE(localOffset + 26) + buffer.readUInt16LE(localOffset + 28);
+      const data = buffer.subarray(dataStart, dataStart + compressedSize);
+      if (method === 0) return data;
+      if (method === 8) return inflateRawSync(data);
+      return null;
+    }
+    p += 46 + nameLength + extraLength + commentLength;
+  }
+  return null;
+}
+
+const XML_ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
+
+/** Paragraph text of a .docx (word/document.xml), or null when it isn't one. */
+export function extractDocxText(buffer) {
+  const xml = zipEntry(buffer, 'word/document.xml');
+  if (!xml) return null;
+  return xml
+    .toString('utf8')
+    .replace(/<w:tab\/>/g, '\t')
+    .replace(/<w:(?:br|cr)\/>/g, '\n')
+    .replace(/<\/w:p>/g, '\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&(amp|lt|gt|quot|apos);/g, (_, e) => XML_ENTITIES[e])
+    .replace(/&#(x?)([0-9a-fA-F]+);/g, (_, hex, n) => String.fromCodePoint(parseInt(n, hex ? 16 : 10)))
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
+export async function loadSupportingDocuments({ s3, bucket, userId, documentIdentifier, limits = {} }) {
+  const caps = { ...DEFAULT_LIMITS, ...limits };
+  const result = { pdfs: [], texts: [], fallback: [] };
+  const prefix = userDocumentsPrefix(userId, documentIdentifier);
+  if (!s3 || !bucket || !prefix) return result;
+
+  let pdfBytes = 0;
+  let pdfPages = 0;
+  let textChars = 0;
+  const objects = await listDocuments(s3, bucket, prefix);
+
+  for (const [index, object] of objects.entries()) {
+    const { key, fileName, size } = object;
+    const skip = (reason) => result.fallback.push({ key, fileName, reason });
+    const kind = kindOf(fileName);
+    if (!kind) { skip('unsupported'); continue; }
+    if (index >= caps.maxFiles) { skip('over-budget'); continue; }
+
+    if (kind === 'pdf') {
+      if (size > caps.maxPdfFileBytes) { skip('file-too-large'); continue; }
+      if (pdfBytes + size > caps.maxPdfBytes) { skip('over-budget'); continue; }
+    } else if (size > caps.maxDownloadBytes) {
+      skip('file-too-large');
+      continue;
+    }
+
+    let bytes;
+    try {
+      bytes = await readObject(s3, bucket, key);
+    } catch (error) {
+      console.warn(`Supporting document ${key} could not be read: ${error?.name}`);
+      skip('unreadable');
+      continue;
+    }
+
+    if (kind === 'pdf') {
+      if (bytes.subarray(0, 5).toString('latin1') !== '%PDF-') { skip('unreadable'); continue; }
+      const pages = estimatePdfPages(bytes);
+      if (pdfPages + pages > caps.maxPdfPages) { skip(pages > caps.maxPdfPages ? 'file-too-large' : 'over-budget'); continue; }
+      pdfBytes += bytes.length;
+      pdfPages += pages;
+      result.pdfs.push({ key, fileName, bytes, pages });
+      continue;
+    }
+
+    let content;
+    try {
+      content = kind === 'docx' ? extractDocxText(bytes) : new TextDecoder('utf-8').decode(bytes).trim();
+    } catch {
+      content = null;
+    }
+    if (content === null) { skip('unreadable'); continue; }
+    if (!content) continue;
+    if (content.length > caps.maxTextFileChars) { skip('file-too-large'); continue; }
+    if (textChars + content.length > caps.maxTextChars) { skip('over-budget'); continue; }
+    textChars += content.length;
+    result.texts.push({ key, fileName, content });
+  }
+  return result;
+}
+
+/** Anthropic Messages content blocks (Bedrock InvokeModel body) for the loaded PDFs, each labelled by name. */
+export function pdfContentBlocks(documents) {
+  return documents.pdfs.flatMap(({ fileName, bytes }) => [
+    { type: 'text', text: `Applicant supporting document "${fileName.replace(/["<>]/g, '')}" (PDF):` },
+    { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: bytes.toString('base64') } },
+  ]);
+}
