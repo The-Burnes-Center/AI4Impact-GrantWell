@@ -4,7 +4,6 @@ import Chat from "../../../components/chat/Chat";
 import { Link, useParams, useSearchParams } from "react-router";
 import { LuCircleHelp, LuUpload, LuFileText } from "react-icons/lu";
 import { useApiClient } from "../../../hooks/use-api-client";
-import { useKbSyncPoll } from "../../../hooks/use-kb-sync-poll";
 import { useFocusTrap } from "../../../hooks/use-focus-trap";
 import { useInert } from "../../../hooks/use-inert";
 import DocumentManager from "../../../components/chat/DocumentManager";
@@ -23,7 +22,6 @@ export default function Playground() {
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [uploadedFileCount, setUploadedFileCount] = useState(0);
   const helpButtonRef = React.useRef<HTMLButtonElement>(null);
-  const { status: kbSyncStatus, start: handleSyncStarted } = useKbSyncPoll(apiClient.kbSync);
   const inertContentRef = useInert<HTMLDivElement>(helpOpen);
   const titleId = useId();
   const descriptionId = useId();
@@ -102,9 +100,9 @@ export default function Playground() {
                 <button
                   className="pg-upload-btn"
                   onClick={() => setUploadModalOpen(true)}
-                  aria-label={`Upload Documents — supporting documents for this grant${uploadedFileCount > 0 ? `. ${uploadedFileCount} supporting document${uploadedFileCount === 1 ? "" : "s"} uploaded.` : ""}`}
+                  aria-label={`Supporting Documents — choose what the AI reads in this chat${uploadedFileCount > 0 ? `. ${uploadedFileCount} selected.` : ""}`}
                 >
-                  <LuUpload size={16} aria-hidden="true" /> Upload Documents
+                  <LuUpload size={16} aria-hidden="true" /> Supporting Documents
                   {uploadedFileCount > 0 && (
                     <span className="pg-upload-badge" aria-hidden="true">
                       <LuFileText size={11} aria-hidden="true" />
@@ -130,13 +128,13 @@ export default function Playground() {
         modalOpen={helpOpen}
         content={
           <div ref={inertContentRef} className="pg-content" aria-hidden={helpOpen}>
-            <Chat sessionId={sessionId} documentIdentifier={documentIdentifier} kbSyncStatus={kbSyncStatus} />
+            <Chat sessionId={sessionId} documentIdentifier={documentIdentifier} />
             {documentIdentifier && (
               <DocumentManager
                 isOpen={uploadModalOpen}
                 onClose={() => setUploadModalOpen(false)}
                 documentIdentifier={documentIdentifier}
-                onSyncStarted={handleSyncStarted}
+                sessionId={sessionId}
                 onFileCountChange={setUploadedFileCount}
               />
             )}

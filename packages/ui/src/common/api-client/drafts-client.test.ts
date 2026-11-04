@@ -37,6 +37,7 @@ describe("DraftsClient.startDraftGeneration", () => {
       questionnaireAnswers: [{ question: "Who will the project serve?", answer: "Rural seniors" }],
       additionalInfo: "We partner with the council on aging.",
       sessionId: "s1",
+      documentKeys: ["user-1/documents/plan.pdf"],
     });
     expect(jobId).toBe("job-1");
     expect(net.last(START).body).toEqual({
@@ -47,7 +48,14 @@ describe("DraftsClient.startDraftGeneration", () => {
       questionnaireAnswers: [{ question: "Who will the project serve?", answer: "Rural seniors" }],
       additionalInfo: "We partner with the council on aging.",
       sessionId: "s1",
+      documentKeys: ["user-1/documents/plan.pdf"],
     });
+  });
+
+  it("sends no selection as null, so an application from before the library keeps its old folder", async () => {
+    const net = stubFetch({ [START]: json({ jobId: "job-1" }) });
+    await new DraftsClient(testConfig).startDraftGeneration({ query: "q", documentIdentifier: "Grant A", sessionId: "s1" });
+    expect((net.last(START).body as Record<string, unknown>).documentKeys).toBeNull();
   });
 
   it("carries the API's message when additional information or an answer is too long", async () => {

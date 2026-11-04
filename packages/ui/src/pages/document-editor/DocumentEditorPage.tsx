@@ -17,7 +17,7 @@ import ProjectBasics from "./ProjectBasics";
 import QuickQuestionnaire from "./QuickQuestionnaire";
 import SectionEditor from "./SectionsEditor";
 import ReviewApplication from "./ReviewApplication";
-import UploadDocuments, { type StepLeaveGuard } from "./UploadDocuments";
+import UploadDocuments from "./UploadDocuments";
 import WelcomeModal from "./components/WelcomeModal";
 import GrantPickerModal, { type PickedGrant } from "../../components/common/GrantPickerModal";
 import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
@@ -105,7 +105,6 @@ const DocumentEditor: React.FC = () => {
   const [isGeneratingDraft, setIsGeneratingDraft] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const stepLeaveGuardRef = useRef<StepLeaveGuard | null>(null);
   const stepRestoredForRef = useRef<string | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
@@ -269,16 +268,8 @@ const DocumentEditor: React.FC = () => {
   }, [documentData, selectedNofo, sessionId, saveFields, navigate, setError, recordStepReached]);
 
   const navigateToStep = useCallback((step: string) => {
-    const blocked = stepLeaveGuardRef.current?.(step, () => {
-      void performStepNavigation(step);
-    });
-    if (blocked) return;
     void performStepNavigation(step);
   }, [performStepNavigation]);
-
-  const registerStepLeaveGuard = useCallback((guard: StepLeaveGuard | null) => {
-    stepLeaveGuardRef.current = guard;
-  }, []);
 
   const handleUpdateData = useCallback((data: Partial<DocumentData>) => {
     setDocumentData((prev) => (prev ? { ...prev, ...data } : prev));
@@ -297,7 +288,7 @@ const DocumentEditor: React.FC = () => {
       case "questionnaire":
         return <QuickQuestionnaire onContinue={() => navigateToStep("uploadDocuments")} selectedNofo={selectedNofo} onNavigate={navigateToStep} documentData={documentData} onUpdateData={handleUpdateData} saveStatus={draftSave.saveStatus} lastSavedAt={draftSave.lastSavedAt} onRetrySave={draftSave.retry} />;
       case "uploadDocuments":
-        return <UploadDocuments selectedNofo={selectedNofo} onNavigate={navigateToStep} onNavigateToEditor={navigateToSectionEditor} sessionId={sessionId || ""} documentData={documentData} draftSave={draftSave} onRegisterLeaveGuard={registerStepLeaveGuard} />;
+        return <UploadDocuments selectedNofo={selectedNofo} onNavigate={navigateToStep} onNavigateToEditor={navigateToSectionEditor} sessionId={sessionId || ""} documentData={documentData} draftSave={draftSave} />;
       case "sectionEditor":
         return <SectionEditor onContinue={() => navigateToStep("reviewApplication")} selectedNofo={selectedNofo} sessionId={sessionId || ""} activeJobId={activeJobId} isGenerating={isGeneratingDraft} draftSave={draftSave} />;
       case "reviewApplication":

@@ -22,6 +22,7 @@ import type { DraftJobStatus, DraftVersionMeta } from "../../common/api-client/d
 import type { useDraftSave } from "../../hooks/use-draft-save";
 import { DailyLimitError } from "../../common/api-client/daily-limit";
 import { InputTooLongError } from "../../common/api-client/drafts-client";
+import { SKIP_REASON_TEXT } from "../../common/helpers/user-documents";
 import "../../styles/document-editor.css";
 
 interface SectionEditorProps {
@@ -51,6 +52,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   const [loaded, setLoaded] = useState(false);
   const [generating, setGenerating] = useState(!!activeJobId && !!initialIsGenerating);
   const [failedSections, setFailedSections] = useState<string[]>([]);
+  const [skippedDocuments, setSkippedDocuments] = useState<{ name: string; reason: string }[]>([]);
   const [completedSectionCount, setCompletedSectionCount] = useState(0);
   const [generationTotal, setGenerationTotal] = useState<number | undefined>(undefined);
   const [historyOpen, setHistoryOpen] = useState(false);
@@ -193,6 +195,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       if (finished) return;
       try {
         const jobStatus: DraftJobStatus = await apiClient.drafts.pollDraftJob(activeJobId);
+        if (jobStatus.skippedDocuments?.length) setSkippedDocuments(jobStatus.skippedDocuments);
 
         // Shown as it arrives; the editor is read-only, so nothing here is saved.
         if (jobStatus.sections) {
@@ -350,6 +353,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
         additionalInfo: currentDraft.additionalInfo || "",
         sessionId,
         sectionIds: retrying,
+        documentKeys: currentDraft.documentKeys,
         onJobUpdate: (jobStatus: DraftJobStatus) => {
           if (jobStatus.sections) {
             const arrived = keyedById(jobStatus.sections, sectionsRef.current);
@@ -363,7 +367,9 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
 
       let final: Pick<DraftJobStatus, "sections" | "failedSections"> = { sections: result.sections };
       try {
-        final = await apiClient.drafts.pollDraftJob(result.jobId);
+        const job = await apiClient.drafts.pollDraftJob(result.jobId);
+        if (job.skippedDocuments?.length) setSkippedDocuments(job.skippedDocuments);
+        final = job;
       } catch (error) {
         console.warn("Could not read the finished job:", error);
       }
@@ -608,6 +614,21 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               </button>
             </div>
           </div>
+
+          {skippedDocuments.length > 0 && (
+            <div className="se-storage-warning" role="status">
+              <p style={{ margin: 0 }}>
+                The AI couldn&apos;t read {skippedDocuments.length === 1 ? "one of your selected documents" : `${skippedDocuments.length} of your selected documents`} for this draft:
+              </p>
+              <ul style={{ margin: "4px 0 0", paddingLeft: 20 }}>
+                {skippedDocuments.map((d) => (
+                  <li key={d.name}>
+                    {d.name}: {SKIP_REASON_TEXT[d.reason] ?? "The AI couldn't read this file"}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {nearStorageLimit && (
             <p className="se-storage-warning" role="status">

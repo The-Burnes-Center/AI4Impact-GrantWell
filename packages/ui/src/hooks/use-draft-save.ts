@@ -23,6 +23,7 @@ export interface DraftSaveFields {
   questionnaire?: Record<string, string>;
   additionalInfo?: string;
   uploadedFiles?: UploadedFileMeta[];
+  documentKeys?: string[];
   status?: DraftStatus;
 }
 
@@ -124,6 +125,7 @@ export function useDraftSave({
         questionnaire: snapshot.questionnaire ?? known?.questionnaire ?? {},
         additionalInfo: snapshot.additionalInfo ?? known?.additionalInfo,
         uploadedFiles: snapshot.uploadedFiles ?? known?.uploadedFiles,
+        documentKeys: snapshot.documentKeys ?? known?.documentKeys,
         status: snapshot.status ?? known?.status,
         lastModified: new Date().toISOString(),
         rev: known?.rev,
