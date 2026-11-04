@@ -12,6 +12,8 @@ import { useAdminCheck } from "../../hooks/use-admin-check";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
+import { useNavigationChrome } from "../../components/navigation/navigation-context";
+import { ConfirmationModal } from "../../components/common/ConfirmationModal";
 import MfaSetupPanel from "../../components/auth/MfaSetupPanel";
 import PasswordRequirementsList from "../../components/auth/PasswordRequirementsList";
 import { getPasswordRequirements } from "../../components/auth/auth-utils";
@@ -215,6 +217,26 @@ export default function ProfilePage() {
       keywords.trim() !== baseline.keywords.trim(),
     [frequency, categories, keywords, baseline]
   );
+
+  const unsaved = orgDirty || dirty;
+  const setLeaveGuard = useNavigationChrome()?.setLeaveGuard;
+  const [pendingLeave, setPendingLeave] = useState<(() => void) | null>(null);
+
+  useEffect(() => {
+    if (!unsaved || !setLeaveGuard) return;
+    setLeaveGuard((proceed) => setPendingLeave(() => proceed));
+    return () => setLeaveGuard(null);
+  }, [unsaved, setLeaveGuard]);
+
+  useEffect(() => {
+    if (!unsaved) return;
+    const warn = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [unsaved]);
 
   const toggle = (list: string[], set: (v: string[]) => void, code: string) => {
     set(list.includes(code) ? list.filter((c) => c !== code) : [...list, code]);
@@ -553,6 +575,19 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={pendingLeave !== null}
+        title="Leave without saving?"
+        message="You have changes on this page that aren't saved yet."
+        confirmLabel="Leave without saving"
+        cancelLabel="Stay on this page"
+        onConfirm={() => {
+          const proceed = pendingLeave;
+          setPendingLeave(null);
+          proceed?.();
+        }}
+        onClose={() => setPendingLeave(null)}
+      />
     </div>
   );
 }

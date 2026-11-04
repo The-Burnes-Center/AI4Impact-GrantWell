@@ -8,6 +8,7 @@ import React, {
 import { useLocation } from "react-router";
 import {
   isUndockedRoute,
+  LeaveGuard,
   MOBILE_NAV_BREAKPOINT,
   NavigationContext,
   NavigationContextValue,
@@ -22,6 +23,7 @@ export function NavigationProvider({ children }: { children: React.ReactNode }) 
     hasStepNav: boolean;
   }>({ hasStepNav: false });
   const onNavigateRef = useRef<((step: string) => void) | null>(null);
+  const leaveGuardRef = useRef<LeaveGuard | null>(null);
   const [menuButtonCount, setMenuButtonCount] = useState(0);
   const [isMobile, setIsMobile] = useState(
     () => window.innerWidth <= MOBILE_NAV_BREAKPOINT
@@ -80,6 +82,14 @@ export function NavigationProvider({ children }: { children: React.ReactNode }) 
     onNavigateRef.current?.(step);
   }, []);
 
+  const setLeaveGuard = useCallback((guard: LeaveGuard | null) => {
+    leaveGuardRef.current = guard;
+  }, []);
+  const runGuarded = useCallback((proceed: () => void) => {
+    if (leaveGuardRef.current) leaveGuardRef.current(proceed);
+    else proceed();
+  }, []);
+
   const openDrawer = useCallback(() => setIsDrawerOpen(true), []);
   const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
   const toggleDrawer = useCallback(() => setIsDrawerOpen((open) => !open), []);
@@ -106,6 +116,8 @@ export function NavigationProvider({ children }: { children: React.ReactNode }) 
       toggleDrawer,
       hasExternalMenuButton: menuButtonCount > 0,
       registerMenuButton,
+      setLeaveGuard,
+      runGuarded,
     }),
     [
       registration,
@@ -120,6 +132,8 @@ export function NavigationProvider({ children }: { children: React.ReactNode }) 
       toggleDrawer,
       menuButtonCount,
       registerMenuButton,
+      setLeaveGuard,
+      runGuarded,
     ]
   );
 

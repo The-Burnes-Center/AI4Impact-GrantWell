@@ -5,6 +5,8 @@ import { mfaEnrolled } from "../../test/amplify";
 import { instance, withMfaDeadline } from "../../test/instance";
 import { renderApp } from "../../test/render";
 import ProfilePage from "./ProfilePage";
+import { NavigationProvider } from "../../components/navigation/NavigationProvider";
+import { useNavigationChrome } from "../../components/navigation/navigation-context";
 import { GRANT_CATEGORIES } from "../../common/types/nofo";
 
 vi.mock("../../components/navigation/UnifiedNavigation", () => ({ default: (): null => null }));
@@ -199,5 +201,48 @@ describe("ProfilePage two-step verification", () => {
     renderProfile();
     expect(await screen.findByText(/GrantWell requires it from November 2, 2026, so it can.t be turned off/)).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Turn off" })).toBeNull();
+  });
+});
+
+describe("ProfilePage unsaved changes", () => {
+  function LeaveButton({ onLeave }: { onLeave: () => void }) {
+    const chrome = useNavigationChrome();
+    return <button onClick={() => chrome?.runGuarded(onLeave)}>Go elsewhere</button>;
+  }
+
+  function renderGuarded(onLeave: () => void) {
+    stubFetch({
+      [PROFILE]: json({ agency: "DOT", organization: "Denver", jobTitle: "Manager" }),
+      [PREFS]: json(savedPrefs),
+      "GET /s3-nofo-bucket-data": json({ nofoData: [] }),
+    });
+    return renderApp(
+      <NavigationProvider>
+        <ProfilePage />
+        <LeaveButton onLeave={onLeave} />
+      </NavigationProvider>,
+      { route: "/profile" }
+    );
+  }
+
+  it("asks before leaving with unsaved changes, and leaves straight away without them", async () => {
+    const onLeave = vi.fn();
+    const { user } = renderGuarded(onLeave);
+    await prefsLoaded();
+
+    await user.click(screen.getByRole("button", { name: "Go elsewhere" }));
+    expect(onLeave).toHaveBeenCalledTimes(1);
+
+    const department = await screen.findByLabelText(/Department/);
+    await user.clear(department);
+    await user.type(department, "Planning");
+    await user.click(screen.getByRole("button", { name: "Go elsewhere" }));
+    const dialog = await screen.findByRole("dialog", { name: "Leave without saving?" });
+    await user.click(within(dialog).getByRole("button", { name: "Stay on this page" }));
+    expect(onLeave).toHaveBeenCalledTimes(1);
+
+    await user.click(screen.getByRole("button", { name: "Go elsewhere" }));
+    await user.click(within(await screen.findByRole("dialog", { name: "Leave without saving?" })).getByRole("button", { name: "Leave without saving" }));
+    expect(onLeave).toHaveBeenCalledTimes(2);
   });
 });

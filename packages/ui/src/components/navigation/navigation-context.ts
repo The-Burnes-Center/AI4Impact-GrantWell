@@ -10,6 +10,9 @@ export interface NavigationRegistration {
   onNavigate?: (step: string) => void;
 }
 
+/** Runs `proceed` once the page agrees to be left (e.g. after confirming unsaved changes are lost). */
+export type LeaveGuard = (proceed: () => void) => void;
+
 export const isUndockedRoute = (pathname: string) =>
   pathname === "/" || pathname.startsWith("/home");
 
@@ -29,6 +32,8 @@ export interface NavigationContextValue {
   toggleDrawer: () => void;
   hasExternalMenuButton: boolean;
   registerMenuButton: () => () => void;
+  setLeaveGuard: (guard: LeaveGuard | null) => void;
+  runGuarded: (proceed: () => void) => void;
 }
 
 export const NavigationContext = createContext<NavigationContextValue | null>(

@@ -143,6 +143,7 @@ export const AppSidebar: React.FC = () => {
   const isDocked = chrome?.isDocked ?? true;
   const isDrawerOpen = chrome?.isDrawerOpen ?? false;
   const closeDrawer = chrome?.closeDrawer;
+  const runGuarded = chrome?.runGuarded;
   const openDrawer = chrome?.openDrawer;
   const currentStep = chrome?.currentStep;
   const hasStepNav = chrome?.hasStepNav ?? false;
@@ -206,9 +207,13 @@ export const AppSidebar: React.FC = () => {
     searchParams.get("folder") ||
     searchParams.get("nofo");
 
-  const go = (action: () => void) => () => {
-    action();
-    closeDrawer?.();
+  const go = (action: () => void, leavesPage = true) => () => {
+    const run = () => {
+      action();
+      closeDrawer?.();
+    };
+    if (leavesPage && runGuarded) runGuarded(run);
+    else run();
   };
 
   const handleChatNavigation = () => {
@@ -560,7 +565,7 @@ export const AppSidebar: React.FC = () => {
           }}
         >
           <NavItem
-            onClick={go(() => setShowFeedback(true))}
+            onClick={go(() => setShowFeedback(true), false)}
             label="Help & feedback"
             icon={<LuCircleHelp size={20} aria-hidden="true" />}
             active={false}
