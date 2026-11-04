@@ -56,8 +56,8 @@ const SUMMARY = {
     GrantName: "Grant A",
     EligibilityCriteria: [{ item: "Cities", description: "Any city." }],
     RequiredDocuments: [{ item: "Budget", description: "A budget." }],
-    ProjectNarrativeSections: [],
-    KeyDeadlines: [],
+    ProjectNarrativeSections: [] as unknown[],
+    KeyDeadlines: [] as unknown[],
   },
 };
 

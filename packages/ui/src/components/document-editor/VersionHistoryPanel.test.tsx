@@ -51,7 +51,7 @@ describe("VersionHistoryPanel", () => {
         isOpen
         onClose={() => {}}
         sessionId="s1"
-        sections={[{ id: "budget", name: "Budget" }]}
+        sections={[{ id: "budget", name: "Budget", description: "" }]}
         currentSections={{ budget: "one two three" }}
         onRestored={() => {}}
       />
