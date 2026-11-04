@@ -26,6 +26,14 @@ export interface DraftJob {
   failedSections?: string[];
 }
 
+export interface LibraryDocument {
+  key: string;
+  name: string;
+  folder: string;
+  size: number;
+  lastModified: string;
+}
+
 export const JOB_DONE = ["completed", "partial", "error"];
 
 export interface RawResponse {
@@ -94,6 +102,39 @@ export async function listDraftIds(): Promise<string[]> {
 export async function deleteDraft(sessionId: string): Promise<void> {
   const { sub } = await tokens();
   await call("POST", "/user-draft", { operation: "delete_draft", session_id: sessionId, user_id: sub });
+}
+
+/** The library keys a chat reads; `exists` is false until the chat has a saved header. */
+export async function chatDocumentKeys(sessionId: string): Promise<{ document_keys: string[] | null; exists: boolean }> {
+  const { sub } = await tokens();
+  return call("POST", "/user-session", { operation: "get_document_keys", session_id: sessionId, user_id: sub });
+}
+
+export async function setChatDocumentKeys(sessionId: string, keys: string[]): Promise<string[]> {
+  const { sub } = await tokens();
+  const result = await call<{ document_keys: string[] }>("POST", "/user-session", {
+    operation: "set_document_keys",
+    session_id: sessionId,
+    user_id: sub,
+    document_keys: keys,
+  });
+  return result.document_keys;
+}
+
+export async function listDocuments(): Promise<LibraryDocument[]> {
+  return (await call<{ documents: LibraryDocument[] }>("POST", "/user-documents/list", {})).documents;
+}
+
+export async function deleteDocument(key: string): Promise<void> {
+  await call("POST", "/user-documents/delete", { KEY: key });
+}
+
+/** The stored bytes of a library document, through the app's presigned download URL. */
+export async function downloadDocument(key: string): Promise<string> {
+  const { signedUrl } = await call<{ signedUrl: string }>("POST", "/user-documents/download-url", { fileName: key });
+  const response = await fetch(signedUrl);
+  if (!response.ok) throw new Error(`Download of ${key} → ${response.status}`);
+  return response.text();
 }
 
 export async function clearRecentlyViewed(): Promise<void> {
