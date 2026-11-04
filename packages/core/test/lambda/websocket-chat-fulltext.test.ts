@@ -31,6 +31,7 @@ beforeAll(async () => {
   vi.stubEnv("USER_POOL_ID", "pool-1");
   vi.stubEnv("USER_DOCUMENTS_BUCKET", "user-docs");
   vi.stubEnv("ARTIFACTS_BUCKET", "grant-artifacts");
+  vi.stubEnv("BUCKET", "grant-bucket");
   vi.stubEnv("SUPPORTED_STATES", JSON.stringify([{ code: "MA", name: "Massachusetts" }]));
   vi.stubEnv("SONNET_MODEL_ID", "arn:aws:bedrock:us-east-1:111111111111:application-inference-profile/chat");
   ({ handler } = await import("../../lib/chatbot-api/functions/websocket-chat/index.mjs"));
@@ -229,6 +230,27 @@ describe("chat with the grant's full text", () => {
       "!<|EOF_STREAM|>!",
       "[]",
     ]);
+  });
+
+  it("reads a grant's text from the grant bucket when the artifacts bucket has none", async () => {
+    s3.on(GetObjectCommand, { Bucket: "grant-artifacts", Key: "Grant A/raw-text.txt" }).rejects(missing());
+    s3.on(GetObjectCommand, { Bucket: "grant-bucket", Key: "Grant A/raw-text.txt" }).resolves(rawText(GRANT_TEXT));
+
+    await handler(event());
+
+    expect(request().system[1].text).toContain("Section D.4");
+    expect(posted().at(-1)).toBe(JSON.stringify([{ title: "Grant document", uri: "s3://grant-bucket/Grant A/raw-text.txt" }]));
+  });
+
+  it("gives the daily message back and saves nothing when the grant isn't readable", async () => {
+    s3.on(GetObjectCommand).rejects(missing());
+
+    await handler(event());
+
+    const counts = ddb.commandCalls(UpdateItemCommand).map((c) => c.args[0].input.ExpressionAttributeValues);
+    expect(counts).toEqual([expect.objectContaining({ ":one": { N: "1" } }), expect.objectContaining({ ":minus": { N: "-1" } })]);
+    const ops = lambda.commandCalls(InvokeCommand).map((c) => JSON.parse(JSON.parse(String(c.args[0].input.Payload)).body).operation);
+    expect(ops).not.toContain("update_session");
   });
 
   it("reads history for the signed-in user, not a user_id in the message", async () => {

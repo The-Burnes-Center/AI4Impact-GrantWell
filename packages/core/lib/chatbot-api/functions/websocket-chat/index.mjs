@@ -220,6 +220,14 @@ async function loadSavedChat(userId, sessionId) {
   }
 }
 
+/** Files written before the artifacts bucket existed are still only in the grant bucket. */
+async function readGrantArtifact(key) {
+  const bucket = process.env.ARTIFACTS_BUCKET;
+  const text = await readArtifact(bucket, key);
+  if (text.trim() || !process.env.BUCKET) return { text, bucket };
+  return { text: await readArtifact(process.env.BUCKET, key), bucket: process.env.BUCKET };
+}
+
 async function readArtifact(bucket, key) {
   try {
     const result = await s3Client.send(new GetObjectCommand({ Bucket: bucket, Key: key }));
@@ -235,19 +243,18 @@ async function readArtifact(bucket, key) {
  * raw-text.txt, a read error, or over the budget), else null.
  */
 async function loadGrantSource(nofoName) {
-  const bucket = process.env.ARTIFACTS_BUCKET;
-  if (!bucket || !nofoName) return null;
+  if (!process.env.ARTIFACTS_BUCKET || !nofoName) return null;
   const textKey = `${nofoName}/raw-text.txt`;
-  const text = await readArtifact(bucket, textKey);
+  const { text, bucket } = await readGrantArtifact(textKey);
   if (text.trim() && text.length <= FULL_TEXT_MAX_CHARS) {
     return { kind: "fullText", text, source: { title: "Grant document", uri: `s3://${bucket}/${textKey}` } };
   }
   if (text.trim()) console.warn(`${textKey} is ${text.length} chars, over the ${FULL_TEXT_MAX_CHARS}-char budget`);
   const summaryKey = `${nofoName}/summary.json`;
-  const summary = await readArtifact(bucket, summaryKey);
-  if (summary.trim()) {
+  const summary = await readGrantArtifact(summaryKey);
+  if (summary.text.trim()) {
     console.warn(`Answering ${nofoName} from its summary`);
-    return { kind: "summary", text: summary, source: { title: "Grant summary", uri: `s3://${bucket}/${summaryKey}` } };
+    return { kind: "summary", text: summary.text, source: { title: "Grant summary", uri: `s3://${summary.bucket}/${summaryKey}` } };
   }
   console.warn(`No raw-text.txt or summary.json for ${nofoName}`);
   return null;
@@ -327,8 +334,9 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
 
     const nofoName = grantName.split("/").pop() || grantName;
     // The cap is taken only once access is confirmed, alongside the loads the answer needs.
+    const capExempt = userRoles.some((r) => CAP_EXEMPT_ROLES.includes(r));
     const [withinCap, grantSource, savedChat, uploadedFileNames] = await Promise.all([
-      userRoles.some((r) => CAP_EXEMPT_ROLES.includes(r)) ? true : takeDailyChatMessage(userId),
+      capExempt ? true : takeDailyChatMessage(userId),
       loadGrantSource(nofoName),
       loadSavedChat(userId, sessionId),
       listUploadedFileNames(userId, nofoName),
@@ -361,6 +369,7 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
     if (!grantSource) {
       modelResponse = GRANT_UNAVAILABLE_MESSAGE;
       await post(modelResponse);
+      if (!capExempt) await refundDailyChatMessage(userId);
     } else {
       const applicantDocuments = await loadApplicantDocuments(userId, nofoName, savedChat.documentKeys);
 
@@ -458,6 +467,11 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
       console.error("Error sending EOF_STREAM and sources:", e);
     }
 
+    if (!grantSource) {
+      await wsConnectionClient.send(new DeleteConnectionCommand({ ConnectionId: id }));
+      return;
+    }
+
     const saved = await invokeSessionHandler({
       operation: "update_session",
       user_id: userId,
@@ -516,6 +530,27 @@ async function takeDailyChatMessage(userId) {
     if (err.name === "ConditionalCheckFailedException") return false;
     console.warn(`Could not count the chat message for ${userId}:`, err.message);
     return true;
+  }
+}
+
+/** Gives back the message counted for a turn that never reached the model. */
+async function refundDailyChatMessage(userId) {
+  const tableName = process.env.DAILY_USAGE_TABLE_NAME;
+  if (!tableName) return;
+  const day = new Date().toISOString().slice(0, 10);
+  try {
+    await dynamoClient.send(
+      new UpdateItemCommand({
+        TableName: tableName,
+        Key: { pk: { S: `${userId}#${day}` } },
+        UpdateExpression: "ADD #count :minus",
+        ConditionExpression: "#count > :zero",
+        ExpressionAttributeNames: { "#count": "chat_messages" },
+        ExpressionAttributeValues: { ":minus": { N: "-1" }, ":zero": { N: "0" } },
+      })
+    );
+  } catch (err) {
+    if (err.name !== "ConditionalCheckFailedException") console.warn(`Could not refund the chat message for ${userId}:`, err.message);
   }
 }
 

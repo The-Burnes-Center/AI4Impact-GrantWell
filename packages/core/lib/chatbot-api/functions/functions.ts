@@ -391,6 +391,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           DAILY_USAGE_TABLE_NAME: props.dailyUsageTable.tableName,
           CHAT_MESSAGES_PER_DAY: String(limits(config).chatMessagesPerDay),
           ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
+          BUCKET: props.ffioNofosBucket.bucketName,
         },
         timeout: cdk.Duration.seconds(300),
         memorySize: 1024,
@@ -399,6 +400,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
     props.dailyUsageTable.grant(websocketAPIFunction, "dynamodb:UpdateItem");
     websocketAPIFunction.addToRolePolicy(s3ReadOnlyPolicy(props.grantArtifactsBucket.bucketArn));
+    websocketAPIFunction.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
 
     // WebSocket messages lack JWT claims, so resolve state via AdminGetUser per message.
     websocketAPIFunction.addToRolePolicy(
@@ -446,7 +448,7 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // The getChatbotResponse route hands each answer to an async copy of this function. No retries:
     // a retried answer would stream a second time and save a duplicate turn.
-    websocketAPIFunction.configureAsyncInvoke({ retryAttempts: 0 });
+    websocketAPIFunction.configureAsyncInvoke({ retryAttempts: 0, maxEventAge: cdk.Duration.minutes(2) });
     // In the role's default policy the grant would reference the function, which already depends on
     // that policy, and CloudFormation rejects the loop.
     new iam.Policy(scope, "ChatHandlerSelfInvokePolicy", {
