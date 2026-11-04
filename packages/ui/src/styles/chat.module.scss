@@ -48,3 +48,102 @@ div.transcript[tabindex]:focus-visible {
 .markdownTable tr:nth-child(even) {
   background-color: #ffffff;
 }
+
+// Chat bubbles sit inside the transcript's <ul>, so browsers would style the answer's lists as nested
+// (hollow circles) and its h5/h6 at their default 0.83em/0.67em, smaller than the body text.
+.answerMarkdown {
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 14px 0 6px;
+    line-height: 1.35;
+  }
+
+  h2 {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  h3,
+  h4 {
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  h5,
+  h6 {
+    font-size: 1em;
+    font-weight: 700;
+  }
+
+  > :first-child {
+    margin-top: 0;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  ul ul {
+    list-style-type: circle;
+  }
+
+  ul ul ul {
+    list-style-type: square;
+  }
+}
+
+.typingDots {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+
+  span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--gw-color-text-muted);
+    animation: typing-dot 1.2s ease-in-out infinite;
+  }
+
+  span:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  span:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    span {
+      animation: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    span {
+      background-color: CanvasText;
+    }
+  }
+}
+
+@keyframes typing-dot {
+  0%,
+  60%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
