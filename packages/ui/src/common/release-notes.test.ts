@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import notes from "../../RELEASE_NOTES.md?raw";
-import { parseReleaseNotes } from "./release-notes-parse";
+import { RELEASES } from "./release-notes";
+import { parseReleaseNotes, shownReleases } from "./release-notes-parse";
 
 const releases = parseReleaseNotes(notes);
 
@@ -18,6 +19,21 @@ describe("parseReleaseNotes", () => {
 
   it("gives an entry without Highlights empty highlights", () => {
     expect(parseReleaseNotes("# GrantWell v1.2.3\n\nJust text\n")[0].highlights).toBe("");
+  });
+});
+
+describe("shownReleases", () => {
+  it("leaves out pre-v3 releases unless the instance shows legacy notes", () => {
+    expect(shownReleases(releases, false).map((r) => r.version)).toEqual(["3.3.0"]);
+    expect(shownReleases(releases, true).map((r) => r.version)).toEqual(["3.3.0", "2.0.0", "1.0.0"]);
+  });
+
+  it("keeps the Massachusetts partnership wording out of the default list", () => {
+    for (const r of shownReleases(releases, false)) expect(r.markdown).not.toMatch(/Massachusetts/);
+  });
+
+  it("is what the app lists", () => {
+    expect(RELEASES.map((r) => r.version)).toEqual(["3.3.0"]);
   });
 });
 

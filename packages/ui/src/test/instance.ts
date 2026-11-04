@@ -23,6 +23,7 @@ const defaults = (): Flags => ({
   MFA_DEADLINE: null,
   REGIONS: [],
   STATE_SITES: [],
+  LEGACY_RELEASE_NOTES: false,
   HOME: resolveHome(defaultBranding, null),
 });
 
