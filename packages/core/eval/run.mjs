@@ -16,7 +16,7 @@ const { totals } = await import("./lib/cost.mjs");
 
 const EVAL_DIR = path.dirname(new URL(import.meta.url).pathname);
 const RUNNERS = ["extract", "questions", "draft", "chat"];
-const RETRIEVES = new Set(["draft", "chat"]);
+const RETRIEVES = new Set(["draft"]);
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,

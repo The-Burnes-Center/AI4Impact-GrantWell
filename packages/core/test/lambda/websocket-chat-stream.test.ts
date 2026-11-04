@@ -4,24 +4,24 @@ import {
   DeleteConnectionCommand,
   PostToConnectionCommand,
 } from "@aws-sdk/client-apigatewaymanagementapi";
-import { BedrockAgentRuntimeClient, RetrieveCommand } from "@aws-sdk/client-bedrock-agent-runtime";
 import { BedrockRuntimeClient, InvokeModelWithResponseStreamCommand } from "@aws-sdk/client-bedrock-runtime";
 import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
+import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 const ws = mockClient(ApiGatewayManagementApiClient);
-const kb = mockClient(BedrockAgentRuntimeClient);
 const bedrock = mockClient(BedrockRuntimeClient);
 const ddb = mockClient(DynamoDBClient);
 const lambda = mockClient(LambdaClient);
+const s3 = mockClient(S3Client);
 
 let handler: (event: any) => Promise<any>;
 beforeAll(async () => {
-  vi.stubEnv("KB_ID", "kb-1");
   vi.stubEnv("SESSION_HANDLER", "session-fn");
   vi.stubEnv("WEBSOCKET_API_ENDPOINT", "https://ws.example");
   vi.stubEnv("NOFO_METADATA_TABLE_NAME", "nofos");
+  vi.stubEnv("ARTIFACTS_BUCKET", "grant-artifacts");
   vi.stubEnv("SONNET_MODEL_ID", "arn:aws:bedrock:us-east-1:111111111111:application-inference-profile/chat");
   ({ handler } = await import("../../lib/chatbot-api/functions/websocket-chat/index.mjs"));
 });
@@ -46,53 +46,63 @@ const event = (data: object = {}) => ({
   body: JSON.stringify({ data: { userMessage: "Give me an overview", session_id: "s1", documentIdentifier: "Grant A", ...data } }),
 });
 
+const ERROR = "<!ERROR!>: Something went wrong while answering. Try again in a moment.";
 const posted = () => ws.commandCalls(PostToConnectionCommand).map((c) => String(c.args[0].input.Data));
 const invokes = () => lambda.commandCalls(InvokeCommand).map((c) => c.args[0].input);
 const saves = () =>
   invokes()
+    .filter((i) => i.InvocationType !== "Event")
     .map((i) => JSON.parse(JSON.parse(String(i.Payload)).body ?? "{}"))
     .filter((b) => b.operation === "update_session");
-const modelBody = (n: number) =>
-  JSON.parse(bedrock.commandCalls(InvokeModelWithResponseStreamCommand)[n].args[0].input.body as string);
 
 beforeEach(() => {
-  for (const m of [ws, kb, bedrock, ddb, lambda]) m.reset();
+  for (const m of [ws, bedrock, ddb, lambda, s3]) m.reset();
   ws.on(PostToConnectionCommand).resolves({});
   ws.on(DeleteConnectionCommand).resolves({});
   ddb.on(GetItemCommand).resolves({ Item: { nofo_name: { S: "Grant A" }, scope: { S: "federal" } } });
   lambda.on(InvokeCommand).resolves({
     Payload: new TextEncoder().encode(JSON.stringify({ statusCode: 200, body: "{}" })) as any,
   });
-  kb.on(RetrieveCommand).resolves({ retrievalResults: [] });
+  s3.on(GetObjectCommand).resolves({ Body: { transformToString: async () => "Grant A text." } } as any);
   vi.spyOn(console, "log").mockImplementation(() => {});
   vi.spyOn(console, "warn").mockImplementation(() => {});
   vi.spyOn(console, "error").mockImplementation(() => {});
 });
 
 describe("chat narration", () => {
-  it("never sends or saves the text of a call that ends in a tool call", async () => {
-    bedrock
-      .on(InvokeModelWithResponseStreamCommand)
-      .resolvesOnce(stream([text("I'll run several focused searches in parallel."), ...tool("t1", "overview"), stop("tool_use")]))
-      .resolves(stream([text("### Overview\n\nThe grant funds transit."), stop("end_turn")]));
+  it("sends no tools and makes one model call", async () => {
+    bedrock.on(InvokeModelWithResponseStreamCommand).resolves(stream([text("The grant funds transit."), stop("end_turn")]));
 
     await handler(event());
 
-    expect(posted()).toEqual(["### Overview\n\nThe grant funds transit.", "!<|EOF_STREAM|>!", "[]"]);
-    expect(saves()[0].new_chat_entry[0].chatbot).toBe("### Overview\n\nThe grant funds transit.");
+    expect(bedrock.commandCalls(InvokeModelWithResponseStreamCommand)).toHaveLength(1);
+    const body = JSON.parse(bedrock.commandCalls(InvokeModelWithResponseStreamCommand)[0].args[0].input.body as string);
+    expect(body).not.toHaveProperty("tools");
+    expect(body).not.toHaveProperty("tool_choice");
+    expect(saves()[0].new_chat_entry[0].chatbot).toBe("The grant funds transit.");
+  });
+
+  it("never sends or saves text from a call that ends in a tool call", async () => {
+    bedrock
+      .on(InvokeModelWithResponseStreamCommand)
+      .resolves(stream([text("I'll run several focused searches in parallel."), ...tool("t1", "overview"), stop("tool_use")]));
+
+    await handler(event());
+
+    expect(posted()).toEqual([ERROR]);
+    expect(saves()).toEqual([]);
   });
 
   it("resets the answer when a call streams past the hold and then calls a tool", async () => {
     const long = "Background. ".repeat(40);
     bedrock
       .on(InvokeModelWithResponseStreamCommand)
-      .resolvesOnce(stream([text(long), text("More narration."), ...tool("t1", "eligibility"), stop("tool_use")]))
-      .resolves(stream([text("You qualify."), stop("end_turn")]));
+      .resolves(stream([text(long), text("More narration."), ...tool("t1", "eligibility"), stop("tool_use")]));
 
     await handler(event());
 
-    expect(posted()).toEqual([long, "More narration.", "<!RESET!>", "You qualify.", "!<|EOF_STREAM|>!", "[]"]);
-    expect(saves()[0].new_chat_entry[0].chatbot).toBe("You qualify.");
+    expect(posted()).toEqual([long, "More narration.", "<!RESET!>", ERROR]);
+    expect(saves()).toEqual([]);
   });
 
   it("streams a long answer as it arrives after the hold", async () => {
@@ -124,39 +134,6 @@ describe("chat narration", () => {
   });
 });
 
-describe("chat searches", () => {
-  it("runs the searches of one call in parallel and returns results in tool order", async () => {
-    let inFlight = 0;
-    let maxInFlight = 0;
-    kb.on(RetrieveCommand).callsFake(async (input) => {
-      inFlight += 1;
-      maxInFlight = Math.max(maxInFlight, inFlight);
-      const query = input.retrievalQuery.text;
-      await new Promise((r) => setTimeout(r, query === "eligibility" ? 30 : 5));
-      inFlight -= 1;
-      if (JSON.stringify(input.retrievalConfiguration).includes("userDocument")) return { retrievalResults: [] };
-      return {
-        retrievalResults: [
-          { content: { text: `Passage for ${query}.` }, score: 0.9, location: { s3Location: { uri: "s3://nofos/Grant A/NOFO-File-PDF" } } },
-        ],
-      };
-    });
-    bedrock
-      .on(InvokeModelWithResponseStreamCommand)
-      .resolvesOnce(stream([...tool("t1", "eligibility"), ...tool("t2", "deadline"), stop("tool_use")]))
-      .resolves(stream([text("Answer."), stop("end_turn")]));
-
-    await handler(event());
-
-    expect(maxInFlight).toBe(4);
-    const results = modelBody(1).messages.at(-1).content;
-    expect(results.map((r: any) => [r.tool_use_id, r.content])).toEqual([
-      ["t1", "<retrieved_passages>\nPassage for eligibility.\n</retrieved_passages>"],
-      ["t2", "<retrieved_passages>\nPassage for deadline.\n</retrieved_passages>"],
-    ]);
-  });
-});
-
 describe("chat hand-off", () => {
   beforeEach(() => {
     vi.stubEnv("AWS_LAMBDA_FUNCTION_NAME", "chat-fn");
@@ -184,7 +161,11 @@ describe("chat hand-off", () => {
 
     expect(res).toEqual({ statusCode: 200 });
     expect(invokes().some((i) => i.InvocationType === "Event")).toBe(false);
-    expect(posted()).toEqual(["You qualify.", "!<|EOF_STREAM|>!", "[]"]);
+    expect(posted()).toEqual([
+      "You qualify.",
+      "!<|EOF_STREAM|>!",
+      JSON.stringify([{ title: "Grant document", uri: "s3://grant-artifacts/Grant A/raw-text.txt" }]),
+    ]);
     expect(saves()).toHaveLength(1);
   });
 

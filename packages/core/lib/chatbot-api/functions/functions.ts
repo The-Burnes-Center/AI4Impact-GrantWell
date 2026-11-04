@@ -382,15 +382,12 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "index.handler",
         environment: {
           WEBSOCKET_API_ENDPOINT: props.wsApiEndpoint.replace("wss", "https"),
-          KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
           SESSION_HANDLER: this.sessionFunction.functionName,
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
           SONNET_MODEL_ID: sonnetChatProfile.attrInferenceProfileArn,
           USER_POOL_ID: props.userPool.userPoolId,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
           LEGACY_STATELESS_ADMIN_IS_PLATFORM,
-          // Flip to "true" once existing NOFOs are sidecar-tagged.
-          NOFO_STATE_FILTER_ENABLED: "false",
           DAILY_USAGE_TABLE_NAME: props.dailyUsageTable.tableName,
           CHAT_MESSAGES_PER_DAY: String(limits(config).chatMessagesPerDay),
           ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
@@ -434,14 +431,6 @@ export class LambdaFunctionStack extends cdk.Stack {
         effect: iam.Effect.ALLOW,
         actions: ["s3:ListBucket"],
         resources: [props.userDocumentsBucket.bucketArn],
-      })
-    );
-
-    websocketAPIFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["bedrock:Retrieve"],
-        resources: [props.knowledgeBase.attrKnowledgeBaseArn],
       })
     );
 

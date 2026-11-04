@@ -14,22 +14,6 @@ import {
 const THINKING = { type: "between_tools" };
 const OUTPUT_CONFIG = { effort: "medium" };
 
-const SEARCH_TOOL = {
-  "name": "query_db",
-  "description": "Search the active grant's documents for passages relevant to a query. It searches only the grant document for the grant this chat is about and the supporting documents the user uploaded for that grant; it does not search the web, other grants, or regulations. It returns the text of up to about 12 matching passages joined together, drops passages below a relevance threshold, and does not guarantee section or page locators. When nothing matches it returns a short notice saying so; that notice means only that this query found nothing. Use one focused query per topic, and run several searches when a question spans several requirements.",
-  "input_schema": {
-    "type": "object",
-    "properties": {
-      "query": {
-        "type": "string",
-        "description": "A focused query naming the requirement you need, in plain words or keywords, for example 'cost share waiver conditions' or 'application submission deadline'."
-      }
-    },
-    "required": [
-      "query"
-    ]
-  }
-};
 
 export default class ClaudeModel {
   constructor() {
@@ -133,12 +117,9 @@ export default class ClaudeModel {
    * 
    * @param {string|Array<object>} system - The system prompt, as text or content blocks.
    * @param {Array} history - The messages.
-   * @param {object} [options]
-   * @param {object} [options.toolChoice] - Anthropic tool_choice, e.g. { type: "none" }.
-   * @param {boolean} [options.tools] - false sends no search tool (the grant's full text is in the prompt).
    * @returns {ReadableStream} - The response stream.
    */
-  async getStreamedResponse(system, history, { toolChoice, tools = true } = {}) {
+  async getStreamedResponse(system, history) {
     const payload = {
       "anthropic_version": "bedrock-2023-05-31",
       "system": system,
@@ -147,8 +128,6 @@ export default class ClaudeModel {
       "thinking": THINKING,
       "output_config": OUTPUT_CONFIG,
     };
-    if (tools) payload.tools = [SEARCH_TOOL];
-    if (toolChoice) payload.tool_choice = toolChoice;
 
     const command = new InvokeModelWithResponseStreamCommand({ body: JSON.stringify(payload), contentType: 'application/json', modelId: this.modelId });
     const apiResponse = await this.client.send(command);

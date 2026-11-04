@@ -84,7 +84,11 @@ beforeEach(() => {
   });
   ddb.on(PutItemCommand).resolves({});
   s3.on(ListObjectsV2Command).resolves({});
-  s3.on(GetObjectCommand).callsFake(() => ({ Body: Readable.from([Buffer.from(JSON.stringify({ questions: [] }))]) }));
+  s3.on(GetObjectCommand).callsFake((input) =>
+    input.Key?.endsWith("/raw-text.txt")
+      ? { Body: { transformToString: async () => "Grant text." } }
+      : { Body: Readable.from([Buffer.from(JSON.stringify({ questions: [] }))]) }
+  );
   sfn.on(StartExecutionCommand).resolves({});
   vi.spyOn(console, "log").mockImplementation(() => {});
   vi.spyOn(console, "error").mockImplementation(() => {});
