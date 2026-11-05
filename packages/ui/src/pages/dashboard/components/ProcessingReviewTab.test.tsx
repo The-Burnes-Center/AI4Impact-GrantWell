@@ -242,4 +242,47 @@ describe("requirements the grant doesn't support", () => {
       "Application deadline: “2027-04-01” — The date 2027-04-01 does not appear in the grant.",
     ]);
   });
+
+  const openDetail = async (item: ReviewItem, shown: ReviewDetail) => {
+    stubFetch({
+      [REVIEWS]: json({ reviews: [item], expiredOpenCount: 0 }),
+      [METRICS]: json({ metrics }),
+      [`GET /admin/processing-reviews/${item.nofo_name}`]: json({ review: shown }),
+    });
+    const view = renderApp(<ProcessingReviewTab apiClient={testApiClient()} addNotification={vi.fn()} />);
+    await view.user.click(await screen.findByRole("button", { name: `View details for ${item.nofo_name}` }));
+    await screen.findByText("Requirements not confirmed in the grant:");
+    return view;
+  };
+
+  it.each([
+    ["a live grant", held, detail],
+    ["a new grant", { ...held, nofo_name: "New-Grant", source: "pipeline" as const }, { ...detail, nofo_name: "New-Grant", source: "pipeline" as const }],
+  ])("recommends Approve for %s", async (_label, item, shown) => {
+    await openDetail(item, shown);
+    expect(screen.getByRole("button", { name: /^Approve As-Is .*\(recommended\)$/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^Reprocess — / })).not.toHaveAccessibleName(/recommended/);
+  });
+
+  it("warns that rejecting a grant that was live deletes it for everyone", async () => {
+    const { user } = await openDetail(held, detail);
+    await user.type(screen.getByRole("textbox", { name: /Admin Notes/ }), "Not a real grant");
+    await user.click(screen.getByRole("button", { name: /^Reject — / }));
+
+    const dialog = await screen.findByRole("dialog", { name: "Confirm Reject" });
+    expect(within(dialog).getByText("This grant was live. Rejecting deletes it and its files for everyone.")).toBeInTheDocument();
+  });
+
+  it("keeps the usual reject confirmation for a new grant", async () => {
+    const { user } = await openDetail(
+      { ...held, nofo_name: "New-Grant", source: "pipeline" },
+      { ...detail, nofo_name: "New-Grant", source: "pipeline" }
+    );
+    await user.type(screen.getByRole("textbox", { name: /Admin Notes/ }), "Duplicate");
+    await user.click(screen.getByRole("button", { name: /^Reject — / }));
+
+    const dialog = await screen.findByRole("dialog", { name: "Confirm Reject" });
+    expect(within(dialog).queryByText(/This grant was live/)).not.toBeInTheDocument();
+    expect(within(dialog).getByText(/permanently delete the grant document/)).toBeInTheDocument();
+  });
 });
