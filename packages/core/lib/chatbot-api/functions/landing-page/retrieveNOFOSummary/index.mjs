@@ -73,6 +73,12 @@ function assertUserCanAccessNofo(callerScope, nofoScope, nofoState) {
 const IN_REVIEW_STATUSES = new Set(["quarantined", "processing"]);
 const GRANT_IN_REVIEW_MESSAGE = "This grant is being reviewed and will be back soon.";
 
+/** Developers, platform admins, and a state admin for their own state's grant open held grants. */
+function opensGrantInReview(callerScope, nofoScope, nofoState) {
+  if (callerScope.role === "developer" || callerScope.role === "regularAdmin") return true;
+  return callerScope.role === "stateAdmin" && nofoScope === "state" && Boolean(nofoState) && nofoState === callerScope.state;
+}
+
 // Returns { scope, state, status } from the grant's metadata row, or null when there is no row or it can't be read.
 async function readNofoScope(tableName, nofoName) {
   if (!tableName || !nofoName) return null;
@@ -168,11 +174,9 @@ export const handler = async (event) => {
     }
 
     const inReview =
-      IN_REVIEW_STATUSES.has(existingScope?.status) &&
-      callerScope.role !== "developer" &&
-      callerScope.role !== "regularAdmin";
+      IN_REVIEW_STATUSES.has(existingScope?.status) && !opensGrantInReview(callerScope, effectiveScope, effectiveState);
     // The applicant's own application stays editable while its grant is reviewed, so the editor
-    // still gets the grant's name and narrative sections; nothing else is served.
+    // still gets the grant's name and narrative section names; nothing else is served.
     const forApplication = event.queryStringParameters?.for === "application";
     if (inReview && !forApplication) {
       return {
@@ -187,7 +191,9 @@ export const handler = async (event) => {
     }
     if (inReview) {
       const held = JSON.parse(await streamToString((await getArtifact(s3Client, `${basePath}/summary.json`, s3Bucket)).Body));
-      const sections = Array.isArray(held.ProjectNarrativeSections) ? withSectionIds(held.ProjectNarrativeSections) : [];
+      const sections = Array.isArray(held.ProjectNarrativeSections)
+        ? withSectionIds(held.ProjectNarrativeSections).map(({ item, id }) => ({ item, id }))
+        : [];
       return {
         statusCode: 200,
         headers: corsHeaders,

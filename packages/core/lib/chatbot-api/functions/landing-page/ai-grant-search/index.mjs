@@ -331,10 +331,11 @@ function resolveCallerScope(event) {
 function callerCanSeeGrant(callerScope, meta) {
   if (callerScope.role === 'developer' || callerScope.role === 'regularAdmin') return true;
   if (!meta) return false;
-  if (meta.status === 'quarantined' || meta.status === 'processing') return false;
   const scope = meta.scope || 'federal';
-  if (scope === 'federal') return true;
-  return scope === 'state' && Boolean(meta.state) && meta.state === callerScope.state;
+  const ownState = scope === 'state' && Boolean(meta.state) && meta.state === callerScope.state;
+  // A grant held for review shows only to those who may open it: here, its own state's admins.
+  if (meta.status === 'quarantined' || meta.status === 'processing') return callerScope.role === 'stateAdmin' && ownState;
+  return scope === 'federal' || ownState;
 }
 
 // ── Feature access ──

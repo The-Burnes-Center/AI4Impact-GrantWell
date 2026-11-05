@@ -303,6 +303,30 @@ describe("AI grant search", () => {
       expect(names(dev).sort()).toEqual(["Bridge Repair Held", "Bridge Repair Program", "Bridge Repair Rerun"]);
     });
 
+    it("shows a state admin their own state's grant held for review, and no other held grant", async () => {
+      metadata(
+        { nofo_name: "Bridge Repair Program", status: "active" },
+        { nofo_name: "Bridge Repair Held MA", status: "quarantined", scope: "state", state: "MA" },
+        { nofo_name: "Bridge Repair Rerun MA", status: "processing", scope: "state", state: "MA" },
+        { nofo_name: "Bridge Repair Held NY", status: "quarantined", scope: "state", state: "NY" },
+        { nofo_name: "Bridge Repair Held", status: "quarantined" },
+        ...filler.map((f) => ({ nofo_name: f.name })),
+      );
+      publish([
+        { name: "Bridge Repair Program", topic: 1, body: "bridge repair" },
+        { name: "Bridge Repair Held MA", topic: 1, body: "bridge repair" },
+        { name: "Bridge Repair Rerun MA", topic: 1, body: "bridge repair" },
+        { name: "Bridge Repair Held NY", topic: 1, body: "bridge repair" },
+        { name: "Bridge Repair Held", topic: 1, body: "bridge repair" },
+        ...filler,
+      ]);
+      await freshHandler();
+      const admin = await search({ query: "bridge repair" }, { email: "ana@example.org", sub: "u1", "custom:role": '["Admin"]', "custom:state": "MA" });
+      expect(names(admin).sort()).toEqual(["Bridge Repair Held MA", "Bridge Repair Program", "Bridge Repair Rerun MA"]);
+      const user = await search({ query: "bridge repair" }, { email: "ana@example.org", sub: "u1", "custom:state": "MA" });
+      expect(names(user)).toEqual(["Bridge Repair Program"]);
+    });
+
     it("keeps a state admin to their own state", async () => {
       await stateFixture();
       const res = await search({ query: "bridge repair" }, { email: "ana@example.org", sub: "u1", "custom:role": '["Admin"]', "custom:state": "MA" });

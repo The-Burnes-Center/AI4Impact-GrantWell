@@ -232,6 +232,33 @@ describe("SectionsEditor rewriting failed sections", () => {
   });
 });
 
+describe("SectionsEditor while the grant is in review", () => {
+  const row = { session_id: "s1", status: "editing_sections", sections: { "statement-of-need": "My text" }, section_order: ORDER, rev: 1 };
+
+  it("shows only section names with a note, and keeps the applicant's text editable", async () => {
+    const net = stubServer({ row: { ...row } }, { inReview: true, ...GRANT });
+    const { user } = renderApp(<Editor />);
+
+    const editor = await screen.findByRole("textbox", { name: "Statement of Need" });
+    await waitFor(() => expect(editor).toHaveValue("My text"));
+    expect(screen.getByText("This grant is being reviewed, so its section guidance is hidden for now.")).toBeInTheDocument();
+    expect(screen.queryByText("Why the project is needed.")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Budget/ })).toBeInTheDocument();
+
+    await user.type(editor, " and more");
+    expect(editor).toHaveValue("My text and more");
+    await waitFor(() => expect(updates(net).slice(-1)[0]?.sections).toMatchObject({ "statement-of-need": "My text and more" }));
+  });
+
+  it("shows the grant's guidance once it is out of review", async () => {
+    stubServer({ row: { ...row } });
+    renderApp(<Editor />);
+
+    expect(await screen.findByText("Why the project is needed.")).toBeInTheDocument();
+    expect(screen.queryByText(/section guidance is hidden/)).not.toBeInTheDocument();
+  });
+});
+
 describe("SectionsEditor size", () => {
   it("warns once a save brings the application close to its storage limit", async () => {
     const fake: Fake = {

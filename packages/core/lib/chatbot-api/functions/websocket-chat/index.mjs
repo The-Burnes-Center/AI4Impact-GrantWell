@@ -154,9 +154,14 @@ function seesEveryGrant(userRoles, userState) {
   );
 }
 
-/** True when the grant is held for review and this user isn't one who may still open it. */
+/**
+ * True when the grant is held for review and this user isn't one who may still open it: a
+ * developer, a platform admin, or a state admin for their own state's grant.
+ */
 function grantInReviewFor(userRoles, userState, row) {
-  return IN_REVIEW_STATUSES.has(row?.status) && !seesEveryGrant(userRoles, userState);
+  if (!IN_REVIEW_STATUSES.has(row?.status) || seesEveryGrant(userRoles, userState)) return false;
+  const ownStateAdmin = userRoles.includes("Admin") && Boolean(userState) && row.scope === "state" && row.state === userState;
+  return !ownStateAdmin;
 }
 
 function checkPerNofoAccess(userRoles, userState, nofoName, row) {
