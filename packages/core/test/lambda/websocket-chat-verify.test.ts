@@ -12,9 +12,7 @@ import { GetObjectCommand, ListObjectsV2Command, S3Client } from "@aws-sdk/clien
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { LOG_MARKERS } from "../../lib/monitoring/monitoring-stack";
 import {
-  LEFT_OUT_NOTE,
-  NOTHING_CONFIRMED_MESSAGE,
-  VERIFY_MARKER,
+  CHECK_MARKER,
   absenceTopic,
   dateStatusFailures,
   weekdayFailures,
@@ -97,11 +95,9 @@ const saves = () =>
     .commandCalls(InvokeCommand)
     .map((c) => JSON.parse(JSON.parse(String(c.args[0].input.Payload)).body))
     .filter((b) => b.operation === "update_session");
-const verifyLines = () =>
-  (console.log as any).mock.calls
-    .map(([line]: [unknown]) => String(line))
-    .filter((l: string) => l.startsWith(`${VERIFY_MARKER} `))
-    .map((l: string) => JSON.parse(l.slice(VERIFY_MARKER.length + 1)));
+const checkLog = () =>
+  (console.log as any).mock.calls.map(([line]: [unknown]) => String(line)).filter((l: string) => l.startsWith(`${CHECK_MARKER} `));
+const checkLines = () => checkLog().map((l: string) => JSON.parse(l.slice(CHECK_MARKER.length + 1)));
 
 const sentencesOf = (input: any) =>
   [...JSON.parse(input.body).messages[0].content.at(-1).text.matchAll(/<sentence id="(\d+)">\n<text>([^<]*)<\/text>/g)].map((m) => ({
@@ -225,8 +221,18 @@ describe("answer units", () => {
   });
 });
 
-describe("verified chat answers", () => {
-  it("posts a checked answer as one frame, only after the meaning check", async () => {
+describe("chat answers, checked after sending", () => {
+  const SOURCES = [{ title: "Grant document", uri: "s3://grant-artifacts/Grant A/raw-text.txt" }];
+
+  it("posts and saves the answer before the check runs, then logs what the check found", async () => {
+    let savedAtHaiku = -1;
+    let closedAtHaiku = -1;
+    bedrock.on(InvokeModelCommand).callsFake((input) => {
+      postsAtHaiku.push(posted().length);
+      savedAtHaiku = saves().length;
+      closedAtHaiku = ws.commandCalls(DeleteConnectionCommand).length;
+      return judge(() => "supported")(input);
+    });
     bedrock.on(InvokeModelWithResponseStreamCommand).resolves(
       cited([["Applications are due March 1, 2027.", deadline], [" Late applications are not reviewed.", late]])
     );
@@ -234,27 +240,30 @@ describe("verified chat answers", () => {
     await handler(event());
 
     const answer = "Applications are due March 1, 2027. Late applications are not reviewed.";
-    expect(postsAtHaiku).toEqual([0]);
     expect(posted()).toEqual([
       answer,
       "!<|EOF_STREAM|>!",
       JSON.stringify({
-        Sources: [{ title: "Grant document", uri: "s3://grant-artifacts/Grant A/raw-text.txt" }],
+        Sources: SOURCES,
         Citations: [
           { n: 1, at: [35], quote: deadline.cited_text, document: "Grant document" },
           { n: 2, at: [answer.length], quote: late.cited_text, document: "Grant document" },
         ],
       }),
     ]);
+    expect(postsAtHaiku).toEqual([3]);
+    expect(savedAtHaiku).toBe(1);
+    expect(closedAtHaiku).toBe(1);
     expect(sonnetCalls()).toHaveLength(1);
     expect(saves()[0].new_chat_entry[0].chatbot).toBe(answer);
-    expect(JSON.parse(saves()[0].new_chat_entry[0].metadata).Verified).toEqual({ regenerated: false, removed: 0 });
-    expect(verifyLines()).toEqual([
-      { regenerated: false, removed: 0, fallback: false, sentences: 2, factFails: 0, meaningFails: 0, absenceFails: 0, ms: expect.any(Number) },
+    expect(JSON.parse(saves()[0].new_chat_entry[0].metadata)).not.toHaveProperty("Verified");
+    expect(checkLines()).toEqual([
+      { session: "s1", grant: "Grant A", question: "What is the deadline?", sentences: 2, flagged: [], ms: expect.any(Number) },
     ]);
+    expect(checkLog()).not.toContain("user-1");
   });
 
-  it("sends Haiku the whole grant, cached, then each sentence with its own cited passages", async () => {
+  it("sends the checker the whole grant, cached, then each sentence with its own cited passages", async () => {
     s3.on(GetObjectCommand, { Bucket: "grant-artifacts", Key: "Grant A/raw-text.txt" }).resolves(rawText(`${GRANT_TEXT} ${"Filler. ".repeat(500)}`));
     bedrock.on(InvokeModelWithResponseStreamCommand).resolves(cited([["Applications are due March 1, 2027.", deadline], " Plan ahead."]));
 
@@ -279,103 +288,97 @@ describe("verified chat answers", () => {
     expect(grantBlock.text).toContain("Filler.");
   });
 
-  it("regenerates once when a fact is not in the grant, and posts the second answer when it passes", async () => {
-    bedrock
-      .on(InvokeModelWithResponseStreamCommand)
-      .resolvesOnce(cited([["Applications are due March 3, 2027.", deadline]]))
-      .resolvesOnce(cited([["Applications are due March 1, 2027.", deadline]]));
-
-    await handler(event());
-
-    expect(sonnetCalls()).toHaveLength(2);
-    const first = sonnetRequest(0);
-    const retry = sonnetRequest(1);
-    expect(retry.messages.slice(0, -1)).toEqual(first.messages.slice(0, -1));
-    expect(retry.messages.at(-1).content.slice(0, -1)).toEqual(first.messages.at(-1).content);
-    expect(retry.messages.at(-1).content.at(-1)).toEqual({
-      type: "text",
-      text: 'These statements could not be confirmed in the grant:\n- "Applications are due March 3, 2027." (a date, amount or number in it isn\'t in the grant)\nAnswer again using only what the grant states; where the grant doesn\'t say, say so.',
-    });
-    expect(retry.system).toEqual(first.system);
-    expect(posted()[0]).toBe("Applications are due March 1, 2027.");
-    expect(posted().filter((p) => p.includes("March 3"))).toEqual([]);
-    expect(JSON.parse(saves()[0].new_chat_entry[0].metadata).Verified).toEqual({ regenerated: true, removed: 0 });
-    expect(verifyLines()[0]).toMatchObject({ regenerated: true, removed: 0, factFails: 1, meaningFails: 0, retryFactFails: 0, retryMeaningFails: 0 });
-  });
-
-  it("regenerates when Haiku finds a sentence the grant does not support", async () => {
-    bedrock
-      .on(InvokeModelWithResponseStreamCommand)
-      .resolvesOnce(cited([["Nonprofits may apply.", cities]]))
-      .resolvesOnce(cited([["Cities may apply.", cities]]));
+  it("posts a flagged answer unchanged, without asking again, and logs each flagged sentence", async () => {
+    bedrock.on(InvokeModelWithResponseStreamCommand).resolves(
+      cited([["Applications are due March 3, 2027.", deadline], [" Nonprofits may apply.", section], [" Cities may apply.", cities]])
+    );
     bedrock.on(InvokeModelCommand).callsFake(judge((t) => (t.startsWith("Nonprofits") ? "unsupported" : "supported")));
 
-    await handler(event("Who can apply?"));
+    await handler(event("Who can apply, and by when?"));
 
-    expect(sonnetCalls()).toHaveLength(2);
-    expect(sonnetRequest(1).messages.at(-1).content.at(-1).text).toContain('- "Nonprofits may apply."');
-    expect(haikuCalls()).toHaveLength(2);
-    expect(posted()[0]).toBe("Cities may apply.");
-    expect(verifyLines()[0]).toMatchObject({ regenerated: true, removed: 0, factFails: 0, meaningFails: 1 });
-  });
-
-  it("removes what still fails after the retry, fixes the citations and says so", async () => {
-    const parts: Array<string | [string, object]> = [
-      ["Applications are due March 1, 2027.", deadline],
-      [" Late applications lose 10% of their score.", late],
-      [" Section D.4 sets the format.", section],
-    ];
-    bedrock
-      .on(InvokeModelWithResponseStreamCommand)
-      .resolvesOnce(cited(parts))
-      .resolvesOnce(cited(parts));
-
-    await handler(event());
-
-    const answer = `Applications are due March 1, 2027. Section D.4 sets the format.\n\n${LEFT_OUT_NOTE}`;
-    expect(sonnetCalls()).toHaveLength(2);
+    const answer = "Applications are due March 3, 2027. Nonprofits may apply. Cities may apply.";
+    expect(sonnetCalls()).toHaveLength(1);
     expect(posted()[0]).toBe(answer);
-    expect(JSON.parse(posted()[2]).Citations).toEqual([
-      { n: 1, at: [35], quote: deadline.cited_text, document: "Grant document" },
-      { n: 2, at: [answer.indexOf("format.") + "format.".length], quote: "Section D.4", document: "Grant document" },
-    ]);
-    const entry = saves()[0].new_chat_entry[0];
-    expect(entry.chatbot).toBe(answer);
-    expect(JSON.parse(entry.metadata)).toMatchObject({ Verified: { regenerated: true, removed: 1 } });
-    expect(JSON.parse(entry.metadata).Citations).toHaveLength(2);
-    expect(verifyLines()).toEqual([
+    expect(JSON.parse(posted()[2]).Citations).toHaveLength(3);
+    expect(saves()[0].new_chat_entry[0].chatbot).toBe(answer);
+    expect(checkLines()).toEqual([
       {
-        regenerated: true,
-        removed: 1,
-        fallback: false,
+        session: "s1",
+        grant: "Grant A",
+        question: "Who can apply, and by when?",
         sentences: 3,
-        factFails: 1,
-        meaningFails: 0,
-        absenceFails: 0,
-        retryFactFails: 1,
-        retryMeaningFails: 0,
+        flagged: [
+          { text: "Applications are due March 3, 2027.", reason: "a date, amount or number in it isn't in the grant", kind: "fact" },
+          { text: "Nonprofits may apply.", reason: "checked", kind: "meaning" },
+        ],
         ms: expect.any(Number),
       },
     ]);
   });
 
-  it("says it couldn't confirm an answer when nothing factual is left", async () => {
-    const parts = ["The grant funds 40 projects.", " Want more detail?"];
-    bedrock
-      .on(InvokeModelWithResponseStreamCommand)
-      .resolvesOnce(cited(parts))
-      .resolvesOnce(cited(parts));
-    bedrock.on(InvokeModelCommand).callsFake(judge((t) => (t.startsWith("Want") ? "not_a_claim" : "supported")));
+  it("names date, weekday and 'the grant doesn't say' findings by kind", async () => {
+    bedrock.on(InvokeModelWithResponseStreamCommand).resolves(
+      cited([
+        "The March 1, 2027 deadline has already passed.",
+        " It is due on a Friday (March 1, 2027).",
+        " The grant doesn't say whether late applications are reviewed.",
+      ])
+    );
+    bedrock.on(InvokeModelCommand).callsFake(judge((t) => (t.startsWith("The grant doesn't say") ? "not_a_claim" : "supported")));
 
-    await handler(event("How many projects?"));
+    await handler(event());
 
-    expect(posted()).toEqual([
-      NOTHING_CONFIRMED_MESSAGE,
-      "!<|EOF_STREAM|>!",
-      JSON.stringify([{ title: "Grant document", uri: "s3://grant-artifacts/Grant A/raw-text.txt" }]),
+    expect(posted()[0]).toContain("The grant doesn't say whether late applications are reviewed.");
+    expect(checkLines()[0].flagged.map((f: { kind: string }) => f.kind)).toEqual(["date", "weekday", "absence"]);
+    expect(checkLines()[0].flagged[2].reason).toBe("the grant does mention late reviewed");
+  });
+
+  it("clips a long question and long sentences in the log line", async () => {
+    const sentence = `Cities ${"really ".repeat(80)}may apply.`;
+    bedrock.on(InvokeModelWithResponseStreamCommand).resolves(cited([sentence]));
+    bedrock.on(InvokeModelCommand).callsFake(judge(() => "unsupported"));
+
+    await handler(event(`Can cities apply? ${"Please explain. ".repeat(40)}`));
+
+    const [line] = checkLines();
+    expect(line.question).toHaveLength(200);
+    expect(line.question.endsWith("…")).toBe(true);
+    expect(line.flagged[0].text).toHaveLength(300);
+    expect(posted()[0]).toBe(sentence);
+  });
+
+  it("still posts and saves the answer when the checker fails, and logs the failure", async () => {
+    bedrock.on(InvokeModelWithResponseStreamCommand).resolves(cited([["Applications are due March 1, 2027.", deadline]]));
+    bedrock.on(InvokeModelCommand).rejects(new Error("ThrottlingException"));
+
+    await handler(event());
+
+    expect(posted()[0]).toBe("Applications are due March 1, 2027.");
+    expect(posted()[1]).toBe("!<|EOF_STREAM|>!");
+    expect(saves()[0].new_chat_entry[0].chatbot).toBe("Applications are due March 1, 2027.");
+    const counts = ddb.commandCalls(UpdateItemCommand).map((c) => c.args[0].input.ExpressionAttributeValues);
+    expect(counts).toEqual([expect.objectContaining({ ":one": { N: "1" } })]);
+    expect(checkLines()).toEqual([
+      { error: "ThrottlingException", session: "s1", grant: "Grant A", question: "What is the deadline?", ms: expect.any(Number) },
     ]);
-    expect(saves()[0].new_chat_entry[0].chatbot).toBe(NOTHING_CONFIRMED_MESSAGE);
-    expect(verifyLines()[0]).toMatchObject({ regenerated: true, removed: 1, fallback: true });
+    expect(console.error).not.toHaveBeenCalled();
+  });
+
+  it("gives up on a checker that never answers", async () => {
+    bedrock.on(InvokeModelWithResponseStreamCommand).resolves(cited([["Applications are due March 1, 2027.", deadline]]));
+    bedrock.on(InvokeModelCommand).callsFake(() => new Promise(() => {}));
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+    try {
+      const done = handler(event());
+      await vi.waitFor(() => expect(haikuCalls()).toHaveLength(1));
+      expect(posted()[0]).toBe("Applications are due March 1, 2027.");
+      await vi.advanceTimersByTimeAsync(60000);
+      await done;
+    } finally {
+      vi.useRealTimers();
+    }
+
+    expect(checkLines()).toEqual([expect.objectContaining({ error: "check timed out after 60000 ms", session: "s1" })]);
   });
 
   it("lets user-given facts pass the fact check but keeps their messages out of the meaning check", async () => {
@@ -388,103 +391,56 @@ describe("verified chat answers", () => {
 
     await handler(event("Our budget is $250,000. Is that allowed?"));
 
-    expect(sonnetCalls()).toHaveLength(1);
     expect(posted()[0]).toBe("Your $250,000 budget for 4,200 residents is yours to set.");
+    expect(checkLines()[0].flagged).toEqual([]);
     const prompt = haikuRequest().messages[0].content.at(-1).text;
     expect(prompt).not.toContain("We serve 4,200 residents.");
     expect(prompt).not.toContain("Is that allowed?");
-  });
-
-  it("regenerates a 'the grant doesn't say' answer when the grant does say it", async () => {
-    bedrock
-      .on(InvokeModelWithResponseStreamCommand)
-      .resolvesOnce(cited(["The grant doesn't say whether late applications are reviewed."]))
-      .resolvesOnce(cited([["Late applications are not reviewed.", { ...deadline, cited_text: "Late applications are not reviewed." }]]));
-    bedrock.on(InvokeModelCommand).callsFake(judge((t) => (t.startsWith("The grant doesn't say") ? "not_a_claim" : "supported")));
-
-    await handler(event("Are late applications reviewed?"));
-
-    expect(sonnetCalls()).toHaveLength(2);
-    expect(posted()[0]).toBe("Late applications are not reviewed.");
-    expect(verifyLines()[0]).toMatchObject({ regenerated: true, absenceFails: 1 });
   });
 
   it("checks a summary-mode answer against the summary, sent once", async () => {
     const summary = JSON.stringify({ GrantName: "Grant A", Deadline: "March 1, 2027" });
     s3.on(GetObjectCommand, { Key: "Grant A/raw-text.txt" }).rejects(Object.assign(new Error("missing"), { name: "NoSuchKey" }));
     s3.on(GetObjectCommand, { Key: "Grant A/summary.json" }).resolves(rawText(summary));
-    bedrock
-      .on(InvokeModelWithResponseStreamCommand)
-      .resolvesOnce(cited(["Applications are due March 1, 2027, and up to $5 million is available."]))
-      .resolvesOnce(cited(["Applications are due March 1, 2027."]));
+    bedrock.on(InvokeModelWithResponseStreamCommand).resolves(cited(["Applications are due March 1, 2027, and up to $5 million is available."]));
 
     await handler(event());
 
-    expect(sonnetCalls()).toHaveLength(2);
-    const prompt = haikuRequest(1).messages[0].content.at(-1).text;
+    expect(sonnetCalls()).toHaveLength(1);
+    const prompt = haikuRequest().messages[0].content.at(-1).text;
     expect(prompt.split("<grant_summary>")).toHaveLength(2);
     expect(prompt).toContain("Deadline");
     expect(prompt).not.toContain("<passage");
-    expect(prompt).not.toContain("<no_passage/>");
     expect(posted()).toEqual([
-      "Applications are due March 1, 2027.",
+      "Applications are due March 1, 2027, and up to $5 million is available.",
       "!<|EOF_STREAM|>!",
       JSON.stringify([{ title: "Grant summary", uri: "s3://grant-artifacts/Grant A/summary.json" }]),
     ]);
+    expect(checkLines()[0].flagged).toEqual([expect.objectContaining({ kind: "fact" })]);
   });
 
-  it("counts one daily message for a regenerated answer", async () => {
-    bedrock
-      .on(InvokeModelWithResponseStreamCommand)
-      .resolvesOnce(cited(["Up to $9 million is available."]))
-      .resolvesOnce(cited(["Up to $8 million is available."]));
-
-    await handler(event());
-
-    expect(sonnetCalls()).toHaveLength(2);
-    const counts = ddb.commandCalls(UpdateItemCommand).map((c) => c.args[0].input.ExpressionAttributeValues);
-    expect(counts).toEqual([expect.objectContaining({ ":one": { N: "1" } })]);
-  });
-
-  it("adds the cut-off notice after the checked text", async () => {
+  it("adds the cut-off notice to the answer but checks only the model's text", async () => {
     bedrock.on(InvokeModelWithResponseStreamCommand).resolves(cited([["Applications are due March 1, 2027.", deadline], " The other"], "max_tokens"));
     bedrock.on(InvokeModelCommand).callsFake(judge((t) => (t === "The other" ? "not_a_claim" : "supported")));
 
     await handler(event());
 
     expect(posted()[0]).toBe("Applications are due March 1, 2027. The other\n\nThis answer was cut off. Ask me to continue.");
+    expect(checkLines()[0]).toMatchObject({ sentences: 2, flagged: [] });
   });
 
-  it("says it couldn't confirm, gives the message back and saves nothing when the meaning check fails", async () => {
-    bedrock.on(InvokeModelWithResponseStreamCommand).resolves(cited([["Applications are due March 1, 2027.", deadline]]));
-    bedrock.on(InvokeModelCommand).rejects(new Error("ThrottlingException"));
+  it("checks nothing when the model was cut off before writing anything", async () => {
+    bedrock.on(InvokeModelWithResponseStreamCommand).resolves(cited([], "max_tokens"));
 
     await handler(event());
 
-    expect(posted()).toEqual([
-      "I couldn't confirm an answer to that in the grant just now. Please try asking again.",
-      "!<|EOF_STREAM|>!",
-      "[]",
-    ]);
-    expect(saves()).toEqual([]);
-    const counts = ddb.commandCalls(UpdateItemCommand).map((c) => c.args[0].input.ExpressionAttributeValues);
-    expect(counts).toEqual([expect.objectContaining({ ":one": { N: "1" } }), expect.objectContaining({ ":minus": { N: "-1" } })]);
-    expect(console.error).toHaveBeenCalledWith(LOG_MARKERS.chatAnswerFailed[1], expect.objectContaining({ message: "ThrottlingException" }));
+    expect(posted()[0]).toBe("This answer was cut off. Ask me to continue.");
+    expect(haikuCalls()).toHaveLength(0);
+    expect(checkLines()).toEqual([]);
   });
 
-  it("treats a sentence Haiku left out as unsupported", async () => {
-    bedrock
-      .on(InvokeModelWithResponseStreamCommand)
-      .resolvesOnce(cited([["Applications are due March 1, 2027.", deadline], [" Cities may apply.", cities]]))
-      .resolvesOnce(cited([["Applications are due March 1, 2027.", deadline], [" Cities may apply.", cities]]));
-    bedrock.on(InvokeModelCommand).callsFake((input) => verdictReply([{ id: 1, verdict: "supported", reason: "ok" }]));
-
-    await handler(event());
-
-    expect(posted()[0]).toBe(`Applications are due March 1, 2027.\n\n${LEFT_OUT_NOTE}`);
-  });
-
-  it("logs a line monitoring counts", () => {
-    expect(LOG_MARKERS.chatVerified).toEqual([VERIFY_MARKER]);
+  it("counts the check's lines in the ChatVerified metric", () => {
+    expect(LOG_MARKERS.chatVerified).toEqual([CHECK_MARKER]);
+    expect(LOG_MARKERS.chatAnswerFailed).not.toContain(CHECK_MARKER);
   });
 });

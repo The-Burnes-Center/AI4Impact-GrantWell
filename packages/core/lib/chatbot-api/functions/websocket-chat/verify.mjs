@@ -1,12 +1,8 @@
 import { BedrockRuntimeClient, InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime";
 import { extractFacts, sourceKeys, unsupportedFacts } from "./fact-check.mjs";
 
-export const VERIFY_MARKER = "CHAT_VERIFY";
-
-export const LEFT_OUT_NOTE = "I left out details I couldn't confirm in the grant.";
-
-export const NOTHING_CONFIRMED_MESSAGE =
-  "I couldn't confirm an answer to that in the grant. Try asking another way, or check with the program officer named in the grant.";
+/** One line per checked answer; the daily brief reads these. */
+export const CHECK_MARKER = "CHAT_CHECK";
 
 const PASSAGE_MAX_CHARS = 1500;
 const DOCUMENT_TEXT_MAX_CHARS = 40000;
@@ -163,10 +159,7 @@ export function meaningRequest({ units, found = [], documents = [], summary = nu
 
 let defaultClient;
 
-/**
- * One verdict per unit, in unit order. A unit Haiku skipped counts as unsupported. Throws when the
- * call fails or returns no usable verdicts, so an unchecked answer never reaches the reader.
- */
+/** One verdict per unit, in unit order. A unit the model skipped counts as unsupported. Throws when the call fails or returns no usable verdicts. */
 export async function checkMeaning(options, { client, modelId = process.env.VERIFY_MODEL_ID } = {}) {
   const { units } = options;
   if (!units.length) return [];
@@ -235,13 +228,18 @@ export async function verifyAnswer({ text, found = [], documents = [], summary =
   const units = splitSentences(text);
   const keys = unionKeys(baseKeys, found.map((f) => f.citation?.cited_text ?? ""));
   const reasons = new Map();
+  const kinds = new Map();
   const note = (list, reason) => list.forEach((i) => reasons.has(i) || reasons.set(i, reason));
+  const kind = (list, k) => list.forEach((i) => kinds.has(i) || kinds.set(i, k));
   const facts = factFailures(units, keys);
   const statuses = dateStatusFailures(units, today);
   const weekdays = weekdayFailures(units, grantText);
   note(statuses, `it says a date has or hasn't passed wrongly for today (${today}); mark each date on its own`);
   note(weekdays, "its weekday doesn't fall on that date");
   note(facts, "a date, amount or number in it isn't in the grant");
+  kind(statuses, "date");
+  kind(weekdays, "weekday");
+  kind(facts, "fact");
   const factFailing = [...new Set([...facts, ...statuses, ...weekdays])].sort((x, y) => x - y);
   const verdicts = await checkMeaning({ units, found, documents, summary, documentText, grantText, today }, deps);
   const absenceFailing = verdicts.flatMap((v, i) => {
@@ -252,10 +250,12 @@ export async function verifyAnswer({ text, found = [], documents = [], summary =
     return [i];
   });
   const meaningFailing = verdicts.flatMap((v, i) => (v.verdict === "supported" || v.verdict === "not_a_claim" ? [] : [i]));
+  kind(absenceFailing, "absence");
+  kind(meaningFailing, "meaning");
   note(meaningFailing, null);
   meaningFailing.forEach((i) => reasons.get(i) || reasons.set(i, verdicts[i].reason || null));
   const failing = [...new Set([...factFailing, ...meaningFailing])].sort((a, b) => a - b);
-  return { units, verdicts, factFailing, meaningFailing, absenceFailing, failing, reasons };
+  return { units, verdicts, factFailing, meaningFailing, absenceFailing, failing, reasons, kinds };
 }
 
 const ABSENCE = /\b(?:grant|notice|nofo|solicitation|announcement|document)\b[^.]{0,40}?\b(?:does not|doesn't|did not|didn't|do not|don't)\s+(?:say|state|mention|specify|address|list|include|cover|describe|set|give|provide|require|explain|name|clarify|define|label|indicate|identify|tie|link)\b\s*(?:anything\s+)?(?:about|on|whether|if|how|what|when|which|who|any|a|an|the)?\s*([^.;:?!]+)/i;

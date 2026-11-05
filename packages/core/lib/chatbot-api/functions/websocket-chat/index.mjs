@@ -15,7 +15,7 @@ import { buildChatRequest, getPromptText } from "./prompt.mjs";
 import { loadSupportingDocuments, pdfContentBlocks, SKIP_REASONS } from "./supporting-documents.mjs";
 import { numberCitations, usablePageMap } from "./citations.mjs";
 import { sourceKeys } from "./fact-check.mjs";
-import { LEFT_OUT_NOTE, NOTHING_CONFIRMED_MESSAGE, VERIFY_MARKER, problemsText, removeUnits, verifyAnswer } from "./verify.mjs";
+import { CHECK_MARKER, verifyAnswer } from "./verify.mjs";
 
 const ENDPOINT = process.env.WEBSOCKET_API_ENDPOINT;
 const wsConnectionClient = new ApiGatewayManagementApiClient({ endpoint: ENDPOINT });
@@ -53,10 +53,11 @@ const CUT_OFF_NOTICE = "This answer was cut off. Ask me to continue.";
 
 const ERROR_MESSAGE = "Something went wrong while answering. Try again in a moment.";
 
-/** Pinned by LOG_MARKERS.chatAnswerFailed. */
-const VERIFY_FAILED_MARKER = "Chat verification failed:";
+// Medium effort runs up to ~20 s; this only bounds a hung call.
+const CHECK_TIMEOUT_MS = 60000;
 
-const CHECK_UNAVAILABLE_MESSAGE = "I couldn't confirm an answer to that in the grant just now. Please try asking again.";
+const CHECK_QUESTION_MAX_CHARS = 200;
+const CHECK_SENTENCE_MAX_CHARS = 300;
 
 const CHAT_WORKER_MARKER = "grantwellChatWorker";
 
@@ -456,7 +457,7 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
     let modelResponse = "";
     let sources = [];
     let citations = [];
-    let verified = null;
+    let check = null;
     if (!grantSource) {
       modelResponse = GRANT_UNAVAILABLE_MESSAGE;
       await post(modelResponse);
@@ -488,54 +489,17 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
 
       const claude = new ClaudeModel();
       const documents = citing ? [{ title: "Grant document", pageStarts: grantSource.pageStarts }, ...applicant.documents] : [];
-      const userText = [...savedChat.turns.map((t) => t.user), userMessage].join("\n\n");
-      const baseKeys = sourceKeys([grantSource.text, ...applicant.texts, userText, context]);
 
-      const fail = async (marker, error) => {
-        console.error(marker, error);
+      let attempt;
+      try {
+        attempt = await answerOnce(claude, system, messages);
+      } catch (error) {
+        console.error("Stream processing error:", error);
         await post(`<!ERROR!>: ${ERROR_MESSAGE}`);
-      };
-      // The checker itself failing must not show unchecked text, and isn't the user's fault.
-      const checkerFailed = async (error) => {
-        console.error(VERIFY_FAILED_MARKER, error);
-        if (!capExempt) await refundDailyChatMessage(userId);
-        try {
-          await post(CHECK_UNAVAILABLE_MESSAGE);
-          await post("!<|EOF_STREAM|>!");
-          await post(JSON.stringify([]));
-          await wsConnectionClient.send(new DeleteConnectionCommand({ ConnectionId: id }));
-        } catch (e) {
-          console.error("Error sending the couldn't-confirm message:", e);
-        }
-      };
-      const generate = async (request) => {
-        try {
-          return await answerOnce(claude, system, request);
-        } catch (error) {
-          await fail("Stream processing error:", error);
-          return null;
-        }
-      };
-      const verify = async (attempt) => {
-        try {
-          return await verifyAnswer({
-            text: attempt.text,
-            found: attempt.found,
-            documents,
-            summary: citing ? null : grantSource.text,
-            documentText: applicant.texts.join("\n\n"),
-            grantText: grantSource.text,
-            baseKeys,
-            today,
-          });
-        } catch (error) {
-          await checkerFailed(error);
-          return null;
-        }
-      };
-      // Nothing streams before this point, so a refusal never follows partial text.
-      const refuse = async (category) => {
-        console.warn(`Model refused the request (category: ${category})`);
+        return;
+      }
+      if (attempt.refusalCategory) {
+        console.warn(`Model refused the request (category: ${attempt.refusalCategory})`);
         try {
           await wsConnectionClient.send(new PostToConnectionCommand({ ConnectionId: id, Data: REFUSAL_MESSAGE }));
           await wsConnectionClient.send(new PostToConnectionCommand({ ConnectionId: id, Data: "!<|EOF_STREAM|>!" }));
@@ -544,73 +508,29 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
         } catch (e) {
           console.error("Error sending refusal message:", e);
         }
-      };
-      const usable = async (attempt) => {
-        if (!attempt) return false;
-        if (attempt.refusalCategory) {
-          await refuse(attempt.refusalCategory);
-          return false;
+        return;
+      }
+      if (!attempt.text.trim()) {
+        if (attempt.stopReason !== "max_tokens") {
+          console.error("Stream processing error:", new Error("The model returned no answer text"));
+          await post(`<!ERROR!>: ${ERROR_MESSAGE}`);
+          return;
         }
-        if (!attempt.text.trim()) {
-          await fail("Stream processing error:", new Error("The model returned no answer text"));
-          return false;
-        }
-        return true;
-      };
-
-      let attempt = await generate(messages);
-      if (attempt && !attempt.refusalCategory && !attempt.text.trim() && attempt.stopReason === "max_tokens") {
         modelResponse = CUT_OFF_NOTICE;
-        verified = { regenerated: false, removed: 0 };
       } else {
-        if (!(await usable(attempt))) return;
-        const started = Date.now();
-        const first = await verify(attempt);
-        if (!first) return;
-        let result = first;
-        const regenerated = first.failing.length > 0;
-        if (regenerated) {
-          const last = messages.at(-1);
-          const statements = first.failing.map((i) => ({ text: first.units[i].text, reason: first.reasons?.get(i) ?? null }));
-          const retryMessages = [
-            ...messages.slice(0, -1),
-            { ...last, content: [...last.content, { type: "text", text: problemsText(statements) }] },
-          ];
-          attempt = await generate(retryMessages);
-          if (!(await usable(attempt))) return;
-          result = await verify(attempt);
-          if (!result) return;
-        }
-
-        let answerText = attempt.text;
-        let found = attempt.found;
-        let fallback = false;
-        if (result.failing.length) {
-          const failing = new Set(result.failing);
-          if (result.verdicts.some((v, i) => !failing.has(i) && v.verdict === "supported")) {
-            ({ text: answerText, found } = removeUnits(answerText, result.units, result.failing, found));
-            answerText = `${answerText}\n\n${LEFT_OUT_NOTE}`;
-          } else {
-            fallback = true;
-            answerText = NOTHING_CONFIRMED_MESSAGE;
-            found = [];
-          }
-        }
-        verified = { regenerated, removed: result.failing.length };
-        console.log(`${VERIFY_MARKER} ${JSON.stringify({
-          ...verified,
-          fallback,
-          sentences: first.units.length,
-          factFails: first.factFailing.length,
-          meaningFails: first.meaningFailing.length,
-          absenceFails: first.absenceFailing.length,
-          ...(regenerated && { retryFactFails: result.factFailing.length, retryMeaningFails: result.meaningFailing.length }),
-          ms: Date.now() - started,
-        })}`);
-
-        modelResponse = answerText;
-        if (citing) citations = numberCitations(found, documents).slice(0, MAX_CITATIONS);
-        if (attempt.stopReason === "max_tokens" && !fallback) modelResponse = `${modelResponse}\n\n${CUT_OFF_NOTICE}`;
+        modelResponse = attempt.stopReason === "max_tokens" ? `${attempt.text}\n\n${CUT_OFF_NOTICE}` : attempt.text;
+        if (citing) citations = numberCitations(attempt.found, documents).slice(0, MAX_CITATIONS);
+        const userText = [...savedChat.turns.map((t) => t.user), userMessage].join("\n\n");
+        check = {
+          text: attempt.text,
+          found: attempt.found,
+          documents,
+          summary: citing ? null : grantSource.text,
+          documentText: applicant.texts.join("\n\n"),
+          grantText: grantSource.text,
+          baseKeys: sourceKeys([grantSource.text, ...applicant.texts, userText, context]),
+          today,
+        };
       }
       await post(modelResponse);
       sources = [grantSource.source, ...applicant.included.map((fileName) => ({ title: fileName, uri: `userDocuments/${fileName}` }))];
@@ -648,7 +568,7 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
       new_chat_entry: [{
         user: userMessage,
         chatbot: modelResponse,
-        metadata: JSON.stringify({ Sources: sources, ...(citations.length && { Citations: citations }), Verified: verified }),
+        metadata: JSON.stringify({ Sources: sources, ...(citations.length && { Citations: citations }) }),
       }],
       title: `Chat about ${documentIdentifier}`,
       document_identifier: documentIdentifier,
@@ -657,11 +577,13 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
       console.error("Could not save the chat turn:", saved.error || saved.body || saved.errorMessage);
     }
 
-    const input = {
-      ConnectionId: id,
-    };
-    await wsConnectionClient.send(new DeleteConnectionCommand(input));
+    try {
+      await wsConnectionClient.send(new DeleteConnectionCommand({ ConnectionId: id }));
+    } catch (e) {
+      console.warn("Failed to close the chat connection:", e.message);
+    }
 
+    if (check) await checkAnswer(check, { session: sessionId, grant: grantName, question: userMessage });
   } catch (error) {
     console.error("Error:", error);
     let responseParams = {
@@ -672,6 +594,34 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
     await wsConnectionClient.send(command);
   }
 };
+
+const clip = (text, max) => {
+  const s = String(text ?? "").replace(/\s+/g, " ").trim();
+  return s.length > max ? `${s.slice(0, max - 1)}…` : s;
+};
+
+/** Checks an answer the user already has and logs what it found; never throws. */
+async function checkAnswer(options, { session, grant, question }) {
+  const started = Date.now();
+  const line = { session, grant, question: clip(question, CHECK_QUESTION_MAX_CHARS) };
+  let timer;
+  try {
+    const timeout = new Promise((_, reject) => {
+      timer = setTimeout(() => reject(new Error(`check timed out after ${CHECK_TIMEOUT_MS} ms`)), CHECK_TIMEOUT_MS);
+    });
+    const result = await Promise.race([verifyAnswer(options), timeout]);
+    const flagged = result.failing.map((i) => ({
+      text: clip(result.units[i].text, CHECK_SENTENCE_MAX_CHARS),
+      reason: result.reasons.get(i) ?? null,
+      kind: result.kinds.get(i) ?? "meaning",
+    }));
+    console.log(`${CHECK_MARKER} ${JSON.stringify({ ...line, sentences: result.units.length, flagged, ms: Date.now() - started })}`);
+  } catch (error) {
+    console.log(`${CHECK_MARKER} ${JSON.stringify({ error: String(error?.message ?? error), ...line, ms: Date.now() - started })}`);
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 /** One buffered model answer; text a call wrote before a tool call is narration, never an answer. */
 async function answerOnce(claude, system, messages) {

@@ -77,7 +77,7 @@ const answer = (text: string) =>
 
 const SOURCE_LIST = [{ title: "Grant document", uri: "s3://grant-artifacts/nofo-a/raw-text.txt" }];
 const SOURCES = JSON.stringify(SOURCE_LIST);
-const SAVED_METADATA = JSON.stringify({ Sources: SOURCE_LIST, Verified: { regenerated: false, removed: 0 } });
+const SAVED_METADATA = JSON.stringify({ Sources: SOURCE_LIST });
 
 const chat = (data: object = {}) =>
   handler({
