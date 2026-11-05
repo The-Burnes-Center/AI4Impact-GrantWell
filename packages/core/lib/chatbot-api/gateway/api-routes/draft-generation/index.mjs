@@ -57,6 +57,9 @@ const CAP_EXEMPT_ROLES = ["Admin", "PlatformAdmin", "Developer"];
 
 const MAX_INPUT_CHARS = 10000;
 
+const IN_REVIEW_STATUSES = new Set(["quarantined", "processing"]);
+const GRANT_IN_REVIEW_MESSAGE = "This grant is being reviewed and will be back soon.";
+
 /** Pinned by LOG_MARKERS.applicationCapReached. */
 const APPLICATION_CAP_MARKER = "Daily application limit reached";
 
@@ -179,7 +182,7 @@ function normalizeQuestionnaireAnswers(raw) {
     .map((a) => ({ question: typeof a.question === "string" ? a.question : "", answer: a.answer }));
 }
 
-// Returns { scope, state } from the grant's metadata row, or null when there is no row or it can't be read.
+// Returns { scope, state, status } from the grant's metadata row, or null when there is no row or it can't be read.
 async function readNofoScope(nofoName) {
   const tableName = process.env.NOFO_METADATA_TABLE_NAME;
   if (!tableName || !nofoName) return null;
@@ -195,6 +198,7 @@ async function readNofoScope(nofoName) {
     return {
       scope: typeof row.scope === "string" ? row.scope : null,
       state: typeof row.state === "string" ? row.state : null,
+      status: typeof row.status === "string" ? row.status : null,
     };
   } catch (err) {
     console.warn(`Could not read scope/state for ${nofoName}:`, err.message);
@@ -303,6 +307,19 @@ export const handler = async (event) => {
         };
       }
       throw authError;
+    }
+
+    // The applicant can still edit their application, but the AI writer waits until the review ends.
+    if (
+      IN_REVIEW_STATUSES.has(nofoScopeRow?.status) &&
+      callerScope.role !== "developer" &&
+      callerScope.role !== "regularAdmin"
+    ) {
+      return {
+        statusCode: 409,
+        headers,
+        body: JSON.stringify({ error: "GRANT_IN_REVIEW", message: GRANT_IN_REVIEW_MESSAGE }),
+      };
     }
 
     const userState = callerScope.state || "";

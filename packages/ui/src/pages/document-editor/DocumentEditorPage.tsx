@@ -242,7 +242,7 @@ const DocumentEditor: React.FC = () => {
     if (!selectedNofo) return;
     setIsNofoLoading(true);
     apiClient.landingPage
-      .getNOFOSummary(selectedNofo)
+      .getNOFOSummary(selectedNofo, { forApplication: true })
       .then((result) => setNofoName(result?.data?.GrantName || "Write Application"))
       .catch(() => setNofoName("Write Application"))
       .finally(() => setIsNofoLoading(false));

@@ -3,6 +3,7 @@ import { AppConfig } from "../types/app";
 import type { ProcessingReviewList, ReviewDetail, ProcessingMetrics } from "../types/processing-review";
 import type { CustomQuestion } from "../types/nofo";
 import { apiFetch } from "../session-ended";
+import { grantInReviewError } from "./grant-in-review";
 
 export class LandingPageClient {
   private readonly baseUrl: string;
@@ -37,13 +38,21 @@ export class LandingPageClient {
   }
 
   // Return NOFO summary from S3 bucket
-  /** `citations` adds each requirement's quoted sources; only the Requirements page shows them. */
-  async getNOFOSummary(documentKey: string, { citations = false }: { citations?: boolean } = {}) {
+  /**
+   * `citations` adds each requirement's quoted sources; only the Requirements page shows them.
+   * `forApplication` is for Write Application, which still gets the grant's name and narrative
+   * sections while the grant is in review (the response then has `inReview: true`).
+   */
+  async getNOFOSummary(
+    documentKey: string,
+    { citations = false, forApplication = false }: { citations?: boolean; forApplication?: boolean } = {}
+  ) {
     try {
       const token = await Utils.authenticate();
       const url = new URL(`${this.API}/s3-nofo-summary`);
       url.searchParams.append("documentKey", documentKey);
       if (citations) url.searchParams.append("citations", "1");
+      if (forApplication) url.searchParams.append("for", "application");
 
       const response = await apiFetch(url, {
         method: "GET",
@@ -69,6 +78,12 @@ export class LandingPageClient {
             err.body = parsed;
             throw err;
           }
+        }
+        if (response.status === 409) {
+          let body: unknown = null;
+          try { body = await response.json(); } catch { /* ignore */ }
+          const inReview = grantInReviewError(response.status, body);
+          if (inReview) throw inReview;
         }
         throw Object.assign(new Error(`Error: ${response.status}`), { status: response.status });
       }

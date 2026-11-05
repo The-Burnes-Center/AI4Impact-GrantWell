@@ -81,4 +81,38 @@ describe("Write Application documents", () => {
     expect(net.last(START).body).toMatchObject({ documentKeys: ["user-1/documents/plan.pdf"] });
     await waitFor(() => expect(onNavigateToEditor).toHaveBeenCalledWith("job-1"), { timeout: 4000 });
   });
+
+  it("says the AI writer waits while the grant is in review, and leaves the application where it was", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const net = stubFetch({
+      [LIST]: json({ documents: LIBRARY }),
+      [DRAFT]: (req: RouteRequest) => json((req.body as { operation: string }).operation === "get_draft" ? BASE_ROW : {}),
+      [SUMMARY]: json({ inReview: true, data: { ProjectNarrativeSections: [{ item: "Need", description: "d" }] } }),
+      [QUESTIONS]: json({ data: { questions: [] } }),
+      [START]: json({ error: "GRANT_IN_REVIEW", message: "This grant is being reviewed and will be back soon." }, 409),
+    });
+    const draftSave = fakeDraftSave();
+    const onNavigateToEditor = vi.fn();
+    const { user } = renderApp(
+      <UploadDocuments
+        selectedNofo="Grant A/"
+        onNavigate={() => {}}
+        onNavigateToEditor={onNavigateToEditor}
+        sessionId="s1"
+        draftSave={draftSave}
+      />
+    );
+    await screen.findByRole("checkbox", { name: /budget\.pdf/ });
+
+    await user.click(screen.getByRole("button", { name: "Create Draft" }));
+
+    expect(await screen.findByText("This grant is being reviewed and will be back soon.")).toBeInTheDocument();
+    expect(screen.queryByText(/GRANT_IN_REVIEW/)).not.toBeInTheDocument();
+    expect(onNavigateToEditor).not.toHaveBeenCalled();
+    expect(draftSave.saveFields).toHaveBeenLastCalledWith(
+      { status: "uploading_documents" },
+      { source: "status_change", immediate: true }
+    );
+    expect(net.to(SUMMARY).every((r) => r.url.searchParams.get("for") === "application")).toBe(true);
+  });
 });

@@ -190,6 +190,48 @@ describe("SectionsEditor versions", () => {
   });
 });
 
+describe("SectionsEditor rewriting failed sections", () => {
+  it("says the AI writer waits while the grant is in review, and keeps the failed sections to retry later", async () => {
+    let row: Record<string, unknown> = {
+      session_id: "s1",
+      status: "generating_draft",
+      sections: {},
+      section_order: ORDER,
+      rev: 1,
+    };
+    const net = stubFetch({
+      [SUMMARY]: json({ inReview: true, ...GRANT }),
+      [JOB]: json({ jobId: "job-1", status: "partial", sections: { "statement-of-need": "AI need" }, failedSections: ["budget"] }),
+      "GET /s3-nofo-questions": json({ data: { questions: [] } }),
+      "POST /draft-generation": json({ error: "GRANT_IN_REVIEW", message: "This grant is being reviewed and will be back soon." }, 409),
+      [DRAFT]: (req: RouteRequest) => {
+        const body = req.body as Record<string, unknown>;
+        if (body.operation === "get_draft") return json(row);
+        if (body.operation === "update_draft") {
+          row = { ...row, sections: body.sections, status: body.status ?? row.status };
+          return json({ ...row, sectionOrder: ORDER, rev: 2, itemBytes: 2000, itemLimitBytes: 409600 });
+        }
+        return json({ versions: [] });
+      },
+    });
+    const { user } = renderApp(
+      <NotificationProvider>
+        <NotificationBar />
+        <Editor activeJobId="job-1" isGenerating />
+      </NotificationProvider>
+    );
+
+    const retry = await screen.findByRole("button", { name: "Retry Failed Sections" }, { timeout: 5000 });
+    await user.click(retry);
+
+    const message = await screen.findByText("This grant is being reviewed and will be back soon.");
+    expect(screen.getAllByRole("alert").some((region) => region.contains(message))).toBe(true);
+    expect(screen.getByRole("button", { name: "Retry Failed Sections" })).toBeInTheDocument();
+    expect(net.last("POST /draft-generation").body).toMatchObject({ sectionIds: ["budget"] });
+    expect(net.to(SUMMARY).every((r) => r.url.searchParams.get("for") === "application")).toBe(true);
+  });
+});
+
 describe("SectionsEditor size", () => {
   it("warns once a save brings the application close to its storage limit", async () => {
     const fake: Fake = {

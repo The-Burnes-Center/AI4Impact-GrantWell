@@ -13,6 +13,7 @@ import type { useDraftSave } from "../../hooks/use-draft-save";
 import type { DocumentData } from "../../common/types/document";
 import { DailyLimitError } from "../../common/api-client/daily-limit";
 import { InputTooLongError } from "../../common/api-client/drafts-client";
+import { GrantInReviewError } from "../../common/api-client/grant-in-review";
 import { grantSections } from "../../common/helpers/application-sections";
 
 // Coarse phases only: the poll below updates a percentage every 2s and those
@@ -106,7 +107,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
 
   const grantListsNoSections = async (nofo: string) => {
     try {
-      const summary = await apiClient.landingPage.getNOFOSummary(nofo);
+      const summary = await apiClient.landingPage.getNOFOSummary(nofo, { forApplication: true });
       return grantSections(summary?.data?.ProjectNarrativeSections).length === 0;
     } catch {
       return false;
@@ -193,7 +194,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       }
     } catch (error) {
       console.error("Error creating draft:", error);
-      if (error instanceof DailyLimitError || error instanceof InputTooLongError) {
+      if (error instanceof DailyLimitError || error instanceof InputTooLongError || error instanceof GrantInReviewError) {
         void draftSave.saveFields({ status: "uploading_documents" }, { source: "status_change", immediate: true });
       }
       setSubmitError(error instanceof Error ? error.message : "Failed to create draft. Please try again.");
