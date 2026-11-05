@@ -203,9 +203,7 @@
       "points": null,
       "weightPct": null,
       "scale": null,
-      "sections": [
-        "Research Strategy"
-      ],
+      "sections": [],
       "quote": "Factor 1. Importance of the Research (Significance and Innovation) Significance Evaluate the importance of the proposed research in the context of current scientific challenges and opportunities"
     },
     {
@@ -214,9 +212,7 @@
       "points": null,
       "weightPct": null,
       "scale": null,
-      "sections": [
-        "Research Strategy"
-      ],
+      "sections": [],
       "quote": "Factor 2. Rigor and Feasibility (Approach) Approach Evaluate the scientific quality of the proposed work. Evaluate the likelihood that compelling, reproducible findings will result (rigor)"
     },
     {
@@ -445,33 +441,9 @@
       "item": "PHS Assignment Request Form",
       "userWrites": false,
       "quote": "PHS Assignment Request Form All instructions in the How to Apply- Application uide"
-    },
-    {
-      "item": "Bibliography & References Cited",
-      "userWrites": true,
-      "quote": null
-    },
-    {
-      "item": "Facilities & Other Resources",
-      "userWrites": true,
-      "quote": null
-    },
-    {
-      "item": "Equipment",
-      "userWrites": true,
-      "quote": null
-    },
-    {
-      "item": "Biographical Sketch",
-      "userWrites": true,
-      "quote": null
     }
   ],
   "libraryRequired": [
-    "Project Summary/Abstract",
-    "Project Narrative",
-    "Specific Aims",
-    "Research Strategy",
     "Resource Sharing Plan",
     "Data Management and Sharing Plan"
   ]

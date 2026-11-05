@@ -412,28 +412,12 @@
       "quote": "PHS Assignment Request Form All instructions in the How to Apply- Application Guide must be followed."
     },
     {
-      "item": "Bibliography & References Cited",
-      "userWrites": true,
-      "quote": null
-    },
-    {
-      "item": "Facilities & Other Resources",
-      "userWrites": true,
-      "quote": null
-    },
-    {
-      "item": "Equipment",
-      "userWrites": true,
-      "quote": null
-    },
-    {
       "item": "Biographical Sketch",
       "userWrites": true,
-      "quote": null
+      "quote": "Applicants should use the biographical sketch of the principal investigator to illustrate how this award will advance the investigator's career in aging research."
     }
   ],
   "libraryRequired": [
-    "Project Summary/Abstract",
     "Project Narrative",
     "Specific Aims",
     "Resource Sharing Plan"

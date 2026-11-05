@@ -424,26 +424,9 @@
       "item": "PHS Assignment Request Form",
       "userWrites": false,
       "quote": "PHS Assignment Request Form All instructions"
-    },
-    {
-      "item": "Bibliography & References Cited",
-      "userWrites": true,
-      "quote": null
-    },
-    {
-      "item": "Facilities & Other Resources",
-      "userWrites": true,
-      "quote": null
-    },
-    {
-      "item": "Equipment",
-      "userWrites": true,
-      "quote": null
     }
   ],
   "libraryRequired": [
-    "Project Summary/Abstract",
-    "Project Narrative",
     "Resource Sharing Plan",
     "Data Management and Sharing Plan"
   ]

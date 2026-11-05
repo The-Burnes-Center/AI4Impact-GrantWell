@@ -333,6 +333,10 @@
     {
       "item": "Pre-award costs (incurred before DOT obligates funds) are ineligible for reimbursement and cannot be used as match, unless DOT authorizes them in writing",
       "quote": "any costs incurred prior to DOT's obligation of funds for activities (\"pre-award costs\") are ineligible for reimbursement and may not be used as matching funds."
+    },
+    {
+      "item": "Recipients must contribute a local match of at least 20 percent of total eligible project costs",
+      "quote": "The Federal share of an SS4A grant may not exceed 80 percent of total eligible SS4A project costs. Recipients are required to contribute a local matching share of no less than 20 percent of total eligible project costs."
     }
   ],
   "requiredDocuments": [

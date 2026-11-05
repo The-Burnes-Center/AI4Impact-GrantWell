@@ -289,7 +289,6 @@
       "weightPct": null,
       "scale": null,
       "sections": [
-        "Specific Aims",
         "Research Strategy"
       ],
       "quote": "Research Plan Are the proposed research question, design, and methodology of significant scientific and technical merit?"
@@ -625,30 +624,12 @@
       "quote": "Reference letters are submitted directly through the eRA Commons Submit Referee Information link and not through Grants.gov."
     },
     {
-      "item": "Bibliography & References Cited",
-      "userWrites": true,
-      "quote": null
-    },
-    {
-      "item": "Facilities & Other Resources",
-      "userWrites": true,
-      "quote": null
-    },
-    {
-      "item": "Equipment",
-      "userWrites": true,
-      "quote": null
-    },
-    {
       "item": "Biographical Sketch",
       "userWrites": true,
-      "quote": null
+      "quote": "Unless also listed as senior/key personnel, collaborators and consultants do not need to provide their biographical sketches."
     }
   ],
   "libraryRequired": [
-    "Project Summary/Abstract",
-    "Project Narrative",
-    "Specific Aims",
     "Training in the Responsible Conduct of Research"
   ]
 }
