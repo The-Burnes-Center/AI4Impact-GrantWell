@@ -48,8 +48,8 @@ export const LOG_MARKERS = {
   turnstileNotConfigured: ["TURNSTILE_SECRET_KEY is not set"],
   accountSetupFailed: ["Failed to set custom:state at confirmation", "Failed to revoke sessions after password reset"],
   kbRetrieveFailed: ["could not retrieve Knowledge Base documents"],
-  chatAnswerFailed: ["Stream processing error:", "Chat verification failed:"],
-  chatVerified: ["CHAT_VERIFY"],
+  chatAnswerFailed: ["Stream processing error:"],
+  chatVerified: ["CHAT_CHECK"],
   grantSearchFailed: ["Hybrid search error:"],
   searchIndexBuildFailed: ["Search index build failed:"],
   createMetadataFailed: ["Error processing record:"],
@@ -165,7 +165,7 @@ export class MonitoringStack extends cdk.NestedStack {
     this.modelCanaryFunctionName = this.addModelCanary(props.bedrockModels);
 
     if (config.monitoring.dailyBrief) {
-      this.addDailyBrief([
+      this.addDailyBrief(props.chatFunction, [
         { label: "chat", fn: props.chatFunction, purpose: "answers every chat message; idle means nobody chatted" },
         { label: "chat sign-in check", fn: props.websocketAuthorizerFunction, purpose: "runs when a chat connection opens" },
         { label: "sign-up / sign-in trigger", fn: props.signupTriggerFunction, purpose: "runs on every sign-up and sign-in; errors include bot rejections" },
@@ -836,7 +836,8 @@ export class MonitoringStack extends cdk.NestedStack {
     };
   }
 
-  private addDailyBrief(components: BriefComponent[]): void {
+  private addDailyBrief(chatFunction: lambda.IFunction, components: BriefComponent[]): void {
+    const chatLogGroupName = `/aws/lambda/${chatFunction.functionName}`;
     // SSM, not an env var: Lambda caps all environment variables at 4 KB combined.
     const manifest = new ssm.StringParameter(this, "DailyBriefComponents", {
       parameterName: `/${this.prefix}/daily-brief/components`,
@@ -859,6 +860,7 @@ export class MonitoringStack extends cdk.NestedStack {
         STAGE: this.stage,
         BRIEF_COMPONENTS_PARAM: manifest.parameterName,
         ALARM_PREFIX: `${this.prefix} `,
+        CHAT_LOG_GROUP: chatLogGroupName,
       },
       description: "Publishes the daily GrantWell health brief to Slack",
       logGroup: new logs.LogGroup(this, "DailyBriefLogGroup", {
@@ -870,6 +872,15 @@ export class MonitoringStack extends cdk.NestedStack {
       actions: ["cloudwatch:GetMetricData", "cloudwatch:DescribeAlarms"],
       resources: ["*"],
     }));
+    brief.addToRolePolicy(new iam.PolicyStatement({
+      actions: ["logs:StartQuery"],
+      resources: [
+        this.formatArn({ service: "logs", resource: "log-group", resourceName: chatLogGroupName, arnFormat: cdk.ArnFormat.COLON_RESOURCE_NAME }),
+        this.formatArn({ service: "logs", resource: "log-group", resourceName: `${chatLogGroupName}:*`, arnFormat: cdk.ArnFormat.COLON_RESOURCE_NAME }),
+      ],
+    }));
+    // GetQueryResults takes only a query ID, so IAM can't scope it to a log group.
+    brief.addToRolePolicy(new iam.PolicyStatement({ actions: ["logs:GetQueryResults"], resources: ["*"] }));
     this.alertTopic.grantPublish(brief);
     manifest.grantRead(brief);
 

@@ -2,17 +2,21 @@
 
 Alarms can't say "is anything still happening": a component that stops being
 invoked raises no errors. This reports positively, so silence means something.
-Ported from a-iep's daily-brief. Only names, counts and timestamps, never log content.
+Ported from a-iep's daily-brief. Only names, counts and timestamps, except the chat
+answer check section, which deliberately quotes questions and flagged sentences from the
+chat's CHAT_CHECK log lines. It never shows who asked: no user name, email or ID.
 """
 import datetime
 import json
 import os
+import time
 
 import boto3
 
 cloudwatch = boto3.client('cloudwatch')
 sns = boto3.client('sns')
 ssm = boto3.client('ssm')
+logs = boto3.client('logs')
 
 ALERT_TOPIC_ARN = os.environ['ALERT_TOPIC_ARN']
 STAGE = os.environ.get('STAGE', 'dev')
@@ -20,6 +24,7 @@ STAGE = os.environ.get('STAGE', 'dev')
 BRIEF_COMPONENTS_PARAM = os.environ.get('BRIEF_COMPONENTS_PARAM', '')
 # Scopes DescribeAlarms to this deployment: the account is shared.
 ALARM_PREFIX = os.environ.get('ALARM_PREFIX', '')
+CHAT_LOG_GROUP = os.environ.get('CHAT_LOG_GROUP', '')
 
 IS_PROD = STAGE == 'prod'
 WINDOW_HOURS = 24
@@ -28,6 +33,26 @@ OK = ':white_check_mark:'
 IDLE = ':zzz:'
 PROBLEM = ':rotating_light:'
 WARN = ':warning:'
+FLAG = ':mag:'
+
+CHECK_MARKER = 'CHAT_CHECK '
+CHECK_LIST_LIMIT = 10
+CHECK_SENTENCES_PER_ANSWER = 5
+QUESTION_MAX_CHARS = 200
+SENTENCE_MAX_CHARS = 200
+REASON_MAX_CHARS = 150
+QUERY_WAIT_SECONDS = 60
+CHECK_COUNTS_QUERY = (
+    "filter @message like 'CHAT_CHECK {'"
+    " | fields strcontains(@message, 'CHAT_CHECK {\"error\"') as failed,"
+    " strcontains(@message, '\"flagged\":[{') as flagged"
+    " | stats count(*) as lines, sum(failed) as failures, sum(flagged) as flags"
+)
+FLAGGED_QUERY = (
+    'fields @timestamp, @message'
+    ' | filter @message like /CHAT_CHECK \\{.*"flagged":\\[\\{/'
+    ' | sort @timestamp desc'
+)
 
 
 def _components():
@@ -111,6 +136,119 @@ def _component_lines(components, totals):
     return lines, problems, ran, idle
 
 
+def _start_query(query, start, end, limit):
+    return logs.start_query(
+        logGroupName=CHAT_LOG_GROUP,
+        startTime=int(start.timestamp()),
+        endTime=int(end.timestamp()),
+        queryString=query,
+        limit=limit,
+    )['queryId']
+
+
+def _query_rows(query_ids):
+    """Rows per query, as dicts. Raises if a query fails or outlasts the wait."""
+    rows, pending = {}, list(query_ids)
+    deadline = time.monotonic() + QUERY_WAIT_SECONDS
+    while pending:
+        for query_id in list(pending):
+            result = logs.get_query_results(queryId=query_id)
+            status = result.get('status')
+            if status == 'Complete':
+                rows[query_id] = [
+                    {cell['field']: cell.get('value') for cell in row}
+                    for row in result.get('results', [])
+                ]
+                pending.remove(query_id)
+            elif status in ('Failed', 'Cancelled', 'Timeout', 'Unknown'):
+                raise RuntimeError(f'query {status}')
+        if pending:
+            if time.monotonic() >= deadline:
+                raise TimeoutError('query still running')
+            time.sleep(1)
+    return rows
+
+
+def _check_line(message):
+    """The JSON after the marker, or None."""
+    index = (message or '').find(CHECK_MARKER)
+    if index < 0:
+        return None
+    try:
+        value, _ = json.JSONDecoder().raw_decode(message[index + len(CHECK_MARKER):])
+    except ValueError:
+        return None
+    return value if isinstance(value, dict) else None
+
+
+def _clip(text, limit):
+    text = ' '.join(str(text or '').split())
+    return text if len(text) <= limit else text[:limit - 1] + '…'
+
+
+def _int(value):
+    try:
+        return int(float(value or 0))
+    except (TypeError, ValueError):
+        return 0
+
+
+def _flagged_answer_lines(entry):
+    """Only these fields are read, so nothing else in a log line can reach Slack."""
+    grant = _clip(entry.get('grant') or 'unknown grant', 120)
+    session = _clip(entry.get('session') or 'unknown', 80)
+    lines = [
+        f'{FLAG} *{grant}* · chat `{session}`',
+        f'    Q: "{_clip(entry.get("question"), QUESTION_MAX_CHARS)}"',
+    ]
+    flagged = [f for f in entry.get('flagged') or [] if isinstance(f, dict)]
+    for item in flagged[:CHECK_SENTENCES_PER_ANSWER]:
+        reason = _clip(item.get('reason') or item.get('kind') or 'not confirmed', REASON_MAX_CHARS)
+        lines.append(f'    • "{_clip(item.get("text"), SENTENCE_MAX_CHARS)}" — {reason}')
+    if len(flagged) > CHECK_SENTENCES_PER_ANSWER:
+        lines.append(f'    • and {len(flagged) - CHECK_SENTENCES_PER_ANSWER} more sentence(s)')
+    return lines
+
+
+def _chat_check_lines(start, end):
+    """The chat answer check section. Never raises: a failed query says so in the brief."""
+    if not CHAT_LOG_GROUP:
+        return []
+    title = 'Chat answer check (answers are sent first, then checked against the grant):'
+    try:
+        counts_id = _start_query(CHECK_COUNTS_QUERY, start, end, 1)
+        list_id = _start_query(FLAGGED_QUERY, start, end, CHECK_LIST_LIMIT)
+        rows = _query_rows([counts_id, list_id])
+    except Exception as error:  # noqa: BLE001
+        print(f'CHAT_CHECK_QUERY_FAILED {type(error).__name__}')
+        return ['', title, f'{WARN} Could not read the chat answer checks ({type(error).__name__}).']
+
+    totals = (rows[counts_id] or [{}])[0]
+    lines, failures, flags = _int(totals.get('lines')), _int(totals.get('failures')), _int(totals.get('flags'))
+    checked = lines - failures
+    failed_note = f', {failures} check(s) failed to run' if failures else ''
+    section = ['', title]
+    if not lines:
+        section.append(f'{IDLE} No answers checked in the last 24h.')
+        return section
+    if not flags:
+        section.append(f'{OK} {checked} answer(s) checked in the last 24h, none flagged{failed_note}.')
+        return section
+
+    section.append(f'{WARN} {checked} answer(s) checked in the last 24h, {flags} flagged{failed_note}.')
+    entries = [e for e in (_check_line(r.get('@message')) for r in rows[list_id]) if e]
+    for entry in entries[:CHECK_LIST_LIMIT]:
+        section.extend(_flagged_answer_lines(entry))
+    more = flags - min(len(entries), CHECK_LIST_LIMIT)
+    if more > 0:
+        section.append(
+            f'…and {more} more. To list them all, run this in CloudWatch Logs Insights on '
+            f'`{CHAT_LOG_GROUP}` over the last 24 hours:'
+        )
+        section.append(f'```{FLAGGED_QUERY}```')
+    return section
+
+
 def build_brief(now=None):
     now = now or datetime.datetime.now(datetime.timezone.utc)
     start = now - datetime.timedelta(hours=WINDOW_HOURS)
@@ -121,6 +259,7 @@ def build_brief(now=None):
     totals = _totals(components, start, now) if components else {}
     lines, problems, ran, idle = _component_lines(components, totals)
     firing = _alarms_now()
+    check_lines = _chat_check_lines(start, now)
 
     count = problems + len(firing)
     if count:
@@ -141,6 +280,7 @@ def build_brief(now=None):
         body.append('')
         body.append('Alarms firing right now:')
         body.extend(f'{PROBLEM} {name}' for name in firing)
+    body.extend(check_lines)
 
     return {
         'version': '1.0',

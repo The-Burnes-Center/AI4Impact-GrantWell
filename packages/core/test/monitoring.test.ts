@@ -223,6 +223,17 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
       expect([alarm.Namespace, alarm.MetricName, alarm.Statistic]).toEqual([prefix, "LambdaInitErrors", "Sum"]);
     });
 
+    it.runIf(env === "prod")("lets the daily brief query only the chat's log group", () => {
+      const [id, brief] = ofType("AWS::Lambda::Function").find(([fnId]) => fnId.startsWith("DailyBriefFunction"))!;
+      const chatLogGroup = JSON.stringify(brief.Properties.Environment.Variables.CHAT_LOG_GROUP);
+      expect(chatLogGroup).toMatch(/\/aws\/lambda\/.*ChatHandlerFunction/);
+      const statements = policyOf(id);
+      const startQuery = statements.find((s) => s.Action === "logs:StartQuery");
+      expect(startQuery.Resource).toHaveLength(2);
+      for (const arn of startQuery.Resource) expect(JSON.stringify(arn)).toMatch(/:log-group:\/aws\/lambda\/.*ChatHandlerFunction/);
+      expect(statements.find((s) => [].concat(s.Action).includes("logs:GetQueryResults")).Resource).toBe("*");
+    });
+
     it("gives the model canary every Bedrock model and only InvokeModel on them", () => {
       const [id, canary] = fnNamed(`${prefix}-model-canary`);
       expect(canary.Properties.Runtime).toBe("nodejs24.x");
