@@ -2,11 +2,11 @@
 
 **Last Updated:** November 4, 2026
 
-This release makes it easier to write and keep track of your applications. You can now pick a grant from a list when you start a new chat or application, look back through earlier versions of an application and restore them, and protect your account with two-step verification. Grant search returns better matches, chats and AI-written applications use a newer AI model, and Word and PDF exports keep their formatting. We have also made the wording and navigation consistent across GrantWell and made the landing page load faster. Since then, grant summaries also use the newer AI model, deadlines show on the right day, GrantWell works better on a phone, two-step verification is quicker, more new grants arrive with the right document, and administrators can search users and see which waiting grants are due soonest. This update also keeps your information safer, keeps your edits while the AI writes, and makes the AI writer use everything you give it. You can now also record how each application turned out, and GrantWell asks once a grant's deadline has passed. In this update, chats and the AI writer work from the whole grant, so answers are quicker, shorter and more complete, and chat answers and the Requirements page show the exact grant passage behind each point; My Documents keeps your supporting documents in one place and lets you choose which ones the AI uses; AI search understands what you need in plain words; and GrantWell fixes the issues found in our partner accessibility review.
+This release makes it easier to write and keep track of your applications. You can now pick a grant from a list when you start a new chat or application, look back through earlier versions of an application and restore them, and protect your account with two-step verification. Grant search returns better matches, chats and AI-written applications use a newer AI model, and Word and PDF exports keep their formatting. We have also made the wording and navigation consistent across GrantWell and made the landing page load faster. Since then, grant summaries also use the newer AI model, deadlines show on the right day, GrantWell works better on a phone, two-step verification is quicker, more new grants arrive with the right document, and administrators can search users and see which waiting grants are due soonest. This update also keeps your information safer, keeps your edits while the AI writes, and makes the AI writer use everything you give it. You can now also record how each application turned out, and GrantWell asks once a grant's deadline has passed. In this update, chats and the AI writer work from the whole grant, so answers are quicker, shorter and more complete, and chat answers and the Requirements page show the exact grant passage behind each point; My Documents keeps your supporting documents in one place and lets you choose which ones the AI uses; AI search understands what you need in plain words; and GrantWell fixes the issues found in our partner accessibility review. Every chat answer and every requirement on the Requirements page is now checked against the grant before you see it.
 
 ## Highlights
 
-- **Answers from the whole grant**: chats and the AI writer read the entire grant, so answers are quicker, shorter and complete, each answer shows the passage it came from, and AI search understands what you need in plain words
+- **Answers from the whole grant**: chats and the AI writer read the entire grant, so answers are quicker, shorter and complete, each answer shows the passage it came from and is checked against the grant before you see it, and AI search understands what you need in plain words
 - **My Documents**: keep your supporting documents in one place and choose which ones the AI uses in each chat and application
 - **Version history for applications**: save named versions, compare them, restore earlier text, and undo an AI rewrite
 - **Two-step verification**: protect your account with a code from an authenticator app; enter the 6 digits and you're signed in
@@ -26,6 +26,15 @@ This release makes it easier to write and keep track of your applications. You c
 - The AI writer in **Write Application** also works from the whole grant for every section
 - A chat appears in **My Chats** once you've asked something, not every time you open one
 - A link to a chat, grant or application that no longer exists now says so, with a way back
+
+### Checked Against the Grant
+
+- Every chat answer is checked against the grant and your supporting documents before you see it: each date, amount and number must appear there, and each sentence must say what the grant says
+- If part of an answer can't be confirmed, GrantWell rewrites it once; anything still unconfirmed is left out, and the answer ends with "I left out details I couldn't confirm in the grant."
+- If nothing in an answer can be confirmed, chat says "I couldn't confirm an answer to that in the grant." and suggests asking another way; that question doesn't count toward your daily limit
+- Each eligibility rule, document, section and deadline on the **Requirements** page is checked the same way before a grant is published
+- A grant with a requirement GrantWell couldn't confirm waits for an administrator to review it. While it does, its Requirements page and chat say "This grant is being reviewed and will be back soon.", and your applications for it stay open to edit, with the AI writer paused
+- When a grant you already use gets a new document, you keep seeing the version you know until the new one is checked or approved
 
 ### My Documents
 
@@ -231,6 +240,12 @@ This release makes it easier to write and keep track of your applications. You c
 - A new grant whose document failed to download is tried again in the next daily update
 - Very long or scanned PDFs get more time to be read, and fail with a clear message if they still can't be
 - If part of a grant's text can't be read, the rest is kept and the grant waits for review with the missing part named, instead of failing outright
+- A grant waits for review when GrantWell can't confirm one of its requirements in the grant; the queue names each one and why, and **Approve** is recommended when the grant does say it
+- Grants that are already live, including archived ones, are checked the same way; any that fail go back to the queue for review
+- A new document for a live grant is checked on its own: users keep the published version until you approve the new one, and **Reject new version** keeps the published version live and deletes nothing
+- On a GrantWell set up for a single state, its admins can open any grant waiting for review; elsewhere, state admins can open their own state's grants
+- Approving a new version of an archived grant makes it active again when its deadline is still ahead
+- While a grant is in review, section guidance is hidden in **Write Application**, with a note on that grant's sections
 
 ### Admin Dashboard Access (Admin)
 
