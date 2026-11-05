@@ -38,6 +38,7 @@ List every claim the answer makes about the grant: eligibility, dates and times,
 For each claim decide "supported": true only when the grant text states it or it follows directly with nothing added. A claim that the grant doesn't mention something is supported only if the grant really doesn't mention it. A claim that a date the grant states has or hasn't passed is supported when it is right for today's date, given below. For a supported claim, quote "evidence": copy one stretch of at least 6 consecutive words of the grant that states it (the whole line or table row when it is shorter), word for word, exactly as it appears, with no ellipses, no paraphrase and no joining of separate passages (empty for a supported "doesn't mention" claim). Give a short "reason" for any unsupported claim.
 List only what the answer says. Never list something the answer leaves out; an incomplete answer is not an unsupported claim.`,
   items: `You audit the requirements a grant pipeline extracted, using the full grant text below as the only source of truth. For each item decide "supported": true only when the grant text states everything the item says (wording may differ; nothing may be added, changed or left out in a way that changes its meaning). Quote "evidence": copy one stretch of at least 6 consecutive words of the grant that states it (the whole line or table row when it is shorter), word for word, exactly as it appears, with no ellipses or paraphrase. Give a short "reason" for any unsupported item.`,
+  second: `A first check flagged each statement below as not supported by the grant text below. Check each one again, carefully, against the whole grant. "supported": true when the grant text states it or it follows directly, with nothing added, changed or broadened in a way that changes its meaning (wording may differ). A statement that the grant doesn't mention something is supported only if the grant really doesn't mention it. A statement that a date has or hasn't passed is supported when it is right for today's date, given below. For a supported statement, quote "evidence": copy one stretch of at least 6 consecutive words of the grant that states it (the whole line or table row when it is shorter), word for word, exactly as it appears, with no ellipses or paraphrase (empty for a supported "doesn't mention" statement). Give a short "reason" either way.`,
   pair: `You match items a grant-extraction pipeline produced against an answer key written from the same grant notice.
 Pair a predicted item with a key item only when the predicted item states the key item's requirement, section or rule (wording may differ, and the predicted item may be merged with neighbours or be more or less detailed). For every pair, quote "evidence": the exact words of the predicted item that state it. A predicted item may pair with several key items when it states each of them; several predicted items may pair with one key item when they repeat it. Items that only share a topic, category or heading are not a pair. Many key items have no pair; never force one.`,
   find: `You check whether a grant-extraction pipeline's output states facts from an answer key. For each key item, decide "found": the output states this item (in any wording, anywhere in the output), with "evidence": the exact words of the output that state it (empty when not found). "valueCorrect": the output gives the item's value as the key does (dates, times, time zones, amounts, points, limits); null when the item has no value to compare. A related but different item is not found.`,
@@ -164,6 +165,25 @@ export function judge(models) {
       });
     },
 
+    /** Flagged statements get one more look at high effort; a flag stands only if it agrees. */
+    async secondLook({ grantText, statements }) {
+      if (statements.length === 0) return [];
+      const out = await ask({
+        model: models.sonnet,
+        toolName: "items",
+        schema: ITEMS_SCHEMA,
+        effort: "high",
+        maxTokens: 16000,
+        prompt: `${PROMPTS.second}\n\nToday's date: ${this.today ?? "unknown"}.\n\n<grant_text>\n${grantText}\n</grant_text>\n\n<statements>\n${list(statements.map((s) => s.text))}\n</statements>`,
+      });
+      const byId = new Map((out.items ?? []).map((r) => [r.id, r]));
+      return statements.map((st, i) => {
+        const r = byId.get(i);
+        const ok = !!r?.supported && (st.absence || quotedWords(r.evidence, grantText) || (st.dateOnly && !r.evidence));
+        return { supported: ok, reason: r?.reason ?? "no verdict" };
+      });
+    },
+
     // A "supported" verdict counts only when its evidence is really in the grant text.
     async claims({ grantText, question, answer }) {
       const out = await ask({
@@ -175,7 +195,7 @@ export function judge(models) {
         prompt: `${PROMPTS.claims}\n\nToday's date: ${this.today ?? "unknown"}.\n\n<grant_text>\n${grantText}\n</grant_text>\n\n<question>${question}</question>\n<answer>\n${answer}\n</answer>`,
       });
       const dateOnly = (c) => /\b(?:has|have|had|hasn't|has not|is|isn't|already|not yet|still)\b.*\b(?:passed|open|closed|ended|past)\b/i.test(c.claim);
-      return (out.claims ?? []).map((c) => {
+      const first = (out.claims ?? []).map((c) => {
         const evidenceOk = c.absence || quotedWords(c.evidence, grantText) || (dateOnly(c) && !c.evidence);
         return {
           ...c,
@@ -183,6 +203,10 @@ export function judge(models) {
           reason: c.supported && !evidenceOk ? "evidence not found in the grant" : c.reason,
         };
       });
+      const flagged = first.filter((c) => !c.supported);
+      const again = await this.secondLook({ grantText, statements: flagged.map((c) => ({ text: c.claim, absence: c.absence, dateOnly: dateOnly(c) })) });
+      flagged.forEach((c, i) => Object.assign(c, { firstReason: c.reason, supported: again[i].supported, reason: again[i].reason }));
+      return first;
     },
 
     async items({ grantText, items }) {
@@ -196,11 +220,15 @@ export function judge(models) {
         prompt: `${PROMPTS.items}\n\n<grant_text>\n${grantText}\n</grant_text>\n\n<items>\n${list(items)}\n</items>`,
       });
       const byId = new Map((out.items ?? []).map((r) => [r.id, r]));
-      return items.map((_, i) => {
+      const first = items.map((_, i) => {
         const r = byId.get(i);
         const ok = !!r?.supported && quotedWords(r.evidence, grantText);
         return { id: i, supported: ok, reason: ok ? "" : r ? (r.supported ? "evidence not found in the grant" : r.reason) : "no verdict" };
       });
+      const flagged = first.filter((v) => !v.supported);
+      const again = await this.secondLook({ grantText, statements: flagged.map((v) => ({ text: items[v.id], absence: false, dateOnly: false })) });
+      flagged.forEach((v, i) => Object.assign(v, { firstReason: v.reason, supported: again[i].supported, reason: again[i].supported ? "" : again[i].reason }));
+      return first;
     },
 
     async draft({ inputs, excerpts, sections, criteria, traps }) {
