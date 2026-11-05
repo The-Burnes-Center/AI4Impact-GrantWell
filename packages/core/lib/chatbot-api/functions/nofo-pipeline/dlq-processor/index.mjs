@@ -103,7 +103,9 @@ async function drainQueue(dlqUrl, reviewTableName, source) {
             const key = decodeURIComponent(
               parsed.Records[0].s3.object.key.replace(/\+/g, " ")
             );
-            nofoName = key.substring(0, key.lastIndexOf("/"));
+            // A live grant's new version runs from _pending/<grant>/ (PENDING_PREFIX in grantwell-shared).
+            const path = key.startsWith("_pending/") ? key.slice("_pending/".length) : key;
+            nofoName = path.substring(0, path.lastIndexOf("/"));
             documentKey = key;
           }
 

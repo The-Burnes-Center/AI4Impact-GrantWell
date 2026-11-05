@@ -6,9 +6,9 @@ import {
   StartDocumentTextDetectionCommand,
   GetDocumentTextDetectionCommand,
 } from "@aws-sdk/client-textract";
-import { artifactsBucket } from "grantwell-shared";
+import { artifactDirOf, artifactsBucket } from "grantwell-shared";
 import { updateProcessingStatus } from "../shared/status.mjs";
-import { joinLines, pageMap, pageMapKey } from "./page-map.mjs";
+import { PAGE_MAP_FILE, joinLines, pageMap } from "./page-map.mjs";
 
 export { joinLines };
 
@@ -36,7 +36,8 @@ export const handler = async (event) => {
     throw new Error("Document content is empty after extraction.");
   }
 
-  const rawTextKey = `${nofoName}/raw-text.txt`;
+  const dir = artifactDirOf(nofoName, documentKey);
+  const rawTextKey = `${dir}raw-text.txt`;
   await new Upload({
     client: s3Client,
     params: {
@@ -50,7 +51,7 @@ export const handler = async (event) => {
     await s3Client.send(
       new PutObjectCommand({
         Bucket: artifactsBucket(),
-        Key: pageMapKey(nofoName),
+        Key: `${dir}${PAGE_MAP_FILE}`,
         Body: JSON.stringify(pageMap(documentContent, pageStarts)),
         ContentType: "application/json",
       })

@@ -69,6 +69,14 @@ export interface NofoPipelineStackProps extends cdk.NestedStackProps {
   readonly stackName: string;
 }
 
+function swapPolicy(grantBucketArn: string, artifactsBucketArn: string): iam.PolicyStatement {
+  return new iam.PolicyStatement({
+    effect: iam.Effect.ALLOW,
+    actions: ["s3:GetObjectVersion", "s3:DeleteObject"],
+    resources: [`${grantBucketArn}/*`, `${artifactsBucketArn}/*`],
+  });
+}
+
 export class NofoPipelineStack extends cdk.NestedStack {
   public readonly nofoProcessingStateMachine: sfn.StateMachine;
   public readonly nofoAdminFunction: lambda.Function;
@@ -249,6 +257,8 @@ export class NofoPipelineStack extends cdk.NestedStack {
     );
     publishFunction.addToRolePolicy(s3ReadWritePolicy(props.ffioNofosBucket.bucketArn));
     publishFunction.addToRolePolicy(s3ReadWritePolicy(artifactsBucketArn));
+    // Swapping a staged version in, or putting the published one back (shared/swap.mjs).
+    publishFunction.addToRolePolicy(swapPolicy(props.ffioNofosBucket.bucketArn, artifactsBucketArn));
     publishFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
     publishFunction.addToRolePolicy(
       new iam.PolicyStatement({
@@ -307,6 +317,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
       runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "dispatcher/index.handler",
+      layers: [props.jsSharedLayer],
       environment: {
         STATE_MACHINE_ARN: nofoProcessing.stateMachine.stateMachineArn,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
@@ -325,6 +336,14 @@ export class NofoPipelineStack extends cdk.NestedStack {
     // Reads whether the grant already has a published summary.json, which keeps it live.
     dispatcherFunction.addToRolePolicy(s3ReadOnlyPolicy(artifactsBucketArn));
     dispatcherFunction.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
+    // Copies a live grant's document into _pending/ for its new version's run, and clears an earlier run's files there.
+    dispatcherFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:PutObject", "s3:DeleteObject"],
+        resources: [props.grantArtifactsBucket.arnForObjects("_pending/*")],
+      })
+    );
     nofoProcessing.stateMachine.grantStartExecution(dispatcherFunction);
     dispatcherFunction.addToRolePolicy(
       new iam.PolicyStatement({
@@ -429,6 +448,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
     );
     nofoAdminFunction.addToRolePolicy(s3ListBucketPolicy(artifactsBucketArn));
     nofoAdminFunction.addToRolePolicy(s3ObjectReadWriteDeletePolicy(artifactsBucketArn));
+    nofoAdminFunction.addToRolePolicy(swapPolicy(props.ffioNofosBucket.bucketArn, artifactsBucketArn));
     nofoAdminFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,

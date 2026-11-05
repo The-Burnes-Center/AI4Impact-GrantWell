@@ -17,6 +17,9 @@ const s3Client = new S3Client({ region: process.env.AWS_REGION || 'us-east-1' })
 const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION || 'us-east-1' });
 const BUCKET = process.env.BUCKET;
 const REVIEW_TABLE_NAME = process.env.REVIEW_TABLE_NAME;
+const ARTIFACTS_BUCKET = process.env.ARTIFACTS_BUCKET;
+// The staging folder in grantwell-shared (artifacts.mjs), which this function does not load.
+const PENDING_DIR = '_pending';
 
 const STUB_MAX_BYTES = 4096;
 const META_REFRESH_RE =
@@ -144,7 +147,9 @@ export const handler = async (event) => {
         continue;
       }
 
-      const opportunityTitle = pathParts.slice(1, -1).join('/').replace(/\//g, '-');
+      // pending-conversion/_pending/{title}/… is a live grant's new version, which stays staged.
+      const staged = pathParts[1] === PENDING_DIR && pathParts.length > 3;
+      const opportunityTitle = pathParts.slice(staged ? 2 : 1, -1).join('/').replace(/\//g, '-');
 
       // Download HTML from S3
       const htmlResponse = await s3Client.send(
@@ -195,10 +200,10 @@ export const handler = async (event) => {
       }
 
       // Upload PDF to final location
-      const finalPdfKey = `${opportunityTitle}/NOFO-File-PDF`;
+      const finalPdfKey = `${staged ? `${PENDING_DIR}/` : ''}${opportunityTitle}/NOFO-File-PDF`;
       await s3Client.send(
         new PutObjectCommand({
-          Bucket: bucket,
+          Bucket: staged ? ARTIFACTS_BUCKET : bucket,
           Key: finalPdfKey,
           Body: pdfBuffer,
           ContentType: 'application/pdf',

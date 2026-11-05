@@ -11,6 +11,22 @@ export const CATEGORY_LABELS = {
 
 const labelOf = (category) => CATEGORY_LABELS[category] ?? category;
 
+const HIDDEN_NOTE = "Users won't see this grant until you fix or approve it.";
+const LIVE_NOTE = "Users keep seeing the published version until you approve or reject this new one.";
+
+/**
+ * The guidance for a live grant's failing new version, whose published version stays up.
+ * `liveStatus` is the status it stays under: an archived grant "was published", not "is live".
+ */
+export function keptLiveGuidance(guidance, nofoName, liveStatus) {
+  if (typeof guidance?.message !== "string") return guidance;
+  const lead = `"${nofoName}" ${liveStatus === "archived" ? "was published" : "is live"}.`;
+  const body = guidance.message.includes(HIDDEN_NOTE)
+    ? guidance.message.replace(HIDDEN_NOTE, LIVE_NOTE)
+    : `${guidance.message.trimEnd()} ${LIVE_NOTE}`.trim();
+  return { ...guidance, message: `${lead} ${body}` };
+}
+
 const failingItemsOf = (failingItems) =>
   failingItems.map((f) => ({ category: f.category, label: labelOf(f.category), item: f.item, reason: f.reason }));
 
@@ -30,7 +46,7 @@ function unreadableTextGuidance(nofoName, failingItems, live) {
       unpublishedNote(nofoName, live) +
       `GrantWell couldn't read this grant's text, so none of the requirements on its Requirements page could be checked against the grant.` +
       (why ? ` ${why}` : "") +
-      " Users won't see this grant until you fix or approve it.",
+      ` ${HIDDEN_NOTE}`,
     actions: [
       "Open the grant document and check that its text can be read. If it can't, re-upload a readable copy.",
       "Check each item on the Requirements page against the grant document yourself.",
@@ -56,7 +72,7 @@ export function unverifiedItemsGuidance(nofoName, failingItems, { live = false }
       unpublishedNote(nofoName, live) +
       `${count} on the Requirements page could not be matched to what the grant says` +
       (live ? "" : ", even after one automatic rewrite") +
-      `: ${named.join("; ")}. Users won't see this grant until you fix or approve it.`,
+      `: ${named.join("; ")}. ${HIDDEN_NOTE}`,
     actions: [
       "Check each item listed below against the grant document.",
       "Correct any item the grant does not support so it says only what the grant states, or remove it.",

@@ -1,12 +1,65 @@
 import { SFNClient, StartExecutionCommand, DescribeExecutionCommand, StopExecutionCommand } from "@aws-sdk/client-sfn";
-import { DynamoDBClient, QueryCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, GetItemCommand, QueryCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { createHash } from "node:crypto";
+import { S3Client, CopyObjectCommand } from "@aws-sdk/client-s3";
+import { artifactsBucket, copySource, deletePending, grantOfKey, isPendingKey, pendingDir } from "grantwell-shared";
 import { updateProcessingStatus } from "../shared/status.mjs";
 import { liveStatusOf } from "../shared/live.mjs";
+import { SWAP_JOURNAL, SWAP_ETAGS, normalizeEtag } from "../shared/swap.mjs";
 
 const sfnClient = new SFNClient();
 const dynamoClient = new DynamoDBClient();
+const s3Client = new S3Client();
+
+async function readMetadataRow(nofoName) {
+  const tableName = process.env.NOFO_METADATA_TABLE_NAME;
+  if (!tableName || !nofoName) return null;
+  const result = await dynamoClient.send(
+    new GetItemCommand({ TableName: tableName, Key: marshall({ nofo_name: nofoName }), ConsistentRead: true })
+  );
+  return result.Item ? unmarshall(result.Item) : null;
+}
+
+/**
+ * True when this event is publish copying a staged document into place (publish records its ETag
+ * first). The ETag is consumed, so a later upload of the same bytes is processed as usual.
+ */
+async function consumePublishedCopy(nofoName, row, eTag) {
+  const etag = normalizeEtag(eTag);
+  const recorded = row?.[SWAP_ETAGS];
+  if (!etag || !recorded || ![...recorded].includes(etag)) return false;
+  try {
+    await dynamoClient.send(
+      new UpdateItemCommand({
+        TableName: process.env.NOFO_METADATA_TABLE_NAME,
+        Key: marshall({ nofo_name: nofoName }),
+        UpdateExpression: `DELETE ${SWAP_ETAGS} :etag`,
+        ExpressionAttributeValues: { ":etag": { SS: [etag] } },
+      })
+    );
+  } catch (error) {
+    console.warn(`Could not clear the swapped document's ETag for ${nofoName}:`, error.message);
+  }
+  return true;
+}
+
+async function stagePublishedDocument(bucket, documentKey, nofoName) {
+  const stagedKey = `${pendingDir(nofoName)}${documentKey.slice(documentKey.lastIndexOf("/") + 1)}`;
+  await s3Client.send(
+    new CopyObjectCommand({ Bucket: artifactsBucket(), CopySource: copySource(bucket, documentKey), Key: stagedKey })
+  );
+  console.log(`${nofoName} is live; its new version runs from ${stagedKey}.`);
+}
+
+/** Files an earlier run staged for this grant would otherwise be swapped in with this run's. */
+async function clearEarlierStagedFiles(nofoName, documentKey) {
+  try {
+    await deletePending(s3Client, nofoName, { keep: [documentKey, `${pendingDir(nofoName)}${SWAP_JOURNAL}`] });
+  } catch (error) {
+    console.warn(`Could not clear earlier staged files for ${nofoName}:`, error.message);
+  }
+}
 
 const STALE_REVIEW_STATUSES = new Set(["pending_review", "failed", "needs_reupload"]);
 const CLAIM_TTL_MS = 50 * 60 * 1000;
@@ -176,7 +229,21 @@ export const handler = async (event) => {
         const documentKey = decodeURIComponent(
           record.s3.object.key.replace(/\+/g, " ")
         );
-        const nofoName = documentKey.substring(0, documentKey.lastIndexOf("/"));
+        const nofoName = grantOfKey(documentKey);
+
+        if (!isPendingKey(documentKey)) {
+          const row = await readMetadataRow(nofoName);
+          if (await consumePublishedCopy(nofoName, row, record.s3.object.eTag)) {
+            console.log(`${documentKey} is a staged version publish just swapped in; not processing it again.`);
+            continue;
+          }
+          // Rename and Reprocess land here with the published document. The run works from a staged
+          // copy, whose upload starts it, so a failing version never overwrites the published files.
+          if (await liveStatusOf(nofoName, row, { unknownIsLive: true })) {
+            await stagePublishedDocument(s3Bucket, documentKey, nofoName);
+            continue;
+          }
+        }
 
         const executionInput = {
           s3Bucket,
@@ -196,6 +263,7 @@ export const handler = async (event) => {
         }
 
         await supersedeOpenReviews(nofoName);
+        if (isPendingKey(documentKey)) await clearEarlierStagedFiles(nofoName, documentKey);
         const liveStatus = await liveStatusOf(nofoName, claim.row);
         if (liveStatus) console.log(`${nofoName} stays ${liveStatus} while its new version is processed.`);
         else await markProcessingStatus(nofoName);

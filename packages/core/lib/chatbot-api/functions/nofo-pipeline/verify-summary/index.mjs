@@ -6,11 +6,11 @@
  */
 
 import { S3Client } from "@aws-sdk/client-s3";
-import { isMissingObject, putArtifact, readArtifactText } from "grantwell-shared";
+import { artifactDirOf, isMissingObject, putArtifact, readArtifactText } from "grantwell-shared";
 import { readRawText } from "../shared/s3.mjs";
 import { updateProcessingStatus } from "../shared/status.mjs";
 import { CITATIONS_FILE } from "../shared/cite.mjs";
-import { pageMapKey, usablePageStarts } from "../extract-text/page-map.mjs";
+import { PAGE_MAP_FILE, usablePageStarts } from "../extract-text/page-map.mjs";
 import { verifyRequirements } from "../shared/verify-requirements.mjs";
 
 const s3 = new S3Client();
@@ -33,13 +33,15 @@ const parseOrNull = (text) => {
 };
 
 export const handler = async (event) => {
-  const { nofoName, s3Bucket, rawTextKey, mergedSummary } = event;
+  const { nofoName, s3Bucket, rawTextKey, documentKey, mergedSummary } = event;
+  // A staged run writes beside its document; the approval record is read from the published file.
+  const dir = artifactDirOf(nofoName, documentKey);
 
   await updateProcessingStatus(nofoName, "checking_sources");
 
   const [rawText, mapText, existingText] = await Promise.all([
     readRawText(s3Bucket, rawTextKey),
-    readOptional(pageMapKey(nofoName)),
+    readOptional(`${dir}${PAGE_MAP_FILE}`),
     readOptional(`${nofoName}/${CITATIONS_FILE}`),
   ]);
   let pageStarts = null;
@@ -52,7 +54,7 @@ export const handler = async (event) => {
   if (result.citationsFile) {
     const approval = parseOrNull(existingText)?.approval;
     const file = { ...result.citationsFile, ...(approval && { approval }) };
-    await putArtifact(s3, `${nofoName}/${CITATIONS_FILE}`, JSON.stringify(file), "application/json");
+    await putArtifact(s3, `${dir}${CITATIONS_FILE}`, JSON.stringify(file), "application/json");
   }
 
   console.log(

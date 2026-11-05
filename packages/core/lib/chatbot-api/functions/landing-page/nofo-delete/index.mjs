@@ -9,7 +9,7 @@ import { S3Client, ListObjectsV2Command, DeleteObjectCommand } from '@aws-sdk/cl
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import { DynamoDBClient, DeleteItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
-import { requireAdmin, assertCanEditNofoOr403, deleteArtifacts } from 'grantwell-shared';
+import { requireAdmin, assertCanEditNofoOr403, deleteArtifacts, deletePending } from 'grantwell-shared';
 
 const scopeDeps = { client: new DynamoDBClient(), GetItemCommand, marshall, unmarshall };
 
@@ -76,6 +76,8 @@ export const handler = async (event) => {
     }
 
     const artifactCount = await deleteArtifacts(s3Client, folder);
+    // A new version waiting for review goes with the grant.
+    await deletePending(s3Client, folder);
 
     // Always remove the DynamoDB row even when S3 has no objects: the dashboard
     // lists NOFOs from DynamoDB, so an orphaned metadata row (S3 already gone)

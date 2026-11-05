@@ -778,6 +778,14 @@ export class LambdaFunctionStack extends cdk.Stack {
       new s3n.SqsDestination(nofoProcessingQueue),
       { prefix: "", suffix: "NOFO-File-TXT" }
     );
+    // A live grant's new version is staged here until it publishes (PENDING_PREFIX in grantwell-shared).
+    for (const suffix of ["NOFO-File-PDF", "NOFO-File-TXT"]) {
+      props.grantArtifactsBucket.addEventNotification(
+        s3.EventType.OBJECT_CREATED,
+        new s3n.SqsDestination(nofoProcessingQueue),
+        { prefix: "_pending/", suffix }
+      );
+    }
 
     // --- Reprocess Lambda ---
 
@@ -788,6 +796,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       layers: [jsSharedLayer],
       environment: {
         BUCKET: props.ffioNofosBucket.bucketName,
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
         QUEUE_URL: nofoProcessingQueue.queueUrl,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
@@ -799,6 +808,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       memorySize: 256,
     });
     nofoReprocessFunction.addToRolePolicy(s3ReadWritePolicy(props.ffioNofosBucket.bucketArn));
+    nofoReprocessFunction.addToRolePolicy(s3ListBucketPolicy(props.grantArtifactsBucket.bucketArn));
     nofoReprocessFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
     nofoReprocessFunction.addToRolePolicy(reviewTableReadWritePolicy(props.nofoProcessingReviewTable.tableArn));
     nofoReprocessFunction.addToRolePolicy(
@@ -903,6 +913,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           LEGACY_STATELESS_ADMIN_IS_PLATFORM,
           ...SINGLE_STATE_ENV,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
         },
         timeout: cdk.Duration.seconds(60),
       }
@@ -916,6 +927,15 @@ export class LambdaFunctionStack extends cdk.Stack {
           props.ffioNofosBucket.bucketArn,
           props.ffioNofosBucket.bucketArn + "/*",
         ],
+      })
+    );
+
+    // Signs the upload of a live grant's new version, which waits in _pending/.
+    nofoUploadS3APIHandlerFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:PutObject"],
+        resources: [props.grantArtifactsBucket.arnForObjects("_pending/*")],
       })
     );
 
@@ -1293,6 +1313,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       "DocumentConversionStack",
       {
         ffioNofosBucket: props.ffioNofosBucket,
+        grantArtifactsBucket: props.grantArtifactsBucket,
         analyticsTable: props.analyticsTable,
         jsSharedLayer: jsSharedLayer,
         nofoProcessingReviewTable: props.nofoProcessingReviewTable,

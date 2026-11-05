@@ -4,6 +4,7 @@ import { randomUUID } from "crypto";
 import { updateProcessingStatus, setNofoStatus, markProcessingComplete } from "../shared/status.mjs";
 import { readRawText } from "../shared/s3.mjs";
 import { liveStatusOf } from "../shared/live.mjs";
+import { keptLiveGuidance } from "../shared/unverified-guidance.mjs";
 
 const dynamoClient = new DynamoDBClient();
 
@@ -110,7 +111,7 @@ export const handler = async (event) => {
     corrections: null,
     source: source || "pipeline",
     errorMessage: errorMessage || null,
-    adminGuidance: adminGuidance ? JSON.stringify(adminGuidance) : null,
+    adminGuidance: adminGuidance ? JSON.stringify(liveStatus ? keptLiveGuidance(adminGuidance, nofoName, liveStatus) : adminGuidance) : null,
     // Approving restores the status the grant had before it was held.
     previous_status: liveStatus ? undefined : heldFrom,
     // Set when the grant's published version stays live; rejecting then keeps it.

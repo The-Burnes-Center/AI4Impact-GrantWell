@@ -25,6 +25,10 @@ import { downloadFile } from './download.mjs';
 
 const API_KEY = process.env.GRANTS_GOV_API_KEY;
 const S3_BUCKET = process.env.BUCKET;
+const ARTIFACTS_BUCKET = process.env.ARTIFACTS_BUCKET;
+// As in grantwell-shared (artifacts.mjs), which this function does not load.
+const PENDING_PREFIX = '_pending/';
+const LIVE_STATUSES = ['active', 'archived'];
 const METADATA_TABLE = process.env.NOFO_METADATA_TABLE_NAME;
 
 const s3Client = new S3Client({ region: process.env.AWS_REGION || 'us-east-1' });
@@ -46,7 +50,7 @@ async function getExistingItem(title) {
     );
     return result.Item ? unmarshall(result.Item) : null;
   } catch {
-    return null;
+    return undefined;
   }
 }
 
@@ -475,9 +479,9 @@ async function resolveFirstUsable(details) {
   return null;
 }
 
-async function uploadToS3(key, fileBuffer, contentType) {
+async function uploadToS3(bucket, key, fileBuffer, contentType) {
   await s3Client.send(
-    new PutObjectCommand({ Bucket: S3_BUCKET, Key: key, Body: fileBuffer, ContentType: contentType })
+    new PutObjectCommand({ Bucket: bucket, Key: key, Body: fileBuffer, ContentType: contentType })
   );
 }
 
@@ -615,27 +619,33 @@ export const handler = async (event) => {
       const existingItem = await getExistingItem(folderName);
       const storedHash = existingItem?.content_hash || null;
       const contentChanged = newHash !== storedHash;
+      // An update of a grant that may be live is staged, so its published files stay up until
+      // the new version passes or is approved. An unreadable row counts as live.
+      const staged = existingItem === undefined || LIVE_STATUSES.includes(existingItem?.status);
+      const folder = staged ? `${PENDING_PREFIX}${folderName}` : folderName;
       let s3Key;
       let contentType;
 
       if (resolved.kind === 'pdf') {
-        s3Key = `${folderName}/NOFO-File-PDF`;
+        s3Key = `${folder}/NOFO-File-PDF`;
         contentType = 'application/pdf';
       } else if (resolved.kind === 'html_text') {
-        s3Key = `${folderName}/NOFO-File-TXT`;
+        s3Key = `${folder}/NOFO-File-TXT`;
         contentType = 'text/plain; charset=utf-8';
       } else {
-        s3Key = `pending-conversion/${folderName}/NOFO-File-HTML.html`;
+        s3Key = `pending-conversion/${folder}/NOFO-File-HTML.html`;
         contentType = 'text/html';
       }
+      const bucket = staged && (resolved.kind === 'pdf' || resolved.kind === 'html_text') ? ARTIFACTS_BUCKET : S3_BUCKET;
 
       // The upload starts the pipeline, which reads this row, so the row goes first.
       await writeMetadata(folderName, details, isUpdate, contentChanged ? null : newHash);
 
       if (contentChanged) {
-        await uploadToS3(s3Key, resolved.buffer, contentType);
+        await uploadToS3(bucket, s3Key, resolved.buffer, contentType);
         // pending-conversion HTML is under a different prefix; sidecar lands on conversion.
-        if (resolved.kind === "pdf" || resolved.kind === "html_text") {
+        // Publish writes a staged version's sidecar.
+        if (!staged && (resolved.kind === "pdf" || resolved.kind === "html_text")) {
           await writeFederalScopeSidecar(s3Key);
         }
         await recordLandedContent(folderName, details, newHash);
