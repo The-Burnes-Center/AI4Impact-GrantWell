@@ -200,6 +200,7 @@ async function listReviews(event) {
       guidanceTitle: guidance?.title || null,
       guidanceSeverity: guidance?.severity || null,
       missingSections: guidance?.missingCategories || [],
+      unverifiedCount: Array.isArray(guidance?.failingItems) ? guidance.failingItems.length : 0,
       deadline: parsed.deadline,
       daysLeft: parsed.daysLeft,
       deadlineUrgency: parsed.urgency,
@@ -208,6 +209,11 @@ async function listReviews(event) {
   });
 
   return httpResponse(200, { reviews, expiredOpenCount });
+}
+
+function approverOf(event) {
+  const claims = event.requestContext?.authorizer?.jwt?.claims || {};
+  return claims.email || claims["cognito:username"] || claims.sub || null;
 }
 
 /**
@@ -228,8 +234,7 @@ async function closeExpiredReviews(event) {
     return inCallerScope(callerScope, meta) && grantDeadline(meta, now).urgency === "expired";
   });
 
-  const claims = event.requestContext?.authorizer?.jwt?.claims || {};
-  const closedBy = claims.email || claims["cognito:username"] || claims.sub || null;
+  const closedBy = approverOf(event);
   const closedAt = now.toISOString();
   let closed = 0;
   for (const review of expired) {
@@ -362,6 +367,7 @@ async function approveReview(nofoName, event) {
     category: extractedSummary?.Category || null,
     existingExpirationDate: null,
     corrections: corrections || null,
+    reviewApproval: { reviewId: actualReviewId, by: approverOf(event), at: new Date().toISOString() },
   };
 
   // Synchronous invoke so we know if publishing failed before telling the admin it succeeded

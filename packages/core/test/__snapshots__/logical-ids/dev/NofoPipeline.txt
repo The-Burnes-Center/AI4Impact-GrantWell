@@ -38,3 +38,6 @@ SynthesizeFunctionServiceRoleDefaultPolicyBD42DA00	AWS::IAM::Policy
 ValidateFunctionC496E7E7	AWS::Lambda::Function
 ValidateFunctionServiceRole7504A3A0	AWS::IAM::Role
 ValidateFunctionServiceRoleDefaultPolicyD1CD6AD3	AWS::IAM::Policy
+VerifySummaryFunction248E5C10	AWS::Lambda::Function
+VerifySummaryFunctionServiceRole6BFCE534	AWS::IAM::Role
+VerifySummaryFunctionServiceRoleDefaultPolicyD6FC9500	AWS::IAM::Policy

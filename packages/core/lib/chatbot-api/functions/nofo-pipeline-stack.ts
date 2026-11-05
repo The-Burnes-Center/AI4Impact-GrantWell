@@ -1,5 +1,5 @@
 /**
- * Nested stack holding the NOFO processing pipeline: the six Step Functions task Lambdas,
+ * Nested stack holding the NOFO processing pipeline: the seven Step Functions task Lambdas,
  * the state machine itself, the SQS dispatcher, the DLQ drain job and the admin review API
  * Lambda. Split out of the main app stack to stay under the 500-resource CloudFormation
  * limit.
@@ -151,6 +151,32 @@ export class NofoPipelineStack extends cdk.NestedStack {
     });
     validateFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
 
+    const verifySummaryFunction = new lambda.Function(this, "VerifySummaryFunction", {
+      runtime: lambda.Runtime.NODEJS_24_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
+      handler: "verify-summary/index.handler",
+      layers: [props.jsSharedLayer],
+      environment: {
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
+        BUCKET: props.ffioNofosBucket.bucketName,
+        HAIKU_MODEL_ID: props.haikuNofoProfileArn,
+        SONNET_MODEL_ID: props.sonnetNofoProfileArn,
+      },
+      timeout: cdk.Duration.minutes(15),
+      memorySize: 1024,
+      description: "Checks every requirement item against the grant before it can publish",
+    });
+    verifySummaryFunction.addToRolePolicy(s3ReadOnlyPolicy(artifactsBucketArn));
+    verifySummaryFunction.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
+    verifySummaryFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:PutObject"],
+        resources: [props.grantArtifactsBucket.arnForObjects("*/requirements-citations.json")],
+      })
+    );
+    verifySummaryFunction.addToRolePolicy(bedrockInvokePolicy());
+
     // Publish and the parent's summary editor invoke it by this name, so no stack references it.
     const citeRequirementsName = `${props.stackName}-citeRequirementsFunction`;
     const citeRequirementsArn = `arn:aws:lambda:${cdk.Stack.of(this).region}:${cdk.Stack.of(this).account}:function:${citeRequirementsName}`;
@@ -164,6 +190,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
         ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
         BUCKET: props.ffioNofosBucket.bucketName,
         HAIKU_MODEL_ID: props.haikuNofoProfileArn,
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
       },
       timeout: cdk.Duration.minutes(15),
       memorySize: 1024,
@@ -176,10 +203,20 @@ export class NofoPipelineStack extends cdk.NestedStack {
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         actions: ["s3:PutObject"],
-        resources: [props.grantArtifactsBucket.arnForObjects("*/requirements-citations.json")],
+        resources: [
+          props.grantArtifactsBucket.arnForObjects("*/requirements-citations.json"),
+          props.grantArtifactsBucket.arnForObjects("_verification/*"),
+        ],
       })
     );
     citeRequirementsFunction.addToRolePolicy(bedrockInvokePolicy());
+    citeRequirementsFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["dynamodb:GetItem", "dynamodb:Query"],
+        resources: [props.nofoMetadataTable.tableArn, `${props.nofoMetadataTable.tableArn}/index/*`],
+      })
+    );
     citeRequirementsFunction.addToRolePolicy(
       new iam.PolicyStatement({ effect: iam.Effect.ALLOW, actions: ["lambda:InvokeFunction"], resources: [citeRequirementsArn] })
     );
@@ -237,6 +274,12 @@ export class NofoPipelineStack extends cdk.NestedStack {
     quarantineFunction.addToRolePolicy(reviewTableReadWritePolicy(props.nofoProcessingReviewTable.tableArn));
     quarantineFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
 
+    // The live-grant check unpublishes through the same Quarantine Lambda a new failing grant goes to.
+    citeRequirementsFunction.addEnvironment("QUARANTINE_FUNCTION_NAME", quarantineFunction.functionName);
+    citeRequirementsFunction.addToRolePolicy(
+      new iam.PolicyStatement({ effect: iam.Effect.ALLOW, actions: ["lambda:InvokeFunction"], resources: [quarantineFunction.functionArn] })
+    );
+
     // --- Step Functions State Machine ---
 
     const nofoProcessing = new NofoProcessingStateMachine(
@@ -246,6 +289,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
         extractTextFunction,
         extractAndAnalyzeFunction,
         synthesizeFunction,
+        verifySummaryFunction,
         validateFunction,
         publishFunction,
         quarantineFunction,

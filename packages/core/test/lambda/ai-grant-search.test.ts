@@ -284,6 +284,25 @@ describe("AI grant search", () => {
       ]);
     });
 
+    it("hides a grant held for review or being processed from regular users", async () => {
+      metadata(
+        { nofo_name: "Bridge Repair Program", status: "active" },
+        { nofo_name: "Bridge Repair Held", status: "quarantined" },
+        { nofo_name: "Bridge Repair Rerun", status: "processing" },
+        ...filler.map((f) => ({ nofo_name: f.name })),
+      );
+      publish([
+        { name: "Bridge Repair Program", topic: 1, body: "bridge repair" },
+        { name: "Bridge Repair Held", topic: 1, body: "bridge repair" },
+        { name: "Bridge Repair Rerun", topic: 1, body: "bridge repair" },
+        ...filler,
+      ]);
+      await freshHandler();
+      expect(names(await search({ query: "bridge repair" }))).toEqual(["Bridge Repair Program"]);
+      const dev = await search({ query: "bridge repair" }, { email: "ana@example.org", sub: "u1", "custom:role": '["Developer"]' });
+      expect(names(dev).sort()).toEqual(["Bridge Repair Held", "Bridge Repair Program", "Bridge Repair Rerun"]);
+    });
+
     it("keeps a state admin to their own state", async () => {
       await stateFixture();
       const res = await search({ query: "bridge repair" }, { email: "ana@example.org", sub: "u1", "custom:role": '["Admin"]', "custom:state": "MA" });

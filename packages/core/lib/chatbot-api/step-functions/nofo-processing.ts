@@ -9,6 +9,7 @@ export interface NofoProcessingStateMachineProps {
   extractTextFunction: lambda.Function;
   extractAndAnalyzeFunction: lambda.Function;
   synthesizeFunction: lambda.Function;
+  verifySummaryFunction: lambda.Function;
   validateFunction: lambda.Function;
   publishFunction: lambda.Function;
   quarantineFunction: lambda.Function;
@@ -95,6 +96,20 @@ export class NofoProcessingStateMachine extends Construct {
       jitterStrategy: sfn.JitterType.FULL,
     });
 
+    // Step 3b: Check every requirement item against the grant; one rewrite for items that fail
+    const verifySummary = new tasks.LambdaInvoke(this, "VerifySummary", {
+      lambdaFunction: props.verifySummaryFunction,
+      outputPath: "$.Payload",
+      retryOnServiceExceptions: true,
+    });
+    verifySummary.addRetry({
+      errors: ["ThrottlingException", "TooManyRequestsException"],
+      interval: cdk.Duration.seconds(20),
+      maxAttempts: 5,
+      backoffRate: 2,
+      jitterStrategy: sfn.JitterType.FULL,
+    });
+
     // Step 4: Content check (programmatic — no LLM calls)
     const validate = new tasks.LambdaInvoke(this, "ContentCheck", {
       lambdaFunction: props.validateFunction,
@@ -161,14 +176,15 @@ export class NofoProcessingStateMachine extends Construct {
 
     extractText.next(afterExtractText);
 
-    // Main chain: extract -> synthesize -> validate -> evaluate
-    extractAndAnalyze.next(synthesize).next(validate).next(evaluateValidation);
+    // Main chain: extract -> synthesize -> verify -> validate -> evaluate
+    extractAndAnalyze.next(synthesize).next(verifySummary).next(validate).next(evaluateValidation);
 
     const definition = extractText;
 
     extractText.addCatch(handleExtractTextError, { resultPath: "$.error" });
     extractAndAnalyze.addCatch(handleError, { resultPath: "$.error" });
     synthesize.addCatch(handleError, { resultPath: "$.error" });
+    verifySummary.addCatch(handleError, { resultPath: "$.error" });
     validate.addCatch(handleError, { resultPath: "$.error" });
 
     const logGroup = new logs.LogGroup(this, "NofoProcessingLogs", {
