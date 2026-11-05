@@ -8,6 +8,7 @@
 import { S3Client } from "@aws-sdk/client-s3";
 import { isMissingObject, putArtifact, readArtifactText } from "grantwell-shared";
 import { readRawText } from "../shared/s3.mjs";
+import { updateProcessingStatus } from "../shared/status.mjs";
 import { CITATIONS_FILE } from "../shared/cite.mjs";
 import { pageMapKey, usablePageStarts } from "../extract-text/page-map.mjs";
 import { verifyRequirements } from "../shared/verify-requirements.mjs";
@@ -33,6 +34,8 @@ const parseOrNull = (text) => {
 
 export const handler = async (event) => {
   const { nofoName, s3Bucket, rawTextKey, mergedSummary } = event;
+
+  await updateProcessingStatus(nofoName, "checking_sources");
 
   const [rawText, mapText, existingText] = await Promise.all([
     readRawText(s3Bucket, rawTextKey),

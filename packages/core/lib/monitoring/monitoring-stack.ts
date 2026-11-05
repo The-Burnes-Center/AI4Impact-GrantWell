@@ -515,7 +515,7 @@ export class MonitoringStack extends cdk.NestedStack {
     this.alarm("NofoProcessingTimedOutAlarm", {
       severity: "medium",
       name: "NOFO processing timed out",
-      description: "A NOFO ran past the 30-minute limit and is stuck: not published and not in the admin review queue.",
+      description: "A NOFO ran past the 45-minute limit and is stuck: not published and not in the admin review queue.",
       metric: pipeline.stateMachine.metricTimedOut({ period: cdk.Duration.minutes(15), statistic: "Sum" }),
       threshold: 1,
     });
