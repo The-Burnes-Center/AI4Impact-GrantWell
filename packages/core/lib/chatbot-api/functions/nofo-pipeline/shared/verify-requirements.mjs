@@ -43,32 +43,40 @@ export function meaningPrompt(batch) {
   const blocks = batch
     .map((i) => {
       const passages = i.quotes.map((q) => `<passage${q.page ? ` page="${q.page}"` : ""}>${oneLine(q.quote)}</passage>`).join("\n");
-      return `<requirement id="${i.id}">\n<name>${oneLine(i.item)}</name>\n<text>${oneLine(i.description)}</text>\n${passages}\n</requirement>`;
+      return `<requirement id="${i.id}">\n<name>${oneLine(i.item)}</name>\n<text>${oneLine(i.description)}</text>${passages ? `\n${passages}` : ""}\n</requirement>`;
     })
     .join("\n\n");
-  return `Each requirement below was written from a grant, and the passages under it are quoted from that grant. For each requirement, decide whether its passages support it. It is supported only if everything it states (who may apply, what is required, amounts, dates, conditions and rules) is stated in its passages or follows directly from them. If it adds, changes or broadens anything, or leaves out a condition that changes its meaning, it is unsupported. Give a short reason either way that names what is missing or wrong. Answer for every ID.
+  return `Each requirement below was written from the grant above. Passages under a requirement are quoted from the grant as pointers to where it came from; judge it against the whole grant text, not only those passages. A requirement is supported only if everything it states (who may apply, what is required, amounts, dates, conditions and rules) is stated somewhere in the grant or follows directly from it. If it adds, changes or broadens anything, or leaves out a condition that changes its meaning, it is unsupported. Give a short reason either way that names what is missing or wrong. Answer for every ID.
 
 ${blocks}`;
 }
 
-// Built here rather than with invokeStructuredOutput, which never sends thinking "disabled"
-// (Sonnet 5.5 rejects it); Haiku 5.5 accepts it at low effort.
-async function judgeMeaning(batch) {
-  const maxTokens = Math.min(16000, 1000 + batch.length * 200);
+// Sonnet, with the whole grant cached across batches. Built by hand because Sonnet 5.5 needs
+// thinking "between_tools" here, which invokeStructuredOutput doesn't send.
+async function judgeMeaning(batch, rawText) {
+  const maxTokens = Math.min(16000, 1000 + batch.length * 250);
   const response = await invokeBedrockWithRetry({
-    modelId: process.env.HAIKU_MODEL_ID,
+    modelId: process.env.SONNET_MODEL_ID,
     contentType: "application/json",
     accept: "application/json",
     body: JSON.stringify({
       anthropic_version: "bedrock-2023-05-31",
       max_tokens: maxTokens,
-      thinking: { type: "disabled" },
+      thinking: { type: "between_tools" },
       output_config: { effort: "low", format: { type: "json_schema", schema: toStrictSchema(MEANING_SCHEMA) } },
-      messages: [{ role: "user", content: meaningPrompt(batch) }],
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: `<grant_text>\n${rawText}\n</grant_text>`, cache_control: { type: "ephemeral" } },
+            { type: "text", text: meaningPrompt(batch) },
+          ],
+        },
+      ],
     }),
   });
   const parsed = JSON.parse(new TextDecoder().decode(response.body));
-  if (parsed.stop_reason === "refusal") throw new Error(`Haiku declined the meaning check (${parsed.stop_details?.category ?? "no category"})`);
+  if (parsed.stop_reason === "refusal") throw new Error(`The meaning check was declined (${parsed.stop_details?.category ?? "no category"})`);
   if (parsed.stop_reason === "max_tokens") throw new Error(`Meaning check was cut off at max_tokens=${maxTokens}`);
   const text = parsed.content?.find((b) => b.type === "text")?.text;
   if (!text) throw new Error("Meaning check returned no answer");
@@ -86,16 +94,13 @@ export async function checkItems(nofoName, rawText, items, keys) {
       verdicts.set(item.id, { ok: false, reason: `The grant doesn't state ${listOf(facts.map((f) => `"${f.raw}"`))}.` });
       continue;
     }
-    const quotes = quotesOf(byId.get(item.id));
-    if (!quotes.length) {
-      verdicts.set(item.id, { ok: false, reason: "No passage in the grant states this." });
-      continue;
-    }
-    toJudge.push({ ...item, quotes });
+    toJudge.push({ ...item, quotes: quotesOf(byId.get(item.id)) });
   }
   const batches = [];
   for (let i = 0; i < toJudge.length; i += MEANING_BATCH) batches.push(toJudge.slice(i, i + MEANING_BATCH));
-  const answers = await Promise.all(batches.map(judgeMeaning));
+  // The first batch writes the cached grant; the rest read it.
+  const answers = batches.length ? [await judgeMeaning(batches[0], rawText)] : [];
+  answers.push(...(await Promise.all(batches.slice(1).map((batch) => judgeMeaning(batch, rawText)))));
   batches.forEach((batch, b) => {
     for (const item of batch) {
       const answer = answers[b].get(item.id);

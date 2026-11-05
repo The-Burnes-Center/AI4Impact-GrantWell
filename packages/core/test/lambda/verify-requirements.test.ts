@@ -105,19 +105,19 @@ const calls = { cite: [] as any[], meaning: [] as any[], rewrite: [] as any[] };
 function fakeBedrock({ quotes = {}, unsupported = {}, rewrite = "" }: Fake) {
   bedrock.on(InvokeModelCommand).callsFake((input) => {
     const request = JSON.parse(input.body as string);
-    if (input.modelId === "sonnet") {
-      calls.rewrite.push(request);
-      return reply([{ type: "text", text: rewrite }]);
-    }
     if (request.output_config?.format) {
       calls.meaning.push(request);
-      const prompt = request.messages[0].content as string;
+      const prompt = request.messages[0].content.at(-1).text as string;
       const results = [...prompt.matchAll(/<requirement id="(\w+)">\n<name>(.*)<\/name>/g)].map(([, id, name]) => ({
         id,
         supported: !(name in unsupported),
         reason: unsupported[name] ?? "Stated in the passage.",
       }));
       return reply([{ type: "text", text: JSON.stringify({ results }) }]);
+    }
+    if (input.modelId === "sonnet") {
+      calls.rewrite.push(request);
+      return reply([{ type: "text", text: rewrite }]);
     }
     calls.cite.push(request);
     const prompt = request.messages[0].content[1].text as string;
@@ -130,6 +130,7 @@ function fakeBedrock({ quotes = {}, unsupported = {}, rewrite = "" }: Fake) {
   });
 }
 
+const NO_TRIBES = "The grant names cities and towns only; it says nothing about tribal governments.";
 const ALL_CITED = {
   Cities: "Eligible applicants are cities and towns.",
   Deadline: "Applications are due March 1, 2027.",
@@ -170,9 +171,11 @@ describe("verifying a grant's requirements", () => {
     expect(out.summary).toBe(SUMMARY);
     expect(calls.rewrite).toHaveLength(0);
     const [meaning] = calls.meaning;
-    expect(meaning.thinking).toEqual({ type: "disabled" });
+    expect(meaning.thinking).toEqual({ type: "between_tools" });
     expect(meaning.output_config).toMatchObject({ effort: "low", format: { type: "json_schema" } });
-    expect(meaning.messages[0].content).toContain("Eligible applicants are cities and towns.");
+    expect(meaning.messages[0].content[0]).toMatchObject({ cache_control: { type: "ephemeral" } });
+    expect(meaning.messages[0].content[0].text).toContain(RAW);
+    expect(meaning.messages[0].content.at(-1).text).toContain("Eligible applicants are cities and towns.");
     expect(Object.keys(out.citationsFile.items)).toHaveLength(2);
   });
 
@@ -182,18 +185,18 @@ describe("verifying a grant's requirements", () => {
     const out = await verify.verifyRequirements({ nofoName: "Grant A", summary, rawText: RAW, rewrite: false });
 
     expect(out.failing).toEqual([{ category: "RequiredDocuments", item: "Awards", reason: 'The grant doesn\'t state "$2 million".' }]);
-    expect(calls.meaning[0].messages[0].content).not.toContain("<name>Awards</name>");
+    expect(calls.meaning[0].messages[0].content.at(-1).text).not.toContain("<name>Awards</name>");
   });
 
-  it("fails an item its passages don't support, and one with no passage at all", async () => {
+  it("fails an item the grant doesn't support, and judges one with no passage against the whole grant", async () => {
     fakeBedrock({ quotes: { Cities: ALL_CITED.Cities }, unsupported: { Cities: "The grant also allows towns; it says nothing about counties." } });
     const summary = { ...SUMMARY, EligibilityCriteria: [{ item: "Cities", description: "Cities and counties may apply." }] };
     const out = await verify.verifyRequirements({ nofoName: "Grant A", summary, rawText: RAW, rewrite: false });
 
     expect(out.failing).toEqual([
       { category: "EligibilityCriteria", item: "Cities", reason: "The grant also allows towns; it says nothing about counties." },
-      { category: "KeyDeadlines", item: "Deadline", reason: "No passage in the grant states this." },
     ]);
+    expect(calls.meaning[0].messages[0].content.at(-1).text).toContain("<name>Deadline</name>");
   });
 
   it("fails an application deadline the grant doesn't give", async () => {
@@ -231,7 +234,7 @@ describe("verifying a grant's requirements", () => {
   });
 
   it("keeps an item the rewrite says to remove, still failing", async () => {
-    fakeBedrock({ quotes: { Deadline: ALL_CITED.Deadline }, rewrite: "[E1] REMOVE" });
+    fakeBedrock({ quotes: { Deadline: ALL_CITED.Deadline }, unsupported: { Tribes: NO_TRIBES }, rewrite: "[E1] REMOVE" });
     const summary = { ...SUMMARY, EligibilityCriteria: [{ item: "Tribes", description: "Tribal governments may apply." }] };
     const out = await verify.verifyRequirements({ nofoName: "Grant A", summary, rawText: RAW });
 
@@ -240,7 +243,7 @@ describe("verifying a grant's requirements", () => {
       {
         category: "EligibilityCriteria",
         item: "Tribes",
-        reason: "No passage in the grant states this. The automatic rewrite found nothing in the grant that states it.",
+        reason: `${NO_TRIBES} The automatic rewrite found nothing in the grant that states it.`,
       },
     ]);
     expect(calls.cite).toHaveLength(1);
@@ -276,7 +279,7 @@ describe("VerifySummary step", () => {
 
   it("saves the verified citations and passes on only the failing names and reasons", async () => {
     files({ "Grant A/raw-text.txt": RAW, "Grant A/requirements-citations.json": JSON.stringify({ items: {}, approval: { itemsHash: "old" } }) });
-    fakeBedrock({ quotes: { Cities: ALL_CITED.Cities }, rewrite: "[K1] REMOVE" });
+    fakeBedrock({ quotes: { Cities: ALL_CITED.Cities }, unsupported: { Deadline: "The grant gives March 1, not a rolling deadline." }, rewrite: "[K1] REMOVE" });
 
     const out = await verifySummary(event);
 
@@ -356,7 +359,7 @@ describe("checking live grants", () => {
   beforeEach(() => {
     live(["Good Grant", "Bad Grant"]);
     files({ ...grantFiles("Good Grant"), ...grantFiles("Bad Grant", BAD) });
-    fakeBedrock({ quotes: ALL_CITED });
+    fakeBedrock({ quotes: ALL_CITED, unsupported: { Tribes: NO_TRIBES } });
   });
 
   it("dry run writes a report of failing grants and items and changes nothing else", async () => {
@@ -366,7 +369,7 @@ describe("checking live grants", () => {
     const report = JSON.parse(reportPut()!.Body as string);
     expect(reportPut()!.Key).toBe(`_verification/${out.reportId}.json`);
     expect(report.failing).toEqual([
-      { grant: "Bad Grant", status: "active", items: [{ category: "EligibilityCriteria", item: "Tribes", reason: "No passage in the grant states this." }] },
+      { grant: "Bad Grant", status: "active", items: [{ category: "EligibilityCriteria", item: "Tribes", reason: NO_TRIBES }] },
     ]);
     expect(report.applied).toBeNull();
     expect(calls.rewrite).toHaveLength(0);

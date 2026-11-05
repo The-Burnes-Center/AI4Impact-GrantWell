@@ -113,11 +113,28 @@ export function citationsFile(items, byId, { textChars, pageStarts, model }) {
   return { version: CITATIONS_VERSION, itemsHash: itemsHash(items), textChars, model, items: entries };
 }
 
-/** One Haiku call over the whole grant; citations per item id. */
+const CITE_BATCH = 25;
+
+/**
+ * Citations per item id, in batches so a long list is never cut off. The grant is cached, so the
+ * first batch writes it once and the rest read it.
+ */
 export async function citeItems(nofoName, rawText, items, modelId = process.env.HAIKU_MODEL_ID) {
+  const batches = [];
+  for (let i = 0; i < items.length; i += CITE_BATCH) batches.push(items.slice(i, i + CITE_BATCH));
+  const out = new Map();
+  const run = async (batch) => {
+    for (const [id, list] of await citeBatch(nofoName, rawText, batch, modelId)) out.set(id, list);
+  };
+  if (batches.length) await run(batches[0]);
+  await Promise.all(batches.slice(1).map(run));
+  return out;
+}
+
+async function citeBatch(nofoName, rawText, items, modelId) {
   const body = {
     anthropic_version: "bedrock-2023-05-31",
-    max_tokens: Math.min(32000, 1000 + items.length * 150),
+    max_tokens: Math.min(32000, 1500 + items.length * 300),
     thinking: { type: "disabled" },
     output_config: { effort: "low" },
     messages: [
@@ -129,6 +146,7 @@ export async function citeItems(nofoName, rawText, items, modelId = process.env.
             source: { type: "text", media_type: "text/plain", data: rawText },
             title: nofoName,
             citations: { enabled: true },
+            cache_control: { type: "ephemeral" },
           },
           { type: "text", text: citationPrompt(items) },
         ],

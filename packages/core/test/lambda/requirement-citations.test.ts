@@ -158,6 +158,27 @@ describe("cite-requirements handler", () => {
     expect(bedrock.commandCalls(InvokeModelCommand)).toHaveLength(1);
   });
 
+  it("cites a long list in batches of 25 against the cached grant, so none are cut off", async () => {
+    const many = { ...SUMMARY, EligibilityCriteria: Array.from({ length: 30 }, (_, i) => ({ item: `City ${i + 1}`, description: "Cities may apply." })) };
+    files({ "Grant A/summary.json": JSON.stringify(many), "Grant A/raw-text.txt": RAW });
+    bedrock.on(InvokeModelCommand).callsFake((input) => {
+      const prompt = JSON.parse(input.body as string).messages[0].content[1].text as string;
+      return modelReply(
+        [...prompt.matchAll(/^\[([EK]\d+)\] /gm)].flatMap(([, id]) => [
+          { type: "text", text: `\n[${id}] ` },
+          { type: "text", text: "cited", citations: [charCite("Eligible applicants are cities and towns.")] },
+        ])
+      );
+    });
+
+    expect(await cite.handler({ nofoName: "Grant A" })).toEqual({ result: "written" });
+
+    const requests = bedrock.commandCalls(InvokeModelCommand).map((c) => JSON.parse(c.args[0].input.body as string));
+    expect(requests.map((r) => r.messages[0].content[1].text.match(/^\[[EK]\d+\] /gm).length)).toEqual([25, 6]);
+    for (const r of requests) expect(r.messages[0].content[0]).toMatchObject({ cache_control: { type: "ephemeral" } });
+    expect(Object.keys(JSON.parse(puts()[0].Body as string).items)).toHaveLength(31);
+  });
+
   it("writes nothing for a grant with no text yet", async () => {
     files({ "Grant A/summary.json": JSON.stringify(SUMMARY) });
     expect(await cite.handler({ nofoName: "Grant A" })).toEqual({ result: "no-source" });
