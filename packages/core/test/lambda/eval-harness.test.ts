@@ -168,7 +168,7 @@ describe("eval harness", () => {
     expect(body).not.toHaveProperty("tools");
     expect(r.usage.map((u: any) => [u.model, u.input, u.output, u.stop])).toEqual([
       [h.models.sonnet, 900, 12, "end_turn"],
-      [h.models.haiku, 300, 40, "end_turn"],
+      [h.models.sonnet, 300, 40, "end_turn"],
     ]);
     expect(r.usage[0].firstTokenMs).toBeGreaterThanOrEqual(0);
     expect(kb.commandCalls(RetrieveCommand)).toHaveLength(0);

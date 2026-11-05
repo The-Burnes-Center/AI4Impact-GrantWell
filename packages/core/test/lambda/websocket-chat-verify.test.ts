@@ -17,6 +17,7 @@ import {
   VERIFY_MARKER,
   absenceTopic,
   dateStatusFailures,
+  weekdayFailures,
   meaningRequest,
   mentions,
   problemsText,
@@ -46,7 +47,7 @@ beforeAll(async () => {
   vi.stubEnv("ARTIFACTS_BUCKET", "grant-artifacts");
   vi.stubEnv("SUPPORTED_STATES", JSON.stringify([{ code: "MA", name: "Massachusetts" }]));
   vi.stubEnv("SONNET_MODEL_ID", "arn:aws:bedrock:us-east-1:111111111111:application-inference-profile/chat");
-  vi.stubEnv("HAIKU_MODEL_ID", HAIKU);
+  vi.stubEnv("VERIFY_MODEL_ID", HAIKU);
   ({ handler } = await import("../../lib/chatbot-api/functions/websocket-chat/index.mjs"));
 });
 
@@ -190,6 +191,12 @@ describe("answer units", () => {
     expect(dateStatusFailures(units, "November 4, 2026")).toEqual([0]);
   });
 
+  it("catches a weekday that doesn't match its date, and a future date said to be due in the past", () => {
+    expect(weekdayFailures(splitSentences("It was due on a Thursday (October 9, 2026). It is due Wednesday, October 7, 2026."))).toEqual([0]);
+    expect(dateStatusFailures(splitSentences("The pre-application was due December 22, 2026."), "November 4, 2026")).toEqual([0]);
+    expect(absenceTopic("The grant doesn't explain how the base and country deadlines fit together.")).toBe("base country deadlines fit");
+  });
+
   it("drops a heading whose every sentence was removed", () => {
     const text = "### Eligibility\nCities may apply.\n\n### Budget\nThe cap is $9 billion.";
     const units = splitSentences(text);
@@ -247,7 +254,7 @@ describe("verified chat answers", () => {
 
     expect(haikuCalls()[0].args[0].input.modelId).toBe(HAIKU);
     const body = haikuRequest();
-    expect(body.thinking).toEqual({ type: "disabled" });
+    expect(body.thinking).toEqual({ type: "between_tools" });
     expect(body.output_config).toMatchObject({ effort: "low", format: { type: "json_schema" } });
     expect(body.output_config.format.schema.properties.verdicts.items.properties.verdict.enum).toEqual(["supported", "unsupported", "not_a_claim"]);
     const prompt = body.messages[0].content.at(-1).text;

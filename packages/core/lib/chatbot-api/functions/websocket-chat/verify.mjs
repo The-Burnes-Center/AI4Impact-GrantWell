@@ -142,7 +142,8 @@ export function meaningRequest({ units, found = [], documents = [], summary = nu
   return {
     anthropic_version: "bedrock-2023-05-31",
     max_tokens: Math.min(8192, 512 + 96 * units.length),
-    thinking: { type: "disabled" },
+    // Sonnet 5.5 rejects "disabled"; between_tools is its no-thinking setting.
+    thinking: { type: "between_tools" },
     output_config: { effort: "low", format: { type: "json_schema", schema: VERDICT_SCHEMA } },
     system: SYSTEM,
     messages: [
@@ -164,7 +165,7 @@ let defaultClient;
  * One verdict per unit, in unit order. A unit Haiku skipped counts as unsupported. Throws when the
  * call fails or returns no usable verdicts, so an unchecked answer never reaches the reader.
  */
-export async function checkMeaning(options, { client, modelId = process.env.HAIKU_MODEL_ID } = {}) {
+export async function checkMeaning(options, { client, modelId = process.env.VERIFY_MODEL_ID } = {}) {
   const { units } = options;
   if (!units.length) return [];
   client ??= defaultClient ??= new BedrockRuntimeClient({ region: process.env.AWS_REGION || "us-east-1" });
@@ -187,7 +188,7 @@ export async function checkMeaning(options, { client, modelId = process.env.HAIK
  * Both checks on one answer. `baseKeys` are sourceKeys of the grant, the user's documents and words
  * and the context; the answer's own cited passages are added here.
  */
-const PASSED = /\b(?:has|have|had)\s+(?:already\s+)?passed\b|\b(?:is|are|was|were)\s+(?:now\s+)?(?:past|closed|over)\b|\bhas\s+(?:already\s+)?(?:closed|ended|expired)\b|\balready\s+(?:passed|closed|ended)\b/i;
+const PASSED = /\b(?:was|were)\s+due\b|\b(?:has|have|had)\s+(?:already\s+)?passed\b|\b(?:is|are|was|were)\s+(?:now\s+)?(?:past|closed|over)\b|\bhas\s+(?:already\s+)?(?:closed|ended|expired)\b|\balready\s+(?:passed|closed|ended)\b/i;
 const NOT_PASSED = /\b(?:has|have)\s*n[o']t\s+(?:yet\s+)?passed\b|\b(?:has|have)\s+not\s+(?:yet\s+)?passed\b|\bnot\s+yet\s+passed\b|\bstill\s+(?:open|ahead|to come)\b|\bis\s+(?:still\s+)?upcoming\b/i;
 
 /**
@@ -207,10 +208,25 @@ export function dateStatusFailures(units, today) {
   });
 }
 
+const WEEKDAYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+const WEEKDAY_NEAR_DATE = /\b(sunday|monday|tuesday|wednesday|thursday|friday|saturday)\b[^.;\n]{0,40}?\b([A-Z][a-z]{2,8}\.?\s+\d{1,2}(?:st|nd|rd|th)?,?\s+\d{4})|\b([A-Z][a-z]{2,8}\.?\s+\d{1,2}(?:st|nd|rd|th)?,?\s+\d{4})\b[^.;\n]{0,15}?\(?\b(sunday|monday|tuesday|wednesday|thursday|friday|saturday)\b/gi;
+
+/** Units naming a weekday for a date it doesn't fall on ("due on a Friday (October 9, 2026)"). */
+export function weekdayFailures(units) {
+  return units.flatMap((u, i) => {
+    for (const m of u.text.matchAll(WEEKDAY_NEAR_DATE)) {
+      const day = (m[1] ?? m[4]).toLowerCase();
+      const key = extractFacts(m[2] ?? m[3]).find((f) => f.key.startsWith("date:"))?.key.slice(5);
+      if (key && WEEKDAYS[new Date(`${key}T12:00:00Z`).getUTCDay()] !== day) return [i];
+    }
+    return [];
+  });
+}
+
 export async function verifyAnswer({ text, found = [], documents = [], summary = null, documentText = "", grantText = "", baseKeys, today = "" }, deps) {
   const units = splitSentences(text);
   const keys = unionKeys(baseKeys, found.map((f) => f.citation?.cited_text ?? ""));
-  const factFailing = [...new Set([...factFailures(units, keys), ...dateStatusFailures(units, today)])].sort((x, y) => x - y);
+  const factFailing = [...new Set([...factFailures(units, keys), ...dateStatusFailures(units, today), ...weekdayFailures(units)])].sort((x, y) => x - y);
   const verdicts = await checkMeaning({ units, found, documents, summary, documentText, grantText, today }, deps);
   const absenceFailing = verdicts.flatMap((v, i) => {
     if (v.verdict !== "not_a_claim") return [];
@@ -224,7 +240,7 @@ export async function verifyAnswer({ text, found = [], documents = [], summary =
   return { units, verdicts, factFailing, meaningFailing, absenceFailing, failing };
 }
 
-const ABSENCE = /\b(?:grant|notice|nofo|solicitation|announcement|document)\b[^.]{0,40}?\b(?:does not|doesn't|did not|didn't|do not|don't)\s+(?:say|state|mention|specify|address|list|include|cover|describe|set|give|provide|require)\b\s*(?:anything\s+)?(?:about|on|whether|if|how|what|when|which|who|any|a|an|the)?\s*([^.;:?!]+)/i;
+const ABSENCE = /\b(?:grant|notice|nofo|solicitation|announcement|document)\b[^.]{0,40}?\b(?:does not|doesn't|did not|didn't|do not|don't)\s+(?:say|state|mention|specify|address|list|include|cover|describe|set|give|provide|require|explain|name|clarify|define|label|indicate|identify|tie|link)\b\s*(?:anything\s+)?(?:about|on|whether|if|how|what|when|which|who|any|a|an|the)?\s*([^.;:?!]+)/i;
 const SILENT = /\b(?:is silent on|makes no mention of|has no mention of|no mention of|isn't stated|is not stated)\s+(?:about\s+|whether\s+|the\s+|a\s+|an\s+|any\s+)?([^.;:?!]+)/i;
 const FILLER = new Set(("a an the any of for to in on at by with from and or is are be been being was were will would can could should may might must " +
   "applicant applicants application applications grant grants program project projects required require requires requirement " +
