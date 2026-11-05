@@ -6,7 +6,7 @@ AuthorizationAuthorizationFunctionB35B7A4C	AWS::Lambda::Function
 AuthorizationAuthorizationFunctionServiceRole09B7CF46	AWS::IAM::Role
 AuthorizationSignUpTriggerFunction6EFE223F	AWS::Lambda::Function
 AuthorizationSignUpTriggerFunctionServiceRoleCA0A452B	AWS::IAM::Role
-AuthorizationSignUpTriggerFunctionServiceRoleDefaultPolicyC7735BE4	AWS::IAM::Policy
+AuthorizationSignupTriggerUserPoolPolicy82C2D4B4	AWS::IAM::Policy
 AuthorizationUserPool114F25B4	AWS::Cognito::UserPool
 AuthorizationUserPoolClient8E2989BE	AWS::Cognito::UserPoolClient
 AuthorizationUserPoolCognitoDomain7EF39E06	AWS::Cognito::UserPoolDomain
@@ -314,6 +314,9 @@ ChatbotAPIRestBackendHTTPAPIPUTuserprofileC857530C	AWS::ApiGatewayV2::Route
 ChatbotAPIRestBackendHTTPAPIPUTuserprofileUserProfileIntegrationPermission6DE8E94D	AWS::Lambda::Permission
 ChatbotAPIRestBackendHTTPAPIPUTuserprofilerecentlyviewed20F2CCEE	AWS::ApiGatewayV2::Route
 ChatbotAPIRestBackendHTTPAPIPUTuserprofilerecentlyviewedUserProfileIntegrationPermission84882D72	AWS::Lambda::Permission
+ChatbotAPIRestBackendHttpApiAccessLogs28AE40DA	AWS::Logs::LogGroup
+ChatbotAPIS3AccessLogsBucket3A4594F9	AWS::S3::Bucket
+ChatbotAPIS3AccessLogsBucketPolicyE06F386E	AWS::S3::BucketPolicy
 ChatbotAPIS3DataSource7122E2EC	AWS::Bedrock::DataSource
 ChatbotAPIScraperDownloadDLQ9A4781FB	AWS::SQS::Queue
 ChatbotAPIScraperDownloadDLQPolicyE3696EC5	AWS::SQS::QueuePolicy

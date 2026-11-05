@@ -58,6 +58,7 @@ export class UserInterface extends Construct {
 
     const uploadLogsBucket = new s3.Bucket(this, "WebsiteLogsBucket", {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      lifecycleRules: [{ expiration: cdk.Duration.days(90) }],
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
       enforceSSL: true,
@@ -197,6 +198,13 @@ export class UserInterface extends Construct {
       memoryLimit: 2048,
       retainOnDelete: false
     });
+
+    // CDK owns BucketDeployment's handler and its runtime; it moves when aws-cdk-lib is upgraded.
+    for (const handler of cdk.Stack.of(this).node.children.filter((c) => c.node.id.startsWith("Custom::CDKBucketDeployment"))) {
+      NagSuppressions.addResourceSuppressions(handler, [
+        { id: "AwsSolutions-L1", reason: "CDK-managed BucketDeployment handler; its runtime follows aws-cdk-lib." },
+      ], true);
+    }
 
     const publicDeployment = new s3deploy.BucketDeployment(this, "UserInterfacePublicDeployment", {
       prune: false,

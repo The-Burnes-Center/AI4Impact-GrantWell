@@ -4,6 +4,7 @@
  * This construct can be used to define WebSocket endpoints for real-time communication in the backend.
  */
 
+import { NagSuppressions } from "cdk-nag";
 import { aws_apigatewayv2 as apigwv2 } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import type { Throttle } from "../../config/instance-config";
@@ -29,5 +30,8 @@ export class WebsocketBackendAPI extends Construct {
     // Assign the created WebSocket API and stage to the class properties
     this.wsAPI = webSocketApi;
     this.wsAPIStage = webSocketApiStage;
+    NagSuppressions.addResourceSuppressions(webSocketApiStage, [
+      { id: "AwsSolutions-APIG1", reason: "WebSocket access logs need an account-level API Gateway CloudWatch role, which GrantWell doesn't own yet; the chat Lambda logs every message." },
+    ]);
   }
 }

@@ -69,6 +69,8 @@ export class AuthorizationStack extends Construct {
       // Logs risky sign-ins without blocking them; switch to FULL_FUNCTION once the audit looks clean.
       standardThreatProtectionMode: cognito.StandardThreatProtectionMode.AUDIT_ONLY,
       autoVerify: { email: true },
+      // A changed email counts only after it is verified, so the ID token never carries an unverified address.
+      keepOriginal: { email: true },
       signInAliases: {
         email: true,
       },
@@ -109,6 +111,9 @@ export class AuthorizationStack extends Construct {
           })
         : cognito.UserPoolEmail.withCognito(config.branding.supportEmail),
     });
+    NagSuppressions.addResourceSuppressions(userPool, [
+      { id: "AwsSolutions-COG3", reason: "Threat protection runs in audit mode first; it moves to full enforcement once the audit shows no false blocks." },
+    ]);
     if (!config.auth.mfaRequired) {
       NagSuppressions.addResourceSuppressions(userPool, [
         { id: "AwsSolutions-COG2", reason: "MFA is optional or off by this deployment's config.auth; deployments that need it set mfaRequired." },
@@ -142,22 +147,18 @@ export class AuthorizationStack extends Construct {
       cognito.UserPoolOperation.PRE_AUTHENTICATION,
       signupTriggerFunction
     );
-    signupTriggerFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          'cognito-idp:AdminUpdateUserAttributes',
-          'cognito-idp:AdminUserGlobalSignOut',
-        ],
-        resources: [
-          cdk.Stack.of(this).formatArn({
-            service: 'cognito-idp',
-            resource: 'userpool',
-            resourceName: '*',
-          }),
-        ],
-      })
-    );
+    // A standalone Policy, not the role's DefaultPolicy: naming the pool there makes a cycle
+    // (pool -> trigger -> DefaultPolicy -> pool). Scoped to this pool, not every pool in the account.
+    new iam.Policy(this, 'SignupTriggerUserPoolPolicy', {
+      roles: [signupTriggerFunction.role!],
+      statements: [
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['cognito-idp:AdminUpdateUserAttributes', 'cognito-idp:AdminUserGlobalSignOut'],
+          resources: [userPool.userPoolArn],
+        }),
+      ],
+    });
 
     if (config.e2e) {
       const parameterName = e2eBypassParameter(config);
@@ -193,8 +194,9 @@ export class AuthorizationStack extends Construct {
 
     const userPoolClient = new UserPoolClient(this, 'UserPoolClient', {
       userPool,
+      // The UI signs in with SRP and e2e with refresh tokens; plain password auth is unused.
       authFlows: {
-        userPassword: true,
+        userPassword: false,
         userSrp: true,
       },
       preventUserExistenceErrors: true,
@@ -214,7 +216,7 @@ export class AuthorizationStack extends Construct {
     this.userPoolClient = userPoolClient;
 
     const authorizerHandlerFunction = new lambda.Function(this, 'AuthorizationFunction', {
-      runtime: lambda.Runtime.PYTHON_3_12,
+      runtime: lambda.Runtime.PYTHON_3_13,
       code: lambda.Code.fromAsset(path.join(__dirname, 'websocket-api-authorizer')),
       handler: 'lambda_function.lambda_handler',
       environment: {

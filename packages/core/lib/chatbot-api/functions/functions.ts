@@ -244,11 +244,11 @@ export class LambdaFunctionStack extends cdk.Stack {
     // Create Python shared models Lambda Layer
     const pythonSharedLayer = new lambda.LayerVersion(scope, "PythonSharedLayer", {
       layerVersionName: `${stackName}-python-shared-layer`,
-      compatibleRuntimes: [lambda.Runtime.PYTHON_3_12],
+      compatibleRuntimes: [lambda.Runtime.PYTHON_3_13],
       code: lambda.Code.fromAsset(
         path.join(__dirname, "layers/python-shared-layer"), {
         bundling: {
-          image: lambda.Runtime.PYTHON_3_12.bundlingImage,
+          image: lambda.Runtime.PYTHON_3_13.bundlingImage,
           command: [
             'bash', '-c',
             'pip install -r requirements.txt -t python && cp -au python /asset-output',
@@ -273,7 +273,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "DraftHandlerFunction",
       {
-        runtime: lambda.Runtime.PYTHON_3_12,
+        runtime: lambda.Runtime.PYTHON_3_13,
         code: lambda.Code.fromAsset(path.join(__dirname, "draft-editor")),
         handler: "lambda_function.lambda_handler",
         layers: [pythonSharedLayer],
@@ -315,7 +315,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "DraftVersionWriterFunction",
       {
-        runtime: lambda.Runtime.PYTHON_3_12,
+        runtime: lambda.Runtime.PYTHON_3_13,
         code: lambda.Code.fromAsset(path.join(__dirname, "draft-version-writer")),
         handler: "lambda_function.lambda_handler",
         layers: [pythonSharedLayer],
@@ -353,7 +353,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "SessionHandlerFunction",
       {
-        runtime: lambda.Runtime.PYTHON_3_12,
+        runtime: lambda.Runtime.PYTHON_3_13,
         code: lambda.Code.fromAsset(path.join(__dirname, "session-handler")),
         handler: "lambda_function.lambda_handler",
         layers: [pythonSharedLayer],
@@ -488,7 +488,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       "SyncKBHandlerFunction",
       {
         functionName: `${stackName}-syncKBFunction`,
-        runtime: lambda.Runtime.PYTHON_3_12,
+        runtime: lambda.Runtime.PYTHON_3_13,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "knowledge-management/kb-sync")
         ),
@@ -594,7 +594,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "DeleteS3FilesHandlerFunction",
       {
-        runtime: lambda.Runtime.PYTHON_3_12,
+        runtime: lambda.Runtime.PYTHON_3_13,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "knowledge-management/delete-document")
         ),
@@ -674,20 +674,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       }
     );
 
-    getS3APIHandlerFunctionForNOFOs.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          "s3:*",
-          //'s3:GetObject',     // Read objects from the bucket
-          //'s3:ListBucket'     // List the contents of the bucket
-        ],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          props.ffioNofosBucket.bucketArn + "/*",
-        ],
-      })
-    );
+    getS3APIHandlerFunctionForNOFOs.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
 
     getS3APIHandlerFunctionForNOFOs.addToRolePolicy(s3ReadOnlyPolicy(props.grantArtifactsBucket.bucketArn));
 
@@ -856,16 +843,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
     props.analyticsTable.grantWriteData(RequirementsForNOFOs);
 
-    RequirementsForNOFOs.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["s3:*", "bedrock:*"],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          props.ffioNofosBucket.bucketArn + "/*",
-        ],
-      })
-    );
+    RequirementsForNOFOs.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
     RequirementsForNOFOs.addToRolePolicy(s3ReadOnlyPolicy(props.grantArtifactsBucket.bucketArn));
     props.nofoMetadataTable.grantReadData(RequirementsForNOFOs);
     props.nofoStateOverlayTable.grantReadData(RequirementsForNOFOs);
@@ -893,16 +871,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       }
     );
 
-    NOFOQuestionsForNOFOs.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["s3:*", "bedrock:*"],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          props.ffioNofosBucket.bucketArn + "/*",
-        ],
-      })
-    );
+    NOFOQuestionsForNOFOs.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
     NOFOQuestionsForNOFOs.addToRolePolicy(s3ReadOnlyPolicy(props.grantArtifactsBucket.bucketArn));
     props.nofoMetadataTable.grantReadData(NOFOQuestionsForNOFOs);
     props.nofoStateOverlayTable.grantReadData(NOFOQuestionsForNOFOs);
@@ -930,14 +899,12 @@ export class LambdaFunctionStack extends cdk.Stack {
       }
     );
 
+    // Signs admins' upload URLs; it never reads or deletes.
     nofoUploadS3APIHandlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["s3:*"],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          props.ffioNofosBucket.bucketArn + "/*",
-        ],
+        actions: ["s3:PutObject"],
+        resources: [props.ffioNofosBucket.bucketArn + "/*"],
       })
     );
 

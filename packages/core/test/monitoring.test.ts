@@ -210,9 +210,11 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
         LOG_GROUP_PREFIX: `/aws/lambda/${ENVS[env].STACK_NAME}-`,
         METRIC_NAMESPACE: prefix,
         METRIC_NAME: "LambdaInitErrors",
+        RETENTION_DAYS: "90",
       });
       const statements = policyOf(id);
-      const startQuery = statements.find((s) => s.Action === "logs:StartQuery");
+      const startQuery = statements.find((s) => [].concat(s.Action).includes("logs:StartQuery"));
+      expect([...startQuery.Action].sort()).toEqual(["logs:PutRetentionPolicy", "logs:StartQuery"]);
       expect(JSON.stringify(startQuery.Resource)).toContain(`:log-group:/aws/lambda/${ENVS[env].STACK_NAME}-*`);
       const put = statements.find((s) => s.Action === "cloudwatch:PutMetricData");
       expect(put.Condition).toEqual({ StringEquals: { "cloudwatch:namespace": prefix } });

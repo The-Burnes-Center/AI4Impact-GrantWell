@@ -151,6 +151,20 @@ export class MonitoringStack extends cdk.NestedStack {
       topicName: `${this.prefix}-alerts`,
       displayName: `GrantWell ${config.id} alerts`,
     });
+    // enforceSSL replaces the topics' default policy, which is what let CloudWatch alarms publish.
+    for (const topic of [this.alarmTopic, this.alertTopic]) {
+      topic.addToResourcePolicy(
+        new iam.PolicyStatement({
+          principals: [new iam.ServicePrincipal("cloudwatch.amazonaws.com")],
+          actions: ["sns:Publish"],
+          resources: [topic.topicArn],
+          conditions: {
+            ArnLike: { "aws:SourceArn": `arn:${cdk.Aws.PARTITION}:cloudwatch:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:alarm:*` },
+            StringEquals: { "aws:SourceAccount": cdk.Aws.ACCOUNT_ID },
+          },
+        })
+      );
+    }
 
     this.addAlertFormatter();
     this.addSiteAndApiAlarms(props);
@@ -205,7 +219,7 @@ export class MonitoringStack extends cdk.NestedStack {
    */
   private addAlertFormatter(): void {
     const formatter = new lambda.Function(this, "AlertFormatterFunction", {
-      runtime: lambda.Runtime.PYTHON_3_12,
+      runtime: lambda.Runtime.PYTHON_3_13,
       handler: "handler.lambda_handler",
       code: lambda.Code.fromAsset(path.join(__dirname, "functions/alert-formatter"), {
         exclude: ["__pycache__"],
@@ -709,8 +723,9 @@ export class MonitoringStack extends cdk.NestedStack {
         EXCLUDE_LOG_GROUP: logGroup.logGroupName,
         METRIC_NAMESPACE: this.prefix,
         METRIC_NAME: metricName,
+        RETENTION_DAYS: "90",
       },
-      description: "Finds GrantWell Lambdas that failed to start in the last 15 minutes",
+      description: "Finds GrantWell Lambdas that failed to start in the last 15 minutes, and sets 90-day retention on their logs",
       logGroup,
     });
     scan.addToRolePolicy(new iam.PolicyStatement({
@@ -718,7 +733,7 @@ export class MonitoringStack extends cdk.NestedStack {
       resources: [this.formatArn({ service: "logs", resource: "log-group", resourceName: "*", arnFormat: cdk.ArnFormat.COLON_RESOURCE_NAME })],
     }));
     scan.addToRolePolicy(new iam.PolicyStatement({
-      actions: ["logs:StartQuery"],
+      actions: ["logs:StartQuery", "logs:PutRetentionPolicy"],
       resources: [
         this.formatArn({
           service: "logs",
@@ -851,7 +866,7 @@ export class MonitoringStack extends cdk.NestedStack {
     });
 
     const brief = new lambda.Function(this, "DailyBriefFunction", {
-      runtime: lambda.Runtime.PYTHON_3_12,
+      runtime: lambda.Runtime.PYTHON_3_13,
       handler: "handler.lambda_handler",
       code: lambda.Code.fromAsset(path.join(__dirname, "functions/daily-brief"), {
         exclude: ["__pycache__"],

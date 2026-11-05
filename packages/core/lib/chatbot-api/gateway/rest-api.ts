@@ -4,6 +4,7 @@
  * This construct can be used to define RESTful endpoints for the backend.
  */
 
+import * as logs from "aws-cdk-lib/aws-logs";
 import { Construct } from "constructs";
 import { Duration, aws_apigatewayv2 as apigwv2 } from "aws-cdk-lib";
 import type { Throttle } from "../../config/instance-config";
@@ -32,7 +33,21 @@ export class RestBackendAPI extends Construct {
       },
     });
 
-    // HttpApi takes no throttle for the stage it creates itself.
+    const accessLogs = new logs.LogGroup(this, "HttpApiAccessLogs", { retention: logs.RetentionDays.THREE_MONTHS });
+    // HttpApi takes no throttle or access log setting for the stage it creates itself.
+    (httpApi.defaultStage!.node.defaultChild as apigwv2.CfnStage).accessLogSettings = {
+      destinationArn: accessLogs.logGroupArn,
+      format: JSON.stringify({
+        requestId: "$context.requestId",
+        time: "$context.requestTime",
+        ip: "$context.identity.sourceIp",
+        user: "$context.authorizer.claims.sub",
+        route: "$context.routeKey",
+        status: "$context.status",
+        latencyMs: "$context.responseLatency",
+        integrationError: "$context.integrationErrorMessage",
+      }),
+    };
     (httpApi.defaultStage!.node.defaultChild as apigwv2.CfnStage).defaultRouteSettings = {
       throttlingRateLimit: props.throttle.rateLimit,
       throttlingBurstLimit: props.throttle.burstLimit,

@@ -4,6 +4,7 @@
  * the 500-resource CloudFormation limit.
  */
 
+import { NagSuppressions } from "cdk-nag";
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as path from "path";
@@ -120,6 +121,9 @@ export class DocumentConversionStack extends cdk.NestedStack {
       lifecycleRules: [{ expiration: cdk.Duration.days(1) }],
     });
     this.applicationExportsBucket = applicationExportsBucket;
+    NagSuppressions.addResourceSuppressions(applicationExportsBucket, [
+      { id: "AwsSolutions-S1", reason: "Holds generated exports for one day only; the export Lambdas' logs record each request." },
+    ]);
 
     // Application PDF Generator Lambda Function (using Puppeteer for tagged PDFs)
     const applicationPdfGeneratorFunction = new lambda.Function(

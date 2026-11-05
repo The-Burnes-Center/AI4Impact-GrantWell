@@ -1,4 +1,5 @@
 import * as cdk from "aws-cdk-lib";
+import { NagSuppressions } from "cdk-nag";
 import { Construct } from "constructs";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
 import * as tasks from "aws-cdk-lib/aws-stepfunctions-tasks";
@@ -202,5 +203,8 @@ export class DraftGenerationStateMachine extends Construct {
       },
       tracingEnabled: true,
     });
+    NagSuppressions.addResourceSuppressions(this.stateMachine, [
+      { id: "AwsSolutions-SF1", reason: "Errors are logged with their execution data; logging every step would copy grant and draft text (user content) into logs." },
+    ]);
   }
 }

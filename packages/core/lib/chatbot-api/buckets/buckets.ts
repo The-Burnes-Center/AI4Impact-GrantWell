@@ -4,6 +4,7 @@
  * The common properties include versioning, automatic deletion, and CORS configuration.
  */
 
+import { NagSuppressions } from 'cdk-nag';
 import * as cdk from 'aws-cdk-lib';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as iam from 'aws-cdk-lib/aws-iam';
@@ -29,8 +30,22 @@ export class S3BucketStack extends cdk.Stack {
     //   }]
     // });
 
+    const accessLogsBucket = new s3.Bucket(scope, 'S3AccessLogsBucket', {
+      enforceSSL: true,
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      encryption: s3.BucketEncryption.S3_MANAGED,
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
+      lifecycleRules: [{ expiration: cdk.Duration.days(90) }],
+    });
+    NagSuppressions.addResourceSuppressions(accessLogsBucket, [
+      { id: 'AwsSolutions-S1', reason: 'This is the access-logs bucket for the other buckets; logging it to itself would loop.' },
+    ]);
+
     this.ffioNofosBucket = new s3.Bucket(scope, 'ffioNofosDownloadBucket', {
       enforceSSL: true,
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      serverAccessLogsBucket: accessLogsBucket,
+      serverAccessLogsPrefix: 'nofos/',
       // bucketName: 'ffioNofos-download',
       versioned: true,
       removalPolicy: cdk.RemovalPolicy.RETAIN,
@@ -45,6 +60,11 @@ export class S3BucketStack extends cdk.Stack {
     // Bucket for user-uploaded documents (organized by userId/nofoName/)
     this.userDocumentsBucket = new s3.Bucket(scope, 'UserDocumentsBucket', {
       enforceSSL: true,
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      // A user's delete leaves a noncurrent version behind; remove it after 30 days.
+      lifecycleRules: [{ noncurrentVersionExpiration: cdk.Duration.days(30) }],
+      serverAccessLogsBucket: accessLogsBucket,
+      serverAccessLogsPrefix: 'user-documents/',
       versioned: true,
       removalPolicy: cdk.RemovalPolicy.RETAIN,
       autoDeleteObjects: false,
@@ -58,6 +78,9 @@ export class S3BucketStack extends cdk.Stack {
     // raw-text.txt, summary.json and questions.json per grant; kept out of ffioNofosBucket, which the KB indexes.
     this.grantArtifactsBucket = new s3.Bucket(scope, 'GrantArtifactsBucket', {
       enforceSSL: true,
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      serverAccessLogsBucket: accessLogsBucket,
+      serverAccessLogsPrefix: 'grant-artifacts/',
       versioned: true,
       removalPolicy: cdk.RemovalPolicy.RETAIN,
       autoDeleteObjects: false,

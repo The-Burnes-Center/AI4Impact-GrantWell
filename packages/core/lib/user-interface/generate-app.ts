@@ -41,6 +41,7 @@ export class Website extends Construct {
       {
         objectOwnership: s3.ObjectOwnership.OBJECT_WRITER,
         blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+        lifecycleRules: [{ expiration: cdk.Duration.days(90) }],
         removalPolicy: cdk.RemovalPolicy.DESTROY,
         autoDeleteObjects: true,
         enforceSSL: true,

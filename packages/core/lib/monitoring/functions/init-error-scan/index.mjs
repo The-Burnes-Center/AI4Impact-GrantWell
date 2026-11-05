@@ -2,11 +2,15 @@
  * A function that can't load its code never reaches its handler, so none of its own error handling or
  * log markers run. This finds those failures for every Lambda under the stack name, including ones
  * added later. Only names, error types and first lines are logged.
+ *
+ * It also gives every such log group without a retention RETENTION_DAYS: Lambda creates them with no
+ * expiry, and setting it here costs no extra resources in a stack near CloudFormation's limit.
  */
 import {
   CloudWatchLogsClient,
   DescribeLogGroupsCommand,
   GetQueryResultsCommand,
+  PutRetentionPolicyCommand,
   StartQueryCommand,
   StopQueryCommand,
 } from "@aws-sdk/client-cloudwatch-logs";
@@ -38,6 +42,28 @@ export async function listLogGroups(logs, prefix, exclude) {
     nextToken = page.nextToken;
   } while (nextToken);
   return names;
+}
+
+export async function enforceRetention(logs, prefix, days) {
+  if (!days) return { set: 0, failed: 0 };
+  let set = 0;
+  let failed = 0;
+  let nextToken;
+  do {
+    const page = await logs.send(new DescribeLogGroupsCommand({ logGroupNamePrefix: prefix, nextToken }));
+    for (const group of page.logGroups ?? []) {
+      if (!group.logGroupName || group.retentionInDays) continue;
+      try {
+        await logs.send(new PutRetentionPolicyCommand({ logGroupName: group.logGroupName, retentionInDays: days }));
+        set += 1;
+      } catch (error) {
+        failed += 1;
+        console.error(`Could not set retention on ${group.logGroupName}: ${error.name}`);
+      }
+    }
+    nextToken = page.nextToken;
+  } while (nextToken);
+  return { set, failed };
 }
 
 export function batches(items, size = MAX_GROUPS_PER_QUERY) {
@@ -142,7 +168,8 @@ export async function scan({ logs, cloudwatch, env, nowMs, queryOptions }) {
   for (const f of affected) {
     console.error(`Lambda init error in ${f.functionName}: ${f.errorType}: ${f.message} (${f.count} matching lines)`);
   }
-  return { logGroups: groups.length, initErrorLines: rows.length, affected };
+  const retention = await enforceRetention(logs, env.LOG_GROUP_PREFIX, Number(env.RETENTION_DAYS) || 0);
+  return { logGroups: groups.length, initErrorLines: rows.length, affected, retentionSet: retention.set };
 }
 
 const logs = new CloudWatchLogsClient({});
@@ -150,6 +177,6 @@ const cloudwatch = new CloudWatchClient({});
 
 export const handler = async () => {
   const summary = await scan({ logs, cloudwatch, env: process.env, nowMs: Date.now() });
-  console.log(JSON.stringify({ logGroups: summary.logGroups, initErrorLines: summary.initErrorLines }));
+  console.log(JSON.stringify({ logGroups: summary.logGroups, initErrorLines: summary.initErrorLines, retentionSet: summary.retentionSet }));
   return summary;
 };
