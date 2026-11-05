@@ -33,7 +33,8 @@ describe("auth.turnstile: false", () => {
   });
 
   it("leaves out the Turnstile alarms but keeps the other sign-in alarms", () => {
-    const alarms = Object.keys(resourcesIn(variantOut)).filter((id) => resourcesIn(variantOut)[id].Type === "AWS::CloudWatch::Alarm");
+    const resources = resourcesIn(variantOut);
+    const alarms = Object.keys(resources).filter((id) => resources[id].Type === "AWS::CloudWatch::Alarm");
     expect(alarms.some((id) => id.startsWith("Turnstile"))).toBe(false);
     for (const kept of ["SignInTriggerSlowAlarm", "SignUpRejectionsAlarm", "AccountSetupFailedAlarm"]) {
       expect(alarms.some((id) => id.startsWith(kept))).toBe(true);
