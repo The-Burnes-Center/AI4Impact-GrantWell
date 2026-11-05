@@ -142,8 +142,8 @@ const styles = {
 
 // WCAG 2.2.1 — the response deadline must be extendable, so warn with enough of the
 // budget left for the user to ask for more time before anything is torn down.
-const RESPONSE_WARN_MS = 40000;
-const RESPONSE_EXTEND_MS = 20000;
+const RESPONSE_WARN_MS = 60000;
+const RESPONSE_EXTEND_MS = 60000;
 
 const LIMIT_SENTINEL = "<!LIMIT!>";
 

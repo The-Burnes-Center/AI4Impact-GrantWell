@@ -15,6 +15,9 @@ import {
   LEFT_OUT_NOTE,
   NOTHING_CONFIRMED_MESSAGE,
   VERIFY_MARKER,
+  absenceTopic,
+  meaningRequest,
+  mentions,
   problemsText,
   removeUnits,
   splitSentences,
@@ -168,6 +171,30 @@ describe("answer units", () => {
     expect(out).toEqual({ text: "Kept claim.", found: [{ citation: {}, from: 0, at: 11 }] });
   });
 
+  it("finds the topic of a 'the grant doesn't say' sentence and whether the grant mentions it", () => {
+    expect(absenceTopic("The grant doesn't say whether a letter of intent is required.")).toBe("letter intent");
+    expect(absenceTopic("The notice does not mention any cost share.")).toBe("cost share");
+    expect(absenceTopic("The grant is silent on indirect costs.")).toBe("indirect costs");
+    expect(absenceTopic("Applications are due March 1.")).toBeNull();
+    const grant = "Applicants must submit Letters of Intent by January 5. A cost share of 20% applies.";
+    expect(mentions(grant, "letter intent")).toBe(true);
+    expect(mentions(grant, "cost share")).toBe(true);
+    expect(mentions(grant, "indirect costs")).toBe(false);
+  });
+
+  it("drops a heading whose every sentence was removed", () => {
+    const text = "### Eligibility\nCities may apply.\n\n### Budget\nThe cap is $9 billion.";
+    const units = splitSentences(text);
+    const failing = units.flatMap((u: { text: string }, i: number) => (u.text.includes("$9 billion") ? [i] : []));
+    expect(removeUnits(text, units, failing).text).toBe("### Eligibility\nCities may apply.");
+  });
+
+  it("gives the meaning check the user's documents in summary mode", () => {
+    const units = splitSentences("Your match is $415,000.");
+    const prompt = meaningRequest({ units, summary: "{}", documentText: "The board approved a $415,000 match." }).messages[0].content[0].text;
+    expect(prompt).toContain("<supporting_documents>\nThe board approved a $415,000 match.\n</supporting_documents>");
+  });
+
   it("asks for the answer again with the statements that failed", () => {
     expect(problemsText(["- Cities get $5 million.", "It closes in 3 days."])).toBe(
       'These statements could not be confirmed in the grant:\n- "Cities get $5 million."\n- "It closes in 3 days."\nAnswer again using only what the grant states; where the grant doesn\'t say, say so.'
@@ -200,7 +227,7 @@ describe("verified chat answers", () => {
     expect(saves()[0].new_chat_entry[0].chatbot).toBe(answer);
     expect(JSON.parse(saves()[0].new_chat_entry[0].metadata).Verified).toEqual({ regenerated: false, removed: 0 });
     expect(verifyLines()).toEqual([
-      { regenerated: false, removed: 0, fallback: false, sentences: 2, factFails: 0, meaningFails: 0, ms: expect.any(Number) },
+      { regenerated: false, removed: 0, fallback: false, sentences: 2, factFails: 0, meaningFails: 0, absenceFails: 0, ms: expect.any(Number) },
     ]);
   });
 
@@ -220,7 +247,8 @@ describe("verified chat answers", () => {
       '<sentence id="1">\n<text>Applications are due March 1, 2027.</text>\n<passage document="Grant document">Applications are due March 1, 2027.</passage>\n</sentence>'
     );
     expect(prompt).toContain('<sentence id="2">\n<text>Plan ahead.</text>\n<no_passage/>\n</sentence>');
-    expect(prompt).toContain("<user_said>\nWhat is the deadline?\n</user_said>");
+    expect(prompt).not.toContain("<user_said>");
+    expect(prompt).not.toContain("What is the deadline?");
     expect(prompt).not.toContain("Filler.");
   });
 
@@ -296,6 +324,7 @@ describe("verified chat answers", () => {
         sentences: 3,
         factFails: 1,
         meaningFails: 0,
+        absenceFails: 0,
         retryFactFails: 1,
         retryMeaningFails: 0,
         ms: expect.any(Number),
@@ -322,7 +351,7 @@ describe("verified chat answers", () => {
     expect(verifyLines()[0]).toMatchObject({ regenerated: true, removed: 1, fallback: true });
   });
 
-  it("lets the answer repeat facts the user gave, now or earlier in the chat", async () => {
+  it("lets user-given facts pass the fact check but keeps their messages out of the meaning check", async () => {
     lambda.on(InvokeCommand).callsFake((input) =>
       String(input.Payload).includes("get_session")
         ? sessionReply({ chat_history: [{ user: "We serve 4,200 residents.", chatbot: "Noted.", metadata: "[]" }] })
@@ -334,7 +363,23 @@ describe("verified chat answers", () => {
 
     expect(sonnetCalls()).toHaveLength(1);
     expect(posted()[0]).toBe("Your $250,000 budget for 4,200 residents is yours to set.");
-    expect(haikuRequest().messages[0].content[0].text).toContain("We serve 4,200 residents.\n\nOur budget is $250,000. Is that allowed?");
+    const prompt = haikuRequest().messages[0].content[0].text;
+    expect(prompt).not.toContain("We serve 4,200 residents.");
+    expect(prompt).not.toContain("Is that allowed?");
+  });
+
+  it("regenerates a 'the grant doesn't say' answer when the grant does say it", async () => {
+    bedrock
+      .on(InvokeModelWithResponseStreamCommand)
+      .resolvesOnce(cited(["The grant doesn't say whether late applications are reviewed."]))
+      .resolvesOnce(cited([["Late applications are not reviewed.", { ...deadline, cited_text: "Late applications are not reviewed." }]]));
+    bedrock.on(InvokeModelCommand).callsFake(judge((t) => (t.startsWith("The grant doesn't say") ? "not_a_claim" : "supported")));
+
+    await handler(event("Are late applications reviewed?"));
+
+    expect(sonnetCalls()).toHaveLength(2);
+    expect(posted()[0]).toBe("Late applications are not reviewed.");
+    expect(verifyLines()[0]).toMatchObject({ regenerated: true, absenceFails: 1 });
   });
 
   it("checks a summary-mode answer against the summary, sent once", async () => {
@@ -383,14 +428,20 @@ describe("verified chat answers", () => {
     expect(posted()[0]).toBe("Applications are due March 1, 2027. The other\n\nThis answer was cut off. Ask me to continue.");
   });
 
-  it("shows an error, not an unchecked answer, when the meaning check fails", async () => {
+  it("says it couldn't confirm, gives the message back and saves nothing when the meaning check fails", async () => {
     bedrock.on(InvokeModelWithResponseStreamCommand).resolves(cited([["Applications are due March 1, 2027.", deadline]]));
     bedrock.on(InvokeModelCommand).rejects(new Error("ThrottlingException"));
 
     await handler(event());
 
-    expect(posted()).toEqual(["<!ERROR!>: Something went wrong while answering. Try again in a moment."]);
+    expect(posted()).toEqual([
+      "I couldn't confirm an answer to that in the grant just now. Please try asking again.",
+      "!<|EOF_STREAM|>!",
+      "[]",
+    ]);
     expect(saves()).toEqual([]);
+    const counts = ddb.commandCalls(UpdateItemCommand).map((c) => c.args[0].input.ExpressionAttributeValues);
+    expect(counts).toEqual([expect.objectContaining({ ":one": { N: "1" } }), expect.objectContaining({ ":minus": { N: "-1" } })]);
     expect(console.error).toHaveBeenCalledWith(LOG_MARKERS.chatAnswerFailed[1], expect.objectContaining({ message: "ThrottlingException" }));
   });
 

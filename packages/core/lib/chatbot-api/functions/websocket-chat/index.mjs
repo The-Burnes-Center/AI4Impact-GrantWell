@@ -56,6 +56,8 @@ const ERROR_MESSAGE = "Something went wrong while answering. Try again in a mome
 /** Pinned by LOG_MARKERS.chatAnswerFailed. */
 const VERIFY_FAILED_MARKER = "Chat verification failed:";
 
+const CHECK_UNAVAILABLE_MESSAGE = "I couldn't confirm an answer to that in the grant just now. Please try asking again.";
+
 const CHAT_WORKER_MARKER = "grantwellChatWorker";
 
 const ASYNC_PAYLOAD_LIMIT_BYTES = 256 * 1024;
@@ -458,6 +460,19 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
         console.error(marker, error);
         await post(`<!ERROR!>: ${ERROR_MESSAGE}`);
       };
+      // The checker itself failing must not show unchecked text, and isn't the user's fault.
+      const checkerFailed = async (error) => {
+        console.error(VERIFY_FAILED_MARKER, error);
+        if (!capExempt) await refundDailyChatMessage(userId);
+        try {
+          await post(CHECK_UNAVAILABLE_MESSAGE);
+          await post("!<|EOF_STREAM|>!");
+          await post(JSON.stringify([]));
+          await wsConnectionClient.send(new DeleteConnectionCommand({ ConnectionId: id }));
+        } catch (e) {
+          console.error("Error sending the couldn't-confirm message:", e);
+        }
+      };
       const generate = async (request) => {
         try {
           return await answerOnce(claude, system, request);
@@ -473,12 +488,13 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
             found: attempt.found,
             documents,
             summary: citing ? null : grantSource.text,
+            documentText: applicant.texts.join("\n\n"),
+            grantText: grantSource.text,
             baseKeys,
-            userText,
             today,
           });
         } catch (error) {
-          await fail(VERIFY_FAILED_MARKER, error);
+          await checkerFailed(error);
           return null;
         }
       };
@@ -552,6 +568,7 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
           sentences: first.units.length,
           factFails: first.factFailing.length,
           meaningFails: first.meaningFailing.length,
+          absenceFails: first.absenceFailing.length,
           ...(regenerated && { retryFactFails: result.factFailing.length, retryMeaningFails: result.meaningFailing.length }),
           ms: Date.now() - started,
         })}`);
