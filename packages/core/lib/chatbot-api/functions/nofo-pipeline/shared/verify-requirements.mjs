@@ -46,7 +46,7 @@ export function meaningPrompt(batch) {
       return `<requirement id="${i.id}">\n<name>${oneLine(i.item)}</name>\n<text>${oneLine(i.description)}</text>${passages ? `\n${passages}` : ""}\n</requirement>`;
     })
     .join("\n\n");
-  return `Each requirement below was written from the grant above. Passages under a requirement are quoted from the grant as pointers to where it came from; judge it against the whole grant text, not only those passages. A requirement is supported only if everything it states (who may apply, what is required, amounts, dates, conditions and rules) is stated somewhere in the grant or follows directly from it. If it adds, changes or broadens anything, or leaves out a condition that changes its meaning, it is unsupported. Give a short reason either way that names what is missing or wrong. Answer for every ID.
+  return `Each requirement below was written from the grant above. Passages under a requirement are quoted from the grant as pointers to where it came from; judge it against the whole grant text, not only those passages. A requirement is supported only if everything it states (who may apply, what is required, amounts, dates, conditions and rules) is stated somewhere in the grant or follows directly from it. If it adds, changes or broadens anything, leaves out a condition that changes its meaning, or attaches a rule the grant gives for a different section, program, applicant type or round, it is unsupported. Give a short reason either way that names what is missing or wrong. Answer for every ID.
 
 ${blocks}`;
 }
@@ -130,7 +130,7 @@ ${list}
 </requirements>`);
   }
   if (deadline) {
-    parts.push(`The grant above was summarized, and its application deadline was recorded as ${deadline.value}, but ${deadline.reason.charAt(0).toLowerCase()}${deadline.reason.slice(1)} Write one line in one of these two forms, giving the application deadline the grant states and citing it, or REMOVE if the grant states none:
+    parts.push(`The grant above was summarized, and its application deadline was recorded as ${deadline.value}, but ${deadline.reason.charAt(0).toLowerCase()}${deadline.reason.slice(1)} Write one line in one of these two forms, giving the application deadline the grant states (the last date it accepts applications, when it has several) and citing it, or REMOVE if the grant states none:
 [AD] DATE: <YYYY-MM-DD>
 [AD] REMOVE`);
   }

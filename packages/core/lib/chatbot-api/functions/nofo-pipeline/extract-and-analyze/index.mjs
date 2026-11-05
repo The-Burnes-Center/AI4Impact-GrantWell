@@ -2,7 +2,7 @@ import { EXTRACTION_PROMPT } from "./prompts.mjs";
 import { updateProcessingStatus } from "../shared/status.mjs";
 import { readRawText } from "../shared/s3.mjs";
 import { invokeStructuredOutput, isRetryableError } from "../shared/bedrock.mjs";
-import { validateMergedSummary, countItems } from "../shared/json.mjs";
+import { validateMergedSummary, countItems, isPlaceholderText } from "../shared/json.mjs";
 import { EXTRACTION_SCHEMA } from "../shared/schemas.mjs";
 
 const SONNET_MODEL = process.env.SONNET_MODEL_ID;
@@ -46,7 +46,7 @@ export const handler = async (event, context) => {
   }
 
   const succeeded = outcomes.filter((outcome) => !outcome.error).map((outcome) => outcome.summary);
-  const mergedSummary = chunks.length === 1 ? succeeded[0] : mergeChunkResults(succeeded);
+  const mergedSummary = withoutPlaceholders(chunks.length === 1 ? succeeded[0] : mergeChunkResults(succeeded));
 
   console.log(
     `Extracted from ${nofoName}: ${countItems(mergedSummary)} items, ` +
@@ -160,6 +160,16 @@ function splitIntoChunks(text, chunkSize, overlap) {
   }
 
   return chunks;
+}
+
+const CATEGORIES = ["EligibilityCriteria", "RequiredDocuments", "ProjectNarrativeSections", "KeyDeadlines"];
+
+export function withoutPlaceholders(summary) {
+  const out = { ...summary };
+  for (const cat of CATEGORIES) {
+    if (Array.isArray(out[cat])) out[cat] = out[cat].filter((i) => i && !isPlaceholderText(i.item) && !isPlaceholderText(i.description));
+  }
+  return out;
 }
 
 function mergeChunkResults(results) {

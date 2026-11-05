@@ -1,4 +1,5 @@
 import type { ChatCitation } from "../../components/chat/types";
+import { withEasternTime } from "../../common/eastern-time";
 
 export interface TabText {
   markdown: string;
@@ -18,7 +19,7 @@ export function requirementsMarkdown(items: ApiItem[] | undefined): TabText {
   let markdown = "";
   items.forEach((section, i) => {
     if (i > 0) markdown += "\n";
-    markdown += `- **${asText(section.item, "Unknown")}**: ${asText(section.description, "No description")}`;
+    markdown += `- **${asText(section.item, "Unknown")}**: ${withEasternTime(asText(section.description, "No description"))}`;
     const quotes = Array.isArray(section.citations) ? (section.citations as ApiQuote[]) : [];
     for (const q of quotes) {
       if (typeof q?.quote !== "string" || !q.quote.trim()) continue;
