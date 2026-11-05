@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When's the next deadline for the energy code grant?",
+    "expected": "The FY27 first round closes November 27, 2026 at 5:00 PM MT and the second round May 28, 2027 at 5:00 PM MT. Applications may be submitted continuously; each round opens the day after the previous one closes, and rounds are tentative on funding.",
+    "quote": "FY27 First Round Application Deadline November 27, 2026 5:00 PM",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "eligibility",
+    "question": "Can a nonprofit apply for this grant?",
+    "expected": "Only on behalf of a local government or partnership: a council of governments or nonprofit may apply if it manages the project for that local government or partnership, or passes all award funding through to it. Otherwise eligible applicants are local governments (their departments or agencies) and partnerships of two or more local governments.",
+    "quote": "Councils of governments or non-profit organizations applying on behalf of a",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "absent",
+    "question": "Is there a page limit for the project description?",
+    "expected": "Not stated in the notice.",
+    "quote": null,
+    "confirmed": false
+  }
+]

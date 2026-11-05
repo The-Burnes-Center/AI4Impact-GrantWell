@@ -1,0 +1,296 @@
+{
+  "schemaVersion": 1,
+  "status": "prelabeled",
+  "family": "CO state",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "Capital applications due in COTRAMS by 11:59 p.m. MT (window opens 10/12/2026); late applications not accepted",
+      "date": "2026-12-11",
+      "time": "23:59",
+      "tzAsWritten": "MT",
+      "fromBrokenTable": true,
+      "quote": "Capital Applications 10/12/2026 12/11/2026"
+    },
+    {
+      "kind": "preapp",
+      "label": "New Applicant Questionnaire (agencies with no DTR transit funds in the last five years), by email",
+      "date": "2026-11-13",
+      "time": "23:59",
+      "tzAsWritten": "MT",
+      "fromBrokenTable": false,
+      "quote": "Please submit the questionnaire no later than 11:59 p.m. MT on Friday, November 13, 2026., regardless of your project type."
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": 25000,
+    "periodMonths": null,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [
+      {
+        "what": "Other Capital project requests (non-revenue-vehicle projects)",
+        "value": 1000000,
+        "quote": "other capital project requests are capped at a maximum of $1,000,000.00 based on project scope."
+      }
+    ],
+    "match": {
+      "required": true,
+      "ratio": "0.2",
+      "appliesTo": "All programs (FTA 5339, 5311, 5310 and FASTER): 80% federal/state, 20% local; Toll Credits may replace cash match for federally funded projects at CDOT's discretion for stated financial hardship",
+      "quote": "FTA 5339 80% 20% FTA 5311 80% 20% FTA 5310 80% 20% FASTER 80% 20%"
+    },
+    "quote": "The minimum federal or state capital assistance request amount is $25,000, except in cases where an applicant is requesting state funds to be used as a local match for federal funds. There is no maximum request"
+  },
+  "sections": [
+    {
+      "name": "Project Information (service areas and service populations)",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": "COTRAMS application",
+      "quote": "Providing this vital information in the Project Information section of the application will greatly assist DTR."
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Threshold: application completeness and thoroughness (including a current vehicle quote)",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "All questions asked in the application were answered, all information requested in the application was provided, and all required and necessary attachments to the application were included."
+    },
+    {
+      "name": "Threshold: program eligibility",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "The proposed project is an eligible project for the respective program and includes work elements or activities like those described in PART 3 above."
+    },
+    {
+      "name": "Threshold: consistency with the Statewide Transit Plan or Regional Transit Plan",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Projects that are not consistent with any such strategy will be deemed ineligible for funding without further evaluation."
+    },
+    {
+      "name": "Subrecipient threshold: legal standing, financial management, technical capacity, procurement and timely implementation",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Eligible subrecipients must also meet the following minimum criteria:"
+    },
+    {
+      "name": "Replacement vehicles, Metric 1: Minimum Useful Life",
+      "scored": true,
+      "points": null,
+      "weightPct": 90,
+      "scale": null,
+      "sections": [],
+      "quote": "The weighting will be 90% Metric 1, 5% Metric 2, and 5% Metric 3."
+    },
+    {
+      "name": "Replacement vehicles, Metric 2: Business Case and Project Readiness",
+      "scored": true,
+      "points": null,
+      "weightPct": 5,
+      "scale": null,
+      "sections": [],
+      "quote": "Metric 2: Business Case and Project Readiness: Higher scoring will be awarded to projects that effectively demonstrate a solid business case and readiness to implement the project upon award."
+    },
+    {
+      "name": "Replacement vehicles, Metric 3: Additional Considerations (asset plans, institutional and financial commitment)",
+      "scored": true,
+      "points": null,
+      "weightPct": 5,
+      "scale": null,
+      "sections": [],
+      "quote": "Metric 3: Additional Considerations: Higher scoring will be awarded to projects with documented capital replacement and asset maintenance plan(s) and who can show strong"
+    },
+    {
+      "name": "Expansion vehicles, Metric 1: Demonstrated Need and Benefits",
+      "scored": true,
+      "points": null,
+      "weightPct": 40,
+      "scale": null,
+      "sections": ["Project Information (service areas and service populations)"],
+      "quote": "Metric 1: Demonstrated Need and Benefits: Higher scoring will be awarded to projects that effectively demonstrate and/or describe the need for expanded service"
+    },
+    {
+      "name": "Expansion vehicles, Metric 2: Business Case and Project Readiness",
+      "scored": true,
+      "points": null,
+      "weightPct": 40,
+      "scale": null,
+      "sections": [],
+      "quote": "Metric 2. Business Case and Project Readiness: Higher scoring will be awarded to projects that effectively demonstrate a solid business case and readiness to implement the project upon award."
+    },
+    {
+      "name": "Expansion vehicles, Metric 3: Additional Considerations (asset plans, community support, commitment)",
+      "scored": true,
+      "points": null,
+      "weightPct": 20,
+      "scale": null,
+      "sections": [],
+      "quote": "documented capital replacement/asset maintenance plan(s), who can show community support for the expansion"
+    },
+    {
+      "name": "Design/engineering, facilities and equipment, Metric 1: Demonstrated Need and Benefit",
+      "scored": true,
+      "points": null,
+      "weightPct": 40,
+      "scale": null,
+      "sections": ["Project Information (service areas and service populations)"],
+      "quote": "Metric 1: Demonstrated Need and Benefit: Higher scoring will be awarded to projects that effectively demonstrate and/or describe the need for the project"
+    },
+    {
+      "name": "Design/engineering, facilities and equipment, Metric 2: Business Case and Project Readiness",
+      "scored": true,
+      "points": null,
+      "weightPct": 40,
+      "scale": null,
+      "sections": [],
+      "quote": "For Design/Engineering, Construction of Facilities, and Purchase of Equipment:"
+    },
+    {
+      "name": "Design/engineering, facilities and equipment, Metric 3: Additional Considerations (asset plans, community support, commitment)",
+      "scored": true,
+      "points": null,
+      "weightPct": 20,
+      "scale": null,
+      "sections": [],
+      "quote": "documented capital replacement and asset management plan(s), who can show community support for the project"
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Submit electronically through COTRAMS; late applications are not accepted",
+      "One application per project; replacement and expansion vehicles in separate applications",
+      "Additional applications must be requested by email from DTR Pre-Award",
+      "Vehicle quotes must be current, based on price agreements in the project initiation year (FY 2027); past purchase quotes are not accepted"
+    ],
+    "quote": "Applications must be submitted electronically through COTRAMS on or before 11:59 p.m. on the due date described above in PART 1."
+  },
+  "eligibility": [
+    {
+      "item": "FTA 5310 traditional funds: private nonprofits, or local governmental authorities approved by DTR to coordinate services for seniors and people with disabilities or certifying no nonprofit is readily available",
+      "quote": "Eligible subrecipients of FTA Section 5310 funds are as follows: 1. \"Traditional\" 5310 funds (i.e.., Mobility Management and Capital projects) a. A private non-profit organization; or b. A local governmental authority that:"
+    },
+    {
+      "item": "FTA 5310 projects must be included in a coordinated public transit-human service transportation plan",
+      "quote": "The 5310 program also requires that projects funded through the program must be included in a coordinated public transit-human service transportation plan (coordinated plan)."
+    },
+    {
+      "item": "FTA 5311: federally recognized tribes, local governments, nonprofits and operators of public transportation running general-public rural service, signing annual Certifications & Assurances, complying with drug and alcohol testing and reporting, and maintaining required plans and policies",
+      "quote": "Eligible subrecipients of Section 5311 funds include federally recognized Indian Tribes, or local government authorities, nonprofit organizations, and operators of public transportation."
+    },
+    {
+      "item": "FTA 5339: public agencies or private nonprofits engaged in public transportation in rural or small urbanized areas, certifying a drug and alcohol testing program",
+      "quote": "Eligible subrecipients of Section 5339 funds are public agencies or private nonprofit organizations engaged in public transportation, including those providing services open to a segment of the general public, as defined by age, disability, or low income."
+    },
+    {
+      "item": "FASTER: local public and private nonprofit entities and tribal governments offering public or open-door specialized transportation",
+      "quote": "Eligible grantees of local competitive State FASTER funding assistance are local public and private nonprofit entities, as well as tribal governments, that offer public transportation or open-door specialized transportation."
+    },
+    {
+      "item": "Designated recipients in the three large urbanized areas (RTD, MMT, Transfort) are not eligible for the statewide competitive FASTER funds",
+      "quote": "the designated recipients in the three large urbanized areas are not eligible to apply for the statewide competitive funds because they are guaranteed the set-aside funds"
+    },
+    {
+      "item": "Eligible items are FTA capital assets (over $5,000 with a useful life over one year); no office furnishings, administrative staff vehicles, leasing of capital assets or related administrative expenses",
+      "quote": "DTR will not accept requests for funding office-related furnishings and administrative staff vehicles, nor for the leasing of capital assets or administrative expenses related to a capital purchase."
+    },
+    {
+      "item": "New facility construction or horizontal expansion requires Uniform Act compliance and NEPA clearance before acquiring property",
+      "quote": "All applicants requesting grant funds for new facility construction or horizontal facility expansion must ensure and verify full compliance with the Uniform Relocation Assistance and Real Property Acquisition Policies Act of 1970 (Uniform Act) and obtain NEPA clearance prior to acquiring property."
+    },
+    {
+      "item": "All projects require local match (20% for every program in this call); local match may only be used once",
+      "quote": "All projects funded through the programs in this call for projects require some form of local match."
+    },
+    {
+      "item": "One application per project; replacement and expansion vehicle requests in two separate applications",
+      "quote": "requests for replacement and expansion vehicles, though, must be submitted in two separate applications--one for replacements and one for expansions."
+    },
+    {
+      "item": "Vehicles already awarded for replacement or disposed of are not eligible for replacement",
+      "quote": "Vehicles that have already been awarded for replacement or disposed of are not eligible for replacement in this call"
+    },
+    {
+      "item": "A replacement vehicle must have met its Minimum Useful Life in years or miles (or qualify for special consideration)",
+      "quote": "To be eligible for replacement, a vehicle must have met the Minimum Useful Life (MUL) in years or miles in revenue service for its size and type at the time of application."
+    },
+    {
+      "item": "Vehicle cost estimates must come from FTA-approved NASPO vendors",
+      "quote": "DTR applicants must use FTA-approved NASPO vendors for cost estimates, as not all NASPO vendors hold FTA approval."
+    },
+    {
+      "item": "Registered in SAM.gov and not suspended, debarred or excluded (or show willingness to register before award)",
+      "quote": "Legal Standing: The subrecipient must be registered on the official U.S. Government System of Award Management (SAM) system, SAM.gov"
+    },
+    {
+      "item": "Financial management systems and cash flow to incur costs upfront and wait for reimbursement",
+      "quote": "the subrecipient must have the financial ability and cash flow to incur those costs upfront and wait for reimbursement from CDOT."
+    },
+    {
+      "item": "Technical capacity to operate and manage the award and project",
+      "quote": "Technical Capacity: The subrecipient must have the capability and resources necessary to operate and manage the award and project on an ongoing basis"
+    },
+    {
+      "item": "Documented procurement procedures conforming to 2 CFR 200.318-326",
+      "quote": "Procurement: The subrecipient must have its own documented procurement procedures which reflect applicable state, local, and tribal laws and regulations"
+    },
+    {
+      "item": "Ability and commitment to implement the project promptly once awarded and contracted",
+      "quote": "Timely implementation: Applicants must demonstrate their ability and commitment to implement their proposed project timely once funding has been awarded and contracted."
+    },
+    {
+      "item": "Pre-Award Authority does not apply to capital projects",
+      "quote": "Pre-Award Authority does not apply to any capital projects, regardless of funding type."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "Capital application in COTRAMS (Revenue Service Vehicle or Other Capital), one per project",
+      "userWrites": true,
+      "quote": "CDOT offers two types of capital applications through COTRAMS, for: A. Revenue Service Vehicle purchase requests. B. Other Capital project requests (including support vehicles)."
+    },
+    {
+      "item": "Current vehicle quote or cost estimate (vehicle acquisition requests); applications without one are not evaluated",
+      "userWrites": false,
+      "quote": "All applicants requesting funds for vehicle acquisition (replacement, CTE expansion/replacement, or fleet expansion) must submit a current vehicle quote."
+    },
+    {
+      "item": "Letters of commitment from partners providing local match, land or right-of-way, or sharing a facility",
+      "userWrites": false,
+      "quote": "DTR requires written letters of support and commitment from partners in a project that will need to make a commitment to the project"
+    },
+    {
+      "item": "New Applicant Questionnaire (MS Word), for agencies with no DTR transit funds in the last five years",
+      "userWrites": true,
+      "quote": "you will need to complete and submit a New Applicant Questionnaire"
+    },
+    {
+      "item": "Special consideration requests: supporting documents for alternative usefulness criteria (Scenario 2) or data-based evidence for early replacement (Scenario 3)",
+      "userWrites": false,
+      "quote": "Applicants must provide documentable, verifiable, data-based evidence of unexpected declines in vehicle condition, high maintenance costs, damage beyond repair, operating conditions, or other relevant factors"
+    }
+  ],
+  "libraryRequired": []
+}

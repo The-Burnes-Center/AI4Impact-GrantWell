@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When is RFA 212 due?",
+    "expected": "Applications are due November 16, 2026 by 4:00 PM (no time zone stated), emailed with all attachments to the program contact; faxed applications are not accepted and late applications may not be accepted. Written inquiries were due 10/22/26 at 4:00 PM.",
+    "quote": "Application Due Date: November 16, 2026, by",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "limits",
+    "question": "What are the page limits for the narrative?",
+    "expected": "The total Application Narrative is no more than 10 pages: Executive Summary 1 page, Summary of Experience/Qualifications 5 pages and Billing for Services 4 pages, in 12-point Times New Roman, double-spaced with 1\" margins. The budget is not counted in the page limit.",
+    "quote": "Total Application Narrative: no more than 10 pages",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "absent",
+    "question": "Do we need to provide matching funds?",
+    "expected": "Not stated in the notice.",
+    "quote": null,
+    "confirmed": false
+  }
+]
