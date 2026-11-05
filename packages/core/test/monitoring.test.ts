@@ -203,6 +203,17 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
       return policy![1].Properties.PolicyDocument.Statement as any[];
     };
 
+    it("lets CloudWatch alarms publish to both SSL-only topics", () => {
+      const policies = ofType("AWS::SNS::TopicPolicy").map(([, r]) => r.Properties);
+      for (const topic of ["AlarmTopic", "AlertTopic"]) {
+        const policy = policies.find((p) => JSON.stringify(p.Topics).includes(topic))!;
+        const statements = policy.PolicyDocument.Statement;
+        expect(statements.some((st: any) => st.Effect === "Deny" && st.Condition?.Bool?.["aws:SecureTransport"] === "false"), topic).toBe(true);
+        const allow = statements.find((st: any) => st.Effect === "Allow" && st.Principal?.Service === "cloudwatch.amazonaws.com");
+        expect(allow?.Action, topic).toBe("sns:Publish");
+      }
+    });
+
     it("scans every Lambda log group under the stack name, publishing only to its own namespace", () => {
       const [id, scan] = fnNamed(`${prefix}-init-error-scan`);
       expect(scan.Properties.Runtime).toBe("nodejs24.x");
