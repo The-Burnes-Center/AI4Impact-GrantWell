@@ -108,13 +108,16 @@ describe("eval harness", () => {
     expect(JSON.parse(process.env.SUPPORTED_STATES!)).toContainEqual({ code: "MA", name: "Massachusetts" });
   });
 
-  it("extract runs both handlers and records usage per stage", async () => {
+  it("extract runs the handlers and the source check, and records usage per stage", async () => {
     const r = await h.extract(h.grant);
     expect(r.error).toBeUndefined();
     expect(r.output.summary.ProjectNarrativeSections).toHaveLength(2);
     expect(r.output.questions.questions).toHaveLength(1);
     expect(r.output.applicationDeadline).toBe("2026-12-01");
-    expect(r.usage.map((u: any) => u.stage).sort()).toEqual(["extract", "synthesize", "synthesize"]);
+    const stages = r.usage.map((u: any) => u.stage);
+    expect(stages.filter((st: string) => st !== "verify").sort()).toEqual(["extract", "synthesize", "synthesize"]);
+    expect(stages).toContain("verify");
+    expect(Array.isArray(r.output.verifyFailing)).toBe(true);
     expect(r.usage[0]).toMatchObject({ input: 1000, output: 200, stop: "end_turn" });
     expect(h.costOf(r.usage)).toBeGreaterThan(0);
   });

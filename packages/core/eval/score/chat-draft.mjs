@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import { readOptional } from "../lib/golden.mjs";
+import { chatClaims } from "./claims.mjs";
 
 const WORDS_PER_PAGE = 500;
 const MAX_NOTICE_CHARS = 150000;
@@ -16,7 +17,13 @@ export async function scoreChat(gold, grant, output, judge) {
     const ok = q.kind === "absent" ? g.saysNotStated : q.kind === "allowable_cost" ? g.verdict === q.verdict : g.correct;
     counts[metric][0] += ok ? 1 : 0;
     counts[metric][1] += 1;
-    graded.push({ id: a.id, kind: q.kind, ok, reason: g.reason });
+    const claims = await chatClaims(grant, q.question, a.answer, judge);
+    for (const [m, [hit, total]] of Object.entries(claims.counts)) {
+      counts[m] ??= [0, 0];
+      counts[m][0] += hit;
+      counts[m][1] += total;
+    }
+    graded.push({ id: a.id, kind: q.kind, ok, reason: g.reason, unsupportedClaims: claims.unsupported });
   }
   for (const m of Object.keys(counts)) if (counts[m][1] === 0) delete counts[m];
   return { counts, notes: [], detail: graded };

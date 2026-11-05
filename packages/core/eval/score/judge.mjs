@@ -14,6 +14,10 @@ async function ask({ model, prompt, schema, toolName, maxTokens = 4000, effort =
 }
 
 export const PROMPTS = {
+  claims: `You audit a grant chatbot's answer for unsupported claims, using the full grant text below as the only source of truth.
+List every claim the answer makes about the grant: eligibility, dates and times, amounts, percentages, counts, required documents, rules, contacts, websites, regulations, and what the grant does or doesn't say. Split compound sentences into separate claims. Skip greetings, offers to help, questions back to the user, and advice to confirm with the program officer.
+For each claim decide "supported": true only when the grant text states it or it follows directly with nothing added. A claim that the grant doesn't mention something is supported only if the grant really doesn't mention it. For a supported claim, quote "evidence": the exact words of the grant that state it (empty for a supported "doesn't mention" claim). Give a short "reason" for any unsupported claim.`,
+  items: `You audit the requirements a grant pipeline extracted, using the full grant text below as the only source of truth. For each item decide "supported": true only when the grant text states everything the item says (wording may differ; nothing may be added, changed or left out in a way that changes its meaning). Quote "evidence": the exact words of the grant that state it. Give a short "reason" for any unsupported item.`,
   pair: `You match items a grant-extraction pipeline produced against an answer key written from the same grant notice.
 Pair a predicted item with a key item only when the predicted item states the key item's requirement, section or rule (wording may differ, and the predicted item may be merged with neighbours or be more or less detailed). For every pair, quote "evidence": the exact words of the predicted item that state it. A predicted item may pair with several key items when it states each of them; several predicted items may pair with one key item when they repeat it. Items that only share a topic, category or heading are not a pair. Many key items have no pair; never force one.`,
   find: `You check whether a grant-extraction pipeline's output states facts from an answer key. For each key item, decide "found": the output states this item (in any wording, anywhere in the output), with "evidence": the exact words of the output that state it (empty when not found). "valueCorrect": the output gives the item's value as the key does (dates, times, time zones, amounts, points, limits); null when the item has no value to compare. A related but different item is not found.`,
@@ -57,6 +61,36 @@ const CHAT_SCHEMA = {
   },
   required: ["correct", "saysNotStated", "verdict", "reason"],
 };
+const CLAIMS_SCHEMA = {
+  type: "object",
+  properties: {
+    claims: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: { claim: { type: "string" }, absence: { type: "boolean" }, supported: { type: "boolean" }, evidence: { type: "string" }, reason: { type: "string" } },
+        required: ["claim", "absence", "supported", "evidence", "reason"],
+      },
+    },
+  },
+  required: ["claims"],
+};
+
+const ITEMS_SCHEMA = {
+  type: "object",
+  properties: {
+    items: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: { id: { type: "integer" }, supported: { type: "boolean" }, evidence: { type: "string" }, reason: { type: "string" } },
+        required: ["id", "supported", "evidence", "reason"],
+      },
+    },
+  },
+  required: ["items"],
+};
+
 const DRAFT_SCHEMA = {
   type: "object",
   properties: {
@@ -107,6 +141,41 @@ export function judge(models) {
         schema: CHAT_SCHEMA,
         effort: "medium",
         prompt: `${PROMPTS.chat}\n\n<question>${question}</question>\n<expected>${expected}</expected>\n<answer>\n${answer ?? "(no answer)"}\n</answer>`,
+      });
+    },
+
+    // A "supported" verdict counts only when its evidence is really in the grant text.
+    async claims({ grantText, question, answer }) {
+      const out = await ask({
+        model: models.sonnet,
+        toolName: "claims",
+        schema: CLAIMS_SCHEMA,
+        effort: "medium",
+        maxTokens: 8000,
+        prompt: `${PROMPTS.claims}\n\n<grant_text>\n${grantText}\n</grant_text>\n\n<question>${question}</question>\n<answer>\n${answer}\n</answer>`,
+      });
+      return (out.claims ?? []).map((c) => ({
+        ...c,
+        supported: !!c.supported && (c.absence ? true : quoted(c.evidence, grantText)),
+        reason: c.supported && !c.absence && !quoted(c.evidence, grantText) ? "evidence not found in the grant" : c.reason,
+      }));
+    },
+
+    async items({ grantText, items }) {
+      if (items.length === 0) return [];
+      const out = await ask({
+        model: models.sonnet,
+        toolName: "items",
+        schema: ITEMS_SCHEMA,
+        effort: "medium",
+        maxTokens: 8000,
+        prompt: `${PROMPTS.items}\n\n<grant_text>\n${grantText}\n</grant_text>\n\n<items>\n${list(items)}\n</items>`,
+      });
+      const byId = new Map((out.items ?? []).map((r) => [r.id, r]));
+      return items.map((_, i) => {
+        const r = byId.get(i);
+        const ok = !!r?.supported && quoted(r.evidence, grantText);
+        return { id: i, supported: ok, reason: ok ? "" : r ? (r.supported ? "evidence not found in the grant" : r.reason) : "no verdict" };
       });
     },
 

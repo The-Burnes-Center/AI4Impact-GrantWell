@@ -30,3 +30,8 @@ export function readOptional(grant, file) {
   const p = path.join(grant.dir, file);
   return fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, "utf8")) : null;
 }
+
+/** The grant's extracted text for judging claims against; empty when the golden grant has none. */
+export function judgeGrantText(grant) {
+  return fs.existsSync(grant.rawPath) ? fs.readFileSync(grant.rawPath, "utf8") : "";
+}
