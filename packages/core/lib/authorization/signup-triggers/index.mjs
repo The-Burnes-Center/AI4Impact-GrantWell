@@ -72,7 +72,9 @@ export const handler = async (event) => {
   }
 
   if (event.triggerSource === "PostConfirmation_ConfirmSignUp") {
-    const state = SINGLE_STATE || normalizeState(event.request.clientMetadata);
+    // ConfirmSignUp's client metadata is the client's to choose, not what PreSignUp checked.
+    const requested = normalizeState(event.request.clientMetadata);
+    const state = SINGLE_STATE || (STATE_SITES.has(requested) ? "" : requested);
     if (!state) return event;
 
     try {

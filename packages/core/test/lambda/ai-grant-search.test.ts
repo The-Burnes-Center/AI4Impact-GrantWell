@@ -70,7 +70,7 @@ afterEach(() => {
 });
 
 const search = (body: object, claims: Record<string, unknown> = { email: "Ana@Example.org", sub: "u1" }) =>
-  handler({ requestContext: { authorizer: { jwt: { claims } } }, body: JSON.stringify(body) });
+  handler({ requestContext: { authorizer: { jwt: { claims: { email_verified: "true", ...claims } } } }, body: JSON.stringify(body) });
 const names = (res: { body: string }) => JSON.parse(res.body).results.map((r: any) => r.name);
 
 const filler = Array.from({ length: 70 }, (_, i) => ({ name: `Filler ${i}`, topic: 200 + i, body: `unrelated ${i}` }));
@@ -156,6 +156,15 @@ describe("AI grant search", () => {
   it("answers 401 without an email claim", async () => {
     const res = await search({ query: "bridge repair" }, { sub: "u1" });
     expect(res.statusCode).toBe(401);
+    expect(bedrock.calls()).toHaveLength(0);
+  });
+
+  it("answers 401 to an allowlisted email that isn't verified", async () => {
+    ddb.reset();
+    rollout("allowlisted", true);
+    const res = await search({ query: "bridge repair" }, { email: "ana@example.org", email_verified: "false", sub: "u2" });
+    expect(res.statusCode).toBe(401);
+    expect(ddb.calls()).toHaveLength(0);
     expect(bedrock.calls()).toHaveLength(0);
   });
 

@@ -6,21 +6,24 @@ const aws = vi.hoisted(() => {
   }
   const command = (name: string) => ({ [name]: class extends Command {} })[name];
   const sent: { name: string; input: any }[] = [];
-  const users: Record<string, { state: string; roles: string[] }> = {};
+  const users: Record<string, { state: string; roles: string[]; sub?: string }> = {};
   class Client {
     async send(cmd: any) {
       sent.push({ name: cmd.constructor.name, input: cmd.input });
       if (cmd.constructor.name === "AdminGetUserCommand") {
-        const user = users[cmd.input.Username];
+        // Cognito resolves an email alias to the account's own username.
+        const username = Object.keys(users).find((u) => u === cmd.input.Username || `${u}@example.com` === cmd.input.Username);
+        const user = username ? users[username] : undefined;
         if (!user) throw Object.assign(new Error("not found"), { name: "UserNotFoundException" });
         return {
-          Username: cmd.input.Username,
+          Username: username,
           UserStatus: "CONFIRMED",
           Enabled: true,
           UserAttributes: [
-            { Name: "email", Value: `${cmd.input.Username}@example.com` },
+            { Name: "email", Value: `${username}@example.com` },
             { Name: "custom:role", Value: JSON.stringify(user.roles) },
             { Name: "custom:state", Value: user.state },
+            ...(user.sub ? [{ Name: "sub", Value: user.sub }] : []),
           ],
         };
       }
@@ -65,7 +68,7 @@ beforeEach(() => {
   aws.users["ri-user"] = { state: "RI", roles: ["User"] };
 });
 
-const reset = (username: string, actor: { username: string; roles: string[]; state?: string }) =>
+const reset = (username: string, actor: { username: string; roles: string[]; state?: string; sub?: string }) =>
   handler({
     routeKey: "POST /user-management/users/{username}/mfa-reset",
     pathParameters: { username },
@@ -77,6 +80,7 @@ const reset = (username: string, actor: { username: string; roles: string[]; sta
             "cognito:username": actor.username,
             "custom:role": JSON.stringify(actor.roles),
             "custom:state": actor.state ?? "",
+            ...(actor.sub ? { sub: actor.sub } : {}),
           },
         },
       },
@@ -108,6 +112,18 @@ describe("MFA reset", () => {
     aws.users["ma-admin"] = { state: "MA", roles: ["Admin"] };
     const res = await reset("ma-admin", { username: "ma-admin", roles: ["Admin"], state: "MA" });
     expect(res.statusCode).toBe(403);
+    expect(writes()).toEqual([]);
+  });
+
+  it("refuses resetting yourself by your email address", async () => {
+    aws.users["ma-admin"] = { state: "MA", roles: ["Admin"], sub: "sub-ma-admin" };
+    for (const actor of [
+      { username: "ma-admin", roles: ["Admin"], state: "MA" },
+      { username: "", roles: ["Admin"], state: "MA", sub: "sub-ma-admin" },
+    ]) {
+      const res = await reset("ma-admin@example.com", actor);
+      expect(res.statusCode).toBe(403);
+    }
     expect(writes()).toEqual([]);
   });
 

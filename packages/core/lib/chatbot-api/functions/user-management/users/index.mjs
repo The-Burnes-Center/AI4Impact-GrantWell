@@ -182,17 +182,16 @@ async function handleUpdate(scope, actor, event) {
     return respond(400, { message: "Request must include rolePreset and/or state" });
   }
 
-  // Changing your own role/state through this API is never allowed: it would let
-  // a state admin clear their own state and become a platform admin.
-  if (isSelf(actor, username)) {
-    return respond(403, {
-      message: "You cannot change your own role or state. Ask another administrator.",
-    });
-  }
-
   const target = await getTargetUser(username);
   if (!target) {
     return respond(404, { message: "User not found" });
+  }
+  // Changing your own role/state through this API is never allowed: it would let
+  // a state admin clear their own state and become a platform admin.
+  if (isSelf(actor, target)) {
+    return respond(403, {
+      message: "You cannot change your own role or state. Ask another administrator.",
+    });
   }
   assertCanManageTarget(scope, target);
 
@@ -280,13 +279,12 @@ async function handleDelete(scope, actor, event) {
   if (!username) {
     return respond(400, { message: "Username is required" });
   }
-  if (isSelf(actor, username)) {
-    return respond(403, { message: "You cannot delete your own account" });
-  }
-
   const target = await getTargetUser(username);
   if (!target) {
     return respond(404, { message: "User not found" });
+  }
+  if (isSelf(actor, target)) {
+    return respond(403, { message: "You cannot delete your own account" });
   }
   assertCanManageTarget(scope, target);
   await assertNotLastPrivilegedUser(target, []);
@@ -311,15 +309,14 @@ async function handleMfaReset(scope, actor, event) {
   if (!username) {
     return respond(400, { message: "Username is required" });
   }
-  if (isSelf(actor, username)) {
-    return respond(403, {
-      message: "You cannot reset your own two-step verification. Ask another administrator.",
-    });
-  }
-
   const target = await getTargetUser(username);
   if (!target) {
     return respond(404, { message: "User not found" });
+  }
+  if (isSelf(actor, target)) {
+    return respond(403, {
+      message: "You cannot reset your own two-step verification. Ask another administrator.",
+    });
   }
   assertCanManageTarget(scope, target);
 
@@ -372,6 +369,7 @@ function getActorContext(event) {
   const claims = event?.requestContext?.authorizer?.jwt?.claims || {};
   return {
     username: String(claims["cognito:username"] || "").trim(),
+    sub: String(claims.sub || "").trim(),
     roles: parseRoles(claims["custom:role"]),
     state: normalizeStoredStateCode(claims["custom:state"]),
   };
@@ -407,8 +405,10 @@ function hasRole(roles, requiredRole) {
   return new Set(roles).has(requiredRole);
 }
 
-function isSelf(actor, username) {
-  return Boolean(actor.username) && actor.username === username;
+// By the looked-up account, so an email alias in the path still names the caller.
+function isSelf(actor, target) {
+  if (actor.sub && actor.sub === target.sub) return true;
+  return Boolean(actor.username) && actor.username === target.username;
 }
 
 function assertCanManageTarget(scope, target) {
