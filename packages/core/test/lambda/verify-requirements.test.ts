@@ -1,9 +1,9 @@
 import { Readable } from "node:stream";
 import { mockClient } from "aws-sdk-client-mock";
 import { BedrockRuntimeClient, InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime";
-import { DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
+import { DeleteItemCommand, DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
-import { GetObjectCommand, ListObjectsV2Command, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { DeleteObjectsCommand, GetObjectCommand, HeadObjectCommand, ListObjectsV2Command, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { requirementKey } from "grantwell-shared";
@@ -27,6 +27,7 @@ let cite: { handler: (event: any, context?: any) => Promise<any> };
 let quarantine: (event: any) => Promise<any>;
 let admin: (event: any) => Promise<any>;
 let publish: (event: any) => Promise<any>;
+let unverifiedGuidance: (name: string, items: any[], opts?: any) => any;
 
 const QUARANTINE = "stack-QuarantineFunction";
 
@@ -50,6 +51,7 @@ beforeAll(async () => {
   ({ handler: quarantine } = await import(`${fns}/quarantine/index.mjs`));
   ({ handler: admin } = await import(`${fns}/admin/index.mjs`));
   ({ handler: publish } = await import(`${fns}/publish/index.mjs`));
+  ({ unverifiedItemsGuidance: unverifiedGuidance } = await import(`${fns}/shared/unverified-guidance.mjs`));
 });
 
 const RAW =
@@ -583,5 +585,151 @@ describe("restoring a held live grant's status", () => {
     await publish({ ...event, publishStatus: "archived" });
     await publish(event);
     expect(statusSet()).toEqual(["archived", "active"]);
+  });
+});
+
+describe("reprocessing a grant that is already live", () => {
+  const metadataWrites = () =>
+    ddb.commandCalls(UpdateItemCommand).map((c) => c.args[0].input).filter((i) => i.TableName === "nofos");
+  const statusWrites = () =>
+    metadataWrites()
+      .filter((i) => String(i.UpdateExpression).includes("#status = "))
+      .map((i) => unmarshall(i.ExpressionAttributeValues!));
+  const reviewRow = () => unmarshall(ddb.commandCalls(PutItemCommand)[0].args[0].input.Item!);
+  const withRow = (row: Record<string, unknown> | null, review: Record<string, unknown> = {}) =>
+    ddb.on(GetItemCommand).callsFake((input) =>
+      input.TableName === "reviews"
+        ? { Item: marshall({ nofo_name: "Live Grant", review_id: "r1", status: "pending_review", extractedSummary: JSON.stringify(SUMMARY), extractedQuestions: JSON.stringify(QUESTIONS), ...review }) }
+        : row ? { Item: marshall({ nofo_name: "Live Grant", scope: "federal", ...row }) } : {}
+    );
+  const asAdmin = (action: "approve" | "reject") =>
+    admin({
+      requestContext: {
+        http: { method: "POST", path: `/admin/processing-reviews/Live%20Grant/${action}` },
+        authorizer: { jwt: { claims: { "custom:role": JSON.stringify(["Developer"]), email: "dev@example.org" } } },
+      },
+      body: JSON.stringify({ reviewId: "r1" }),
+    });
+
+  beforeEach(() => {
+    ddb.on(QueryCommand).resolves({ Items: [] });
+    ddb.on(PutItemCommand).resolves({});
+    ddb.on(DeleteItemCommand).resolves({});
+    s3.on(HeadObjectCommand).resolves({});
+    s3.on(DeleteObjectsCommand).resolves({});
+  });
+
+  it.each(["active", "archived"])("holds a failing new version for review and leaves the %s grant up", async (status) => {
+    withRow({ status });
+
+    await quarantine({ nofoName: "Live Grant", mergedSummary: SUMMARY, source: "pipeline" });
+
+    expect(statusWrites()).toEqual([]);
+    expect(metadataWrites().some((i) => unmarshall(i.ExpressionAttributeValues!)[":s"] === "quarantined")).toBe(true);
+    expect(reviewRow()).toMatchObject({ nofo_name: "Live Grant", status: "pending_review", live_status: status });
+    expect(reviewRow()).not.toHaveProperty("previous_status");
+  });
+
+  it("holds a grant with no published summary as before, though its row says active", async () => {
+    withRow({ status: "active" });
+    s3.on(HeadObjectCommand).rejects(Object.assign(new Error("Not Found"), { name: "NotFound", $metadata: { httpStatusCode: 404 } }));
+
+    await quarantine({ nofoName: "Live Grant", mergedSummary: SUMMARY });
+
+    expect(statusWrites().map((v) => v[":s"])).toEqual(["quarantined"]);
+    expect(reviewRow()).not.toHaveProperty("live_status");
+  });
+
+  it("the live check's unpublish takes the grant down and keeps the status it had on the row", async () => {
+    withRow({ status: "archived" });
+
+    await quarantine({ nofoName: "Live Grant", mergedSummary: SUMMARY, source: "verification", unpublish: true, previousStatus: "archived" });
+
+    expect(statusWrites()).toEqual([expect.objectContaining({ ":s": "quarantined", ":prev": "archived" })]);
+    expect(reviewRow()).toMatchObject({ previous_status: "archived" });
+    expect(reviewRow()).not.toHaveProperty("live_status");
+    expect(s3.commandCalls(HeadObjectCommand)).toHaveLength(0);
+  });
+
+  it("a held archived grant that is reprocessed and fails again keeps previous_status on its new review", async () => {
+    withRow({ status: "processing", previous_status: "archived" });
+
+    await quarantine({ nofoName: "Live Grant", mergedSummary: SUMMARY, source: "pipeline" });
+
+    expect(statusWrites()).toEqual([expect.objectContaining({ ":s": "quarantined", ":prev": "archived" })]);
+    expect(reviewRow()).toMatchObject({ previous_status: "archived" });
+  });
+
+  it.each([
+    ["a live active grant stays active", { status: "active" }, "active"],
+    ["a live archived grant stays archived", { status: "archived" }, "archived"],
+    ["a held archived grant goes back to archived", { status: "processing", previous_status: "archived" }, "archived"],
+    ["a new grant goes live as active", { status: "processing" }, "active"],
+  ])("publishing: %s", async (_label, row, expected) => {
+    withRow(row);
+
+    await publish({ nofoName: "Live Grant", s3Bucket: "nofo-bucket", mergedSummary: SUMMARY, questionsData: QUESTIONS });
+
+    const write = metadataWrites().find((i) => String(i.UpdateExpression).includes("#status = :status"))!;
+    expect(unmarshall(write.ExpressionAttributeValues!)[":status"]).toBe(expected);
+    expect(write.UpdateExpression).toMatch(/REMOVE .*previous_status/);
+  });
+
+  it("approving the held new version publishes it under the grant's current status", async () => {
+    withRow({ status: "archived", processing_status: "quarantined" }, { live_status: "active" });
+
+    expect((await asAdmin("approve")).statusCode).toBe(200);
+
+    const call = lambda.commandCalls(InvokeCommand).find((c) => c.args[0].input.FunctionName === "stack-PublishFunction")!;
+    const payload = JSON.parse(String(call.args[0].input.Payload));
+    expect(payload).toMatchObject({ nofoName: "Live Grant", mergedSummary: SUMMARY });
+    expect(payload).not.toHaveProperty("publishStatus");
+  });
+
+  it("rejecting the held new version keeps the live grant, its files and its row", async () => {
+    withRow({ status: "active", processing_status: "quarantined" }, { live_status: "active" });
+
+    const res = await asAdmin("reject");
+
+    expect(res.statusCode).toBe(200);
+    expect(JSON.parse(res.body)).toMatchObject({ keptLive: true });
+    expect(ddb.commandCalls(DeleteItemCommand)).toHaveLength(0);
+    expect(s3.commandCalls(DeleteObjectsCommand)).toHaveLength(0);
+    const rejected = ddb.commandCalls(UpdateItemCommand).map((c) => c.args[0].input).find((i) => i.TableName === "reviews")!;
+    expect(unmarshall(rejected.ExpressionAttributeValues!)[":status"]).toBe("rejected");
+    expect(metadataWrites().map((i) => i.UpdateExpression)).toEqual([expect.stringContaining("REMOVE processing_status")]);
+  });
+
+  it("rejecting a held grant with no live version still deletes it", async () => {
+    withRow({ status: "quarantined", previous_status: "active" });
+    s3.on(ListObjectsV2Command).resolves({ Contents: [{ Key: "Live Grant/NOFO-File-PDF" }] });
+
+    const res = await asAdmin("reject");
+
+    expect(res.statusCode).toBe(200);
+    expect(JSON.parse(res.body)).not.toHaveProperty("keptLive");
+    expect(ddb.commandCalls(DeleteItemCommand)).toHaveLength(1);
+    expect(s3.commandCalls(DeleteObjectsCommand).length).toBeGreaterThan(0);
+  });
+
+  it("rejecting refuses, changing nothing, when the grant's row can't be read", async () => {
+    ddb.on(GetItemCommand).callsFake((input) => {
+      if (input.TableName === "nofos" && !input.ProjectionExpression) throw new Error("Throttled");
+      return input.TableName === "reviews" ? { Item: marshall({ nofo_name: "Live Grant", review_id: "r1", status: "pending_review" }) } : { Item: marshall({ nofo_name: "Live Grant", scope: "federal" }) };
+    });
+
+    const res = await asAdmin("reject");
+
+    expect(res.statusCode).toBe(500);
+    expect(ddb.commandCalls(UpdateItemCommand)).toHaveLength(0);
+    expect(ddb.commandCalls(DeleteItemCommand)).toHaveLength(0);
+  });
+
+  it("says an archived grant the live check holds was published, not live", () => {
+    const failing = [{ category: "EligibilityCriteria", item: "Tribes", reason: "No passage." }];
+    expect(unverifiedGuidance("Old Grant", failing, { live: "archived" }).message).toContain('"Old Grant" was published and has been unpublished');
+    expect(unverifiedGuidance("Old Grant", failing, { live: "active" }).message).toContain('"Old Grant" was live and has been unpublished');
+    const unreadable = [{ category: "grant_text", item: "Grant text", reason: "The grant text is missing." }];
+    expect(unverifiedGuidance("Old Grant", unreadable, { live: "archived" }).message).toContain("was published");
   });
 });

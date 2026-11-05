@@ -1,13 +1,15 @@
 import { mockClient } from "aws-sdk-client-mock";
 import { DynamoDBClient, QueryCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { SFNClient, StartExecutionCommand } from "@aws-sdk/client-sfn";
+import { HeadObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
-import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { LOG_MARKERS } from "../../lib/monitoring/monitoring-stack";
 
 const ddb = mockClient(DynamoDBClient);
 const sfn = mockClient(SFNClient);
+const s3 = mockClient(S3Client);
 
 let handler: (event: any) => Promise<{ batchItemFailures: { itemIdentifier: string }[] }>;
 beforeAll(async () => {
@@ -30,6 +32,7 @@ let errors: ReturnType<typeof vi.spyOn>;
 beforeEach(() => {
   ddb.reset();
   sfn.reset();
+  s3.reset();
   ddb.on(UpdateItemCommand).resolves({});
   ddb.on(QueryCommand).resolves({ Items: [] });
   vi.spyOn(console, "log").mockImplementation(() => {});
@@ -95,5 +98,71 @@ describe("NOFO pipeline dispatcher", () => {
 
     const superseded = updates().filter((u) => u.TableName === "reviews").map((u) => unmarshall(u.Key!).review_id);
     expect(superseded).toEqual(["r1"]);
+  });
+
+  describe("a grant that is already live", () => {
+    const notFound = () => Object.assign(new Error("Not Found"), { name: "NotFound", $metadata: { httpStatusCode: 404 } });
+    const statusWrites = () => updates().filter((u) => String(u.UpdateExpression).includes("#status = :processing"));
+    const stages = () => updates().map((u) => u.ExpressionAttributeValues?.[":s"]?.S).filter(Boolean);
+    const dispatch = async (row: Record<string, unknown>) => {
+      ddb.on(UpdateItemCommand, { ConditionExpression: "attribute_not_exists(pipeline_claim_at) OR pipeline_claim_at < :staleBefore" })
+        .resolves({ Attributes: marshall({ nofo_name: "Grant", ...row }) });
+      sfn.on(StartExecutionCommand).resolves({ executionArn: "arn:exec:1", startDate: new Date() });
+      return handler({ Records: [sqsRecord("m1", "Grant/NOFO-File-PDF")] });
+    };
+
+    beforeEach(() => {
+      vi.stubEnv("ARTIFACTS_BUCKET", "grant-artifacts");
+      vi.stubEnv("BUCKET", "nofos");
+    });
+    afterEach(() => {
+      vi.stubEnv("ARTIFACTS_BUCKET", "");
+      vi.stubEnv("BUCKET", "");
+    });
+
+    it.each(["active", "archived"])("keeps a published %s grant's status while its new version runs", async (status) => {
+      s3.on(HeadObjectCommand).resolves({});
+
+      expect((await dispatch({ status })).batchItemFailures).toEqual([]);
+
+      expect(statusWrites()).toHaveLength(0);
+      expect(stages()).toEqual(["uploading"]);
+      expect(s3.commandCalls(HeadObjectCommand)[0].args[0].input).toEqual({ Bucket: "grant-artifacts", Key: "Grant/summary.json" });
+      expect(sfn.commandCalls(StartExecutionCommand)).toHaveLength(1);
+    });
+
+    it("finds a summary published before the artifacts bucket existed", async () => {
+      s3.on(HeadObjectCommand, { Bucket: "grant-artifacts" }).rejects(notFound());
+      s3.on(HeadObjectCommand, { Bucket: "nofos" }).resolves({});
+
+      await dispatch({ status: "active" });
+
+      expect(statusWrites()).toHaveLength(0);
+    });
+
+    it("marks an active row with no published summary as processing, as a new grant", async () => {
+      s3.on(HeadObjectCommand).rejects(notFound());
+
+      await dispatch({ status: "active" });
+
+      expect(statusWrites()).toHaveLength(1);
+    });
+
+    it("keeps a grant held for review held: it has no version users can see", async () => {
+      s3.on(HeadObjectCommand).resolves({});
+
+      await dispatch({ status: "quarantined", previous_status: "archived" });
+
+      expect(statusWrites()).toHaveLength(1);
+      expect(s3.commandCalls(HeadObjectCommand)).toHaveLength(0);
+    });
+
+    it("falls back to processing when S3 can't say whether a summary is published", async () => {
+      s3.on(HeadObjectCommand).rejects(Object.assign(new Error("Slow down"), { name: "SlowDown" }));
+
+      await dispatch({ status: "active" });
+
+      expect(statusWrites()).toHaveLength(1);
+    });
   });
 });

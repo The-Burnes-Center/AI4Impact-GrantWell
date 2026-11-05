@@ -14,6 +14,10 @@ const labelOf = (category) => CATEGORY_LABELS[category] ?? category;
 const failingItemsOf = (failingItems) =>
   failingItems.map((f) => ({ category: f.category, label: labelOf(f.category), item: f.item, reason: f.reason }));
 
+/** `live` is the status ("active" or "archived") of a published grant being unpublished, else false. */
+const unpublishedNote = (nofoName, live) =>
+  live ? `"${nofoName}" ${live === "archived" ? "was published" : "was live"} and has been unpublished until it is reviewed. ` : "";
+
 function unreadableTextGuidance(nofoName, failingItems, live) {
   const why = failingItems.map((f) => f.reason).filter(Boolean).join(" ");
   return {
@@ -23,7 +27,7 @@ function unreadableTextGuidance(nofoName, failingItems, live) {
     canApprove: true,
     title: "The grant's text couldn't be read",
     message:
-      (live ? `"${nofoName}" was live and has been unpublished until it is reviewed. ` : "") +
+      unpublishedNote(nofoName, live) +
       `GrantWell couldn't read this grant's text, so none of the requirements on its Requirements page could be checked against the grant.` +
       (why ? ` ${why}` : "") +
       " Users won't see this grant until you fix or approve it.",
@@ -49,7 +53,7 @@ export function unverifiedItemsGuidance(nofoName, failingItems, { live = false }
     canApprove: true,
     title: "Some requirements could not be confirmed in the grant",
     message:
-      (live ? `"${nofoName}" was live and has been unpublished until it is reviewed. ` : "") +
+      unpublishedNote(nofoName, live) +
       `${count} on the Requirements page could not be matched to what the grant says` +
       (live ? "" : ", even after one automatic rewrite") +
       `: ${named.join("; ")}. Users won't see this grant until you fix or approve it.`,

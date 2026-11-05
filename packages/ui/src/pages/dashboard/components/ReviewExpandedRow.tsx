@@ -484,7 +484,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
                 This will permanently delete the grant document and all processed data. This action cannot be
                 undone.
               </p>
-              {review.source === "verification" && (
+              {!detail.live_status && (review.source === "verification" || detail.previous_status) && (
                 <p className="warning-text">
                   <strong>This grant was live. Rejecting deletes it and its files for everyone.</strong>
                 </p>
@@ -542,6 +542,10 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
             status={review.status}
             source={review.source}
             reason={detail.adminGuidance?.reason}
+            unreadableText={
+              !!detail.adminGuidance?.failingItems?.length &&
+              detail.adminGuidance.failingItems.every((f) => f.category === "grant_text")
+            }
             onApprove={handleApprove}
             onReject={handleRejectClick}
             onReprocess={handleReprocess}

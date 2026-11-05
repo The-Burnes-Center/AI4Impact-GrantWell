@@ -62,6 +62,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   const [labelPromptOpen, setLabelPromptOpen] = useState(false);
   const [undoCandidate, setUndoCandidate] = useState<DraftVersionMeta | null>(null);
   const [undoConfirmOpen, setUndoConfirmOpen] = useState(false);
+  const [grantInReview, setGrantInReview] = useState(false);
   const apiClient = useApiClient();
   const { addNotification } = useNotifications();
   const { saveFields, flush, saveStatus, retry, storageUse } = draftSave;
@@ -99,7 +100,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     if (!selectedNofo) return [];
     try {
       const result = await apiClient.landingPage.getNOFOSummary(selectedNofo, { forApplication: true });
-      return grantSections(result?.data?.ProjectNarrativeSections);
+      const inReview = result?.inReview === true;
+      setGrantInReview(inReview);
+      const list = grantSections(result?.data?.ProjectNarrativeSections);
+      return inReview ? list.map((section) => ({ ...section, description: "" })) : list;
     } catch (error) {
       console.error("Error loading the grant's narrative sections:", error);
       return [];
@@ -638,10 +642,16 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
             </p>
           )}
 
-          {active?.description && (
+          {grantInReview ? (
             <div className="se-section-description">
-              <p>{active.description}</p>
+              <p>This grant is being reviewed, so its section guidance is hidden for now.</p>
             </div>
+          ) : (
+            active?.description && (
+              <div className="se-section-description">
+                <p>{active.description}</p>
+              </div>
+            )
           )}
 
           {/* Editor */}

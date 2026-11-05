@@ -60,6 +60,12 @@ const MAX_INPUT_CHARS = 10000;
 const IN_REVIEW_STATUSES = new Set(["quarantined", "processing"]);
 const GRANT_IN_REVIEW_MESSAGE = "This grant is being reviewed and will be back soon.";
 
+/** Developers, platform admins, and a state admin for their own state's grant open held grants. */
+function opensGrantInReview(callerScope, row) {
+  if (callerScope.role === "developer" || callerScope.role === "regularAdmin") return true;
+  return callerScope.role === "stateAdmin" && row?.scope === "state" && Boolean(row.state) && row.state === callerScope.state;
+}
+
 /** Pinned by LOG_MARKERS.applicationCapReached. */
 const APPLICATION_CAP_MARKER = "Daily application limit reached";
 
@@ -310,11 +316,7 @@ export const handler = async (event) => {
     }
 
     // The applicant can still edit their application, but the AI writer waits until the review ends.
-    if (
-      IN_REVIEW_STATUSES.has(nofoScopeRow?.status) &&
-      callerScope.role !== "developer" &&
-      callerScope.role !== "regularAdmin"
-    ) {
+    if (IN_REVIEW_STATUSES.has(nofoScopeRow?.status) && !opensGrantInReview(callerScope, nofoScopeRow)) {
       return {
         statusCode: 409,
         headers,

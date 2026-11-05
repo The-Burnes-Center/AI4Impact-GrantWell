@@ -12,7 +12,7 @@ import { CITATIONS_FILE, itemsHash, requirementItems } from "../shared/cite.mjs"
 // the late-stage sidecar overwrite doesn't drop these fields.
 async function readScopeFromMetadataTable(nofoName) {
   const tableName = process.env.NOFO_METADATA_TABLE_NAME;
-  if (!tableName || !nofoName) return { scope: null, state: null };
+  if (!tableName || !nofoName) return { scope: null, state: null, status: null, previousStatus: null };
   try {
     const result = await dynamoClient.send(
       new GetItemCommand({
@@ -20,16 +20,28 @@ async function readScopeFromMetadataTable(nofoName) {
         Key: marshall({ nofo_name: nofoName }),
       })
     );
-    if (!result.Item) return { scope: null, state: null };
+    if (!result.Item) return { scope: null, state: null, status: null, previousStatus: null };
     const row = unmarshall(result.Item);
     return {
       scope: typeof row.scope === "string" ? row.scope : null,
       state: typeof row.state === "string" ? row.state : null,
+      status: typeof row.status === "string" ? row.status : null,
+      previousStatus: typeof row.previous_status === "string" ? row.previous_status : null,
     };
   } catch (err) {
     console.warn(`Could not read scope/state for ${nofoName}:`, err.message);
-    return { scope: null, state: null };
+    return { scope: null, state: null, status: null, previousStatus: null };
   }
+}
+
+/**
+ * A live grant keeps its status when its new version publishes; a held grant goes back to the
+ * status it had before it was held. Anything else goes live as active.
+ */
+function statusToPublish(publishStatus, { status, previousStatus }) {
+  if (publishStatus === "archived") return "archived";
+  if (status === "active" || status === "archived") return status;
+  return previousStatus === "archived" ? "archived" : "active";
 }
 
 const s3Client = new S3Client();
@@ -89,7 +101,8 @@ export const handler = async (event) => {
   if (reviewApproval) await recordApproval(nofoName, finalSummary, reviewApproval);
 
   const docKey = documentKey || `${nofoName}/NOFO-File-PDF`;
-  const { scope: ddbScope, state: ddbState } = await readScopeFromMetadataTable(nofoName);
+  const metadataRow = await readScopeFromMetadataTable(nofoName);
+  const { scope: ddbScope, state: ddbState } = metadataRow;
 
   const metadata = {
     metadataAttributes: {
@@ -129,8 +142,7 @@ export const handler = async (event) => {
     ];
     const exprNames = { "#status": "status" };
     const exprValues = {
-      // An archived grant held for review goes back to archived, so it doesn't reappear as open.
-      ":status": publishStatus === "archived" ? "archived" : "active",
+      ":status": statusToPublish(publishStatus, metadataRow),
       ":now": now,
       ":outcome": "published",
     };
@@ -161,8 +173,7 @@ export const handler = async (event) => {
     exprValues[":defaultGrantType"] = "federal";
     exprValues[":defaultPinned"] = "false";
 
-    
-    const removeFields = ["pipeline_claim_at", "pipeline_claim_execution"];
+    const removeFields = ["pipeline_claim_at", "pipeline_claim_execution", "previous_status"];
     if (adminGuidance) {
       setExprs.push("review_flag = :reviewFlag");
       exprValues[":reviewFlag"] = {

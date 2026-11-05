@@ -285,4 +285,36 @@ describe("requirements the grant doesn't support", () => {
     expect(within(dialog).queryByText(/This grant was live/)).not.toBeInTheDocument();
     expect(within(dialog).getByText(/permanently delete the grant document/)).toBeInTheDocument();
   });
+
+  const rejectDialog = async (item: ReviewItem, shown: ReviewDetail) => {
+    const { user } = await openDetail(item, shown);
+    await user.type(screen.getByRole("textbox", { name: /Admin Notes/ }), "Wrong document");
+    await user.click(screen.getByRole("button", { name: /^Reject — / }));
+    return screen.findByRole("dialog", { name: "Confirm Reject" });
+  };
+
+  it("warns for a held grant that was live before, whatever step held it this time", async () => {
+    const rerun = { ...held, nofo_name: "Rerun-Grant", source: "pipeline" as const };
+    const dialog = await rejectDialog(rerun, { ...detail, ...rerun, previous_status: "archived" });
+    expect(within(dialog).getByText("This grant was live. Rejecting deletes it and its files for everyone.")).toBeInTheDocument();
+  });
+
+  it("doesn't warn when the grant's published version stays live, since rejecting keeps it", async () => {
+    const pending = { ...held, nofo_name: "Live-Grant", source: "pipeline" as const, grantStatus: "active" };
+    const dialog = await rejectDialog(pending, { ...detail, ...pending, live_status: "active" });
+    expect(within(dialog).queryByText(/This grant was live/)).not.toBeInTheDocument();
+  });
+
+  it("recommends re-uploading when the only failure is text that couldn't be read", async () => {
+    await openDetail(held, {
+      ...detail,
+      adminGuidance: {
+        ...detail.adminGuidance!,
+        title: "The grant's text couldn't be read",
+        failingItems: [{ category: "grant_text", label: "Grant text", item: "Grant text", reason: "The grant text is missing." }],
+      },
+    });
+    expect(screen.getByRole("button", { name: /^Re-upload Grant Document .*\(recommended\)$/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^Approve As-Is — / })).not.toHaveAccessibleName(/recommended/);
+  });
 });

@@ -82,4 +82,18 @@ describe("grant list", () => {
     expect(db.queries.filter((q) => q.ExclusiveStartKey)).toHaveLength(3);
     db.pageSize = Infinity;
   });
+
+  it("keeps a live grant listed while its new version is processed or held, and leaves out held grants", async () => {
+    db.fail = false;
+    db.items = [
+      { nofo_name: "Rerun Grant", status: "active", scope: "federal", processing_status: "checking_sources" },
+      { nofo_name: "Waiting Grant", status: "active", scope: "federal", processing_status: "quarantined" },
+      { nofo_name: "New Grant", status: "processing", scope: "federal", processing_status: "extracting_text" },
+      { nofo_name: "Held Grant", status: "quarantined", scope: "federal", processing_status: "quarantined" },
+    ];
+
+    const body = JSON.parse((await handler(request)).body);
+
+    expect(body.folders).toEqual(["Rerun Grant", "Waiting Grant"]);
+  });
 });

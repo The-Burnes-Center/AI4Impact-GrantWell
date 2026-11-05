@@ -330,9 +330,10 @@ const Dashboard: React.FC = () => {
   }, [statusFilter, grantTypeFilter]);
 
   const filteredNofos = useMemo(() => {
-    // In-flight grants live in the "Processing" segment, not the browse list.
+    // In-flight new grants live in the "Processing" segment, not the browse list; a live grant
+    // being reprocessed stays listed.
     let filtered = nofos.filter((nofo) =>
-      !nofo.processingStatus &&
+      (!nofo.processingStatus || nofo.status === "active" || nofo.status === "archived") &&
       nofo.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
     if (statusFilter !== "all") {

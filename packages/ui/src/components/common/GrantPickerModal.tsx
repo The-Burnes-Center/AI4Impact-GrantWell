@@ -45,7 +45,7 @@ export default function GrantPickerModal({
         if (cancelled) return;
         const names: string[] = result.nofoData
           ? result.nofoData
-              .filter((nofo: RawNOFOData) => !nofo.processing_status && nofo.status === "active")
+              .filter((nofo: RawNOFOData) => nofo.status === "active")
               .map((nofo: RawNOFOData) => nofo.name)
           : result.folders || [];
         names.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));

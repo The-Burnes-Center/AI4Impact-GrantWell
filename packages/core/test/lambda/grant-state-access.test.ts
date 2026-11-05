@@ -71,6 +71,7 @@ const grants: Record<string, Record<string, unknown>> = {
   "Legacy Grant": { nofo_name: "Legacy Grant" },
   "Held Grant": { nofo_name: "Held Grant", scope: "federal", status: "quarantined" },
   "New Grant": { nofo_name: "New Grant", scope: "state", state: "MA", status: "processing" },
+  "NY Held Grant": { nofo_name: "NY Held Grant", scope: "state", state: "NY", status: "quarantined" },
 };
 
 const IN_REVIEW = "This grant is being reviewed and will be back soon.";
@@ -268,11 +269,43 @@ describe("grants held for review", () => {
     expect(answered()).toHaveLength(2);
   });
 
-  it("holds a state admin to the same rule as a user", async () => {
+  it("chat answers a state admin on their own state's grant in review, and no other", async () => {
     signedInAs("Admin", "MA");
+    await chat("New Grant/");
+    expect(posted()).not.toContain(IN_REVIEW);
+    expect(answered()).toHaveLength(1);
+
+    ws.resetHistory();
+    await chat("Held Grant/");
+    expect(posted()).toContain(IN_REVIEW);
+    ws.resetHistory();
+    signedInAs("Admin", "NY");
+    await chat("New Grant/");
+    expect(chatDenied()).toBe(true);
+    expect(answered()).toHaveLength(1);
+  });
+
+  it("chat holds a user to the in-review message on their own state's grant", async () => {
+    signedInAs(null, "MA");
     await chat("New Grant/");
     expect(posted()).toContain(IN_REVIEW);
     expect(bedrock.calls()).toHaveLength(0);
+  });
+
+  it("the AI writer runs for a state admin on their own state's grant in review, and no other", async () => {
+    const claims = signedInAs("Admin", "MA");
+    expect((await draft(claims, "New Grant")).statusCode).toBe(200);
+    expect((await draft(claims, "Held Grant")).statusCode).toBe(409);
+    expect(sfn.calls()).toHaveLength(1);
+  });
+
+  it("the summary opens a state admin's own state's grant in review in full, and no other", async () => {
+    const res = await landing(summaryHandler, signedInAs("Admin", "MA"), "New Grant/summary.json");
+    expect(res.statusCode).toBe(200);
+    expect(JSON.parse(res.body)).not.toHaveProperty("inReview");
+    expect((await landing(summaryHandler, signedInAs("Admin", "MA"), "Held Grant/summary.json")).statusCode).toBe(409);
+    expect((await landing(summaryHandler, signedInAs("Admin", "NY"), "Held Grant/summary.json")).statusCode).toBe(409);
+    expect((await landing(summaryHandler, signedInAs("Admin", "MA"), "NY Held Grant/summary.json")).statusCode).toBe(403);
   });
 
   it("the AI writer refuses to start or rewrite sections for a grant in review", async () => {
@@ -302,7 +335,7 @@ describe("grants held for review", () => {
     expect(s3.commandCalls(GetObjectCommand)).toHaveLength(0);
   });
 
-  it("the summary gives an application only the grant's name and sections while it is in review", async () => {
+  it("the summary gives an application only the grant's name and section names while it is in review", async () => {
     s3.on(GetObjectCommand).callsFake(() => ({
       Body: Readable.from([
         Buffer.from(
@@ -322,7 +355,7 @@ describe("grants held for review", () => {
     const body = JSON.parse(res.body);
     expect(body.inReview).toBe(true);
     expect(Object.keys(body.data).sort()).toEqual(["GrantName", "ProjectNarrativeSections"]);
-    expect(body.data.ProjectNarrativeSections).toEqual([expect.objectContaining({ item: "Need", id: expect.any(String) })]);
+    expect(body.data.ProjectNarrativeSections).toEqual([{ item: "Need", id: "need" }]);
   });
 
   it("the summary still opens a grant in review for a Developer and a platform admin", async () => {
