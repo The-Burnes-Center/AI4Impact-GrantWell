@@ -111,21 +111,23 @@ async function extractDeadline(keyDeadlines) {
       );
       return null;
     }
-    const content = (body.content?.find((b) => b.type === "text")?.text ?? "").trim();
+    // The model sometimes explains before answering; the answer is the last line.
+    const content = (body.content?.find((b) => b.type === "text")?.text ?? "").trim().split("\n").at(-1).trim();
 
     if (content.toLowerCase() === "null" || !content) return null;
 
     // A leading date is the deadline's own calendar date; converting a full timestamp would shift it.
     const isoMatch = content.match(/^(\d{4}-\d{2}-\d{2})(?:$|T)/);
-    if (isoMatch) return isoMatch[1];
-
-    const date = new Date(content);
-    if (isNaN(date.getTime())) return null;
-
-    const y = date.getUTCFullYear();
-    const m = String(date.getUTCMonth() + 1).padStart(2, "0");
-    const d = String(date.getUTCDate()).padStart(2, "0");
-    return `${y}-${m}-${d}`;
+    let found = isoMatch?.[1];
+    if (!found) {
+      const date = new Date(content);
+      if (isNaN(date.getTime())) return null;
+      const m = String(date.getUTCMonth() + 1).padStart(2, "0");
+      const d = String(date.getUTCDate()).padStart(2, "0");
+      found = `${date.getUTCFullYear()}-${m}-${d}`;
+    }
+    // A deadline whose year the grant never gives ("due September 1") is a guess.
+    return deadlineText.includes(found.slice(0, 4)) ? found : null;
   } catch (error) {
     console.error("Error extracting deadline:", error);
     return null;
