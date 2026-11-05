@@ -14,7 +14,7 @@ import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { GetObjectCommand, ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
 import { SFNClient, StartExecutionCommand } from "@aws-sdk/client-sfn";
 import { marshall } from "@aws-sdk/util-dynamodb";
-import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 const ws = mockClient(ApiGatewayManagementApiClient);
 const kb = mockClient(BedrockAgentRuntimeClient);
@@ -306,6 +306,48 @@ describe("grants held for review", () => {
     expect((await landing(summaryHandler, signedInAs("Admin", "MA"), "Held Grant/summary.json")).statusCode).toBe(409);
     expect((await landing(summaryHandler, signedInAs("Admin", "NY"), "Held Grant/summary.json")).statusCode).toBe(409);
     expect((await landing(summaryHandler, signedInAs("Admin", "MA"), "NY Held Grant/summary.json")).statusCode).toBe(403);
+  });
+
+  describe("on a single-state site", () => {
+    let chatOn: Handler;
+    let draftOn: Handler;
+    let summaryOn: Handler;
+    beforeAll(async () => {
+      vi.stubEnv("SINGLE_STATE", "MA");
+      vi.resetModules();
+      ({ handler: chatOn } = await import("../../lib/chatbot-api/functions/websocket-chat/index.mjs"));
+      ({ handler: draftOn } = await import("../../lib/chatbot-api/gateway/api-routes/draft-generation/index.mjs"));
+      ({ handler: summaryOn } = await import("../../lib/chatbot-api/functions/landing-page/retrieveNOFOSummary/index.mjs"));
+    });
+    afterAll(() => {
+      vi.stubEnv("SINGLE_STATE", "");
+    });
+    const chatAs = (documentIdentifier: string) =>
+      chatOn({
+        requestContext: { connectionId: "c1", routeKey: "getChatbotResponse", authorizer: { userId: "user-1" } },
+        body: JSON.stringify({ data: { userMessage: "Am I eligible?", session_id: "s1", chatHistory: [], documentIdentifier } }),
+      });
+
+    it("a state admin opens any grant held for review, federal ones included", async () => {
+      const claims = signedInAs("Admin", "MA");
+      await chatAs("Held Grant/");
+      expect(posted()).not.toContain(IN_REVIEW);
+      expect(answered()).toHaveLength(1);
+      expect((await draftOn({
+        requestContext: { http: { method: "POST" }, authorizer: { jwt: { claims: { sub: "user-1", ...claims } } } },
+        body: JSON.stringify({ query: "Write the draft", documentIdentifier: "Held Grant", sessionId: "s1" }),
+      })).statusCode).toBe(200);
+      const summary = await landing(summaryOn, claims, "Held Grant/summary.json");
+      expect(summary.statusCode).toBe(200);
+      expect(JSON.parse(summary.body)).not.toHaveProperty("inReview");
+    });
+
+    it("a user still sees only the in-review message", async () => {
+      const claims = signedInAs(null, "MA");
+      await chatAs("Held Grant/");
+      expect(posted()).toContain(IN_REVIEW);
+      expect((await landing(summaryOn, claims, "Held Grant/summary.json")).statusCode).toBe(409);
+    });
   });
 
   it("the AI writer refuses to start or rewrite sections for a grant in review", async () => {

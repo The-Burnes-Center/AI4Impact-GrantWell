@@ -397,6 +397,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           USER_POOL_ID: props.userPool.userPoolId,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
           LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+          ...SINGLE_STATE_ENV,
           DAILY_USAGE_TABLE_NAME: props.dailyUsageTable.tableName,
           CHAT_MESSAGES_PER_DAY: String(limits(config).chatMessagesPerDay),
           ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
@@ -838,6 +839,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           NOFO_STATE_OVERLAY_TABLE_NAME: props.nofoStateOverlayTable.tableName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
           LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+          ...SINGLE_STATE_ENV,
           ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
         },
         timeout: cdk.Duration.minutes(2),
@@ -1476,6 +1478,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
           LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+          ...SINGLE_STATE_ENV,
         },
         timeout: cdk.Duration.seconds(30),
         // Holds the decoded index (about 8 MB for 2,000 grants); more memory also means more CPU for ranking.

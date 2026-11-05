@@ -2,6 +2,7 @@ import { S3Client } from '@aws-sdk/client-s3';
 import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import {
+  canEditAnyNofo,
   getArtifact,
   isMissingObject,
   recordEvent,
@@ -73,9 +74,12 @@ function assertUserCanAccessNofo(callerScope, nofoScope, nofoState) {
 const IN_REVIEW_STATUSES = new Set(["quarantined", "processing"]);
 const GRANT_IN_REVIEW_MESSAGE = "This grant is being reviewed and will be back soon.";
 
-/** Developers, platform admins, and a state admin for their own state's grant open held grants. */
+/**
+ * Developers, platform admins, and a state admin for their own state's grant open held grants, as
+ * does any admin of a single-state site (canEditAnyNofo).
+ */
 function opensGrantInReview(callerScope, nofoScope, nofoState) {
-  if (callerScope.role === "developer" || callerScope.role === "regularAdmin") return true;
+  if (canEditAnyNofo(callerScope)) return true;
   return callerScope.role === "stateAdmin" && nofoScope === "state" && Boolean(nofoState) && nofoState === callerScope.state;
 }
 

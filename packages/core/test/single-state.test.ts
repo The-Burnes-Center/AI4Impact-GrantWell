@@ -47,9 +47,13 @@ describe("auth.turnstile: false", () => {
 });
 
 describe("tenancy: single", () => {
-  it("puts SINGLE_STATE on the sign-in trigger, user management and the functions that change grants only", () => {
+  it("puts SINGLE_STATE on the sign-in trigger, user management, the functions that change grants and those that open held grants only", () => {
     expect(functionsWith(variantOut, "SINGLE_STATE").sort()).toEqual([
       ["AuthorizationSignUpTriggerFunction", "MA"],
+      ["ChatbotAPIAIGrantSearchFunction", "MA"],
+      ["ChatbotAPIChatHandlerFunction", "MA"],
+      ["ChatbotAPIDraftGeneratorAPIFunction", "MA"],
+      ["ChatbotAPIGetRequirementsForNOFOs", "MA"],
       ["ChatbotAPIManageUsersFunction", "MA"],
       ["ChatbotAPINofoDeleteHandlerFunction", "MA"],
       ["ChatbotAPINofoRenameHandlerFunction", "MA"],

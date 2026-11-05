@@ -327,6 +327,32 @@ describe("AI grant search", () => {
       expect(names(user)).toEqual(["Bridge Repair Program"]);
     });
 
+    it("shows a single-state site's admin every grant held for review, and a user none", async () => {
+      metadata(
+        { nofo_name: "Bridge Repair Program", status: "active" },
+        { nofo_name: "Bridge Repair Held", status: "quarantined" },
+        { nofo_name: "Bridge Repair Rerun MA", status: "processing", scope: "state", state: "MA" },
+        ...filler.map((f) => ({ nofo_name: f.name })),
+      );
+      publish([
+        { name: "Bridge Repair Program", topic: 1, body: "bridge repair" },
+        { name: "Bridge Repair Held", topic: 1, body: "bridge repair" },
+        { name: "Bridge Repair Rerun MA", topic: 1, body: "bridge repair" },
+        ...filler,
+      ]);
+      vi.stubEnv("SINGLE_STATE", "MA");
+      try {
+        await freshHandler();
+        const admin = await search({ query: "bridge repair" }, { email: "ana@example.org", sub: "u1", "custom:role": '["Admin"]', "custom:state": "MA" });
+        expect(names(admin).sort()).toEqual(["Bridge Repair Held", "Bridge Repair Program", "Bridge Repair Rerun MA"]);
+        const user = await search({ query: "bridge repair" }, { email: "ana@example.org", sub: "u1", "custom:state": "MA" });
+        expect(names(user)).toEqual(["Bridge Repair Program"]);
+      } finally {
+        vi.stubEnv("SINGLE_STATE", "");
+        await freshHandler();
+      }
+    });
+
     it("keeps a state admin to their own state", async () => {
       await stateFixture();
       const res = await search({ query: "bridge repair" }, { email: "ana@example.org", sub: "u1", "custom:role": '["Admin"]', "custom:state": "MA" });
