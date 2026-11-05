@@ -21,7 +21,7 @@ export async function summaryClaims(grant, output, judge) {
   }
   const summary = output?.summary ?? {};
   const items = CATEGORIES.flatMap((c) => (Array.isArray(summary[c]) ? summary[c] : []).map((e) => `${e.item}: ${e.description}`));
-  if (output?.applicationDeadline) items.push(`Application deadline: ${output.applicationDeadline}`);
+  if (output?.applicationDeadline) items.push(`Application deadline (the last date the grant accepts any application): ${output.applicationDeadline}`);
   const verdicts = await judge.items({ grantText: judgeGrantText(grant), items });
   const unsupported = verdicts.filter((v) => !v.supported).map((v) => ({ item: items[v.id], reason: v.reason }));
   return { counts: { "summary.heldGrants": [0, 1], "summary.unsupportedItems": [unsupported.length, items.length] }, unsupported };
