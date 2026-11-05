@@ -1,6 +1,6 @@
 import { mockClient } from "aws-sdk-client-mock";
 import { DynamoDBClient, GetItemCommand, QueryCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
-import { SFNClient, StartExecutionCommand } from "@aws-sdk/client-sfn";
+import { DescribeExecutionCommand, SFNClient, StartExecutionCommand, StopExecutionCommand } from "@aws-sdk/client-sfn";
 import { CopyObjectCommand, DeleteObjectsCommand, HeadObjectCommand, ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
@@ -19,9 +19,9 @@ beforeAll(async () => {
   ({ handler } = await import("../../lib/chatbot-api/functions/nofo-pipeline/dispatcher/index.mjs"));
 });
 
-const sqsRecord = (messageId: string, key: string, bucket = "nofos", eTag?: string) => ({
+const sqsRecord = (messageId: string, key: string, bucket = "nofos", eTag?: string, versionId?: string) => ({
   messageId,
-  body: JSON.stringify({ Records: [{ s3: { bucket: { name: bucket }, object: { key, ...(eTag && { eTag }) } } }] }),
+  body: JSON.stringify({ Records: [{ s3: { bucket: { name: bucket }, object: { key, ...(eTag && { eTag }), ...(versionId && { versionId }) } } }] }),
 });
 
 const updates = () => ddb.commandCalls(UpdateItemCommand).map((c) => c.args[0].input);
@@ -52,6 +52,7 @@ describe("NOFO pipeline dispatcher", () => {
     expect(JSON.parse(start.input!)).toEqual({
       s3Bucket: "nofos",
       documentKey: "Bridge Repair: 2026/NOFO-File-PDF",
+      documentVersionId: null,
       nofoName: "Bridge Repair: 2026",
       retryCount: 0,
       validationFeedback: null,
@@ -106,10 +107,16 @@ describe("NOFO pipeline dispatcher", () => {
     const statusWrites = () => updates().filter((u) => String(u.UpdateExpression).includes("#status = :processing"));
     const stages = () => updates().map((u) => u.ExpressionAttributeValues?.[":s"]?.S).filter(Boolean);
     const STAGED = "_pending/Grant/NOFO-File-PDF";
-    const dispatch = async (row: Record<string, unknown>, record = sqsRecord("m1", STAGED, "grant-artifacts")) => {
+    const dispatch = async (
+      row: Record<string, unknown>,
+      record = sqsRecord("m1", STAGED, "grant-artifacts", undefined, "v2"),
+      stagedVersion = "v2"
+    ) => {
+      s3.on(HeadObjectCommand, { Bucket: "grant-artifacts", Key: STAGED }).resolves({ VersionId: stagedVersion });
       ddb.on(GetItemCommand).resolves({ Item: marshall({ nofo_name: "Grant", ...row }) });
-      ddb.on(UpdateItemCommand, { ConditionExpression: "attribute_not_exists(pipeline_claim_at) OR pipeline_claim_at < :staleBefore" })
-        .resolves({ Attributes: marshall({ nofo_name: "Grant", ...row }) });
+      ddb.on(UpdateItemCommand).callsFake((input) =>
+        isClaim(input) ? { Attributes: marshall({ nofo_name: "Grant", ...row }) } : {}
+      );
       sfn.on(StartExecutionCommand).resolves({ executionArn: "arn:exec:1", startDate: new Date() });
       return handler({ Records: [record] });
     };
@@ -132,10 +139,74 @@ describe("NOFO pipeline dispatcher", () => {
 
       expect(statusWrites()).toHaveLength(0);
       expect(stages()).toEqual(["uploading"]);
-      expect(s3.commandCalls(HeadObjectCommand)[0].args[0].input).toEqual({ Bucket: "grant-artifacts", Key: "Grant/summary.json" });
+      expect(s3.commandCalls(HeadObjectCommand).map((c) => c.args[0].input)).toContainEqual({ Bucket: "grant-artifacts", Key: "Grant/summary.json" });
       expect(started()).toEqual([
-        { s3Bucket: "grant-artifacts", documentKey: STAGED, nofoName: "Grant", retryCount: 0, validationFeedback: null },
+        { s3Bucket: "grant-artifacts", documentKey: STAGED, documentVersionId: "v2", nofoName: "Grant", retryCount: 0, validationFeedback: null },
       ]);
+    });
+
+    describe("a newer upload while a staged version is processing", () => {
+      const older = { status: "active", pipeline_claim_at: new Date().toISOString(), pipeline_claim_document: `${STAGED}#v1`, pipeline_execution_arn: "arn:exec:old" };
+      beforeEach(() => {
+        s3.on(HeadObjectCommand).resolves({});
+        s3.on(ListObjectsV2Command).resolves({ Contents: [{ Key: STAGED }, { Key: "_pending/Grant/raw-text.txt" }] });
+        s3.on(DeleteObjectsCommand).resolves({});
+        sfn.on(DescribeExecutionCommand).resolves({ status: "RUNNING" });
+        sfn.on(StopExecutionCommand).resolves({});
+      });
+
+      it("takes over the claim, stops the older run, clears its files and restarts with the newest", async () => {
+        ddb.on(QueryCommand).resolves({ Items: [marshall({ nofo_name: "Grant", review_id: "r-old", status: "pending_review" })] });
+
+        expect((await dispatch(older)).batchItemFailures).toEqual([]);
+
+        const claim = updates().find(isClaim)!;
+        expect(claim.ConditionExpression).toContain("pipeline_claim_document <> :document");
+        expect(claim.ExpressionAttributeValues![":document"]).toEqual({ S: `${STAGED}#v2` });
+        expect(sfn.commandCalls(StopExecutionCommand).map((c) => c.args[0].input.executionArn)).toEqual(["arn:exec:old"]);
+        const superseded = updates().filter((u) => u.TableName === "reviews").map((u) => unmarshall(u.Key!).review_id);
+        expect(superseded).toEqual(["r-old"]);
+        const deleted = s3.commandCalls(DeleteObjectsCommand).flatMap((c) => c.args[0].input.Delete!.Objects!.map((o) => o.Key));
+        expect(deleted).toEqual(["_pending/Grant/raw-text.txt"]);
+        expect(started().map((i) => i.documentVersionId)).toEqual(["v2"]);
+      });
+
+      it("treats the same version arriving again as a duplicate", async () => {
+        s3.on(HeadObjectCommand, { Key: STAGED }).resolves({ VersionId: "v1" });
+        ddb.on(UpdateItemCommand).callsFake((input) => {
+          if (isClaim(input)) throw new ConditionalCheckFailedException({ message: "held", $metadata: {} });
+          return {};
+        });
+
+        const res = await handler({ Records: [sqsRecord("m1", STAGED, "grant-artifacts", undefined, "v1")] });
+
+        expect(res.batchItemFailures).toEqual([]);
+        expect(updates().filter(isClaim)).toHaveLength(1);
+        expect(sfn.commandCalls(StartExecutionCommand)).toHaveLength(0);
+        expect(sfn.commandCalls(StopExecutionCommand)).toHaveLength(0);
+      });
+
+      it("reads the staged document's version when Reprocess sends no version", async () => {
+        await dispatch({ status: "active" }, sqsRecord("m1", STAGED, "grant-artifacts"), "v3");
+
+        expect(started().map((i) => i.documentVersionId)).toEqual(["v3"]);
+      });
+
+      it("ignores an older upload's event that arrives after the newer one, leaving the newest run alone", async () => {
+        await dispatch(older, sqsRecord("m1", STAGED, "grant-artifacts", undefined, "v1"), "v2");
+
+        expect(updates().filter(isClaim)).toHaveLength(0);
+        expect(sfn.commandCalls(StopExecutionCommand)).toHaveLength(0);
+        expect(sfn.commandCalls(StartExecutionCommand)).toHaveLength(0);
+      });
+
+      it("keeps the old rule for a document that isn't staged: a held claim is never taken over", async () => {
+        s3.on(HeadObjectCommand).rejects(notFound());
+
+        await dispatch({ status: "processing" }, sqsRecord("m1", "Grant/NOFO-File-PDF", "nofos", undefined, "v9"));
+
+        expect(updates().find(isClaim)!.ConditionExpression).toBe("attribute_not_exists(pipeline_claim_at) OR pipeline_claim_at < :staleBefore");
+      });
     });
 
     it("runs a live grant's published document from a staged copy, not in place", async () => {

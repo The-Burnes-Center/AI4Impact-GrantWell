@@ -5,6 +5,7 @@ import { updateProcessingStatus, setNofoStatus, markProcessingComplete } from ".
 import { readRawText } from "../shared/s3.mjs";
 import { liveStatusOf } from "../shared/live.mjs";
 import { keptLiveGuidance } from "../shared/unverified-guidance.mjs";
+import { isStaleRun } from "../shared/swap.mjs";
 
 const dynamoClient = new DynamoDBClient();
 
@@ -14,6 +15,7 @@ export const handler = async (event) => {
     s3Bucket,
     rawTextKey,
     documentKey,
+    documentVersionId,
     mergedSummary,
     questionsData,
     validationResult,
@@ -25,6 +27,12 @@ export const handler = async (event) => {
     previousStatus,
     unpublish,
   } = event;
+
+  // A newer upload restarted processing; this run's review would describe a document that's gone.
+  if (await isStaleRun(documentKey, documentVersionId)) {
+    console.log(`${documentKey} was replaced after this run started; not holding it for review.`);
+    return { statusCode: 200, nofoName, quarantined: false, superseded: true };
+  }
 
   const row = await readMetadataRow(nofoName);
   // A live grant's failing new version waits here while its published version stays up. Only a
@@ -103,6 +111,7 @@ export const handler = async (event) => {
     qualityScore: qualityScore || 0,
     retryCount: retryCount || 0,
     s3DocumentKey: documentKey || "",
+    s3DocumentVersionId: documentVersionId || undefined,
     s3RawTextKey: rawTextKey || "",
     documentTextPreview,
     reviewed_by: null,

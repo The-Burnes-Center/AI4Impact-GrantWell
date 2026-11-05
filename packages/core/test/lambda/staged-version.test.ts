@@ -57,7 +57,7 @@ const ENV = {
 const fns = "../../lib/chatbot-api/functions";
 
 /** A versioned two-bucket S3 that keeps every version, as GrantWell's buckets do. */
-type Version = { versionId: string; body: Buffer | null; etag: string | null; contentType?: string };
+type Version = { versionId: string; body: Buffer | null; etag: string | null; contentType?: string; metadata?: Record<string, string> };
 let objects: Map<string, Version[]>;
 let versionCounter: number;
 let log: string[];
@@ -69,12 +69,12 @@ const current = (bucket: string, key: string) => {
   const v = objects.get(id(bucket, key))?.at(-1);
   return v && v.body ? v : null;
 };
-function write(bucket: string, key: string, body: Buffer | null, contentType?: string) {
-  const version: Version = { versionId: `v${++versionCounter}`, body, etag: body ? md5(body) : null, contentType };
+function write(bucket: string, key: string, body: Buffer | null, contentType?: string, metadata?: Record<string, string>) {
+  const version: Version = { versionId: `v${++versionCounter}`, body, etag: body ? md5(body) : null, contentType, metadata };
   objects.set(id(bucket, key), [...(objects.get(id(bucket, key)) ?? []), version]);
   return version;
 }
-const put = (bucket: string, key: string, text: string) => write(bucket, key, Buffer.from(text));
+const put = (bucket: string, key: string, text: string, metadata?: Record<string, string>) => write(bucket, key, Buffer.from(text), undefined, metadata);
 const text = (bucket: string, key: string) => current(bucket, key)?.body?.toString() ?? null;
 const keysUnder = (bucket: string, prefix: string) =>
   [...objects.keys()]
@@ -89,17 +89,17 @@ function serveS3() {
   s3.on(HeadObjectCommand).callsFake(({ Bucket, Key }) => {
     const v = current(Bucket, Key);
     if (!v) throw notFound();
-    return { VersionId: v.versionId, ETag: `"${v.etag}"` };
+    return { VersionId: v.versionId, ETag: `"${v.etag}"`, Metadata: v.metadata ?? {} };
   });
-  s3.on(GetObjectCommand).callsFake(({ Bucket, Key }) => {
-    const v = current(Bucket, Key);
+  s3.on(GetObjectCommand).callsFake(({ Bucket, Key, VersionId }) => {
+    const v = VersionId ? objects.get(id(Bucket, Key))?.find((x) => x.versionId === VersionId) : current(Bucket, Key);
     if (!v) throw noSuchKey();
     const body = Object.assign(Readable.from([v.body!]), { transformToString: async () => v.body!.toString() });
     return { Body: body, ETag: `"${v.etag}"` };
   });
-  s3.on(PutObjectCommand).callsFake(({ Bucket, Key, Body, ContentType }) => {
+  s3.on(PutObjectCommand).callsFake(({ Bucket, Key, Body, ContentType, Metadata }) => {
     log.push(`put ${Bucket}/${Key}`);
-    const v = write(Bucket, Key, asBuffer(Body), ContentType);
+    const v = write(Bucket, Key, asBuffer(Body), ContentType, Metadata);
     return { VersionId: v.versionId, ETag: `"${v.etag}"` };
   });
   s3.on(CopyObjectCommand).callsFake(({ Bucket, Key, CopySource }) => {
@@ -112,7 +112,7 @@ function serveS3() {
       : current(fromBucket, fromKey);
     if (!source?.body) throw noSuchKey();
     log.push(`copy ${fromBucket}/${fromKey} -> ${Bucket}/${Key}`);
-    const v = write(Bucket, Key, source.body, source.contentType);
+    const v = write(Bucket, Key, source.body, source.contentType, source.metadata);
     return { VersionId: v.versionId, CopyObjectResult: { ETag: `"${v.etag}"` } };
   });
   s3.on(DeleteObjectCommand).callsFake(({ Bucket, Key }) => {
@@ -368,6 +368,98 @@ describe("publishing a staged version", () => {
   });
 });
 
+describe("a newer upload while a staged version is processing", () => {
+  /** The run started for the first upload (`older`); then the admin uploaded again. */
+  function replacedWhileProcessing() {
+    liveGrantWithStagedVersion();
+    const older = current(ARTIFACTS, STAGED)!.versionId;
+    for (const name of ["raw-text.txt", "raw-text-pages.json", "requirements-citations.json"]) {
+      put(ARTIFACTS, `_pending/Grant/${name}`, text(ARTIFACTS, `_pending/Grant/${name}`)!, { "source-version": older });
+    }
+    const newer = put(ARTIFACTS, STAGED, "newest document").versionId;
+    return { older, newer };
+  }
+
+  it("refuses to swap in the older run's version, changing nothing", async () => {
+    const { older } = replacedWhileProcessing();
+    const { handler } = await load("nofo-pipeline/publish/index.mjs");
+
+    await expect(handler(publishEvent({ documentVersionId: older }))).rejects.toThrow(/newer document for "Grant" was uploaded/);
+
+    expect(published()).toEqual(BEFORE);
+    expect(text(ARTIFACTS, "_pending/Grant/swap.json")).toBeNull();
+    expect(text(ARTIFACTS, STAGED)).toBe("newest document");
+    expect(log.filter((l) => !l.startsWith("put") || !l.includes("_pending/"))).toEqual([]);
+  });
+
+  it("refuses a newer run's version whose text a stopped older run overwrote", async () => {
+    const { older, newer } = replacedWhileProcessing();
+    put(ARTIFACTS, "_pending/Grant/raw-text.txt", "newest text", { "source-version": newer });
+    put(ARTIFACTS, "_pending/Grant/raw-text-pages.json", "[0]", { "source-version": newer });
+    put(ARTIFACTS, "_pending/Grant/requirements-citations.json", "{}", { "source-version": older });
+    const { handler } = await load("nofo-pipeline/publish/index.mjs");
+
+    await expect(handler(publishEvent({ documentVersionId: newer }))).rejects.toThrow(/newer document/);
+
+    expect(published()).toEqual(BEFORE);
+  });
+
+  it("swaps in exactly the version the newest run processed", async () => {
+    const { newer } = replacedWhileProcessing();
+    for (const name of ["raw-text.txt", "raw-text-pages.json", "requirements-citations.json"]) {
+      put(ARTIFACTS, `_pending/Grant/${name}`, `newest ${name}`, { "source-version": newer });
+    }
+    const { handler } = await load("nofo-pipeline/publish/index.mjs");
+
+    await handler(publishEvent({ documentVersionId: newer }));
+
+    expect(published()).toMatchObject({ document: { pdf: "newest document", txt: null }, rawText: "newest raw-text.txt" });
+  });
+
+  it("extracts the exact version its run was started for, and stamps that version on what it writes", async () => {
+    put(ARTIFACTS, "_pending/Grant/NOFO-File-TXT", "This grant program offers funding to each eligible applicant. ".repeat(20));
+    const first = current(ARTIFACTS, "_pending/Grant/NOFO-File-TXT")!.versionId;
+    put(ARTIFACTS, "_pending/Grant/NOFO-File-TXT", "A newer upload.");
+    const { handler } = await load("nofo-pipeline/extract-text/index.mjs");
+
+    await handler({ s3Bucket: ARTIFACTS, documentKey: "_pending/Grant/NOFO-File-TXT", documentVersionId: first, nofoName: "Grant" });
+
+    const raw = current(ARTIFACTS, "_pending/Grant/raw-text.txt")!;
+    expect(raw.body!.toString()).toContain("This grant program");
+    expect(raw.metadata).toEqual({ "source-version": first });
+  });
+
+  it("the older run holds nothing for review, so the newest run's claim and review stand", async () => {
+    const { older } = replacedWhileProcessing();
+    const { handler } = await load("nofo-pipeline/quarantine/index.mjs");
+
+    const out = await handler({
+      nofoName: "Grant",
+      s3Bucket: ARTIFACTS,
+      documentKey: STAGED,
+      documentVersionId: older,
+      rawTextKey: "_pending/Grant/raw-text.txt",
+      mergedSummary: SUMMARY,
+      source: "pipeline",
+    });
+
+    expect(out).toMatchObject({ quarantined: false, superseded: true });
+    expect(ddb.calls()).toHaveLength(0);
+  });
+
+  it("the newest run's review records the version Approve must swap in", async () => {
+    const { newer } = replacedWhileProcessing();
+    const { PutItemCommand } = await import("@aws-sdk/client-dynamodb");
+    ddb.on(PutItemCommand).resolves({});
+    const { handler } = await load("nofo-pipeline/quarantine/index.mjs");
+
+    await handler({ nofoName: "Grant", s3Bucket: ARTIFACTS, documentKey: STAGED, documentVersionId: newer, rawTextKey: "", mergedSummary: SUMMARY, source: "pipeline" });
+
+    const item = unmarshall(ddb.commandCalls(PutItemCommand)[0].args[0].input.Item!);
+    expect(item).toMatchObject({ s3DocumentKey: STAGED, s3DocumentVersionId: newer, live_status: "active" });
+  });
+});
+
 describe("the review of a staged version", () => {
   const admin = { "custom:role": '["Developer"]' };
   const call = async (action: string, body: Record<string, unknown>) => {
@@ -425,6 +517,18 @@ describe("the review of a staged version", () => {
 
     expect(published()).toEqual(BEFORE);
     expect(keysUnder(ARTIFACTS, "_pending/")).toEqual([]);
+  });
+
+  it("Approve asks publish to swap in the version this review checked", async () => {
+    liveGrantWithStagedVersion();
+    openReview();
+    reviews[0].s3DocumentVersionId = "v7";
+    lambda.on(InvokeCommand).resolves({ Payload: new TextEncoder().encode("{}") as any });
+
+    expect((await call("approve", { reviewId: "r1" })).statusCode).toBe(200);
+
+    const payload = JSON.parse(String(lambda.commandCalls(InvokeCommand)[0].args[0].input.Payload));
+    expect(payload).toMatchObject({ documentKey: STAGED, documentVersionId: "v7" });
   });
 
   it.each(["approve", "reject"])("refuses to %s a closed review, whose staged files may be a newer run's", async (action) => {
