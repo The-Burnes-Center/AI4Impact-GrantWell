@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When is the TAFC application due?",
+    "expected": "There is no fixed deadline: applications are accepted on a rolling basis until all program funds are obligated, with awards made at CWCB's Board meetings six times a year. Applicants must contact the CWCB to discuss the project before applying.",
+    "quote": "Applications to the TAFC program will be accepted on a rolling basis",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "eligibility",
+    "question": "Who can apply for a TAFC grant?",
+    "expected": "Governmental entities (municipalities, districts, enterprises and counties) and private entities such as mutual ditch companies, non-profit corporations and partnerships. State agencies are generally not eligible except in limited cases at staff discretion, and covered entities must have an approved water conservation plan.",
+    "quote": "Governmental entities including municipalities, districts, enterprises, and counties.",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "absent",
+    "question": "What's the most we can request from TAFC?",
+    "expected": "Not stated in the notice.",
+    "quote": null,
+    "confirmed": false
+  }
+]

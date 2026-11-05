@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "What's the deadline for the Coal Transition Community Grants?",
+    "expected": "There is no fixed deadline: applications are accepted and reviewed on a rolling basis while funds remain. Yampa Valley and Morgan County funds are fully awarded; limited funding remains for Pueblo County, the West End of Montrose County and Tier II entities.",
+    "quote": "Applications will be accepted and reviewed on a rolling basis.",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "eligibility",
+    "question": "We're a nonprofit in Pueblo. Can we apply?",
+    "expected": "Yes. Public or private nonprofits located in or serving a coal transition community are eligible entities, and Pueblo County is a Tier One community with limited funding remaining. You must first meet with OJT and OEDIT staff, and the application must show support from both Pueblo County and the City of Pueblo.",
+    "quote": "Applications for Pueblo must show support from both Pueblo County and the City of Pueblo.",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "absent",
+    "question": "Is there a matching funds requirement?",
+    "expected": "Not stated in the notice.",
+    "quote": null,
+    "confirmed": false
+  }
+]

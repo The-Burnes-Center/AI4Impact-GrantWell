@@ -1,0 +1,867 @@
+COLORADO
+CEO
+Energy Office
+TM
+Energy Code Adoption &
+Enforcement Grant Program
+Request for Applications (RFA)
+Opened: July 26, 2023
+Revised: July 9, 2026
+Application Deadline: November 27, 2026 (see Section IV for future round deadlines)
+COLORADO
+CEO
+Energy Office
+Table of Contents
+Table of Contents
+1
+Terms Defined
+3
+Section I - Program Overview
+4
+Section II - Eligibility
+4
+1. Eligible Applicants
+4
+2. Allowable Projects & Activities
+5
+Eligible Costs
+5
+Disallowed Costs
+6
+Additional Cost Information
+7
+3. Prioritized Applicants
+7
+Underserved Communities
+8
+Partnerships
+8
+Workforce Development
+8
+Section III - Grant Amounts
+8
+1. Minimum and Maximum Awards
+9
+2. Indirect Cost Rate
+9
+Section IV - Application
+10
+Application Submission
+10
+Application Procedures
+10
+RFA Response Material Ownership
+10
+Disclaimer
+10
+Applicant Acceptance of Solicitation Terms/Applicant Application Content
+11
+Application Timeline
+11
+Application Materials
+12
+1. Applicant Information 10 points
+12
+2. Description and Timeline of Proposed Project 50 points
+13
+3. Description of Need 30 points
+13
+4. Description of Project Team and Qualifications 10 points
+13
+5. Attachments - 20 points
+14
+Proposed Budget
+14
+Letters of commitment
+14
+Attestation form
+15
+Section V - Application Scoring and Award Process
+15
+Pre-award tasks
+16
+Risk assessment
+16
+1
+COLORADO
+CEO
+Energy Office
+TM
+Total compensation of executives (DOE Terms and Conditions pg 23)
+16
+System for Award Management and Universal Identifier Requirements (Small
+Dollar Grant Agreement Terms and Conditions pg 19)
+17
+Interim Conflict of Interest Policy for Financial Assistance (DOE Terms and
+Conditions pg 36)
+17
+Individuals working on the project (DOE Terms and Conditions pg 36)
+17
+Section VI - Award Terms and Conditions
+19
+Section VII - Awardee Reporting and Auditing
+20
+Reporting
+20
+Auditing
+20
+2
+COLORADO
+CEO
+Energy Office
+TM
+Terms Defined
+Energy Code Board - The Board authorized to develop the model electric ready
+and solar ready code and the model low energy and carbon code pursuant to
+House Bill 22-1362, Colorado Revised Statutes 24-38.5-401.
+Equivalent or More Restrictive Code - A code that provides equivalent or
+greater energy savings, equivalent or greater greenhouse gas emissions
+reductions, or stronger prescriptive requirements relative to the 2021
+International Energy Conservation Code, the model electric ready and solar
+ready code, or the low energy and carbon code.
+International Energy Conservation Code (IECC) - A model energy code
+developed by the International Code Council that regulates the energy
+efficiency and energy use of new residential and commercial buildings.
+Local Government - A statutory or home rule municipality, county, city &
+county, or special district in the State of Colorado.
+Model Electric Ready and Solar Ready Code - A building energy code
+developed by the Energy Code Board that applies to new buildings and major
+renovations or additions to existing buildings and includes pre-wiring
+requirements for future rooftop solar, high-efficiency electric appliances, and
+electric vehicle (EV) charging infrastructure.
+Model Low Energy and Carbon Code - A building developed by the Energy
+Code Board that minimizes overall carbon dioxide emissions associated with
+new and renovated homes and commercial buildings. The code is based on the
+2024 International Energy Conservation Code, with amendments specific to
+Colorado. Cities and counties with building codes must adopt this code, or an
+equivalent or more restrictive code code, when adopting or updating any
+building code after July 1, 2026.
+Partnership - Two or more local governments that jointly apply for funding
+through the program.
+Subrecipient - A non-federal entity that receives a subaward from a
+pass-through entity (in this case, CEO) to carry out part of a federal program.
+3
+COLORADO
+CEO
+Energy Office
+TM
+Section I - Program Overview
+House Bill 22-1362 Building Greenhouse Gas Emissions directs the Colorado Energy
+Office (CEO) to provide financial assistance in the form of grants to local governments
+to assist them in adopting an energy code that meets or exceeds the stringency of the
+state minimum energy code. Prior to July 1, 2026, the state minimum energy code
+was the 2021 International Energy Conservation Code (IECC) and the Model Electric
+Ready and Solar Ready Code developed by the Energy Code Board. As of July 1, 2026,
+the state minimum energy code is the Model Low Energy and Carbon Code developed
+by the Energy Code Board. HB22-1362 also directs CEO to establish multiple programs
+to support local governments in adopting and enforcing the new minimum energy
+codes, and training local governments and the building industry to understand and
+comply with the requirements of the new codes.
+The program will continue to award funds until all funds are expended. The following
+program RFA criteria may be modified or waived by CEO unless otherwise required by
+law. Any modifications will be posted on the program website; please monitor our
+website for the most current version before submitting an application.
+The Colorado Energy Office provides a wide range of building code services and
+resources, including technical assistance, training, and an adoption toolkit. Visit our
+building energy codes webpage for more information.
+In the event of conflict between information provided in this RFA and that found
+in the terms and conditions discussed in Section VII, the terms and conditions
+shall prevail.
+Section II - Eligibility
+1. Eligible Applicants
+Local governments, including:
+One or more departments or agencies of a local government
+Two or more local governments applying as a partnership
+Councils of governments or non-profit organizations applying on behalf of a
+local government or partnership if they either:
+Manage the project on behalf of the local government or partnership for
+whom the council of governments or non-profit organization is
+submitting the application; or
+Pass all award funding on to the local government or partnership on
+whose behalf the council of governments or non-profit organization is
+applying.
+4
+COLORADO
+CEO
+Energy Office
+TM
+Entities that have applied for the Energy Code Adoption and Enforcement Grant
+Program in the past can reapply for this program as long as they meet eligibility
+requirements and the work was not performed as part of a previous award. Priority
+will be given to applicants that have not previously received an award through this
+program.
+2. Allowable Projects & Activities
+Proposals must demonstrate the intent of the local government to vote on and/or
+adopt as well as enforce, at a minimum, the energy code established by the State of
+Colorado, according to the time frame below.
+Applications submitted after January 1, 2026 proposing adoption of an energy
+code must pertain to the Model Low Energy and Carbon Code, or an
+equivalent or more restrictive code. The Model Electric Ready and Solar
+Ready Code is incorporated into the Model Low Energy and Carbon Code.
+Applications proposing enforcement only of a previously-adopted energy code
+submitted after January 1, 2026 must pertain to the 2021 IECC, 2024 IECC,
+Model Electric Ready and Solar Ready Code, or Model Low Energy and Carbon
+Code so long as the proposed code to be enforced was adopted in accordance
+with state law.
+Applicants are encouraged to limit the full proposed project timeline to one year of
+the start of the award. Applications that propose longer timeframes will be
+considered based on the justification for such a timeline provided by the applicant.
+Local governments that already meet the state's minimum energy code at the time of
+application may apply for energy code enforcement and compliance assistance only,
+without voting on and/or adopting additional code updates. However, any applicant
+proposing to use funding to adopt a code that is equivalent or more restrictive than
+the state's minimum energy code shall commit to voting on and/or adopting the
+proposed code.
+In addition, it is the responsibility of the local government to demonstrate they will
+not weaken the minimum codes with amendments developed during the grant
+project. Some options are to include this as a cost in proposals or to seek assistance
+from CEO's free technical assistance services.
+Eligible Costs
+All costs must pertain to energy codes that meet or exceed the state's minimum
+energy code, as outlined above. Costs may be passed through to a consultant or
+considered as staff time, but should be outlined as such in the proposal. Eligible costs
+include:
+5
+COLORADO
+CEO
+Energy Office
+TM
+1. Jurisdiction-specific cost analysis for code adoption and implementation.
+a. These proposals must include a budget and timeline for the local
+governing body to vote on the adoption of the relevant energy code,
+regardless of the results of the analysis.
+2. Technical assistance with energy code adoption and implementation, such as
+preparing code amendments, reviewing for major changes, and updating
+building department guidelines.
+3. Staff time dedicated to code adoption and implementation, including engaging
+with a consultant or study sessions with the local governing body.
+4. Public outreach and engagement on updated energy codes:
+a. These activities should follow the Colorado Department of Public Health
+and Environment's community engagement best practices to the extent
+possible.
+5. Training, scholarship programs, and other workforce development activities for
+local government staff or building and design industry professionals.
+a. Building industry scholarships may cover partial reimbursement of
+certifications, equipment, and travel to complete training in order to
+adhere to the updated codes. Equipment must have a fair market value
+of less than $5,000. Travel costs must be handled in accordance with the
+pertinent federal and state regulations which govern allowability and
+allocability.
+6. Production of physical energy code materials, such as energy code books (which
+can include purchasing the IECC or Model Low Energy and Carbon Code) or
+checklists.
+7. Contract expenses for third party inspection, plan review, and compliance
+verification.
+8. Improvements to or expansions of enforcement of adopted energy code
+requirements.
+9. Pilots or planning for deployment of innovative code enforcement and
+compliance tools.
+10. Additional costs related to code adoption, implementation, and/or
+enforcement with accompanying justification.
+Disallowed Costs
+1. Any expense incurred to adopt a code weaker than the Colorado Model Low
+Energy and Carbon Code
+2. Any expense incurred to develop, adopt, or implement amendments to the
+Model Low Energy and Carbon Code that would weaken the requirements of the
+code.
+3. Any expense incurred to enforce or require compliance with a code older than
+the 2021 IECC, or to enforce or require compliance with any code requirement
+6
+COLORADO
+CEO
+Energy Office
+TM
+that fails to meet the minimum standards of the 2021 IECC, the Model Electric
+Ready and Solar Ready Code, or the Model Low Energy and Carbon Code.
+Additional Cost Information
+All expenditures, in order to be allowable, must be reasonable and appropriate, and
+in compliance with federal and state regulations.
+Federal Regulations
+Regulations establishing the general parameters of allowable
+expenditures are set forth in 2 CFR Part 200 as amended by 2 CFR Part
+910.
+Subrecipients must operate a financial management system which meets
+or exceeds the minimum requirements set forth in 2 CFR 200.
+State Grants and Contracts
+No materials, grantee expenses, or contractor expenses, may be
+incurred for any work completed outside of the performance period.
+Procurement
+Per 2 CFR 200.317 - 200.32, subrecipients must maintain and use
+documented procedures for procurement transactions under a Federal
+award or subaward, including for acquisition of property or services.
+These documented procurement procedures must be consistent with
+State, local, and tribal laws and regulations and the standards identified
+in §§ 200.317 through 200.327.
+Audits
+See the Department of Energy Terms & Conditions in the RFA folder
+(Term 24, page 11) for more audit information.
+Annual independent audits must be paid for by the subrecipient.
+Accessibility
+Subrecipients are required to comply with HB21-1110 Colorado Laws For
+Persons With Disabilities. HB21-1110 makes it a state civil rights violation
+for a government agency to exclude people with disabilities from
+receiving services or benefits because of lack of accessibility. Visit the
+State's Accessibility Website for more information and resources.
+3. Prioritized Applicants
+The following areas will inform the evaluation of applications; however none of these
+factors will prevent an applicant from being eligible for funding.
+Underserved Communities
+Jurisdictions that include disproportionately impacted communities, as defined by the
+State of Colorado, including federal Justice40 communities, will be prioritized in this
+grant program. CEO's Disproportionately Impacted Community Guidance Document
+outlines steps to determine if your community or portions of your community meets
+7
+COLORADO
+CEO
+Energy Office
+TM
+this definition (documentation is required in Section IV Application Materials).
+Applicants are also strongly encouraged to address affordable housing considerations
+in their applications as applicable in their community.
+Partnerships
+Applicants who partner with other local governments to collaborate on energy code
+adoption, implementation, and enforcement will also be prioritized in this grant
+program. CEO recognizes the numerous benefits that partnerships offer, including
+regional collaboration and consistency in code adoption and implementation, more
+efficient and effective use of funding, streamlined engagement with technical
+consultants and subject matter experts, shared resources for enforcement and
+compliance verification, and reduced burden on individual communities. Partnerships
+should submit a single application, with a single local government, council of
+governments, or non-profit organization designated as the lead applicant on behalf of
+the partnership.
+If a partnership is awarded under this program, the lead applicant will be
+responsible for any distribution of funding among members of the partnership,
+fulfilling reporting requirements, and management of all reporting, engagement,
+and communication with the Colorado Energy Office on behalf of the partnership.
+Workforce Development
+CEO encourages applicants to include workforce development activities outlined
+under "eligible costs" with their code adoption proposals whenever possible. CEO
+recognizes that the deployment of building codes cannot be successful without a
+robust and diverse building workforce.
+Section III - Grant Amounts
+Grants awarded through this program will be provided as a reimbursement of
+any incurred expenses approved as part of an awarded project. For projects that
+involve code adoption, there are two options for payment of these costs in alignment
+with Section 11.2 Allowable Projects and Activities:
+1. Full reimbursement after the codes have been adopted and/or voted on by the
+local governing board, or
+2. Incremental reimbursement after tangible milestones towards adoption have
+occurred, with 15% of the proposed funding withheld until after the codes have
+been adopted and/or voted on by the local governing board.
+Applicants proposing the second reimbursement option should include these tangible
+milestones with timelines in their project proposal and budget. Should the applicant
+fail to achieve any of the proposed milestones, no further payments shall be made to
+8
+COLORADO
+CEO
+Energy Office
+TM
+that applicant for code adoption. Other eligible costs outside of code adoption can be
+reimbursed no more frequently than monthly.
+1. Minimum and Maximum Awards
+The minimum and maximum awards that will be provided under this program are
+shown below. Applicants are not required to provide matching funds for this program.
+However, they will need to report supplemental funds expenditures when requesting
+reimbursements (more details in the budget portion of Section IV Application).
+Eligible Entity
+Minimum Award
+Maximum Award
+Single local government
+$10,000
+$125,000
+$249,999, with no partner
+Partnership
+$20,000
+receiving more than
+$125,000
+2. Indirect Cost Rate
+Indirect costs are those that have been incurred for common or joint objectives and
+cannot be readily identified with a particular final cost objective or grant account. If
+the Applicant maintains an indirect rate and chooses to include this on the application
+budget, it is expected that the amount budgeted will reflect the approved rate. The
+Applicant's indirect costs must be allowable, and comply with the requirements of the
+Terms and Conditions of the Federal Awards and 2 CFR Part 200 as amended by 2 CFR
+910.
+Be prepared to submit one of the following if awarded:
+a. Federally Negotiated Indirect Rate Agreement - An entity that receives funding
+directly from the federal government must recover indirect costs by using a
+federally negotiated indirect cost rate from their Federal cognizant agency.
+a. de minimis indirect cost rate - An entity may elect to charge a de minimis rate
+of 10% of modified total direct costs as defined at 2 CFR 200.414 if they do not
+have a Federally Negotiated Indirect Rate Agreement.
+Regardless of the option chosen, CEO requires all indirect rates to comply with
+generally accepted accounting principles and be fully supported by actual cost data.
+9
+COLORADO
+CEO
+Energy Office
+TM
+Section IV - Application
+Application Submission
+Applicants are required to respond to all sections of the "Application Materials"
+portion of this document; failure to do so may disqualify them from the round in
+which they are applying. Each section is labeled with maximum possible points as
+scored by the evaluation team - total possible points is 120.
+Applicants should submit documents outlined in the "Attachments" section as
+separate documents to the application. Application materials must be submitted as
+PDF files, with the exception of the proposed budget, which may be submitted as a
+Microsoft Excel file.
+Applications must be submitted to Adam Berry (adam.berry@state.co.us) by 5:00 PM
+MT on the closing date of the desired funding round. Please use the subject line
+"[Local Government/Partnership Name] Energy Code Adoption Grant Application
+Submission".
+Application Procedures
+This Request for Applications (RFA) is issued by the Colorado Energy Office (CEO). The
+CEO contact listed in these instructions is the sole point of contact concerning this
+RFA. During the solicitation process for this RFA, all applicant questions regarding RFA
+requirements should be submitted through our Q&A form or brought up in our virtual
+office hours as outlined in the "application timeline" section below.
+Applicants are responsible for monitoring for publication of modifications to this
+solicitation on the program website. Written inquiries will also be summarized and
+posted to this website. It is incumbent upon applicants to monitor for any such
+notices carefully and regularly. Applicants are not to contact any other state office or
+employee regarding this RFA. Applicants are not to rely on any other statements that
+alter any specification or term or condition of the solicitation.
+RFA Response Material Ownership
+All material submitted in response to this solicitation becomes the property of the
+State after the application has been submitted.
+Disclaimer
+All statistical and fiscal information contained within this RFA, and any amendments
+and modifications thereto, reflect the best and most accurate information available
+to the CEO at the time of RFA preparation. No inaccuracies in such data shall
+constitute a basis for legal recovery of damages or protests, either real or punitive,
+10
+COLORADO
+CEO
+Energy Office
+TM
+except to the extent that any such inaccuracy was a result of intentional
+misrepresentation by the CEO.
+Applicant Acceptance of Solicitation Terms/Applicant Application Content
+Application materials submitted in response to this RFA shall constitute a binding
+offer. Acknowledgment of this condition shall be indicated by the signature on the
+attestation document of the applicant or an officer of the applicant legally authorized
+to execute contractual obligations and bind the applicant to the application. By
+submitting an application, the applicant affirms its acceptance of the terms and
+requirements of this RFA, including its attachments and appendices, without
+exception, deletion, or qualification - and without making its offer contingent. The
+applicant further agrees to cooperate with the CEO and expedite the contracting
+process upon notice of award.
+Application Timeline
+Applications may be submitted continuously and will be evaluated according to the
+timeline below. Each subsequent round of applications opens the day after the
+previous round closes. Each grant round is tentative and contingent on available state
+or federal funding. Additional funding rounds may be added beyond the time period
+outlined below, pending additional funding for the program.
+Activity
+Date
+Time (MT)
+Request for Applications posted
+July 1, 2024
+12:00 PM
+Notification of Award
+Within approx. 30 days
+N/A
+of deadline
+FY27 First Round Application Deadline
+November 27, 2026
+5:00 PM
+FY27 Second Round Application Deadline
+May 28, 2027
+5:00 PM
+Application Materials
+1.
+Applicant Information - 10 points
+Lead Applicant
+Applicant Name:
+Applicant's Primary Mailing Address:
+Primary Point of Contact (POC):
+11
+COLORADO
+CEO
+Energy Office
+TM
+POC Phone Number:
+POC Email Address:
+Applicant's Jurisdiction Population
+(including source of population data):
+Applicant's Currently Adopted Energy
+Code (including any stretch codes):
+Partner Applicant (if applicable; provide information for each partner)
+Applicant Name:
+Applicant's Primary Mailing Address:
+Primary Point of Contact (POC):
+POC Phone Number:
+POC Email Address:
+Applicant's Jurisdiction Population (including
+source of population data):
+Applicant's Currently Adopted Energy Code:
+Total Funding Amount Requested:
+2.
+Description and Timeline of Proposed Project - 50 points
+Provide a description of the proposed project which includes, at a minimum:
+A description of the energy codes that pertain to the proposal as outlined
+under Section II.2 Allowable Projects and Activities.
+An outline of the work plan of the project and the steps the applicant will take
+as outlined in Section II.2 Allowable Projects and Activities.
+A description of how the jurisdiction(s) plan to enforce the requirements of the
+energy codes.
+A timeline that estimates the duration of each phase of the work plan.
+Estimated energy and/or emissions reduction potential of the proposed code
+update for your jurisdiction (or across applying jurisdictions) at the community
+level (not the building level). Please see this sample emission reduction
+calculation for more information, which is also available in the RFA folder.
+12
+COLORADO
+CEO
+Energy Office
+TM
+A description of any existing funding and/or programming for the project and
+how the proposal will supplement this funding (see budget section below for
+additional details).
+For partnerships only: Provide a description of how each partner will actively
+support and demonstrate participation in the partnership.
+Work plan and timeline information may be displayed in a table format and in
+combination as appropriate.
+3.
+Description of Need - 30 points
+Provide a description of the need for funding from the Colorado Energy Office (CEO)
+to achieve the proposed energy code adoption, implementation, and/or enforcement,
+including an explanation of how the proposed project would not be achievable
+without CEO funding or would be enhanced or improved with CEO funding.
+Include your disproportionately impacted community determination as outlined in the
+Disproportionately Impacted Community Guidance Document. Include any relevant
+background information on affordable housing and workforce development in your
+community and explain how these issues will be taken into account throughout the
+proposed project.
+4.
+Description of Project Team and Qualifications - 10 points
+Identify each member of the team that will work on the proposed project, including
+descriptions of previous experience and qualifications of each team member.
+Applicants proposing to contract with a technical consultant or other subject matter
+expert should describe the qualifications of the consultant or expert they intend to
+contract with and may substitute the consultant's/expert's qualifications for those of
+the applicant. Qualifications may include subject matter expertise, experience with
+state and federal grants, experience with accessibility requirements in HB21-1110,
+and other components outlined in this RFA.
+5.
+Attachments - 20 points
+Proposed Budget
+Provide a budget proposal (see sample budget here) that outlines the proposed
+expenditures during each phase of the project. For each expenditure, please include
+justification as well as an appropriate category ("energy code adoption &
+implementation" or "energy code enforcement").
+The budget should identify any funding that currently exists to support the project.
+This is to ensure that a grant award is funding additional work that is supplemental to
+work already occurring or for which funding has been allocated, and not supplanting
+such work or funding. Supplanting occurs when a state or unit of local government
+reduces state or local funds for an activity, specifically because federal funds are
+available (or expected to be available) to fund that same activity. Supplementing
+13
+COLORADO
+CEO
+Energy Office
+TM
+occurs when federal funds are used to enhance existing state or local funds for
+program activities.
+In addition to the overall budget proposal, applicants representing a partnership
+should include a budget proposal from each member of the partnership that intends
+to directly expend funding or be reimbursed for expenditures that outlines the
+proposed spending. The budgets should include the same elements outlined above.
+The total of all proposed expenditures in each member budget proposal should add up
+to the overall proposed expenditures of the partnership budget proposal.
+The budget may either be submitted as a PDF or a Microsoft Excel file. Applicants
+proposing to contract with a specific technical consultant or other subject matter
+expert must submit cost estimates/bids from multiple sources to demonstrate
+compliance with the procurement regulations outlined in Section II. This may include
+proposals to share contracting resources in accordance with 2 CFR 200.318(e).
+No formal contracting with a consultant should occur prior to the execution of a grant
+agreement between the applicant and the CEO, though estimates or bids may be
+solicited.
+Letters of commitment
+Submit a letter of commitment signed by the applying jurisdiction that outlines its
+intent to 1) vote on and/or adopt or 2) enforce an energy code equivalent to or
+stronger than Colorado's minimum energy code. Applicants submitting on behalf of a
+partnership are required to submit a letter of commitment from each partner.
+Local ordinances or resolutions passed by a local governing body affirming a
+jurisdiction's intent to 1) vote on and/or adopt or 2) enforce an energy code
+equivalent to or stronger than Colorado's minimum energy code may be submitted in
+lieu of letters of commitments.
+CEO will not accept climate action plans or other documents that do not specifically
+include the energy code commitments outlined above. We highly encourage
+applicants to engage with all local governing bodies and building departments
+involved in a proposal to ensure their understanding and commitment to the
+proposed work. Note that letters of commitment are not intended to serve as a
+legally binding commitment.
+Attestation form
+Submit an attestation form (see example form here) which states that the applicant is
+aware of all requirements of this program, has provided accurate information in all
+responses and submissions in their application, and will comply with all state and
+federal laws and requirements.
+14
+COLORADO
+CEO
+Energy Office
+TM
+Section V - Application Scoring and Award Process
+All applications received under this RFA will be reviewed by a scoring committee that
+will consider the following criteria:
+1. Demonstrated intent of the local government(s) to vote on and/or adopt and
+enforce an energy code that, at a minimum, meets the State of Colorado's
+requirements, if a code that meets such requirements has not already been
+adopted.
+2. Need for funding to achieve the desired energy code update or to implement
+an updated energy code, whether or not the applicant meets prioritized
+criteria outlined in Section II.3, and any awards already received through this
+program.
+3. Applicant's technical qualifications to carry out the project, or applicant's
+engagement with a technical consultant or other subject matter expert to
+assist with carrying out the project.
+4. Demonstrated capability, or demonstrated intent to develop capability, to
+achieve full enforcement of and compliance with the adopted energy code(s).
+5. Energy and/or emissions reduction potential of the applicant's proposed
+project.
+Applicants will be notified by email whether their application has been selected for
+funding or denied. At any point during the selection process, if CEO determines that it
+is in the best interest of the State of Colorado, it reserves the right to request
+additional information to assist in the review process. Moreover, it reserves the right
+to approve selected portions of applications, to reject all applications or to resolicit
+the entire grant solicitation. The State may conduct discussions with applicants for
+the purpose of promoting understanding of the State's requirements and the
+applicant's application, to clarify requirements and adjust services to be performed,
+and to adjust prices. Changes to applications, if permitted, will be requested by the
+State in writing from applicants. Additional changes may be negotiated during the
+development of a grant agreement (see below).
+Applicants who believe that they should have been awarded a grant when they were
+not or who believe that they were otherwise not properly awarded a grant may
+submit their appeal to the Energy Code Program Manager, Adam Berry
+(adam.berry@state.co.us). who shall review the appeal and make a final
+determination. The sole remedy for Applicants shall be potential funding depending
+on availability of funding. Appeals are to be presented within 30 days of the day of
+issuance of a grant award decision.
+Compliance with Executive Orders (EOs) D 2025 005 and D 2025 011
+These EOs relate to compliance with recent housing and strategic growth legislation
+and direct staff to consider a grant applicant's compliance status when prioritizing
+15
+COLORADO
+CEO
+Energy Office
+TM
+awards. CEO will still use the full scoring criteria and factors noted in Section V to
+determine grant funding allocations. CEO will then consider applicants' compliance
+status with the laws referenced in the EOs as a tie-breaking factor, scoring those that
+are in compliance with the relevant land use and housing laws more favorably to help
+prioritize awards among otherwise similar applications. We will also consider funding
+need, funding requested, and geographic representation among other things in our
+scoring (e.g. low-income focus; quality of the application).
+Pre-award tasks
+Applications that are selected for funding (also referred to as "subrecipients" below)
+will proceed with development of a grant agreement that will establish final award
+funding amounts, terms and conditions, the scope of work to be completed by the
+subrecipients, the information required to be reported to CEO throughout the project,
+and any additional terms or information necessary to execute a grant agreement.
+Documents referenced below are outlined further in Section VI Award Terms &
+Conditions and included in the RFA folder.
+Risk assessment
+Subrecipients will be required to complete a risk self-assessment. The risk assessment
+will help CEO create a monitoring plan that will be updated periodically. Per 2 CFR
+200.332, the risk assessment may include:
+Prior experience with same or similar awards
+Results of previous audits
+Whether there are new personnel or substantially changed systems, policies or
+procedures
+If receiving funding directly from a federal agency, the federal agency
+monitoring results
+Processes in place to adequately manage federal funding
+Total compensation of executives (DOE Terms and Conditions pg 23)
+Subrecipients shall report the names and total compensation of each of their
+five most highly compensated executives for the preceding completed fiscal
+year, if:
+1. In the preceding fiscal year, the subrecipient received:
+a. 80 percent or more of its annual gross revenues from federal
+procurement contracts (and subcontracts) and federal financial
+assistance subject to the Transparency Act, as defined at 2 CFR
+170.320 (and subawards); and
+b. $25,000,000 or more in annual gross revenues from federal
+procurement contracts (and subcontracts), and federal financial
+assistance subject to the Transparency Act (and subawards).
+16
+COLORADO
+CEO
+Energy Office
+TM
+2. The public does not have access to information about the
+compensation of the executives through periodic reports filed under
+section 13(a) or 15(d) of the Securities Exchange Act of 1934 (15
+U.S.C. 78m(a), 78o(d)) or section 6104 of the Internal Revenue Code
+of 1986. (To determine if the public has access to the compensation
+information, see the U.S. Security and Exchange Commission total
+compensation filings at http://www.sec.gov/answers/execomp.htm).
+System for Award Management and Universal Identifier Requirements (Small
+Dollar Grant Agreement Terms and Conditions pg 19)
+SAM. Subrecipient shall maintain the currency of its information in SAM until
+the Subrecipient submits the final financial report required under the Award
+or receives final payment, whichever is later. Subrecipient shall review and
+update SAM information at least annually after the initial registration, and
+more frequently if required by changes in its information.
+Unique Entity ID. Subrecipient shall provide its Unique Entity ID to its
+Recipient, and shall update Subrecipient's information at
+http://www.sam.gov at least annually after the initial registration, and more
+frequently if required by changes in Subrecipient's information.
+Interim Conflict of Interest Policy for Financial Assistance (DOE Terms and
+Conditions pg 36)
+We are requiring subrecipients to submit written standards of conduct covering
+organizational conflicts of interest pertaining to 2 CFR 200.318(c)(2). The DOE
+interim Conflict of Interest Policy for Financial Assistance (COI Policy) can be found
+at
+https://www.energy.gov/management/department-energy-interim-conflict-interest
+-policy-requirements-financial-assistance. This policy is applicable to all
+non-federal entities applying for, or that receive, DOE funding by means of a
+financial assistance award (e.g., a grant, cooperative agreement, or technology
+investment agreement). The requirements of the interim COI Policy flow down to
+any subrecipient non-federal entities, with the exception of DOE National
+Laboratories. Further, the Recipient must identify all financial conflicts of interests
+(FCOI), i.e., managed and unmanaged/unmanageable, in its initial and ongoing
+FCOI reports.
+Individuals working on the project (DOE Terms and Conditions pg 36)
+Provide the following information for (1) all senior and key personnel; and (2) each
+person who has worked or is expected to work at least one person month per year
+on the project regardless of the source of compensation (a person month equals
+approximately 160 hours of effort).
+i. Name
+ii.
+Organization
+iii.
+Job Title
+17
+COLORADO
+CEO
+Energy Office
+TM
+iv.
+Role in the project
+V.
+Start and end date (month and year) working on the project
+vi.
+State, U.S. territory, and/or country of residence
+vii.
+Whether this person collaborated with an individual or entity located in a
+foreign country in connection with the scope of this Award, and
+viii.
+If yes to vii, whether the person traveled to the foreign country as part of
+that collaboration, and, if so, where and what the duration of stay was.
+Award Management Reporting - Current and Pending Support (Federal Assistance
+Reporting Checklist pg 27)
+Prior to and throughout the life of the award, subrecipients must submit current
+and pending support disclosure statements and a CV or Biosketch for any new PI and
+senior/key personnel added to the project funded under this Award within thirty
+(30) days of the individual joining the project. In addition, if there are any changes
+to current and pending support disclosure statements previously submitted,
+subrecipients must submit updated statements within fifteen (15) days of the
+change.
+Monitoring Plan
+The monitoring plan developed by CEO may include various tools such as desk reviews
+and on-site monitoring, examples of which are provided below. Subrecipients are
+expected to comply with the plan and provide documentation and supporting
+materials as needed. The monitoring plan will also include possible enforcement
+actions CEO may take for noncompliant subrecipients as described in 2 CFR
+200.339-343.
+Desk reviews
+Financial
+Backup documentation for reimbursements
+Chart of accounts and accounting system description
+Procedures for cash management
+Most recent single audit report (if applicable)
+Policy and procedures for accounting practices and internal
+controls
+Board of Directors financial reports (if applicable)
+Current year budget
+Payment records, reported expenditures (including capital assets),
+etc.
+Costs are reasonable and allowable
+Supplemental funds are being reported
+Organizational
+Organizational charts that identify individuals
+Human Resource policies and procedures
+Conflict of interest policy
+18
+COLORADO
+CEO
+Energy Office
+TM
+Time and effort documentation
+Procedures to protect personally identifiable information
+Procurement procedures
+Performance
+Performance reports
+Data regarding end users
+Evaluation data or findings
+Description of performance improvement process
+Accessibility compliance
+On-site monitoring
+Record retention of all financial, programmatic, and administrative
+documents and ensure storage in a secure location (if applicable)
+Accounting system can separate revenues and expenditures by funding
+source
+Verify disposition of equipment follows 2 CFR 200 requirements
+Per § 200.318, subrecipients must maintain oversight to ensure that their contractors
+perform in accordance with the terms, conditions, and specifications of their
+contracts or purchase orders.
+Section VI - Award Terms and Conditions
+CEO has included the Department of Energy's Special Terms & Conditions in the RFA
+folder. These terms and conditions, including the Intellectual Property Provisions,
+apply to all subrecipients awarded through this grant program (and contractors, as
+appropriate). See, 2 CFR 200.101(b)(2), 2 CFR 200.327, and 2 CFR 200.332. CEO has
+also included the Department of Energy's Federal Assistance Reporting Checklist.
+Applicants can find the most current Small Dollar Grant Award Terms and Conditions
+on the Office of the State Controller's Purchase Order Terms & Conditions webpage.
+Note that these terms and conditions list the State's required legal provisions but do
+not include the specific scope of work and budget requirements for this RFA.
+The applicant is expected to review the terms and conditions as applicable; any
+exceptions are to be noted. Applicants agreeing to abide by the requirements of the
+RFA are also agreeing to abide by the terms and conditions. It may be possible to
+negotiate some of the wording in the final contract; however, there are many
+provisions, such as those contained in the State Special Provisions, which cannot be
+changed. Applicants are cautioned that the State believes modifications to the
+standard provisions, terms and conditions, and the State Special Provisions constitute
+increased risk to the State and increased costs. Therefore, the scope of requested
+exceptions is considered in the scoring of applications.
+19
+COLORADO
+CEO
+Energy Office
+TM
+Section VII - Awardee Reporting and Auditing
+Reporting
+Each awardee will be required to:
+Provide monthly written reports on the programmatic and financial status of
+the project. Reports should include progress on each task in the grant
+agreement, a comparison of expenditures and allocations for budget line items,
+verification of allowable costs, any difficulties faced during the reporting
+period, and an overview of next action items. CEO staff may require additional
+items to be included throughout the period of performance.
+Meet with CEO staff regularly (up to monthly) to discuss the status of the
+project, as CEO determines necessary.
+Notify CEO upon adoption of an updated energy code and provide a copy of all
+amendments and ordinances.
+Report on any local governing meetings where proposed energy codes were
+considered but not adopted.
+Report on any trainings or certifications provided to builders, contractors,
+designers, architects, building officials, or building department staff that will
+improve understanding of the adopted energy code requirements.
+Provide additional federal reporting such as energy savings, job creation
+outcomes, community event metrics, and products developed as part of the
+grant (e.g. technical assistance, webinars, training curriculum).
+Provide a final report consisting of the programmatic and financial conclusion
+of the project, as well as the accomplishment of objectives laid out in the
+grant agreement.
+Attend a meeting with other awardees to discuss progress of funding support,
+share learnings and best practices, and any changes needed to the program.
+(This may occur during or after the period of performance)
+The lead applicant of an awarded partnership will be responsible for complying with
+the reporting requirements listed above. Reporting is required regardless of whether
+the subrecipient has requested reimbursements in a given month.
+Auditing
+See the Department of Energy Terms & Conditions in the RFA folder (Term 24, page
+11) for full audit information.
+20

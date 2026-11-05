@@ -1,0 +1,273 @@
+{
+  "schemaVersion": 1,
+  "status": "prelabeled",
+  "family": "CO state",
+  "deadlines": [
+    {
+      "kind": "preapp",
+      "label": "Second cycle concept paper, through the website form by 5 pm (no time zone stated)",
+      "date": "2027-01-21",
+      "time": "17:00",
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Second Cycle - Concept papers due: January 21, 2027"
+    },
+    {
+      "kind": "application",
+      "label": "Second cycle full application, by invitation only",
+      "date": "2027-03-11",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Applications due: March 11, 2027"
+    },
+    {
+      "kind": "preapp",
+      "label": "First cycle concept paper (past), by 5 pm (no time zone stated)",
+      "date": "2026-07-23",
+      "time": "17:00",
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "First Cycle - Concept papers due: July 23, 2026"
+    },
+    {
+      "kind": "application",
+      "label": "First cycle full application (past), by invitation only",
+      "date": "2026-09-10",
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Applications due: September 10, 2026"
+    },
+    {
+      "kind": "application",
+      "label": "Urgent land acquisition proposals accepted at any time, outside the grant cycles",
+      "date": null,
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Urgent land acquisition proposals will be accepted at any time, regardless of scheduled grant cycles."
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": null,
+    "periodMonths": null,
+    "expectedAwards": null,
+    "range": {
+      "min": null,
+      "max": 3000000,
+      "quote": "Competitive proposals are generally up to $3 million per project. However, GOCO may consider more significant investments in high-impact projects when funding is available."
+    },
+    "caps": [
+      {
+        "what": "grant share of a conservation easement's value (not fee simple acquisitions)",
+        "value": 50,
+        "quote": "Up to 50% of the value of a conservation easement (this does not apply to fee simple acquisitions)"
+      }
+    ],
+    "match": {
+      "required": false,
+      "ratio": null,
+      "appliesTo": null,
+      "quote": "GOCO does not have a set match requirement for our funding opportunities"
+    },
+    "quote": "Generally, up to $3 million per project. GOCO may suggest a revised award amount as needed."
+  },
+  "sections": [
+    {
+      "name": "Brief project description",
+      "order": 1,
+      "limit": {"type": "words", "value": 50},
+      "conditional": null,
+      "component": "Concept paper (project summary form)",
+      "quote": "Brief project description (50 words or less; 3-4 sentences)"
+    },
+    {
+      "name": "Concept Narrative",
+      "order": 2,
+      "limit": {"type": "pages", "value": 2},
+      "conditional": null,
+      "component": "Concept paper",
+      "quote": "Write a short narrative (up to 2 pages; 11 pt font or larger; 1-inch margins) in response to the following prompts."
+    },
+    {
+      "name": "Proposal Narrative",
+      "order": 3,
+      "limit": {"type": "pages", "value": 5},
+      "conditional": "Invited applicants only",
+      "component": "Final application",
+      "quote": "Responses to Proposal Narrative prompts (up to five pages)"
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Resource conservation",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Concept Narrative", "Proposal Narrative"],
+      "quote": "Resource conservation – We value strategic land conservation and resource protection work."
+    },
+    {
+      "name": "Outdoor stewardship",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Concept Narrative", "Proposal Narrative"],
+      "quote": "Outdoor stewardship – We support sustainability of and improvements to the state’s natural and recreational resources."
+    },
+    {
+      "name": "Community vitality",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Concept Narrative", "Proposal Narrative"],
+      "quote": "Community vitality – We invest in conservation and outdoor recreation efforts that support communities and quality of life."
+    },
+    {
+      "name": "Equitable access",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Concept Narrative", "Proposal Narrative"],
+      "quote": "Equitable access – We partner with communities to break down barriers to the outdoors."
+    },
+    {
+      "name": "Youth connections",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Concept Narrative", "Proposal Narrative"],
+      "quote": "Youth connections – We believe children and their families deserve opportunities to get outside and experience all the benefits of doing so."
+    },
+    {
+      "name": "Urgency (threat of conversion or time-sensitive issues)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Concept Narrative", "Proposal Narrative"],
+      "quote": "Urgency – Priority goes to projects with significant natural resources and community benefits under threat of conversion, or projects that address time-sensitive issues."
+    },
+    {
+      "name": "Need (benefit most from GOCO funding, leverage, statewide distribution)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Concept Narrative", "Proposal Narrative"],
+      "quote": "Priority goes to projects that will benefit most from GOCO funding, whether there are few other funding options or GOCO’s contribution will help leverage a match from another organization or the community."
+    },
+    {
+      "name": "Outcomes (public access, habitat, watersheds, viewsheds, cultural resources, parks for disproportionately impacted communities)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Concept Narrative", "Proposal Narrative"],
+      "quote": "Outcomes –We consider how projects provide or protect passive public recreation access; essential wildlife habitat and migration corridors; critical watersheds, waterways, and riparian ecosystems"
+    },
+    {
+      "name": "Advancing relevant plans and resources",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Concept Narrative", "Proposal Narrative"],
+      "quote": "Advancing relevant plans and resources – We consider how projects align with local, regional, or statewide efforts"
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": "1-inch",
+    "font": null,
+    "fontSizePt": 11,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Text documents use 11 pt font or larger",
+      "Submit materials in plain text (no letterhead or logos)",
+      "Submit an individual document for each category (narrative as one document, maps compiled as one document)",
+      "Each document must be 30 MB or less",
+      "Narrative submitted as doc or docx; budget as xls or xlsx",
+      "Concept paper submitted through the website form by 5 pm on the deadline",
+      "Maps up to two pages; photos up to two pages",
+      "Optional budget narrative one page or less"
+    ],
+    "quote": "Text documents should use 11 pt font or larger and have 1-inch margins. Please submit materials in plain text (no letterhead or logos)."
+  },
+  "eligibility": [
+    {
+      "item": "Eligible organizations: Colorado cities, towns and counties; Title 32 special districts eligible for Conservation Trust Fund distributions; land conservation organizations; political subdivisions whose mission is open space; Colorado Parks and Wildlife",
+      "quote": "Organizations eligible for GOCO funding include Colorado cities, towns, and counties; Title 32 special districts; land conservation organizations that advance the acquisition of open space; political subdivisions of the State of Colorado whose missions are to identify, manage, or acquire open space and natural areas; and Colorado Parks and Wildlife."
+    },
+    {
+      "item": "Eligible projects are fee-simple land acquisitions that provide public access; conservation easements are considered when tax credits are financially insufficient or impractical",
+      "quote": "Eligible projects are fee-simple land acquisitions that provide public access. GOCO also considers conservation easements when tax credits are financially insufficient or impractical."
+    },
+    {
+      "item": "The full application is by invitation only, after GOCO reviews concept papers",
+      "quote": "The full application is by invitation only, after GOCO reviews concept papers"
+    },
+    {
+      "item": "Acquisition costs for existing buildings and other structures, and project contingency, are not covered",
+      "quote": "The following expenses will not be covered: • Acquisition costs associated with existing buildings and other structures • Project contingency"
+    },
+    {
+      "item": "Projects involving federal land must be discussed with GOCO staff before submitting a concept paper or application",
+      "quote": "Applicants seeking funding for projects involving federal land must discuss the proposal with GOCO staff prior to submitting a concept paper or application."
+    },
+    {
+      "item": "GOCO cannot participate in acquisitions involving condemnation or the threat of condemnation",
+      "quote": "GOCO cannot participate in property acquisitions involving condemnation or the threat of condemnation."
+    },
+    {
+      "item": "Fee title applicants must discuss their plan to protect the property from development with their GOCO regional program officer",
+      "quote": "Applicants seeking funding for a fee title acquisition must discuss their plan to protect the property from present and future development with their GOCO regional program officer."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "Concept paper: budget on the GOCO template (xls or xlsx)",
+      "userWrites": true,
+      "quote": "Budget – available on Land Acquisition Web page; submit file in xls or xlsx"
+    },
+    {
+      "item": "Transaction and Due Diligence information (required attachment; also in the final application)",
+      "userWrites": true,
+      "quote": "Required Attachments • Transaction and Due Diligence information"
+    },
+    {
+      "item": "Project maps (up to two pages)",
+      "userWrites": false,
+      "quote": "Maps (up to two pages) - We recommend a context map showing surrounding land uses and a detailed/schematic map."
+    },
+    {
+      "item": "Project photos or footage (up to two pages)",
+      "userWrites": false,
+      "quote": "Up to two pages of photos, links to property footage, or other assets that display the property."
+    },
+    {
+      "item": "Final application: resolution from the applicant's governing body meeting GOCO's resolution requirements",
+      "userWrites": false,
+      "quote": "Resolution from the applicant’s governing body (your resolution must meet GOCO’s resolution requirements )"
+    },
+    {
+      "item": "Final application: wildlife review and completed Wildlife Review Form (with the local CPW Area Wildlife Manager)",
+      "userWrites": true,
+      "quote": "Projects invited to the application phase will be required to submit the wildlife review form."
+    },
+    {
+      "item": "Final application: indication of support (up to five, e.g. letters of support)",
+      "userWrites": false,
+      "quote": "Indication of support (up to five; may include letters of support from partners, community members, volunteers; a summary of media articles, broadcasts, testimonials, etc.)"
+    }
+  ],
+  "libraryRequired": []
+}

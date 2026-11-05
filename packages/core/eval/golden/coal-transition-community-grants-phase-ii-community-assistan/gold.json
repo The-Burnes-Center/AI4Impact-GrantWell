@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "status": "prelabeled",
+  "family": "CO state",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "Rolling; applications accepted and reviewed while funds remain",
+      "date": null,
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Applications will be accepted and reviewed on a rolling basis."
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": null,
+    "periodMonths": null,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [],
+    "match": null,
+    "quote": null
+  },
+  "sections": [
+    {
+      "name": "Description of the proposal or project",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": "Funding request form",
+      "quote": "The application form requests: - A description of the proposal or project;"
+    },
+    {
+      "name": "Fit with any applicable transition plan",
+      "order": 2,
+      "limit": null,
+      "conditional": null,
+      "component": "Funding request form",
+      "quote": "How the proposal or project fits within any applicable transition plan; and"
+    },
+    {
+      "name": "Anticipated impacts (jobs created, property tax generated, economic development benefits, other impacts)",
+      "order": 3,
+      "limit": null,
+      "conditional": null,
+      "component": "Funding request form",
+      "quote": "Information on the anticipated impacts of the proposal or project, including jobs created, property tax generated, economic development-related benefits, and any other impacts to the general welfare of the community."
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Pre-application meeting with OJT and OEDIT staff",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Request a meeting with OJT and OEDIT staff prior to applying."
+    },
+    {
+      "name": "Tier One: support from 60 percent or more of the designated jurisdictions",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Secure support for your request from 60 percent or more of the “designated jurisdictions” in the transition community your project is intended to serve"
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Apply through the online funding request form, answering all questions and uploading any additional information requested"
+    ],
+    "quote": "Answer all questions completely, and upload any additional information requested. Do not submit incomplete applications."
+  },
+  "eligibility": [
+    {
+      "item": "Only Coal Transition Communities and eligible entities may receive funding; grants are for community entities, not individuals",
+      "quote": "By law, only Coal Transition Communities and “eligible entities” may receive this funding."
+    },
+    {
+      "item": "Eligible entities: economic development districts; counties, municipalities and other political subdivisions (including public K-12 schools and special districts); Indian tribes; registered apprenticeship programs; institutions of higher education; public or private nonprofits",
+      "quote": "Economic development districts - Counties, municipalities, or other political subdivisions of the State (including public K12 schools and special districts) - Indian tribes - Registered apprenticeship programs - Institutions of higher education - Public or private nonprofit organizations or associations."
+    },
+    {
+      "item": "An eligible entity must be physically located in or serve one or more Tier One or Tier Two coal transition communities",
+      "quote": "To be eligible to apply for and receive funding, an “eligible entity” must either be physically located in or serve one or more Tier One or Tier Two coal transition communities."
+    },
+    {
+      "item": "Tier One applications must show support from at least 60 percent of the community's designated jurisdictions (Pueblo: both Pueblo County and the City of Pueblo); not required for Tier Two",
+      "quote": "Regardless of who applies, applications for projects in a Tier One community must show support from at least 60 percent of the “designated jurisdictions” in that community."
+    },
+    {
+      "item": "Applications that have not completed the pre-application meeting and jurisdiction support steps are not considered",
+      "quote": "OJT and OEDIT will not consider applications that have not completed these first two steps."
+    },
+    {
+      "item": "Yampa Valley and Morgan County funds are fully awarded; limited funding remains for Pueblo County, the West End of Montrose County and Tier II entities",
+      "quote": "At this time, limited funding remains available for Pueblo County, the West End of Montrose County, and eligible Tier II entities. All Yampa Valley and Morgan County funding has been awarded."
+    },
+    {
+      "item": "Grants may not pay lost property taxes or fund activities previously supported by lost property taxes",
+      "quote": "Pay lost property taxes or directly fund activities that were previously supported by lost property taxes."
+    },
+    {
+      "item": "Grants may not support activities not expected to create jobs paying at or above the community median income, new property tax, or economic diversity",
+      "quote": "Support activities that are not directly or indirectly expected or intended to create jobs that provide incomes at or above the median income of the community"
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "Funding request form (online application)",
+      "userWrites": true,
+      "quote": "Apply for funding by going to and filling out the appropriate application form: Funding request form"
+    },
+    {
+      "item": "Budget and deliverables for the proposal or project",
+      "userWrites": true,
+      "quote": "A budget and deliverables for the proposal or project;"
+    }
+  ],
+  "libraryRequired": []
+}

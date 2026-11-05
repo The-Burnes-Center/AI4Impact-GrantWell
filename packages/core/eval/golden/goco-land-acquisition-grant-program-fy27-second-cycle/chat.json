@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When is the next deadline for GOCO Land Acquisition?",
+    "expected": "For the second cycle, concept papers are due January 21, 2027 by 5 pm (no time zone stated) through the website form. Invitations go out February 4, 2027 and invited full applications are due March 11, 2027. Urgent land acquisition proposals are accepted at any time.",
+    "quote": "Concept papers due: January 21, 2027",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "limits",
+    "question": "How long can the concept narrative be?",
+    "expected": "Up to 2 pages, in 11 pt font or larger with 1-inch margins, submitted as a doc or docx file.",
+    "quote": "Write a short narrative (up to 2 pages; 11 pt font or larger; 1-inch margins)",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "absent",
+    "question": "Is there a minimum grant request?",
+    "expected": "Not stated in the notice.",
+    "quote": null,
+    "confirmed": false
+  }
+]
