@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useId, useMemo, useRef } from "react";
+import { SINGLE_STATE } from "../../common/states";
 import { useNavigate, useLocation, Navigate } from "react-router";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";
@@ -80,6 +81,8 @@ const Dashboard: React.FC = () => {
   const location = useLocation();
   const apiClient = useApiClient();
   const { isAdmin, isDeveloper, isStateAdmin, userState, username, loading: roleLoading } = useAdminCheck();
+  // Same rule as the server's canEditAnyNofo: a state admin may scrape only on their single-state site.
+  const canScrape = !isStateAdmin || Boolean(SINGLE_STATE && userState === SINGLE_STATE.code);
   const canManageUsers = isAdmin;
   const { addNotification } = useNotifications();
 
@@ -759,9 +762,11 @@ const Dashboard: React.FC = () => {
                     <button className="action-button add-button" onClick={() => setUploadNofoModalOpen(true)}>
                       <LuUpload size={16} className="button-icon" aria-hidden="true" /><span>Add Grant</span>
                     </button>
-                    <button className="action-button scraper-button" onClick={() => !isScraping && setScrapeConfirmModalOpen(true)} aria-disabled={isScraping} aria-busy={isScraping}>
-                      <LuDownload size={16} className="button-icon" aria-hidden="true" /><span>{isScraping ? "Scraping..." : "Auto-Scrape Grants"}</span><span className="visually-hidden"> from grants.gov</span>
-                    </button>
+                    {canScrape && (
+                      <button className="action-button scraper-button" onClick={() => !isScraping && setScrapeConfirmModalOpen(true)} aria-disabled={isScraping} aria-busy={isScraping}>
+                        <LuDownload size={16} className="button-icon" aria-hidden="true" /><span>{isScraping ? "Scraping..." : "Auto-Scrape Grants"}</span><span className="visually-hidden"> from grants.gov</span>
+                      </button>
+                    )}
                   </div>
                 </div>
 
