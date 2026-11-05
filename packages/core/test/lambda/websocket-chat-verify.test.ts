@@ -16,6 +16,7 @@ import {
   NOTHING_CONFIRMED_MESSAGE,
   VERIFY_MARKER,
   absenceTopic,
+  dateStatusFailures,
   meaningRequest,
   mentions,
   problemsText,
@@ -180,6 +181,13 @@ describe("answer units", () => {
     expect(mentions(grant, "letter intent")).toBe(true);
     expect(mentions(grant, "cost share")).toBe(true);
     expect(mentions(grant, "indirect costs")).toBe(false);
+  });
+
+  it("catches a stated date wrongly called passed or not passed", () => {
+    const units = splitSentences(
+      "The August 26, 2026 date has not passed. The March 1, 2027 deadline is still open. The May 15, 2026 date has already passed. Applications close March 1, 2027."
+    );
+    expect(dateStatusFailures(units, "November 4, 2026")).toEqual([0]);
   });
 
   it("drops a heading whose every sentence was removed", () => {

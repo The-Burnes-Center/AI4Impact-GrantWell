@@ -33,6 +33,8 @@ const run = JSON.parse(fs.readFileSync(path.join(runDir, "run.json"), "utf8"));
 const models = configure();
 install();
 const judge = makeJudge(models);
+// The chat answered with the run's US Eastern date; the claim judge needs the same one.
+judge.today = new Date(run.startedAt ?? Date.now()).toLocaleDateString("en-US", { timeZone: "America/New_York", year: "numeric", month: "long", day: "numeric" });
 const grants = new Map(loadGrants(values.golden).map((g) => [g.slug, g]));
 
 async function scoreOne(row) {

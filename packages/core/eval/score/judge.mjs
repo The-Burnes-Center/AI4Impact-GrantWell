@@ -5,6 +5,25 @@ const BEDROCK = new URL("../../lib/chatbot-api/functions/nofo-pipeline/shared/be
 const squash = (t) => String(t).toLowerCase().replace(/\s+/g, " ").trim();
 // A judgement only counts when its evidence is really in the text it claims to quote.
 const quoted = (evidence, text) => squash(evidence).length >= 3 && squash(text).includes(squash(evidence));
+// Claim and item audits compare words only: a judge's quote often differs from the grant in
+// punctuation, quote marks or line breaks, and may join two passages with an ellipsis.
+const words = (t) => String(t).toLowerCase().replace(/[^a-z0-9$%]+/g, " ").trim();
+const quotedWords = (evidence, text) => {
+  const hay = words(text);
+  const parts = String(evidence).split(/\.{3}|…/).map(words).filter((p) => p.split(" ").length >= 3);
+  if (parts.length > 0 && parts.every((p) => hay.includes(p))) return true;
+  // Near-exact: a run of 5 words from the quote is in the grant, and 85% of its words sit around it.
+  const ev = words(evidence).split(" ").filter(Boolean);
+  if (ev.length < 6) return false;
+  const span = ev.join(" ").length;
+  for (let i = 0; i + 5 <= ev.length; i++) {
+    const at = hay.indexOf(ev.slice(i, i + 5).join(" "));
+    if (at < 0) continue;
+    const near = new Set(hay.slice(Math.max(0, at - span), at + 2 * span).split(" "));
+    if (ev.filter((w) => near.has(w)).length / ev.length >= 0.85) return true;
+  }
+  return false;
+};
 
 const list = (items) => items.map((t, i) => `<item id="${i}">${String(t).replace(/<\/?item[^>]*>/g, "")}</item>`).join("\n");
 
@@ -16,7 +35,8 @@ async function ask({ model, prompt, schema, toolName, maxTokens = 4000, effort =
 export const PROMPTS = {
   claims: `You audit a grant chatbot's answer for unsupported claims, using the full grant text below as the only source of truth.
 List every claim the answer makes about the grant: eligibility, dates and times, amounts, percentages, counts, required documents, rules, contacts, websites, regulations, and what the grant does or doesn't say. Split compound sentences into separate claims. Skip greetings, offers to help, questions back to the user, and advice to confirm with the program officer.
-For each claim decide "supported": true only when the grant text states it or it follows directly with nothing added. A claim that the grant doesn't mention something is supported only if the grant really doesn't mention it. For a supported claim, quote "evidence": the exact words of the grant that state it (empty for a supported "doesn't mention" claim). Give a short "reason" for any unsupported claim.`,
+For each claim decide "supported": true only when the grant text states it or it follows directly with nothing added. A claim that the grant doesn't mention something is supported only if the grant really doesn't mention it. A claim that a date the grant states has or hasn't passed is supported when it is right for today's date, given below. For a supported claim, quote "evidence": the exact words of the grant that state it (empty for a supported "doesn't mention" claim). Give a short "reason" for any unsupported claim.
+List only what the answer says. Never list something the answer leaves out; an incomplete answer is not an unsupported claim.`,
   items: `You audit the requirements a grant pipeline extracted, using the full grant text below as the only source of truth. For each item decide "supported": true only when the grant text states everything the item says (wording may differ; nothing may be added, changed or left out in a way that changes its meaning). Quote "evidence": the exact words of the grant that state it. Give a short "reason" for any unsupported item.`,
   pair: `You match items a grant-extraction pipeline produced against an answer key written from the same grant notice.
 Pair a predicted item with a key item only when the predicted item states the key item's requirement, section or rule (wording may differ, and the predicted item may be merged with neighbours or be more or less detailed). For every pair, quote "evidence": the exact words of the predicted item that state it. A predicted item may pair with several key items when it states each of them; several predicted items may pair with one key item when they repeat it. Items that only share a topic, category or heading are not a pair. Many key items have no pair; never force one.`,
@@ -152,13 +172,17 @@ export function judge(models) {
         schema: CLAIMS_SCHEMA,
         effort: "medium",
         maxTokens: 8000,
-        prompt: `${PROMPTS.claims}\n\n<grant_text>\n${grantText}\n</grant_text>\n\n<question>${question}</question>\n<answer>\n${answer}\n</answer>`,
+        prompt: `${PROMPTS.claims}\n\nToday's date: ${this.today ?? "unknown"}.\n\n<grant_text>\n${grantText}\n</grant_text>\n\n<question>${question}</question>\n<answer>\n${answer}\n</answer>`,
       });
-      return (out.claims ?? []).map((c) => ({
-        ...c,
-        supported: !!c.supported && (c.absence ? true : quoted(c.evidence, grantText)),
-        reason: c.supported && !c.absence && !quoted(c.evidence, grantText) ? "evidence not found in the grant" : c.reason,
-      }));
+      const dateOnly = (c) => /\b(?:has|have|had|hasn't|has not|is|isn't|already|not yet|still)\b.*\b(?:passed|open|closed|ended|past)\b/i.test(c.claim);
+      return (out.claims ?? []).map((c) => {
+        const evidenceOk = c.absence || quotedWords(c.evidence, grantText) || (dateOnly(c) && !c.evidence);
+        return {
+          ...c,
+          supported: !!c.supported && evidenceOk,
+          reason: c.supported && !evidenceOk ? "evidence not found in the grant" : c.reason,
+        };
+      });
     },
 
     async items({ grantText, items }) {
@@ -174,7 +198,7 @@ export function judge(models) {
       const byId = new Map((out.items ?? []).map((r) => [r.id, r]));
       return items.map((_, i) => {
         const r = byId.get(i);
-        const ok = !!r?.supported && quoted(r.evidence, grantText);
+        const ok = !!r?.supported && quotedWords(r.evidence, grantText);
         return { id: i, supported: ok, reason: ok ? "" : r ? (r.supported ? "evidence not found in the grant" : r.reason) : "no verdict" };
       });
     },
