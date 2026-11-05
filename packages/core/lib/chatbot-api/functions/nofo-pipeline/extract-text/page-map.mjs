@@ -7,11 +7,11 @@ export const pageMapKey = (nofoName) => `${nofoName}/raw-text-pages.json`;
  * where each page starts (`pageStarts[i]` is page i + 1). Citations point at character offsets in raw-text.txt, so the
  * chat turns them into page numbers with this map.
  */
-export function joinLines(lines) {
+export function joinLines(lines, { tables = true } = {}) {
   const parts = [];
   const pageStarts = [];
   let length = 0;
-  for (const line of withTableRows(lines)) {
+  for (const line of tables ? withTableRows(lines) : lines) {
     const page = Number.isInteger(line.Page) && line.Page > 0 ? line.Page : 1;
     if (parts.length) length += 1;
     while (pageStarts.length < page) pageStarts.push(length);

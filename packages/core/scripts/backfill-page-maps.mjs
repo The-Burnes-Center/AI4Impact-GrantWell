@@ -77,6 +77,11 @@ async function readText(s3, bucket, key) {
   }
 }
 
+/** The join of `lines` that gives `stored`: grants extracted before tables were written row by row have the plain join. */
+export function matchingJoin(stored, lines) {
+  return [joinLines(lines), joinLines(lines, { tables: false })].find((joined) => joined.text === stored) ?? null;
+}
+
 /** Grants with a PDF and a stored raw-text.txt that have no page map yet (all of them with `force`). */
 export function planBackfill(grantKeys, artifactKeys, { force = false, only } = {}) {
   const artifacts = new Set(artifactKeys);
@@ -158,15 +163,15 @@ async function main() {
         textractLines(textract, args.grantBucket, `${name}${PDF_SUFFIX}`),
       ]);
       report.pages += pages;
-      const { text, pageStarts } = joinLines(lines);
-      if (stored !== text) {
-        report.mismatched.push({ name, storedChars: stored?.length ?? null, textractChars: text.length });
+      const joined = matchingJoin(stored, lines);
+      if (!joined) {
+        report.mismatched.push({ name, storedChars: stored?.length ?? null, textractChars: joinLines(lines).text.length });
       } else {
         await s3.send(
           new PutObjectCommand({
             Bucket: args.artifactsBucket,
             Key: pageMapKey(name),
-            Body: JSON.stringify(pageMap(text, pageStarts)),
+            Body: JSON.stringify(pageMap(joined.text, joined.pageStarts)),
             ContentType: "application/json",
           })
         );
