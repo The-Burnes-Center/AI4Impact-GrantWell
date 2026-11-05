@@ -193,6 +193,7 @@ describe("answer units", () => {
 
   it("catches a weekday that doesn't match its date, and a future date said to be due in the past", () => {
     expect(weekdayFailures(splitSentences("It was due on a Thursday (October 9, 2026). It is due Wednesday, October 7, 2026."))).toEqual([0]);
+    expect(weekdayFailures(splitSentences("Applications are due Wednesday, October 9, 2026."), "Applications are due to MSA on Wednesday, Oct 9, 2026 by 2:00 P.M.")).toEqual([]);
     expect(dateStatusFailures(splitSentences("The pre-application was due December 22, 2026."), "November 4, 2026")).toEqual([0]);
     expect(absenceTopic("The grant doesn't explain how the base and country deadlines fit together.")).toBe("base country deadlines fit");
   });

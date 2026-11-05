@@ -211,22 +211,28 @@ export function dateStatusFailures(units, today) {
 const WEEKDAYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 const WEEKDAY_NEAR_DATE = /\b(sunday|monday|tuesday|wednesday|thursday|friday|saturday)\b[^.;\n]{0,40}?\b([A-Z][a-z]{2,8}\.?\s+\d{1,2}(?:st|nd|rd|th)?,?\s+\d{4})|\b([A-Z][a-z]{2,8}\.?\s+\d{1,2}(?:st|nd|rd|th)?,?\s+\d{4})\b[^.;\n]{0,15}?\(?\b(sunday|monday|tuesday|wednesday|thursday|friday|saturday)\b/gi;
 
-/** Units naming a weekday for a date it doesn't fall on ("due on a Friday (October 9, 2026)"). */
-export function weekdayFailures(units) {
-  return units.flatMap((u, i) => {
-    for (const m of u.text.matchAll(WEEKDAY_NEAR_DATE)) {
-      const day = (m[1] ?? m[4]).toLowerCase();
-      const key = extractFacts(m[2] ?? m[3]).find((f) => f.key.startsWith("date:"))?.key.slice(5);
-      if (key && WEEKDAYS[new Date(`${key}T12:00:00Z`).getUTCDay()] !== day) return [i];
-    }
-    return [];
+function weekdayPairs(text) {
+  return [...String(text).matchAll(WEEKDAY_NEAR_DATE)].flatMap((m) => {
+    const key = extractFacts(m[2] ?? m[3]).find((f) => f.key.startsWith("date:"))?.key.slice(5);
+    return key ? [{ day: (m[1] ?? m[4]).toLowerCase(), key }] : [];
   });
+}
+
+/**
+ * Units naming a weekday for a date it doesn't fall on ("due on a Friday (October 9, 2026)"),
+ * unless the grant itself pairs them: repeating the grant's own typo is quoting, not a mistake.
+ */
+export function weekdayFailures(units, grantText = "") {
+  const stated = new Set(weekdayPairs(grantText).map((p) => `${p.day} ${p.key}`));
+  return units.flatMap((u, i) =>
+    weekdayPairs(u.text).some((p) => WEEKDAYS[new Date(`${p.key}T12:00:00Z`).getUTCDay()] !== p.day && !stated.has(`${p.day} ${p.key}`)) ? [i] : []
+  );
 }
 
 export async function verifyAnswer({ text, found = [], documents = [], summary = null, documentText = "", grantText = "", baseKeys, today = "" }, deps) {
   const units = splitSentences(text);
   const keys = unionKeys(baseKeys, found.map((f) => f.citation?.cited_text ?? ""));
-  const factFailing = [...new Set([...factFailures(units, keys), ...dateStatusFailures(units, today), ...weekdayFailures(units)])].sort((x, y) => x - y);
+  const factFailing = [...new Set([...factFailures(units, keys), ...dateStatusFailures(units, today), ...weekdayFailures(units, grantText)])].sort((x, y) => x - y);
   const verdicts = await checkMeaning({ units, found, documents, summary, documentText, grantText, today }, deps);
   const absenceFailing = verdicts.flatMap((v, i) => {
     if (v.verdict !== "not_a_claim") return [];
