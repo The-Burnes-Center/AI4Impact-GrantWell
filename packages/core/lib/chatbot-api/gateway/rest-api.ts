@@ -11,7 +11,7 @@ import type { Throttle } from "../../config/instance-config";
 export class RestBackendAPI extends Construct {
   public readonly restAPI: apigwv2.HttpApi;
 
-  constructor(scope: Construct, id: string, props: { throttle: Throttle }) {
+  constructor(scope: Construct, id: string, props: { throttle: Throttle; allowedOrigins: string[] }) {
     super(scope, id);
 
     // Create an HTTP API with CORS configuration
@@ -27,7 +27,7 @@ export class RestBackendAPI extends Construct {
           apigwv2.CorsHttpMethod.PATCH,
           apigwv2.CorsHttpMethod.DELETE,
         ],
-        allowOrigins: ['*'],
+        allowOrigins: props.allowedOrigins,
         maxAge: Duration.days(10),
       },
     });

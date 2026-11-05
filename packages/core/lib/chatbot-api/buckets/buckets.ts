@@ -14,7 +14,7 @@ export class S3BucketStack extends cdk.Stack {
   public readonly userDocumentsBucket: s3.Bucket;
   public readonly grantArtifactsBucket: s3.Bucket;
 
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props: cdk.StackProps & { allowedOrigins: string[] }) {
     super(scope, id, props);
 
     // Create a new S3 bucket
@@ -36,7 +36,7 @@ export class S3BucketStack extends cdk.Stack {
       autoDeleteObjects: false,
       cors: [{
         allowedMethods: [s3.HttpMethods.GET,s3.HttpMethods.POST,s3.HttpMethods.PUT,s3.HttpMethods.DELETE],
-        allowedOrigins: ['*'], 
+        allowedOrigins: props.allowedOrigins,
         allowedHeaders: ["*"]     
       }]
     });
@@ -48,7 +48,7 @@ export class S3BucketStack extends cdk.Stack {
       autoDeleteObjects: false,
       cors: [{
         allowedMethods: [s3.HttpMethods.GET, s3.HttpMethods.POST, s3.HttpMethods.PUT, s3.HttpMethods.DELETE],
-        allowedOrigins: ['*'],
+        allowedOrigins: props.allowedOrigins,
         allowedHeaders: ["*"]
       }]
     });
@@ -61,7 +61,7 @@ export class S3BucketStack extends cdk.Stack {
       // Admins' browsers upload a live grant's new version straight to _pending/ with a presigned PUT.
       cors: [{
         allowedMethods: [s3.HttpMethods.PUT],
-        allowedOrigins: ['*'],
+        allowedOrigins: props.allowedOrigins,
         allowedHeaders: ["*"]
       }],
       // The search index builder rewrites _search/ on every grant change; old versions are useless.

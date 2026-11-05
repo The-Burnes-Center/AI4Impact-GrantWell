@@ -27,7 +27,7 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as logs from "aws-cdk-lib/aws-logs";
 import * as path from "path";
-import { InstanceConfig, limits, regions, singleState, supportedStatesEnv } from "../config/instance-config";
+import { InstanceConfig, allowedOrigins, limits, regions, singleState, supportedStatesEnv } from "../config/instance-config";
 
 // See the matching constant in functions/functions.ts: while "true", a legacy stateless Admin
 // still resolves to platform-wide. Flip both to "false" only after migrating every pool.
@@ -52,7 +52,8 @@ export class ChatBotApi extends Construct {
 
     const SUPPORTED_STATES_ENV = supportedStatesEnv(props.config);
     const tables = new TableStack(this, "TableStack");
-    const buckets = new S3BucketStack(this, "BucketStack");
+    const origins = allowedOrigins(props.config);
+    const buckets = new S3BucketStack(this, "BucketStack", { allowedOrigins: origins });
     const openSearch = new OpenSearchStack(this, "OpenSearchStack", { config: props.config });
     const knowledgeBase = new KnowledgeBaseStack(this, "KnowledgeBaseStack", {
       config: props.config,
@@ -62,7 +63,7 @@ export class ChatBotApi extends Construct {
     });
 
     const instanceLimits = limits(props.config);
-    const restBackend = new RestBackendAPI(this, "RestBackend", { throttle: instanceLimits.httpApiThrottle });
+    const restBackend = new RestBackendAPI(this, "RestBackend", { throttle: instanceLimits.httpApiThrottle, allowedOrigins: origins });
     this.httpAPI = restBackend;
     const websocketBackend = new WebsocketBackendAPI(
       this,

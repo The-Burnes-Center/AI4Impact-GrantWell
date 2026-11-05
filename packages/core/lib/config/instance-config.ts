@@ -188,6 +188,11 @@ export const DEFAULT_LIMITS: Limits = {
   websocketThrottle: { rateLimit: 50, burstLimit: 100 },
 };
 
+/** Browser origins allowed to call the API and the buckets: the site itself, plus the Vite dev server on dev. */
+export function allowedOrigins(config: InstanceConfig): string[] {
+  return config.stage === "dev" ? [config.siteUrl, "http://localhost:5173", "http://localhost:3000"] : [config.siteUrl];
+}
+
 export function limits(config: InstanceConfig): Limits {
   return { ...DEFAULT_LIMITS, ...config.limits };
 }
