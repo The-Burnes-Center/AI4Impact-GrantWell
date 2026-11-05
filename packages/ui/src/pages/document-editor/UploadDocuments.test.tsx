@@ -114,5 +114,7 @@ describe("Write Application documents", () => {
       { source: "status_change", immediate: true }
     );
     expect(net.to(SUMMARY).every((r) => r.url.searchParams.get("for") === "application")).toBe(true);
+    expect(net.to(QUESTIONS).length).toBeGreaterThan(0);
+    expect(net.to(QUESTIONS).every((r) => r.url.searchParams.get("for") === "application")).toBe(true);
   });
 });

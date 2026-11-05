@@ -11,7 +11,13 @@ import {
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
-import { DynamoDBClient, GetItemCommand, QueryCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
+import {
+  ConditionalCheckFailedException,
+  DynamoDBClient,
+  GetItemCommand,
+  QueryCommand,
+  UpdateItemCommand,
+} from "@aws-sdk/client-dynamodb";
 import { BedrockRuntimeClient, InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime";
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
@@ -156,9 +162,9 @@ function serveDynamo() {
   });
 }
 
-async function load(path: string) {
+async function load(path: string, env: Record<string, string> = {}) {
   vi.unstubAllEnvs();
-  for (const [k, v] of Object.entries(ENV)) vi.stubEnv(k, v);
+  for (const [k, v] of Object.entries({ ...ENV, ...env })) vi.stubEnv(k, v);
   vi.resetModules();
   return import(`${fns}/${path}`);
 }
@@ -297,6 +303,64 @@ describe("a live grant's new version while it is staged", () => {
     const sent = JSON.parse(sqs.calls()[0].args[0].input.MessageBody);
     expect(sent.Records[0].s3).toEqual({ bucket: { name: ARTIFACTS }, object: { key: STAGED } });
     sqs.restore();
+  });
+});
+
+describe("an upload over a grant that already exists", () => {
+  const STATES = { SUPPORTED_STATES: JSON.stringify([{ code: "MA", name: "Massachusetts" }, { code: "NY", name: "New York" }]) };
+  const as = (claims: Record<string, string>) => ({ requestContext: { authorizer: { jwt: { claims } } } });
+  const maAdmin = as({ "custom:role": '["Admin"]', "custom:state": "MA" });
+  const upload = async (caller: object, body: Record<string, string>, env: Record<string, string> = {}) => {
+    const { handler } = await load("landing-page/upload-nofos/index.mjs", { ...STATES, ...env });
+    return handler({ ...caller, body: JSON.stringify({ fileName: "Grant/NOFO-File-PDF", fileType: "application/pdf", ...body }) });
+  };
+  const asMa = { scope: "state", state: "MA" };
+
+  it("refuses a state admin who claims a federal or another state's grant, changing nothing", async () => {
+    for (const row of [{ scope: "federal" }, { scope: "state", state: "NY" }, {}]) {
+      metaRow = { nofo_name: "Grant", status: "active", ...row };
+      const res = await upload(maAdmin, asMa);
+      expect(res.statusCode).toBe(403);
+      expect(JSON.parse(res.body)).not.toHaveProperty("signedUrl");
+    }
+    expect(metaUpdates()).toHaveLength(0);
+  });
+
+  it("lets a state admin upload their own state's grant, new or existing, only where the row still matches", async () => {
+    metaRow = { nofo_name: "Grant", status: "active", scope: "state", state: "MA" };
+    expect((await upload(maAdmin, asMa)).statusCode).toBe(200);
+    metaRow = null;
+    expect((await upload(maAdmin, asMa)).statusCode).toBe(200);
+    for (const update of metaUpdates()) {
+      expect(update.ConditionExpression).toBe("attribute_not_exists(nofo_name) OR (#scope = :scope AND #state = :state)");
+    }
+    expect(metaUpdates()).toHaveLength(2);
+  });
+
+  it("refuses when the row changed between the check and the write", async () => {
+    metaRow = null;
+    ddb.on(UpdateItemCommand).rejects(new ConditionalCheckFailedException({ message: "failed", $metadata: {} }));
+    const res = await upload(maAdmin, asMa);
+    expect(res.statusCode).toBe(403);
+    expect(JSON.parse(res.body)).not.toHaveProperty("signedUrl");
+    expect(s3.commandCalls(PutObjectCommand)).toHaveLength(0);
+  });
+
+  it("keeps a single-state site's admin to the grant's own scope too", async () => {
+    metaRow = { nofo_name: "Grant", status: "active", scope: "federal", state: null };
+    const res = await upload(maAdmin, { scope: "federal" }, { SINGLE_STATE: "MA" });
+    expect(res.statusCode).toBe(200);
+    expect(metaUpdates()[0].ConditionExpression).toBe(
+      "attribute_not_exists(nofo_name) OR (#scope = :scope AND (attribute_not_exists(#state) OR attribute_type(#state, :nullType)))"
+    );
+  });
+
+  it("still lets a Developer or platform admin move a grant to another scope", async () => {
+    metaRow = { nofo_name: "Grant", status: "active", scope: "federal" };
+    for (const role of ["Developer", "PlatformAdmin"]) {
+      expect((await upload(as({ "custom:role": JSON.stringify([role]) }), asMa)).statusCode).toBe(200);
+    }
+    expect(metaUpdates().map((u) => u.ConditionExpression)).toEqual([undefined, undefined]);
   });
 });
 

@@ -2,8 +2,10 @@ import { S3Client } from '@aws-sdk/client-s3';
 import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import {
-  canEditAnyNofo,
   getArtifact,
+  GRANT_IN_REVIEW_MESSAGE,
+  IN_REVIEW_STATUSES,
+  opensGrantInReview,
   isMissingObject,
   recordEvent,
   touchLastActive,
@@ -69,18 +71,6 @@ function assertUserCanAccessNofo(callerScope, nofoScope, nofoState) {
   err.userState = callerScope.state || null;
   err.nofoState = nofoState || null;
   throw err;
-}
-
-const IN_REVIEW_STATUSES = new Set(["quarantined", "processing"]);
-const GRANT_IN_REVIEW_MESSAGE = "This grant is being reviewed and will be back soon.";
-
-/**
- * Developers, platform admins, and a state admin for their own state's grant open held grants, as
- * does any admin of a single-state site (canEditAnyNofo).
- */
-function opensGrantInReview(callerScope, nofoScope, nofoState) {
-  if (canEditAnyNofo(callerScope)) return true;
-  return callerScope.role === "stateAdmin" && nofoScope === "state" && Boolean(nofoState) && nofoState === callerScope.state;
 }
 
 // Returns { scope, state, status } from the grant's metadata row, or null when there is no row or it can't be read.

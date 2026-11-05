@@ -866,6 +866,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           NOFO_STATE_OVERLAY_TABLE_NAME: props.nofoStateOverlayTable.tableName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+          ...SINGLE_STATE_ENV,
         },
         timeout: cdk.Duration.minutes(2),
       }
@@ -917,7 +918,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
-    props.nofoMetadataTable.grantWriteData(nofoUploadS3APIHandlerFunction);
+    props.nofoMetadataTable.grantReadWriteData(nofoUploadS3APIHandlerFunction);
     this.uploadNOFOS3Function = nofoUploadS3APIHandlerFunction;
 
     // Add the NOFO status update function
@@ -1277,6 +1278,9 @@ export class LambdaFunctionStack extends cdk.Stack {
       haikuScraperProfileArn: haikuScraperProfile.attrInferenceProfileArn,
       scraperDownloadQueueArn: scraperDownloadQueue.queueArn,
       scraperDownloadQueueUrl: scraperDownloadQueue.queueUrl,
+      supportedStatesEnv: SUPPORTED_STATES_ENV,
+      legacyStatelessAdminIsPlatform: LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+      singleStateEnv: SINGLE_STATE_ENV,
     });
 
     this.scraperCoordinatorFunction = scraper.scraperCoordinatorFunction;

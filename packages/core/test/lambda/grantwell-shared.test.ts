@@ -111,12 +111,21 @@ describe("assertCanEditNofoOr403", () => {
     expect(JSON.parse(res.body).message).toMatch(/Cannot verify NOFO scope/);
   });
 
-  it("lets the create path through on an unknown scope only when asked", async () => {
+  it("lets the create path through on a missing row only when asked", async () => {
     ddb.on(GetItemCommand).resolves({});
     expect((await shared.assertCanEditNofoOr403(stateAdmin, deps(), "nofos", "New"))?.statusCode).toBe(403);
     await expect(
-      shared.assertCanEditNofoOr403(stateAdmin, deps(), "nofos", "New", { allowUnknownScope: true })
+      shared.assertCanEditNofoOr403(stateAdmin, deps(), "nofos", "New", { allowMissingRow: true })
     ).resolves.toBeNull();
+  });
+
+  it("still denies a state admin an existing row with no scope, or an unreadable one, on the create path", async () => {
+    ddb.on(GetItemCommand).resolves({ Item: marshall({ nofo_name: "Old" }) });
+    const opts = { allowMissingRow: true };
+    expect((await shared.assertCanEditNofoOr403(stateAdmin, deps(), "nofos", "Old", opts))?.statusCode).toBe(403);
+    ddb.on(GetItemCommand).rejects(new Error("throttled"));
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    expect((await shared.assertCanEditNofoOr403(stateAdmin, deps(), "nofos", "Old", opts))?.statusCode).toBe(403);
   });
 });
 

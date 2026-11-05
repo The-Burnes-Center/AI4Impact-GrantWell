@@ -1,8 +1,14 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { DynamoDBClient, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
-import { marshall } from "@aws-sdk/util-dynamodb";
-import { artifactsBucket, pendingDir, stagesNewVersion } from "grantwell-shared";
+import { DynamoDBClient, GetItemCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
+import {
+  artifactsBucket,
+  assertCanEditNofoOr403,
+  canSeeEveryState,
+  pendingDir,
+  stagesNewVersion,
+} from "grantwell-shared";
 
 const URL_EXPIRATION_SECONDS = 300;
 
@@ -35,8 +41,10 @@ const s3 = new S3Client({
 });
 
 const ddb = new DynamoDBClient({ region: process.env.AWS_REGION || 'us-east-1' });
+const scopeDeps = { client: ddb, GetItemCommand, marshall, unmarshall };
 
-async function recordScopeInMetadataTable(documentIdentifier, scope, stateCode) {
+// `keepScope`: an existing row's scope and state must already be the ones being written.
+async function recordScopeInMetadataTable(documentIdentifier, scope, stateCode, keepScope) {
   const tableName = process.env.NOFO_METADATA_TABLE_NAME;
   if (!tableName || !documentIdentifier) return { status: null };
 
@@ -47,6 +55,16 @@ async function recordScopeInMetadataTable(documentIdentifier, scope, stateCode) 
     ":state": scope === "state" && stateCode ? { S: stateCode } : { NULL: true },
     ":now": { S: new Date().toISOString() },
   };
+  let condition;
+  if (keepScope) {
+    if (scope === "state") {
+      condition = "attribute_not_exists(nofo_name) OR (#scope = :scope AND #state = :state)";
+    } else {
+      condition =
+        "attribute_not_exists(nofo_name) OR (#scope = :scope AND (attribute_not_exists(#state) OR attribute_type(#state, :nullType)))";
+      exprValues[":nullType"] = { S: "NULL" };
+    }
+  }
 
   try {
     const result = await ddb.send(
@@ -56,11 +74,17 @@ async function recordScopeInMetadataTable(documentIdentifier, scope, stateCode) 
         UpdateExpression: `SET ${setExprs.join(", ")}`,
         ExpressionAttributeNames: exprNames,
         ExpressionAttributeValues: exprValues,
+        ...(condition ? { ConditionExpression: condition } : {}),
         ReturnValues: "ALL_OLD",
       })
     );
     return { status: result?.Attributes?.status?.S ?? null };
   } catch (err) {
+    if (err?.name === "ConditionalCheckFailedException") {
+      const denied = new Error("This grant already exists with a different grant type or state.");
+      denied.statusCode = 403;
+      throw denied;
+    }
     // Sidecar still carries scope/state, so the upload itself isn't blocked.
     console.warn(
       `Could not record scope/state to NOFOMetadataTable for ${documentIdentifier}:`,
@@ -195,6 +219,14 @@ export const handler = async (event) => {
     const baseFileName =
       lastSlash >= 0 ? fileName.substring(lastSlash + 1) : fileName;
 
+    const keepScope = !canSeeEveryState(callerScope);
+    if (keepScope) {
+      const denied = await assertCanEditNofoOr403(
+        event, scopeDeps, process.env.NOFO_METADATA_TABLE_NAME, documentIdentifier, { allowMissingRow: true }
+      );
+      if (denied) return respond(denied.statusCode, JSON.parse(denied.body));
+    }
+
     const metadataAttributes = {
       documentType: "NOFO",
       documentIdentifier,
@@ -205,7 +237,7 @@ export const handler = async (event) => {
       ...(scope === "state" ? { state: stateCode } : {}),
     };
 
-    const previous = await recordScopeInMetadataTable(documentIdentifier, scope, stateCode);
+    const previous = await recordScopeInMetadataTable(documentIdentifier, scope, stateCode, keepScope);
     // A grant that may be live keeps its published files until the new version passes or is
     // approved; publish writes the sidecar then. An unreadable row is treated as live.
     const staged = previous === undefined || stagesNewVersion(previous.status);

@@ -404,4 +404,45 @@ describe("grants held for review", () => {
     expect((await landing(summaryHandler, signedInAs("Developer", "MA"), "Held Grant/summary.json")).statusCode).toBe(200);
     expect((await landing(summaryHandler, signedInAs("PlatformAdmin", ""), "Held Grant/summary.json")).statusCode).toBe(200);
   });
+
+  const HELD_QUESTIONS = { questions: [{ id: 1, question: "Who will you serve?", helpText: "Unconfirmed guidance." }] };
+  const serveQuestions = () =>
+    s3.on(GetObjectCommand).callsFake(() => ({ Body: Readable.from([Buffer.from(JSON.stringify(HELD_QUESTIONS))]) }));
+
+  it("the questions refuse a grant in review with the message and a way home", async () => {
+    serveQuestions();
+    for (const grant of ["Held Grant", "New Grant"]) {
+      const res = await landing(questionsHandler, signedInAs(null, "MA"), `${grant}/questions.json`);
+      expect(res.statusCode).toBe(409);
+      expect(JSON.parse(res.body)).toEqual({ error: "GRANT_IN_REVIEW", message: IN_REVIEW, cta: { label: "Go to Home", target: "/home" } });
+    }
+    expect(s3.commandCalls(GetObjectCommand)).toHaveLength(0);
+  });
+
+  it("the questions give an application only the question text while its grant is in review", async () => {
+    serveQuestions();
+    const res = await questionsHandler({
+      queryStringParameters: { documentKey: "Held Grant/questions.json", for: "application" },
+      requestContext: { authorizer: { jwt: { claims: { sub: "user-1", ...signedInAs(null, "MA") } } } },
+    });
+    expect(res.statusCode).toBe(200);
+    const body = JSON.parse(res.body);
+    expect(body.inReview).toBe(true);
+    expect(body.data).toEqual({ questions: [{ id: 1, question: "Who will you serve?" }] });
+  });
+
+  it("the questions open a grant in review in full for whoever may open it", async () => {
+    serveQuestions();
+    for (const [role, state, grant] of [
+      ["Developer", "MA", "Held Grant"],
+      ["PlatformAdmin", "", "Held Grant"],
+      ["Admin", "MA", "New Grant"],
+    ]) {
+      const res = await landing(questionsHandler, signedInAs(role, state), `${grant}/questions.json`);
+      expect(res.statusCode).toBe(200);
+      expect(JSON.parse(res.body)).not.toHaveProperty("inReview");
+      expect(JSON.parse(res.body).data).toEqual(HELD_QUESTIONS);
+    }
+    expect((await landing(questionsHandler, signedInAs("Admin", "MA"), "Held Grant/questions.json")).statusCode).toBe(409);
+  });
 });
