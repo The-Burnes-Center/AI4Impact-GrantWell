@@ -48,8 +48,8 @@ export default class ClaudeModel {
    *
    * @param {AsyncIterable} stream - The Bedrock response stream.
    * @param {function(string): Promise<void>} onText - Called with each answer text delta.
-   * @returns {Promise<{content: Array, citations: Array<{citation: object, at: number}>, stopReason: string|undefined, stopDetails: object|undefined}>}
-   *   `at` is where the cited text ends in the text passed to onText, before any trailing whitespace.
+   * @returns {Promise<{content: Array, citations: Array<{citation: object, from: number, at: number}>, stopReason: string|undefined, stopDetails: object|undefined}>}
+   *   `from` and `at` are where the cited text block starts and ends in the text passed to onText; `at` is before any trailing whitespace.
    */
   async readStream(stream, onText) {
     const content = [];
@@ -124,6 +124,7 @@ export default class ClaudeModel {
 
     const citations = pending.map(({ block, citation }) => ({
       citation,
+      from: blockStart.get(block) ?? emitted,
       at: (blockStart.get(block) ?? emitted) + (block.text || "").trimEnd().length,
     }));
 

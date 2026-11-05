@@ -4,11 +4,12 @@ import {
   DeleteConnectionCommand,
   PostToConnectionCommand,
 } from "@aws-sdk/client-apigatewaymanagementapi";
-import { BedrockRuntimeClient, InvokeModelWithResponseStreamCommand } from "@aws-sdk/client-bedrock-runtime";
+import { BedrockRuntimeClient, InvokeModelCommand, InvokeModelWithResponseStreamCommand } from "@aws-sdk/client-bedrock-runtime";
 import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { haikuJudge } from "./chat-verify-fakes";
 
 const ws = mockClient(ApiGatewayManagementApiClient);
 const bedrock = mockClient(BedrockRuntimeClient);
@@ -64,12 +65,13 @@ beforeEach(() => {
     Payload: new TextEncoder().encode(JSON.stringify({ statusCode: 200, body: "{}" })) as any,
   });
   s3.on(GetObjectCommand).resolves({ Body: { transformToString: async () => "Grant A text." } } as any);
+  bedrock.on(InvokeModelCommand).callsFake(haikuJudge());
   vi.spyOn(console, "log").mockImplementation(() => {});
   vi.spyOn(console, "warn").mockImplementation(() => {});
   vi.spyOn(console, "error").mockImplementation(() => {});
 });
 
-describe("chat narration", () => {
+describe("chat answer frames", () => {
   it("sends no tools and makes one model call", async () => {
     bedrock.on(InvokeModelWithResponseStreamCommand).resolves(stream([text("The grant funds transit."), stop("end_turn")]));
 
@@ -93,7 +95,7 @@ describe("chat narration", () => {
     expect(saves()).toEqual([]);
   });
 
-  it("resets the answer when a call streams past the hold and then calls a tool", async () => {
+  it("never posts a long call that ends in a tool call", async () => {
     const long = "Background. ".repeat(40);
     bedrock
       .on(InvokeModelWithResponseStreamCommand)
@@ -101,21 +103,23 @@ describe("chat narration", () => {
 
     await handler(event());
 
-    expect(posted()).toEqual([long, "More narration.", "<!RESET!>", ERROR]);
+    expect(posted()).toEqual([ERROR]);
     expect(saves()).toEqual([]);
   });
 
-  it("streams a long answer as it arrives after the hold", async () => {
-    const opening = "a".repeat(299);
+  it("posts a long answer as one frame once it is checked", async () => {
+    const opening = "The grant funds transit. ".repeat(20);
     bedrock.on(InvokeModelWithResponseStreamCommand).resolves(stream([text(opening), text("bc"), text("d"), stop("end_turn")]));
 
     await handler(event());
 
-    expect(posted().slice(0, 2)).toEqual([`${opening}bc`, "d"]);
+    expect(posted()[0]).toBe(`${opening}bcd`);
+    expect(posted()[1]).toBe("!<|EOF_STREAM|>!");
     expect(saves()[0].new_chat_entry[0].chatbot).toBe(`${opening}bcd`);
   });
 
   it("joins the text blocks of a cited answer as written", async () => {
+    s3.on(GetObjectCommand).resolves({ Body: { transformToString: async () => "Applications are due March 1." } } as any);
     bedrock.on(InvokeModelWithResponseStreamCommand).resolves(
       stream([
         { type: "content_block_start", content_block: { type: "text", text: "" } },

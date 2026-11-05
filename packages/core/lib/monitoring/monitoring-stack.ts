@@ -48,7 +48,8 @@ export const LOG_MARKERS = {
   turnstileNotConfigured: ["TURNSTILE_SECRET_KEY is not set"],
   accountSetupFailed: ["Failed to set custom:state at confirmation", "Failed to revoke sessions after password reset"],
   kbRetrieveFailed: ["could not retrieve Knowledge Base documents"],
-  chatAnswerFailed: ["Stream processing error:"],
+  chatAnswerFailed: ["Stream processing error:", "Chat verification failed:"],
+  chatVerified: ["CHAT_VERIFY"],
   grantSearchFailed: ["Hybrid search error:"],
   searchIndexBuildFailed: ["Search index build failed:"],
   createMetadataFailed: ["Error processing record:"],
@@ -155,6 +156,7 @@ export class MonitoringStack extends cdk.NestedStack {
     this.addEmailAlarms(config);
     this.addChatAndSearchAlarms(props);
     this.addDailyCapMetrics(props);
+    this.markerMetric("ChatVerified", props.chatFunction, LOG_MARKERS.chatVerified, cdk.Duration.hours(1));
     this.addDocumentAlarms(props);
     this.addNofoPipelineAlarms(props);
     this.addDraftAlarms(props);

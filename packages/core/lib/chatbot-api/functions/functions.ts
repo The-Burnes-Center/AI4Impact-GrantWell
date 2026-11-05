@@ -201,6 +201,9 @@ export class LambdaFunctionStack extends cdk.Stack {
     const haikuScraperProfile = makeInferenceProfile(
       "HaikuScraperInferenceProfile", `${HAIKU_TAG}-scraper`, haikuSystemProfileArn, "nofo-scraper",
     );
+    const haikuChatVerifyProfile = makeInferenceProfile(
+      "HaikuChatVerifyInferenceProfile", `${HAIKU_TAG}-chat-verify`, haikuSystemProfileArn, "chat",
+    );
     const titanSearchProfile = makeInferenceProfile(
       "TitanSearchInferenceProfile", "titan-grant-search", titanFoundationModelArn, "grant-search",
     );
@@ -219,8 +222,10 @@ export class LambdaFunctionStack extends cdk.Stack {
         `arn:aws:bedrock:*::foundation-model/${systemProfileId.slice(systemProfileId.indexOf(".") + 1)}`,
       ],
     });
+    const haikuChatVerify = claude("chat answer checks (Haiku)", haikuChatVerifyProfile, HAIKU_MODEL_ID, haikuSystemProfileArn);
     this.bedrockModels = [
       claude("chat (Sonnet)", sonnetChatProfile, SONNET_MODEL_ID, sonnetSystemProfileArn),
+      haikuChatVerify,
       claude("NOFO analysis (Sonnet)", sonnetNofoProfile, SONNET_MODEL_ID, sonnetSystemProfileArn),
       claude("draft generation (Sonnet)", sonnetDraftProfile, SONNET_MODEL_ID, sonnetSystemProfileArn),
       claude("NOFO synthesis and questions (Haiku)", haikuNofoProfile, HAIKU_MODEL_ID, haikuSystemProfileArn),
@@ -388,6 +393,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           SESSION_HANDLER: this.sessionFunction.functionName,
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
           SONNET_MODEL_ID: sonnetChatProfile.attrInferenceProfileArn,
+          HAIKU_MODEL_ID: haikuChatVerifyProfile.attrInferenceProfileArn,
           USER_POOL_ID: props.userPool.userPoolId,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
           LEGACY_STATELESS_ADMIN_IS_PLATFORM,
@@ -428,6 +434,14 @@ export class LambdaFunctionStack extends cdk.Stack {
           "bedrock:InvokeModel",
         ],
         resources: ["*"],
+      })
+    );
+
+    websocketAPIFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["bedrock:InvokeModel"],
+        resources: haikuChatVerify.invokeResources,
       })
     );
 

@@ -23,6 +23,7 @@ ChatCapReachedFilterCDFC7D3C	AWS::Logs::MetricFilter
 ChatErrorsAlarm173D708E	AWS::CloudWatch::Alarm
 ChatRetrievalFailingAlarm48AB668A	AWS::CloudWatch::Alarm
 ChatThrottlesAlarmE66FA00D	AWS::CloudWatch::Alarm
+ChatVerifiedFilter38593008	AWS::Logs::MetricFilter
 CreateMetadataFailedFilter2C34B016	AWS::Logs::MetricFilter
 CreateMetadataFailedLogGroupExists9855E594	Custom::AWS
 CreateMetadataFailedLogGroupExistsCustomResourcePolicyB180CB19	AWS::IAM::Policy

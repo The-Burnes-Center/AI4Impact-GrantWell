@@ -4,11 +4,12 @@ import {
   DeleteConnectionCommand,
   PostToConnectionCommand,
 } from "@aws-sdk/client-apigatewaymanagementapi";
-import { BedrockRuntimeClient, InvokeModelWithResponseStreamCommand } from "@aws-sdk/client-bedrock-runtime";
+import { BedrockRuntimeClient, InvokeModelCommand, InvokeModelWithResponseStreamCommand } from "@aws-sdk/client-bedrock-runtime";
 import { AdminGetUserCommand, CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
 import { DynamoDBClient, GetItemCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { GetObjectCommand, ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
+import { haikuJudge } from "./chat-verify-fakes";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { buildChatRequest } from "../../lib/chatbot-api/functions/websocket-chat/prompt.mjs";
 import { numberCitations, pageAt, usablePageMap } from "../../lib/chatbot-api/functions/websocket-chat/citations.mjs";
@@ -77,6 +78,7 @@ beforeEach(() => {
   s3.on(ListObjectsV2Command).resolves({});
   s3.on(GetObjectCommand, { Bucket: "grant-artifacts", Key: "Grant A/raw-text.txt" }).resolves(rawText(GRANT_TEXT));
   bedrock.on(InvokeModelWithResponseStreamCommand).resolves(answer("Applications are due March 1, 2027 (§D.4)."));
+  bedrock.on(InvokeModelCommand).callsFake(haikuJudge());
   vi.spyOn(console, "log").mockImplementation(() => {});
   vi.spyOn(console, "warn").mockImplementation(() => {});
   vi.spyOn(console, "error").mockImplementation(() => {});

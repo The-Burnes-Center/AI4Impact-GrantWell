@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { LOG_MARKERS } from "../lib/monitoring/monitoring-stack";
+import { haikuJudge } from "./lambda/chat-verify-fakes";
 
 const aws = vi.hoisted(() => {
   class Command {
@@ -11,9 +12,10 @@ const aws = vi.hoisted(() => {
       send = send;
     };
   const bedrock = vi.fn();
+  const haiku = vi.fn();
   const posts = vi.fn();
   const lambda = vi.fn();
-  return { command, client, bedrock, posts, lambda };
+  return { command, client, bedrock, haiku, posts, lambda };
 });
 
 vi.mock("@aws-sdk/client-apigatewaymanagementapi", () => ({
@@ -24,7 +26,9 @@ vi.mock("@aws-sdk/client-apigatewaymanagementapi", () => ({
   DeleteConnectionCommand: aws.command("DeleteConnectionCommand"),
 }));
 vi.mock("@aws-sdk/client-bedrock-runtime", () => ({
-  BedrockRuntimeClient: aws.client((cmd: any) => aws.bedrock(JSON.parse(cmd.input.body))),
+  BedrockRuntimeClient: aws.client((cmd: any) =>
+    cmd.constructor.name === "InvokeModelCommand" ? aws.haiku(cmd.input) : aws.bedrock(JSON.parse(cmd.input.body))
+  ),
   InvokeModelWithResponseStreamCommand: aws.command("InvokeModelWithResponseStreamCommand"),
   InvokeModelCommand: aws.command("InvokeModelCommand"),
 }));
@@ -71,7 +75,9 @@ const answer = (text: string) =>
     { type: "message_delta", delta: { stop_reason: "end_turn" } },
   ]);
 
-const SOURCES = JSON.stringify([{ title: "Grant document", uri: "s3://grant-artifacts/nofo-a/raw-text.txt" }]);
+const SOURCE_LIST = [{ title: "Grant document", uri: "s3://grant-artifacts/nofo-a/raw-text.txt" }];
+const SOURCES = JSON.stringify(SOURCE_LIST);
+const SAVED_METADATA = JSON.stringify({ Sources: SOURCE_LIST, Verified: { regenerated: false, removed: 0 } });
 
 const chat = (data: object = {}) =>
   handler({
@@ -85,6 +91,8 @@ const sessionSaves = () => aws.lambda.mock.calls.filter(([body]) => body.operati
 
 beforeEach(() => {
   aws.bedrock.mockReset();
+  aws.haiku.mockReset();
+  aws.haiku.mockImplementation(async (input: any) => haikuJudge()(input));
   aws.posts.mockReset();
   aws.lambda.mockReset();
   aws.lambda.mockImplementation(async () => ({
@@ -144,8 +152,7 @@ describe("websocket-chat model call", () => {
     await chat();
 
     expect(aws.posts.mock.calls.map(([d]) => d)).toEqual([
-      "The first three requirements are",
-      "\n\nThis answer was cut off. Ask me to continue.",
+      "The first three requirements are\n\nThis answer was cut off. Ask me to continue.",
       "!<|EOF_STREAM|>!",
       SOURCES,
     ]);
@@ -211,12 +218,13 @@ describe("websocket-chat refusals", () => {
     expect(sessionSaves()).toEqual([]);
   });
 
-  it("follows partial output with the refusal and saves nothing", async () => {
+  it("drops partial output before the refusal and saves nothing", async () => {
     aws.bedrock.mockResolvedValueOnce(refusal([{ type: "content_block_delta", delta: { type: "text_delta", text: "Partial" } }]));
 
     await chat();
 
-    expect(aws.posts.mock.calls.map(([d]) => d)).toEqual(["Partial", "\n\nI can't help with that request.", "!<|EOF_STREAM|>!", "[]"]);
+    expect(aws.posts.mock.calls.map(([d]) => d)).toEqual(["I can't help with that request.", "!<|EOF_STREAM|>!", "[]"]);
+    expect(aws.haiku).not.toHaveBeenCalled();
     expect(sessionSaves()).toEqual([]);
   });
 });
@@ -235,7 +243,7 @@ describe("websocket-chat history", () => {
           operation: "update_session",
           user_id: "user-1",
           session_id: "s1",
-          new_chat_entry: [{ user: "Am I eligible?", chatbot: "You qualify.", metadata: SOURCES }],
+          new_chat_entry: [{ user: "Am I eligible?", chatbot: "You qualify.", metadata: SAVED_METADATA }],
           title: "Chat about nofo-a",
           document_identifier: "nofo-a",
         },

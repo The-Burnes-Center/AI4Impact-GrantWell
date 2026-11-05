@@ -14,6 +14,8 @@ import ClaudeModel from "./claudeSonnet.mjs";
 import { buildChatRequest, getPromptText } from "./prompt.mjs";
 import { loadSupportingDocuments, pdfContentBlocks, SKIP_REASONS } from "./supporting-documents.mjs";
 import { numberCitations, usablePageMap } from "./citations.mjs";
+import { sourceKeys } from "./fact-check.mjs";
+import { LEFT_OUT_NOTE, NOTHING_CONFIRMED_MESSAGE, VERIFY_MARKER, problemsText, removeUnits, verifyAnswer } from "./verify.mjs";
 
 const ENDPOINT = process.env.WEBSOCKET_API_ENDPOINT;
 const wsConnectionClient = new ApiGatewayManagementApiClient({ endpoint: ENDPOINT });
@@ -51,11 +53,8 @@ const CUT_OFF_NOTICE = "This answer was cut off. Ask me to continue.";
 
 const ERROR_MESSAGE = "Something went wrong while answering. Try again in a moment.";
 
-const RESET_SENTINEL = "<!RESET!>";
-
-// The chat sends no tools, but text a model writes before a tool call is narration ("I'll search
-// for..."). Holding back the start keeps it off screen; one that streamed already is reset instead.
-const NARRATION_HOLD_CHARS = 300;
+/** Pinned by LOG_MARKERS.chatAnswerFailed. */
+const VERIFY_FAILED_MARKER = "Chat verification failed:";
 
 const CHAT_WORKER_MARKER = "grantwellChatWorker";
 
@@ -285,7 +284,7 @@ async function loadGrantSource(nofoName) {
  * chats saved before it existed.
  */
 async function loadApplicantDocuments(userId, documentIdentifier, documentKeys, { citations = false } = {}) {
-  const none = { blocks: [], documents: [], included: [], skipped: [] };
+  const none = { blocks: [], documents: [], included: [], skipped: [], texts: [] };
   if (!userId || !process.env.USER_DOCUMENTS_BUCKET) return none;
   try {
     const docs = await loadSupportingDocuments({
@@ -298,8 +297,9 @@ async function loadApplicantDocuments(userId, documentIdentifier, documentKeys, 
     const name = (n) => String(n ?? "").replace(/["<>]/g, "");
     const included = [...docs.pdfs, ...docs.texts].map((d) => d.fileName);
     const skipped = docs.skipped.map(({ fileName, reason }) => ({ fileName, reason: SKIP_REASONS[reason] ?? reason }));
+    const texts = docs.texts.map((t) => String(t.content ?? ""));
     if (citations) {
-      const texts = docs.texts.filter((t) => String(t.content ?? "").trim());
+      const citable = docs.texts.filter((t) => String(t.content ?? "").trim());
       const blocks = [
         ...docs.pdfs.map((p) => ({
           type: "document",
@@ -308,7 +308,7 @@ async function loadApplicantDocuments(userId, documentIdentifier, documentKeys, 
           context: APPLICANT_DOCUMENT_CONTEXT,
           citations: { enabled: true },
         })),
-        ...texts.map((t) => ({
+        ...citable.map((t) => ({
           type: "document",
           source: { type: "text", media_type: "text/plain", data: String(t.content) },
           title: name(t.fileName),
@@ -316,8 +316,8 @@ async function loadApplicantDocuments(userId, documentIdentifier, documentKeys, 
           citations: { enabled: true },
         })),
       ];
-      const documents = [...docs.pdfs, ...texts].map((d) => ({ title: d.fileName }));
-      return { blocks, documents, included: documents.map((d) => d.title), skipped };
+      const documents = [...docs.pdfs, ...citable].map((d) => ({ title: d.fileName }));
+      return { blocks, documents, included: documents.map((d) => d.title), skipped, texts };
     }
     const closing = /<\s*\/\s*(applicant_documents|document)\s*>/gi;
     const blocks = [...pdfContentBlocks(docs)];
@@ -333,7 +333,7 @@ async function loadApplicantDocuments(userId, documentIdentifier, documentKeys, 
         ].join("\n"),
       });
     }
-    return { blocks, documents: [], included, skipped };
+    return { blocks, documents: [], included, skipped, texts };
   } catch (err) {
     console.warn("Could not load the supporting documents:", err.message);
     return none;
@@ -419,6 +419,7 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
     let modelResponse = "";
     let sources = [];
     let citations = [];
+    let verified = null;
     if (!grantSource) {
       modelResponse = GRANT_UNAVAILABLE_MESSAGE;
       await post(modelResponse);
@@ -436,77 +437,130 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
       }
 
       const today = new Date().toLocaleDateString("en-US", { timeZone: "America/New_York", year: "numeric", month: "long", day: "numeric" });
+      const context = `Active grant (documentIdentifier): ${documentIdentifier}${uploadedFilesList}\n\nToday's date is ${today} (US Eastern). Use it only to tell whether a date the grant states has passed.`;
       const { system, messages } = buildChatRequest({
         instructions: getPromptText(userState, { source: grantSource.kind }),
         grantText: grantSource.text,
         grantTitle: grantSource.title,
         citations: citing,
         applicantDocuments: applicant.blocks,
-        context: `Active grant (documentIdentifier): ${documentIdentifier}${uploadedFilesList}\n\nToday's date is ${today} (US Eastern). Use it when a question turns on whether a deadline has passed or how much time is left.`,
+        context,
         turns: savedChat.turns,
         question: userMessage,
       });
 
       const claude = new ClaudeModel();
-      let refusalCategory = null;
-      try {
-        const stream = await claude.getStreamedResponse(system, messages);
-        let callText = "";
-        let streamed = false;
-        const { stopReason, stopDetails, citations: found } = await claude.readStream(stream, async (text) => {
-          callText = callText.concat(text);
-          if (streamed) {
-            await post(text);
-          } else if (callText.length >= NARRATION_HOLD_CHARS) {
-            streamed = true;
-            await post(callText);
-          }
-        });
+      const documents = citing ? [{ title: "Grant document", pageStarts: grantSource.pageStarts }, ...applicant.documents] : [];
+      const userText = [...savedChat.turns.map((t) => t.user), userMessage].join("\n\n");
+      const baseKeys = sourceKeys([grantSource.text, ...applicant.texts, userText, context]);
 
-        if (stopReason === "tool_use") {
-          if (streamed) await post(RESET_SENTINEL);
-        } else {
-          if (!streamed && callText) await post(callText);
-          modelResponse = callText;
-          if (citing) {
-            const documents = [{ title: "Grant document", pageStarts: grantSource.pageStarts }, ...applicant.documents];
-            citations = numberCitations(found, documents).slice(0, MAX_CITATIONS);
-          }
-          if (stopReason === "refusal") {
-            refusalCategory = stopDetails?.category ?? "none";
-          } else if (stopReason === "max_tokens") {
-            const notice = modelResponse ? `\n\n${CUT_OFF_NOTICE}` : CUT_OFF_NOTICE;
-            modelResponse = modelResponse.concat(notice);
-            await post(notice);
-          }
-        }
-      } catch (error) {
-        console.error("Stream processing error:", error);
+      const fail = async (marker, error) => {
+        console.error(marker, error);
         await post(`<!ERROR!>: ${ERROR_MESSAGE}`);
-        return;
-      }
-
-      if (refusalCategory) {
-        console.warn(`Model refused the request (category: ${refusalCategory})`);
+      };
+      const generate = async (request) => {
         try {
-          await wsConnectionClient.send(new PostToConnectionCommand({
-            ConnectionId: id,
-            Data: modelResponse ? `\n\n${REFUSAL_MESSAGE}` : REFUSAL_MESSAGE,
-          }));
+          return await answerOnce(claude, system, request);
+        } catch (error) {
+          await fail("Stream processing error:", error);
+          return null;
+        }
+      };
+      const verify = async (attempt) => {
+        try {
+          return await verifyAnswer({
+            text: attempt.text,
+            found: attempt.found,
+            documents,
+            summary: citing ? null : grantSource.text,
+            baseKeys,
+            userText,
+            today,
+          });
+        } catch (error) {
+          await fail(VERIFY_FAILED_MARKER, error);
+          return null;
+        }
+      };
+      // Nothing streams before this point, so a refusal never follows partial text.
+      const refuse = async (category) => {
+        console.warn(`Model refused the request (category: ${category})`);
+        try {
+          await wsConnectionClient.send(new PostToConnectionCommand({ ConnectionId: id, Data: REFUSAL_MESSAGE }));
           await wsConnectionClient.send(new PostToConnectionCommand({ ConnectionId: id, Data: "!<|EOF_STREAM|>!" }));
           await wsConnectionClient.send(new PostToConnectionCommand({ ConnectionId: id, Data: "[]" }));
           await wsConnectionClient.send(new DeleteConnectionCommand({ ConnectionId: id }));
         } catch (e) {
           console.error("Error sending refusal message:", e);
         }
-        return;
-      }
+      };
+      const usable = async (attempt) => {
+        if (!attempt) return false;
+        if (attempt.refusalCategory) {
+          await refuse(attempt.refusalCategory);
+          return false;
+        }
+        if (!attempt.text.trim()) {
+          await fail("Stream processing error:", new Error("The model returned no answer text"));
+          return false;
+        }
+        return true;
+      };
 
-      if (!modelResponse) {
-        console.error("Stream processing error:", new Error("The model returned no answer text"));
-        await post(`<!ERROR!>: ${ERROR_MESSAGE}`);
-        return;
+      let attempt = await generate(messages);
+      if (attempt && !attempt.refusalCategory && !attempt.text.trim() && attempt.stopReason === "max_tokens") {
+        modelResponse = CUT_OFF_NOTICE;
+        verified = { regenerated: false, removed: 0 };
+      } else {
+        if (!(await usable(attempt))) return;
+        const started = Date.now();
+        const first = await verify(attempt);
+        if (!first) return;
+        let result = first;
+        const regenerated = first.failing.length > 0;
+        if (regenerated) {
+          const last = messages.at(-1);
+          const statements = first.failing.map((i) => first.units[i].text);
+          const retryMessages = [
+            ...messages.slice(0, -1),
+            { ...last, content: [...last.content, { type: "text", text: problemsText(statements) }] },
+          ];
+          attempt = await generate(retryMessages);
+          if (!(await usable(attempt))) return;
+          result = await verify(attempt);
+          if (!result) return;
+        }
+
+        let answerText = attempt.text;
+        let found = attempt.found;
+        let fallback = false;
+        if (result.failing.length) {
+          const failing = new Set(result.failing);
+          if (result.verdicts.some((v, i) => !failing.has(i) && v.verdict === "supported")) {
+            ({ text: answerText, found } = removeUnits(answerText, result.units, result.failing, found));
+            answerText = `${answerText}\n\n${LEFT_OUT_NOTE}`;
+          } else {
+            fallback = true;
+            answerText = NOTHING_CONFIRMED_MESSAGE;
+            found = [];
+          }
+        }
+        verified = { regenerated, removed: result.failing.length };
+        console.log(`${VERIFY_MARKER} ${JSON.stringify({
+          ...verified,
+          fallback,
+          sentences: first.units.length,
+          factFails: first.factFailing.length,
+          meaningFails: first.meaningFailing.length,
+          ...(regenerated && { retryFactFails: result.factFailing.length, retryMeaningFails: result.meaningFailing.length }),
+          ms: Date.now() - started,
+        })}`);
+
+        modelResponse = answerText;
+        if (citing) citations = numberCitations(found, documents).slice(0, MAX_CITATIONS);
+        if (attempt.stopReason === "max_tokens" && !fallback) modelResponse = `${modelResponse}\n\n${CUT_OFF_NOTICE}`;
       }
+      await post(modelResponse);
       sources = [grantSource.source, ...applicant.included.map((fileName) => ({ title: fileName, uri: `userDocuments/${fileName}` }))];
     }
 
@@ -539,7 +593,11 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
       operation: "update_session",
       user_id: userId,
       session_id: sessionId,
-      new_chat_entry: [{ user: userMessage, chatbot: modelResponse, metadata: links }],
+      new_chat_entry: [{
+        user: userMessage,
+        chatbot: modelResponse,
+        metadata: JSON.stringify({ Sources: sources, ...(citations.length && { Citations: citations }), Verified: verified }),
+      }],
       title: `Chat about ${documentIdentifier}`,
       document_identifier: documentIdentifier,
     });
@@ -562,6 +620,17 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
     await wsConnectionClient.send(command);
   }
 };
+
+/** One buffered model answer; text a call wrote before a tool call is narration, never an answer. */
+async function answerOnce(claude, system, messages) {
+  const stream = await claude.getStreamedResponse(system, messages);
+  let text = "";
+  const { stopReason, stopDetails, citations } = await claude.readStream(stream, async (delta) => {
+    text = text.concat(delta);
+  });
+  if (stopReason === "tool_use") return { text: "", found: [], stopReason };
+  return { text, found: citations, stopReason, refusalCategory: stopReason === "refusal" ? stopDetails?.category ?? "none" : null };
+}
 
 /**
  * Counts one message against the user's cap for the current UTC day. False once the cap is
