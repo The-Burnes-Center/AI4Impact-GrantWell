@@ -112,6 +112,9 @@ This release makes it easier to write and keep track of your applications. You c
 
 - Grant summaries now use the newer AI model
 - Deadlines show on the right day: a deadline late in the day no longer shows as the next day
+- Times show exactly as the grant gives them; when a grant uses another US time zone, the Requirements page adds the Eastern Time in brackets, for example "5:00 PM MT (7:00 PM ET)"
+- A grant that accepts applications in several rounds now uses its final closing date as its deadline, so it no longer leaves Home after the first round closes
+- Tables in grant documents, such as due-date tables, are read row by row, so dates stay with the right application type
 - Each required narrative section is listed once, so you don't write the same thing twice
 - Links in grant summaries open only secure (https) addresses, and summaries no longer show images
 
