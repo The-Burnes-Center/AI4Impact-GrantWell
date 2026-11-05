@@ -211,6 +211,13 @@ describe("answer units", () => {
     expect(prompt).toContain("<supporting_documents>\nThe board approved a $415,000 match.\n</supporting_documents>");
   });
 
+  it("names why each statement failed when asking again", () => {
+    expect(problemsText([{ text: "- November 5, 2026 (passed)", reason: "it says a date has or hasn't passed wrongly for today (November 4, 2026); mark each date on its own" }])).toContain(
+      '- "November 5, 2026 (passed)" (it says a date has or hasn\'t passed wrongly for today (November 4, 2026); mark each date on its own)'
+    );
+    expect(dateStatusFailures(splitSentences("- October 5, 2026 (passed)\n- November 5, 2026 (passed)"), "November 4, 2026")).toEqual([1]);
+  });
+
   it("asks for the answer again with the statements that failed", () => {
     expect(problemsText(["- Cities get $5 million.", "It closes in 3 days."])).toBe(
       'These statements could not be confirmed in the grant:\n- "Cities get $5 million."\n- "It closes in 3 days."\nAnswer again using only what the grant states; where the grant doesn\'t say, say so.'
@@ -287,7 +294,7 @@ describe("verified chat answers", () => {
     expect(retry.messages.at(-1).content.slice(0, -1)).toEqual(first.messages.at(-1).content);
     expect(retry.messages.at(-1).content.at(-1)).toEqual({
       type: "text",
-      text: 'These statements could not be confirmed in the grant:\n- "Applications are due March 3, 2027."\nAnswer again using only what the grant states; where the grant doesn\'t say, say so.',
+      text: 'These statements could not be confirmed in the grant:\n- "Applications are due March 3, 2027." (a date, amount or number in it isn\'t in the grant)\nAnswer again using only what the grant states; where the grant doesn\'t say, say so.',
     });
     expect(retry.system).toEqual(first.system);
     expect(posted()[0]).toBe("Applications are due March 1, 2027.");

@@ -112,6 +112,7 @@ const SYSTEM = `You check a grant assistant's answer one sentence at a time agai
   - what a person, office or website can do or tells you (who to contact for what, where to find something);
   - how two limits, amounts or rules relate (one inside another, one replacing another);
   - which column, row or application type a date or number belongs to when the passage is a table whose labels and values don't line up clearly.
+- A weekday the grant itself gives with a date is supported, even if it doesn't fall on that date.
 - A sentence saying the grant does not say, cover, specify, distinguish or address something (or that something is the only rule it gives) is a claim about the whole grant: supported only if the grant text really says nothing more about it; unsupported if the grant addresses it anywhere, even partly or in another section.
 - not_a_claim: greetings, offers to help, questions to the user, headings, advice to confirm with the program officer, and pointers to GrantWell's Write Application feature.
 
@@ -189,7 +190,7 @@ export async function checkMeaning(options, { client, modelId = process.env.VERI
  * Both checks on one answer. `baseKeys` are sourceKeys of the grant, the user's documents and words
  * and the context; the answer's own cited passages are added here.
  */
-const PASSED = /\b(?:was|were)\s+due\b|\b(?:has|have|had)\s+(?:already\s+)?passed\b|\b(?:is|are|was|were)\s+(?:now\s+)?(?:past|closed|over)\b|\bhas\s+(?:already\s+)?(?:closed|ended|expired)\b|\balready\s+(?:passed|closed|ended)\b/i;
+const PASSED = /\(passed\)|:\**\s*passed\b|\b(?:was|were)\s+due\b|\b(?:has|have|had)\s+(?:already\s+)?passed\b|\b(?:is|are|was|were)\s+(?:now\s+)?(?:past|closed|over)\b|\bhas\s+(?:already\s+)?(?:closed|ended|expired)\b|\balready\s+(?:passed|closed|ended)\b/i;
 const NOT_PASSED = /\b(?:has|have)\s*n[o']t\s+(?:yet\s+)?passed\b|\b(?:has|have)\s+not\s+(?:yet\s+)?passed\b|\bnot\s+yet\s+passed\b|\bstill\s+(?:open|ahead|to come)\b|\bis\s+(?:still\s+)?upcoming\b/i;
 
 /**
@@ -233,7 +234,15 @@ export function weekdayFailures(units, grantText = "") {
 export async function verifyAnswer({ text, found = [], documents = [], summary = null, documentText = "", grantText = "", baseKeys, today = "" }, deps) {
   const units = splitSentences(text);
   const keys = unionKeys(baseKeys, found.map((f) => f.citation?.cited_text ?? ""));
-  const factFailing = [...new Set([...factFailures(units, keys), ...dateStatusFailures(units, today), ...weekdayFailures(units, grantText)])].sort((x, y) => x - y);
+  const reasons = new Map();
+  const note = (list, reason) => list.forEach((i) => reasons.has(i) || reasons.set(i, reason));
+  const facts = factFailures(units, keys);
+  const statuses = dateStatusFailures(units, today);
+  const weekdays = weekdayFailures(units, grantText);
+  note(statuses, `it says a date has or hasn't passed wrongly for today (${today}); mark each date on its own`);
+  note(weekdays, "its weekday doesn't fall on that date");
+  note(facts, "a date, amount or number in it isn't in the grant");
+  const factFailing = [...new Set([...facts, ...statuses, ...weekdays])].sort((x, y) => x - y);
   const verdicts = await checkMeaning({ units, found, documents, summary, documentText, grantText, today }, deps);
   const absenceFailing = verdicts.flatMap((v, i) => {
     if (v.verdict !== "not_a_claim") return [];
@@ -243,8 +252,10 @@ export async function verifyAnswer({ text, found = [], documents = [], summary =
     return [i];
   });
   const meaningFailing = verdicts.flatMap((v, i) => (v.verdict === "supported" || v.verdict === "not_a_claim" ? [] : [i]));
+  note(meaningFailing, null);
+  meaningFailing.forEach((i) => reasons.get(i) || reasons.set(i, verdicts[i].reason || null));
   const failing = [...new Set([...factFailing, ...meaningFailing])].sort((a, b) => a - b);
-  return { units, verdicts, factFailing, meaningFailing, absenceFailing, failing };
+  return { units, verdicts, factFailing, meaningFailing, absenceFailing, failing, reasons };
 }
 
 const ABSENCE = /\b(?:grant|notice|nofo|solicitation|announcement|document)\b[^.]{0,40}?\b(?:does not|doesn't|did not|didn't|do not|don't)\s+(?:say|state|mention|specify|address|list|include|cover|describe|set|give|provide|require|explain|name|clarify|define|label|indicate|identify|tie|link)\b\s*(?:anything\s+)?(?:about|on|whether|if|how|what|when|which|who|any|a|an|the)?\s*([^.;:?!]+)/i;
@@ -281,9 +292,13 @@ export function mentions(text, topic) {
 
 /** The final user-turn block that asks for the answer again. */
 export function problemsText(statements) {
+  const line = (s) => {
+    const { text, reason } = typeof s === "string" ? { text: s, reason: null } : s;
+    return `- "${text.replace(/^\s*(?:[-*+•]|\d+[.)])\s+/, "")}"${reason ? ` (${reason})` : ""}`;
+  };
   return [
     "These statements could not be confirmed in the grant:",
-    ...statements.map((s) => `- "${s.replace(/^\s*(?:[-*+•]|\d+[.)])\s+/, "")}"`),
+    ...statements.map(line),
     "Answer again using only what the grant states; where the grant doesn't say, say so.",
   ].join("\n");
 }

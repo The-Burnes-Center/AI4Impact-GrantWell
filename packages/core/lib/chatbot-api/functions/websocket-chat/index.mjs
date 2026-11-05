@@ -571,7 +571,7 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
         const regenerated = first.failing.length > 0;
         if (regenerated) {
           const last = messages.at(-1);
-          const statements = first.failing.map((i) => first.units[i].text);
+          const statements = first.failing.map((i) => ({ text: first.units[i].text, reason: first.reasons?.get(i) ?? null }));
           const retryMessages = [
             ...messages.slice(0, -1),
             { ...last, content: [...last.content, { type: "text", text: problemsText(statements) }] },
