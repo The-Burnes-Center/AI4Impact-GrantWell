@@ -9,7 +9,18 @@ import Dashboard from "./DashboardPage";
 
 const stub = vi.hoisted(() => (name: string) => ({ default: () => <p>{name} panel</p> }));
 vi.mock("../../components/navigation/UnifiedNavigation", () => ({ default: (): null => null }));
-vi.mock("./components/NOFOsTab", () => stub("Grants"));
+vi.mock("./components/NOFOsTab", () => ({
+  default: ({ nofos }: { nofos: { name: string }[] }) => (
+    <>
+      <p>Grants panel</p>
+      <ul aria-label="Listed grants">
+        {nofos.map((n) => (
+          <li key={n.name}>{n.name}</li>
+        ))}
+      </ul>
+    </>
+  ),
+}));
 vi.mock("./components/ProcessingTab", () => stub("Processing"));
 vi.mock("./components/ProcessingReviewTab", () => stub("Review"));
 vi.mock("./components/AnalyticsTab", () => stub("Analytics"));
@@ -95,5 +106,28 @@ describe("Admin Dashboard tabs", () => {
     await user.keyboard("{ArrowLeft}");
     expect(tab("User Management")).toHaveFocus();
     expect(tab("Grants")).toHaveAttribute("tabindex", "-1");
+  });
+});
+
+describe("Admin Dashboard grant list", () => {
+  it("keeps a live grant listed while its new version runs or waits for review, and leaves new ones to Processing", async () => {
+    stubFetch({
+      "GET /s3-nofo-bucket-data": json({
+        nofoData: [
+          { name: "Live Grant", status: "active", processing_status: "checking_sources" },
+          { name: "Waiting Grant", status: "active", processing_status: "quarantined" },
+          { name: "New Grant", status: "processing", processing_status: "extracting_text" },
+          { name: "Held Grant", status: "quarantined", processing_status: "quarantined" },
+          { name: "Plain Grant", status: "active" },
+        ],
+      }),
+      "GET /admin/processing-metrics": json({ metrics }),
+    });
+    signedInAs({ "custom:role": '["Developer"]' });
+    renderDashboard();
+
+    await screen.findByText("Plain Grant");
+    const list = screen.getByRole("list", { name: "Listed grants" });
+    expect([...list.querySelectorAll("li")].map((li) => li.textContent)).toEqual(["Live Grant", "Plain Grant", "Waiting Grant"]);
   });
 });

@@ -61,6 +61,10 @@ export interface ReviewDetail extends ReviewItem {
   admin_notes: string | null;
   corrections: Record<string, unknown> | null;
   adminGuidance: AdminGuidance | null;
+  /** The status a held grant had before it was held; approving restores it. */
+  previous_status?: string;
+  /** Set when the grant's published version stays live while this new version is reviewed. */
+  live_status?: string;
 }
 
 export interface ProcessingMetrics {

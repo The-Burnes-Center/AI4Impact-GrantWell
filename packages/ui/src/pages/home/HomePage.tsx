@@ -109,8 +109,9 @@ export default function HomePage() {
         const folders = result.folders || [];
 
         if (result.nofoData) {
+          // A live grant stays listed while a new version of it is processed.
           const readyNofos = result.nofoData.filter(
-            (nofo: RawNOFOData) => !nofo.processing_status
+            (nofo: RawNOFOData) => nofo.status === "active" || nofo.status === "archived"
           );
 
           const sortedNofos = [...readyNofos].sort(
