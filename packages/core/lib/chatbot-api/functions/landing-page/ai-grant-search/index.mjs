@@ -331,6 +331,7 @@ function resolveCallerScope(event) {
 function callerCanSeeGrant(callerScope, meta) {
   if (callerScope.role === 'developer' || callerScope.role === 'regularAdmin') return true;
   if (!meta) return false;
+  if (meta.status === 'quarantined' || meta.status === 'processing') return false;
   const scope = meta.scope || 'federal';
   if (scope === 'federal') return true;
   return scope === 'state' && Boolean(meta.state) && meta.state === callerScope.state;

@@ -3152,7 +3152,8 @@ select.form-input {
   font-size: 13px;
 }
 
-.review-dlq-guidance ol {
+.review-dlq-guidance ol,
+.review-dlq-guidance ul {
   margin: 8px 0 0;
   padding-left: 20px;
 }

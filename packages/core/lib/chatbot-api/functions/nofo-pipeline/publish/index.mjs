@@ -5,7 +5,8 @@ import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { updateProcessingStatus } from "../shared/status.mjs";
 import { hasQuestions } from "../shared/questions.mjs";
-import { artifactsBucket, withSectionIds } from "grantwell-shared";
+import { artifactsBucket, isMissingObject, putArtifact, readArtifactText, withSectionIds } from "grantwell-shared";
+import { CITATIONS_FILE, itemsHash, requirementItems } from "../shared/cite.mjs";
 
 // scope/state are written by upload-nofos / scraper; publish reads them so
 // the late-stage sidecar overwrite doesn't drop these fields.
@@ -49,6 +50,7 @@ export const handler = async (event) => {
     corrections,
     contentHash,
     adminGuidance,
+    reviewApproval,
   } = event;
 
   if (!mergedSummary || typeof mergedSummary !== "object") {
@@ -82,6 +84,8 @@ export const handler = async (event) => {
   await uploadJson(artifactsBucket(), `${folderPath}summary.json`, finalSummary);
 
   await uploadJson(artifactsBucket(), `${folderPath}questions.json`, questionsData);
+
+  if (reviewApproval) await recordApproval(nofoName, finalSummary, reviewApproval);
 
   const docKey = documentKey || `${nofoName}/NOFO-File-PDF`;
   const { scope: ddbScope, state: ddbState } = await readScopeFromMetadataTable(nofoName);
@@ -219,6 +223,34 @@ export const handler = async (event) => {
     published: true,
   };
 };
+
+/**
+ * An admin approved these exact items after review, so the live-grant check does not flag them
+ * again until they change. Kept in requirements-citations.json, which cite-requirements carries it
+ * across when it rewrites the file.
+ */
+async function recordApproval(nofoName, summary, { reviewId = null, by = null, at = new Date().toISOString() }) {
+  const key = `${nofoName}/${CITATIONS_FILE}`;
+  try {
+    let file = null;
+    try {
+      file = JSON.parse(await readArtifactText(s3Client, key));
+    } catch (error) {
+      if (!isMissingObject(error) && !(error instanceof SyntaxError)) throw error;
+    }
+    file = file && typeof file === "object" ? file : { items: {} };
+    file.approval = {
+      at,
+      by,
+      reviewId,
+      itemsHash: itemsHash(requirementItems(summary)),
+      applicationDeadline: summary?.application_deadline || null,
+    };
+    await putArtifact(s3Client, key, JSON.stringify(file), "application/json");
+  } catch (error) {
+    console.error(`Could not record the review approval for ${nofoName}; a later live check may flag it again:`, error);
+  }
+}
 
 async function uploadJson(bucket, key, data) {
   await new Upload({

@@ -56,6 +56,7 @@ vi.mock("@aws-sdk/client-lambda", () => ({
 vi.mock("grantwell-shared", async () => ({
   ...(await import("../lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/grantwell-shared/sections.mjs")),
   ...(await import("../lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/grantwell-shared/artifacts.mjs")),
+  ...(await import("../lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/grantwell-shared/requirement-citations.mjs")),
   requireAdmin: () => null,
   assertCanEditNofoOr403: async () => null,
   resolveCallerScope: () => ({ role: "admin" }),

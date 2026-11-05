@@ -1,6 +1,6 @@
 import { screen, waitFor, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import type { ReviewItem } from "../../../common/types/processing-review";
+import type { ReviewDetail, ReviewItem } from "../../../common/types/processing-review";
 import { json, stubFetch, type RouteRequest } from "../../../test/fetch-routes";
 import { renderApp, testApiClient } from "../../../test/render";
 import ProcessingReviewTab from "./ProcessingReviewTab";
@@ -186,5 +186,60 @@ describe("ProcessingReviewTab", () => {
     await user.click(within(dialog).getByRole("button", { name: "Cancel" }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(net.to(CLOSE_EXPIRED)).toHaveLength(0);
+  });
+});
+
+describe("requirements the grant doesn't support", () => {
+  const held = review("Held-Grant", "pending_review", {
+    source: "verification",
+    unverifiedCount: 2,
+    guidanceTitle: "Some requirements could not be confirmed in the grant",
+    guidanceSeverity: "critical",
+  });
+  const detail: ReviewDetail = {
+    ...held,
+    extractedSummary: { EligibilityCriteria: [{ item: "Tribes", description: "Tribal governments may apply." }] },
+    extractedQuestions: null,
+    validationResult: { overallVerdict: "NEEDS_REVIEW" },
+    s3DocumentKey: "",
+    s3RawTextKey: "",
+    documentTextPreview: "",
+    reviewed_by: null,
+    reviewed_at: null,
+    admin_notes: null,
+    corrections: null,
+    adminGuidance: {
+      reason: "unverified_items",
+      severity: "critical",
+      title: "Some requirements could not be confirmed in the grant",
+      message: '"Held-Grant" was live and has been unpublished until it is reviewed.',
+      actions: ["Check each item listed below against the grant document."],
+      missingCategories: [],
+      canApprove: true,
+      failingItems: [
+        { category: "EligibilityCriteria", label: "Eligibility Criteria", item: "Tribes", reason: "No passage in the grant states this." },
+        { category: "application_deadline", label: "Application deadline", item: "2027-04-01", reason: "The date 2027-04-01 does not appear in the grant." },
+      ],
+    },
+  };
+
+  it("counts them in the queue and names each one with its reason in the review", async () => {
+    stubFetch({
+      [REVIEWS]: json({ reviews: [held], expiredOpenCount: 0 }),
+      [METRICS]: json({ metrics }),
+      "GET /admin/processing-reviews/Held-Grant": json({ review: detail }),
+    });
+    const { user } = renderApp(<ProcessingReviewTab apiClient={testApiClient()} addNotification={vi.fn()} />);
+    await screen.findByText("Held-Grant");
+    expect(screen.getByText("Not confirmed: 2 requirements")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "View details for Held-Grant" }));
+
+    const heading = await screen.findByText("Requirements not confirmed in the grant:");
+    const items = within(heading.parentElement as HTMLElement).getAllByRole("listitem").map((li) => li.textContent);
+    expect(items).toEqual([
+      "Eligibility Criteria: “Tribes” — No passage in the grant states this.",
+      "Application deadline: “2027-04-01” — The date 2027-04-01 does not appear in the grant.",
+    ]);
   });
 });

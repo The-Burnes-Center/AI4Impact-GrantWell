@@ -44,6 +44,7 @@ const SOURCE_LABELS: Record<string, string> = {
   "scraper-dlq": "Scraper failure",
   duplicate: "Duplicate detected",
   quality: "Quality check",
+  verification: "Live grant check",
 };
 
 const REPROCESSABLE_STATUSES = new Set(["failed", "pending_review", "needs_reupload"]);
@@ -283,6 +284,14 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
   };
 
   const getReasonSummary = (review: ReviewItem) => {
+    if (review.unverifiedCount) {
+      return (
+        <span className="review-issue-count review-issue-count--critical">
+          Not confirmed: {review.unverifiedCount} {review.unverifiedCount === 1 ? "requirement" : "requirements"}
+        </span>
+      );
+    }
+
     if (review.missingSections && review.missingSections.length > 0) {
       return (
         <span className="review-issue-count review-issue-count--warning">

@@ -1,9 +1,11 @@
 import { updateProcessingStatus } from "../shared/status.mjs";
 import { hasMeaningfulContent, SUMMARY_ARRAY_FIELDS } from "../shared/json.mjs";
 import { hasQuestions } from "../shared/questions.mjs";
+import { unverifiedItemsGuidance } from "../shared/unverified-guidance.mjs";
 
 export const handler = async (event) => {
   const { nofoName, mergedSummary, questionsData, failedChunks } = event;
+  const failingItems = Array.isArray(event.failingItems) ? event.failingItems : [];
 
   await updateProcessingStatus(nofoName, "validating");
 
@@ -20,6 +22,8 @@ export const handler = async (event) => {
     reason = "mostly_empty";
   } else if (!hasQuestions(questionsData)) {
     reason = "no_questions";
+  } else if (failingItems.length > 0) {
+    reason = "unverified_items";
   } else if (missingSections.length > 0) {
     reason = "partial_extraction";
   } else if (missingParts) {
@@ -27,13 +31,17 @@ export const handler = async (event) => {
   }
 
   const adminGuidance = reason
-    ? buildAdminGuidance(reason, { emptyCategories: missingSections, nofoName, missingParts })
+    ? buildAdminGuidance(reason, { emptyCategories: missingSections, nofoName, missingParts, failingItems })
     : null;
+  if (adminGuidance && failingItems.length > 0 && reason !== "unverified_items") {
+    adminGuidance.failingItems = unverifiedItemsGuidance(nofoName, failingItems).failingItems;
+  }
 
   // partial_extraction (1-2 missing) is approvable, so auto-publish it and let the guidance ride along
-  // as an advisory review flag. Anything else, including an unread part of the text, blocks on review.
+  // as an advisory review flag. Anything else, including an unread part of the text or a single
+  // requirement the grant doesn't support, blocks on review.
   let validationResult;
-  if (!reason || (reason === "partial_extraction" && !missingParts)) {
+  if (failingItems.length === 0 && (!reason || (reason === "partial_extraction" && !missingParts))) {
     validationResult = { overallVerdict: "PASS" };
     console.log(
       reason
@@ -45,6 +53,8 @@ export const handler = async (event) => {
     console.log(
       reason === "no_questions"
         ? `Content check NEEDS_REVIEW for ${nofoName}: no application questions generated`
+        : reason === "unverified_items"
+          ? `Content check NEEDS_REVIEW for ${nofoName}: ${failingItems.length} requirement(s) not confirmed in the grant`
         : reason === "partial_document"
           ? `Content check NEEDS_REVIEW for ${nofoName}: part of the text unread`
           : `Content check NEEDS_REVIEW for ${nofoName}: missing ${missingSections.join(", ")}`
@@ -74,8 +84,18 @@ function describeMissingParts(failedChunks) {
  * This tells the admin exactly what went wrong and what they should do.
  */
 function buildAdminGuidance(reason, context) {
-  const { emptyCategories, nofoName, missingParts } = context;
+  const { emptyCategories, nofoName, missingParts, failingItems } = context;
   const missingList = emptyCategories.join(", ");
+
+  if (reason === "unverified_items") {
+    const guidance = { ...unverifiedItemsGuidance(nofoName, failingItems), missingCategories: emptyCategories };
+    if (emptyCategories.length > 0) guidance.message += ` The extraction is also missing: ${missingList}.`;
+    if (missingParts) {
+      guidance.missingParts = missingParts;
+      guidance.message = `${missingParts} ${guidance.message}`;
+    }
+    return guidance;
+  }
 
   const guidance = {
     reason,
