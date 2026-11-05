@@ -27,6 +27,15 @@ ChatVerifiedFilter38593008	AWS::Logs::MetricFilter
 CreateMetadataFailedFilter2C34B016	AWS::Logs::MetricFilter
 CreateMetadataFailedLogGroupExists9855E594	Custom::AWS
 CreateMetadataFailedLogGroupExistsCustomResourcePolicyB180CB19	AWS::IAM::Policy
+DailyBriefComponentsC15167C9	AWS::SSM::Parameter
+DailyBriefFailingAlarm33CE92EA	AWS::CloudWatch::Alarm
+DailyBriefFunction78463219	AWS::Lambda::Function
+DailyBriefFunctionServiceRoleAD3FB914	AWS::IAM::Role
+DailyBriefFunctionServiceRoleDefaultPolicyFE9FF85E	AWS::IAM::Policy
+DailyBriefLogGroup098F167D	AWS::Logs::LogGroup
+DailyBriefMissingAlarmC47E7500	AWS::CloudWatch::Alarm
+DailyBriefSchedule99515B48	AWS::Events::Rule
+DailyBriefScheduleAllowEventRulegrantwellburnesstagingChatbotAPIMonitoringStackDailyBriefFunction232FB111296B728A	AWS::Lambda::Permission
 DigestFailingAlarmC96125F6	AWS::CloudWatch::Alarm
 DigestSendFailedFilter8C21163C	AWS::Logs::MetricFilter
 DigestSendFailedLogGroupExists48E4AF46	Custom::AWS

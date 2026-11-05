@@ -62,6 +62,9 @@ const PROD_ONLY_ALARMS: [string, string, number][] = [
   ["SES bounce rate heading for a sending pause", "medium", 0.05],
   ["processing-queue email failing", "low", 1],
   ["daily grants.gov scrape has stopped", "medium", 1],
+];
+// Dev has the brief too, so testers' flagged chat answers reach Slack during QA.
+const BRIEF_ALARMS: [string, string, number][] = [
   ["the daily health brief has stopped running", "low", 1],
   ["the daily health brief is failing", "medium", 1],
 ];
@@ -107,7 +110,7 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
       if (!found) throw new Error(`No alarm "${suffix}"`);
       return found;
     };
-    const expected = env === "prod" ? [...COMMON_ALARMS, ...PROD_ONLY_ALARMS] : COMMON_ALARMS;
+    const expected = env === "prod" ? [...COMMON_ALARMS, ...PROD_ONLY_ALARMS, ...BRIEF_ALARMS] : [...COMMON_ALARMS, ...BRIEF_ALARMS];
 
     it("has exactly the expected alarms", () => {
       expect(alarms.map((a) => a.AlarmName).sort()).toEqual(expected.map(([n]) => `${prefix} ${n}`).sort());
@@ -182,17 +185,11 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
       }
     });
 
-    it("builds the daily brief only where configured", () => {
+    it("builds the daily brief in both stages", () => {
       const parameters = ofType("AWS::SSM::Parameter").map(([, r]) => r.Properties.Name);
       const rules = ofType("AWS::Events::Rule").map(([, r]) => r.Properties.ScheduleExpression).sort();
-      const always = ["cron(30 12 * * ? *)", "rate(15 minutes)"];
-      if (env === "prod") {
-        expect(parameters).toEqual([`/${prefix}/daily-brief/components`]);
-        expect(rules).toEqual(["cron(0 13 * * ? *)", ...always].sort());
-      } else {
-        expect(parameters).toEqual([]);
-        expect(rules).toEqual(always);
-      }
+      expect(parameters).toEqual([`/${prefix}/daily-brief/components`]);
+      expect(rules).toEqual(["cron(0 13 * * ? *)", "cron(30 12 * * ? *)", "rate(15 minutes)"].sort());
     });
 
     const fnNamed = (name: string) => {
