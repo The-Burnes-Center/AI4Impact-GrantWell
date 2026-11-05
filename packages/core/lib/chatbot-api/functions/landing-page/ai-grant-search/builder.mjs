@@ -48,7 +48,8 @@ const KEEP_BUILDS = 3;
 const EMBED_CONCURRENCY = 8;
 const PROFILE_CONCURRENCY = 6;
 const RAW_TEXT_BYTES = 24_000;
-const PROFILE_MAX_TOKENS = 400;
+// About 1,400 characters of profile is kept; 400 tokens cut off about one profile in seven before that.
+const PROFILE_MAX_TOKENS = 800;
 const PROFILE_MAX_CHARS = 1_400;
 const RESERVED_MS = 180_000;
 const MAX_RETRIES = 4;
