@@ -11,10 +11,12 @@ import { marshall } from "@aws-sdk/util-dynamodb";
 import {
   DOCUMENT_FILES,
   REQUIREMENT_CITATIONS_FILE,
+  SOURCE_VERSION_METADATA,
   artifactsBucket,
   copySource,
   deletePending,
   isMissingObject,
+  isPendingKey,
   listPending,
   pendingDir,
 } from "grantwell-shared";
@@ -96,11 +98,35 @@ async function recordDocumentEtags(nofoName, etags) {
 
 const isDocument = (key) => DOCUMENT_FILES.some((file) => key.endsWith(`/${file}`));
 
+export class StaleVersionError extends Error {
+  constructor(nofoName) {
+    super(`A newer document for "${nofoName}" was uploaded after this version was processed; its run replaces this one.`);
+    this.name = "StaleVersionError";
+  }
+}
+
+/**
+ * True when a run of a staged document is no longer the newest: another upload replaced the
+ * document (or Reject removed it) since. Unknown versions, and an S3 read error, are never stale:
+ * holding a review that turns out stale is safe, since swapIn refuses it.
+ */
+export async function isStaleRun(documentKey, documentVersionId) {
+  if (!documentVersionId || !isPendingKey(documentKey)) return false;
+  try {
+    const current = await head(artifactsBucket(), documentKey);
+    return current?.VersionId !== documentVersionId;
+  } catch (error) {
+    console.warn(`Could not check whether ${documentKey} was replaced:`, error.message);
+    return false;
+  }
+}
+
 /**
  * Copies a staged version over the published one. Returns the published document key. Throws,
- * changing nothing, when the staged document is gone (rejected, renamed, or superseded and cleared).
+ * changing nothing, when the staged document is gone (rejected, renamed, or superseded and cleared),
+ * or is not the version this run processed (StaleVersionError).
  */
-export async function swapIn(nofoName, stagedDocumentKey, grantBucket) {
+export async function swapIn(nofoName, stagedDocumentKey, grantBucket, documentVersionId = null) {
   const dir = pendingDir(nofoName);
   const file = stagedDocumentKey.slice(dir.length);
   if (!stagedDocumentKey.startsWith(dir) || !DOCUMENT_FILES.includes(file)) {
@@ -111,14 +137,26 @@ export async function swapIn(nofoName, stagedDocumentKey, grantBucket) {
     throw new Error(`The new version of "${nofoName}" is no longer staged; reprocess the grant instead.`);
   }
 
-  await ensureJournal(nofoName, grantBucket);
   const artifacts = artifactsBucket();
+  const source = await head(artifacts, stagedDocumentKey);
+  if (documentVersionId) {
+    if (source?.VersionId !== documentVersionId) throw new StaleVersionError(nofoName);
+    for (const name of STAGED_FILES.filter((f) => staged.has(`${dir}${f}`))) {
+      const derived = await head(artifacts, `${dir}${name}`);
+      if (derived?.Metadata?.[SOURCE_VERSION_METADATA] !== documentVersionId) throw new StaleVersionError(nofoName);
+    }
+  }
+
+  await ensureJournal(nofoName, grantBucket);
   const documentKey = `${nofoName}/${file}`;
 
-  const source = await head(artifacts, stagedDocumentKey);
   await recordDocumentEtags(nofoName, [normalizeEtag(source?.ETag)]);
   const copied = await s3.send(
-    new CopyObjectCommand({ Bucket: grantBucket, CopySource: copySource(artifacts, stagedDocumentKey), Key: documentKey })
+    new CopyObjectCommand({
+      Bucket: grantBucket,
+      CopySource: copySource(artifacts, stagedDocumentKey) + (documentVersionId ? `?versionId=${encodeURIComponent(documentVersionId)}` : ""),
+      Key: documentKey,
+    })
   );
   const copiedEtag = normalizeEtag(copied?.CopyObjectResult?.ETag);
   if (copiedEtag && copiedEtag !== normalizeEtag(source?.ETag)) await recordDocumentEtags(nofoName, [copiedEtag]);

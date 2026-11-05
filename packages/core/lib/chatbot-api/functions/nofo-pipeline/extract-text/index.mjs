@@ -6,7 +6,7 @@ import {
   StartDocumentTextDetectionCommand,
   GetDocumentTextDetectionCommand,
 } from "@aws-sdk/client-textract";
-import { artifactDirOf, artifactsBucket } from "grantwell-shared";
+import { artifactDirOf, artifactsBucket, sourceVersionMetadata } from "grantwell-shared";
 import { updateProcessingStatus } from "../shared/status.mjs";
 import { PAGE_MAP_FILE, joinLines, pageMap } from "./page-map.mjs";
 
@@ -16,7 +16,7 @@ const s3Client = new S3Client();
 const textractClient = new TextractClient({ region: process.env.AWS_REGION || 'us-east-1' });
 
 export const handler = async (event) => {
-  const { s3Bucket, documentKey, nofoName } = event;
+  const { s3Bucket, documentKey, documentVersionId, nofoName } = event;
 
   await updateProcessingStatus(nofoName, "extracting_text");
 
@@ -25,9 +25,9 @@ export const handler = async (event) => {
   let pageStarts = null;
 
   if (fileName === "NOFO-File-PDF") {
-    ({ text: documentContent, pageStarts } = await extractPdfText(s3Bucket, documentKey));
+    ({ text: documentContent, pageStarts } = await extractPdfText(s3Bucket, documentKey, documentVersionId));
   } else if (fileName === "NOFO-File-TXT") {
-    documentContent = await extractTxtContent(s3Bucket, documentKey);
+    documentContent = await extractTxtContent(s3Bucket, documentKey, documentVersionId);
   } else {
     throw new Error(`Unsupported file type: ${fileName}`);
   }
@@ -37,6 +37,7 @@ export const handler = async (event) => {
   }
 
   const dir = artifactDirOf(nofoName, documentKey);
+  const metadata = sourceVersionMetadata(documentVersionId);
   const rawTextKey = `${dir}raw-text.txt`;
   await new Upload({
     client: s3Client,
@@ -45,6 +46,7 @@ export const handler = async (event) => {
       Key: rawTextKey,
       Body: documentContent,
       ContentType: "text/plain",
+      ...(metadata && { Metadata: metadata }),
     },
   }).done();
   if (pageStarts) {
@@ -54,6 +56,7 @@ export const handler = async (event) => {
         Key: `${dir}${PAGE_MAP_FILE}`,
         Body: JSON.stringify(pageMap(documentContent, pageStarts)),
         ContentType: "application/json",
+        ...(metadata && { Metadata: metadata }),
       })
     );
   }
@@ -115,10 +118,10 @@ export class TextractTimeoutError extends Error {
   }
 }
 
-async function extractPdfText(bucket, key) {
+async function extractPdfText(bucket, key, versionId) {
   const startResponse = await textractClient.send(
     new StartDocumentTextDetectionCommand({
-      DocumentLocation: { S3Object: { Bucket: bucket, Name: key } },
+      DocumentLocation: { S3Object: { Bucket: bucket, Name: key, ...(versionId && { Version: versionId }) } },
     })
   );
 
@@ -157,9 +160,9 @@ async function extractPdfText(bucket, key) {
   return joinLines(allBlocks.filter((block) => block.BlockType === "LINE"));
 }
 
-async function extractTxtContent(bucket, key) {
+async function extractTxtContent(bucket, key, versionId) {
   const response = await s3Client.send(
-    new GetObjectCommand({ Bucket: bucket, Key: key })
+    new GetObjectCommand({ Bucket: bucket, Key: key, ...(versionId && { VersionId: versionId }) })
   );
   const chunks = [];
   for await (const chunk of response.Body) {

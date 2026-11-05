@@ -2,11 +2,11 @@ import { SFNClient, StartExecutionCommand, DescribeExecutionCommand, StopExecuti
 import { DynamoDBClient, GetItemCommand, QueryCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { createHash } from "node:crypto";
-import { S3Client, CopyObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, CopyObjectCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
 import { artifactsBucket, copySource, deletePending, grantOfKey, isPendingKey, pendingDir } from "grantwell-shared";
 import { updateProcessingStatus } from "../shared/status.mjs";
 import { liveStatusOf } from "../shared/live.mjs";
-import { SWAP_JOURNAL, SWAP_ETAGS, normalizeEtag } from "../shared/swap.mjs";
+import { SWAP_JOURNAL, SWAP_ETAGS, isStaleRun, normalizeEtag } from "../shared/swap.mjs";
 
 const sfnClient = new SFNClient();
 const dynamoClient = new DynamoDBClient();
@@ -68,12 +68,13 @@ const CLAIM_TTL_MS = 50 * 60 * 1000;
  * Try to become the owner of this NOFO's pipeline run.
  * @returns {{acquired: boolean, previousExecutionArn?: string, row?: object}}
  */
-async function claimPipeline(nofoName, executionName) {
+async function claimPipeline(nofoName, executionName, { document = null, replaceOlder = false } = {}) {
   const tableName = process.env.NOFO_METADATA_TABLE_NAME;
   if (!tableName || !nofoName) return { acquired: true };
 
   const now = Date.now();
   const staleBefore = new Date(now - CLAIM_TTL_MS).toISOString();
+  const free = "attribute_not_exists(pipeline_claim_at) OR pipeline_claim_at < :staleBefore";
 
   try {
     const result = await dynamoClient.send(
@@ -81,13 +82,15 @@ async function claimPipeline(nofoName, executionName) {
         TableName: tableName,
         Key: marshall({ nofo_name: nofoName }),
         UpdateExpression:
-          "SET pipeline_claim_execution = :name, pipeline_claim_at = :now, updated_at = :now",
-        ConditionExpression:
-          "attribute_not_exists(pipeline_claim_at) OR pipeline_claim_at < :staleBefore",
+          "SET pipeline_claim_execution = :name, pipeline_claim_at = :now, updated_at = :now" +
+          (document ? ", pipeline_claim_document = :document" : " REMOVE pipeline_claim_document"),
+        // A run of another staged document (a newer upload) takes over; the same one again is a duplicate.
+        ConditionExpression: replaceOlder && document ? `${free} OR pipeline_claim_document <> :document` : free,
         ExpressionAttributeValues: marshall({
           ":name": executionName,
           ":now": new Date(now).toISOString(),
           ":staleBefore": staleBefore,
+          ...(document && { ":document": document }),
         }),
         ReturnValues: "ALL_OLD",
       })
@@ -98,6 +101,17 @@ async function claimPipeline(nofoName, executionName) {
   } catch (error) {
     if (error.name === "ConditionalCheckFailedException") return { acquired: false };
     throw error;
+  }
+}
+
+/** The S3 version of a staged document this run processes; the event's, or the current one. */
+async function stagedVersionOf(bucket, documentKey, eventVersionId) {
+  if (eventVersionId) return eventVersionId;
+  try {
+    return (await s3Client.send(new HeadObjectCommand({ Bucket: bucket, Key: documentKey }))).VersionId ?? null;
+  } catch (error) {
+    console.warn(`Could not read the version of ${documentKey}:`, error.message);
+    return null;
   }
 }
 
@@ -127,7 +141,7 @@ async function releaseClaim(nofoName) {
       new UpdateItemCommand({
         TableName: tableName,
         Key: marshall({ nofo_name: nofoName }),
-        UpdateExpression: "REMOVE pipeline_claim_at, pipeline_claim_execution",
+        UpdateExpression: "REMOVE pipeline_claim_at, pipeline_claim_execution, pipeline_claim_document",
       })
     );
   } catch (error) {
@@ -245,9 +259,17 @@ export const handler = async (event) => {
           }
         }
 
+        const staged = isPendingKey(documentKey);
+        const documentVersionId = staged ? await stagedVersionOf(s3Bucket, documentKey, record.s3.object.versionId) : null;
+        // An older upload's event can arrive after a newer one's; running it would stop the newest run.
+        if (await isStaleRun(documentKey, documentVersionId)) {
+          console.log(`${documentKey} was replaced by a newer upload; not processing this version.`);
+          continue;
+        }
         const executionInput = {
           s3Bucket,
           documentKey,
+          documentVersionId,
           nofoName,
           retryCount: 0,
           validationFeedback: null,
@@ -256,20 +278,23 @@ export const handler = async (event) => {
         const nofoDigest = createHash("sha256").update(nofoName).digest("hex").substring(0, 16);
         const executionName = `${Date.now()}-${nofoDigest}`;
 
-        const claim = await claimPipeline(nofoName, executionName);
+        const claim = await claimPipeline(nofoName, executionName, {
+          document: documentVersionId ? `${documentKey}#${documentVersionId}` : null,
+          replaceOlder: staged,
+        });
         if (!claim.acquired) {
           console.log(`Pipeline already running for ${nofoName}; skipping duplicate dispatch.`);
           continue;
         }
 
+        // Before the older run's staged files are cleared, so it stops writing them.
+        await stopPreviousExecution(claim.previousExecutionArn);
         await supersedeOpenReviews(nofoName);
-        if (isPendingKey(documentKey)) await clearEarlierStagedFiles(nofoName, documentKey);
+        if (staged) await clearEarlierStagedFiles(nofoName, documentKey);
         const liveStatus = await liveStatusOf(nofoName, claim.row);
         if (liveStatus) console.log(`${nofoName} stays ${liveStatus} while its new version is processed.`);
         else await markProcessingStatus(nofoName);
         await updateProcessingStatus(nofoName, "uploading");
-
-        await stopPreviousExecution(claim.previousExecutionArn);
 
         try {
           const startResult = await sfnClient.send(

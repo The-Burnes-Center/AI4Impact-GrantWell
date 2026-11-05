@@ -84,7 +84,7 @@ export async function markProcessingComplete(nofoName, outcome) {
         Key: marshall({ nofo_name: nofoName }),
         UpdateExpression:
           "SET processing_completed_at = :now, processing_outcome = :outcome, updated_at = :now" +
-          " REMOVE pipeline_claim_at, pipeline_claim_execution",
+          " REMOVE pipeline_claim_at, pipeline_claim_execution, pipeline_claim_document",
         ExpressionAttributeValues: marshall({
           ":now": new Date().toISOString(),
           ":outcome": outcome,

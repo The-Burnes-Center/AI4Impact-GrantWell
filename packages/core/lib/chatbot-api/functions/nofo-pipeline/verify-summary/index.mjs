@@ -6,7 +6,7 @@
  */
 
 import { S3Client } from "@aws-sdk/client-s3";
-import { artifactDirOf, isMissingObject, putArtifact, readArtifactText } from "grantwell-shared";
+import { artifactDirOf, isMissingObject, putArtifact, readArtifactText, sourceVersionMetadata } from "grantwell-shared";
 import { readRawText } from "../shared/s3.mjs";
 import { updateProcessingStatus } from "../shared/status.mjs";
 import { CITATIONS_FILE } from "../shared/cite.mjs";
@@ -33,7 +33,7 @@ const parseOrNull = (text) => {
 };
 
 export const handler = async (event) => {
-  const { nofoName, s3Bucket, rawTextKey, documentKey, mergedSummary } = event;
+  const { nofoName, s3Bucket, rawTextKey, documentKey, documentVersionId, mergedSummary } = event;
   // A staged run writes beside its document; the approval record is read from the published file.
   const dir = artifactDirOf(nofoName, documentKey);
 
@@ -54,7 +54,7 @@ export const handler = async (event) => {
   if (result.citationsFile) {
     const approval = parseOrNull(existingText)?.approval;
     const file = { ...result.citationsFile, ...(approval && { approval }) };
-    await putArtifact(s3, `${dir}${CITATIONS_FILE}`, JSON.stringify(file), "application/json");
+    await putArtifact(s3, `${dir}${CITATIONS_FILE}`, JSON.stringify(file), "application/json", sourceVersionMetadata(documentVersionId));
   }
 
   console.log(

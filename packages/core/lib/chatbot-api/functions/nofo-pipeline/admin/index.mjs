@@ -370,6 +370,7 @@ async function approveReview(nofoName, event) {
     nofoName,
     s3Bucket: process.env.BUCKET,
     documentKey: review.s3DocumentKey,
+    documentVersionId: review.s3DocumentVersionId || null,
     mergedSummary: extractedSummary,
     questionsData,
     applicationDeadline: extractedSummary?.application_deadline || null,

@@ -58,6 +58,7 @@ export const handler = async (event) => {
   const {
     s3Bucket,
     documentKey,
+    documentVersionId,
     nofoName,
     mergedSummary,
     questionsData,
@@ -103,7 +104,7 @@ export const handler = async (event) => {
   const staged = isPendingKey(documentKey);
   const grantBucket = staged ? process.env.BUCKET : bucket;
   try {
-    const docKey = staged ? await swapIn(nofoName, documentKey, grantBucket) : documentKey || `${nofoName}/NOFO-File-PDF`;
+    const docKey = staged ? await swapIn(nofoName, documentKey, grantBucket, documentVersionId) : documentKey || `${nofoName}/NOFO-File-PDF`;
 
     await uploadJson(artifactsBucket(), `${folderPath}summary.json`, finalSummary);
 
@@ -183,7 +184,7 @@ export const handler = async (event) => {
       exprValues[":defaultGrantType"] = "federal";
       exprValues[":defaultPinned"] = "false";
 
-      const removeFields = ["pipeline_claim_at", "pipeline_claim_execution", "previous_status"];
+      const removeFields = ["pipeline_claim_at", "pipeline_claim_execution", "pipeline_claim_document", "previous_status"];
       if (adminGuidance) {
         setExprs.push("review_flag = :reviewFlag");
         exprValues[":reviewFlag"] = {

@@ -108,6 +108,14 @@ export class NofoPipelineStack extends cdk.NestedStack {
     });
     extractTextFunction.addToRolePolicy(s3ReadWritePolicy(props.ffioNofosBucket.bucketArn));
     extractTextFunction.addToRolePolicy(s3ReadWritePolicy(artifactsBucketArn));
+    // Reads the exact staged version its run was started for (Textract reads with these permissions).
+    extractTextFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:GetObjectVersion"],
+        resources: [props.grantArtifactsBucket.arnForObjects("_pending/*")],
+      })
+    );
     extractTextFunction.addToRolePolicy(textractPolicy());
     extractTextFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
 
