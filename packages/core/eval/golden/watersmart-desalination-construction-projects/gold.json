@@ -361,10 +361,6 @@
       "quote": "budgets submitted under this NOFO may only include costs incurred after the date of Reclamation's feasibility determination, and within three years from the application deadline for each submission period under this NOFO."
     },
     {
-      "item": "Buy America preferences apply: iron, steel, manufactured products and construction materials must be produced in the U.S.",
-      "quote": "Buy America preferences apply to Federal awards for infrastructure projects in the United States."
-    },
-    {
       "item": "Applicant must be registered in SAM.gov with a UEI and certify the Financial Assistance General Representations and Certifications before applying",
       "quote": "Before applying, all applicants except individuals applying as a natural person must be registered in SAM.gov."
     },
@@ -373,8 +369,8 @@
       "quote": "Before applying, ensure that at least one person at your organization is registered and has the Authorized Organization Representative (AOR). Only the AOR can submit the"
     },
     {
-      "item": "By applying, the applicant certifies awareness of and compliance with all applicable executive orders and secretary's orders",
-      "quote": "By applying in response to this Notice of Funding Opportunity, the applicant certifies awareness and compliance with all currently effective and applicable executive orders and secretary's orders,"
+      "item": "A non-Federal cost share of at least 75% of total project costs is required",
+      "quote": "Cost Sharing Required? Yes 75% of total project costs."
     }
   ],
   "requiredDocuments": [

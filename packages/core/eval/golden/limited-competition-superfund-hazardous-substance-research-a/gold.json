@@ -767,22 +767,7 @@
     {
       "item": "Biographical Sketch",
       "userWrites": true,
-      "quote": null
-    },
-    {
-      "item": "Bibliography & References Cited",
-      "userWrites": true,
-      "quote": null
-    },
-    {
-      "item": "Facilities & Other Resources",
-      "userWrites": true,
-      "quote": null
-    },
-    {
-      "item": "Equipment",
-      "userWrites": true,
-      "quote": null
+      "quote": "Include a single Biographical Sketch for each Senior/Key person listed in the application regardless of the number of components in which they participate."
     }
   ],
   "libraryRequired": [

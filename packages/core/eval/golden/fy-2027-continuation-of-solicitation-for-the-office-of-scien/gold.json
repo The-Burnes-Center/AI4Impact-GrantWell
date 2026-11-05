@@ -507,6 +507,10 @@
     {
       "item": "Provide an IRS-assigned EIN as the TIN for SAM.gov registration; do not use a social security number",
       "quote": "Applicants must provide a Taxpayer Identification Number (TIN) to complete their registration in SAM.gov."
+    },
+    {
+      "item": "Only New, Renewal, or supplemental (Revision) applications are accepted; SC does not use Resubmission or Continuation",
+      "quote": "DOE will accept new/renewal/supplemental applications under this NOFO."
     }
   ],
   "requiredDocuments": [
@@ -583,12 +587,12 @@
     {
       "item": "Biographical Sketch",
       "userWrites": true,
-      "quote": null
+      "quote": "Attach the person's biographical sketch, following the instructions in Part 2 of this NOFO for crafting a biographical sketch."
     },
     {
       "item": "Current and Pending Support",
       "userWrites": true,
-      "quote": null
+      "quote": "Attach the person's current and pending support, following the instructions in Part 2 of this NOFO for crafting current and pending support."
     }
   ],
   "libraryRequired": []

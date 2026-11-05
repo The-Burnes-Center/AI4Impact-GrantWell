@@ -387,10 +387,6 @@
       "quote": "The candidate is required to devote at least 6 calendar months (50% of full-time professional effort) to the K18 program, but may devote their full-time (12 calendar months) effort to it."
     },
     {
-      "item": "The research experience generally spans a contiguous six months to two years; a six-month experience may be split over two successive full-time summer semesters",
-      "quote": "However, a six-month research experience may be apportioned over two successive summer semesters (of three months each), provided the experience is pursued on a full-time (100%) basis during these periods."
-    },
-    {
       "item": "Before submitting, the candidate must identify a mentor who will supervise the career development and research experience",
       "quote": "Before submitting the application, the candidate must identify a mentor who will supervise the proposed career development and research experience."
     },
@@ -540,29 +536,13 @@
       "quote": "Applications lacking the appropriate required reference letters will not be reviewed."
     },
     {
-      "item": "Bibliography & References Cited",
-      "userWrites": true,
-      "quote": null
-    },
-    {
-      "item": "Facilities & Other Resources",
-      "userWrites": true,
-      "quote": null
-    },
-    {
-      "item": "Equipment",
-      "userWrites": true,
-      "quote": null
-    },
-    {
       "item": "Biographical Sketch",
       "userWrites": true,
-      "quote": null
+      "quote": "Unless also listed as senior/key personnel, collaborators and consultants do not need to provide their biographical sketches."
     }
   ],
   "libraryRequired": [
     "Specific Aims",
-    "Project Narrative",
     "Training in the Responsible Conduct of Research",
     "Data Management and Sharing Plan"
   ]

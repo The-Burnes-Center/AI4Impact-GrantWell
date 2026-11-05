@@ -175,10 +175,6 @@
       "quote": "Only the Lead State Agency (or Agencies) as determined by the Governor of each Highlands State may be the applicant for funding under the Highlands Conservation Act Grant Program."
     },
     {
-      "item": "If the Governor assigns multiple Lead Agencies, they must coordinate requests before submission and not exceed the maximum allowable amount",
-      "quote": "If the Governor assigns multiple Lead Agencies, those Agencies must coordinate on funding requests prior to submission and ensure no more than the maximum allowable amount is requested through this funding opportunity."
-    },
-    {
       "item": "Each parcel must be in the Highlands Region or in a Highlands Expansion Opportunity Area municipality approved by the Service",
       "quote": "To be eligible for Highlands Conservation Act Grant funding, a parcel must be either 1) in the Highlands Region as defined in the NY-NJ Highlands Regional Study: 2002 Update"
     },
@@ -203,12 +199,12 @@
       "quote": "This program accepts applications through GrantSolutions.gov. You must register with GrantSolutions. See Submission Instructions."
     },
     {
-      "item": "By applying, the applicant certifies awareness of and compliance with all applicable executive orders and Secretary's orders",
-      "quote": "By applying in response to this Notice of Funding Opportunity, the applicant certifies awareness and compliance with all currently effective and applicable executive orders and secretary's orders"
-    },
-    {
       "item": "Projects must meet Criteria 1 and 2 and score 35 points or higher on Criteria 3 to be eligible for funding",
       "quote": "Projects that meet Criteria 1 and 2 and score 35 points or higher in Criteria 3 as determined by the Merit Review Panel will be eligible for funding."
+    },
+    {
+      "item": "A 50 percent non-Federal cost share (1:1) is required",
+      "quote": "Cost Sharing Required? Yes 50 percent non-Federal cost share required."
     }
   ],
   "requiredDocuments": [

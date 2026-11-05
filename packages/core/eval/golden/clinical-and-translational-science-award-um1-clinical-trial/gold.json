@@ -633,24 +633,12 @@
       "quote": "PHS Assignment Request Form"
     },
     {
-      "item": "Bibliography & References Cited",
-      "userWrites": true,
-      "quote": null
-    },
-    {
       "item": "Facilities & Other Resources",
       "userWrites": true,
-      "quote": null
-    },
-    {
-      "item": "Equipment",
-      "userWrites": true,
-      "quote": null
+      "quote": "this Other Attachment does not replace and is separate from the required Facilities and Other Resources Attachment in the R.230 - Project/Performance Site Locations(s) Form."
     }
   ],
   "libraryRequired": [
-    "Project Summary/Abstract",
-    "Project Narrative",
     "Resource Sharing Plan"
   ]
 }
