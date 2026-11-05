@@ -6,7 +6,8 @@ import {
   PostToConnectionCommand,
 } from "@aws-sdk/client-apigatewaymanagementapi";
 import { BedrockAgentRuntimeClient, RetrieveCommand } from "@aws-sdk/client-bedrock-agent-runtime";
-import { BedrockRuntimeClient, InvokeModelWithResponseStreamCommand } from "@aws-sdk/client-bedrock-runtime";
+import { BedrockRuntimeClient, InvokeModelCommand, InvokeModelWithResponseStreamCommand } from "@aws-sdk/client-bedrock-runtime";
+import { haikuJudge } from "./chat-verify-fakes";
 import { AdminGetUserCommand, CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
 import { DynamoDBClient, GetItemCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
@@ -77,6 +78,7 @@ beforeEach(() => {
   ws.on(DeleteConnectionCommand).resolves({});
   kb.on(RetrieveCommand).resolves({ retrievalResults: [] });
   bedrock.on(InvokeModelWithResponseStreamCommand).callsFake(answer);
+  bedrock.on(InvokeModelCommand).callsFake(haikuJudge());
   lambda.on(InvokeCommand).resolves({ Payload: new TextEncoder().encode(JSON.stringify({ body: "{}" })) as any });
   ddb.on(GetItemCommand).callsFake((input) => {
     const row = grants[input.Key?.nofo_name?.S];
@@ -139,7 +141,7 @@ describe("chat grant access", () => {
     await chat("Federal Grant/");
     await chat("Legacy Grant/");
     expect(chatDenied()).toBe(false);
-    expect(bedrock.calls()).toHaveLength(3);
+    expect(bedrock.commandCalls(InvokeModelWithResponseStreamCommand)).toHaveLength(3);
   });
 
   it("denies a grant with no metadata row for a normal user but lets a Developer in", async () => {
@@ -151,7 +153,7 @@ describe("chat grant access", () => {
     signedInAs("Developer", "MA");
     await chat("Unknown Grant/");
     expect(chatDenied()).toBe(false);
-    expect(bedrock.calls()).toHaveLength(1);
+    expect(bedrock.commandCalls(InvokeModelWithResponseStreamCommand)).toHaveLength(1);
   });
 
   it("denies when the metadata table can't be read", async () => {

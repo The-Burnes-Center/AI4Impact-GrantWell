@@ -5,7 +5,8 @@ import {
   PostToConnectionCommand,
 } from "@aws-sdk/client-apigatewaymanagementapi";
 import { BedrockAgentRuntimeClient, RetrieveCommand } from "@aws-sdk/client-bedrock-agent-runtime";
-import { BedrockRuntimeClient, InvokeModelWithResponseStreamCommand } from "@aws-sdk/client-bedrock-runtime";
+import { BedrockRuntimeClient, InvokeModelCommand, InvokeModelWithResponseStreamCommand } from "@aws-sdk/client-bedrock-runtime";
+import { haikuJudge } from "./chat-verify-fakes";
 import { AdminGetUserCommand, CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
 import {
   ConditionalCheckFailedException,
@@ -77,6 +78,7 @@ beforeEach(() => {
   ddb.on(UpdateItemCommand).resolves({});
   lambda.on(InvokeCommand).resolves({ Payload: new TextEncoder().encode(JSON.stringify({ body: "{}" })) as any });
   bedrock.on(InvokeModelWithResponseStreamCommand).resolves(answer("Here is the answer."));
+  bedrock.on(InvokeModelCommand).callsFake(haikuJudge());
   sfn.on(StartExecutionCommand).resolves({});
   vi.spyOn(console, "log").mockImplementation(() => {});
   vi.spyOn(console, "error").mockImplementation(() => {});
