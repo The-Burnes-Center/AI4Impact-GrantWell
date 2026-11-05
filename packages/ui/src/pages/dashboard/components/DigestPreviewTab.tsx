@@ -193,6 +193,7 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
               <iframe
                 title={`${frequency} digest preview`}
                 srcDoc={rendered.html}
+                sandbox=""
                 style={{ width: "100%", height: 480, border: "none", background: "#fff" }}
               />
             </div>

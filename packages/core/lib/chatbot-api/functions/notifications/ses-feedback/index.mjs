@@ -7,6 +7,8 @@
  *
  * Transient bounces aren't suppressed: SES retries them, and a full mailbox isn't a reason to stop
  * mailing a valid address.
+ *
+ * Logs carry counts and SES message IDs, never an address: the suppression table is the record.
  */
 
 import {
@@ -42,15 +44,13 @@ async function resolveUserId(email) {
   );
   const users = res.Users || [];
   if (users.length !== 1) {
-    console.log(
-      `Cannot resolve ${email} to a single user (${users.length} matches); skipping prefs update`
-    );
+    console.log(`Cannot resolve the recipient to a single user (${users.length} matches); skipping prefs update`);
     return null;
   }
   return users[0].Attributes?.find((a) => a.Name === "sub")?.Value || null;
 }
 
-async function suppress(email, reason, detail) {
+async function suppress(email, reason, detail, messageId) {
   const address = email.toLowerCase();
   await dynamoClient.send(
     new PutItemCommand({
@@ -66,13 +66,13 @@ async function suppress(email, reason, detail) {
       ),
     })
   );
-  console.log(`Suppressed ${address} (${reason}${detail ? `/${detail}` : ""})`);
+  console.log(`Suppressed a recipient of ${messageId} (${reason}${detail ? `/${detail}` : ""})`);
 
   let userId = null;
   try {
     userId = await resolveUserId(address);
   } catch (error) {
-    console.error(`Cognito lookup failed for ${address}:`, error);
+    console.error(`Cognito lookup failed for a recipient of ${messageId}: ${error?.name}`);
   }
   if (!userId) return;
 
@@ -103,18 +103,19 @@ function recipientsOf(list) {
 
 async function handleNotification(notification) {
   const type = notification.eventType || notification.notificationType;
+  const messageId = notification.mail?.messageId || "unknown message";
 
   if (type === "Bounce") {
     const bounce = notification.bounce || {};
     const recipients = recipientsOf(bounce.bouncedRecipients);
     if (bounce.bounceType !== "Permanent") {
       console.log(
-        `Transient bounce (${bounce.bounceType}/${bounce.bounceSubType}) for ${recipients.join(", ")}; not suppressing`
+        `Transient bounce (${bounce.bounceType}/${bounce.bounceSubType}) of ${messageId} for ${recipients.length} recipient(s); not suppressing`
       );
       return;
     }
     for (const email of recipients) {
-      await suppress(email, "bounce", bounce.bounceSubType);
+      await suppress(email, "bounce", bounce.bounceSubType, messageId);
     }
     return;
   }
@@ -122,14 +123,14 @@ async function handleNotification(notification) {
   if (type === "Complaint") {
     const complaint = notification.complaint || {};
     for (const email of recipientsOf(complaint.complainedRecipients)) {
-      await suppress(email, "complaint", complaint.complaintFeedbackType);
+      await suppress(email, "complaint", complaint.complaintFeedbackType, messageId);
     }
     return;
   }
 
   if (type === "Delivery") {
     const recipients = recipientsOf(notification.delivery?.recipients);
-    console.log(`Delivered to ${recipients.join(", ")}`);
+    console.log(`Delivered ${messageId} to ${recipients.length} recipient(s)`);
     return;
   }
 
@@ -147,7 +148,7 @@ export const handler = async (event) => {
     try {
       await handleNotification(JSON.parse(record.Sns.Message));
     } catch (error) {
-      console.error("Failed to process SES feedback record:", error);
+      console.error(`Failed to process SES feedback record: ${error?.name}`);
     }
   }
 };

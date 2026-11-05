@@ -28,6 +28,7 @@ export const DEFAULT_LIMITS = Object.freeze({
   maxPdfPages: 150,
   maxTextChars: 200_000,
   maxDownloadBytes: 25 * 1024 * 1024,
+  maxInflatedBytes: 50 * 1024 * 1024,
   maxFiles: 25,
 });
 
@@ -94,7 +95,7 @@ export function estimatePdfPages(bytes) {
   return (bytes.toString('latin1').match(/\/Type\s*\/Page(?![a-zA-Z])/g) || []).length;
 }
 
-function zipEntry(buffer, name) {
+function zipEntry(buffer, name, maxInflatedBytes) {
   let eocd = -1;
   for (let i = buffer.length - 22; i >= Math.max(0, buffer.length - 65557); i--) {
     if (buffer.readUInt32LE(i) === 0x06054b50) { eocd = i; break; }
@@ -114,7 +115,7 @@ function zipEntry(buffer, name) {
       const dataStart = localOffset + 30 + buffer.readUInt16LE(localOffset + 26) + buffer.readUInt16LE(localOffset + 28);
       const data = buffer.subarray(dataStart, dataStart + compressedSize);
       if (method === 0) return data;
-      if (method === 8) return inflateRawSync(data);
+      if (method === 8) return inflateRawSync(data, { maxOutputLength: maxInflatedBytes });
       return null;
     }
     p += 46 + nameLength + extraLength + commentLength;
@@ -124,9 +125,12 @@ function zipEntry(buffer, name) {
 
 const XML_ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
 
-/** Paragraph text of a .docx (word/document.xml), or null when it isn't one. */
-export function extractDocxText(buffer) {
-  const xml = zipEntry(buffer, 'word/document.xml');
+/**
+ * Paragraph text of a .docx (word/document.xml), or null when it isn't one. Throws
+ * ERR_BUFFER_TOO_LARGE when the body inflates past maxInflatedBytes.
+ */
+export function extractDocxText(buffer, maxInflatedBytes = DEFAULT_LIMITS.maxInflatedBytes) {
+  const xml = zipEntry(buffer, 'word/document.xml', maxInflatedBytes);
   if (!xml) return null;
   return xml
     .toString('utf8')
@@ -188,8 +192,9 @@ export async function loadSupportingDocuments({ s3, bucket, userId, documentKeys
 
     let content;
     try {
-      content = kind === 'docx' ? extractDocxText(bytes) : new TextDecoder('utf-8').decode(bytes).trim();
-    } catch {
+      content = kind === 'docx' ? extractDocxText(bytes, caps.maxInflatedBytes) : new TextDecoder('utf-8').decode(bytes).trim();
+    } catch (error) {
+      if (error?.code === 'ERR_BUFFER_TOO_LARGE') { skip('too-large'); continue; }
       content = null;
     }
     if (content === null) { skip('unreadable'); continue; }

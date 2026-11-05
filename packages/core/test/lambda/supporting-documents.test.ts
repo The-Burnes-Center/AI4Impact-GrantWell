@@ -184,6 +184,21 @@ describe("loading supporting documents", () => {
     ]);
   });
 
+  it("skips a .docx that inflates past 50 MB as too large instead of inflating it", async () => {
+    const bomb = zip("word/document.xml", "<w:p>" + "a".repeat(51 * 1024 * 1024));
+    expect(bomb.length).toBeLessThan(1024 * 1024);
+    expect(() => extractDocxText(bomb)).toThrow(expect.objectContaining({ code: "ERR_BUFFER_TOO_LARGE" }));
+    bucket({
+      "user-1/documents/bomb.docx": { body: bomb, modified: "2026-11-03T00:00:00Z" },
+      "user-1/documents/ok.docx": { body: docx(["Fine."]), modified: "2026-11-02T00:00:00Z" },
+    });
+
+    const docs = await load(["user-1/documents/bomb.docx", "user-1/documents/ok.docx"]);
+
+    expect(docs.skipped).toEqual([{ key: "user-1/documents/bomb.docx", fileName: "bomb.docx", reason: "too-large" }]);
+    expect(docs.texts.map((t) => t.content)).toEqual(["Fine."]);
+  });
+
   it("returns null for a zip without a Word body", () => {
     expect(extractDocxText(zip("other.xml", "<x/>"))).toBeNull();
   });

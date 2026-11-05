@@ -9,6 +9,7 @@ chat's CHAT_CHECK log lines. It never shows who asked: no user name, email or ID
 import datetime
 import json
 import os
+import re
 import time
 
 import boto3
@@ -186,6 +187,19 @@ def _clip(text, limit):
     return text if len(text) <= limit else text[:limit - 1] + '…'
 
 
+_SLACK_ANGLE_LINK = re.compile(r'<((?:[A-Za-z][A-Za-z0-9+.-]*:|[@#!])[^<>|]*)(?:\|([^<>]*))?>')
+_MARKDOWN_LINK = re.compile(r'\[([^\[\]]*)\]\(([^()\s]*)\)')
+
+
+def _slack_text(text, limit):
+    """User-derived text for Slack: links reduced to their label, then & < > escaped, so nothing
+    in it can link, mention (<!channel>, <@U...>) or reformat the message."""
+    text = _SLACK_ANGLE_LINK.sub(lambda m: m.group(2) if m.group(2) is not None else m.group(1),str(text or ''))
+    text = _MARKDOWN_LINK.sub(lambda m: m.group(1), text)
+    text = _clip(text, limit)
+    return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+
+
 def _int(value):
     try:
         return int(float(value or 0))
@@ -195,16 +209,16 @@ def _int(value):
 
 def _flagged_answer_lines(entry):
     """Only these fields are read, so nothing else in a log line can reach Slack."""
-    grant = _clip(entry.get('grant') or 'unknown grant', 120)
-    session = _clip(entry.get('session') or 'unknown', 80)
+    grant = _slack_text(entry.get('grant') or 'unknown grant', 120)
+    session = _slack_text(entry.get('session') or 'unknown', 80).replace('`', "'")
     lines = [
         f'{FLAG} *{grant}* · chat `{session}`',
-        f'    Q: "{_clip(entry.get("question"), QUESTION_MAX_CHARS)}"',
+        f'    Q: "{_slack_text(entry.get("question"), QUESTION_MAX_CHARS)}"',
     ]
     flagged = [f for f in entry.get('flagged') or [] if isinstance(f, dict)]
     for item in flagged[:CHECK_SENTENCES_PER_ANSWER]:
-        reason = _clip(item.get('reason') or item.get('kind') or 'not confirmed', REASON_MAX_CHARS)
-        lines.append(f'    • "{_clip(item.get("text"), SENTENCE_MAX_CHARS)}" — {reason}')
+        reason = _slack_text(item.get('reason') or item.get('kind') or 'not confirmed', REASON_MAX_CHARS)
+        lines.append(f'    • "{_slack_text(item.get("text"), SENTENCE_MAX_CHARS)}" — {reason}')
     if len(flagged) > CHECK_SENTENCES_PER_ANSWER:
         lines.append(f'    • and {len(flagged) - CHECK_SENTENCES_PER_ANSWER} more sentence(s)')
     return lines
