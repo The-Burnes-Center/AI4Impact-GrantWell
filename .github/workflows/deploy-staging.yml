@@ -132,14 +132,7 @@ jobs:
           set -o pipefail
           status=0
           npx cdk diff --method template --no-color 2>&1 |
-            node -e '
-              let text = require("fs").readFileSync(0, "utf8");
-              for (const key of ["GRANTS_GOV_API_KEY", "TURNSTILE_SECRET_KEY", "TURNSTILE_SITE_KEY"]) {
-                const value = process.env[key];
-                if (value) text = text.split(value).join(`<${key}>`);
-              }
-              process.stdout.write(text);
-            ' > "$RUNNER_TEMP/prod-diff.txt" || status=$?
+            node "$GITHUB_WORKSPACE/scripts/redact-diff.mjs" > "$RUNNER_TEMP/prod-diff.txt" || status=$?
           cat "$RUNNER_TEMP/prod-diff.txt"
           exit $status
 

@@ -2,7 +2,12 @@ import { createServer, type IncomingMessage, type Server, type ServerResponse } 
 import type { AddressInfo } from "node:net";
 import { brotliCompressSync, gzipSync } from "node:zlib";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { downloadFile } from "../../lib/chatbot-api/functions/nofo-scraper/opportunity-processor/download.mjs";
+import { downloadFile as download, isPublicAddress } from "../../lib/chatbot-api/functions/nofo-scraper/opportunity-processor/download.mjs";
+
+// The test server is on loopback, which production refuses; only that one address is let through.
+const testServerOnly = (address: string) => address === "127.0.0.1" || isPublicAddress(address);
+const downloadFile = (url: string, options: Parameters<typeof download>[1] = {}) =>
+  download(url, { isAllowed: testServerOnly, ...options });
 
 let server: Server;
 let base: string;
@@ -94,6 +99,82 @@ describe("opportunity processor downloads", () => {
 
     await expect(downloadFile(`${base}/gone`)).resolves.toBeNull();
     await expect(downloadFile(`${base}/broken`)).rejects.toThrow(/Download failed 500/);
+  });
+
+  it("stops following redirects after five hops", async () => {
+    handle = (req, res) => {
+      const n = Number(req.url!.slice(1));
+      return n < 5 ? res.writeHead(302, { location: `/${n + 1}` }).end() : res.end("%PDF-1.7");
+    };
+    await expect(downloadFile(`${base}/0`)).resolves.toMatchObject({ finalUrl: `${base}/5` });
+
+    handle = (req, res) => res.writeHead(302, { location: `/${Number(req.url!.slice(1)) + 1}` }).end();
+    requests = [];
+    await expect(downloadFile(`${base}/0`)).rejects.toThrow(/Too many redirects/);
+    expect(requests.map((r) => r.path)).toEqual(["/0", "/1", "/2", "/3", "/4", "/5"]);
+  });
+
+  it("refuses loopback, private and link-local hosts by default, by name or address", async () => {
+    handle = (_req, res) => res.end("internal");
+    const port = (server.address() as AddressInfo).port;
+
+    for (const url of [
+      `http://127.0.0.1:${port}/`,
+      `http://localhost:${port}/`,
+      `http://[::1]:${port}/`,
+      "http://169.254.169.254/latest/meta-data/",
+      "http://[fd00:ec2::254]/latest/meta-data/",
+      "http://10.0.0.5/",
+      "http://[::ffff:192.168.1.1]/",
+      "http://0x7f.1/",
+    ]) {
+      await expect(download(url, { timeoutMs: 2000 }), url).rejects.toMatchObject({ code: "ERR_NON_PUBLIC_HOST" });
+    }
+    expect(requests).toEqual([]);
+  });
+
+  it("checks every redirect hop, not only the first host", async () => {
+    handle = (_req, res) => res.writeHead(302, { location: "http://169.254.169.254/latest/meta-data/" }).end();
+
+    await expect(downloadFile(`${base}/nofo.pdf`)).rejects.toMatchObject({ code: "ERR_NON_PUBLIC_HOST" });
+
+    handle = (_req, res) => res.writeHead(302, { location: "http://[::1]/admin" }).end();
+    await expect(downloadFile(`${base}/nofo.pdf`)).rejects.toMatchObject({ code: "ERR_NON_PUBLIC_HOST" });
+  });
+
+  it("aborts a body past the size cap while streaming, with or without a content-length", async () => {
+    let written = 0;
+    handle = (_req, res) => {
+      res.writeHead(200);
+      const chunk = Buffer.alloc(64 * 1024);
+      const pump = () => {
+        while (written < 10 * 1024 * 1024) {
+          written += chunk.length;
+          if (!res.write(chunk)) return void res.once("drain", pump);
+        }
+        res.end();
+      };
+      pump();
+    };
+    await expect(downloadFile(`${base}/big`, { maxBytes: 1024 * 1024 })).rejects.toMatchObject({ code: "ERR_BODY_TOO_LARGE" });
+    expect(written).toBeLessThan(10 * 1024 * 1024);
+
+    handle = (_req, res) => res.writeHead(200, { "content-length": String(2 * 1024 * 1024) }).end(Buffer.alloc(2 * 1024 * 1024));
+    await expect(downloadFile(`${base}/big`, { maxBytes: 1024 * 1024 })).rejects.toMatchObject({ code: "ERR_BODY_TOO_LARGE" });
+  });
+
+  it("refuses a gzip body that decodes past the size cap", async () => {
+    handle = (_req, res) => res.writeHead(200, { "content-encoding": "gzip" }).end(gzipSync(Buffer.alloc(2 * 1024 * 1024)));
+
+    await expect(downloadFile(`${base}/nofo.pdf`, { maxBytes: 1024 * 1024 })).rejects.toMatchObject({ code: "ERR_BUFFER_TOO_LARGE" });
+  });
+
+  it("classifies addresses", () => {
+    for (const a of ["8.8.8.8", "52.94.236.248", "2600:1f18::1", "::ffff:8.8.8.8"]) expect(isPublicAddress(a), a).toBe(true);
+    for (const a of ["127.0.0.1", "10.1.2.3", "172.31.0.1", "192.168.0.1", "169.254.169.254", "100.64.0.1", "0.0.0.0",
+      "::1", "::", "fe80::1", "fd00:ec2::254", "::ffff:127.0.0.1", "::ffff:a9fe:a9fe", "not-an-ip"]) {
+      expect(isPublicAddress(a), a).toBe(false);
+    }
   });
 
   it("times out a host that never answers", async () => {

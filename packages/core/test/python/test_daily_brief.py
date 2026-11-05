@@ -150,6 +150,23 @@ def test_caps_sentences_per_answer(brief):
     assert "• and 3 more sentence(s)" in text
 
 
+def test_user_text_cannot_link_mention_or_break_out_in_slack(brief):
+    _, run = brief
+    line = flagged(
+        1,
+        grant="Roads & <Bridges>",
+        session="s`1",
+        question="Ping <!channel> and <@U123>, see <https://evil.example/x|the form> or [here](https://evil.example/y) & 2 > 1",
+        flagged=[{"text": "Due <http://evil.example> soon", "reason": "a <b>bold</b> & bogus claim", "kind": "fact"}],
+    )
+    text = run(FakeLogs([line]))
+    assert ":mag: *Roads &amp; &lt;Bridges&gt;* · chat `s'1`" in text
+    assert 'Q: "Ping !channel and @U123, see the form or here &amp; 2 &gt; 1"' in text
+    assert '• "Due http://evil.example soon" — a &lt;b&gt;bold&lt;/b&gt; &amp; bogus claim' in text
+    for raw in ("<!channel>", "<@U123>", "|the form>", "](https://", "evil.example/x", "evil.example/y", "<b>"):
+        assert raw not in text
+
+
 def test_never_shows_who_asked(brief):
     _, run = brief
     line = flagged(1, user_id="11111111-2222-3333-4444-555555555555", email="person@example.com", name="Pat Person")
