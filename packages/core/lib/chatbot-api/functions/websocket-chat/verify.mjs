@@ -142,10 +142,10 @@ export function meaningRequest({ units, found = [], documents = [], summary = nu
   );
   return {
     anthropic_version: "bedrock-2023-05-31",
-    max_tokens: Math.min(8192, 512 + 96 * units.length),
+    max_tokens: Math.min(16000, 2048 + 160 * units.length),
     // Sonnet 5.5 rejects "disabled"; between_tools is its no-thinking setting.
     thinking: { type: "between_tools" },
-    output_config: { effort: "low", format: { type: "json_schema", schema: VERDICT_SCHEMA } },
+    output_config: { effort: "medium", format: { type: "json_schema", schema: VERDICT_SCHEMA } },
     system: SYSTEM,
     messages: [
       {

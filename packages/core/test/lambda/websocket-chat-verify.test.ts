@@ -256,7 +256,7 @@ describe("verified chat answers", () => {
     expect(haikuCalls()[0].args[0].input.modelId).toBe(HAIKU);
     const body = haikuRequest();
     expect(body.thinking).toEqual({ type: "between_tools" });
-    expect(body.output_config).toMatchObject({ effort: "low", format: { type: "json_schema" } });
+    expect(body.output_config).toMatchObject({ effort: "medium", format: { type: "json_schema" } });
     expect(body.output_config.format.schema.properties.verdicts.items.properties.verdict.enum).toEqual(["supported", "unsupported", "not_a_claim"]);
     const prompt = body.messages[0].content.at(-1).text;
     expect(prompt).toContain(

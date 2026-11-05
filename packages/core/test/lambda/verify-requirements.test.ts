@@ -100,7 +100,7 @@ const charCite = (text: string) => ({
  * A fake Bedrock. Citations come from `quotes` by item name (none for a name not listed), the
  * meaning check from `unsupported` by item name, and Sonnet's rewrite from `rewrite`.
  */
-type Fake = { quotes?: Record<string, string>; unsupported?: Record<string, string>; rewrite?: string };
+type Fake = { quotes?: Record<string, string>; unsupported?: Record<string, string>; rewrite?: string | string[] };
 const calls = { cite: [] as any[], meaning: [] as any[], rewrite: [] as any[] };
 function fakeBedrock({ quotes = {}, unsupported = {}, rewrite = "" }: Fake) {
   bedrock.on(InvokeModelCommand).callsFake((input) => {
@@ -117,7 +117,8 @@ function fakeBedrock({ quotes = {}, unsupported = {}, rewrite = "" }: Fake) {
     }
     if (input.modelId === "sonnet") {
       calls.rewrite.push(request);
-      return reply([{ type: "text", text: rewrite }]);
+      const texts = Array.isArray(rewrite) ? rewrite : [rewrite];
+      return reply([{ type: "text", text: texts[Math.min(calls.rewrite.length, texts.length) - 1] }]);
     }
     calls.cite.push(request);
     const prompt = request.messages[0].content[1].text as string;
@@ -172,7 +173,7 @@ describe("verifying a grant's requirements", () => {
     expect(calls.rewrite).toHaveLength(0);
     const [meaning] = calls.meaning;
     expect(meaning.thinking).toEqual({ type: "between_tools" });
-    expect(meaning.output_config).toMatchObject({ effort: "low", format: { type: "json_schema" } });
+    expect(meaning.output_config).toMatchObject({ effort: "medium", format: { type: "json_schema" } });
     expect(meaning.messages[0].content[0]).toMatchObject({ cache_control: { type: "ephemeral" } });
     expect(meaning.messages[0].content[0].text).toContain(RAW);
     expect(meaning.messages[0].content.at(-1).text).toContain("Eligible applicants are cities and towns.");
@@ -249,6 +250,21 @@ describe("verifying a grant's requirements", () => {
     expect(calls.cite).toHaveLength(1);
   });
 
+  it("tries a failed rewrite once more at high effort, and keeps the second one when it passes", async () => {
+    fakeBedrock({
+      quotes: { ...ALL_CITED, "Cities only": ALL_CITED.Cities },
+      unsupported: { Counties: "Counties are not eligible.", "Cities and counties": "Still says counties." },
+      rewrite: ["[E1] NAME: Cities and counties || TEXT: Cities, towns and counties may apply.", "[E1] NAME: Cities only || TEXT: Cities and towns may apply."],
+    });
+    const summary = { ...SUMMARY, EligibilityCriteria: [{ item: "Counties", description: "Counties may apply." }] };
+    const out = await verify.verifyRequirements({ nofoName: "Grant A", summary, rawText: RAW });
+
+    expect(out.failing).toEqual([]);
+    expect(out.summary.EligibilityCriteria).toEqual([{ item: "Cities only", description: "Cities and towns may apply." }]);
+    expect(calls.rewrite.map((r) => r.output_config.effort)).toEqual(["medium", "high"]);
+    expect(calls.rewrite[1].messages[0].content[1].text).toContain("Reason: Still says counties.");
+  });
+
   it("keeps the original item when its rewrite fails too", async () => {
     fakeBedrock({ quotes: ALL_CITED, rewrite: "[E1] NAME: Cities || TEXT: Cities, towns and counties with $3 million budgets may apply." });
     const summary = { ...SUMMARY, EligibilityCriteria: [{ item: "Cities", description: "Cities and counties may apply with a $5 match." }] };
@@ -256,7 +272,8 @@ describe("verifying a grant's requirements", () => {
 
     expect(out.summary.EligibilityCriteria).toEqual(summary.EligibilityCriteria);
     expect(out.failing).toHaveLength(1);
-    expect(out.failing[0].reason).toContain("A rewrite was tried but could not be confirmed either");
+    expect(out.failing[0].reason).toContain("Two rewrites were tried but could not be confirmed either");
+    expect(calls.rewrite).toHaveLength(2);
   });
 
   it("parses rewrite lines split across cited blocks", () => {

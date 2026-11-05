@@ -54,7 +54,7 @@ ${blocks}`;
 // Sonnet, with the whole grant cached across batches. Built by hand because Sonnet 5.5 needs
 // thinking "between_tools" here, which invokeStructuredOutput doesn't send.
 async function judgeMeaning(batch, rawText) {
-  const maxTokens = Math.min(16000, 1000 + batch.length * 250);
+  const maxTokens = Math.min(32000, 4000 + batch.length * 400);
   const response = await invokeBedrockWithRetry({
     modelId: process.env.SONNET_MODEL_ID,
     contentType: "application/json",
@@ -63,7 +63,7 @@ async function judgeMeaning(batch, rawText) {
       anthropic_version: "bedrock-2023-05-31",
       max_tokens: maxTokens,
       thinking: { type: "between_tools" },
-      output_config: { effort: "low", format: { type: "json_schema", schema: toStrictSchema(MEANING_SCHEMA) } },
+      output_config: { effort: "medium", format: { type: "json_schema", schema: toStrictSchema(MEANING_SCHEMA) } },
       messages: [
         {
           role: "user",
@@ -159,11 +159,11 @@ export function parseRewrite(content) {
   return out;
 }
 
-async function rewriteItems(nofoName, rawText, failing, deadline) {
+async function rewriteItems(nofoName, rawText, failing, deadline, effort = "medium") {
   const body = {
     anthropic_version: "bedrock-2023-05-31",
-    max_tokens: Math.min(32000, 2000 + failing.length * 400),
-    output_config: { effort: "medium" },
+    max_tokens: Math.min(32000, (effort === "high" ? 6000 : 2000) + failing.length * 400),
+    output_config: { effort },
     messages: [
       {
         role: "user",
@@ -238,23 +238,47 @@ export async function verifyRequirements({ nofoName, summary, rawText, pageStart
       else candidates.push({ ...item, answer });
     }
 
-    if (candidates.length) {
-      const candidateSummary = replaceItems(summary, candidates);
-      const ids = new Set(candidates.map((c) => c.id));
-      const second = await checkItems(nofoName, rawText, requirementItems(candidateSummary).filter((i) => ids.has(i.id)), keys);
+    const tryCandidates = async (list) => {
+      if (!list.length) return [];
+      const candidateSummary = replaceItems(finalSummary, list);
+      const ids = new Set(list.map((c) => c.id));
+      const check = await checkItems(nofoName, rawText, requirementItems(candidateSummary).filter((i) => ids.has(i.id)), keys);
       const passed = [];
-      for (const c of candidates) {
-        const v = second.verdicts.get(c.id);
+      const stillFailing = [];
+      for (const c of list) {
+        const v = check.verdicts.get(c.id);
         if (v?.ok) {
           passed.push(c);
-          byId.set(c.id, second.byId.get(c.id) ?? []);
+          byId.set(c.id, check.byId.get(c.id) ?? []);
           verdicts.set(c.id, v);
           rewritten.push(c.id);
         } else {
-          verdicts.set(c.id, { ok: false, reason: `${c.reason} A rewrite was tried but could not be confirmed either: ${v?.reason ?? "no answer"}` });
+          stillFailing.push({ ...c, rewriteReason: v?.reason ?? "no answer" });
         }
       }
-      if (passed.length) finalSummary = replaceItems(summary, passed);
+      if (passed.length) finalSummary = replaceItems(finalSummary, passed);
+      return stillFailing;
+    };
+
+    // A rewrite that still fails gets one more try at high effort, told why the first one failed.
+    const retry = await tryCandidates(candidates);
+    if (retry.length) {
+      const again = await rewriteItems(
+        nofoName,
+        rawText,
+        retry.map((c) => ({ ...c, item: c.answer.item, description: c.answer.description, reason: c.rewriteReason })),
+        null,
+        "high"
+      );
+      const second = [];
+      for (const c of retry) {
+        const answer = again.get(c.id);
+        if (answer && !answer.remove && !answer.date) second.push({ ...c, answer });
+        else verdicts.set(c.id, { ok: false, reason: `${c.reason} A rewrite was tried but could not be confirmed either: ${c.rewriteReason}` });
+      }
+      for (const c of await tryCandidates(second)) {
+        verdicts.set(c.id, { ok: false, reason: `${c.reason} Two rewrites were tried but could not be confirmed either: ${c.rewriteReason}` });
+      }
     }
 
     if (deadlineReason) {
