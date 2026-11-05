@@ -50,6 +50,42 @@ describe("extract-text table rows", () => {
     expect(joinLines(lines).text).toBe(rows.map((cells) => cells.join(" | ")).join("\n"));
   });
 
+  it("never joins a total row's amount onto the row above", () => {
+    const rows = [
+      ["Region", "Funding", "Maximum"],
+      ["9", "$42,600,000", "$12,000,000"],
+      ["10", "$8,900,000", "$4,500,000"],
+      ["TOTAL", "$180,000,000"],
+    ];
+    const lines = rows.flatMap((cells, r) => cells.map((text, c) => line(text, 0.1 + 0.2 * c, 0.1 + 0.015 * r)));
+
+    expect(joinLines(lines).text).toBe(rows.map((cells) => cells.join(" | ")).join("\n"));
+  });
+
+  it("keeps a group heading inside a table on its own line", () => {
+    const lines = [
+      line("Eligible Technologies", 0.1, 0.1),
+      line("EPA Funding Limit", 0.5, 0.1),
+      line("Cost Share", 0.75, 0.1),
+      line("0.035 g NOx limit", 0.1, 0.115),
+      line("45%", 0.5, 0.115),
+      line("55%", 0.75, 0.115),
+      line("Highway Engine Replacement meeting:", 0.1, 0.13),
+      line("0.20-0.11 g NOx limit", 0.1, 0.145),
+      line("40%", 0.5, 0.145),
+      line("60%", 0.75, 0.145),
+    ];
+
+    expect(joinLines(lines).text).toBe(
+      [
+        "Eligible Technologies | EPA Funding Limit | Cost Share",
+        "0.035 g NOx limit | 45% | 55%",
+        "Highway Engine Replacement meeting:",
+        "0.20-0.11 g NOx limit | 40% | 60%",
+      ].join("\n")
+    );
+  });
+
   it("leaves paragraphs as Textract ordered them", () => {
     const lines = [
       line("Eligibility", 0.1, 0.05),

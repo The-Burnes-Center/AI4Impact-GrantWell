@@ -136,15 +136,33 @@ function rowsOf({ bands, columns }) {
       all.some((line) => line.bottom > band.top - margin && line.top < band.bottom + margin && xOverlap(line, column) > 0)
     );
   const reach = (band) => all.filter((line) => line.top >= band.top && line.top < band.bottom);
+  const lineAbove = (line, lines) =>
+    lines
+      .filter((other) => other.top < line.top && xOverlap(other, line) > 0)
+      .reduce((best, other) => (best && best.top >= other.top ? best : other), null);
   const rows = [];
   for (const band of bands) {
     const row = rows.at(-1);
     const local = localColumns(band);
     const wrapped = row ? band.lines.filter((line) => row.lines.includes(partners.get(line))).length : 0;
     const prose = wrapped === band.lines.length && band.lines.some((line) => /^[a-z]/.test(line.text));
+    const amounts = band.lines.filter((line) => NUMBER.test(line.text) && !/^\(.*\)$/.test(line.text.trim()));
+    // A row's amount under another row's amount is two rows, never one cell. "(55%)" annotates the
+    // amount above it, and "$451,25" over "0" is one amount Textract cut in two.
+    const stacksNumbers =
+      row &&
+      band.lines.length > 1 &&
+      amounts.some((line) => {
+        const upper = lineAbove(line, row.lines)?.text.trim() ?? "";
+        return NUMBER.test(upper) && !/,\d{0,2}$/.test(upper);
+      });
+    // "Label:" alone over a row of values heads that row's group rather than wrapping into its first cell.
+    const heading = row?.lines.length === 1 && /:\s*$/.test(row.lines[0].text) && amounts.length > 0;
     // A band filling every column in use after a row that already does is a new row, unless all of it runs on from that row.
     const joins =
       row &&
+      !stacksNumbers &&
+      !heading &&
       (band.top < row.bottom || wrapped > 0) &&
       !(covers(reach(band), local) && covers(row.lines, local) && !prose);
     if (joins) {
