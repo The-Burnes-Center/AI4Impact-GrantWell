@@ -142,10 +142,12 @@ export class MonitoringStack extends cdk.NestedStack {
     });
 
     this.alarmTopic = new sns.Topic(this, "AlarmTopic", {
+      enforceSSL: true,
       topicName: `${this.prefix}-alarms`,
       displayName: `GrantWell ${config.id} alarms (raw)`,
     });
     this.alertTopic = new sns.Topic(this, "AlertTopic", {
+      enforceSSL: true,
       topicName: `${this.prefix}-alerts`,
       displayName: `GrantWell ${config.id} alerts`,
     });

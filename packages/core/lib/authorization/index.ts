@@ -1,4 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
+import { NagSuppressions } from "cdk-nag";
 import { Construct } from 'constructs';
 import { UserPool, UserPoolClient, FeaturePlan} from 'aws-cdk-lib/aws-cognito';
 import * as cognito from "aws-cdk-lib/aws-cognito";
@@ -63,6 +64,10 @@ export class AuthorizationStack extends Construct {
       // No phone number is collected, so SMS would leave MFA unenrollable.
       mfaSecondFactor: { sms: false, otp: true },
       featurePlan: FeaturePlan.PLUS,
+      // Cognito's own default, stated so it can't drift.
+      passwordPolicy: { minLength: 8, requireLowercase: true, requireUppercase: true, requireDigits: true, requireSymbols: true },
+      // Logs risky sign-ins without blocking them; switch to FULL_FUNCTION once the audit looks clean.
+      standardThreatProtectionMode: cognito.StandardThreatProtectionMode.AUDIT_ONLY,
       autoVerify: { email: true },
       signInAliases: {
         email: true,
@@ -104,6 +109,11 @@ export class AuthorizationStack extends Construct {
           })
         : cognito.UserPoolEmail.withCognito(config.branding.supportEmail),
     });
+    if (!config.auth.mfaRequired) {
+      NagSuppressions.addResourceSuppressions(userPool, [
+        { id: "AwsSolutions-COG2", reason: "MFA is optional or off by this deployment's config.auth; deployments that need it set mfaRequired." },
+      ]);
+    }
     // Must come after the event destination, or metrics miss the first messages.
     if (authEmailConfigurationSet) userPool.node.addDependency(authEmailConfigurationSet);
     this.userPool = userPool;

@@ -4,6 +4,7 @@
  * and configures DynamoDB tables and S3 buckets for storing chat history and NOFO data.
  */
 
+import { NagSuppressions } from "cdk-nag";
 import * as cdk from "aws-cdk-lib";
 import { AuthorizationStack } from "../authorization";
 import { WebsocketBackendAPI } from "./gateway/websocket-api";
@@ -109,7 +110,7 @@ export class ChatBotApi extends Construct {
       }
     );
 
-    websocketBackend.wsAPI.addRoute("getChatbotResponse", {
+    const chatRoute = websocketBackend.wsAPI.addRoute("getChatbotResponse", {
       integration: new WebSocketLambdaIntegration(
         "chatbotResponseIntegration",
         lambdaFunctions.chatFunction
@@ -123,18 +124,22 @@ export class ChatBotApi extends Construct {
       ),
       authorizer: wsAuthorizer,
     });
-    websocketBackend.wsAPI.addRoute("$default", {
+    const defaultRoute = websocketBackend.wsAPI.addRoute("$default", {
       integration: new WebSocketLambdaIntegration(
         "chatbotConnectionIntegration",
         lambdaFunctions.chatFunction
       ),
     });
-    websocketBackend.wsAPI.addRoute("$disconnect", {
+    const disconnectRoute = websocketBackend.wsAPI.addRoute("$disconnect", {
       integration: new WebSocketLambdaIntegration(
         "chatbotDisconnectionIntegration",
         lambdaFunctions.chatFunction
       ),
     });
+
+    NagSuppressions.addResourceSuppressions([chatRoute, defaultRoute, disconnectRoute], [
+      { id: "AwsSolutions-APIG4", reason: "API Gateway authorizes a WebSocket connection on $connect only; later routes run on that authorized connection." },
+    ]);
 
     websocketBackend.wsAPI.grantManageConnections(lambdaFunctions.chatFunction);
 
@@ -708,11 +713,14 @@ export class ChatBotApi extends Construct {
       "NotificationUnsubscribeIntegration",
       lambdaFunctions.notificationUnsubscribeFunction
     );
-    restBackend.restAPI.addRoutes({
+    const unsubscribeRoutes = restBackend.restAPI.addRoutes({
       path: "/unsubscribe",
       methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST],
       integration: notificationUnsubscribeIntegration,
     });
+    NagSuppressions.addResourceSuppressions(unsubscribeRoutes, [
+      { id: "AwsSolutions-APIG4", reason: "One-click unsubscribe from an email must work signed out; the handler verifies an HMAC token in the link." },
+    ]);
 
     // Still the raw execute-api host, which doesn't match the From domain. Branding it needs a
     // `/unsubscribe*` behavior on the app's CloudFront distribution, but that is built by

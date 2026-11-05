@@ -58,6 +58,7 @@ ChatbotAPIDraftJobStatusFunctionLogGroup8CFEE122	AWS::Logs::LogGroup
 ChatbotAPIDraftJobStatusFunctionServiceRoleDDD4D07B	AWS::IAM::Role
 ChatbotAPIDraftJobStatusFunctionServiceRoleDefaultPolicyA2E1AAC9	AWS::IAM::Policy
 ChatbotAPIDraftVersionWriterFailures62B5BCC3	AWS::SQS::Queue
+ChatbotAPIDraftVersionWriterFailuresPolicy7DDFBA94	AWS::SQS::QueuePolicy
 ChatbotAPIDraftVersionWriterFunction1206ED30	AWS::Lambda::Function
 ChatbotAPIDraftVersionWriterFunctionDynamoDBEventSourcegrantwellburnesstagingChatbotAPITableStackDraftTableD35939603E8C9819	AWS::Lambda::EventSourceMapping
 ChatbotAPIDraftVersionWriterFunctionServiceRole4397BAF4	AWS::IAM::Role
@@ -83,6 +84,7 @@ ChatbotAPIGrantArtifactsBucketAllowBucketNotificationsTograntwellburnesstagingCh
 ChatbotAPIGrantArtifactsBucketE67E060E	AWS::S3::Bucket
 ChatbotAPIGrantArtifactsBucketNotifications62341AF2	Custom::S3BucketNotifications
 ChatbotAPIGrantArtifactsBucketNotificationsHandlerPolicyDCBAF66C	AWS::IAM::Policy
+ChatbotAPIGrantArtifactsBucketPolicy683E7671	AWS::S3::BucketPolicy
 ChatbotAPIHaikuNofoInferenceProfile18C3AD97	AWS::Bedrock::ApplicationInferenceProfile
 ChatbotAPIHaikuScraperInferenceProfile35A1CE0B	AWS::Bedrock::ApplicationInferenceProfile
 ChatbotAPIHaikuSearchInferenceProfileA93624B5	AWS::Bedrock::ApplicationInferenceProfile
@@ -97,6 +99,7 @@ ChatbotAPIManageUsersFunctionServiceRoleD537318E	AWS::IAM::Role
 ChatbotAPIManageUsersFunctionServiceRoleDefaultPolicy2026B947	AWS::IAM::Policy
 ChatbotAPIMonitoringStackNestedStackMonitoringStackNestedStackResource8C9EF984	AWS::CloudFormation::Stack
 ChatbotAPINOFOProcessingDLQ283C8086	AWS::SQS::Queue
+ChatbotAPINOFOProcessingDLQPolicyC1897AED	AWS::SQS::QueuePolicy
 ChatbotAPINOFOProcessingQueue319369F1	AWS::SQS::Queue
 ChatbotAPINOFOProcessingQueuePolicy45DD529C	AWS::SQS::QueuePolicy
 ChatbotAPINofoDeleteHandlerFunction59980845	AWS::Lambda::Function
@@ -312,7 +315,9 @@ ChatbotAPIRestBackendHTTPAPIPUTuserprofilerecentlyviewed20F2CCEE	AWS::ApiGateway
 ChatbotAPIRestBackendHTTPAPIPUTuserprofilerecentlyviewedUserProfileIntegrationPermission84882D72	AWS::Lambda::Permission
 ChatbotAPIS3DataSource7122E2EC	AWS::Bedrock::DataSource
 ChatbotAPIScraperDownloadDLQ9A4781FB	AWS::SQS::Queue
+ChatbotAPIScraperDownloadDLQPolicyE3696EC5	AWS::SQS::QueuePolicy
 ChatbotAPIScraperDownloadQueueC567C2A7	AWS::SQS::Queue
+ChatbotAPIScraperDownloadQueuePolicy96948AE0	AWS::SQS::QueuePolicy
 ChatbotAPIScraperStackNestedStackScraperStackNestedStackResource70090EC0	AWS::CloudFormation::Stack
 ChatbotAPISearchIndexBuilderFunction3D696627	AWS::Lambda::Function
 ChatbotAPISearchIndexBuilderFunctionEventInvokeConfig6ED95221	AWS::Lambda::EventInvokeConfig
@@ -320,6 +325,7 @@ ChatbotAPISearchIndexBuilderFunctionServiceRole189A9195	AWS::IAM::Role
 ChatbotAPISearchIndexBuilderFunctionServiceRoleDefaultPolicy67005540	AWS::IAM::Policy
 ChatbotAPISearchIndexBuilderFunctionSqsEventSourcegrantwellburnesstagingChatbotAPISearchIndexQueueE4BF2C633A122727	AWS::Lambda::EventSourceMapping
 ChatbotAPISearchIndexDLQC22F2A6C	AWS::SQS::Queue
+ChatbotAPISearchIndexDLQPolicy99991349	AWS::SQS::QueuePolicy
 ChatbotAPISearchIndexInitialBuild434C9099	Custom::AWS
 ChatbotAPISearchIndexInitialBuildCustomResourcePolicyAEC2348F	AWS::IAM::Policy
 ChatbotAPISearchIndexNightlyRule28B0F75F	AWS::Events::Rule

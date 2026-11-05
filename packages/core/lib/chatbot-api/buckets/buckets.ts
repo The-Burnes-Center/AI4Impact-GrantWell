@@ -30,6 +30,7 @@ export class S3BucketStack extends cdk.Stack {
     // });
 
     this.ffioNofosBucket = new s3.Bucket(scope, 'ffioNofosDownloadBucket', {
+      enforceSSL: true,
       // bucketName: 'ffioNofos-download',
       versioned: true,
       removalPolicy: cdk.RemovalPolicy.RETAIN,
@@ -43,6 +44,7 @@ export class S3BucketStack extends cdk.Stack {
     
     // Bucket for user-uploaded documents (organized by userId/nofoName/)
     this.userDocumentsBucket = new s3.Bucket(scope, 'UserDocumentsBucket', {
+      enforceSSL: true,
       versioned: true,
       removalPolicy: cdk.RemovalPolicy.RETAIN,
       autoDeleteObjects: false,
@@ -55,6 +57,7 @@ export class S3BucketStack extends cdk.Stack {
 
     // raw-text.txt, summary.json and questions.json per grant; kept out of ffioNofosBucket, which the KB indexes.
     this.grantArtifactsBucket = new s3.Bucket(scope, 'GrantArtifactsBucket', {
+      enforceSSL: true,
       versioned: true,
       removalPolicy: cdk.RemovalPolicy.RETAIN,
       autoDeleteObjects: false,

@@ -3,6 +3,7 @@
  * These Lambda functions handle session management, S3 operations, and knowledge base synchronization.
  */
 
+import { NagSuppressions } from "cdk-nag";
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as path from "path";
@@ -329,8 +330,12 @@ export class LambdaFunctionStack extends cdk.Stack {
     props.draftVersionTable.grantReadWriteData(draftVersionWriterFunction);
     // Holds batch metadata (shard + sequence range), not the records; the stream keeps those for 24 h.
     const draftVersionWriterFailures = new sqs.Queue(scope, "DraftVersionWriterFailures", {
+      enforceSSL: true,
       retentionPeriod: cdk.Duration.days(14),
     });
+    NagSuppressions.addResourceSuppressions(draftVersionWriterFailures, [
+      { id: "AwsSolutions-SQS3", reason: "This queue is itself the stream's failure destination; nothing consumes it to fail again." },
+    ]);
     draftVersionWriterFunction.addEventSource(
       new DynamoEventSource(props.draftTable, {
         startingPosition: lambda.StartingPosition.TRIM_HORIZON,
@@ -705,10 +710,12 @@ export class LambdaFunctionStack extends cdk.Stack {
     this.getNOFOsList = getS3APIHandlerFunctionForNOFOs;
 
     const nofoProcessingDLQ = new sqs.Queue(scope, "NOFOProcessingDLQ", {
+      enforceSSL: true,
       retentionPeriod: cdk.Duration.days(14),
     });
 
     const nofoProcessingQueue = new sqs.Queue(scope, "NOFOProcessingQueue", {
+      enforceSSL: true,
       visibilityTimeout: cdk.Duration.minutes(2),
       receiveMessageWaitTime: cdk.Duration.seconds(20),
       deadLetterQueue: {
@@ -719,11 +726,13 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // SQS DLQ for scraper downloads
     const scraperDownloadDLQ = new sqs.Queue(scope, "ScraperDownloadDLQ", {
+      enforceSSL: true,
       retentionPeriod: cdk.Duration.days(14),
     });
 
     // SQS queue for individual opportunity downloads
     const scraperDownloadQueue = new sqs.Queue(scope, "ScraperDownloadQueue", {
+      enforceSSL: true,
       visibilityTimeout: cdk.Duration.minutes(12),
       retentionPeriod: cdk.Duration.days(4),
       deadLetterQueue: {
@@ -1384,6 +1393,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     const sesFeedbackTopic = new sns.Topic(scope, "NotificationDigestFeedbackTopic", {
+      enforceSSL: true,
       displayName: "SES digest bounce/complaint feedback",
     });
 
@@ -1406,6 +1416,9 @@ export class LambdaFunctionStack extends cdk.Stack {
         excludePunctuation: true,
       },
     });
+    NagSuppressions.addResourceSuppressions(unsubscribeSecret, [
+      { id: "AwsSolutions-SMG4", reason: "Rotating the HMAC key would break the unsubscribe link in every email already sent." },
+    ]);
 
     // Notification digest functions and their schedules live in their own NestedStack to
     // keep the main app stack under the 500-resource CloudFormation limit. The SES identity,
@@ -1506,9 +1519,11 @@ export class LambdaFunctionStack extends cdk.Stack {
     // Search index builder: summary.json changes reach it through this queue, so a burst of
     // publishes, renames or edits becomes one incremental build.
     const searchIndexDlq = new sqs.Queue(scope, "SearchIndexDLQ", {
+      enforceSSL: true,
       retentionPeriod: cdk.Duration.days(14),
     });
     const searchIndexQueue = new sqs.Queue(scope, "SearchIndexQueue", {
+      enforceSSL: true,
       deliveryDelay: cdk.Duration.seconds(30),
       visibilityTimeout: cdk.Duration.minutes(20),
       retentionPeriod: cdk.Duration.days(4),
