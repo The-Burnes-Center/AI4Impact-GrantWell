@@ -95,12 +95,13 @@ export class LandingPageClient {
     }
   }
 
-  // Return NOFO questions from S3 bucket
+  /** Only Write Application reads these; while the grant is in review it gets the question text alone. */
   async getNOFOQuestions(documentKey: string) {
     try {
       const token = await Utils.authenticate();
       const url = new URL(`${this.API}/s3-nofo-questions`);
       url.searchParams.append("documentKey", documentKey);
+      url.searchParams.append("for", "application");
 
       const response = await apiFetch(url, {
         method: "GET",

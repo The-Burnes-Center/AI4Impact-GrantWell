@@ -48,12 +48,13 @@ describe("auth.turnstile: false", () => {
 });
 
 describe("tenancy: single", () => {
-  it("puts SINGLE_STATE on the sign-in trigger, user management, the functions that change grants and those that open held grants only", () => {
+  it("puts SINGLE_STATE on the sign-in trigger, user management, the functions that change grants, those that open held grants and the scraper only", () => {
     expect(functionsWith(variantOut, "SINGLE_STATE").sort()).toEqual([
       ["AuthorizationSignUpTriggerFunction", "MA"],
       ["ChatbotAPIAIGrantSearchFunction", "MA"],
       ["ChatbotAPIChatHandlerFunction", "MA"],
       ["ChatbotAPIDraftGeneratorAPIFunction", "MA"],
+      ["ChatbotAPIGetQuestionsForNOFOs", "MA"],
       ["ChatbotAPIGetRequirementsForNOFOs", "MA"],
       ["ChatbotAPIManageUsersFunction", "MA"],
       ["ChatbotAPINofoDeleteHandlerFunction", "MA"],
@@ -63,6 +64,7 @@ describe("tenancy: single", () => {
       ["ChatbotAPINofoSummaryUpdateFunction", "MA"],
       ["ChatbotAPInofoUploadS3FilesHandlerFunction", "MA"],
       ["NofoAdminFunction", "MA"],
+      ["ScraperCoordinatorFunction", "MA"],
     ]);
   });
 

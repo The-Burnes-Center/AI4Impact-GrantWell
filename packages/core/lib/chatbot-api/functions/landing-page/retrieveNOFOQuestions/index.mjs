@@ -7,7 +7,13 @@
 import { S3Client } from "@aws-sdk/client-s3";
 import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
-import { getArtifact, isMissingObject } from "grantwell-shared";
+import {
+  getArtifact,
+  isMissingObject,
+  GRANT_IN_REVIEW_MESSAGE,
+  IN_REVIEW_STATUSES,
+  opensGrantInReview,
+} from "grantwell-shared";
 
 // SUPPORTED_STATES injected as [{code,name}] (from config.states via supportedStatesEnv in lib/config/instance-config.ts).
 const SUPPORTED_STATES = (() => {
@@ -84,6 +90,7 @@ async function readNofoScope(tableName, nofoName) {
     return {
       scope: typeof row.scope === "string" ? row.scope : null,
       state: typeof row.state === "string" ? row.state : null,
+      status: typeof row.status === "string" ? row.status : null,
     };
   } catch (err) {
     console.warn(`Could not read scope/state for ${nofoName}:`, err.message);
@@ -137,8 +144,8 @@ export const handler = async (event) => {
     const effectiveScope = existingScope ? existingScope.scope || "federal" : null;
     const effectiveState = existingScope?.state || null;
 
+    const callerScope = resolveCallerScope(event);
     try {
-      const callerScope = resolveCallerScope(event);
       assertUserCanAccessNofo(callerScope, effectiveScope, effectiveState);
     } catch (authError) {
       if (authError.code === "ACCESS_DENIED_STATE") {
@@ -158,6 +165,22 @@ export const handler = async (event) => {
         };
       }
       throw authError;
+    }
+
+    const inReview =
+      IN_REVIEW_STATUSES.has(existingScope?.status) && !opensGrantInReview(callerScope, effectiveScope, effectiveState);
+    // As with the summary, an application on a grant in review keeps the questions its answers
+    // belong to, without their help text.
+    if (inReview && event.queryStringParameters?.for !== "application") {
+      return {
+        statusCode: 409,
+        headers: corsHeaders,
+        body: JSON.stringify({
+          error: "GRANT_IN_REVIEW",
+          message: GRANT_IN_REVIEW_MESSAGE,
+          cta: { label: "Go to Home", target: "/home" },
+        }),
+      };
     }
 
     // Load the parsed questions from S3. A state NOFO whose document had no questions has no
@@ -183,6 +206,22 @@ export const handler = async (event) => {
           data.questions.push({ id: q.id, question: q.question, helpText: q.helpText, source: "custom" });
         }
       }
+    }
+
+    if (inReview) {
+      return {
+        statusCode: 200,
+        headers: corsHeaders,
+        body: JSON.stringify({
+          message: "Questions file retrieved successfully",
+          inReview: true,
+          data: {
+            questions: data.questions
+              .filter((q) => q && typeof q.question === "string")
+              .map((q) => ({ id: q.id, question: q.question, ...(q.source === "custom" ? { source: "custom" } : {}) })),
+          },
+        }),
+      };
     }
 
     return {

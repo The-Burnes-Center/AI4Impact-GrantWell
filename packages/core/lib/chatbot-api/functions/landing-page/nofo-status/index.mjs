@@ -195,7 +195,7 @@ export const handler = async (event) => {
     }
 
     const denied = await assertCanEditNofoOr403(
-      event, scopeDeps, tableName, nofoName, { allowUnknownScope: true }
+      event, scopeDeps, tableName, nofoName, { allowMissingRow: true }
     );
     if (denied) return denied;
 

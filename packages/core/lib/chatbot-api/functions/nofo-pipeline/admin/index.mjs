@@ -62,6 +62,10 @@ export const handler = async (event) => {
       return await listReviews(event);
     }
     if (method === "GET" && path === "/admin/processing-metrics") {
+      // Counts every grant and review on the site, so a multi-state site's state admins don't get them.
+      if (!canEditAnyNofo(resolveCallerScope(event))) {
+        return httpResponse(403, { message: "Not authorized to view processing metrics." });
+      }
       return await getMetrics();
     }
     if (method === "POST" && path === "/admin/processing-reviews/close-expired") {

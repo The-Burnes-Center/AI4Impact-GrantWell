@@ -151,7 +151,8 @@ export const handler = async (event) => {
 
   try {
     const claims = event?.requestContext?.authorizer?.jwt?.claims || {};
-    const email = normalizeEmail(claims.email || claims['cognito:username'] || '');
+    // Allowlist entries are emails, and an unverified one may be anyone's address.
+    const email = String(claims.email_verified) === 'true' ? normalizeEmail(claims.email) : '';
 
     if (!email) {
       return respond(401, { message: 'Authenticated user email is missing', results: [], query: '', searchTimeMs: 0 });
