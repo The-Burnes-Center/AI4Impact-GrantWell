@@ -10,6 +10,7 @@ import {
 } from "@aws-sdk/client-bedrock-runtime";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { haikuJudge } from "./chat-verify-fakes";
 
 // reset() recreates each stub, so install() runs after it to route through the new mock.
 const bedrock = mockClient(BedrockRuntimeClient);
@@ -47,6 +48,7 @@ function model(input: any) {
     if (props.EligibilityCriteria) return reply(JSON.stringify(SUMMARY));
     if (props.questions) return reply(JSON.stringify(QUESTIONS));
     if (props.content) return reply(JSON.stringify({ content: "We serve 4,200 residents." }));
+    if (props.verdicts) return haikuJudge()(input);
   }
   return reply("2026-12-01");
 }
@@ -161,8 +163,11 @@ describe("eval harness", () => {
     const body = JSON.parse(bedrock.commandCalls(InvokeModelWithResponseStreamCommand)[0].args[0].input.body as string);
     expect(JSON.stringify(body.messages[0].content[0])).toContain("Applications are due December 1, 2026.");
     expect(body).not.toHaveProperty("tools");
-    expect(r.usage.map((u: any) => [u.input, u.output, u.stop])).toEqual([[900, 12, "end_turn"]]);
-    expect(r.usage.every((u: any) => u.firstTokenMs >= 0)).toBe(true);
+    expect(r.usage.map((u: any) => [u.model, u.input, u.output, u.stop])).toEqual([
+      [h.models.sonnet, 900, 12, "end_turn"],
+      [h.models.haiku, 300, 40, "end_turn"],
+    ]);
+    expect(r.usage[0].firstTokenMs).toBeGreaterThanOrEqual(0);
     expect(kb.commandCalls(RetrieveCommand)).toHaveLength(0);
   });
 
