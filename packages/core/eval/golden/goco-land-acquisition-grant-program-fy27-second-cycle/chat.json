@@ -11,7 +11,7 @@
     "id": "q2",
     "kind": "limits",
     "question": "How long can the concept narrative be?",
-    "expected": "Up to 2 pages, in 11 pt font or larger with 1-inch margins, submitted as a doc or docx file. The brief project description in the form is 50 words or less.",
+    "expected": "Up to 2 pages, in 11 pt font or larger with 1-inch margins, submitted as a doc or docx file.",
     "quote": "Write a short narrative (up to 2 pages; 11 pt font or larger; 1-inch margins)",
     "confirmed": false
   },
