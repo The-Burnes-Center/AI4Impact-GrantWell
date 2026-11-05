@@ -1,7 +1,7 @@
 import React from "react";
 import { LuCheck, LuX, LuRefreshCw, LuUpload, LuTriangleAlert } from "react-icons/lu";
 
-type ReviewSource = "pipeline" | "dlq" | "duplicate" | "quality";
+type ReviewSource = "pipeline" | "dlq" | "duplicate" | "quality" | "verification";
 
 interface ReviewActionsProps {
   actionInProgress: string | null;

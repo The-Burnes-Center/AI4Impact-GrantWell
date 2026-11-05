@@ -270,6 +270,18 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
               ))}
             </ol>
           </div>
+          {detail.adminGuidance.failingItems && detail.adminGuidance.failingItems.length > 0 && (
+            <div className="review-dlq-guidance">
+              <h5 className="review-dlq-guidance__title">Requirements not confirmed in the grant:</h5>
+              <ul>
+                {detail.adminGuidance.failingItems.map((f, i) => (
+                  <li key={i}>
+                    <strong>{f.label}: “{f.item}”</strong> — {f.reason}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           {detail.adminGuidance.missingCategories.length > 0 && (
             <p style={{ margin: "8px 0 0", fontSize: "12px", color: "var(--gw-color-text-secondary)" }}>
               Missing categories: {detail.adminGuidance.missingCategories.join(", ")}
