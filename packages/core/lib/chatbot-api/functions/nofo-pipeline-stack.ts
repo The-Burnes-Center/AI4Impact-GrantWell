@@ -161,11 +161,13 @@ export class NofoPipelineStack extends cdk.NestedStack {
         BUCKET: props.ffioNofosBucket.bucketName,
         HAIKU_MODEL_ID: props.haikuNofoProfileArn,
         SONNET_MODEL_ID: props.sonnetNofoProfileArn,
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
       },
       timeout: cdk.Duration.minutes(15),
       memorySize: 1024,
       description: "Checks every requirement item against the grant before it can publish",
     });
+    verifySummaryFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
     verifySummaryFunction.addToRolePolicy(s3ReadOnlyPolicy(artifactsBucketArn));
     verifySummaryFunction.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
     verifySummaryFunction.addToRolePolicy(
@@ -310,7 +312,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
       },
       // The dispatcher only enqueues work now — it no longer waits for the state machine, which
-      // may run up to 30 min (longer than any Lambda can live).
+      // may run up to 45 min (longer than any Lambda can live).
       timeout: cdk.Duration.minutes(1),
       memorySize: 256,
     });

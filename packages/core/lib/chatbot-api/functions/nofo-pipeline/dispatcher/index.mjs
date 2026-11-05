@@ -8,7 +8,7 @@ const sfnClient = new SFNClient();
 const dynamoClient = new DynamoDBClient();
 
 const STALE_REVIEW_STATUSES = new Set(["pending_review", "failed", "needs_reupload"]);
-const CLAIM_TTL_MS = 35 * 60 * 1000;
+const CLAIM_TTL_MS = 50 * 60 * 1000;
 
 /**
  * Try to become the owner of this NOFO's pipeline run.

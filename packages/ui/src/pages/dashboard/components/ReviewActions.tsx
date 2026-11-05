@@ -9,6 +9,8 @@ interface ReviewActionsProps {
   canApprove: boolean;
   status: string;
   source?: ReviewSource;
+  /** The admin guidance's reason, e.g. "unverified_items". */
+  reason?: string;
   onApprove: () => void;
   onReject: () => void;
   onReprocess: () => void;
@@ -25,8 +27,11 @@ type RecommendedAction = "approve" | "reupload" | "reject" | "reprocess";
 
 function recommendedAction(
   source: ReviewSource | undefined,
-  canApprove: boolean
+  canApprove: boolean,
+  reason: string | undefined
 ): RecommendedAction {
+  // Reprocessing rarely fixes an item the grant doesn't support; the admin's check does.
+  if (reason === "unverified_items" && canApprove) return "approve";
   if (source === "duplicate") return "reject";
   if (source === "quality") return "reupload";
   if (source === "dlq" || source === "pipeline") return "reprocess";
@@ -40,6 +45,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
   canApprove,
   status,
   source,
+  reason,
   onApprove,
   onReject,
   onReprocess,
@@ -79,7 +85,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
     );
   }
 
-  const recommended = recommendedAction(source, canApprove);
+  const recommended = recommendedAction(source, canApprove, reason);
   // Recommendation is a color-only cue visually, so name it for assistive tech too.
   const rec = (action: RecommendedAction, label: string) =>
     recommended === action ? `${label} (recommended)` : label;

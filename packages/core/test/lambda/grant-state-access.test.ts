@@ -69,7 +69,11 @@ const grants: Record<string, Record<string, unknown>> = {
   "MA Grant": { nofo_name: "MA Grant", scope: "state", state: "MA" },
   "Federal Grant": { nofo_name: "Federal Grant", scope: "federal" },
   "Legacy Grant": { nofo_name: "Legacy Grant" },
+  "Held Grant": { nofo_name: "Held Grant", scope: "federal", status: "quarantined" },
+  "New Grant": { nofo_name: "New Grant", scope: "state", state: "MA", status: "processing" },
 };
+
+const IN_REVIEW = "This grant is being reviewed and will be back soon.";
 
 let warns: ReturnType<typeof vi.spyOn>;
 beforeEach(() => {
@@ -121,6 +125,9 @@ const draft = (claims: Record<string, string>, documentIdentifier: string) =>
     body: JSON.stringify({ query: "Write the draft", documentIdentifier, sessionId: "s1" }),
   });
 
+// Answers only: each answer is also checked with a separate (non-streaming) model call.
+const answered = () => bedrock.commandCalls(InvokeModelWithResponseStreamCommand);
+
 const landing = (handler: Handler, claims: Record<string, string>, documentKey: string) =>
   handler({
     queryStringParameters: { documentKey },
@@ -141,7 +148,7 @@ describe("chat grant access", () => {
     await chat("Federal Grant/");
     await chat("Legacy Grant/");
     expect(chatDenied()).toBe(false);
-    expect(bedrock.commandCalls(InvokeModelWithResponseStreamCommand)).toHaveLength(3);
+    expect(answered()).toHaveLength(3);
   });
 
   it("denies a grant with no metadata row for a normal user but lets a Developer in", async () => {
@@ -153,7 +160,7 @@ describe("chat grant access", () => {
     signedInAs("Developer", "MA");
     await chat("Unknown Grant/");
     expect(chatDenied()).toBe(false);
-    expect(bedrock.commandCalls(InvokeModelWithResponseStreamCommand)).toHaveLength(1);
+    expect(answered()).toHaveLength(1);
   });
 
   it("denies when the metadata table can't be read", async () => {
@@ -230,5 +237,96 @@ describe.each([
   it("denies when the metadata table can't be read", async () => {
     ddb.on(GetItemCommand).rejects(new Error("Throttled"));
     expect((await landing(handler(), signedInAs(null, "MA"), `Federal Grant/${file}`)).statusCode).toBe(403);
+  });
+});
+
+describe("grants held for review", () => {
+  const posted = () => ws.commandCalls(PostToConnectionCommand).map((c) => String(c.args[0].input.Data));
+
+  it("chat answers with the in-review message before the model, the cap or the saved chat", async () => {
+    vi.stubEnv("DAILY_USAGE_TABLE_NAME", "daily-usage");
+    try {
+      signedInAs(null, "MA");
+      await chat("Held Grant/");
+      await chat("New Grant/");
+    } finally {
+      vi.stubEnv("DAILY_USAGE_TABLE_NAME", "");
+    }
+    expect(posted().filter((d) => d === IN_REVIEW)).toHaveLength(2);
+    expect(bedrock.calls()).toHaveLength(0);
+    expect(ddb.calls().filter((c) => (c.args[0].input as { TableName?: string }).TableName === "daily-usage")).toHaveLength(0);
+    expect(lambda.calls()).toHaveLength(0);
+    expect(ws.commandCalls(DeleteConnectionCommand)).toHaveLength(2);
+  });
+
+  it("chat still answers a Developer and a platform admin on a grant in review", async () => {
+    signedInAs("Developer", "MA");
+    await chat("Held Grant/");
+    signedInAs("PlatformAdmin", "");
+    await chat("Held Grant/");
+    expect(posted()).not.toContain(IN_REVIEW);
+    expect(answered()).toHaveLength(2);
+  });
+
+  it("holds a state admin to the same rule as a user", async () => {
+    signedInAs("Admin", "MA");
+    await chat("New Grant/");
+    expect(posted()).toContain(IN_REVIEW);
+    expect(bedrock.calls()).toHaveLength(0);
+  });
+
+  it("the AI writer refuses to start or rewrite sections for a grant in review", async () => {
+    const claims = signedInAs(null, "MA");
+    for (const res of [await draft(claims, "Held Grant/"), await draft(claims, "New Grant")]) {
+      expect(res.statusCode).toBe(409);
+      expect(JSON.parse(res.body)).toEqual({ error: "GRANT_IN_REVIEW", message: IN_REVIEW });
+    }
+    const retry = await draftHandler({
+      requestContext: { http: { method: "POST" }, authorizer: { jwt: { claims: { sub: "user-1", ...claims } } } },
+      body: JSON.stringify({ query: "Write the draft", documentIdentifier: "Held Grant", sessionId: "s1", sectionIds: ["need"] }),
+    });
+    expect(retry.statusCode).toBe(409);
+    expect(sfn.calls()).toHaveLength(0);
+    expect(ddb.commandCalls(PutItemCommand)).toHaveLength(0);
+  });
+
+  it("the AI writer still runs for a Developer on a grant in review", async () => {
+    expect((await draft(signedInAs("Developer", "MA"), "Held Grant/")).statusCode).toBe(200);
+    expect(sfn.calls()).toHaveLength(1);
+  });
+
+  it("the summary refuses a grant in review with the message and a way home", async () => {
+    const res = await landing(summaryHandler, signedInAs(null, "MA"), "Held Grant/summary.json");
+    expect(res.statusCode).toBe(409);
+    expect(JSON.parse(res.body)).toEqual({ error: "GRANT_IN_REVIEW", message: IN_REVIEW, cta: { label: "Go to Home", target: "/home" } });
+    expect(s3.commandCalls(GetObjectCommand)).toHaveLength(0);
+  });
+
+  it("the summary gives an application only the grant's name and sections while it is in review", async () => {
+    s3.on(GetObjectCommand).callsFake(() => ({
+      Body: Readable.from([
+        Buffer.from(
+          JSON.stringify({
+            GrantName: "New Grant",
+            EligibilityCriteria: [{ item: "Tribes", description: "Unconfirmed." }],
+            ProjectNarrativeSections: [{ item: "Need", description: "The need." }],
+          })
+        ),
+      ]),
+    }));
+    const res = await summaryHandler({
+      queryStringParameters: { documentKey: "New Grant/summary.json", for: "application" },
+      requestContext: { authorizer: { jwt: { claims: { sub: "user-1", ...signedInAs(null, "MA") } } } },
+    });
+    expect(res.statusCode).toBe(200);
+    const body = JSON.parse(res.body);
+    expect(body.inReview).toBe(true);
+    expect(Object.keys(body.data).sort()).toEqual(["GrantName", "ProjectNarrativeSections"]);
+    expect(body.data.ProjectNarrativeSections).toEqual([expect.objectContaining({ item: "Need", id: expect.any(String) })]);
+  });
+
+  it("the summary still opens a grant in review for a Developer and a platform admin", async () => {
+    expect((await landing(summaryHandler, signedInAs("Developer", "MA"), "Held Grant/summary.json")).statusCode).toBe(200);
+    expect((await landing(summaryHandler, signedInAs("PlatformAdmin", ""), "Held Grant/summary.json")).statusCode).toBe(200);
   });
 });

@@ -10,6 +10,7 @@ import { useInert } from "../../hooks/use-inert";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import HelpModal from "./components/HelpModal";
 import { GRANT_TYPES, type GrantTypeId } from "../../common/types/nofo";
+import { GrantInReviewError } from "../../common/api-client/grant-in-review";
 import "../../styles/checklists.css";
 
 function RequirementsList({ text }: { text: TabText }) {
@@ -55,6 +56,7 @@ const Checklists: React.FC = () => {
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [notFound, setNotFound] = useState(false);
+  const [inReviewMessage, setInReviewMessage] = useState<string | null>(null);
   const [activeTabId, setActiveTabId] = useState<TabId>("eligibility");
   const [showHelp, setShowHelp] = useState(false);
   const inertMainRef = useInert<HTMLDivElement>(showHelp);
@@ -112,7 +114,8 @@ const Checklists: React.FC = () => {
         setStateGuidance(guidance?.note ? { stateName: guidance.stateName || "your state", note: guidance.note } : null);
       } catch (err) {
         console.error("Error loading NOFO summary:", err);
-        if (await grantIsMissing(err)) setNotFound(true);
+        if (err instanceof GrantInReviewError) setInReviewMessage(err.message);
+        else if (await grantIsMissing(err)) setNotFound(true);
         else setError("Failed to load grant requirements. Please try again.");
       } finally {
         setLoading(false);
@@ -167,6 +170,13 @@ const Checklists: React.FC = () => {
                   Our AI reviews eligibility criteria, deadlines, and requirements to save you hours of research time.
                 </p>
               </div>
+            </div>
+          ) : inReviewMessage ? (
+            <div className="checklist-error">
+              <h1 className="checklist-error__title">{inReviewMessage}</h1>
+              <Link className="checklist-error__btn" to="/home">
+                Go to Home
+              </Link>
             </div>
           ) : notFound ? (
             <div className="checklist-error">

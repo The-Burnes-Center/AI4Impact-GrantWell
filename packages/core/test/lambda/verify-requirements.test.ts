@@ -1,12 +1,19 @@
 import { Readable } from "node:stream";
 import { mockClient } from "aws-sdk-client-mock";
 import { BedrockRuntimeClient, InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime";
-import { DynamoDBClient, GetItemCommand, QueryCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { GetObjectCommand, ListObjectsV2Command, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { marshall } from "@aws-sdk/util-dynamodb";
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { requirementKey } from "grantwell-shared";
+
+// Publish uploads through lib-storage, which the Lambda runtime provides and this package doesn't install.
+vi.mock("@aws-sdk/lib-storage", () => ({
+  Upload: class {
+    async done() {}
+  },
+}));
 
 const s3 = mockClient(S3Client);
 const bedrock = mockClient(BedrockRuntimeClient);
@@ -17,6 +24,9 @@ let verify: any;
 let verifySummary: (event: any) => Promise<any>;
 let validate: (event: any) => Promise<any>;
 let cite: { handler: (event: any, context?: any) => Promise<any> };
+let quarantine: (event: any) => Promise<any>;
+let admin: (event: any) => Promise<any>;
+let publish: (event: any) => Promise<any>;
 
 const QUARANTINE = "stack-QuarantineFunction";
 
@@ -30,11 +40,16 @@ beforeAll(async () => {
   vi.stubEnv("SONNET_MODEL_ID", "sonnet");
   vi.stubEnv("NOFO_METADATA_TABLE_NAME", "nofos");
   vi.stubEnv("QUARANTINE_FUNCTION_NAME", QUARANTINE);
+  vi.stubEnv("REVIEW_TABLE_NAME", "reviews");
+  vi.stubEnv("PUBLISH_FUNCTION_NAME", "stack-PublishFunction");
   const fns = "../../lib/chatbot-api/functions/nofo-pipeline";
   verify = await import(`${fns}/shared/verify-requirements.mjs`);
   ({ handler: verifySummary } = await import(`${fns}/verify-summary/index.mjs`));
   ({ handler: validate } = await import(`${fns}/validate/index.mjs`));
   cite = await import(`${fns}/cite-requirements/index.mjs`);
+  ({ handler: quarantine } = await import(`${fns}/quarantine/index.mjs`));
+  ({ handler: admin } = await import(`${fns}/admin/index.mjs`));
+  ({ handler: publish } = await import(`${fns}/publish/index.mjs`));
 });
 
 const RAW =
@@ -274,6 +289,15 @@ describe("VerifySummary step", () => {
     expect(JSON.stringify(out).length).toBeLessThan(256 * 1024);
   });
 
+  it("shows the grant as checking sources while it runs", async () => {
+    files({ "Grant A/raw-text.txt": RAW });
+    fakeBedrock({ quotes: ALL_CITED });
+    await verifySummary(event);
+    const [update] = ddb.commandCalls(UpdateItemCommand).map((c) => c.args[0].input);
+    expect(update).toMatchObject({ TableName: "nofos", UpdateExpression: "SET processing_status = :s, updated_at = :now" });
+    expect(unmarshall(update.ExpressionAttributeValues!)[":s"]).toBe("checking_sources");
+  });
+
   it("carries a rewritten deadline to the publish step", async () => {
     files({ "Grant A/raw-text.txt": RAW });
     fakeBedrock({ quotes: ALL_CITED, rewrite: "[AD] DATE: 2027-03-01" });
@@ -319,8 +343,12 @@ describe("ContentCheck with verification", () => {
 describe("checking live grants", () => {
   const BAD = { ...SUMMARY, EligibilityCriteria: [{ item: "Tribes", description: "Tribal governments may apply." }] };
   const ctx = { getRemainingTimeInMillis: () => 14 * 60 * 1000 };
-  const live = (names: string[]) =>
-    ddb.on(QueryCommand).resolves({ Items: names.map((n) => marshall({ nofo_name: n, status: "active" })) });
+  const live = (names: string[], archived: string[] = []) =>
+    ddb.on(QueryCommand).callsFake((input) => {
+      const status = unmarshall(input.ExpressionAttributeValues)[":s"];
+      const listed = status === "active" ? names : status === "archived" ? archived : [];
+      return { Items: listed.map((n) => marshall({ nofo_name: n, status })) };
+    });
   const reportPut = () => puts().filter((p) => String(p.Key).startsWith("_verification/")).at(-1);
 
   beforeEach(() => {
@@ -336,7 +364,7 @@ describe("checking live grants", () => {
     const report = JSON.parse(reportPut()!.Body as string);
     expect(reportPut()!.Key).toBe(`_verification/${out.reportId}.json`);
     expect(report.failing).toEqual([
-      { grant: "Bad Grant", items: [{ category: "EligibilityCriteria", item: "Tribes", reason: "No passage in the grant states this." }] },
+      { grant: "Bad Grant", status: "active", items: [{ category: "EligibilityCriteria", item: "Tribes", reason: "No passage in the grant states this." }] },
     ]);
     expect(report.applied).toBeNull();
     expect(calls.rewrite).toHaveLength(0);
@@ -384,14 +412,77 @@ describe("checking live grants", () => {
 
   it("apply skips a reported grant that is no longer live", async () => {
     const { reportId } = await cite.handler({ verifyLive: true, apply: false }, ctx);
-    ddb.on(GetItemCommand).resolves({ Item: marshall({ nofo_name: "Bad Grant", status: "archived" }) });
+    ddb.on(GetItemCommand).resolves({ Item: marshall({ nofo_name: "Bad Grant", status: "quarantined" }) });
 
     await cite.handler({ verifyLive: true, apply: true, reportId }, ctx);
 
     expect(JSON.parse(reportPut()!.Body as string).applied.skipped).toEqual([
-      { grant: "Bad Grant", why: "it is no longer live (status archived)" },
+      { grant: "Bad Grant", why: "it is no longer live (status quarantined)" },
     ]);
     expect(quarantineCalls()).toHaveLength(0);
+  });
+
+  it("checks archived grants too, and holds a failing one noting it was archived", async () => {
+    live(["Good Grant"], ["Bad Grant"]);
+    const { reportId, ...out } = await cite.handler({ verifyLive: true, apply: false }, ctx);
+    expect(out).toMatchObject({ total: 2, passed: 1, failing: 1 });
+    expect(JSON.parse(reportPut()!.Body as string).failing).toEqual([
+      expect.objectContaining({ grant: "Bad Grant", status: "archived" }),
+    ]);
+
+    ddb.on(GetItemCommand).resolves({ Item: marshall({ nofo_name: "Bad Grant", status: "archived" }) });
+    expect(await cite.handler({ verifyLive: true, apply: true, reportId }, ctx)).toMatchObject({ unpublished: 1 });
+    expect(quarantineCalls()[0]).toMatchObject({ nofoName: "Bad Grant", source: "verification", previousStatus: "archived" });
+  });
+
+  it("retries a grant whose check errored once, then reports it as an error and never unpublishes it", async () => {
+    s3.on(GetObjectCommand).callsFake((input) => {
+      if (input.Key.startsWith("Bad Grant/")) throw Object.assign(new Error("Slow down"), { name: "SlowDown" });
+      const text = objects[input.Key];
+      if (text === undefined || input.Bucket !== "grant-artifacts") throw missing();
+      return body(text);
+    });
+
+    const { reportId, ...out } = await cite.handler({ verifyLive: true, apply: false }, ctx);
+
+    expect(out).toMatchObject({ complete: true, passed: 1, error: 1 });
+    const report = JSON.parse(reportPut()!.Body as string);
+    expect(report.errors).toEqual([{ grant: "Bad Grant", error: "Slow down", attempts: 2 }]);
+    expect(report.failing).toEqual([]);
+    expect(await cite.handler({ verifyLive: true, apply: true, reportId }, ctx)).toMatchObject({ unpublished: 0, errors: 0 });
+    expect(quarantineCalls()).toHaveLength(0);
+  });
+
+  it("keeps a grant whose check errored once and then passed out of the error list", async () => {
+    let first = true;
+    s3.on(GetObjectCommand).callsFake((input) => {
+      if (input.Key === "Bad Grant/summary.json" && first) {
+        first = false;
+        throw Object.assign(new Error("Slow down"), { name: "SlowDown" });
+      }
+      const text = objects[input.Key];
+      if (text === undefined || input.Bucket !== "grant-artifacts") throw missing();
+      return body(text);
+    });
+
+    const out = await cite.handler({ verifyLive: true, apply: false }, ctx);
+
+    expect(out).toMatchObject({ complete: true, passed: 1, failing: 1 });
+    expect(out).not.toHaveProperty("error");
+    expect(JSON.parse(reportPut()!.Body as string).errors).toEqual([]);
+  });
+
+  it("holds a live grant whose text can't be read, and says so plainly", async () => {
+    delete objects["Bad Grant/raw-text.txt"];
+    const { reportId } = await cite.handler({ verifyLive: true, apply: false }, ctx);
+    ddb.on(GetItemCommand).resolves({ Item: marshall({ nofo_name: "Bad Grant", status: "active" }) });
+
+    await cite.handler({ verifyLive: true, apply: true, reportId }, ctx);
+
+    const [{ adminGuidance }] = quarantineCalls();
+    expect(adminGuidance).toMatchObject({ reason: "unverified_items", canApprove: true, title: "The grant's text couldn't be read" });
+    expect(adminGuidance.message).toContain("GrantWell couldn't read this grant's text");
+    expect(adminGuidance.message).toContain("The grant text is missing");
   });
 
   it("refuses to apply a report that is not finished", async () => {
@@ -435,5 +526,62 @@ describe("checking live grants", () => {
     expect(quarantineCalls()).toHaveLength(0);
     expect(ddb.commandCalls(UpdateItemCommand)).toHaveLength(0);
     expect(calls.meaning).toHaveLength(meaningCalls);
+  });
+});
+
+describe("restoring a held live grant's status", () => {
+  const statusSet = () =>
+    ddb
+      .commandCalls(UpdateItemCommand)
+      .map((c) => c.args[0].input)
+      .filter((i) => i.TableName === "nofos" && String(i.UpdateExpression).includes("#status = :status"))
+      .map((i) => unmarshall(i.ExpressionAttributeValues!)[":status"]);
+
+  it("quarantine records the status the grant had on its review row", async () => {
+    ddb.on(QueryCommand).resolves({ Items: [] });
+    ddb.on(PutItemCommand).resolves({});
+    await quarantine({ nofoName: "Old Grant", mergedSummary: SUMMARY, source: "verification", previousStatus: "archived" });
+    const item = unmarshall(ddb.commandCalls(PutItemCommand)[0].args[0].input.Item!);
+    expect(item).toMatchObject({ nofo_name: "Old Grant", source: "verification", previous_status: "archived" });
+
+    ddb.resetHistory();
+    await quarantine({ nofoName: "New Grant", mergedSummary: SUMMARY });
+    expect(unmarshall(ddb.commandCalls(PutItemCommand)[0].args[0].input.Item!)).not.toHaveProperty("previous_status");
+  });
+
+  const approve = async (row: Record<string, unknown>) => {
+    ddb.on(GetItemCommand).callsFake((input) =>
+      input.TableName === "reviews"
+        ? { Item: marshall({ nofo_name: "Old Grant", review_id: "r1", status: "pending_review", extractedSummary: JSON.stringify(SUMMARY), extractedQuestions: JSON.stringify(QUESTIONS), ...row }) }
+        : { Item: marshall({ nofo_name: "Old Grant", status: "quarantined", scope: "federal" }) }
+    );
+    const res = await admin({
+      requestContext: {
+        http: { method: "POST", path: "/admin/processing-reviews/Old%20Grant/approve" },
+        authorizer: { jwt: { claims: { "custom:role": JSON.stringify(["Developer"]), email: "dev@example.org" } } },
+      },
+      body: JSON.stringify({ reviewId: "r1" }),
+    });
+    expect(res.statusCode).toBe(200);
+    const call = lambda.commandCalls(InvokeCommand).find((c) => c.args[0].input.FunctionName === "stack-PublishFunction")!;
+    return JSON.parse(String(call.args[0].input.Payload));
+  };
+
+  it("approving a grant that was archived publishes it back as archived", async () => {
+    expect(await approve({ previous_status: "archived" })).toMatchObject({ nofoName: "Old Grant", publishStatus: "archived" });
+  });
+
+  it("approving any other held grant publishes it as active, as before", async () => {
+    expect(await approve({ previous_status: "active" })).not.toHaveProperty("publishStatus");
+    lambda.resetHistory();
+    expect(await approve({})).not.toHaveProperty("publishStatus");
+  });
+
+  it("publish writes the status it is given for an archived grant, and active otherwise", async () => {
+    ddb.on(GetItemCommand).resolves({ Item: marshall({ nofo_name: "Old Grant", status: "quarantined" }) });
+    const event = { nofoName: "Old Grant", s3Bucket: "nofo-bucket", mergedSummary: SUMMARY, questionsData: QUESTIONS };
+    await publish({ ...event, publishStatus: "archived" });
+    await publish(event);
+    expect(statusSet()).toEqual(["archived", "active"]);
   });
 });

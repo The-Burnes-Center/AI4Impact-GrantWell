@@ -13,6 +13,7 @@ export const PROCESSING_STAGES = [
   { key: "extracting_text", label: "Extracting text", description: "Reading the grant document and pulling out its raw text." },
   { key: "extracting", label: "Analyzing", description: "Identifying grant requirements, eligibility, and key sections." },
   { key: "synthesizing", label: "Synthesizing", description: "Assembling the structured grant requirements." },
+  { key: "checking_sources", label: "Checking sources", description: "Checking each requirement against the grant's text." },
   { key: "validating", label: "Validating", description: "Checking the requirements are complete before publishing." },
 ] as const;
 

@@ -368,6 +368,7 @@ async function approveReview(nofoName, event) {
     existingExpirationDate: null,
     corrections: corrections || null,
     reviewApproval: { reviewId: actualReviewId, by: approverOf(event), at: new Date().toISOString() },
+    ...(review.previous_status === "archived" && { publishStatus: "archived" }),
   };
 
   // Synchronous invoke so we know if publishing failed before telling the admin it succeeded

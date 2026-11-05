@@ -70,7 +70,10 @@ function assertUserCanAccessNofo(callerScope, nofoScope, nofoState) {
   throw err;
 }
 
-// Returns { scope, state } from the grant's metadata row, or null when there is no row or it can't be read.
+const IN_REVIEW_STATUSES = new Set(["quarantined", "processing"]);
+const GRANT_IN_REVIEW_MESSAGE = "This grant is being reviewed and will be back soon.";
+
+// Returns { scope, state, status } from the grant's metadata row, or null when there is no row or it can't be read.
 async function readNofoScope(tableName, nofoName) {
   if (!tableName || !nofoName) return null;
   try {
@@ -86,6 +89,7 @@ async function readNofoScope(tableName, nofoName) {
     return {
       scope: typeof row.scope === "string" ? row.scope : null,
       state: typeof row.state === "string" ? row.state : null,
+      status: typeof row.status === "string" ? row.status : null,
     };
   } catch (err) {
     console.warn(`Could not read scope/state for ${nofoName}:`, err.message);
@@ -161,6 +165,38 @@ export const handler = async (event) => {
         };
       }
       throw authError;
+    }
+
+    const inReview =
+      IN_REVIEW_STATUSES.has(existingScope?.status) &&
+      callerScope.role !== "developer" &&
+      callerScope.role !== "regularAdmin";
+    // The applicant's own application stays editable while its grant is reviewed, so the editor
+    // still gets the grant's name and narrative sections; nothing else is served.
+    const forApplication = event.queryStringParameters?.for === "application";
+    if (inReview && !forApplication) {
+      return {
+        statusCode: 409,
+        headers: corsHeaders,
+        body: JSON.stringify({
+          error: "GRANT_IN_REVIEW",
+          message: GRANT_IN_REVIEW_MESSAGE,
+          cta: { label: "Go to Home", target: "/home" },
+        }),
+      };
+    }
+    if (inReview) {
+      const held = JSON.parse(await streamToString((await getArtifact(s3Client, `${basePath}/summary.json`, s3Bucket)).Body));
+      const sections = Array.isArray(held.ProjectNarrativeSections) ? withSectionIds(held.ProjectNarrativeSections) : [];
+      return {
+        statusCode: 200,
+        headers: corsHeaders,
+        body: JSON.stringify({
+          message: "File retrieved successfully",
+          inReview: true,
+          data: { GrantName: held.GrantName, ProjectNarrativeSections: sections },
+        }),
+      };
     }
 
     const [result, citationsFile] = await Promise.all([

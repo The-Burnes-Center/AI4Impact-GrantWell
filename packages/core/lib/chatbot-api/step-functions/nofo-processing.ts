@@ -37,7 +37,7 @@ export class NofoProcessingStateMachine extends Construct {
       maxAttempts: 4,
       backoffRate: 2,
     });
-    // Must precede States.TaskFailed: a rerun would wait just as long and push past the 30-minute limit.
+    // Must precede States.TaskFailed: a rerun would wait just as long and push past the 45-minute limit.
     extractText.addRetry({
       errors: ["TextractTimeoutError"],
       maxAttempts: 0,
@@ -195,7 +195,7 @@ export class NofoProcessingStateMachine extends Construct {
     this.stateMachine = new sfn.StateMachine(this, "NofoProcessingSFN", {
       definitionBody: sfn.DefinitionBody.fromChainable(definition),
       stateMachineType: sfn.StateMachineType.STANDARD,
-      timeout: cdk.Duration.minutes(30),
+      timeout: cdk.Duration.minutes(45),
       logs: {
         destination: logGroup,
         level: sfn.LogLevel.ERROR,

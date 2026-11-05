@@ -12,6 +12,7 @@ import { useBranding } from "../../common/branding";
 import { useNotifications } from "../notifications/NotificationManager";
 import { LuCircleHelp, LuChevronDown } from "react-icons/lu";
 import { parseChatHistory } from "./utils";
+import { GrantInReviewError } from "../../common/api-client/grant-in-review";
 import chatStyles from "../../styles/chat.module.scss";
 
 // Styles for components
@@ -194,6 +195,7 @@ export default function Chat(props: {
   const pendingSessionRef = useRef<ChatSession | null>(null);
   const savingSessionRef = useRef<Promise<void> | null>(null);
   const [unavailable, setUnavailable] = useState(false);
+  const [inReviewMessage, setInReviewMessage] = useState<string | null>(null);
 
   const ensureSession = useCallback((): Promise<void> => {
     const pending = pendingSessionRef.current;
@@ -214,6 +216,7 @@ export default function Chat(props: {
     pendingSessionRef.current = null;
     savingSessionRef.current = null;
     setUnavailable(false);
+    setInReviewMessage(null);
     setMessageHistory([]);
     setOlderMessages([]);
     setOlderCursor(null);
@@ -281,6 +284,11 @@ export default function Chat(props: {
             );
             grantName = summaryResult.data.GrantName;
           } catch (error) {
+            if (error instanceof GrantInReviewError) {
+              setInReviewMessage(error.message);
+              showUnavailable();
+              return;
+            }
             const status = (error as { status?: number }).status;
             if (status === 403 || status === 404) {
               showUnavailable();
@@ -523,7 +531,15 @@ export default function Chat(props: {
             </li>
           )}
 
-          {unavailable && (
+          {unavailable && inReviewMessage && (
+            <li style={styles.unavailable}>
+              <p style={{ margin: 0 }}>{inReviewMessage}</p>
+              <Link to="/home" style={styles.unavailableLink}>
+                Go to Home
+              </Link>
+            </li>
+          )}
+          {unavailable && !inReviewMessage && (
             <li style={styles.unavailable}>
               <p style={{ margin: 0 }}>
                 This chat isn&apos;t available. It may have been deleted, or the link is wrong.
@@ -564,7 +580,7 @@ export default function Chat(props: {
         {session?.loading
           ? "Loading chat"
           : unavailable
-          ? "This chat isn't available."
+          ? inReviewMessage ?? "This chat isn't available."
           : running
           ? "Assistant is replying"
           : replyStatus}

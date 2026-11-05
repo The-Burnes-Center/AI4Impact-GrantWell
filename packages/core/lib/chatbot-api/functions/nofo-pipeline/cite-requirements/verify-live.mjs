@@ -1,8 +1,10 @@
 /**
- * The one-time check of live grants. A dry run (`{ verifyLive: true }`) verifies every active grant
- * and writes `_verification/<id>.json`; it changes nothing else. `{ verifyLive: true, apply: true,
- * reportId }` sends exactly the failing grants in that report to the review queue through the
- * Quarantine Lambda, the way a new failing grant lands there. Published items are never rewritten.
+ * The one-time check of live grants. A dry run (`{ verifyLive: true }`) verifies every active and
+ * archived grant and writes `_verification/<id>.json`; it changes nothing else. A grant whose check
+ * errors is retried once later in the same run, then reported as `error` and never unpublished.
+ * `{ verifyLive: true, apply: true, reportId }` sends exactly the failing grants in that report to
+ * the review queue through the Quarantine Lambda, the way a new failing grant lands there, noting
+ * the status each had so approval can restore it. Published items are never rewritten.
  */
 
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
@@ -21,6 +23,8 @@ const CONCURRENCY = 4;
 const ROUND_BUDGET_MS = 12 * 60 * 1000;
 const MAX_ROUNDS = 40;
 const REPORT_ID = /^[\w.-]{1,80}$/;
+const LIVE_STATUSES = ["active", "archived"];
+const MAX_ATTEMPTS = 2;
 
 const s3 = new S3Client();
 const dynamo = new DynamoDBClient();
@@ -54,27 +58,29 @@ async function readReport(id) {
 
 const writeReport = (report) => putArtifact(s3, reportKey(report.id), JSON.stringify(report, null, 2), "application/json");
 
-/** Active grants not mid-pipeline, by name. */
+/** Active and archived grants not mid-pipeline: `{ name: status }`. */
 export async function liveGrants() {
-  const names = [];
-  let ExclusiveStartKey;
-  do {
-    const page = await dynamo.send(
-      new QueryCommand({
-        TableName: process.env.NOFO_METADATA_TABLE_NAME,
-        IndexName: "StatusIndex",
-        KeyConditionExpression: "#s = :active",
-        ExpressionAttributeNames: { "#s": "status" },
-        ExpressionAttributeValues: marshall({ ":active": "active" }),
-        ExclusiveStartKey,
-      })
-    );
-    for (const row of (page.Items ?? []).map((i) => unmarshall(i))) {
-      if (row.nofo_name && !row.processing_status) names.push(row.nofo_name);
-    }
-    ExclusiveStartKey = page.LastEvaluatedKey;
-  } while (ExclusiveStartKey);
-  return [...new Set(names)].sort();
+  const statuses = {};
+  for (const status of LIVE_STATUSES) {
+    let ExclusiveStartKey;
+    do {
+      const page = await dynamo.send(
+        new QueryCommand({
+          TableName: process.env.NOFO_METADATA_TABLE_NAME,
+          IndexName: "StatusIndex",
+          KeyConditionExpression: "#s = :s",
+          ExpressionAttributeNames: { "#s": "status" },
+          ExpressionAttributeValues: marshall({ ":s": status }),
+          ExclusiveStartKey,
+        })
+      );
+      for (const row of (page.Items ?? []).map((i) => unmarshall(i))) {
+        if (row.nofo_name && !row.processing_status && !statuses[row.nofo_name]) statuses[row.nofo_name] = status;
+      }
+      ExclusiveStartKey = page.LastEvaluatedKey;
+    } while (ExclusiveStartKey);
+  }
+  return statuses;
 }
 
 const deadlineOf = (summary) => summary?.application_deadline || null;
@@ -121,8 +127,19 @@ function summarize(report) {
   report.checked = Object.keys(report.results).length;
   report.failing = report.grants
     .filter((g) => report.results[g]?.result === "failing")
-    .map((g) => ({ grant: g, items: report.results[g].failing }));
+    .map((g) => ({ grant: g, ...(report.statuses?.[g] && { status: report.statuses[g] }), items: report.results[g].failing }));
+  report.errors = report.grants
+    .filter((g) => report.results[g]?.result === "error")
+    .map((g) => ({ grant: g, error: report.results[g].error, attempts: report.results[g].attempts ?? 1 }));
 }
+
+const retryable = (result) => result?.result === "error" && (result.attempts ?? 1) < MAX_ATTEMPTS;
+
+/** Grants still to check: unchecked ones first, then errored ones on their retry. */
+const pendingOf = (report) => [
+  ...report.grants.filter((g) => !report.results[g]),
+  ...report.grants.filter((g) => retryable(report.results[g])),
+];
 
 async function dryRun(event, remainingMs) {
   const started = Date.now();
@@ -132,21 +149,21 @@ async function dryRun(event, remainingMs) {
     report = await readReport(event.reportId);
   } else {
     const now = new Date();
+    const statuses = await liveGrants();
     report = {
       version: REPORT_VERSION,
       id: now.toISOString().replace(/[:]/g, "-"),
       startedAt: now.toISOString(),
       finishedAt: null,
       complete: false,
-      grants: await liveGrants(),
+      grants: Object.keys(statuses).sort(),
+      statuses,
       results: {},
       applied: null,
     };
   }
   if (report.complete) return { reportId: report.id, complete: true, ...report.counts };
 
-  const todo = report.grants.filter((g) => !report.results[g]);
-  let next = 0;
   let outOfTime = false;
   let saving = Promise.resolve();
   const save = () => {
@@ -158,26 +175,33 @@ async function dryRun(event, remainingMs) {
   };
   await save();
 
-  await Promise.all(
-    Array.from({ length: Math.min(CONCURRENCY, todo.length) }, async () => {
-      while (next < todo.length) {
-        if (Date.now() - started > ROUND_BUDGET_MS || remainingMs() < 2 * 60 * 1000) {
-          outOfTime = true;
-          return;
+  // A grant that errors goes back on the list, so it is retried after every other grant is checked.
+  let todo = pendingOf(report);
+  while (todo.length && !outOfTime) {
+    let next = 0;
+    await Promise.all(
+      Array.from({ length: Math.min(CONCURRENCY, todo.length) }, async () => {
+        while (next < todo.length) {
+          if (Date.now() - started > ROUND_BUDGET_MS || remainingMs() < 2 * 60 * 1000) {
+            outOfTime = true;
+            return;
+          }
+          const name = todo[next++];
+          const attempts = report.results[name]?.result === "error" ? (report.results[name].attempts ?? 1) + 1 : 1;
+          try {
+            report.results[name] = await checkGrant(name);
+          } catch (error) {
+            console.error(`Could not verify ${name} (attempt ${attempts}):`, error.message);
+            report.results[name] = { result: "error", error: String(error.message).slice(0, 300), attempts };
+          }
+          await save();
         }
-        const name = todo[next++];
-        try {
-          report.results[name] = await checkGrant(name);
-        } catch (error) {
-          console.error(`Could not verify ${name}:`, error.message);
-          report.results[name] = { result: "error", error: String(error.message).slice(0, 300) };
-        }
-        await save();
-      }
-    })
-  );
+      })
+    );
+    todo = pendingOf(report);
+  }
 
-  report.complete = report.grants.every((g) => report.results[g]);
+  report.complete = pendingOf(report).length === 0;
   if (report.complete) report.finishedAt = new Date().toISOString();
   await save();
   console.log(`Live verification ${report.id} round ${round}: ${report.checked}/${report.grants.length} checked`, report.counts);
@@ -205,7 +229,7 @@ async function unpublish(name, entry) {
     new GetItemCommand({ TableName: process.env.NOFO_METADATA_TABLE_NAME, Key: marshall({ nofo_name: name }) })
   );
   const row = meta.Item ? unmarshall(meta.Item) : null;
-  if (row?.status !== "active" || row.processing_status) {
+  if (!LIVE_STATUSES.includes(row?.status) || row.processing_status) {
     return { skipped: `it is no longer live (status ${row?.status ?? "missing"}${row?.processing_status ? `, ${row.processing_status}` : ""})` };
   }
   const [summaryText, questionsText] = await Promise.all([readOptional(`${name}/summary.json`), readOptional(`${name}/questions.json`)]);
@@ -225,6 +249,7 @@ async function unpublish(name, entry) {
     validationResult: { overallVerdict: "NEEDS_REVIEW" },
     adminGuidance: unverifiedItemsGuidance(name, entry.failing, { live: true }),
     source: "verification",
+    previousStatus: row.status,
     retryCount: 0,
     qualityScore: 0,
   };

@@ -22,6 +22,7 @@ import type { DraftJobStatus, DraftVersionMeta } from "../../common/api-client/d
 import type { useDraftSave } from "../../hooks/use-draft-save";
 import { DailyLimitError } from "../../common/api-client/daily-limit";
 import { InputTooLongError } from "../../common/api-client/drafts-client";
+import { GrantInReviewError } from "../../common/api-client/grant-in-review";
 import { SKIP_REASON_TEXT } from "../../common/helpers/user-documents";
 import "../../styles/document-editor.css";
 
@@ -97,7 +98,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   const loadGrantSections = useCallback(async () => {
     if (!selectedNofo) return [];
     try {
-      const result = await apiClient.landingPage.getNOFOSummary(selectedNofo);
+      const result = await apiClient.landingPage.getNOFOSummary(selectedNofo, { forApplication: true });
       return grantSections(result?.data?.ProjectNarrativeSections);
     } catch (error) {
       console.error("Error loading the grant's narrative sections:", error);
@@ -379,7 +380,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       setFailedSections(retrying);
       setGenerating(false);
       setGenerationTotal(undefined);
-      if (error instanceof DailyLimitError || error instanceof InputTooLongError) {
+      if (error instanceof DailyLimitError || error instanceof InputTooLongError || error instanceof GrantInReviewError) {
         addNotification("error", error.message);
       }
     }

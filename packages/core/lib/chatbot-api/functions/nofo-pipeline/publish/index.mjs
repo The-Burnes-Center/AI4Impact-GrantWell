@@ -51,6 +51,7 @@ export const handler = async (event) => {
     contentHash,
     adminGuidance,
     reviewApproval,
+    publishStatus,
   } = event;
 
   if (!mergedSummary || typeof mergedSummary !== "object") {
@@ -128,7 +129,8 @@ export const handler = async (event) => {
     ];
     const exprNames = { "#status": "status" };
     const exprValues = {
-      ":status": "active",
+      // An archived grant held for review goes back to archived, so it doesn't reappear as open.
+      ":status": publishStatus === "archived" ? "archived" : "active",
       ":now": now,
       ":outcome": "published",
     };

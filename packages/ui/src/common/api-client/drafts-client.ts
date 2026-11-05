@@ -3,6 +3,7 @@ import { AppConfig } from "../types/app";
 import type { ProjectBasicsData, QuestionnaireAnswer, RawDraftRecord } from "../types/document";
 import { apiFetch } from "../session-ended";
 import { dailyLimitError } from "./daily-limit";
+import { grantInReviewError } from "./grant-in-review";
 import type { SectionRef } from "../helpers/application-sections";
 
 /** A draft start refused because additional information or an answer is too long; the message says which. */
@@ -599,6 +600,8 @@ export class DraftsClient {
       if (limitError) throw limitError;
       const tooLong = inputTooLongError(response.status, errorData);
       if (tooLong) throw tooLong;
+      const inReview = grantInReviewError(response.status, errorData);
+      if (inReview) throw inReview;
       throw new Error(errorData.error || 'Failed to start draft generation');
     }
 
@@ -660,6 +663,8 @@ export class DraftsClient {
       if (limitError) throw limitError;
       const tooLong = inputTooLongError(startResponse.status, errorMessage);
       if (tooLong) throw tooLong;
+      const inReview = grantInReviewError(startResponse.status, errorMessage);
+      if (inReview) throw inReview;
       throw new Error(errorMessage.error || 'Failed to start draft generation');
     }
 

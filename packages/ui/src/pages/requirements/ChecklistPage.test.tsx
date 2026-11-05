@@ -91,6 +91,19 @@ describe("ChecklistPage missing grant", () => {
     expect(await screen.findByRole("heading", { level: 1, name: "Grant not found" })).toBeInTheDocument();
   });
 
+  it("says a grant in review will be back soon, with a Home link and no retry", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    renderChecklist(
+      json({ error: "GRANT_IN_REVIEW", message: "This grant is being reviewed and will be back soon." }, 409)
+    );
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "This grant is being reviewed and will be back soon." })
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Go to Home" })).toHaveAttribute("href", "/home");
+    expect(screen.queryByText("Grant not found")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Try Again" })).not.toBeInTheDocument();
+  });
+
   it("keeps the retry message for a server error on a listed grant", async () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     renderChecklist(json({}, 500));

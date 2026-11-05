@@ -20,6 +20,7 @@ export const handler = async (event) => {
     errorMessage,
     source,
     adminGuidance,
+    previousStatus,
   } = event;
 
   // Terminal state: mark the metadata record `quarantined` (honest top-level status, no longer
@@ -104,6 +105,8 @@ export const handler = async (event) => {
     source: source || "pipeline",
     errorMessage: errorMessage || null,
     adminGuidance: adminGuidance ? JSON.stringify(adminGuidance) : null,
+    // The grant's status before it was held (set for a live grant the verification check unpublished).
+    previous_status: typeof previousStatus === "string" ? previousStatus : undefined,
   };
 
   await dynamoClient.send(

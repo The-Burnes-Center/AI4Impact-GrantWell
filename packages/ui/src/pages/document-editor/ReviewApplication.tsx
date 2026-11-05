@@ -64,7 +64,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
 
         if (currentDraft) {
           const result =
-            await apiClient.landingPage.getNOFOSummary(selectedNofo);
+            await apiClient.landingPage.getNOFOSummary(selectedNofo, { forApplication: true });
           const resolved = resolveApplicationSections(
             grantSections(result?.data?.ProjectNarrativeSections),
             currentDraft.sections,
@@ -170,7 +170,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
     if (!selectedNofo) return { draftData: null, grantName: null, resolved: null };
     const username = (await getCurrentUser()).username;
     const draftData = await apiClient.drafts.getDraft({ sessionId, userId: username });
-    const nofoSummary = await apiClient.landingPage.getNOFOSummary(selectedNofo);
+    const nofoSummary = await apiClient.landingPage.getNOFOSummary(selectedNofo, { forApplication: true });
     const grantName = nofoSummary?.data?.GrantName || null;
     const resolved = draftData
       ? resolveApplicationSections(

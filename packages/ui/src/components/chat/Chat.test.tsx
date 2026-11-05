@@ -228,4 +228,20 @@ describe("Chat new and unavailable chats", () => {
     await screen.findByRole("link", { name: "Go to My Chats" });
     expect(container.textContent).not.toMatch(/ACCESS_DENIED_STATE|refresh the page/i);
   });
+
+  it("says a new chat's grant is being reviewed, with a Home link and no input or greeting", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const net = stubFetch({
+      [SESSION]: json({}),
+      [SUMMARY]: json({ error: "GRANT_IN_REVIEW", message: "This grant is being reviewed and will be back soon." }, 409),
+    });
+    const { container } = renderApp(<Chat sessionId="s1" documentIdentifier="Held Grant" />);
+
+    const home = await screen.findByRole("link", { name: "Go to Home" });
+    expect(home).toHaveAttribute("href", "/home");
+    expect(home.closest("li")).toHaveTextContent("This grant is being reviewed and will be back soon.");
+    expect(screen.queryByTestId("chat-input")).not.toBeInTheDocument();
+    expect(container.textContent).not.toMatch(/GRANT_IN_REVIEW|isn't available/);
+    expect(operations(net)).toEqual(["get_session"]);
+  });
 });
