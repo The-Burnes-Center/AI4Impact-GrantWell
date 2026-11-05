@@ -208,6 +208,8 @@ export class NofoPipelineStack extends cdk.NestedStack {
         ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
         BUCKET: props.ffioNofosBucket.bucketName,
         HAIKU_MODEL_ID: props.haikuNofoProfileArn,
+        // The live check ({verifyLive}) runs the same Sonnet meaning check as VerifySummary.
+        SONNET_MODEL_ID: props.sonnetNofoProfileArn,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
       },
       timeout: cdk.Duration.minutes(15),
