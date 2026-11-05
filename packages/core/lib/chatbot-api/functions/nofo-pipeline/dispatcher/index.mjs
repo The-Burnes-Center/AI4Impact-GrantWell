@@ -3,6 +3,7 @@ import { DynamoDBClient, QueryCommand, UpdateItemCommand } from "@aws-sdk/client
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { createHash } from "node:crypto";
 import { updateProcessingStatus } from "../shared/status.mjs";
+import { liveStatusOf } from "../shared/live.mjs";
 
 const sfnClient = new SFNClient();
 const dynamoClient = new DynamoDBClient();
@@ -12,7 +13,7 @@ const CLAIM_TTL_MS = 50 * 60 * 1000;
 
 /**
  * Try to become the owner of this NOFO's pipeline run.
- * @returns {{acquired: boolean, previousExecutionArn?: string}}
+ * @returns {{acquired: boolean, previousExecutionArn?: string, row?: object}}
  */
 async function claimPipeline(nofoName, executionName) {
   const tableName = process.env.NOFO_METADATA_TABLE_NAME;
@@ -40,7 +41,7 @@ async function claimPipeline(nofoName, executionName) {
     );
 
     const previous = result.Attributes ? unmarshall(result.Attributes) : {};
-    return { acquired: true, previousExecutionArn: previous.pipeline_execution_arn };
+    return { acquired: true, previousExecutionArn: previous.pipeline_execution_arn, row: previous };
   } catch (error) {
     if (error.name === "ConditionalCheckFailedException") return { acquired: false };
     throw error;
@@ -195,7 +196,9 @@ export const handler = async (event) => {
         }
 
         await supersedeOpenReviews(nofoName);
-        await markProcessingStatus(nofoName);
+        const liveStatus = await liveStatusOf(nofoName, claim.row);
+        if (liveStatus) console.log(`${nofoName} stays ${liveStatus} while its new version is processed.`);
+        else await markProcessingStatus(nofoName);
         await updateProcessingStatus(nofoName, "uploading");
 
         await stopPreviousExecution(claim.previousExecutionArn);

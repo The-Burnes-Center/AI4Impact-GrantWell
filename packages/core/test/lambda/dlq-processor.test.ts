@@ -8,13 +8,15 @@ import {
   UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
 import { DeleteMessageCommand, ReceiveMessageCommand, SQSClient } from "@aws-sdk/client-sqs";
+import { HeadObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const ddb = mockClient(DynamoDBClient);
 const sqs = mockClient(SQSClient);
+const s3 = mockClient(S3Client);
 
-const ENV = {
+const ENV: Record<string, string> = {
   DLQ_URL: "https://sqs/pipeline-dlq",
   SCRAPER_DLQ_URL: "https://sqs/scraper-dlq",
   REVIEW_TABLE_NAME: "reviews",
@@ -66,6 +68,7 @@ const puts = () => ddb.commandCalls(PutItemCommand).map((c) => unmarshall(c.args
 beforeEach(() => {
   ddb.reset();
   sqs.reset();
+  s3.reset();
   ddb.on(UpdateItemCommand).resolves({});
   ddb.on(PutItemCommand).resolves({});
   vi.useFakeTimers({ toFake: ["Date"] });
@@ -212,6 +215,24 @@ describe("DLQ processor", () => {
     expect(puts()[0]).toMatchObject({ nofo_name: "Broken Grant", source: "dlq", status: "failed" });
     expect(metaUpdates()).toHaveLength(3);
     expect(metaUpdates().every((i) => unmarshall(i.Key!).nofo_name === "Broken Grant")).toBe(true);
+  });
+
+  it("leaves a live grant up when its new version's pipeline run landed in the DLQ", async () => {
+    ENV.ARTIFACTS_BUCKET = "grant-artifacts";
+    try {
+      queue(s3Event("Live Grant/NOFO-File-PDF"), "3", ENV.DLQ_URL);
+      serveReviews([]);
+      ddb.on(GetItemCommand).resolves({ Item: marshall({ nofo_name: "Live Grant", status: "archived" }) });
+      s3.on(HeadObjectCommand).resolves({});
+
+      await (await load())();
+
+      expect(puts()[0]).toMatchObject({ nofo_name: "Live Grant", source: "dlq", status: "failed" });
+      expect(metaUpdates().some((i) => String(i.UpdateExpression).includes("#status"))).toBe(false);
+      expect(metaUpdates().some((i) => unmarshall(i.ExpressionAttributeValues!)[":s"] === "quarantined")).toBe(true);
+    } finally {
+      delete ENV.ARTIFACTS_BUCKET;
+    }
   });
 
   it("doesn't create a metadata row for a pipeline failure whose grant has none", async () => {

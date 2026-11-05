@@ -265,6 +265,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
       layers: [props.jsSharedLayer],
       environment: {
         ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
+        BUCKET: props.ffioNofosBucket.bucketName,
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
       },
@@ -310,6 +311,8 @@ export class NofoPipelineStack extends cdk.NestedStack {
         STATE_MACHINE_ARN: nofoProcessing.stateMachine.stateMachineArn,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
+        BUCKET: props.ffioNofosBucket.bucketName,
       },
       // The dispatcher only enqueues work now — it no longer waits for the state machine, which
       // may run up to 45 min (longer than any Lambda can live).
@@ -319,6 +322,9 @@ export class NofoPipelineStack extends cdk.NestedStack {
 
     dispatcherFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
     dispatcherFunction.addToRolePolicy(reviewTableReadWritePolicy(props.nofoProcessingReviewTable.tableArn));
+    // Reads whether the grant already has a published summary.json, which keeps it live.
+    dispatcherFunction.addToRolePolicy(s3ReadOnlyPolicy(artifactsBucketArn));
+    dispatcherFunction.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
     nofoProcessing.stateMachine.grantStartExecution(dispatcherFunction);
     dispatcherFunction.addToRolePolicy(
       new iam.PolicyStatement({
@@ -356,12 +362,16 @@ export class NofoPipelineStack extends cdk.NestedStack {
         SCRAPER_DLQ_URL: props.scraperDownloadDlqUrl,
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
+        BUCKET: props.ffioNofosBucket.bucketName,
       },
       timeout: cdk.Duration.minutes(5),
       memorySize: 256,
     });
     dlqProcessorFunction.addToRolePolicy(reviewTableReadWritePolicy(props.nofoProcessingReviewTable.tableArn));
     dlqProcessorFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
+    dlqProcessorFunction.addToRolePolicy(s3ReadOnlyPolicy(artifactsBucketArn));
+    dlqProcessorFunction.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
     dlqProcessorFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,

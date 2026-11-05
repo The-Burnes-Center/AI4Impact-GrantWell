@@ -18,6 +18,7 @@ import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { safeJsonParse, httpResponse } from "../shared/json.mjs";
 import { readRawText } from "../shared/s3.mjs";
 import { documentSampleOf, generateQuestions, hasQuestions } from "../shared/questions.mjs";
+import { liveStatusOf } from "../shared/live.mjs";
 import {
   requireAdmin,
   assertCanEditNofoOr403,
@@ -439,6 +440,8 @@ async function rejectReview(nofoName, event) {
     return httpResponse(404, { error: "Review not found" });
   }
 
+  const keepLive = await hasLiveVersion(metadataTableName, nofoName);
+
   const ttlRejected = Math.floor(Date.now() / 1000) + 90 * 86400;
   await dynamoClient.send(
     new UpdateItemCommand({
@@ -458,6 +461,19 @@ async function rejectReview(nofoName, event) {
       ),
     })
   );
+
+  if (keepLive) {
+    await dynamoClient.send(
+      new UpdateItemCommand({
+        TableName: metadataTableName,
+        Key: marshall({ nofo_name: nofoName }),
+        UpdateExpression: "REMOVE processing_status SET updated_at = :now",
+        ExpressionAttributeValues: marshall({ ":now": new Date().toISOString() }),
+      })
+    );
+    console.log(`Rejected the new version of live grant ${nofoName}; its published version stays`);
+    return httpResponse(200, { message: `Review rejected for "${nofoName}"`, keptLive: true });
+  }
 
   // Delete all S3 objects under the NOFO folder
   if (bucket) {
@@ -511,6 +527,19 @@ async function rejectReview(nofoName, event) {
   }
 
   return httpResponse(200, { message: `Review rejected for "${nofoName}"` });
+}
+
+/**
+ * True when the grant has a published version that stays live, so rejecting its new version keeps
+ * the grant. A metadata read error throws rather than risk deleting a live grant.
+ */
+async function hasLiveVersion(tableName, nofoName) {
+  if (!tableName) return false;
+  const result = await dynamoClient.send(
+    new GetItemCommand({ TableName: tableName, Key: marshall({ nofo_name: nofoName }) })
+  );
+  const row = result.Item ? unmarshall(result.Item) : null;
+  return Boolean(await liveStatusOf(nofoName, row, { unknownIsLive: true }));
 }
 
 /**

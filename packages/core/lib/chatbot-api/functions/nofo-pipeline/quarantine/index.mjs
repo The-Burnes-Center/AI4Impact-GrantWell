@@ -1,8 +1,9 @@
-import { DynamoDBClient, PutItemCommand, QueryCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { randomUUID } from "crypto";
 import { updateProcessingStatus, setNofoStatus, markProcessingComplete } from "../shared/status.mjs";
 import { readRawText } from "../shared/s3.mjs";
+import { liveStatusOf } from "../shared/live.mjs";
 
 const dynamoClient = new DynamoDBClient();
 
@@ -21,11 +22,16 @@ export const handler = async (event) => {
     source,
     adminGuidance,
     previousStatus,
+    unpublish,
   } = event;
 
-  // Terminal state: mark the metadata record `quarantined` (honest top-level status, no longer
-  // stuck at `processing`) and set the processing_status field the Grants row keys its pill off.
-  await setNofoStatus(nofoName, "quarantined");
+  const row = await readMetadataRow(nofoName);
+  // A live grant's failing new version waits here while its published version stays up. Only a
+  // grant with no published version, or one the live check unpublishes, is marked `quarantined`.
+  const liveStatus = unpublish === true ? null : await liveStatusOf(nofoName, row, { unknownIsLive: true });
+  const heldFrom = typeof previousStatus === "string" ? previousStatus : typeof row?.previous_status === "string" ? row.previous_status : undefined;
+  // An unreadable row leaves the status alone: a new grant is already `processing`, which is held too.
+  if (!liveStatus && (row !== undefined || unpublish === true)) await setNofoStatus(nofoName, "quarantined", { previousStatus: heldFrom });
   await updateProcessingStatus(nofoName, "quarantined");
   // Stamp completion so the Processing tab shows this as a "Needs review" outcome for a window.
   await markProcessingComplete(nofoName, "needs_review");
@@ -105,8 +111,10 @@ export const handler = async (event) => {
     source: source || "pipeline",
     errorMessage: errorMessage || null,
     adminGuidance: adminGuidance ? JSON.stringify(adminGuidance) : null,
-    // The grant's status before it was held (set for a live grant the verification check unpublished).
-    previous_status: typeof previousStatus === "string" ? previousStatus : undefined,
+    // Approving restores the status the grant had before it was held.
+    previous_status: liveStatus ? undefined : heldFrom,
+    // Set when the grant's published version stays live; rejecting then keeps it.
+    live_status: liveStatus ?? undefined,
   };
 
   await dynamoClient.send(
@@ -128,3 +136,17 @@ export const handler = async (event) => {
     quarantined: true,
   };
 };
+
+async function readMetadataRow(nofoName) {
+  const tableName = process.env.NOFO_METADATA_TABLE_NAME;
+  if (!tableName || !nofoName) return null;
+  try {
+    const result = await dynamoClient.send(
+      new GetItemCommand({ TableName: tableName, Key: marshall({ nofo_name: nofoName }) })
+    );
+    return result.Item ? unmarshall(result.Item) : null;
+  } catch (error) {
+    console.warn(`Could not read metadata for ${nofoName}:`, error.message);
+    return undefined;
+  }
+}

@@ -317,8 +317,9 @@ export const handler = async (event) => {
       }
     }
 
-    // Filter out archived NOFOs and those still being processed/quarantined for the landing page
-    const activeNofos = nofoData.filter(nofo => nofo.status === 'active' && !nofo.processing_status);
+    // A live grant stays active while a new version is processed (processing_status set), so the
+    // status alone decides; new and held grants are `processing` or `quarantined`.
+    const activeNofos = nofoData.filter(nofo => nofo.status === 'active');
     console.log(`Active NOFOs: ${activeNofos.length}, Archived NOFOs: ${nofoData.filter(n => n.status === 'archived').length}, Processing/Quarantined: ${nofoData.filter(n => n.processing_status).length}`);
 
     // Return the list of folders with their status
