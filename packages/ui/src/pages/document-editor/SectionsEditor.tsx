@@ -62,7 +62,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   const [labelPromptOpen, setLabelPromptOpen] = useState(false);
   const [undoCandidate, setUndoCandidate] = useState<DraftVersionMeta | null>(null);
   const [undoConfirmOpen, setUndoConfirmOpen] = useState(false);
-  const [grantInReview, setGrantInReview] = useState(false);
+  /** While the grant is in review, the ids of its own sections, whose guidance is hidden. */
+  const [heldSectionIds, setHeldSectionIds] = useState<ReadonlySet<string> | null>(null);
   const apiClient = useApiClient();
   const { addNotification } = useNotifications();
   const { saveFields, flush, saveStatus, retry, storageUse } = draftSave;
@@ -101,8 +102,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     try {
       const result = await apiClient.landingPage.getNOFOSummary(selectedNofo, { forApplication: true });
       const inReview = result?.inReview === true;
-      setGrantInReview(inReview);
       const list = grantSections(result?.data?.ProjectNarrativeSections);
+      setHeldSectionIds(inReview ? new Set(list.map((section) => section.id)) : null);
       return inReview ? list.map((section) => ({ ...section, description: "" })) : list;
     } catch (error) {
       console.error("Error loading the grant's narrative sections:", error);
@@ -642,7 +643,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
             </p>
           )}
 
-          {grantInReview ? (
+          {active && heldSectionIds?.has(active.id) ? (
             <div className="se-section-description">
               <p>This grant is being reviewed, so its section guidance is hidden for now.</p>
             </div>

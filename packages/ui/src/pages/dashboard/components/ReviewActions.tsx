@@ -13,6 +13,8 @@ interface ReviewActionsProps {
   reason?: string;
   /** Every failing item is the grant's text itself, which couldn't be read. */
   unreadableText?: boolean;
+  /** The grant's published version stays live, so rejecting drops only this new version. */
+  keepsLive?: boolean;
   onApprove: () => void;
   onReject: () => void;
   onReprocess: () => void;
@@ -51,6 +53,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
   source,
   reason,
   unreadableText = false,
+  keepsLive = false,
   onApprove,
   onReject,
   onReprocess,
@@ -59,7 +62,8 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
 }) => {
   const busy = actionInProgress !== null;
   // Accessible names start with the visible (busy) label so SC 2.5.3 holds while an action runs.
-  const rejectLabel = actionInProgress === "reject" ? "Rejecting..." : "Reject";
+  const rejectLabel = actionInProgress === "reject" ? "Rejecting..." : keepsLive ? "Reject new version" : "Reject";
+  const rejectPurpose = keepsLive ? "the published version stays live" : "reject this grant";
   const reprocessLabel = actionInProgress === "reprocess" ? "Reprocessing..." : "Reprocess";
 
   // needs_reupload is a terminal holding state: the only meaningful moves are
@@ -81,7 +85,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
           className="review-btn review-btn--reject"
           onClick={onReject}
           disabled={busy}
-          aria-label={`${rejectLabel} — reject this grant`}
+          aria-label={`${rejectLabel} — ${rejectPurpose}`}
         >
           <LuX size={14} aria-hidden="true" />
           {rejectLabel}
@@ -154,7 +158,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
       className={`review-btn ${recommended === "reject" ? "review-btn--reject review-btn--recommended" : "review-btn--reject"}`}
       onClick={onReject}
       disabled={busy}
-      aria-label={rec("reject", `${rejectLabel} — reject this grant`)}
+      aria-label={rec("reject", `${rejectLabel} — ${rejectPurpose}`)}
     >
       <LuX size={14} aria-hidden="true" />
       {rejectLabel}

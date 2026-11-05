@@ -243,16 +243,17 @@ describe("requirements the grant doesn't support", () => {
     ]);
   });
 
-  const openDetail = async (item: ReviewItem, shown: ReviewDetail) => {
-    stubFetch({
+  const openDetail = async (item: ReviewItem, shown: ReviewDetail, routes: Parameters<typeof stubFetch>[0] = {}) => {
+    const net = stubFetch({
       [REVIEWS]: json({ reviews: [item], expiredOpenCount: 0 }),
       [METRICS]: json({ metrics }),
       [`GET /admin/processing-reviews/${item.nofo_name}`]: json({ review: shown }),
+      ...routes,
     });
     const view = renderApp(<ProcessingReviewTab apiClient={testApiClient()} addNotification={vi.fn()} />);
     await view.user.click(await screen.findByRole("button", { name: `View details for ${item.nofo_name}` }));
     await screen.findByText("Requirements not confirmed in the grant:");
-    return view;
+    return { ...view, net };
   };
 
   it.each([
@@ -286,23 +287,62 @@ describe("requirements the grant doesn't support", () => {
     expect(within(dialog).getByText(/permanently delete the grant document/)).toBeInTheDocument();
   });
 
-  const rejectDialog = async (item: ReviewItem, shown: ReviewDetail) => {
-    const { user } = await openDetail(item, shown);
-    await user.type(screen.getByRole("textbox", { name: /Admin Notes/ }), "Wrong document");
-    await user.click(screen.getByRole("button", { name: /^Reject — / }));
-    return screen.findByRole("dialog", { name: "Confirm Reject" });
+  const rejectDialog = async (item: ReviewItem, shown: ReviewDetail, routes: Parameters<typeof stubFetch>[0] = {}) => {
+    const view = await openDetail(item, shown, routes);
+    await view.user.type(screen.getByRole("textbox", { name: /Admin Notes/ }), "Wrong document");
+    await view.user.click(screen.getByRole("button", { name: /^Reject( new version)? — / }));
+    return { ...view, dialog: await screen.findByRole("dialog", { name: "Confirm Reject" }) };
   };
 
   it("warns for a held grant that was live before, whatever step held it this time", async () => {
     const rerun = { ...held, nofo_name: "Rerun-Grant", source: "pipeline" as const };
-    const dialog = await rejectDialog(rerun, { ...detail, ...rerun, previous_status: "archived" });
+    const { dialog } = await rejectDialog(rerun, { ...detail, ...rerun, previous_status: "active" });
     expect(within(dialog).getByText("This grant was live. Rejecting deletes it and its files for everyone.")).toBeInTheDocument();
   });
 
-  it("doesn't warn when the grant's published version stays live, since rejecting keeps it", async () => {
-    const pending = { ...held, nofo_name: "Live-Grant", source: "pipeline" as const, grantStatus: "active" };
-    const dialog = await rejectDialog(pending, { ...detail, ...pending, live_status: "active" });
-    expect(within(dialog).queryByText(/This grant was live/)).not.toBeInTheDocument();
+  it("says a held grant that was archived was published, not live", async () => {
+    const rerun = { ...held, nofo_name: "Rerun-Grant", source: "pipeline" as const };
+    const { dialog } = await rejectDialog(rerun, { ...detail, ...rerun, previous_status: "archived" });
+    expect(within(dialog).getByText("This grant was published. Rejecting deletes it and its files for everyone.")).toBeInTheDocument();
+    expect(within(dialog).queryByText(/was live/)).not.toBeInTheDocument();
+  });
+
+  describe.each(["active", "archived"])("a new version of a %s grant whose published version stays", (liveStatus) => {
+    const pending = { ...held, nofo_name: "Live-Grant", source: "pipeline" as const, grantStatus: liveStatus };
+    const shown = { ...detail, ...pending, live_status: liveStatus };
+
+    it("offers Reject new version", async () => {
+      await openDetail(pending, shown);
+      expect(screen.getByRole("button", { name: "Reject new version — the published version stays live" })).toHaveTextContent(
+        "Reject new version"
+      );
+    });
+
+    it("confirms that nothing is deleted, and doesn't warn about deleting the grant", async () => {
+      const { dialog } = await rejectDialog(pending, shown);
+      expect(within(dialog).getByText("Reject this new version? The published version stays live and nothing is deleted.")).toBeInTheDocument();
+      expect(within(dialog).queryByText(/permanently delete/)).not.toBeInTheDocument();
+      expect(within(dialog).queryByText(/Rejecting deletes it/)).not.toBeInTheDocument();
+      expect(within(dialog).getByRole("button", { name: "Reject new version" })).toHaveTextContent("Reject new version");
+    });
+
+    it("rejects only this review when confirmed", async () => {
+      const { dialog, user, net } = await rejectDialog(pending, shown, {
+        "POST /admin/processing-reviews/Live-Grant/reject": json({ message: "ok", keptLive: true }),
+      });
+      await user.click(within(dialog).getByRole("button", { name: "Reject new version" }));
+      await waitFor(() => expect(net.to("POST /admin/processing-reviews/Live-Grant/reject")).toHaveLength(1));
+      expect(net.to("POST /admin/processing-reviews/Live-Grant/reject")[0].body).toMatchObject({ reviewId: shown.review_id });
+    });
+  });
+
+  it("shows the guidance that users keep seeing the published version", async () => {
+    const pending = { ...held, nofo_name: "Live-Grant", source: "pipeline" as const };
+    const message =
+      '"Live-Grant" is live. 1 item on the Requirements page could not be matched to what the grant says. ' +
+      "Users keep seeing the published version until you approve or reject this new one.";
+    await openDetail(pending, { ...detail, ...pending, live_status: "active", adminGuidance: { ...detail.adminGuidance!, message } });
+    expect(screen.getByText(message)).toBeInTheDocument();
   });
 
   it("recommends re-uploading when the only failure is text that couldn't be read", async () => {

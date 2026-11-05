@@ -1,5 +1,5 @@
 import { screen, waitFor, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { json, stubFetch, type RouteRequest } from "../../test/fetch-routes";
 import { renderApp } from "../../test/render";
 import { useDraftSave } from "../../hooks/use-draft-save";
@@ -248,6 +248,26 @@ describe("SectionsEditor while the grant is in review", () => {
     await user.type(editor, " and more");
     expect(editor).toHaveValue("My text and more");
     await waitFor(() => expect(updates(net).slice(-1)[0]?.sections).toMatchObject({ "statement-of-need": "My text and more" }));
+  });
+
+  it("shows the note only on the grant's own sections, not on one the applicant added", async () => {
+    const order = [...ORDER, { id: "custom-partners", name: "Partners" }];
+    stubServer({ row: { ...row, sections: { ...row.sections, "custom-partners": "Our partners" }, section_order: order } }, { inReview: true, ...GRANT });
+    // jsdom has no layout, so it leaves scrollIntoView out.
+    Element.prototype.scrollIntoView = vi.fn();
+    const { user } = renderApp(<Editor />);
+
+    await screen.findByRole("textbox", { name: "Statement of Need" });
+    expect(screen.getByText(/section guidance is hidden/)).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /Partners/ }));
+    await screen.findByRole("textbox", { name: "Partners" });
+    expect(screen.queryByText(/section guidance is hidden/)).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /Budget/ }));
+    await screen.findByRole("textbox", { name: "Budget" });
+    expect(screen.getByText(/section guidance is hidden/)).toBeInTheDocument();
+    delete (Element.prototype as Partial<Element>).scrollIntoView;
   });
 
   it("shows the grant's guidance once it is out of review", async () => {

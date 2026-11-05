@@ -230,6 +230,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   }
 
   const isResolved = review.status === "approved" || review.status === "rejected" || review.status === "superseded";
+  const keepsLive = Boolean(detail.live_status);
 
   return asTableRow(
     <div
@@ -476,17 +477,26 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
             <div className="modal-form">
               <div className="delete-confirmation">
                 <LuTriangleAlert size={32} className="warning-icon dashboard-info-icon" aria-hidden="true" />
-                <p>
-                  Are you sure you want to reject <strong>{review.nofo_name}</strong>?
-                </p>
+                {keepsLive ? (
+                  <p>Reject this new version? The published version stays live and nothing is deleted.</p>
+                ) : (
+                  <p>
+                    Are you sure you want to reject <strong>{review.nofo_name}</strong>?
+                  </p>
+                )}
               </div>
-              <p className="warning-text">
-                This will permanently delete the grant document and all processed data. This action cannot be
-                undone.
-              </p>
-              {!detail.live_status && (review.source === "verification" || detail.previous_status) && (
+              {!keepsLive && (
                 <p className="warning-text">
-                  <strong>This grant was live. Rejecting deletes it and its files for everyone.</strong>
+                  This will permanently delete the grant document and all processed data. This action cannot be
+                  undone.
+                </p>
+              )}
+              {!keepsLive && (review.source === "verification" || detail.previous_status) && (
+                <p className="warning-text">
+                  <strong>
+                    This grant {detail.previous_status === "archived" ? "was published" : "was live"}. Rejecting
+                    deletes it and its files for everyone.
+                  </strong>
                 </p>
               )}
               {adminNotes && (
@@ -516,9 +526,9 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
                 <button
                   className="modal-button danger"
                   onClick={confirmReject}
-                  aria-label="Reject and delete this grant"
+                  aria-label={keepsLive ? "Reject new version" : "Reject and delete this grant"}
                 >
-                  Reject and Delete
+                  {keepsLive ? "Reject new version" : "Reject and Delete"}
                 </button>
               </div>
             </div>
@@ -546,6 +556,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
               !!detail.adminGuidance?.failingItems?.length &&
               detail.adminGuidance.failingItems.every((f) => f.category === "grant_text")
             }
+            keepsLive={keepsLive}
             onApprove={handleApprove}
             onReject={handleRejectClick}
             onReprocess={handleReprocess}
