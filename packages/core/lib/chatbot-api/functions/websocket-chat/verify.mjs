@@ -105,9 +105,9 @@ const VERDICT_SCHEMA = {
   additionalProperties: false,
 };
 
-const SYSTEM = `You check a grant assistant's answer one sentence at a time. Each sentence comes with the grant passages it cited. Give every sentence one verdict and a reason of a few words.
+const SYSTEM = `You check a grant assistant's answer one sentence at a time against the full grant text, which comes first, and the user's supporting documents when given. Each sentence also shows the passages it cited, as a pointer to where to look. Judge each sentence against everything provided, not only its cited passages. Give every sentence one verdict and a reason of a few words.
 
-- supported: everything the sentence states about the grant, the program or the applicant is stated in its passages. Paraphrase is fine; the meaning must match.
+- supported: everything the sentence states about the grant, the program or the applicant is stated in the grant text, the user's documents or its passages. Paraphrase is fine; the meaning must match.
 - unsupported: the sentence states something about the grant, the program, a regulation, a website, a date, an amount or a count that its passages do not state, that contradicts them, or that goes beyond them (a date, count or total worked out from them, an outside rule or source). A sentence that states something about the grant with no passage is unsupported. These go beyond the passages unless a passage says them outright:
   - what a person, office or website can do or tells you (who to contact for what, where to find something);
   - how two limits, amounts or rules relate (one inside another, one replacing another);
@@ -123,11 +123,11 @@ const esc = (s) => String(s).replace(/</g, "&lt;").replace(/>/g, "&gt;");
  * not a source (the user decided); their ticked documents are, as cited passages or, with only the
  * summary to cite from, as text.
  */
-export function meaningRequest({ units, found = [], documents = [], summary = null, documentText = "", today = "" }) {
+export function meaningRequest({ units, found = [], documents = [], summary = null, documentText = "", grantText = "", today = "" }) {
   const parts = [];
   if (today) parts.push(`Today's date is ${today}.`);
   if (summary != null) parts.push(`The grant summary below is the passage for every sentence.\n<grant_summary>\n${esc(summary)}\n</grant_summary>`);
-  if (summary != null && documentText) parts.push(`The user's supporting documents below are also passages for every sentence.\n<supporting_documents>\n${esc(documentText.slice(0, DOCUMENT_TEXT_MAX_CHARS))}\n</supporting_documents>`);
+  if (documentText) parts.push(`The user's supporting documents below are also sources for every sentence.\n<supporting_documents>\n${esc(documentText.slice(0, DOCUMENT_TEXT_MAX_CHARS))}\n</supporting_documents>`);
   parts.push(
     `<sentences>\n${units
       .map((u, i) => {
@@ -145,7 +145,16 @@ export function meaningRequest({ units, found = [], documents = [], summary = nu
     thinking: { type: "disabled" },
     output_config: { effort: "low", format: { type: "json_schema", schema: VERDICT_SCHEMA } },
     system: SYSTEM,
-    messages: [{ role: "user", content: [{ type: "text", text: parts.join("\n\n") }] }],
+    messages: [
+      {
+        role: "user",
+        content: [
+          // The grant is the same for every answer about it, so it is cached ahead of the volatile parts.
+          ...(summary == null && grantText ? [{ type: "text", text: `<grant_text>\n${esc(grantText)}\n</grant_text>`, cache_control: { type: "ephemeral" } }] : []),
+          { type: "text", text: parts.join("\n\n") },
+        ],
+      },
+    ],
   };
 }
 
@@ -202,7 +211,7 @@ export async function verifyAnswer({ text, found = [], documents = [], summary =
   const units = splitSentences(text);
   const keys = unionKeys(baseKeys, found.map((f) => f.citation?.cited_text ?? ""));
   const factFailing = [...new Set([...factFailures(units, keys), ...dateStatusFailures(units, today)])].sort((x, y) => x - y);
-  const verdicts = await checkMeaning({ units, found, documents, summary, documentText, today }, deps);
+  const verdicts = await checkMeaning({ units, found, documents, summary, documentText, grantText, today }, deps);
   const absenceFailing = verdicts.flatMap((v, i) => {
     if (v.verdict !== "not_a_claim") return [];
     const topic = absenceTopic(units[i].text);

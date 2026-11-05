@@ -103,7 +103,7 @@ const verifyLines = () =>
     .map((l: string) => JSON.parse(l.slice(VERIFY_MARKER.length + 1)));
 
 const sentencesOf = (input: any) =>
-  [...JSON.parse(input.body).messages[0].content[0].text.matchAll(/<sentence id="(\d+)">\n<text>([^<]*)<\/text>/g)].map((m) => ({
+  [...JSON.parse(input.body).messages[0].content.at(-1).text.matchAll(/<sentence id="(\d+)">\n<text>([^<]*)<\/text>/g)].map((m) => ({
     id: Number(m[1]),
     text: m[2],
   }));
@@ -199,7 +199,7 @@ describe("answer units", () => {
 
   it("gives the meaning check the user's documents in summary mode", () => {
     const units = splitSentences("Your match is $415,000.");
-    const prompt = meaningRequest({ units, summary: "{}", documentText: "The board approved a $415,000 match." }).messages[0].content[0].text;
+    const prompt = meaningRequest({ units, summary: "{}", documentText: "The board approved a $415,000 match." }).messages[0].content.at(-1).text;
     expect(prompt).toContain("<supporting_documents>\nThe board approved a $415,000 match.\n</supporting_documents>");
   });
 
@@ -239,7 +239,7 @@ describe("verified chat answers", () => {
     ]);
   });
 
-  it("sends Haiku each sentence with its own cited passages, not the grant", async () => {
+  it("sends Haiku the whole grant, cached, then each sentence with its own cited passages", async () => {
     s3.on(GetObjectCommand, { Bucket: "grant-artifacts", Key: "Grant A/raw-text.txt" }).resolves(rawText(`${GRANT_TEXT} ${"Filler. ".repeat(500)}`));
     bedrock.on(InvokeModelWithResponseStreamCommand).resolves(cited([["Applications are due March 1, 2027.", deadline], " Plan ahead."]));
 
@@ -250,7 +250,7 @@ describe("verified chat answers", () => {
     expect(body.thinking).toEqual({ type: "disabled" });
     expect(body.output_config).toMatchObject({ effort: "low", format: { type: "json_schema" } });
     expect(body.output_config.format.schema.properties.verdicts.items.properties.verdict.enum).toEqual(["supported", "unsupported", "not_a_claim"]);
-    const prompt = body.messages[0].content[0].text;
+    const prompt = body.messages[0].content.at(-1).text;
     expect(prompt).toContain(
       '<sentence id="1">\n<text>Applications are due March 1, 2027.</text>\n<passage document="Grant document">Applications are due March 1, 2027.</passage>\n</sentence>'
     );
@@ -258,6 +258,10 @@ describe("verified chat answers", () => {
     expect(prompt).not.toContain("<user_said>");
     expect(prompt).not.toContain("What is the deadline?");
     expect(prompt).not.toContain("Filler.");
+    const grantBlock = body.messages[0].content[0];
+    expect(grantBlock.cache_control).toEqual({ type: "ephemeral" });
+    expect(grantBlock.text).toContain("Applications are due March 1, 2027.");
+    expect(grantBlock.text).toContain("Filler.");
   });
 
   it("regenerates once when a fact is not in the grant, and posts the second answer when it passes", async () => {
@@ -371,7 +375,7 @@ describe("verified chat answers", () => {
 
     expect(sonnetCalls()).toHaveLength(1);
     expect(posted()[0]).toBe("Your $250,000 budget for 4,200 residents is yours to set.");
-    const prompt = haikuRequest().messages[0].content[0].text;
+    const prompt = haikuRequest().messages[0].content.at(-1).text;
     expect(prompt).not.toContain("We serve 4,200 residents.");
     expect(prompt).not.toContain("Is that allowed?");
   });
@@ -402,7 +406,7 @@ describe("verified chat answers", () => {
     await handler(event());
 
     expect(sonnetCalls()).toHaveLength(2);
-    const prompt = haikuRequest(1).messages[0].content[0].text;
+    const prompt = haikuRequest(1).messages[0].content.at(-1).text;
     expect(prompt.split("<grant_summary>")).toHaveLength(2);
     expect(prompt).toContain("Deadline");
     expect(prompt).not.toContain("<passage");
