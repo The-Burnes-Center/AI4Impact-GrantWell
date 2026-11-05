@@ -49,6 +49,7 @@ function model(input: any) {
     if (props.questions) return reply(JSON.stringify(QUESTIONS));
     if (props.content) return reply(JSON.stringify({ content: "We serve 4,200 residents." }));
     if (props.verdicts) return haikuJudge()(input);
+    if (props.results) return reply(JSON.stringify({ results: [] }));
   }
   return reply("2026-12-01");
 }
