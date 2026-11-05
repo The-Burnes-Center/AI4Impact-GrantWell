@@ -154,14 +154,19 @@ function seesEveryGrant(userRoles, userState) {
   );
 }
 
+// As in canEditAnyNofo (grantwell-shared): a single-state site's admins may edit any grant.
+const SINGLE_STATE = String(process.env.SINGLE_STATE || "").trim().toUpperCase();
+
 /**
  * True when the grant is held for review and this user isn't one who may still open it: a
- * developer, a platform admin, or a state admin for their own state's grant.
+ * developer, a platform admin, a state admin for their own state's grant, or any admin of a
+ * single-state site.
  */
 function grantInReviewFor(userRoles, userState, row) {
   if (!IN_REVIEW_STATUSES.has(row?.status) || seesEveryGrant(userRoles, userState)) return false;
-  const ownStateAdmin = userRoles.includes("Admin") && Boolean(userState) && row.scope === "state" && row.state === userState;
-  return !ownStateAdmin;
+  if (!userRoles.includes("Admin") || !userState) return true;
+  if (SINGLE_STATE !== "" && userState === SINGLE_STATE) return false;
+  return !(row.scope === "state" && row.state === userState);
 }
 
 function checkPerNofoAccess(userRoles, userState, nofoName, row) {

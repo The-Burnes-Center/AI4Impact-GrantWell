@@ -103,6 +103,7 @@ export class ScraperStack extends cdk.NestedStack {
         handler: "opportunity-processor/index.handler",
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
           GRANTS_GOV_API_KEY: props.grantsGovApiKey,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           HAIKU_MODEL_ID: props.haikuScraperProfileArn,
@@ -113,6 +114,14 @@ export class ScraperStack extends cdk.NestedStack {
     );
 
     opportunityProcessorFunction.addToRolePolicy(s3ReadWritePolicy(props.ffioNofosBucket.bucketArn));
+    // An update of a live grant waits in _pending/ until its new version publishes.
+    opportunityProcessorFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:PutObject"],
+        resources: [props.grantArtifactsBucket.arnForObjects("_pending/*")],
+      })
+    );
     opportunityProcessorFunction.addToRolePolicy(bedrockInvokePolicy());
     opportunityProcessorFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
 

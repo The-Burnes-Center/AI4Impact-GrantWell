@@ -58,6 +58,12 @@ export class S3BucketStack extends cdk.Stack {
       versioned: true,
       removalPolicy: cdk.RemovalPolicy.RETAIN,
       autoDeleteObjects: false,
+      // Admins' browsers upload a live grant's new version straight to _pending/ with a presigned PUT.
+      cors: [{
+        allowedMethods: [s3.HttpMethods.PUT],
+        allowedOrigins: ['*'],
+        allowedHeaders: ["*"]
+      }],
       // The search index builder rewrites _search/ on every grant change; old versions are useless.
       lifecycleRules: [{
         id: 'ExpireOldSearchIndexVersions',

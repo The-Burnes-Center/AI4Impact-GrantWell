@@ -389,6 +389,7 @@ export class ChatBotApi extends Construct {
         NOFO_METADATA_TABLE_NAME: tables.nofoMetadataTable.tableName,
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
       LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+        ...(singleState(props.config) && { SINGLE_STATE: singleState(props.config)!.code }),
         DAILY_USAGE_TABLE_NAME: tables.dailyUsageTable.tableName,
         APPLICATIONS_PER_DAY: String(instanceLimits.applicationsPerDay),
       },

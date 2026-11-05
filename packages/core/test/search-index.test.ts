@@ -46,7 +46,9 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
 
     it("rebuilds on summary.json changes through a queue, nightly at 06:30 UTC and once on deploy", () => {
       const [, notifications] = Object.entries(all).find(([id, r]) => id.startsWith("ChatbotAPIGrantArtifactsBucketNotifications") && r.Type === "Custom::S3BucketNotifications")!;
-      const queues = notifications.Properties.NotificationConfiguration.QueueConfigurations;
+      const queues = notifications.Properties.NotificationConfiguration.QueueConfigurations.filter((q: any) =>
+        q.Filter.Key.FilterRules.some((r: any) => r.Value === "/summary.json")
+      );
       expect(queues.map((q: any) => [q.Events, q.Filter.Key.FilterRules])).toEqual([
         [["s3:ObjectCreated:*"], [{ Name: "suffix", Value: "/summary.json" }]],
         [["s3:ObjectRemoved:*"], [{ Name: "suffix", Value: "/summary.json" }]],
@@ -60,6 +62,17 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
 
       const initial = Object.entries(all).find(([id]) => id.startsWith("ChatbotAPISearchIndexInitialBuild") && all[id].Type === "Custom::AWS")!;
       expect(JSON.stringify(initial[1].Properties.Create)).toContain("sendMessage");
+    });
+
+    it("starts the pipeline on a live grant's new version staged under _pending/, and lets admins upload it there", () => {
+      const [, notifications] = Object.entries(all).find(([id, r]) => id.startsWith("ChatbotAPIGrantArtifactsBucketNotifications") && r.Type === "Custom::S3BucketNotifications")!;
+      const config = notifications.Properties.NotificationConfiguration;
+      const rules = (c: any) => Object.fromEntries(c.Filter.Key.FilterRules.map((r: any) => [r.Name, r.Value]));
+      const staged = config.QueueConfigurations.map(rules).filter((r: any) => r.prefix === "_pending/");
+      expect(staged.map((r: any) => r.suffix).sort()).toEqual(["NOFO-File-PDF", "NOFO-File-TXT"]);
+      expect(config.LambdaFunctionConfigurations.map(rules)).toEqual([{ prefix: "_pending/", suffix: "NOFO-File-DOCX" }]);
+      const [, bucket] = Object.entries(all).find(([id, r]) => id.startsWith("ChatbotAPIGrantArtifactsBucket") && r.Type === "AWS::S3::Bucket")!;
+      expect(bucket.Properties.CorsConfiguration.CorsRules).toEqual([expect.objectContaining({ AllowedMethods: ["PUT"] })]);
     });
 
     it("expires old index versions in the versioned artifacts bucket", () => {

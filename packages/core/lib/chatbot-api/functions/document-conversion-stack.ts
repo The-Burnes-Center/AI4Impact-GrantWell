@@ -21,6 +21,7 @@ import {
 
 export interface DocumentConversionStackProps extends cdk.NestedStackProps {
   readonly ffioNofosBucket: s3.Bucket;
+  readonly grantArtifactsBucket: s3.Bucket;
   readonly analyticsTable: Table;
   /** Shared with functions outside this stack, so it stays in the parent. */
   readonly jsSharedLayer: lambda.ILayerVersion;
@@ -71,6 +72,7 @@ export class DocumentConversionStack extends cdk.NestedStack {
         layers: [puppeteerCoreLayer],
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
           REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
         },
         timeout: cdk.Duration.minutes(5),
@@ -87,6 +89,14 @@ export class DocumentConversionStack extends cdk.NestedStack {
     // Object-level permissions on bucket contents
     htmlToPdfConverterFunction.addToRolePolicy(
       s3ObjectReadWriteDeletePolicy(props.ffioNofosBucket.bucketArn)
+    );
+    // A live grant's new version is converted into _pending/, where it waits to publish.
+    htmlToPdfConverterFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:PutObject"],
+        resources: [props.grantArtifactsBucket.arnForObjects("_pending/*")],
+      })
     );
 
     // Add S3 event notification to trigger HTML-to-PDF conversion
@@ -203,6 +213,20 @@ export class DocumentConversionStack extends cdk.NestedStack {
       s3.EventType.OBJECT_CREATED,
       new s3n.LambdaDestination(docxToTextConverterFunction),
       { suffix: "NOFO-File-DOCX" }
+    );
+    // A live grant's new version converts in place under _pending/, where it waits to publish.
+    docxToTextConverterFunction.addToRolePolicy(s3ListBucketPolicy(props.grantArtifactsBucket.bucketArn));
+    docxToTextConverterFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+        resources: [props.grantArtifactsBucket.arnForObjects("_pending/*")],
+      })
+    );
+    props.grantArtifactsBucket.addEventNotification(
+      s3.EventType.OBJECT_CREATED,
+      new s3n.LambdaDestination(docxToTextConverterFunction),
+      { prefix: "_pending/", suffix: "NOFO-File-DOCX" }
     );
 
     this.docxToTextConverterFunction = docxToTextConverterFunction;

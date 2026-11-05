@@ -1,7 +1,7 @@
 import { mockClient } from "aws-sdk-client-mock";
-import { DynamoDBClient, QueryCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, GetItemCommand, QueryCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { SFNClient, StartExecutionCommand } from "@aws-sdk/client-sfn";
-import { HeadObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { CopyObjectCommand, DeleteObjectsCommand, HeadObjectCommand, ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -19,9 +19,9 @@ beforeAll(async () => {
   ({ handler } = await import("../../lib/chatbot-api/functions/nofo-pipeline/dispatcher/index.mjs"));
 });
 
-const sqsRecord = (messageId: string, key: string) => ({
+const sqsRecord = (messageId: string, key: string, bucket = "nofos", eTag?: string) => ({
   messageId,
-  body: JSON.stringify({ Records: [{ s3: { bucket: { name: "nofos" }, object: { key } } }] }),
+  body: JSON.stringify({ Records: [{ s3: { bucket: { name: bucket }, object: { key, ...(eTag && { eTag }) } } }] }),
 });
 
 const updates = () => ddb.commandCalls(UpdateItemCommand).map((c) => c.args[0].input);
@@ -35,6 +35,7 @@ beforeEach(() => {
   s3.reset();
   ddb.on(UpdateItemCommand).resolves({});
   ddb.on(QueryCommand).resolves({ Items: [] });
+  ddb.on(GetItemCommand).resolves({});
   vi.spyOn(console, "log").mockImplementation(() => {});
   vi.spyOn(console, "warn").mockImplementation(() => {});
   errors = vi.spyOn(console, "error").mockImplementation(() => {});
@@ -104,12 +105,15 @@ describe("NOFO pipeline dispatcher", () => {
     const notFound = () => Object.assign(new Error("Not Found"), { name: "NotFound", $metadata: { httpStatusCode: 404 } });
     const statusWrites = () => updates().filter((u) => String(u.UpdateExpression).includes("#status = :processing"));
     const stages = () => updates().map((u) => u.ExpressionAttributeValues?.[":s"]?.S).filter(Boolean);
-    const dispatch = async (row: Record<string, unknown>) => {
+    const STAGED = "_pending/Grant/NOFO-File-PDF";
+    const dispatch = async (row: Record<string, unknown>, record = sqsRecord("m1", STAGED, "grant-artifacts")) => {
+      ddb.on(GetItemCommand).resolves({ Item: marshall({ nofo_name: "Grant", ...row }) });
       ddb.on(UpdateItemCommand, { ConditionExpression: "attribute_not_exists(pipeline_claim_at) OR pipeline_claim_at < :staleBefore" })
         .resolves({ Attributes: marshall({ nofo_name: "Grant", ...row }) });
       sfn.on(StartExecutionCommand).resolves({ executionArn: "arn:exec:1", startDate: new Date() });
-      return handler({ Records: [sqsRecord("m1", "Grant/NOFO-File-PDF")] });
+      return handler({ Records: [record] });
     };
+    const started = () => sfn.commandCalls(StartExecutionCommand).map((c) => JSON.parse(c.args[0].input.input!));
 
     beforeEach(() => {
       vi.stubEnv("ARTIFACTS_BUCKET", "grant-artifacts");
@@ -120,15 +124,83 @@ describe("NOFO pipeline dispatcher", () => {
       vi.stubEnv("BUCKET", "");
     });
 
-    it.each(["active", "archived"])("keeps a published %s grant's status while its new version runs", async (status) => {
+    it.each(["active", "archived"])("keeps a published %s grant's status while its new version runs from _pending/", async (status) => {
       s3.on(HeadObjectCommand).resolves({});
+      s3.on(ListObjectsV2Command).resolves({ Contents: [] });
 
       expect((await dispatch({ status })).batchItemFailures).toEqual([]);
 
       expect(statusWrites()).toHaveLength(0);
       expect(stages()).toEqual(["uploading"]);
       expect(s3.commandCalls(HeadObjectCommand)[0].args[0].input).toEqual({ Bucket: "grant-artifacts", Key: "Grant/summary.json" });
-      expect(sfn.commandCalls(StartExecutionCommand)).toHaveLength(1);
+      expect(started()).toEqual([
+        { s3Bucket: "grant-artifacts", documentKey: STAGED, nofoName: "Grant", retryCount: 0, validationFeedback: null },
+      ]);
+    });
+
+    it("runs a live grant's published document from a staged copy, not in place", async () => {
+      s3.on(HeadObjectCommand).resolves({});
+      s3.on(CopyObjectCommand).resolves({});
+
+      const res = await dispatch({ status: "active" }, sqsRecord("m1", "Grant/NOFO-File-TXT"));
+
+      expect(res.batchItemFailures).toEqual([]);
+      expect(s3.commandCalls(CopyObjectCommand).map((c) => c.args[0].input)).toEqual([
+        { Bucket: "grant-artifacts", CopySource: "nofos/Grant/NOFO-File-TXT", Key: "_pending/Grant/NOFO-File-TXT" },
+      ]);
+      expect(sfn.commandCalls(StartExecutionCommand)).toHaveLength(0);
+      expect(updates().filter(isClaim)).toHaveLength(0);
+    });
+
+    it("stages the copy when S3 can't say whether the grant is published, so its files are never overwritten", async () => {
+      s3.on(HeadObjectCommand).rejects(Object.assign(new Error("Slow down"), { name: "SlowDown" }));
+      s3.on(CopyObjectCommand).resolves({});
+
+      await dispatch({ status: "active" }, sqsRecord("m1", "Grant/NOFO-File-PDF"));
+
+      expect(s3.commandCalls(CopyObjectCommand)).toHaveLength(1);
+      expect(sfn.commandCalls(StartExecutionCommand)).toHaveLength(0);
+    });
+
+    it("does not run again on the document publish just swapped in, and forgets its ETag", async () => {
+      const res = await dispatch(
+        { status: "active", swap_document_etags: new Set(["abc123"]) },
+        sqsRecord("m1", "Grant/NOFO-File-PDF", "nofos", "abc123")
+      );
+
+      expect(res.batchItemFailures).toEqual([]);
+      expect(sfn.commandCalls(StartExecutionCommand)).toHaveLength(0);
+      expect(s3.commandCalls(CopyObjectCommand)).toHaveLength(0);
+      const consumed = updates().find((u) => String(u.UpdateExpression).startsWith("DELETE swap_document_etags"))!;
+      expect(consumed.ExpressionAttributeValues).toEqual({ ":etag": { SS: ["abc123"] } });
+      expect(ddb.commandCalls(GetItemCommand)[0].args[0].input.ConsistentRead).toBe(true);
+    });
+
+    it("processes other bytes that land on a grant with a recorded ETag as usual", async () => {
+      s3.on(HeadObjectCommand).rejects(notFound());
+
+      await dispatch({ status: "processing", swap_document_etags: new Set(["abc123"]) }, sqsRecord("m1", "Grant/NOFO-File-PDF", "nofos", "other"));
+
+      expect(started()).toHaveLength(1);
+    });
+
+    it("clears an earlier run's staged files, keeping this run's document and the swap journal", async () => {
+      s3.on(HeadObjectCommand).resolves({});
+      s3.on(ListObjectsV2Command).resolves({
+        Contents: [
+          { Key: STAGED },
+          { Key: "_pending/Grant/NOFO-File-TXT" },
+          { Key: "_pending/Grant/raw-text-pages.json" },
+          { Key: "_pending/Grant/swap.json" },
+        ],
+      });
+      s3.on(DeleteObjectsCommand).resolves({});
+
+      await dispatch({ status: "active" });
+
+      expect(s3.commandCalls(ListObjectsV2Command)[0].args[0].input).toMatchObject({ Bucket: "grant-artifacts", Prefix: "_pending/Grant/" });
+      const deleted = s3.commandCalls(DeleteObjectsCommand).flatMap((c) => c.args[0].input.Delete!.Objects!.map((o) => o.Key));
+      expect(deleted).toEqual(["_pending/Grant/NOFO-File-TXT", "_pending/Grant/raw-text-pages.json"]);
     });
 
     it("finds a summary published before the artifacts bucket existed", async () => {
@@ -151,7 +223,7 @@ describe("NOFO pipeline dispatcher", () => {
     it("keeps a grant held for review held: it has no version users can see", async () => {
       s3.on(HeadObjectCommand).resolves({});
 
-      await dispatch({ status: "quarantined", previous_status: "archived" });
+      await dispatch({ status: "quarantined", previous_status: "archived" }, sqsRecord("m1", "Grant/NOFO-File-PDF"));
 
       expect(statusWrites()).toHaveLength(1);
       expect(s3.commandCalls(HeadObjectCommand)).toHaveLength(0);

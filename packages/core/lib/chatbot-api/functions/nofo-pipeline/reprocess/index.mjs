@@ -3,13 +3,18 @@ import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 import { DynamoDBClient, UpdateItemCommand, QueryCommand, GetItemCommand } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { httpResponse } from "../shared/json.mjs";
-import { requireAdmin, assertCanEditNofoOr403 } from "grantwell-shared";
+import { requireAdmin, assertCanEditNofoOr403, artifactsBucket, pendingDir } from "grantwell-shared";
 
 const s3Client = new S3Client();
 const sqsClient = new SQSClient();
 const dynamoClient = new DynamoDBClient();
 
 const scopeDeps = { client: dynamoClient, GetItemCommand, marshall, unmarshall };
+
+async function findDocument(bucket, folder) {
+  const listed = await s3Client.send(new ListObjectsV2Command({ Bucket: bucket, Prefix: `${folder}NOFO-File-`, MaxKeys: 5 }));
+  return listed.Contents?.find((obj) => obj.Key.endsWith("NOFO-File-PDF") || obj.Key.endsWith("NOFO-File-TXT"))?.Key ?? null;
+}
 
 export const handler = async (event) => {
   const forbidden = requireAdmin(event);
@@ -31,21 +36,11 @@ export const handler = async (event) => {
   const bucket = process.env.BUCKET;
   const queueUrl = process.env.QUEUE_URL;
 
-  // Find the NOFO file in S3
-  const listResult = await s3Client.send(
-    new ListObjectsV2Command({
-      Bucket: bucket,
-      Prefix: `${nofoName}/NOFO-File-`,
-      MaxKeys: 5,
-    })
-  );
+  // A live grant's new version waiting for review is the one to reprocess, not the published one.
+  const staged = await findDocument(artifactsBucket(), pendingDir(nofoName));
+  const found = staged ? { bucket: artifactsBucket(), key: staged } : { bucket, key: await findDocument(bucket, `${nofoName}/`) };
 
-  const nofoFile = listResult.Contents?.find(
-    (obj) =>
-      obj.Key.endsWith("NOFO-File-PDF") || obj.Key.endsWith("NOFO-File-TXT")
-  );
-
-  if (!nofoFile) {
+  if (!found.key) {
     return httpResponse(404, { error: `No grant document found for "${nofoName}"` });
   }
 
@@ -54,8 +49,8 @@ export const handler = async (event) => {
     Records: [
       {
         s3: {
-          bucket: { name: bucket },
-          object: { key: nofoFile.Key },
+          bucket: { name: found.bucket },
+          object: { key: found.key },
         },
       },
     ],
@@ -131,6 +126,6 @@ export const handler = async (event) => {
 
   return httpResponse(200, {
     message: `Reprocessing triggered for "${nofoName}"`,
-    documentKey: nofoFile.Key,
+    documentKey: found.key,
   });
 };

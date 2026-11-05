@@ -60,10 +60,18 @@ const MAX_INPUT_CHARS = 10000;
 const IN_REVIEW_STATUSES = new Set(["quarantined", "processing"]);
 const GRANT_IN_REVIEW_MESSAGE = "This grant is being reviewed and will be back soon.";
 
-/** Developers, platform admins, and a state admin for their own state's grant open held grants. */
+// As in canEditAnyNofo (grantwell-shared): a single-state site's admins may edit any grant.
+const SINGLE_STATE = String(process.env.SINGLE_STATE || "").trim().toUpperCase();
+
+/**
+ * Developers, platform admins, and a state admin for their own state's grant open held grants, as
+ * does any admin of a single-state site.
+ */
 function opensGrantInReview(callerScope, row) {
   if (callerScope.role === "developer" || callerScope.role === "regularAdmin") return true;
-  return callerScope.role === "stateAdmin" && row?.scope === "state" && Boolean(row.state) && row.state === callerScope.state;
+  if (callerScope.role !== "stateAdmin") return false;
+  if (SINGLE_STATE !== "" && callerScope.state === SINGLE_STATE) return true;
+  return row?.scope === "state" && Boolean(row.state) && row.state === callerScope.state;
 }
 
 /** Pinned by LOG_MARKERS.applicationCapReached. */

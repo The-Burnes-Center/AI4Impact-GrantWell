@@ -6,6 +6,7 @@ import { readRawText } from "../shared/s3.mjs";
 import { invokeBedrockWithRetry } from "../shared/bedrock.mjs";
 import { countItems } from "../shared/json.mjs";
 import { documentSampleOf, generateQuestionsWithRetry } from "../shared/questions.mjs";
+import { grantDeadline } from "grantwell-shared";
 
 const dynamoClient = new DynamoDBClient();
 
@@ -20,6 +21,7 @@ export const handler = async (event) => {
   let agency = null;
   let category = null;
   let existingExpirationDate = null;
+  let isRolling;
 
   if (tableName) {
     try {
@@ -34,6 +36,7 @@ export const handler = async (event) => {
         agency = item.agency || null;
         category = item.category || null;
         existingExpirationDate = item.expiration_date || null;
+        isRolling = item.is_rolling;
       }
     } catch (error) {
       console.warn(`Could not fetch metadata for ${nofoName}:`, error.message);
@@ -42,12 +45,20 @@ export const handler = async (event) => {
 
   const documentSample = documentSampleOf(await readRawText(s3Bucket, rawTextKey));
 
-  // Run deadline extraction and question generation in parallel
-  const needsDeadline = !existingExpirationDate && mergedSummary.KeyDeadlines?.length > 0;
-  const [applicationDeadline, questionsData] = await Promise.all([
+  // An expired stored deadline may belong to the version this one replaces, so the new
+  // version's own deadline is read, and replaces it only when it is still ahead.
+  const isAhead = (date) => {
+    const { urgency } = grantDeadline({ expiration_date: date, is_rolling: isRolling });
+    return urgency !== null && urgency !== "expired";
+  };
+  const storedExpired = Boolean(existingExpirationDate) && grantDeadline({ expiration_date: existingExpirationDate, is_rolling: isRolling }).urgency === "expired";
+  const needsDeadline = (!existingExpirationDate || storedExpired) && mergedSummary.KeyDeadlines?.length > 0;
+  const [extractedDeadline, questionsData] = await Promise.all([
     needsDeadline ? extractDeadline(mergedSummary.KeyDeadlines) : Promise.resolve(null),
     generateQuestionsWithRetry(mergedSummary, documentSample),
   ]);
+  const applicationDeadline = !existingExpirationDate || isAhead(extractedDeadline) ? extractedDeadline : null;
+  if (applicationDeadline) existingExpirationDate = null;
 
   mergedSummary.GrantName = nofoName;
   if (agency) mergedSummary.Agency = agency;

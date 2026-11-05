@@ -28,8 +28,14 @@ import {
   compareByDeadline,
   readGrantMetadata,
   OPEN_REVIEW_STATUSES,
+  artifactsBucket,
   deleteArtifacts,
+  deletePending,
+  isPendingKey,
+  pendingDir,
+  stagesNewVersion,
 } from "grantwell-shared";
+import { rollBack } from "../shared/swap.mjs";
 
 const dynamoClient = new DynamoDBClient();
 const lambdaClient = new LambdaClient();
@@ -310,27 +316,30 @@ async function getReviewDetail(nofoName) {
   return httpResponse(200, { review: detail });
 }
 
+const CLOSED_REVIEW = "This review is closed. A newer run of this grant may be in the review queue.";
+
+async function readReview(tableName, nofoName, reviewId) {
+  if (!reviewId) return getLatestReview(tableName, nofoName);
+  const result = await dynamoClient.send(
+    new GetItemCommand({ TableName: tableName, Key: marshall({ nofo_name: nofoName, review_id: reviewId }) })
+  );
+  return result.Item ? unmarshall(result.Item) : null;
+}
+
 async function approveReview(nofoName, event) {
   const body = JSON.parse(event.body || "{}");
   const { corrections, notes, reviewId } = body;
   const tableName = process.env.REVIEW_TABLE_NAME;
   const publishFunctionName = process.env.PUBLISH_FUNCTION_NAME;
 
-  let review;
-  if (reviewId) {
-    const result = await dynamoClient.send(
-      new GetItemCommand({
-        TableName: tableName,
-        Key: marshall({ nofo_name: nofoName, review_id: reviewId }),
-      })
-    );
-    review = result.Item ? unmarshall(result.Item) : null;
-  } else {
-    review = await getLatestReview(tableName, nofoName);
-  }
+  const review = await readReview(tableName, nofoName, reviewId);
 
   if (!review) {
     return httpResponse(404, { error: "Review not found" });
+  }
+  // Publishing swaps in whatever is staged now, which a newer run may have replaced.
+  if (isPendingKey(review.s3DocumentKey) && !OPEN_REVIEW_STATUSES.includes(review.status)) {
+    return httpResponse(409, { error: CLOSED_REVIEW });
   }
 
   const actualReviewId = review.review_id;
@@ -441,6 +450,13 @@ async function rejectReview(nofoName, event) {
   }
 
   const keepLive = await hasLiveVersion(metadataTableName, nofoName);
+  if (keepLive) {
+    // A closed review's staged files may belong to a newer run by now.
+    const review = await readReview(tableName, nofoName, actualReviewId);
+    if (review && !OPEN_REVIEW_STATUSES.includes(review.status)) return httpResponse(409, { error: CLOSED_REVIEW });
+    // Before the review is marked rejected, so a failure leaves it open to retry.
+    await discardNewVersion(nofoName);
+  }
 
   const ttlRejected = Math.floor(Date.now() / 1000) + 90 * 86400;
   await dynamoClient.send(
@@ -507,6 +523,7 @@ async function rejectReview(nofoName, event) {
 
   try {
     await deleteArtifacts(s3Client, nofoName);
+    await deletePending(s3Client, nofoName);
   } catch (error) {
     console.error(`Failed to delete derived files for ${nofoName}:`, error);
   }
@@ -530,23 +547,39 @@ async function rejectReview(nofoName, event) {
 }
 
 /**
+ * Drops the staged new version. A publish that stopped partway is undone first, so the published
+ * version is exactly what it was. Errors propagate: the admin retries rather than half-rejecting.
+ */
+async function discardNewVersion(nofoName) {
+  await rollBack(nofoName);
+  const removed = await deletePending(s3Client, nofoName);
+  if (removed) console.log(`Discarded ${removed} staged file(s) of ${nofoName}`);
+}
+
+/**
  * True when the grant has a published version that stays live, so rejecting its new version keeps
  * the grant. A metadata read error throws rather than risk deleting a live grant.
  */
 async function hasLiveVersion(tableName, nofoName) {
   if (!tableName) return false;
+  const row = await readMetadataRow(nofoName);
+  return Boolean(await liveStatusOf(nofoName, row, { unknownIsLive: true }));
+}
+
+async function readMetadataRow(nofoName) {
+  const tableName = process.env.NOFO_METADATA_TABLE_NAME;
+  if (!tableName) return null;
   const result = await dynamoClient.send(
     new GetItemCommand({ TableName: tableName, Key: marshall({ nofo_name: nofoName }) })
   );
-  const row = result.Item ? unmarshall(result.Item) : null;
-  return Boolean(await liveStatusOf(nofoName, row, { unknownIsLive: true }));
+  return result.Item ? unmarshall(result.Item) : null;
 }
 
 /**
  * Generate a presigned S3 PUT URL so the admin can upload a replacement NOFO
  * document directly from the review panel without leaving the page.
- * The upload key matches the existing NOFO folder so the pipeline picks it up
- * automatically via the S3 trigger.
+ * The upload lands in the NOFO's folder, or its staging folder when it may be live, and either
+ * S3 trigger starts the pipeline.
  */
 async function getReuploadUrl(event) {
   const body = JSON.parse(event.body || "{}");
@@ -562,10 +595,14 @@ async function getReuploadUrl(event) {
   }
 
   const extension = fileType === "application/pdf" ? "PDF" : "TXT";
-  const objectKey = `${nofoName}/NOFO-File-${extension}`;
+  const file = `NOFO-File-${extension}`;
+  // A grant that may be live gets its replacement staged; the staged upload starts the pipeline.
+  const row = await readMetadataRow(nofoName);
+  const staged = stagesNewVersion(row?.status);
+  const objectKey = staged ? `${pendingDir(nofoName)}${file}` : `${nofoName}/${file}`;
 
   const command = new PutObjectCommand({
-    Bucket: bucket,
+    Bucket: staged ? artifactsBucket() : bucket,
     Key: objectKey,
     ContentType: fileType,
   });

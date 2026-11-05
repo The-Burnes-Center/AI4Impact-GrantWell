@@ -20,7 +20,7 @@ import { S3Client, ListObjectsV2Command, CopyObjectCommand, DeleteObjectCommand,
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import { DynamoDBClient, GetItemCommand, PutItemCommand, DeleteItemCommand, QueryCommand, BatchWriteItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
-import { requireAdmin, assertCanEditNofoOr403, copyArtifacts, deleteArtifacts } from 'grantwell-shared';
+import { requireAdmin, assertCanEditNofoOr403, copyArtifacts, deleteArtifacts, deletePending } from 'grantwell-shared';
 
 const dynamoClient = new DynamoDBClient();
 const scopeDeps = { client: dynamoClient, GetItemCommand, marshall, unmarshall };
@@ -119,6 +119,9 @@ export const handler = async (event) => {
       await s3Client.send(new DeleteObjectCommand({ Bucket: s3Bucket, Key: object.Key }));
     }
     await deleteArtifacts(s3Client, oldName);
+    // A staged new version is dropped, not carried over: the copied document starts a fresh run
+    // under the new name, and approving the old name's review must not publish into the old folder.
+    await deletePending(s3Client, oldName);
 
     if (claimedNewRow) {
       await dynamoClient.send(new DeleteItemCommand({

@@ -1,4 +1,5 @@
-export const pageMapKey = (nofoName) => `${nofoName}/raw-text-pages.json`;
+export const PAGE_MAP_FILE = "raw-text-pages.json";
+export const pageMapKey = (nofoName) => `${nofoName}/${PAGE_MAP_FILE}`;
 
 /**
  * raw-text.txt from Textract LINE blocks, and the character offset where each page starts

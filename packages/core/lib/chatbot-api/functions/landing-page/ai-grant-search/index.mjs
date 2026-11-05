@@ -11,7 +11,7 @@ import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedroc
 import { DynamoDBClient, GetItemCommand, ScanCommand } from '@aws-sdk/client-dynamodb';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
-import { recordEvent, touchLastActive } from 'grantwell-shared';
+import { canEditAnyNofo, recordEvent, touchLastActive } from 'grantwell-shared';
 import { EMBEDDING_DIM, POINTER_KEY, decodeIndex, rankHybrid } from './search-core.mjs';
 
 const REGION = process.env.AWS_REGION || 'us-east-1';
@@ -333,8 +333,11 @@ function callerCanSeeGrant(callerScope, meta) {
   if (!meta) return false;
   const scope = meta.scope || 'federal';
   const ownState = scope === 'state' && Boolean(meta.state) && meta.state === callerScope.state;
-  // A grant held for review shows only to those who may open it: here, its own state's admins.
-  if (meta.status === 'quarantined' || meta.status === 'processing') return callerScope.role === 'stateAdmin' && ownState;
+  // A grant held for review shows only to those who may open it: its own state's admins, or any
+  // admin of a single-state site (canEditAnyNofo).
+  if (meta.status === 'quarantined' || meta.status === 'processing') {
+    return callerScope.role === 'stateAdmin' && (ownState || canEditAnyNofo(callerScope));
+  }
   return scope === 'federal' || ownState;
 }
 
