@@ -498,9 +498,9 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
           {failedSections.length > 0 && (
             <div
               style={{
-                background: '#FEF3C7',
+                background: 'var(--gw-color-warning-light)',
                 padding: '12px 16px',
-                borderRadius: '8px',
+                borderRadius: 'var(--gw-radius-container)',
                 marginBottom: '16px',
                 display: 'flex',
                 alignItems: 'center',
@@ -515,9 +515,9 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                 onClick={handleRetryFailedSections}
                 style={{
                   padding: '4px 12px',
-                  borderRadius: '6px',
-                  border: '1px solid #D97706',
-                  background: '#FFF',
+                  borderRadius: 'var(--gw-radius-control)',
+                  border: '1px solid var(--gw-color-warning)',
+                  background: 'var(--gw-color-surface)',
                   cursor: 'pointer',
                   fontSize: '13px',
                   fontWeight: 500,
@@ -525,7 +525,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               >
                 Retry Failed Sections
               </button>
-              <span style={{ color: '#6B7280' }}>or write them manually below.</span>
+              <span style={{ color: 'var(--gw-color-text-muted)' }}>or write them manually below.</span>
             </div>
           )}
 
@@ -539,7 +539,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                 style={{
                   background: 'var(--gw-color-primary-light)',
                   padding: '12px 16px',
-                  borderRadius: '8px',
+                  borderRadius: 'var(--gw-radius-container)',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '10px',
@@ -571,11 +571,11 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                 alignItems: 'center',
                 gap: '8px',
                 padding: '10px 16px',
-                background: '#f0fdf4',
-                border: '1px solid #bbf7d0',
-                borderRadius: '8px',
+                background: 'var(--gw-color-background)',
+                border: '1px solid var(--gw-color-success-border)',
+                borderRadius: 'var(--gw-radius-container)',
                 fontSize: '13px',
-                color: '#065f46',
+                color: 'var(--gw-color-success-text)',
               }}>
                 <span style={{ fontSize: '15px', flexShrink: 0 }} aria-hidden="true">&#10003;</span>
                 Your progress is automatically saved. You can leave and come back anytime.

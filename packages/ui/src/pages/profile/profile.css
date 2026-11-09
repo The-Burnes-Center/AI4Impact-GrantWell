@@ -34,13 +34,13 @@
 }
 .profile-identity dd {
   margin: 0;
-  color: var(--gw-color-text, #333);
+  color: var(--gw-color-text, #333333);
 }
 
 .profile-field-label {
   display: block;
   font-weight: var(--gw-font-weight-medium, 500);
-  color: var(--gw-color-text, #333);
+  color: var(--gw-color-text, #333333);
   margin-bottom: var(--gw-spacing-xs, 4px);
 }
 
@@ -65,19 +65,19 @@
   color: var(--gw-color-text, #333333);
   background: var(--gw-color-background, #f9fafb);
   border: 1px solid var(--gw-color-border-input, #767676);
-  border-radius: var(--gw-radius-lg, 8px);
+  border-radius: var(--gw-radius-container, 8px);
   appearance: none;
   transition: border-color 0.2s, background-color 0.2s;
 }
 .profile-input:hover {
   border-color: var(--gw-color-text-secondary, #5a5a5a);
-  background: var(--gw-color-white, #ffffff);
+  background: var(--gw-color-surface, #ffffff);
 }
 .profile-input:focus {
-  border-color: var(--gw-color-focus-light, var(--gw-color-primary));
-  outline: 3px solid var(--gw-color-focus-light, var(--gw-color-primary));
+  border-color: var(--gw-color-focus);
+  outline: 3px solid var(--gw-color-focus);
   outline-offset: 2px;
-  background: var(--gw-color-white, #ffffff);
+  background: var(--gw-color-surface, #ffffff);
 }
 .profile-input:disabled {
   color: var(--gw-color-disabled-text, #707070);
@@ -98,7 +98,7 @@
 }
 .profile-frequency label {
   border: 1px solid var(--gw-color-border, #e2e8f0);
-  border-radius: var(--gw-radius-md, 6px);
+  border-radius: var(--gw-radius-control, 4px);
   padding: var(--gw-spacing-sm, 8px) var(--gw-spacing-lg, 16px);
   cursor: pointer;
   display: flex;
@@ -126,7 +126,7 @@
   max-width: 320px;
   padding: var(--gw-spacing-xs, 4px) var(--gw-spacing-sm, 8px);
   border: 1px solid var(--gw-color-border-input, #767676);
-  border-radius: var(--gw-radius-md, 6px);
+  border-radius: var(--gw-radius-control, 4px);
   font-size: var(--gw-font-size-sm, 14px);
 }
 .profile-chip-search:focus {
@@ -152,11 +152,11 @@
   align-items: center;
   gap: var(--gw-spacing-xs, 4px);
   padding: var(--gw-spacing-xs, 4px) var(--gw-spacing-sm, 8px);
-  border-radius: var(--gw-radius-sm, 4px);
+  border-radius: var(--gw-radius-control, 4px);
   cursor: pointer;
 }
 .profile-chip:hover {
-  background: var(--gw-color-border-light, #f3f4f6);
+  background: var(--gw-color-border, #e2e8f0);
 }
 
 .profile-section {
@@ -170,7 +170,7 @@
   font-size: var(--gw-font-size-lg, 18px);
   font-weight: var(--gw-font-weight-semibold, 600);
   margin: 0 0 var(--gw-spacing-sm, 8px);
-  color: var(--gw-color-text, #333);
+  color: var(--gw-color-text, #333333);
 }
 
 .profile-fieldset {
@@ -193,16 +193,16 @@
 }
 
 .profile-alert {
-  border-radius: var(--gw-radius-md, 6px);
+  border-radius: var(--gw-radius-control, 4px);
   padding: var(--gw-spacing-sm, 8px) var(--gw-spacing-lg, 16px);
   margin-bottom: var(--gw-spacing-lg, 16px);
 }
 .profile-alert--error {
-  background: var(--gw-color-danger-light, #ffebee);
+  background: var(--gw-color-danger-light, #fdeceb);
   color: var(--gw-color-danger, #CD0D0D);
 }
 .profile-alert--success {
-  background: var(--gw-color-success-light, #d4edda);
+  background: var(--gw-color-success-light, #e7f6ec);
   color: var(--gw-color-success-text);
 }
 

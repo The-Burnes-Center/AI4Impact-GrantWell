@@ -158,7 +158,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
             background: colors.primary,
             color: colors.white,
             border: "none",
-            borderRadius: "4px",
+            borderRadius: "var(--gw-radius-control)",
             cursor: "pointer",
           }}
         >
@@ -207,7 +207,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
         <ol
           style={{
             background: colors.white,
-            borderRadius: "8px",
+            borderRadius: "var(--gw-radius-container)",
             padding: "24px 24px 24px calc(24px + 1.5em)",
             margin: 0,
             color: colors.text,
@@ -252,7 +252,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
                   width: "100%",
                   padding: "12px",
                   border: `1px solid ${colors.inputBorder}`,
-                  borderRadius: "6px",
+                  borderRadius: "var(--gw-radius-control)",
                   fontSize: typography.fontSize.base,
                   minHeight: "120px",
                   resize: "vertical",

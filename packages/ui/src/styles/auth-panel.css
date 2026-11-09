@@ -1,9 +1,9 @@
 .auth-login-card {
-  background: #fff;
-  border-radius: 20px;
+  background: var(--gw-color-surface);
+  border-radius: var(--gw-radius-pill);
   box-shadow:
-    0 25px 50px -12px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
+    0 25px 50px -12px color-mix(in srgb, var(--gw-color-text-strong) 35%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--gw-color-surface) 10%, transparent);
   padding: 44px 40px;
   width: 100%;
   border: none;
@@ -17,7 +17,7 @@
 .auth-card-title {
   font-size: 28px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--gw-color-text-strong);
   margin: 0 0 8px;
   font-family: var(--gw-font-family);
   outline: none;
@@ -25,7 +25,7 @@
 
 .auth-card-subtitle {
   font-size: 15px;
-  color: #64748b;
+  color: var(--gw-color-text-muted);
   margin: 0;
   line-height: 1.5;
 }
@@ -44,7 +44,7 @@
 
 .auth-form-description {
   font-size: 14px;
-  color: #64748b;
+  color: var(--gw-color-text-muted);
   margin: 0 0 20px;
   line-height: 1.5;
 }
@@ -53,7 +53,7 @@
   display: block;
   font-size: 14px;
   font-weight: 500;
-  color: #1e293b;
+  color: var(--gw-color-text-strong);
   margin-bottom: 8px;
 }
 
@@ -65,11 +65,11 @@
   font-size: 15px;
   font-weight: 400;
   line-height: 1.2;
-  color: #334155;
-  border: 1px solid #767676;
-  border-radius: 8px;
+  color: var(--gw-color-text);
+  border: 1px solid var(--gw-color-border-input);
+  border-radius: var(--gw-radius-container);
   transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
-  background: #f8fafc;
+  background: var(--gw-color-background);
   box-sizing: border-box;
   box-shadow: none !important;
   font-family: var(--gw-font-family);
@@ -78,8 +78,8 @@
 
 .auth-login-card .form-input:hover,
 .auth-login-card .form-control.form-input:hover {
-  border-color: #4b5563;
-  background: #fff;
+  border-color: var(--gw-color-border-input-hover);
+  background: var(--gw-color-surface);
 }
 
 /* The base rule sets `box-shadow: none !important`, so a box-shadow ring here
@@ -90,14 +90,14 @@
   border-color: var(--gw-color-primary);
   outline: 3px solid var(--gw-color-primary);
   outline-offset: 2px;
-  background: #fff;
+  background: var(--gw-color-surface);
 }
 
 .auth-login-card .form-input:disabled,
 .auth-login-card .form-control.form-input:disabled,
 .auth-login-card .form-control.form-input[readonly] {
-  color: #64748b;
-  background: #f1f5f9;
+  color: var(--gw-color-text-muted);
+  background: var(--gw-color-surface-subtle);
   opacity: 1;
 }
 
@@ -141,7 +141,7 @@
 }
 
 .show-password-checkbox .form-check-input:not(:checked) {
-  border-color: #767676;
+  border-color: var(--gw-color-border-input);
 }
 
 .show-password-checkbox .form-check-input:focus-visible {
@@ -154,7 +154,7 @@
   display: inline-flex;
   align-items: center;
   font-size: 14px;
-  color: #475569;
+  color: var(--gw-color-text-muted);
   cursor: pointer;
   margin: 0;
   padding: 0;
@@ -176,7 +176,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: color 0.2s ease;
-  border-radius: 0;
+  border-radius: var(--gw-radius-none);
   margin-left: auto;
   white-space: nowrap;
   flex: 0 0 auto;
@@ -213,7 +213,7 @@
 .btn.login-submit-button:focus-visible {
   outline: 3px solid var(--gw-color-primary);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: var(--gw-radius-check);
   box-shadow: none !important;
 }
 
@@ -231,8 +231,8 @@
   font-weight: 600;
   background: linear-gradient(135deg, var(--gw-color-primary) 0%, var(--gw-color-primary-hover) 100%);
   border: none;
-  border-radius: 10px;
-  color: #fff;
+  border-radius: var(--gw-radius-container);
+  color: var(--gw-color-text-inverse);
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
@@ -251,7 +251,7 @@ a.login-submit-button {
   padding: var(--gw-spacing-sm) var(--gw-spacing-md);
   background: var(--gw-color-primary-light);
   border-left: 3px solid var(--gw-color-primary);
-  border-radius: var(--gw-radius-sm);
+  border-radius: var(--gw-radius-control);
   color: var(--gw-color-text);
   font-size: var(--gw-font-size-sm, 14px);
 }
@@ -267,7 +267,7 @@ a.login-submit-button {
 }
 
 .login-submit-button:disabled {
-  background: #94a3b8;
+  background: var(--gw-color-disabled-bg);
   cursor: not-allowed;
   transform: none;
 }
@@ -279,7 +279,7 @@ a.login-submit-button {
   gap: 12px;
   flex-wrap: nowrap;
   padding-top: 28px;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--gw-color-border);
   text-align: left;
   width: 100%;
 }
@@ -307,7 +307,7 @@ a.login-submit-button {
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
-  border-radius: 0;
+  border-radius: var(--gw-radius-none);
   line-height: 1.2;
   box-shadow: none !important;
   font-family: var(--gw-font-family);
@@ -321,7 +321,7 @@ a.login-submit-button {
 
 .auth-footer-prompt {
   font-size: 14px;
-  color: #64748b;
+  color: var(--gw-color-text-muted);
   line-height: 1.2;
 }
 
@@ -345,11 +345,11 @@ a.login-submit-button {
 }
 
 .password-requirement.text-success {
-  color: #047857;
+  color: var(--gw-color-success);
 }
 
 .password-requirement.text-muted {
-  color: #64748b;
+  color: var(--gw-color-text-muted);
 }
 
 .requirement-icon {
@@ -380,7 +380,7 @@ a.login-submit-button {
 @media (max-width: 480px) {
   .auth-login-card {
     padding: 28px 20px;
-    border-radius: 12px;
+    border-radius: var(--gw-radius-container);
   }
 
   .auth-card-title {

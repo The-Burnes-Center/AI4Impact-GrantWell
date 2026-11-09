@@ -120,7 +120,7 @@
 
 .marketing__nav-link:hover {
   background-color: var(--mk-green);
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
 }
 
 .marketing__nav-link:active {
@@ -129,14 +129,14 @@
 
 .marketing__nav-link--active {
   background-color: var(--mk-green);
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
   border-color: var(--mk-green);
 }
 
 .marketing__nav-link--active:hover {
   background-color: var(--mk-green-dark);
   border-color: var(--mk-green-dark);
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
 }
 
 .marketing__nav--app {
@@ -178,7 +178,7 @@
   width: 44px;
   height: 44px;
   flex-shrink: 0;
-  border-radius: var(--gw-radius-md, 6px);
+  border-radius: var(--gw-radius-control, 4px);
   background-color: transparent;
   color: var(--mk-green-deepest);
   border: 1px solid var(--mk-green-deepest);
@@ -200,7 +200,7 @@
   background-color: var(--mk-green-deepest);
   color: var(--mk-white);
   text-decoration: none;
-  border-radius: 4px;
+  border-radius: var(--gw-radius-control);
   font-weight: 600;
 }
 
@@ -344,7 +344,7 @@
 
 .mk-btn--primary {
   background-color: var(--mk-green);
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
   border-color: var(--mk-green);
 }
 
@@ -361,7 +361,7 @@
 
 .mk-btn--outline:hover {
   background-color: var(--mk-green);
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
 }
 
 .mk-btn--light {
@@ -507,7 +507,7 @@
 
 .marketing__signin .auth-login-card {
   background-color: var(--mk-white);
-  border-radius: 16px;
+  border-radius: var(--gw-radius-container);
   padding: 32px;
   box-shadow: 0 4px 16px color-mix(in srgb, var(--gw-color-primary-active) 8%, transparent);
   border: none;
@@ -553,11 +553,11 @@
 
 .marketing__signin .auth-tab--active {
   background-color: var(--mk-green);
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
 }
 
 .marketing__signin .auth-tab--active:hover {
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
 }
 
 .marketing__signin .auth-card-header {
@@ -592,7 +592,7 @@
 .marketing__signin button[type="submit"] {
   background-color: var(--mk-green);
   border-color: var(--mk-green);
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
   font-family: var(--gw-font-button);
   font-size: 14px;
   font-weight: 600;
@@ -606,7 +606,7 @@
 .marketing__signin button[type="submit"]:hover {
   background-color: var(--mk-green-dark);
   border-color: var(--mk-green-dark);
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
 }
 
 .marketing__signin .btn-primary:focus,
@@ -671,7 +671,7 @@
 .marketing__footer-links a:focus-visible {
   outline: 2px solid var(--mk-off-white);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: var(--gw-radius-check);
 }
 
 .marketing__footer-copyright,
@@ -719,7 +719,7 @@
   font-size: 21px;
   line-height: 26px;
   letter-spacing: -1.05px;
-  color: #FDFCFB;
+  color: var(--gw-color-text-inverse);
 }
 
 .marketing__footer-heart {
@@ -777,7 +777,7 @@
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
-  border-radius: 4px;
+  border-radius: var(--gw-radius-control);
   text-decoration: none;
 }
 
@@ -786,7 +786,7 @@
 }
 
 .marketing__partner-link:focus-visible {
-  outline: 2px solid var(--gw-color-focus-dark, var(--gw-color-primary-light));
+  outline: 2px solid var(--gw-color-focus-on-dark);
   outline-offset: 4px;
 }
 

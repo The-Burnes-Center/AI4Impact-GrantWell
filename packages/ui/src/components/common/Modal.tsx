@@ -38,7 +38,7 @@ export const Modal = React.memo<ModalProps>(
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.6)",
+          backgroundColor: "var(--gw-color-overlay)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -63,11 +63,11 @@ export const Modal = React.memo<ModalProps>(
           aria-labelledby={titleId}
           style={{
             backgroundColor: "white",
-            borderRadius: "12px",
+            borderRadius: "var(--gw-radius-container)",
             width: "100%",
             maxWidth: maxWidth,
             maxHeight: "85vh",
-            boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
+            boxShadow: "var(--gw-shadow-high)",
             position: "relative",
             display: "flex",
             flexDirection: "column",
@@ -78,13 +78,13 @@ export const Modal = React.memo<ModalProps>(
             className="modal-header"
             style={{
               padding: "20px 25px",
-              borderBottom: "1px solid #e0e0e0",
+              borderBottom: "1px solid var(--gw-color-border)",
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              backgroundColor: "#f9fafc",
-              borderTopLeftRadius: "12px",
-              borderTopRightRadius: "12px",
+              backgroundColor: "var(--gw-color-background)",
+              borderTopLeftRadius: "var(--gw-radius-container)",
+              borderTopRightRadius: "var(--gw-radius-container)",
               flexShrink: 0,
             }}
           >

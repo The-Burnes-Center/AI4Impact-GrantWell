@@ -9,7 +9,7 @@ import { useApiClient } from "../../hooks/use-api-client";
 import { useInert } from "../../hooks/use-inert";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import HelpModal from "./components/HelpModal";
-import { GRANT_TYPES, type GrantTypeId } from "../../common/types/nofo";
+import { GRANT_TYPES, grantTypeTint, type GrantTypeId } from "../../common/types/nofo";
 import { GrantInReviewError } from "../../common/api-client/grant-in-review";
 import "../../styles/checklists.css";
 
@@ -209,9 +209,9 @@ const Checklists: React.FC = () => {
                         <span
                           className="checklist-grant-badge"
                           style={{
-                            backgroundColor: `${GRANT_TYPES[grantType].color}15`,
+                            backgroundColor: grantTypeTint(GRANT_TYPES[grantType].color, 8),
                             color: GRANT_TYPES[grantType].color,
-                            border: `1px solid ${GRANT_TYPES[grantType].color}40`,
+                            border: `1px solid ${grantTypeTint(GRANT_TYPES[grantType].color, 25)}`,
                           }}
                         >
                           {GRANT_TYPES[grantType].label}
@@ -237,10 +237,10 @@ const Checklists: React.FC = () => {
                   style={{
                     margin: "0 0 20px",
                     padding: "14px 16px",
-                    borderRadius: "8px",
-                    border: "1px solid var(--gw-color-border, #d0d7de)",
-                    borderLeft: "4px solid var(--gw-color-primary, #195C53)",
-                    background: "var(--gw-color-surface-subtle, #f6f8fa)",
+                    borderRadius: "var(--gw-radius-container)",
+                    border: "1px solid var(--gw-color-border, #e2e8f0)",
+                    borderLeft: "4px solid var(--gw-color-primary, #23776C)",
+                    background: "var(--gw-color-surface-subtle, #f0f2f4)",
                   }}
                 >
                   <h2 style={{ margin: "0 0 6px", fontSize: "inherit", fontWeight: 700, lineHeight: "inherit" }}>

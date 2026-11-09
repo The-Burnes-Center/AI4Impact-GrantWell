@@ -5,16 +5,16 @@
   flex: 1;
   padding: 2rem;
   min-height: 60vh;
-  background-color: #f2f2f2;
+  background-color: var(--gw-color-surface-subtle);
 }
 
 .maintenance-container {
   max-width: 560px;
   text-align: center;
   padding: 3rem 2rem;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background-color: var(--gw-color-surface);
+  border-radius: var(--gw-radius-container);
+  box-shadow: var(--gw-shadow-low);
 }
 
 .maintenance-icon {
@@ -33,7 +33,7 @@
 .maintenance-message {
   font-family: var(--gw-font-family);
   font-size: 1.05rem;
-  color: #333;
+  color: var(--gw-color-text);
   margin: 0 0 1rem;
   line-height: 1.6;
 }
@@ -41,7 +41,7 @@
 .maintenance-submessage {
   font-family: var(--gw-font-family);
   font-size: 0.9rem;
-  color: #666;
+  color: var(--gw-color-text-secondary);
   margin: 0;
   line-height: 1.6;
 }

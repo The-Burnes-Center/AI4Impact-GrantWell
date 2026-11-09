@@ -39,7 +39,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const hoverColors: Record<ButtonVariant, string> = {
   primary: colors.primaryHover,
   secondary: colors.background,
-  danger: "#b71c1c",
+  danger: "var(--gw-color-danger-text)",
   ghost: colors.primaryLight,
 };
 

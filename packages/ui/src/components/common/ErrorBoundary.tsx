@@ -66,7 +66,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               the problem persists, contact support.
             </p>
             {this.state.error && (
-              <p className="mb-3" style={{ fontSize: "14px", color: "#444" }}>
+              <p className="mb-3" style={{ fontSize: "14px", color: "var(--gw-color-text)" }}>
                 {this.state.error.message}
               </p>
             )}

@@ -201,7 +201,7 @@ export default function Sessions(props: SessionsProps) {
       <div className="dashboard-header dashboard-header--wrap">
         <div>
           <h1>My Chats</h1>
-          <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
+          <p style={{ marginTop: "4px", color: "var(--gw-color-text-secondary)", fontSize: "14px" }}>
             Manage and access your previous chats
           </p>
         </div>
@@ -224,8 +224,8 @@ export default function Sessions(props: SessionsProps) {
             onClick={() => setShowModalDelete(true)}
             disabled={selectedItems.length === 0}
             style={{
-              backgroundColor: selectedItems.length === 0 ? "#e5e7eb" : "#cd0d0d",
-              color: selectedItems.length === 0 ? "#9ca3af" : "white",
+              backgroundColor: selectedItems.length === 0 ? "var(--gw-color-surface-subtle)" : "var(--gw-color-danger)",
+              color: selectedItems.length === 0 ? "var(--gw-color-text-muted)" : "white",
               cursor: selectedItems.length === 0 ? "not-allowed" : "pointer",
             }}
           >
@@ -378,7 +378,7 @@ export default function Sessions(props: SessionsProps) {
                       </button>
                     </div>
                     <div className="row-cell" role="cell">
-                      <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#666" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--gw-color-text-secondary)" }}>
                         <LuCalendar size={16} aria-hidden="true" />
                         <time dateTime={item.time_stamp}>
                           {formatSessionTime(item.time_stamp)}

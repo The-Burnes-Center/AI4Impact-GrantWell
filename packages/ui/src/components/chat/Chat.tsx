@@ -23,7 +23,7 @@ const styles: Record<string, React.CSSProperties> = {
     height: "100%",
     position: "relative",
     overflow: "hidden",
-    backgroundColor: "#fbfbfd",
+    backgroundColor: "var(--gw-color-background)",
     minHeight: 0,
     flex: 1,
   },
@@ -33,7 +33,7 @@ const styles: Record<string, React.CSSProperties> = {
     overflowX: "hidden",
     padding: "20px",
     paddingBottom: "20px",
-    backgroundColor: "#fbfbfd",
+    backgroundColor: "var(--gw-color-background)",
     minHeight: 0,
     scrollBehavior: "smooth",
   },
@@ -43,53 +43,53 @@ const styles: Record<string, React.CSSProperties> = {
     gap: "16px",
   },
   infoAlert: {
-    backgroundColor: "#f0f4f8",
-    border: "1px solid #d0e0f0",
-    borderRadius: "6px",
+    backgroundColor: "var(--gw-color-surface-subtle)",
+    border: "1px solid var(--gw-color-info-border)",
+    borderRadius: "var(--gw-radius-control)",
     padding: "12px 16px",
     marginBottom: "16px",
     display: "flex",
     alignItems: "flex-start",
-    color: "#2c5282",
+    color: "var(--gw-color-info)",
     fontSize: "14px",
   },
   infoIcon: {
     marginRight: "10px",
     marginTop: "2px",
     flexShrink: 0,
-    color: "#3182ce",
+    color: "var(--gw-color-info)",
   },
   loadingContainer: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     padding: "30px 0",
-    color: "#5a6876",
+    color: "var(--gw-color-text-muted)",
   },
   spinner: {
     display: "inline-block",
     width: "20px",
     height: "20px",
-    border: "3px solid rgba(0, 0, 0, 0.1)",
+    border: "3px solid color-mix(in srgb, var(--gw-color-text-strong) 10%, transparent)",
     borderRadius: "50%",
-    borderTopColor: "#3182ce",
+    borderTopColor: "var(--gw-color-info)",
     animation: "spin 1s linear infinite",
     marginRight: "8px",
   },
   welcomeText: {
     textAlign: "center",
-    color: "#5a6876",
+    color: "var(--gw-color-text-muted)",
     fontStyle: "italic",
     padding: "20px",
   },
   inputContainer: {
     border: "none",
-    backgroundColor: "#f8fafc",
+    backgroundColor: "var(--gw-color-background)",
     padding: "20px",
     width: "100%",
     maxWidth: "100%",
     zIndex: 100,
-    boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.1)",
+    boxShadow: "var(--gw-shadow-high)",
     borderTop: "3px solid var(--gw-color-primary)",
     flexShrink: 0,
     display: "flex",
@@ -111,7 +111,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     justifyContent: "center",
     cursor: "pointer",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+    boxShadow: "var(--gw-shadow-mid)",
     zIndex: 60, // Increased z-index to ensure it's above the input container
     transition: "all 0.2s ease",
     opacity: 0,
@@ -132,8 +132,8 @@ const styles: Record<string, React.CSSProperties> = {
     margin: "24px auto",
     padding: "16px 20px",
     border: "1px solid var(--gw-color-border)",
-    borderRadius: "8px",
-    backgroundColor: "var(--gw-color-white)",
+    borderRadius: "var(--gw-radius-container)",
+    backgroundColor: "var(--gw-color-surface)",
     color: "var(--gw-color-text)",
     fontSize: "15px",
   },
@@ -147,8 +147,8 @@ const styles: Record<string, React.CSSProperties> = {
   },
   earlierButton: {
     backgroundColor: "white",
-    border: "1px solid var(--gw-color-border, #cbd5e0)",
-    borderRadius: "6px",
+    border: "1px solid var(--gw-color-border, #e2e8f0)",
+    borderRadius: "var(--gw-radius-control)",
     padding: "8px 16px",
     color: "var(--gw-color-primary)",
     fontSize: "14px",
@@ -564,12 +564,12 @@ export default function Chat(props: {
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = "var(--gw-color-primary-hover)";
             e.currentTarget.style.transform = "scale(1.05)";
-            e.currentTarget.style.boxShadow = "0 6px 16px rgba(0, 0, 0, 0.25)";
+            e.currentTarget.style.boxShadow = "var(--gw-shadow-mid)";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.backgroundColor = "var(--gw-color-primary)";
             e.currentTarget.style.transform = "scale(1)";
-            e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)";
+            e.currentTarget.style.boxShadow = "var(--gw-shadow-mid)";
           }}
         >
           <LuChevronDown size={20} aria-hidden="true" />

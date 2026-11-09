@@ -12,7 +12,7 @@ import { PROCESSING_LABELS } from "./processing-stages";
 import TableScrollRegion from "../../../components/ui/TableScrollRegion";
 import { Utils } from "../../../common/utils";
 import type { NOFO, GrantTypeId, CustomQuestion, ReviewFlag } from "../../../common/types/nofo";
-import { GRANT_TYPES, GRANT_CATEGORIES } from "../../../common/types/nofo";
+import { GRANT_TYPES, grantTypeTint, GRANT_CATEGORIES } from "../../../common/types/nofo";
 import { SINGLE_STATE, SUPPORTED_STATES } from "../../../common/states";
 
 // A single-state deployment's state grants always belong to its state.
@@ -517,9 +517,9 @@ const NOFOsTab = React.memo(function NOFOsTab({
                   <span
                     className="grant-type-badge"
                     style={{
-                      backgroundColor: `${GRANT_TYPES[nofo.grantType].color}15`,
+                      backgroundColor: grantTypeTint(GRANT_TYPES[nofo.grantType].color, 8),
                       color: GRANT_TYPES[nofo.grantType].color,
-                      borderColor: `${GRANT_TYPES[nofo.grantType].color}99`,
+                      borderColor: grantTypeTint(GRANT_TYPES[nofo.grantType].color, 60),
                     }}
                   >
                     {GRANT_TYPES[nofo.grantType].label}
@@ -765,7 +765,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 </p>
               ) : (
                 customQuestions.map((q, index) => (
-                  <div key={q.id ?? index} style={{ marginBottom: "16px", padding: "12px", border: "1px solid var(--gw-color-border)", borderRadius: "8px" }}>
+                  <div key={q.id ?? index} style={{ marginBottom: "16px", padding: "12px", border: "1px solid var(--gw-color-border)", borderRadius: "var(--gw-radius-container)" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
                       <span style={{ fontWeight: 500 }}>Question {index + 1}</span>
                       <button

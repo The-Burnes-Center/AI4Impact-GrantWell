@@ -6,7 +6,7 @@ interface SearchIconProps {
 }
 
 export const SearchIcon: React.FC<SearchIconProps> = ({
-  color = "#666666",
+  color = "var(--gw-color-text-secondary)",
   size = 20,
 }) => (
   <svg

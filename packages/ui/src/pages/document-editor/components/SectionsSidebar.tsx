@@ -55,7 +55,7 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
       case "completed":
         return <LuCircleCheckBig size={16} className="se-sidebar__check" role="img" aria-label={`${section.name}: completed`} />;
       case "failed":
-        return <LuCircleAlert size={16} style={{ color: 'var(--gw-color-danger-icon)' }} role="img" aria-label={`${section.name}: failed`} />;
+        return <LuCircleAlert size={16} style={{ color: 'var(--gw-color-danger)' }} role="img" aria-label={`${section.name}: failed`} />;
       case "generating":
         return (
           <LuLoader
@@ -94,7 +94,7 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
       <h3 className="se-sidebar__title">
         Sections
         {generating && (
-          <span style={{ fontSize: '13px', fontWeight: 400, color: '#6B7280', marginLeft: 8 }}>
+          <span style={{ fontSize: '13px', fontWeight: 400, color: 'var(--gw-color-text-muted)', marginLeft: 8 }}>
             {completedSectionCount}/{total} generated
           </span>
         )}

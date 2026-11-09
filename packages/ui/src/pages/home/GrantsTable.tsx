@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { LuFileX, LuX, LuArrowUp, LuArrowDown, LuArrowUpDown, LuPin } from "react-icons/lu";
 import type { NOFO, GrantTypeId } from "../../common/types/nofo";
-import { GRANT_TYPES, nofoDisplayName } from "../../common/types/nofo";
+import { GRANT_TYPES, grantTypeTint, nofoDisplayName } from "../../common/types/nofo";
 import { Utils } from "../../common/utils";
 import TableScrollRegion from "../../components/ui/TableScrollRegion";
 import type { AISearchResult } from "../../hooks/use-ai-grant-search";
@@ -509,7 +509,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                 className={`landing-table-row ${isArchived ? "archived" : ""}`}
                 style={{
                   cursor: isArchived ? "not-allowed" : "pointer",
-                  backgroundColor: isArchived ? "#f9f9f9" : undefined,
+                  backgroundColor: isArchived ? "var(--gw-color-background)" : undefined,
                 }}
               >
                 <div className="landing-row-cell" role="cell">
@@ -533,7 +533,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                         : `Select ${title}${stateBadge ? `, maintained by ${stateBadge}` : ""}`
                     }
                   >
-                    <span className="landing-nofo-name" style={{ color: isArchived ? "#6b7280" : undefined }}>
+                    <span className="landing-nofo-name" style={{ color: isArchived ? "var(--gw-color-text-muted)" : undefined }}>
                       {title}
                     </span>
                   </button>
@@ -562,10 +562,10 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                     </span>
                   )}
                 </div>
-                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "#6b7280" : undefined }}>
+                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "var(--gw-color-text-muted)" : undefined }}>
                   {nofo.agency || <span className="landing-no-value">N/A</span>}
                 </div>
-                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "#6b7280" : undefined }}>
+                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "var(--gw-color-text-muted)" : undefined }}>
                   {nofo.category || <span className="landing-no-value">N/A</span>}
                 </div>
                 <div className="landing-row-cell" role="cell">
@@ -573,9 +573,9 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                     <span
                       className={getGrantTypeBadgeClassName()}
                       style={{
-                        backgroundColor: `${GRANT_TYPES[nofo.grantType].color}15`,
+                        backgroundColor: grantTypeTint(GRANT_TYPES[nofo.grantType].color, 8),
                         color: GRANT_TYPES[nofo.grantType].color,
-                        borderColor: `${GRANT_TYPES[nofo.grantType].color}40`,
+                        borderColor: grantTypeTint(GRANT_TYPES[nofo.grantType].color, 25),
                       }}
                     >
                       {GRANT_TYPES[nofo.grantType].label}
@@ -584,7 +584,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                     <span className="landing-grant-type-badge unset">Unset</span>
                   )}
                 </div>
-                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "#6b7280" : undefined }}>
+                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "var(--gw-color-text-muted)" : undefined }}>
                   {nofo.isRolling ? (
                     <span className="landing-expiry-date rolling">Rolling</span>
                   ) : nofo.expirationDate ? (

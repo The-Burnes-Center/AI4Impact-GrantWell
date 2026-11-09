@@ -50,8 +50,8 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
               padding: "2px 8px",
               cursor: "pointer",
               border: "1px solid var(--gw-color-border)",
-              borderRadius: "4px",
-              background: "var(--gw-color-white)",
+              borderRadius: "var(--gw-radius-control)",
+              background: "var(--gw-color-surface)",
               color: "var(--gw-color-text)",
             }}
           >

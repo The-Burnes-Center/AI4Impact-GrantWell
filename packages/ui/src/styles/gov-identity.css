@@ -1,6 +1,6 @@
 .gov-banner {
-  background-color: #ffffff;
-  border-bottom: 1px solid #d9d9d9;
+  background-color: var(--gw-color-surface);
+  border-bottom: 1px solid var(--gw-color-border);
   width: 100%;
   padding: 4px 60px;
   font-family: var(--gw-font-marketing);
@@ -32,7 +32,7 @@
   margin-right: 10px;
   padding: 2px;
   border-radius: 50%;
-  background-color: #ffffff;
+  background-color: var(--gw-color-surface);
   flex-shrink: 0;
 }
 

@@ -311,7 +311,7 @@ export default function ProfilePage() {
           <div className="dashboard-header">
             <div>
               <h1>Profile</h1>
-              <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
+              <p style={{ marginTop: "4px", color: "var(--gw-color-text-secondary)", fontSize: "14px" }}>
                 {EMAIL_DIGEST
                   ? "Your account, sign-in security, and notification preferences"
                   : "Your account and sign-in security"}

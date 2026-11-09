@@ -275,11 +275,11 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             alignItems: "center",
             gap: "10px",
             padding: "14px 18px",
-            background: "#f0fdf4",
-            border: "1px solid #bbf7d0",
+            background: "var(--gw-color-background)",
+            border: "1px solid var(--gw-color-success-border)",
             borderRadius: borderRadius.lg,
             fontSize: typography.fontSize.sm,
-            color: "#065f46",
+            color: "var(--gw-color-success-text)",
           }}
         >
           <span style={{ fontSize: "18px", flexShrink: 0 }} aria-hidden="true">&#10003;</span>

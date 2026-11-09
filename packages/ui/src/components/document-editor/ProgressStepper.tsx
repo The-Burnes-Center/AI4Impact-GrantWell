@@ -71,13 +71,13 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
       aria-label="Application steps"
       style={{
         width: "100%",
-        background: "#ffffff",
-        borderBottom: "1px solid #e5e7eb",
+        background: "var(--gw-color-surface)",
+        borderBottom: "1px solid var(--gw-color-border)",
         padding: "20px 24px",
         position: "sticky",
         top: "var(--gw-editor-header-height, 62px)",
         zIndex: 100,
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
+        boxShadow: "var(--gw-shadow-low)",
       }}
     >
       <style>
@@ -97,15 +97,15 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
             left: 50%;
             transform: translateX(-50%);
             padding: 8px 12px;
-            background-color: #1f2937;
-            color: #ffffff;
-            border-radius: 6px;
+            background-color: var(--gw-color-text-strong);
+            color: var(--gw-color-text-inverse);
+            border-radius: var(--gw-radius-control);
             font-family: var(--gw-font-family);
             font-size: 12px;
             font-weight: 400;
             white-space: pre-line;
             text-align: left;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--gw-shadow-mid);
             z-index: 1000;
             opacity: 0;
             visibility: hidden;
@@ -144,7 +144,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
             left: 50%;
             transform: translateX(-50%);
             border: 6px solid transparent;
-            border-bottom-color: #1f2937;
+            border-bottom-color: var(--gw-color-text-strong);
           }
 
           .step-wrapper:first-child .step-tooltip::before {
@@ -223,7 +223,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
               height: "2px",
               // Light enough that the completed fill reads against it at 3.4:1.
               // The circles, not this rail, carry the per-step state.
-              backgroundColor: "#c9ced3",
+              backgroundColor: "var(--gw-color-border-strong)",
               zIndex: 0,
             }}
           >
@@ -293,8 +293,8 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                       height: "32px",
                       borderRadius: "50%",
                       border: `2px solid ${completed || active ? "var(--gw-color-primary)" : "var(--gw-color-text-muted)"}`,
-                      backgroundColor: completed || active ? "var(--gw-color-primary)" : "var(--gw-color-white)",
-                      color: completed || active ? "#ffffff" : "#4b5563",
+                      backgroundColor: completed || active ? "var(--gw-color-primary)" : "var(--gw-color-surface)",
+                      color: completed || active ? "var(--gw-color-text-inverse)" : "var(--gw-color-border-input-hover)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -309,7 +309,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                     onMouseEnter={(e) => {
                       if (clickable) {
                         e.currentTarget.style.transform = "scale(1.1)";
-                        e.currentTarget.style.boxShadow = "0 2px 8px rgba(20, 85, 143, 0.3)";
+                        e.currentTarget.style.boxShadow = "var(--gw-shadow-low)";
                       }
                     }}
                     onMouseLeave={(e) => {
@@ -350,7 +350,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                         fontFamily: "var(--gw-font-family)",
                         fontSize: "15px",
                         fontWeight: active ? 600 : 500,
-                        color: active ? "var(--gw-color-primary)" : completed ? "var(--gw-color-text-muted)" : "var(--gw-color-text-status)",
+                        color: active ? "var(--gw-color-primary)" : completed ? "var(--gw-color-text-muted)" : "var(--gw-color-text-secondary)",
                         lineHeight: "1.4",
                         transition: "color 0.2s ease",
                         cursor: "default",
@@ -364,7 +364,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                         style={{
                           fontFamily: "var(--gw-font-family)",
                           fontSize: "13px",
-                          color: "#4b5563",
+                          color: "var(--gw-color-text-secondary)",
                           marginTop: "4px",
                           lineHeight: "1.3",
                         }}
@@ -389,7 +389,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
             margin: "12px 0 0",
             fontFamily: "var(--gw-font-family)",
             fontSize: "13px",
-            color: "#4b5563",
+            color: "var(--gw-color-text-secondary)",
             fontWeight: 500,
           }}
         >
@@ -405,7 +405,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
             marginTop: "12px",
             fontFamily: "var(--gw-font-family)",
             fontSize: "12px",
-            color: "#6b7280",
+            color: "var(--gw-color-text-muted)",
             fontWeight: 500,
           }}
         >

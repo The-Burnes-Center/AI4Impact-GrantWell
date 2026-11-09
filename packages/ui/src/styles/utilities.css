@@ -41,7 +41,7 @@ textarea:focus-visible,
 [role="menuitemradio"]:focus-visible,
 [role="checkbox"]:focus-visible,
 [tabindex]:focus-visible:not([tabindex="-1"]) {
-  outline: 2px solid var(--gw-color-focus-light, var(--gw-color-primary));
+  outline: 2px solid var(--gw-color-focus);
   outline-offset: 2px;
 }
 
@@ -50,7 +50,7 @@ textarea:focus-visible,
 .marketing__band a:focus-visible,
 .marketing__omni a:focus-visible,
 .marketing__footer a:focus-visible {
-  outline-color: var(--gw-color-focus-dark, var(--gw-color-primary-light));
+  outline-color: var(--gw-color-focus-on-dark);
 }
 
 /* ==============================
@@ -67,10 +67,10 @@ textarea:focus-visible,
   z-index: 9999;
   padding: 8px 16px;
   background: var(--gw-color-primary);
-  color: var(--gw-color-white);
+  color: var(--gw-color-surface);
   font-weight: 600;
   text-decoration: none;
-  border: 2px solid var(--gw-color-focus-light);
+  border: 2px solid var(--gw-color-focus);
 }
 
 .skip-to-main:focus {

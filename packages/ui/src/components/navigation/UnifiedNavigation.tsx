@@ -47,7 +47,7 @@ const groupHeadingStyle: React.CSSProperties = {
   padding: "0 16px 8px 16px",
   fontSize: "var(--gw-font-size-sm, 14px)",
   fontWeight: 600,
-  color: "var(--gw-color-nav-heading, #a0aec0)",
+  color: "var(--gw-color-nav-text, #e2e8f0)",
   textTransform: "var(--gw-button-text-transform, uppercase)",
   letterSpacing: "var(--gw-button-letter-spacing, 1px)",
   fontFamily: "var(--gw-font-family, 'Noto Sans', sans-serif)",
@@ -58,10 +58,10 @@ const itemStyle = (active: boolean): React.CSSProperties => ({
   display: "flex",
   alignItems: "center",
   padding: "12px 16px",
-  borderRadius: "var(--gw-radius-lg, 8px)",
+  borderRadius: "var(--gw-radius-container, 8px)",
   marginBottom: "8px",
   background: active ? "var(--gw-color-primary, #23776C)" : "none",
-  color: active ? "var(--gw-color-white, #ffffff)" : "var(--gw-color-nav-text, #e2e8f0)",
+  color: active ? "var(--gw-color-surface, #ffffff)" : "var(--gw-color-nav-text, #e2e8f0)",
   border: "none",
   fontSize: "var(--gw-font-size-base, 16px)",
   cursor: "pointer",
@@ -265,11 +265,11 @@ export const AppSidebar: React.FC = () => {
 
   const panelStyle: React.CSSProperties = {
     background: "var(--gw-color-nav-bg, #1a202c)",
-    color: "var(--gw-color-white, #ffffff)",
+    color: "var(--gw-color-surface, #ffffff)",
     // The inline display would win over the `hidden` attribute's UA rule, so drop it explicitly.
     display: drawerHidden ? "none" : "flex",
     flexDirection: "column",
-    borderRight: "1px solid var(--gw-color-nav-border, #23272f)",
+    borderRight: "1px solid var(--gw-color-nav-bg-hover, #2d3748)",
     overflow: "hidden",
     flexShrink: 0,
     ...(!isDocked
@@ -282,7 +282,7 @@ export const AppSidebar: React.FC = () => {
           maxWidth: "85vw",
           height: "100vh",
           zIndex: "calc(var(--gw-z-drawer, 900) + 1)",
-          boxShadow: "var(--gw-shadow-xl, 0 10px 25px rgba(0, 0, 0, 0.2))",
+          boxShadow: "var(--gw-shadow-high, 0 16px 32px color-mix(in srgb, var(--gw-color-text-strong) 12%, transparent))",
         }
       : {
           width: isExpanded ? EXPANDED_WIDTH : COLLAPSED_WIDTH,
@@ -298,12 +298,12 @@ export const AppSidebar: React.FC = () => {
   const iconButtonStyle: React.CSSProperties = {
     background: "none",
     border: "none",
-    color: "var(--gw-color-white, #ffffff)",
+    color: "var(--gw-color-surface, #ffffff)",
     cursor: "pointer",
     opacity: 0.8,
     transition: "opacity 0.2s",
     padding: "4px",
-    borderRadius: "var(--gw-radius-sm, 4px)",
+    borderRadius: "var(--gw-radius-control, 4px)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -328,13 +328,13 @@ export const AppSidebar: React.FC = () => {
               left: "8px",
               zIndex: "var(--gw-z-sticky, 200)",
               background: "var(--gw-color-nav-bg, #1a202c)",
-              color: "var(--gw-color-white, #ffffff)",
+              color: "var(--gw-color-surface, #ffffff)",
               border: "none",
-              borderRadius: "var(--gw-radius-sm, 4px)",
+              borderRadius: "var(--gw-radius-control, 4px)",
               padding: "8px",
               cursor: "pointer",
               display: "flex",
-              boxShadow: "var(--gw-shadow-lg, 0 4px 6px rgba(0, 0, 0, 0.1))",
+              boxShadow: "var(--gw-shadow-mid, 0 8px 16px color-mix(in srgb, var(--gw-color-text-strong) 12%, transparent))",
             }}
           >
             <LuMenu size={20} aria-hidden="true" />
@@ -347,7 +347,7 @@ export const AppSidebar: React.FC = () => {
           style={{
             position: "fixed",
             inset: 0,
-            backgroundColor: "var(--gw-color-overlay-sidebar, rgba(0, 0, 0, 0.5))",
+            backgroundColor: "var(--gw-color-overlay)",
             zIndex: "var(--gw-z-drawer, 900)",
           }}
           aria-hidden="true"
@@ -560,7 +560,7 @@ export const AppSidebar: React.FC = () => {
         <div
           style={{
             padding: "16px 0 8px 0",
-            borderTop: "1px solid var(--gw-color-nav-divider, #2d3748)",
+            borderTop: "1px solid var(--gw-color-nav-bg-hover, #2d3748)",
             flexShrink: 0,
           }}
         >

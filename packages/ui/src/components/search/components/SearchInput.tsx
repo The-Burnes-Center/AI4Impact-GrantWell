@@ -75,10 +75,10 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
               style={clearButtonStyle}
               onClick={onClear}
               onMouseEnter={(e) => {
-                e.currentTarget.style.color = "#333";
+                e.currentTarget.style.color = "var(--gw-color-text)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.color = "#666";
+                e.currentTarget.style.color = "var(--gw-color-text-secondary)";
               }}
               aria-label="Clear search"
               type="button"

@@ -15,7 +15,7 @@ const fieldLabelStyle: React.CSSProperties = {
   display: "block",
   marginBottom: "8px",
   fontWeight: 600,
-  color: "var(--gw-color-dialog-text, #2d3748)",
+  color: "var(--gw-color-text, #333333)",
   fontSize: "var(--gw-font-size-base, 16px)",
 };
 
@@ -67,7 +67,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
     >
       {submitted ? (
         <div>
-          <p style={{ margin: "0 0 20px 0", color: "var(--gw-color-dialog-text, #2d3748)" }}>
+          <p style={{ margin: "0 0 20px 0", color: "var(--gw-color-text, #333333)" }}>
             Thanks — your feedback has been sent to the {appName} team.
           </p>
           <div className="modal-actions">
@@ -95,7 +95,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                     alignItems: "center",
                     gap: "8px",
                     cursor: "pointer",
-                    color: "var(--gw-color-dialog-text, #2d3748)",
+                    color: "var(--gw-color-text, #333333)",
                   }}
                 >
                   <input
@@ -126,7 +126,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                 width: "100%",
                 boxSizing: "border-box",
                 padding: "10px 12px",
-                borderRadius: "var(--gw-radius-md, 6px)",
+                borderRadius: "var(--gw-radius-control, 4px)",
                 border: "1px solid var(--gw-color-border-input, #767676)",
                 fontFamily: "inherit",
                 fontSize: "var(--gw-font-size-base, 16px)",
@@ -138,7 +138,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
           <p
             role="status"
             aria-live="polite"
-            style={{ margin: "0 0 16px 0", color: "var(--gw-color-dialog-error, #c53030)" }}
+            style={{ margin: "0 0 16px 0", color: "var(--gw-color-danger-text, #b42318)" }}
           >
             {error}
           </p>
@@ -161,7 +161,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
           </div>
 
           {supportEmail && (
-            <p style={{ margin: "20px 0 0 0", color: "var(--gw-color-dialog-text-secondary, #4a5568)" }}>
+            <p style={{ margin: "20px 0 0 0", color: "var(--gw-color-text-secondary, #5a5a5a)" }}>
               Need help with something urgent? Email{" "}
               <a href={`mailto:${supportEmail}`}>{supportEmail}</a>.
             </p>

@@ -29,7 +29,7 @@
   padding: 13px 28px;
   border-radius: var(--gw-radius-pill);
   background-color: var(--mk-green);
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
   border: 1px solid var(--mk-green);
   font-family: var(--gw-font-button);
   font-size: 13px;
@@ -56,7 +56,7 @@
 .marketing .pg-got-it-btn:hover {
   background-color: var(--mk-green-dark);
   border-color: var(--mk-green-dark);
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
 }
 
 .marketing .cta-btn:active,
@@ -121,7 +121,7 @@
 .marketing .se-suggestion-btn:hover,
 .marketing .se-regenerate-btn:hover {
   background-color: var(--mk-green);
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
   border-color: var(--mk-green);
 }
 
@@ -175,13 +175,13 @@
 .marketing .tab-button.active,
 .marketing .checklist-tab--active {
   background-color: var(--mk-green);
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
 }
 
 .marketing .tab-button.active:hover,
 .marketing .checklist-tab--active:hover {
   background-color: var(--mk-green-dark);
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
 }
 
 /* ==========================================================================
@@ -194,7 +194,7 @@
 .marketing .se-editor-card,
 .marketing .se-checklist-card {
   background-color: var(--mk-white);
-  border-radius: 16px;
+  border-radius: var(--gw-radius-container);
   box-shadow: 0 4px 16px color-mix(in srgb, var(--gw-color-primary-active) 8%, transparent);
   border: none;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
@@ -230,7 +230,7 @@
 .marketing .pg-modal-title {
   font-family: var(--gw-font-serif);
   letter-spacing: 0;
-  color: var(--gw-color-white, #ffffff);
+  color: var(--gw-color-surface, #ffffff);
 }
 
 /* Slightly larger size for top-level panel headings */
@@ -247,7 +247,7 @@
 .marketing .btn-primary {
   background-color: var(--mk-green);
   border-color: var(--mk-green);
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
 }
 
 .marketing .btn-primary:hover,
@@ -255,5 +255,5 @@
 .marketing .btn-primary:active {
   background-color: var(--mk-green-dark) !important;
   border-color: var(--mk-green-dark) !important;
-  color: #f9fbff !important;
+  color: var(--gw-color-text-inverse) !important;
 }

@@ -43,7 +43,7 @@ function ChatMessage(props: ChatMessageProps) {
   // Styles for the components
   const containerStyle: React.CSSProperties = {
     padding: "4px 16px",
-    borderRadius: "8px",
+    borderRadius: "var(--gw-radius-container)",
     backgroundColor: "transparent",
     marginBottom: "4px",
     position: "relative",
@@ -100,8 +100,8 @@ function ChatMessage(props: ChatMessageProps) {
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    color: "#6b7280",
-    borderRadius: "4px",
+    color: "var(--gw-color-text-muted)",
+    borderRadius: "var(--gw-radius-control)",
     transition: "all 0.2s ease",
   };
 
@@ -112,14 +112,14 @@ function ChatMessage(props: ChatMessageProps) {
         ? "18px 18px 4px 18px"
         : "18px 18px 18px 4px",
     backgroundColor:
-      props.message?.type === ChatBotMessageType.Human ? "var(--gw-color-primary)" : "var(--gw-color-message-bg)",
+      props.message?.type === ChatBotMessageType.Human ? "var(--gw-color-primary)" : "var(--gw-color-surface-subtle)",
     color:
-      props.message?.type === ChatBotMessageType.Human ? "white" : "#2d3748",
+      props.message?.type === ChatBotMessageType.Human ? "white" : "var(--gw-color-text)",
     wordWrap: "break-word" as const,
     boxShadow:
       props.message?.type === ChatBotMessageType.Human
-        ? "0 1px 3px rgba(0, 0, 0, 0.1)"
-        : "0 2px 4px rgba(0, 0, 0, 0.15)",
+        ? "0 1px 3px color-mix(in srgb, var(--gw-color-text-strong) 10%, transparent)"
+        : "0 2px 4px color-mix(in srgb, var(--gw-color-text-strong) 15%, transparent)",
     position: "relative" as const,
   };
 
@@ -327,7 +327,7 @@ function ChatMessage(props: ChatMessageProps) {
                           marginTop: "8px",
                           fontSize: "12px",
                           fontStyle: "italic",
-                          color: "#565d6b",
+                          color: "var(--gw-color-text-muted)",
                         }}
                       >
                         <FaRegStopCircle size={12} aria-hidden="true" />
@@ -339,7 +339,7 @@ function ChatMessage(props: ChatMessageProps) {
                     {showSources && (
                       <div
                         style={{
-                          borderTop: "1px solid #e0e0e0",
+                          borderTop: "1px solid var(--gw-color-border)",
                           marginTop: "12px",
                           paddingTop: "8px",
                         }}
@@ -363,7 +363,7 @@ function ChatMessage(props: ChatMessageProps) {
                             padding: "4px 0",
                             fontSize: "13px",
                             fontWeight: 600,
-                            color: "#374151",
+                            color: "var(--gw-color-text)",
                             width: "100%",
                             textAlign: "left",
                             minHeight: "32px",
@@ -391,7 +391,7 @@ function ChatMessage(props: ChatMessageProps) {
                                 <div aria-hidden="true" style={{
                                   fontSize: "11px",
                                   fontWeight: 600,
-                                  color: "var(--gw-color-text-status, #4b5563)",
+                                  color: "var(--gw-color-text-secondary, #5a5a5a)",
                                   textTransform: "uppercase",
                                   letterSpacing: "0.5px",
                                   marginBottom: "4px",
@@ -408,11 +408,11 @@ function ChatMessage(props: ChatMessageProps) {
                                       alignItems: "center",
                                       gap: "6px",
                                       fontSize: "13px",
-                                      color: "#374151",
+                                      color: "var(--gw-color-text)",
                                       padding: "3px 0",
                                     }}
                                   >
-                                    <FaFileAlt size={11} aria-hidden="true" style={{ flexShrink: 0, color: "#6b7280" }} />
+                                    <FaFileAlt size={11} aria-hidden="true" style={{ flexShrink: 0, color: "var(--gw-color-text-muted)" }} />
                                     <span style={{ wordBreak: "break-word" }}>
                                       {cleanSourceTitle(source.title)}
                                     </span>
@@ -427,7 +427,7 @@ function ChatMessage(props: ChatMessageProps) {
                                 <div aria-hidden="true" style={{
                                   fontSize: "11px",
                                   fontWeight: 600,
-                                  color: "var(--gw-color-text-status, #4b5563)",
+                                  color: "var(--gw-color-text-secondary, #5a5a5a)",
                                   textTransform: "uppercase",
                                   letterSpacing: "0.5px",
                                   marginBottom: "4px",
@@ -444,7 +444,7 @@ function ChatMessage(props: ChatMessageProps) {
                                       alignItems: "center",
                                       gap: "6px",
                                       fontSize: "13px",
-                                      color: "#374151",
+                                      color: "var(--gw-color-text)",
                                       padding: "3px 0",
                                     }}
                                   >
@@ -473,19 +473,19 @@ function ChatMessage(props: ChatMessageProps) {
                     onClick={handleCopy}
                     onMouseEnter={(e) => {
                       if (!copied) {
-                        e.currentTarget.style.backgroundColor = "#f3f4f6";
+                        e.currentTarget.style.backgroundColor = "var(--gw-color-surface-subtle)";
                         e.currentTarget.style.color = "var(--gw-color-primary)";
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (!copied) {
                         e.currentTarget.style.backgroundColor = "transparent";
-                        e.currentTarget.style.color = "#6b7280";
+                        e.currentTarget.style.color = "var(--gw-color-text-muted)";
                       }
                     }}
                     onFocus={(e) => {
                       if (!copied) {
-                        e.currentTarget.style.backgroundColor = "#f3f4f6";
+                        e.currentTarget.style.backgroundColor = "var(--gw-color-surface-subtle)";
                         e.currentTarget.style.color = "var(--gw-color-primary)";
                       }
                       e.currentTarget.style.outline = "2px solid var(--gw-color-primary)";
@@ -494,7 +494,7 @@ function ChatMessage(props: ChatMessageProps) {
                     onBlur={(e) => {
                       if (!copied) {
                         e.currentTarget.style.backgroundColor = "transparent";
-                        e.currentTarget.style.color = "#6b7280";
+                        e.currentTarget.style.color = "var(--gw-color-text-muted)";
                       }
                       e.currentTarget.style.outline = "none";
                       e.currentTarget.style.outlineOffset = "0";
@@ -506,7 +506,7 @@ function ChatMessage(props: ChatMessageProps) {
                     }
                   >
                     {copied ? (
-                      <FaCheck size={14} aria-hidden="true" style={{ color: "#059669" }} />
+                      <FaCheck size={14} aria-hidden="true" style={{ color: "var(--gw-color-success)" }} />
                     ) : (
                       <FaCopy size={14} aria-hidden="true" />
                     )}

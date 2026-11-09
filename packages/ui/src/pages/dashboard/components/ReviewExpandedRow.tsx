@@ -415,7 +415,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
               style={{
                 padding: "12px",
                 backgroundColor: "var(--gw-color-background)",
-                borderRadius: "6px",
+                borderRadius: "var(--gw-radius-control)",
                 fontSize: "13px",
                 color: "var(--gw-color-text)",
               }}
@@ -506,7 +506,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
                     style={{
                       padding: "12px",
                       backgroundColor: "var(--gw-color-background)",
-                      borderRadius: "6px",
+                      borderRadius: "var(--gw-radius-control)",
                       fontSize: "13px",
                       color: "var(--gw-color-text)",
                     }}

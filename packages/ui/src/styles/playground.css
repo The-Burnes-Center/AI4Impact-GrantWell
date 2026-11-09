@@ -6,9 +6,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px 32px;
-  border-bottom: 1px solid var(--gw-color-border, #e5e7eb);
-  background-color: var(--gw-color-white, #ffffff);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--gw-color-border, #e2e8f0);
+  background-color: var(--gw-color-surface, #ffffff);
+  box-shadow: var(--gw-shadow-low);
   position: relative;
   z-index: 10;
 }
@@ -16,7 +16,7 @@
 .pg-header-title {
   font-size: 26px;
   font-weight: 600;
-  color: var(--gw-color-heading, var(--gw-color-primary-active));
+  color: var(--gw-color-heading);
   margin: 0;
   flex: 1;
   min-width: 0;
@@ -46,7 +46,7 @@
   gap: 8px;
   padding: 10px 22px;
   background-color: var(--gw-color-primary);
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
   border: 1px solid var(--gw-color-primary);
   border-radius: var(--gw-radius-pill);
   font-family: var(--gw-font-button);
@@ -69,7 +69,7 @@
 }
 
 .pg-upload-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, var(--gw-color-primary));
+  outline: 2px solid var(--gw-color-focus);
   outline-offset: 2px;
 }
 
@@ -77,9 +77,9 @@
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: color-mix(in srgb, var(--gw-color-surface) 25%, transparent);
   padding: 2px 7px;
-  border-radius: 10px;
+  border-radius: var(--gw-radius-container);
   font-size: 11px;
   font-weight: 600;
   line-height: 1;
@@ -108,7 +108,7 @@
 
 .pg-help-btn:hover {
   background-color: var(--gw-color-primary);
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
 }
 
 .pg-help-btn:active {
@@ -116,7 +116,7 @@
 }
 
 .pg-help-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, var(--gw-color-primary));
+  outline: 2px solid var(--gw-color-focus);
   outline-offset: 2px;
 }
 
@@ -136,7 +136,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: var(--gw-color-overlay);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -146,9 +146,9 @@
 .pg-modal {
   width: 650px;
   max-width: calc(100vw - 32px);
-  background-color: var(--gw-color-white, #ffffff);
-  border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  background-color: var(--gw-color-surface, #ffffff);
+  border-radius: var(--gw-radius-container);
+  box-shadow: var(--gw-shadow-high);
   max-height: 90vh;
   overflow: hidden;
   display: flex;
@@ -168,18 +168,18 @@
 .pg-modal-title {
   font-size: 22px;
   font-weight: 600;
-  color: var(--gw-color-white, #ffffff);
+  color: var(--gw-color-surface, #ffffff);
   margin: 0;
 }
 
 .pg-modal-close-btn {
-  background: rgba(255, 255, 255, 0.2);
+  background: color-mix(in srgb, var(--gw-color-surface) 20%, transparent);
   border: none;
   cursor: pointer;
   font-size: 24px;
-  color: var(--gw-color-white, #ffffff);
+  color: var(--gw-color-surface, #ffffff);
   padding: 8px 12px;
-  border-radius: 4px;
+  border-radius: var(--gw-radius-control);
   line-height: 1;
   transition: background 0.2s;
   min-width: 44px;
@@ -190,13 +190,13 @@
 }
 
 .pg-modal-close-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: color-mix(in srgb, var(--gw-color-surface) 30%, transparent);
 }
 
 .pg-modal-close-btn:focus-visible {
-  background: var(--gw-color-white, #ffffff);
+  background: var(--gw-color-surface, #ffffff);
   color: var(--gw-color-primary);
-  outline: 2px solid var(--gw-color-white, #ffffff);
+  outline: 2px solid var(--gw-color-surface, #ffffff);
   outline-offset: 2px;
 }
 
@@ -220,7 +220,7 @@
   background-color: var(--gw-color-primary-light);
   padding: 16px 20px;
   margin-bottom: 24px;
-  border-radius: 4px;
+  border-radius: var(--gw-radius-control);
 }
 
 .pg-highlight-title {
@@ -293,7 +293,7 @@
 
 .pg-checkbox-label {
   font-size: 14px;
-  color: #666;
+  color: var(--gw-color-text-secondary);
   cursor: pointer;
   user-select: none;
 }
@@ -305,7 +305,7 @@
   gap: 8px;
   padding: 14px 30px;
   background-color: var(--gw-color-primary);
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
   border: 1px solid var(--gw-color-primary);
   border-radius: var(--gw-radius-pill);
   cursor: pointer;
@@ -329,7 +329,7 @@
 }
 
 .pg-got-it-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, var(--gw-color-primary));
+  outline: 2px solid var(--gw-color-focus);
   outline-offset: 2px;
 }
 

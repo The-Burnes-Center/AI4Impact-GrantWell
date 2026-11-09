@@ -18,7 +18,7 @@
 
 .analytics__caption {
   margin: 0;
-  color: #666;
+  color: var(--gw-color-text-secondary);
   font-size: 14px;
 }
 
@@ -32,10 +32,10 @@
 .analytics__state-select {
   padding: 8px 12px;
   border: 1px solid var(--gw-color-border-input, #767676);
-  border-radius: 8px;
-  background: #fff;
+  border-radius: var(--gw-radius-container);
+  background: var(--gw-color-surface);
   font-size: 13px;
-  color: #333;
+  color: var(--gw-color-text);
   cursor: pointer;
 }
 
@@ -47,10 +47,10 @@
 
 .analytics__window {
   display: inline-flex;
-  border: 1px solid #d9d9d9;
-  border-radius: 8px;
+  border: 1px solid var(--gw-color-border);
+  border-radius: var(--gw-radius-container);
   overflow: hidden;
-  background: #fff;
+  background: var(--gw-color-surface);
 }
 
 .analytics__window-btn {
@@ -59,8 +59,8 @@
   padding: 8px 14px;
   font-size: 13px;
   cursor: pointer;
-  color: #333;
-  border-right: 1px solid #eee;
+  color: var(--gw-color-text);
+  border-right: 1px solid var(--gw-color-border);
 }
 
 .analytics__window-btn:last-child {
@@ -73,7 +73,7 @@
 
 .analytics__window-btn--active {
   background: var(--mk-green, var(--gw-color-primary));
-  color: #fff;
+  color: var(--gw-color-text-inverse);
 }
 
 .analytics__window-btn--active:hover {
@@ -84,7 +84,7 @@
 .analytics__window-btn:focus-visible {
   outline: 2px solid var(--gw-color-primary-active);
   outline-offset: -2px;
-  box-shadow: inset 0 0 0 4px var(--gw-color-white, #fff);
+  box-shadow: inset 0 0 0 4px var(--gw-color-surface, #ffffff);
 }
 
 .analytics__body {
@@ -94,9 +94,9 @@
 }
 
 .analytics__card {
-  background: #fff;
-  border: 1px solid #ececec;
-  border-radius: 10px;
+  background: var(--gw-color-surface);
+  border: 1px solid var(--gw-color-border);
+  border-radius: var(--gw-radius-container);
   padding: 20px;
 }
 
@@ -108,13 +108,13 @@
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--gw-color-text-strong);
 }
 
 .analytics__card-sub {
   margin: 4px 0 0;
   font-size: 13px;
-  color: #666;
+  color: var(--gw-color-text-secondary);
 }
 
 .analytics__grid-2 {
@@ -139,11 +139,11 @@
 .analytics__table td {
   text-align: left;
   padding: 8px 10px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--gw-color-surface);
 }
 
 .analytics__table th {
-  color: #52514e;
+  color: var(--gw-color-text-secondary);
   font-weight: 600;
   font-size: 12px;
   text-transform: uppercase;

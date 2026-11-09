@@ -68,7 +68,7 @@ const HelpModal = React.memo(function HelpModal({ isOpen, onClose }: HelpModalPr
           </p>
 
           <div className="help-modal__highlight">
-            <p style={{ margin: 0, lineHeight: "1.6", fontSize: "15px", color: "#333" }}>
+            <p style={{ margin: 0, lineHeight: "1.6", fontSize: "15px", color: "var(--gw-color-text)" }}>
               Click through the tabs above (
               <strong style={{ fontWeight: 600 }}>
                 Eligibility, Required Documents, Narrative Sections, Key Deadlines

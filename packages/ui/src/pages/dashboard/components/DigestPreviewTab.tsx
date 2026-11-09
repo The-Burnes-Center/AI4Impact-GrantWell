@@ -104,7 +104,7 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
           >
             Digest preview
           </h2>
-          <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
+          <p style={{ marginTop: "4px", color: "var(--gw-color-text-secondary)", fontSize: "14px" }}>
             Your real {frequency} digest — the server runs the actual selection against your own
             notification preferences and the active grants, so this is exactly what you'd receive.
             Sending delivers the real email (not a test), with a working unsubscribe link.
@@ -194,7 +194,7 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
                 title={`${frequency} digest preview`}
                 srcDoc={rendered.html}
                 sandbox=""
-                style={{ width: "100%", height: 480, border: "none", background: "#fff" }}
+                style={{ width: "100%", height: 480, border: "none", background: "var(--gw-color-surface)" }}
               />
             </div>
             <div className="digest-preview__pane">

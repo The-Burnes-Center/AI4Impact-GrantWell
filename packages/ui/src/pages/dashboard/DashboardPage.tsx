@@ -467,7 +467,7 @@ const Dashboard: React.FC = () => {
           <div className="dashboard-header">
             <div>
               <h1>Admin Dashboard</h1>
-              <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
+              <p style={{ marginTop: "4px", color: "var(--gw-color-text-secondary)", fontSize: "14px" }}>
                 Manage grants, users, and processing across your instance
               </p>
             </div>

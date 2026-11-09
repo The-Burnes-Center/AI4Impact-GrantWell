@@ -76,7 +76,7 @@ const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
   const spinnerStyle: React.CSSProperties = {
     width: "14px",
     height: "14px",
-    border: `2px solid ${onPrimary ? "rgba(255, 255, 255, 0.4)" : colors.borderLight}`,
+    border: `2px solid ${onPrimary ? "color-mix(in srgb, var(--gw-color-surface) 40%, transparent)" : colors.borderLight}`,
     borderTopColor: onPrimary ? colors.white : colors.primary,
     borderRadius: "50%",
     animation: "autosave-spin 0.8s linear infinite",
@@ -91,7 +91,7 @@ const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
         }
         .autosave--on-primary:focus-visible,
         .autosave--on-primary button:focus-visible {
-          outline: 2px solid #ffffff;
+          outline: 2px solid var(--gw-color-surface);
           outline-offset: 2px;
         }
       `}</style>

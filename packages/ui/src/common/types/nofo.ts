@@ -79,13 +79,16 @@ export function nofoDisplayName(nofo: Pick<NOFO, "name" | "scope" | "state" | "p
 }
 
 export const GRANT_TYPES: Record<GrantTypeId, { label: string; color: string }> = {
-  // Each colour is also the badge text, on a 8% tint of itself. Worst case is a
-  // hovered grant row (#DFECE0); these clear 4.5:1 there.
-  federal: { label: "Federal", color: "#1a4480" },
-  state: { label: "State", color: "#1e6b2e" },
-  quasi: { label: "Quasi", color: "#5b3f8a" },
-  philanthropic: { label: "Philanthropic", color: "#8f4409" },
+  // Each colour is also the badge text, on an 8% tint of itself (grantTypeTint). Worst case is a
+  // hovered grant row (the primary-light tint); these clear 4.5:1 there.
+  federal: { label: "Federal", color: "var(--gw-color-category-1)" },
+  state: { label: "State", color: "var(--gw-color-category-2)" },
+  quasi: { label: "Quasi", color: "var(--gw-color-category-3)" },
+  philanthropic: { label: "Philanthropic", color: "var(--gw-color-category-4)" },
 };
+
+/** A grant-type colour mixed toward transparent, for badge fills and borders. */
+export const grantTypeTint = (color: string, percent: number) => `color-mix(in srgb, ${color} ${percent}%, transparent)`;
 
 export const GRANT_CATEGORIES = [
   "Recovery Act",

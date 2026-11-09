@@ -224,21 +224,21 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
   const getStatusColor = (status?: DraftStatus): string => {
     switch (status) {
       case 'project_basics':
-        return '#4b5563';
+        return 'var(--gw-color-border-input-hover)';
       case 'questionnaire':
         return 'var(--gw-color-primary-hover)';
       case 'uploading_documents':
-        return '#0e7490';
+        return 'var(--gw-color-info)';
       case 'generating_draft':
-        return '#7c2d12';
+        return 'var(--gw-color-warning-text)';
       case 'editing_sections':
-        return '#047857';
+        return 'var(--gw-color-success)';
       case 'reviewing':
-        return '#b45309';
+        return 'var(--gw-color-warning-text)';
       case 'submitted':
-        return '#6d28d9';
+        return 'var(--gw-color-category-3)';
       default:
-        return '#4b5563';
+        return 'var(--gw-color-border-input-hover)';
     }
   };
 
@@ -261,7 +261,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
     return {
       display: 'inline-block',
       padding: '4px 12px',
-      borderRadius: '12px',
+      borderRadius: 'var(--gw-radius-container)',
       fontSize: '12px',
       fontWeight: '500',
       // color-mix, not a hex alpha suffix: some colors are var() tokens.
@@ -319,7 +319,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       <div className="dashboard-header dashboard-header--wrap">
         <div>
           <h1 ref={headingRef} tabIndex={-1}>My Applications</h1>
-          <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
+          <p style={{ marginTop: "4px", color: "var(--gw-color-text-secondary)", fontSize: "14px" }}>
             Manage and continue your saved grant applications
           </p>
         </div>
@@ -354,8 +354,8 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             onClick={() => setShowModalDelete(true)}
             disabled={selectedItems.length === 0}
             style={{
-              backgroundColor: selectedItems.length === 0 ? "#e5e7eb" : "#cd0d0d",
-              color: selectedItems.length === 0 ? "#9ca3af" : "white",
+              backgroundColor: selectedItems.length === 0 ? "var(--gw-color-surface-subtle)" : "var(--gw-color-danger)",
+              color: selectedItems.length === 0 ? "var(--gw-color-text-muted)" : "white",
               cursor: selectedItems.length === 0 ? "not-allowed" : "pointer",
             }}
             aria-label={selectedItems.length === 0 ? "Delete applications (no applications selected)" : `Delete ${selectedItems.length} selected application${selectedItems.length > 1 ? 's' : ''}`}
@@ -488,7 +488,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                   </button>
                 </div>
                 <div className="row-cell" role="cell">
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#5a5a5a" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--gw-color-text-secondary)" }}>
                     <LuCalendar size={16} aria-hidden="true" />
                     <time dateTime={item.last_modified}>
                       {formatSessionTime(item.last_modified)}

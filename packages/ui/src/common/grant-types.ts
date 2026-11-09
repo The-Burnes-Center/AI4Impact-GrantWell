@@ -9,25 +9,25 @@ export const GRANT_TYPES = {
   FEDERAL: { 
     id: 'federal', 
     label: 'Federal', 
-    color: '#1a4480',
+    color: 'var(--gw-color-category-1)',
     description: 'Federal government grants'
   },
   STATE: { 
     id: 'state', 
     label: 'State',
-    color: '#2b7d3c',
+    color: 'var(--gw-color-category-2)',
     description: 'State-level government grants'
   },
   QUASI: { 
     id: 'quasi', 
     label: 'Quasi',
-    color: '#7962a8',
+    color: 'var(--gw-color-category-3)',
     description: 'Quasi-governmental agency grants'
   },
   PHILANTHROPIC: { 
     id: 'philanthropic', 
     label: 'Philanthropic',
-    color: '#af540b',
+    color: 'var(--gw-color-category-4)',
     description: 'Private foundation and charitable organization grants'
   },
 } as const;

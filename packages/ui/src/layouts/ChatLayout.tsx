@@ -72,8 +72,8 @@ const styles: Record<string, React.CSSProperties> = {
   toolsPanel: {
     height: "100%",
     overflow: "auto",
-    borderLeft: "1px solid #9ca3af",
-    backgroundColor: "#f9fafb",
+    borderLeft: "1px solid var(--gw-color-border-strong)",
+    backgroundColor: "var(--gw-color-background)",
     minWidth: 0,
   },
   sidebar: {
@@ -83,7 +83,7 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: "column",
     transition: "width 0.3s ease",
     overflow: "hidden",
-    borderRight: "1px solid var(--gw-color-primary-muted)",
+    borderRight: "1px solid var(--gw-color-primary-active)",
     position: "static",
     flexShrink: 0,
   },
@@ -97,12 +97,12 @@ const styles: Record<string, React.CSSProperties> = {
     padding: "16px",
     display: "flex",
     alignItems: "center",
-    borderBottom: "1px solid var(--gw-color-primary-muted)",
+    borderBottom: "1px solid var(--gw-color-primary-active)",
   },
   sidebarToggle: {
     background: "none",
     border: "none",
-    color: "#ffffff",
+    color: "var(--gw-color-text-inverse)",
     cursor: "pointer",
   },
   navContainer: {
@@ -115,7 +115,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: "8px",
     display: "flex",
     alignItems: "center",
-    color: "#e2e8f0",
+    color: "var(--gw-color-text-inverse)",
     fontSize: "14px",
     fontWeight: 600,
     textTransform: "uppercase",
@@ -128,9 +128,9 @@ const styles: Record<string, React.CSSProperties> = {
     padding: "12px",
     marginBottom: "4px",
     background: "transparent",
-    color: "#e2e8f0",
+    color: "var(--gw-color-text-inverse)",
     border: "none",
-    borderRadius: "6px",
+    borderRadius: "var(--gw-radius-control)",
     cursor: "pointer",
     fontWeight: 500,
     textAlign: "left",
@@ -233,8 +233,8 @@ export default function BaseAppLayout({
                   ...styles.toolsPanel,
                   width: isNarrowViewport ? '100%' : toolsWidth,
                   height: isNarrowViewport ? 'auto' : '100%',
-                  borderLeft: isNarrowViewport ? 'none' : '1px solid #e5e7eb',
-                  borderTop: isNarrowViewport ? '1px solid #e5e7eb' : 'none',
+                  borderLeft: isNarrowViewport ? 'none' : '1px solid var(--gw-color-border)',
+                  borderTop: isNarrowViewport ? '1px solid var(--gw-color-border)' : 'none',
                 }}
               >
                 {info}

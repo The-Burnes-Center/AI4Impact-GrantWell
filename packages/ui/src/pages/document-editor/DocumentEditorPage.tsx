@@ -396,7 +396,7 @@ const DocumentEditor: React.FC = () => {
       <div className="document-content" style={{ flex: 1, display: "flex", flexDirection: "column", margin: 0, padding: 0 }}>
         {!welcomeModalOpen && (
           <>
-            <div ref={headerRef} className="document-editor-header" style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", position: "sticky", top: 0, zIndex: 101, boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
+            <div ref={headerRef} className="document-editor-header" style={{ background: "var(--gw-color-surface)", borderBottom: "1px solid var(--gw-color-border)", position: "sticky", top: 0, zIndex: 101, boxShadow: "var(--gw-shadow-low)" }}>
               <div style={{ padding: 16 }}>
                 <h1 className="document-editor-nofo-title" style={{ margin: 0, fontSize: "22px", fontWeight: 600, lineHeight: 1.4, wordBreak: "break-word" }}>
                   {isNofoLoading ? "Loading..." : nofoName || "Write Application"}
@@ -428,9 +428,9 @@ const DocumentEditor: React.FC = () => {
                 <div id="document-loading-region" aria-busy="true" tabIndex={-1} style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "60vh" }}>
                   <div style={{ textAlign: "center", maxWidth: 400 }}>
                     <div className="loading-spinner" style={{ margin: "0 auto 16px" }} />
-                    <p style={{ color: "#5a6169", fontSize: 16, marginBottom: 8 }}>{loadingMessage}</p>
+                    <p style={{ color: "var(--gw-color-text-secondary)", fontSize: 16, marginBottom: 8 }}>{loadingMessage}</p>
                     {loadingMessage.includes("generation") && (
-                      <p style={{ color: "#6b7280", fontSize: 14, marginTop: 8 }}>This may take 30-60 seconds. Please don&apos;t close this page.</p>
+                      <p style={{ color: "var(--gw-color-text-muted)", fontSize: 14, marginTop: 8 }}>This may take 30-60 seconds. Please don&apos;t close this page.</p>
                     )}
                   </div>
                 </div>

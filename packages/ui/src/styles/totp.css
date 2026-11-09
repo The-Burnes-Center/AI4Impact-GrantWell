@@ -18,9 +18,9 @@
   display: flex;
   justify-content: center;
   padding: 16px;
-  background: var(--gw-color-white);
+  background: var(--gw-color-surface);
   border: 1px solid var(--gw-color-border);
-  border-radius: var(--gw-radius-lg);
+  border-radius: var(--gw-radius-container);
 }
 
 .totp-enrollment-secret {
@@ -40,7 +40,7 @@
   padding: 4px 8px;
   background: transparent;
   border: 1px solid var(--gw-color-border);
-  border-radius: var(--gw-radius-sm);
+  border-radius: var(--gw-radius-control);
   color: var(--gw-color-text);
   font-size: var(--gw-font-size-sm);
   letter-spacing: 0.05em;
@@ -73,10 +73,10 @@
   font-weight: 600;
   line-height: 1.2;
   text-align: center;
-  color: var(--gw-color-text-input);
-  background: var(--gw-color-white);
+  color: var(--gw-color-text);
+  background: var(--gw-color-surface);
   border: 1px solid var(--gw-color-border-input);
-  border-radius: 8px;
+  border-radius: var(--gw-radius-container);
   transition: border-color 0.2s, background-color 0.2s;
 }
 
@@ -87,14 +87,14 @@
 /* Matches .form-input:focus in auth-panel.css — a real outline, since the
    border-colour change alone is only a 1.18:1 luminance shift. */
 .otp-input__box:focus {
-  border-color: var(--gw-color-focus-light);
-  outline: 3px solid var(--gw-color-focus-light);
+  border-color: var(--gw-color-focus);
+  outline: 3px solid var(--gw-color-focus);
   outline-offset: 2px;
 }
 
 .otp-input__box:disabled {
-  background: var(--gw-color-input-disabled-bg);
-  color: var(--gw-color-input-disabled-text);
+  background: var(--gw-color-disabled-bg);
+  color: var(--gw-color-disabled-text);
 }
 
 .otp-input__box[aria-invalid="true"] {

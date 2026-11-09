@@ -179,7 +179,7 @@ describe("withBrandColors", () => {
     const style = out.match(/<html lang="en" style="([^"]*)">/)![1];
     expect(style).toBe(brandColorVars({ primary: "#001970", accent: "#245D38" }).map(([n, c]) => `${n}: ${c}`).join("; "));
     expect(style).toContain("--gw-color-primary: #001970");
-    expect(out).toMatch(new RegExp(`<style id="${TINTS_STYLE_ID}">@layer gw-core \\{ :root \\{ --gw-color-primary-deep: #[0-9a-fA-F]{6};`));
+    expect(out).toMatch(new RegExp(`<style id="${TINTS_STYLE_ID}">@layer gw-core \\{ :root \\{ --gw-color-primary-border: #[0-9a-fA-F]{6};`));
   });
 
   it("adds no tints for the default palette, whose tints are hand-tuned in tokens.css", () => {

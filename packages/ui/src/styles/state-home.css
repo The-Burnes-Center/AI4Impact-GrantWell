@@ -1,7 +1,7 @@
 /* The single-state public home (pages/landing/StateHome.tsx): light page, brand band, sign-in card,
    feature cards under a highlight rule and a tinted trust panel. Colours and type come from tokens.css. */
 .state-home {
-  background: var(--gw-color-white, #fff);
+  background: var(--gw-color-surface, #ffffff);
   color: var(--gw-color-text);
   font-family: var(--gw-font-family);
 }
@@ -81,8 +81,8 @@
 .state-home__sign-in .auth-login-card {
   padding: var(--gw-spacing-3xl);
   border: 1px solid var(--gw-color-primary-border);
-  border-radius: var(--gw-radius-lg);
-  box-shadow: var(--gw-shadow-sm);
+  border-radius: var(--gw-radius-container);
+  box-shadow: var(--gw-shadow-low);
 }
 
 /* The page heading already shows the logo. */
@@ -113,11 +113,11 @@
 
 .state-home__sign-in .auth-tab--active {
   background: var(--gw-color-primary);
-  color: var(--gw-color-white, #fff);
+  color: var(--gw-color-surface, #ffffff);
 }
 
 .state-home__sign-in .auth-tab:focus-visible {
-  outline: 3px solid var(--gw-color-focus-light);
+  outline: 3px solid var(--gw-color-focus);
   outline-offset: 2px;
 }
 
@@ -168,7 +168,7 @@
   padding: var(--gw-spacing-2xl);
   background: var(--gw-color-background);
   border: 1px solid var(--gw-color-border);
-  border-radius: var(--gw-radius-lg);
+  border-radius: var(--gw-radius-container);
 }
 
 .state-home__feature-icon {
@@ -196,7 +196,7 @@
   margin-top: 40px;
   padding: var(--gw-spacing-3xl);
   background: var(--gw-color-primary-light);
-  border-radius: var(--gw-radius-lg);
+  border-radius: var(--gw-radius-container);
 }
 
 .state-home__trust-icon {
@@ -240,6 +240,6 @@
 }
 
 .state-home__link:focus-visible {
-  outline: 3px solid var(--gw-color-focus-light);
+  outline: 3px solid var(--gw-color-focus);
   outline-offset: 2px;
 }
