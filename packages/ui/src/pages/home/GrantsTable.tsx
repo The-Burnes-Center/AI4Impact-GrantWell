@@ -3,6 +3,7 @@ import { LuFileX, LuX, LuArrowUp, LuArrowDown, LuArrowUpDown, LuPin } from "reac
 import type { NOFO, GrantTypeId } from "../../common/types/nofo";
 import { GRANT_TYPES, grantTypeTint, nofoDisplayName } from "../../common/types/nofo";
 import { Utils } from "../../common/utils";
+import PaginationControls from "../../components/common/PaginationControls";
 import TableScrollRegion from "../../components/ui/TableScrollRegion";
 import type { AISearchResult } from "../../hooks/use-ai-grant-search";
 import "../../styles/landing-page-table.css";
@@ -619,59 +620,15 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
         </div>
       )}
 
-      {/* Pagination for normal browsing */}
       {!awaitingAIResults && !hasRankedResults && filteredNofos.length > 0 && totalPages > 1 && (
-        <div className="landing-table-pagination">
-          <div className="landing-pagination-info">
-            Showing {startIndex + 1}-{Math.min(endIndex, filteredNofos.length)} of {filteredNofos.length} grants
-          </div>
-          <div className="landing-pagination-controls">
-            <button
-              className="landing-pagination-button"
-              onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-              disabled={currentPage === 1}
-              aria-label="Previous page"
-            >
-              Previous
-            </button>
-            <div className="landing-pagination-pages">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                if (
-                  page === 1 ||
-                  page === totalPages ||
-                  (page >= currentPage - 1 && page <= currentPage + 1)
-                ) {
-                  return (
-                    <button
-                      key={page}
-                      className={`landing-pagination-page ${currentPage === page ? "active" : ""}`}
-                      onClick={() => setCurrentPage(page)}
-                      aria-label={`Go to page ${page}`}
-                      aria-current={currentPage === page ? "page" : undefined}
-                    >
-                      {page}
-                    </button>
-                  );
-                } else if (page === currentPage - 2 || page === currentPage + 2) {
-                  return (
-                    <span key={page} className="landing-pagination-ellipsis">
-                      ...
-                    </span>
-                  );
-                }
-                return null;
-              })}
-            </div>
-            <button
-              className="landing-pagination-button"
-              onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
-              disabled={currentPage === totalPages}
-              aria-label="Next page"
-            >
-              Next
-            </button>
-          </div>
-        </div>
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={filteredNofos.length}
+          itemsPerPage={itemsPerPage}
+          itemLabel="grants"
+          onPageChange={setCurrentPage}
+        />
       )}
     </div>
   );

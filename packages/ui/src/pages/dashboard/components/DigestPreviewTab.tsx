@@ -132,7 +132,7 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
 
       <div className="digest-toolbar">
         <div
-          className="digest-segment"
+          className="gw-toggle digest-segment"
           role="radiogroup"
           aria-label="Digest frequency"
         >
@@ -142,7 +142,7 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
               role="radio"
               aria-checked={frequency === value}
               tabIndex={frequency === value ? 0 : -1}
-              className={`digest-segment__option ${frequency === value ? "is-active" : ""}`}
+              className={`gw-toggle__option digest-segment__option ${frequency === value ? "is-active" : ""}`}
               onClick={() => setFrequency(value)}
               onKeyDown={(e) => onSegmentKey(e, FREQUENCIES.map((f) => f.value), frequency)}
             >

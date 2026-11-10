@@ -430,3 +430,101 @@
   outline-offset: calc(-1 * var(--gw-focus-width));
   box-shadow: none;
 }
+
+/* ==============================
+ * Pagination
+ * ============================== */
+
+/* Page numbers are links in the primary colour; the current page is a filled square. Previous and Next
+   stay in place on the first and last page (aria-disabled), greyed, so focus never drops. */
+.gw-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gw-spacing-md) var(--gw-spacing-lg);
+  margin-top: var(--gw-spacing-lg);
+  padding: var(--gw-spacing-lg) 0;
+  border-top: 1px solid var(--gw-color-border);
+}
+.gw-pagination__info { color: var(--gw-color-text-secondary); font-size: var(--gw-font-size-sm); }
+.gw-pagination__controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gw-spacing-md) var(--gw-spacing-lg); }
+.gw-pagination__pages { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gw-spacing-xs); }
+.gw-pagination__page,
+.gw-pagination__step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gw-spacing-xs);
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0 var(--gw-spacing-sm);
+  border: 0;
+  border-radius: var(--gw-radius-control);
+  background: transparent;
+  color: var(--gw-color-primary);
+  font-family: inherit;
+  font-size: var(--gw-font-size-base);
+  font-weight: var(--gw-font-weight-semibold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.gw-pagination__page:hover,
+.gw-pagination__step:hover:not([aria-disabled="true"]) { color: var(--gw-color-primary-hover); text-decoration-thickness: 2px; }
+.gw-pagination__page[aria-current="page"] {
+  background: var(--gw-color-primary);
+  color: var(--gw-color-text-inverse);
+  text-decoration: none;
+}
+.gw-pagination__step[aria-disabled="true"] { color: var(--gw-color-disabled-text); text-decoration: none; cursor: not-allowed; }
+.gw-pagination__page:focus-visible,
+.gw-pagination__step:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); }
+.gw-pagination__gap { min-width: 24px; text-align: center; color: var(--gw-color-text-secondary); }
+.gw-pagination__size { display: flex; align-items: center; gap: var(--gw-spacing-sm); font-size: var(--gw-font-size-sm); }
+.gw-pagination__size .gw-input { width: auto; min-height: 36px; padding-block: 4px; }
+
+/* ==============================
+ * Toggles
+ * ============================== */
+
+/* Joined outlined buttons for one choice among a few; the chosen one is filled. Works for aria-pressed
+   button groups and role="radio" groups alike. Sized like .gw-btn. */
+.gw-toggle { display: inline-flex; flex-wrap: nowrap; max-width: 100%; }
+.gw-toggle__option {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gw-spacing-xs);
+  min-height: 40px;
+  margin: 0 0 0 -1px;
+  padding: 8px 16px;
+  border: 1px solid var(--gw-color-primary);
+  border-radius: 0;
+  background: var(--gw-color-surface);
+  box-shadow: none;
+  color: var(--gw-color-primary);
+  font-family: inherit;
+  font-size: var(--gw-font-size-sm);
+  font-weight: var(--gw-font-weight-semibold);
+  line-height: 1.25;
+  text-align: center;
+  text-transform: none;
+  letter-spacing: normal;
+  cursor: pointer;
+}
+.gw-toggle__option:first-child { margin-left: 0; border-radius: var(--gw-radius-control) 0 0 var(--gw-radius-control); }
+.gw-toggle__option:last-child { border-radius: 0 var(--gw-radius-control) var(--gw-radius-control) 0; }
+.gw-toggle__option:only-child { border-radius: var(--gw-radius-control); }
+.gw-toggle__option:hover { background: var(--gw-color-primary-light); color: var(--gw-color-primary-hover); }
+.gw-toggle__option[aria-pressed="true"],
+.gw-toggle__option[aria-checked="true"] { z-index: 1; background: var(--gw-color-primary); color: var(--gw-color-text-inverse); }
+.gw-toggle__option[aria-pressed="true"]:hover,
+.gw-toggle__option[aria-checked="true"]:hover { background: var(--gw-color-primary-hover); color: var(--gw-color-text-inverse); }
+.gw-toggle__option.gw-toggle__option:focus-visible {
+  z-index: 2;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
+  box-shadow: none;
+}

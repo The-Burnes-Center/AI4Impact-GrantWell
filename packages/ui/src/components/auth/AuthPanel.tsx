@@ -849,12 +849,12 @@ export default function AuthPanel({
         alt={branding.appName}
       />
       {showTabs && (
-        <div className="auth-tabs" role="group" aria-label="Authentication mode">
+        <div className="gw-toggle auth-tabs" role="group" aria-label="Authentication mode">
           <button
             type="button"
             aria-pressed={view === "sign-in"}
             className={
-              "auth-tab" + (view === "sign-in" ? " auth-tab--active" : "")
+              "gw-toggle__option auth-tab" + (view === "sign-in" ? " auth-tab--active" : "")
             }
             onClick={() => switchToSignIn()}
           >
@@ -864,7 +864,7 @@ export default function AuthPanel({
             type="button"
             aria-pressed={view === "sign-up"}
             className={
-              "auth-tab" + (view === "sign-up" ? " auth-tab--active" : "")
+              "gw-toggle__option auth-tab" + (view === "sign-up" ? " auth-tab--active" : "")
             }
             onClick={switchToSignUp}
           >

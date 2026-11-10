@@ -102,7 +102,7 @@
   align-items: center;
   gap: 10px;
   padding: 10px 22px;
-  border-radius: var(--gw-radius-pill);
+  border-radius: var(--gw-radius-button);
   background-color: transparent;
   color: var(--mk-green);
   border: 1px solid var(--mk-green);
@@ -475,41 +475,15 @@
 
 .marketing__signin .auth-tabs {
   display: flex;
-  gap: 0;
-  background-color: color-mix(in srgb, var(--gw-color-primary) 8%, transparent);
-  border-radius: var(--gw-radius-pill);
-  padding: 4px;
   margin-bottom: 28px;
 }
 
 .marketing__signin .auth-tab {
   flex: 1 1 0;
-  padding: 12px 24px;
-  border: none;
-  background: transparent;
-  color: var(--mk-green-deepest);
-  font-family: var(--gw-font-button);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: var(--gw-button-letter-spacing, 1.2px);
-  text-transform: var(--gw-button-text-transform);
-  border-radius: var(--gw-radius-pill);
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.marketing__signin .auth-tab:hover {
-  color: var(--mk-green-dark);
-}
 
-.marketing__signin .auth-tab--active {
-  background-color: var(--mk-green);
-  color: var(--gw-color-text-inverse);
-}
 
-.marketing__signin .auth-tab--active:hover {
-  color: var(--gw-color-text-inverse);
-}
 
 .marketing__signin .auth-card-header {
   margin-bottom: 24px;
@@ -549,7 +523,7 @@
   font-weight: 600;
   letter-spacing: var(--gw-button-letter-spacing, 1.4px);
   text-transform: var(--gw-button-text-transform);
-  border-radius: var(--gw-radius-pill);
+  border-radius: var(--gw-radius-button);
   padding: 12px 28px;
 }
 
@@ -780,5 +754,4 @@
   .marketing__signin { padding: 24px 0; }
   .marketing__signin-inner { padding: 16px 16px 48px; }
   .marketing__signin .auth-login-card { padding: 24px 16px; }
-  .marketing__signin .auth-tab { padding: 10px 12px; }
 }

@@ -5,7 +5,7 @@ import type { ManagedUser, UserRolePreset } from "../../../common/types/user-man
 import { SUPPORTED_STATES } from "../../../common/types/user-management";
 import { MFA_ENABLED, REGIONS, SINGLE_STATE } from "../../../common/instance";
 import { Modal } from "../../../components/common/Modal";
-import PaginationControls from "./PaginationControls";
+import PaginationControls from "../../../components/common/PaginationControls";
 import RowActionsMenu, { type RowAction } from "./RowActionsMenu";
 
 interface UserManagementTabProps {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useId, useRef } from "react";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
+import PaginationControls from "../common/PaginationControls";
 import { getCurrentUser } from "aws-amplify/auth";
 import { LuArrowUpDown, LuArrowUp, LuArrowDown, LuPlus, LuTrash, LuRefreshCw, LuCalendar, LuCheck } from "react-icons/lu";
 import { useNavigate } from "react-router";
@@ -544,64 +545,20 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
 
       {/* Pagination */}
       {!isLoading && sortedSessions.length > 0 && (
-        <div className="pagination-container">
-          <div className="pagination-info">
-            Showing {(currentPage - 1) * pageSize + 1} to{" "}
-            {Math.min(currentPage * pageSize, sortedSessions.length)} of{" "}
-            {sortedSessions.length} applications
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <div className="pagination-controls">
-              <button
-                className={`pagination-button ${currentPage === 1 ? "disabled" : ""}`}
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage(1)}
-              >
-                First
-              </button>
-              <button
-                className={`pagination-button ${currentPage === 1 ? "disabled" : ""}`}
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage(currentPage - 1)}
-              >
-                Previous
-              </button>
-              <button
-                className={`pagination-button ${currentPage === Math.ceil(sortedSessions.length / pageSize) ? "disabled" : ""}`}
-                disabled={currentPage === Math.ceil(sortedSessions.length / pageSize)}
-                onClick={() => setCurrentPage(currentPage + 1)}
-              >
-                Next
-              </button>
-              <button
-                className={`pagination-button ${currentPage === Math.ceil(sortedSessions.length / pageSize) ? "disabled" : ""}`}
-                disabled={currentPage === Math.ceil(sortedSessions.length / pageSize)}
-                onClick={() => setCurrentPage(Math.ceil(sortedSessions.length / pageSize))}
-              >
-                Last
-              </button>
-            </div>
-            <div className="items-per-page">
-              <label htmlFor={pageSizeSelectId} style={{ marginRight: "8px" }}>
-                Show:
-              </label>
-              <select
-                id={pageSizeSelectId}
-                value={pageSize}
-                onChange={(e) => {
-                  setPageSize(Number(e.target.value));
-                  setCurrentPage(1);
-                }}
-                aria-label="Show items per page"
-                className="gw-input form-input"
-              >
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={50}>50</option>
-              </select>
-            </div>
-          </div>
-        </div>
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={Math.ceil(sortedSessions.length / pageSize)}
+          totalItems={sortedSessions.length}
+          itemsPerPage={pageSize}
+          itemsPerPageOptions={[10, 20, 50]}
+          itemLabel="applications"
+          selectId={pageSizeSelectId}
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={(e) => {
+            setPageSize(Number(e.target.value));
+            setCurrentPage(1);
+          }}
+        />
       )}
     </div>
   );

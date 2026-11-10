@@ -104,7 +104,7 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
         </div>
         <button
           type="button"
-          className="analytics__window-btn"
+          className="gw-btn gw-btn--secondary gw-btn--slim"
           onClick={exportCsv}
           disabled={!rows || filtered.length === 0}
         >
@@ -202,7 +202,7 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
           </TableScrollRegion>
           {filtered.length === 0 && <div className="no-data">No outcomes match.</div>}
           {filtered.length > shown && (
-            <button type="button" className="analytics__window-btn" onClick={() => setShown((n) => n + PAGE)}>
+            <button type="button" className="gw-btn gw-btn--secondary gw-btn--slim" onClick={() => setShown((n) => n + PAGE)}>
               Show {Math.min(PAGE, filtered.length - shown)} more of {filtered.length - shown}
             </button>
           )}

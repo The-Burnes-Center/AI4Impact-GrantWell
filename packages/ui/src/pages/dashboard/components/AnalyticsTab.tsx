@@ -148,7 +148,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
             </div>
           )}
           <div
-            className="analytics__window"
+            className="gw-toggle analytics__window"
             role="group"
             aria-label="Time window"
           >
@@ -156,7 +156,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
               <button
                 key={w}
                 type="button"
-                className={`analytics__window-btn ${
+                className={`gw-toggle__option analytics__window-btn ${
                   windowDays === w ? "analytics__window-btn--active" : ""
                 }`}
                 aria-pressed={windowDays === w}

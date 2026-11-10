@@ -6,7 +6,7 @@ import { useAdminCheck } from "../../hooks/use-admin-check";
 import { useNotifications } from "../../components/notifications/NotificationManager";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import NOFOsTab from "./components/NOFOsTab";
-import PaginationControls from "./components/PaginationControls";
+import PaginationControls from "../../components/common/PaginationControls";
 import FeatureRolloutsTab from "./components/FeatureRolloutsTab";
 import UserManagementTab from "./components/UserManagementTab";
 import ProcessingReviewTab from "./components/ProcessingReviewTab";
@@ -599,9 +599,9 @@ const Dashboard: React.FC = () => {
                 tabIndex={0}
               >
                 {isAdmin && (
-                  <div className="grants-segment" role="group" aria-label="Grant view">
+                  <div className="gw-toggle grants-segment" role="group" aria-label="Grant view">
                     <button
-                      className={`grants-segment__btn ${grantsSegment === "all" ? "grants-segment__btn--active" : ""}`}
+                      className={`gw-toggle__option grants-segment__btn ${grantsSegment === "all" ? "grants-segment__btn--active" : ""}`}
                       onClick={() => { setGrantsSegment("all"); setReviewFocus(null); }}
                       aria-pressed={grantsSegment === "all"}
                     >
@@ -609,7 +609,7 @@ const Dashboard: React.FC = () => {
                     </button>
                     <button
                       ref={processingSegmentRef}
-                      className={`grants-segment__btn ${grantsSegment === "processing" ? "grants-segment__btn--active" : ""}`}
+                      className={`gw-toggle__option grants-segment__btn ${grantsSegment === "processing" ? "grants-segment__btn--active" : ""}`}
                       onClick={() => { setGrantsSegment("processing"); setReviewFocus(null); }}
                       aria-pressed={grantsSegment === "processing"}
                     >
@@ -623,7 +623,7 @@ const Dashboard: React.FC = () => {
                       )}
                     </button>
                     <button
-                      className={`grants-segment__btn ${grantsSegment === "attention" ? "grants-segment__btn--active" : ""}`}
+                      className={`gw-toggle__option grants-segment__btn ${grantsSegment === "attention" ? "grants-segment__btn--active" : ""}`}
                       onClick={() => setGrantsSegment("attention")}
                       aria-pressed={grantsSegment === "attention"}
                     >

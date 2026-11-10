@@ -16,6 +16,7 @@ import { DeleteConfirmationModal } from "../common/DeleteConfirmationModal";
 import GrantPickerModal, { type PickedGrant } from "../common/GrantPickerModal";
 import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
 import TableScrollRegion from "../ui/TableScrollRegion";
+import PaginationControls from "../common/PaginationControls";
 import { v4 as uuidv4 } from "uuid";
 import { useNotifications } from "../notifications/NotificationManager";
 import "../../styles/dashboard.css";
@@ -411,63 +412,20 @@ export default function Sessions(props: SessionsProps) {
 
       {/* Pagination */}
       {!isLoading && sortedSessions.length > 0 && (
-        <div className="pagination-container">
-          <div className="pagination-info">
-            Showing {(currentPage - 1) * pageSize + 1} to{" "}
-            {Math.min(currentPage * pageSize, sortedSessions.length)} of{" "}
-            {sortedSessions.length} chats
-          </div>
-          <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
-            <div className="pagination-controls">
-              <button
-                className={`pagination-button ${currentPage === 1 ? "disabled" : ""}`}
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage(1)}
-              >
-                First
-              </button>
-              <button
-                className={`pagination-button ${currentPage === 1 ? "disabled" : ""}`}
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage(currentPage - 1)}
-              >
-                Previous
-              </button>
-              <button
-                className={`pagination-button ${currentPage === totalPages ? "disabled" : ""}`}
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage(currentPage + 1)}
-              >
-                Next
-              </button>
-              <button
-                className={`pagination-button ${currentPage === totalPages ? "disabled" : ""}`}
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage(totalPages)}
-              >
-                Last
-              </button>
-            </div>
-            <div className="items-per-page">
-              <label htmlFor={pageSizeSelectId} style={{ marginRight: "8px" }}>
-                Show:
-              </label>
-              <select
-                id={pageSizeSelectId}
-                value={pageSize}
-                onChange={(e) => {
-                  setPageSize(Number(e.target.value));
-                  setCurrentPage(1);
-                }}
-                className="gw-input form-input"
-              >
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={50}>50</option>
-              </select>
-            </div>
-          </div>
-        </div>
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={sortedSessions.length}
+          itemsPerPage={pageSize}
+          itemsPerPageOptions={[10, 20, 50]}
+          itemLabel="chats"
+          selectId={pageSizeSelectId}
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={(e) => {
+            setPageSize(Number(e.target.value));
+            setCurrentPage(1);
+          }}
+        />
       )}
     </div>
   );

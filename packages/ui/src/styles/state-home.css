@@ -92,34 +92,14 @@
 
 .state-home__sign-in .auth-tabs {
   display: flex;
-  padding: 4px;
   margin-bottom: var(--gw-spacing-2xl);
-  background: var(--gw-color-primary-light);
-  border-radius: var(--gw-radius-pill);
 }
 
 .state-home__sign-in .auth-tab {
   flex: 1 1 0;
-  padding: var(--gw-spacing-md) var(--gw-spacing-2xl);
-  border: none;
-  background: transparent;
-  color: var(--gw-color-primary);
-  font-family: var(--gw-font-button);
-  font-size: var(--gw-font-size-sm, 14px);
-  font-weight: var(--gw-font-weight-semibold);
-  border-radius: var(--gw-radius-pill);
-  cursor: pointer;
 }
 
-.state-home__sign-in .auth-tab--active {
-  background: var(--gw-color-primary);
-  color: var(--gw-color-surface, #ffffff);
-}
 
-.state-home__sign-in .auth-tab:focus-visible {
-  outline: var(--gw-focus-width) solid var(--gw-color-focus);
-  outline-offset: var(--gw-focus-offset);
-}
 
 .state-home__sign-in .auth-card-header {
   margin-bottom: var(--gw-spacing-2xl);

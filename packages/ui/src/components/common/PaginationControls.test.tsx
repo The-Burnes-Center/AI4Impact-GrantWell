@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import PaginationControls from "./PaginationControls";
+import PaginationControls, { visiblePages } from "./PaginationControls";
 
 const noop = () => {};
 
@@ -63,5 +63,18 @@ describe("PaginationControls", () => {
       <PaginationControls currentPage={1} totalPages={0} totalItems={0} itemsPerPage={10} onPageChange={noop} onItemsPerPageChange={noop} />
     );
     expect(container).toBeEmptyDOMElement();
+  });
+
+  it("leaves out the page-size picker when the list has a fixed size", () => {
+    render(<PaginationControls currentPage={1} totalPages={3} totalItems={23} itemsPerPage={10} onPageChange={noop} />);
+    expect(screen.queryByLabelText("Items per page:")).toBeNull();
+    expect(screen.getByRole("button", { name: "Previous page" })).toHaveTextContent("Previous");
+  });
+
+  it("keeps the first and last page and marks each gap once", () => {
+    expect(visiblePages(1, 9)).toEqual([1, 2, 3, null, 9]);
+    expect(visiblePages(5, 9)).toEqual([1, null, 3, 4, 5, 6, 7, null, 9]);
+    expect(visiblePages(4, 9)).toEqual([1, 2, 3, 4, 5, 6, null, 9]);
+    expect(visiblePages(1, 1)).toEqual([1]);
   });
 });

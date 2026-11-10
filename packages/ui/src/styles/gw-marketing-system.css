@@ -34,7 +34,7 @@
   justify-content: center;
   gap: 10px;
   padding: 12px 26px;
-  border-radius: var(--gw-radius-pill);
+  border-radius: var(--gw-radius-button);
   background-color: transparent;
   color: var(--mk-green);
   border: 1px solid var(--mk-green);
