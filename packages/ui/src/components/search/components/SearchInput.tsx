@@ -55,7 +55,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             id="grant-search-input"
             ref={ref}
             type="search"
-            className="gw-search-input"
+            className="gw-input gw-search-input"
             placeholder={placeholder}
             aria-describedby="search-help-text"
             aria-busy={isLoading || isSearching}
@@ -72,14 +72,9 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           />
           {searchTerm && !isLoading && !isSearching && (
             <button
+              className="gw-btn gw-btn--icon gw-btn--slim"
               style={clearButtonStyle}
               onClick={onClear}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = "var(--gw-color-text)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = "var(--gw-color-text-secondary)";
-              }}
               aria-label="Clear search"
               type="button"
             >

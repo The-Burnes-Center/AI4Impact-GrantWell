@@ -33,14 +33,8 @@ export const searchIconStyle: React.CSSProperties = {
 
 export const getInputStyle = (isLoading: boolean): React.CSSProperties => ({
   width: "100%",
-  padding: "14px 40px 14px 45px",
-  fontSize: "16px",
-  borderRadius: "var(--gw-radius-pill)",
-  border: "1px solid var(--gw-color-border-input)",
-  boxSizing: "border-box",
-  boxShadow: "var(--gw-shadow-low)",
-  transition: "all 0.2s ease",
-  backgroundColor: "var(--gw-color-surface)",
+  // Room for the search icon on the left and the clear button on the right.
+  padding: "10px 40px 10px 45px",
   cursor: isLoading ? "not-allowed" : "text",
   opacity: isLoading ? 0.7 : 1,
 });
@@ -50,14 +44,6 @@ export const getClearButtonStyle = (isLoading: boolean): React.CSSProperties => 
   right: "15px",
   top: "50%",
   transform: "translateY(-50%)",
-  background: "none",
-  border: "none",
-  cursor: isLoading ? "not-allowed" : "pointer",
-  padding: "4px",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  color: "var(--gw-color-text-secondary)",
-  transition: "color 0.2s ease",
+  cursor: isLoading ? "not-allowed" : undefined,
   opacity: isLoading ? 0.7 : 1,
 });

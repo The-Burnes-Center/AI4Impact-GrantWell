@@ -112,7 +112,7 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
         </div>
         <div className="dashboard-actions">
           <button
-            className="action-button refresh-button"
+            className="gw-btn gw-btn--secondary action-button refresh-button"
             onClick={() => onSend("me")}
             disabled={busy || loading}
             aria-label={`Send to me — send the real ${frequency} digest to your own email`}
@@ -120,7 +120,7 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
             {sending === "me" ? "Sending…" : "Send to me"}
           </button>
           <button
-            className="action-button add-button"
+            className="gw-btn gw-btn--primary action-button add-button"
             onClick={() => onSend("all")}
             disabled={busy || loading}
             aria-label={`Send to all users — send the real ${frequency} digest to all subscribed users`}
@@ -156,7 +156,7 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
       {error ? (
         <div className="no-data">
           <div style={{ fontSize: "18px", fontWeight: 500, marginBottom: 12 }}>{error}</div>
-          <button className="action-button refresh-button" onClick={load}>
+          <button className="gw-btn gw-btn--secondary action-button refresh-button" onClick={load}>
             Retry
           </button>
         </div>

@@ -70,59 +70,8 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
     marginTop: spacing["2xl"],
   };
 
-  const pillBase: React.CSSProperties = {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "8px",
-    padding: "10px 26px",
-    borderRadius: "var(--gw-radius-pill)",
-    fontFamily: "var(--gw-font-button)",
-    fontSize: "13px",
-    lineHeight: "22px",
-    fontWeight: 600,
-    letterSpacing: "var(--gw-button-letter-spacing, 1.3px)",
-    textTransform: "var(--gw-button-text-transform, uppercase)",
-    cursor: "pointer",
-    transition: "background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease",
-    minHeight: "44px",
-    whiteSpace: "nowrap",
-  };
-
-  const backButtonStyle: React.CSSProperties = {
-    ...pillBase,
-    background: "transparent",
-    border: `1px solid ${colors.primary}`,
-    color: colors.primary,
-  };
-
-  const continueButtonStyle: React.CSSProperties = {
-    ...pillBase,
-    background: continueDisabled ? "var(--gw-color-primary-border)" : colors.primary,
-    color: colors.white,
-    border: `1px solid ${continueDisabled ? "var(--gw-color-primary-border)" : colors.primary}`,
-    cursor: continueDisabled ? "not-allowed" : "pointer",
-  };
-
-  const handleBackHover = (e: React.MouseEvent<HTMLButtonElement>, isHover: boolean) => {
-    e.currentTarget.style.backgroundColor = isHover ? colors.primary : "transparent";
-    e.currentTarget.style.color = isHover ? colors.white : colors.primary;
-  };
-
-  const handleContinueHover = (e: React.MouseEvent<HTMLButtonElement>, isHover: boolean) => {
-    if (!continueDisabled) {
-      e.currentTarget.style.backgroundColor = isHover ? colors.primaryHover : colors.primary;
-      e.currentTarget.style.borderColor = isHover ? colors.primaryHover : colors.primary;
-    }
-  };
-
-  const handleFocus = (e: React.FocusEvent<HTMLButtonElement>) => {
-    e.currentTarget.style.outline = `2px solid ${colors.primary}`;
-    e.currentTarget.style.outlineOffset = "2px";
-  };
-
-  const handleBlur = (e: React.FocusEvent<HTMLButtonElement>) => {
-    e.currentTarget.style.outline = "none";
-  };
+  // A 44px touch target; the look comes from the shared button classes.
+  const navButtonStyle: React.CSSProperties = { minHeight: "44px" };
 
   // Arrow icons
   const LeftArrow = () => (
@@ -194,11 +143,8 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
         <button
           type="button"
           onClick={onBack}
-          style={backButtonStyle}
-          onMouseEnter={(e) => handleBackHover(e, true)}
-          onMouseLeave={(e) => handleBackHover(e, false)}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
+          className="gw-btn gw-btn--secondary"
+          style={navButtonStyle}
           aria-label={backLabel}
         >
           <LeftArrow />
@@ -213,11 +159,8 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
           type="button"
           onClick={onContinue}
           disabled={continueDisabled || continueLoading}
-          style={continueButtonStyle}
-          onMouseEnter={(e) => handleContinueHover(e, true)}
-          onMouseLeave={(e) => handleContinueHover(e, false)}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
+          className="gw-btn gw-btn--primary"
+          style={navButtonStyle}
           aria-label={continueLabel}
           aria-disabled={continueDisabled}
           aria-busy={continueLoading}

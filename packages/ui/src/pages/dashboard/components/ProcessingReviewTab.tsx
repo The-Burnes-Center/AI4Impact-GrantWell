@@ -341,7 +341,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
               id="review-status-filter"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-              className="form-input review-status-filter"
+              className="gw-input form-input review-status-filter"
             >
               {Object.entries(STATUS_LABELS).map(([value, label]) => (
                 <option key={value} value={value}>{label}</option>
@@ -351,7 +351,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
         </div>
         <button
           type="button"
-          className="review-btn review-btn--close-expired"
+          className="gw-btn gw-btn--secondary review-btn review-btn--close-expired"
           onClick={() => setConfirmCloseExpired(true)}
           disabled={expiredOpenCount === 0 || closingExpired}
           aria-describedby="close-expired-hint"
@@ -382,7 +382,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
           <div className="modal-actions">
             <button
               type="button"
-              className="modal-button secondary"
+              className="gw-btn gw-btn--secondary modal-button secondary"
               onClick={() => setConfirmCloseExpired(false)}
               disabled={closingExpired}
             >
@@ -390,7 +390,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
             </button>
             <button
               type="button"
-              className="modal-button primary"
+              className="gw-btn gw-btn--primary modal-button primary"
               onClick={() => void handleCloseExpired()}
               disabled={closingExpired}
             >
@@ -408,7 +408,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
           </span>
           <div className="review-bulk-bar__actions">
             <button
-              className="review-btn review-btn--bulk-reprocess"
+              className="gw-btn gw-btn--primary review-btn review-btn--bulk-reprocess"
               onClick={() => void handleBulkReprocess()}
               disabled={!canReprocess || bulkAction !== null}
               aria-label={`${bulkAction === "reprocess" ? "Reprocessing..." : "Reprocess Selected"} — ${selected.size} grant${selected.size === 1 ? "" : "s"}`}
@@ -417,7 +417,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
               <span>{bulkAction === "reprocess" ? "Reprocessing..." : "Reprocess Selected"}</span>
             </button>
             <button
-              className="review-btn review-btn--needs-reupload"
+              className="gw-btn gw-btn--secondary review-btn review-btn--needs-reupload"
               onClick={() => void handleBulkNeedsReupload()}
               disabled={!canMarkReupload || bulkAction !== null}
               aria-label={`${bulkAction === "needs_reupload" ? "Marking..." : "Needs Re-upload"} — mark ${selected.size} selected grant${selected.size === 1 ? "" : "s"} as needs re-upload`}
@@ -521,7 +521,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                         </div>
                         <div className="row-cell" role="cell">{getReasonSummary(review)}</div>
                         <div className="row-cell" role="cell">
-                          <span className={`review-status-badge ${STATUS_CLASS_MAP[review.status] || "review-status-badge--pending"}`}>
+                          <span className={`gw-tag review-status-badge ${STATUS_CLASS_MAP[review.status] || "review-status-badge--pending"}`}>
                             {STATUS_LABELS[review.status] || review.status}
                           </span>
                         </div>
@@ -529,7 +529,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                           <span className="review-date">
                             {review.deadline ? formatDeadline(review.deadline) : "No deadline"}
                           </span>
-                          {badge && <span className={`review-deadline-badge ${badge.className}`}>{badge.label}</span>}
+                          {badge && <span className={`gw-tag review-deadline-badge ${badge.className}`}>{badge.label}</span>}
                         </div>
                         <div className="row-cell" role="cell">
                           <span className="review-date">

@@ -72,13 +72,13 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             )}
             <div className="d-flex gap-2">
               <Button variant="outline-danger" onClick={this.handleReset}>
-                Try Again
+                Try again
               </Button>
               <Button
                 variant="outline-secondary"
                 onClick={() => window.location.reload()}
               >
-                Reload Page
+                Reload page
               </Button>
             </div>
           </Alert>

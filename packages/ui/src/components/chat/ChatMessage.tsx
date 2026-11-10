@@ -90,21 +90,6 @@ function ChatMessage(props: ChatMessageProps) {
     position: "relative",
   };
 
-  const copyButtonStyle: React.CSSProperties = {
-    backgroundColor: "transparent",
-    border: "none",
-    cursor: "pointer",
-    padding: "6px",
-    minWidth: "32px",
-    minHeight: "32px",
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "var(--gw-color-text-muted)",
-    borderRadius: "var(--gw-radius-control)",
-    transition: "all 0.2s ease",
-  };
-
   const messageBubbleStyle = {
     padding: "12px 16px",
     borderRadius:
@@ -469,36 +454,9 @@ function ChatMessage(props: ChatMessageProps) {
               {props.message.content.length > 0 && (
                 <div style={copyButtonContainerStyle}>
                   <button
-                    style={copyButtonStyle}
+                    type="button"
+                    className="gw-btn gw-btn--icon gw-btn--slim"
                     onClick={handleCopy}
-                    onMouseEnter={(e) => {
-                      if (!copied) {
-                        e.currentTarget.style.backgroundColor = "var(--gw-color-surface-subtle)";
-                        e.currentTarget.style.color = "var(--gw-color-primary)";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!copied) {
-                        e.currentTarget.style.backgroundColor = "transparent";
-                        e.currentTarget.style.color = "var(--gw-color-text-muted)";
-                      }
-                    }}
-                    onFocus={(e) => {
-                      if (!copied) {
-                        e.currentTarget.style.backgroundColor = "var(--gw-color-surface-subtle)";
-                        e.currentTarget.style.color = "var(--gw-color-primary)";
-                      }
-                      e.currentTarget.style.outline = "2px solid var(--gw-color-primary)";
-                      e.currentTarget.style.outlineOffset = "2px";
-                    }}
-                    onBlur={(e) => {
-                      if (!copied) {
-                        e.currentTarget.style.backgroundColor = "transparent";
-                        e.currentTarget.style.color = "var(--gw-color-text-muted)";
-                      }
-                      e.currentTarget.style.outline = "none";
-                      e.currentTarget.style.outlineOffset = "0";
-                    }}
                     aria-label={
                       copied
                         ? "Copied to clipboard"

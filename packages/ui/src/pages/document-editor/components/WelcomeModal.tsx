@@ -50,10 +50,10 @@ const WelcomeModal = React.memo(function WelcomeModal({
     </ol>
 
     <div className="welcome-modal-actions">
-      <button className="welcome-modal-btn welcome-modal-btn--primary" onClick={onGetStarted}>
-        Get Started
+      <button className="gw-btn gw-btn--primary welcome-modal-btn welcome-modal-btn--primary" onClick={onGetStarted}>
+        Get started
       </button>
-      <button className="welcome-modal-btn welcome-modal-btn--secondary" onClick={onViewDrafts}>
+      <button className="gw-btn gw-btn--secondary welcome-modal-btn welcome-modal-btn--secondary" onClick={onViewDrafts}>
         View My Applications
       </button>
     </div>

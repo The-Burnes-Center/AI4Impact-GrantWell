@@ -512,18 +512,11 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               <strong>{failedSections.length} section(s) failed to generate:</strong>
               <span>{failedNames.join(", ")}</span>
               <button
+                type="button"
+                className="gw-btn gw-btn--secondary gw-btn--slim"
                 onClick={handleRetryFailedSections}
-                style={{
-                  padding: '4px 12px',
-                  borderRadius: 'var(--gw-radius-control)',
-                  border: '1px solid var(--gw-color-warning)',
-                  background: 'var(--gw-color-surface)',
-                  cursor: 'pointer',
-                  fontSize: '13px',
-                  fontWeight: 500,
-                }}
               >
-                Retry Failed Sections
+                Retry failed sections
               </button>
               <span style={{ color: 'var(--gw-color-text-muted)' }}>or write them manually below.</span>
             </div>
@@ -599,7 +592,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               {undoCandidate && (
                 <button
                   type="button"
-                  className="se-header-btn"
+                  className="gw-btn gw-btn--secondary gw-btn--slim se-header-btn"
                   onClick={() => setUndoConfirmOpen(true)}
                   disabled={generating}
                 >
@@ -609,7 +602,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               )}
               <button
                 type="button"
-                className="se-header-btn"
+                className="gw-btn gw-btn--secondary gw-btn--slim se-header-btn"
                 onClick={() => setHistoryOpen(true)}
                 aria-haspopup="dialog"
                 aria-expanded={historyOpen}
@@ -622,7 +615,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
           </div>
 
           {skippedDocuments.length > 0 && (
-            <div className="se-storage-warning" role="status">
+            <div className="gw-alert gw-alert--warning se-storage-warning" role="status">
               <p style={{ margin: 0 }}>
                 The AI couldn&apos;t read {skippedDocuments.length === 1 ? "one of your selected documents" : `${skippedDocuments.length} of your selected documents`} for this draft:
               </p>
@@ -637,7 +630,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
           )}
 
           {nearStorageLimit && (
-            <p className="se-storage-warning" role="status">
+            <p className="gw-alert gw-alert--warning se-storage-warning" role="status">
               This application is close to its size limit. Shorten long sections or move background
               material into supporting documents.
             </p>
@@ -693,7 +686,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
           <div className="se-actions-bar">
             <button
               id="save-button"
-              className="se-save-btn"
+              className="gw-btn gw-btn--primary se-save-btn"
               onClick={() => setLabelPromptOpen(true)}
               disabled={savingVersion || generating}
             >
@@ -710,7 +703,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
             <div className="se-nav-buttons">
               {activeSection > 0 && (
                 <button
-                  className="se-prev-btn"
+                  className="gw-btn gw-btn--secondary se-prev-btn"
                   onClick={() => setActiveSection(activeSection - 1)}
                 >
                   <LuChevronLeft size={18} className="se-icon--left" aria-hidden="true" />
@@ -719,7 +712,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               )}
 
               <button
-                className="se-next-btn"
+                className="gw-btn gw-btn--primary se-next-btn"
                 onClick={handleSaveAndContinue}
               >
                 {activeSection < sections.length - 1
@@ -782,7 +775,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               maxLength={120}
               onChange={(e) => setVersionLabel(e.target.value)}
               placeholder="e.g. Before budget rewrite"
-              className="se-version-label-input"
+              className="gw-input se-version-label-input"
             />
           </>
         }

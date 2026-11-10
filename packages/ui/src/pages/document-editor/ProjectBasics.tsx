@@ -122,7 +122,7 @@ const InputField: React.FC<InputFieldProps> = React.memo(({
             {prefix}
           </span>
         )}
-        <input
+        <input className="gw-input"
           type={type}
           id={name}
           name={name}
@@ -138,11 +138,7 @@ const InputField: React.FC<InputFieldProps> = React.memo(({
           placeholder={placeholder}
           style={{
             width: "100%",
-            padding: prefix ? "12px 12px 12px 28px" : "12px",
-            border: `1px solid ${hasError ? colors.error : colors.inputBorder}`,
-            borderRadius: borderRadius.md,
-            fontSize: typography.fontSize.base,
-            fontFamily: typography.fontFamily,
+            padding: prefix ? "8px 12px 8px 28px" : undefined,
           }}
         />
       </div>

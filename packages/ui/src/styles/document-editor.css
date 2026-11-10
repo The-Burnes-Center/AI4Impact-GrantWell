@@ -186,48 +186,6 @@ html:has(.document-editor-root) {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 14px 30px;
-  border-radius: var(--gw-radius-pill);
-  font-family: var(--gw-font-button);
-  font-size: 14px;
-  line-height: 22px;
-  font-weight: 600;
-  letter-spacing: var(--gw-button-letter-spacing, 1.4px);
-  text-transform: var(--gw-button-text-transform);
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
-  border: 1px solid transparent;
-  min-height: 48px;
-}
-
-.welcome-modal-btn--primary {
-  background-color: var(--gw-color-primary);
-  color: var(--gw-color-text-inverse);
-  border-color: var(--gw-color-primary);
-}
-
-.welcome-modal-btn--primary:hover {
-  background-color: var(--gw-color-primary-hover);
-  border-color: var(--gw-color-primary-hover);
-}
-
-.welcome-modal-btn--primary:active {
-  transform: translateY(1px);
-}
-
-.welcome-modal-btn--secondary {
-  background-color: transparent;
-  color: var(--gw-color-primary);
-  border-color: var(--gw-color-primary);
-}
-
-.welcome-modal-btn--secondary:hover {
-  background-color: var(--gw-color-primary);
-  color: var(--gw-color-text-inverse);
-}
-
-.welcome-modal-btn--secondary:active {
-  transform: translateY(1px);
 }
 
 /* ===== ReviewApplication (ra-) Styles ===== */
@@ -467,8 +425,8 @@ html:has(.document-editor-root) {
 }
 
 .ra-unviewed__action:focus-visible {
-  outline: 2px solid var(--gw-color-warning-text, #92400e);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
 }
 
 /* Edit Button */
@@ -594,13 +552,7 @@ html:has(.document-editor-root) {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  padding: 14px 18px;
   margin-bottom: 16px;
-  background: var(--gw-color-background);
-  border: 1px solid var(--gw-color-danger);
-  border-radius: var(--gw-radius-container);
-  color: var(--gw-color-danger-text);
-  font-size: 14px;
   line-height: 1.5;
 }
 
@@ -640,29 +592,6 @@ html:has(.document-editor-root) {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 26px;
-  background-color: transparent;
-  border: 1px solid var(--gw-color-primary);
-  border-radius: var(--gw-radius-pill);
-  color: var(--gw-color-primary);
-  font-family: var(--gw-font-button);
-  font-size: 13px;
-  line-height: 22px;
-  font-weight: 600;
-  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
-  text-transform: var(--gw-button-text-transform);
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
-  min-height: 44px;
-}
-
-.ra-back-btn:hover {
-  background-color: var(--gw-color-primary);
-  color: var(--gw-color-text-inverse);
-}
-
-.ra-back-btn:active {
-  transform: translateY(1px);
 }
 
 .ra-back-btn__icon {
@@ -674,46 +603,6 @@ html:has(.document-editor-root) {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 30px;
-  background-color: var(--gw-color-primary);
-  color: var(--gw-color-text-inverse);
-  border: 1px solid var(--gw-color-primary);
-  border-radius: var(--gw-radius-pill);
-  font-family: var(--gw-font-button);
-  font-size: 13px;
-  line-height: 22px;
-  font-weight: 600;
-  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
-  text-transform: var(--gw-button-text-transform);
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
-  min-height: 44px;
-}
-
-.ra-export-pdf-btn:hover {
-  background-color: var(--gw-color-primary-hover);
-  border-color: var(--gw-color-primary-hover);
-}
-
-.ra-export-pdf-btn:active {
-  transform: translateY(1px);
-}
-
-.ra-export-pdf-btn:disabled,
-.ra-export-pdf-btn:disabled:hover {
-  background-color: var(--gw-color-disabled-bg, #F0F0F0);
-  border-color: var(--gw-color-text-secondary, #5a5a5a);
-  color: var(--gw-color-text-secondary, #5a5a5a);
-  cursor: not-allowed;
-  transform: none;
-}
-
-.ra-export-pdf-btn[aria-busy="true"],
-.ra-export-pdf-btn[aria-busy="true"]:hover {
-  background-color: var(--gw-color-primary);
-  border-color: var(--gw-color-primary);
-  color: var(--gw-color-surface, #ffffff);
-  cursor: progress;
 }
 
 .ra-export-pdf-btn__icon {
@@ -783,11 +672,9 @@ html:has(.document-editor-root) {
 
 /* Focus indicators (WCAG 2.4.7) */
 .ra-edit-btn:focus-visible,
-.ra-back-btn:focus-visible,
-.ra-export-pdf-btn:focus-visible,
 .ra-export-dropdown__item:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
 }
 
 /* Responsive adjustments */
@@ -848,26 +735,6 @@ html:has(.document-editor-root) {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 36px;
-  padding: 6px 12px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--gw-color-text, #333333);
-  background: var(--gw-color-surface, #ffffff);
-  border: 1px solid var(--gw-color-border, #e2e8f0);
-  border-radius: var(--gw-radius-control);
-  cursor: pointer;
-}
-
-.se-header-btn:hover {
-  background: var(--gw-color-background, #f9fafb);
-}
-
-.se-header-btn:disabled,
-.se-save-btn:disabled {
-  color: var(--gw-color-disabled-text, #707070);
-  cursor: not-allowed;
-  text-decoration: none;
 }
 
 .se-section-title {
@@ -879,8 +746,8 @@ html:has(.document-editor-root) {
 }
 
 .se-section-title:focus-visible {
-  outline: 2px solid var(--gw-color-primary);
-  outline-offset: 4px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
   border-radius: var(--gw-radius-control);
 }
 
@@ -893,10 +760,6 @@ html:has(.document-editor-root) {
 .se-version-label-input {
   width: 100%;
   min-height: 44px;
-  padding: 10px 12px;
-  font-size: 15px;
-  border: 1px solid var(--gw-color-border-input, #767676);
-  border-radius: var(--gw-radius-control);
 }
 
 /* ===== Version History Panel (vh-) Styles ===== */
@@ -1032,36 +895,31 @@ html:has(.document-editor-root) {
 
 .vh-badge {
   align-self: flex-start;
-  padding: 2px 8px;
-  font-size: 12px;
-  font-weight: 600;
-  border: 1px solid transparent;
-  border-radius: var(--gw-radius-pill);
 }
 
 /* The border keeps the badges apart in forced-colors and greyscale, where the fills flatten. */
 .vh-badge--current {
-  color: var(--gw-color-primary-hover);
-  background: var(--gw-color-primary-light);
-  border-color: color-mix(in srgb, var(--gw-color-primary) 60%, var(--gw-color-surface, #ffffff));
+  --gw-tag-ink: var(--gw-color-success-text);
+  --gw-tag-fill: var(--gw-color-success-light);
+  --gw-tag-line: var(--gw-color-success-border);
 }
 
 .vh-badge--user {
-  color: var(--gw-color-text, #333333);
-  background: color-mix(in srgb, var(--gw-color-text-secondary, #5a5a5a) 12%, var(--gw-color-surface, #ffffff));
-  border-color: color-mix(in srgb, var(--gw-color-text-secondary, #5a5a5a) 80%, var(--gw-color-surface, #ffffff));
+  --gw-tag-ink: var(--gw-color-text-secondary);
+  --gw-tag-fill: var(--gw-color-surface-subtle);
+  --gw-tag-line: var(--gw-color-border);
 }
 
 .vh-badge--ai {
-  color: var(--gw-color-warning-text, #92400e);
-  background: var(--gw-color-warning-light, #fef3c7);
-  border-color: var(--gw-color-warning, #d97706);
+  --gw-tag-ink: var(--gw-color-info-text);
+  --gw-tag-fill: var(--gw-color-info-light);
+  --gw-tag-line: var(--gw-color-info-border);
 }
 
 .vh-badge--system {
-  color: var(--gw-color-text-secondary, #5a5a5a);
-  background: var(--gw-color-surface, #ffffff);
-  border-color: var(--gw-color-border-input, #767676);
+  --gw-tag-ink: var(--gw-color-text-secondary);
+  --gw-tag-fill: var(--gw-color-surface-subtle);
+  --gw-tag-line: var(--gw-color-border);
 }
 
 .vh-label {
@@ -1151,31 +1009,8 @@ html:has(.document-editor-root) {
   }
 }
 
-.vh-btn {
-  min-height: 44px;
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--gw-color-text, #333333);
-  background: var(--gw-color-surface, #ffffff);
-  border: 1px solid var(--gw-color-border, #e2e8f0);
-  border-radius: var(--gw-radius-control);
-  cursor: pointer;
-}
-
-.vh-btn:hover {
-  background: var(--gw-color-background, #f9fafb);
-}
-
-.vh-btn--primary {
-  color: var(--gw-color-surface, #ffffff);
-  background: var(--gw-color-primary);
-  border-color: var(--gw-color-primary);
-}
-
 .vh-btn--primary:hover {
   filter: brightness(0.94);
-  background: var(--gw-color-primary);
 }
 
 /* ===== Version Diff (vd-) Styles ===== */
@@ -1257,7 +1092,7 @@ html:has(.document-editor-root) {
 }
 
 .se-textarea:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
   outline-offset: -2px;
 }
 
@@ -1269,12 +1104,6 @@ html:has(.document-editor-root) {
 
 .se-storage-warning {
   margin: 0 0 16px;
-  padding: 10px 16px;
-  border-radius: var(--gw-radius-container);
-  background: var(--gw-color-warning-light, #fef3c7);
-  border: 1px solid var(--gw-color-warning, #d97706);
-  color: var(--gw-color-warning-text, #92400e);
-  font-size: 14px;
 }
 
 .se-empty-state {
@@ -1318,8 +1147,8 @@ html:has(.document-editor-root) {
 .se-add-section__submit:focus-visible,
 .se-add-section__cancel:focus-visible,
 .se-add-section__input:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
 }
 
 .se-add-section {
@@ -1336,10 +1165,6 @@ html:has(.document-editor-root) {
 
 .se-add-section__input {
   min-height: 44px;
-  padding: 8px 12px;
-  border: 1px solid var(--gw-color-border-input, #767676);
-  border-radius: var(--gw-radius-control);
-  font-size: 15px;
 }
 
 .se-add-section__actions {
@@ -1396,22 +1221,6 @@ html:has(.document-editor-root) {
   gap: 8px;
 }
 
-.se-suggestion-btn {
-  padding: 8px 16px;
-  background: var(--gw-color-surface, #ffffff);
-  border: 1px solid var(--gw-color-border, #e2e8f0);
-  border-radius: var(--gw-radius-control);
-  color: var(--gw-color-text);
-  font-size: 14px;
-  cursor: pointer;
-  min-height: 44px;
-}
-
-.se-suggestion-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
-}
-
 .se-checklist-card {
   background: var(--gw-color-surface, #ffffff);
   padding: 16px;
@@ -1463,31 +1272,10 @@ html:has(.document-editor-root) {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 22px;
-  border-radius: var(--gw-radius-pill);
-  font-family: var(--gw-font-button);
-  font-size: 13px;
-  line-height: 22px;
-  font-weight: 600;
-  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
-  text-transform: var(--gw-button-text-transform);
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
-  border: 1px solid transparent;
-  min-height: 44px;
   white-space: nowrap;
 }
 
-.se-save-btn {
-  background-color: transparent;
-  color: var(--gw-color-primary-hover);
-  border-color: transparent;
-  letter-spacing: var(--gw-button-letter-spacing, 1px);
-}
-
 .se-save-btn:hover {
-  color: var(--gw-color-primary-active);
-  text-decoration: underline;
   text-underline-offset: 4px;
 }
 
@@ -1495,36 +1283,6 @@ html:has(.document-editor-root) {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-}
-
-.se-prev-btn {
-  background-color: transparent;
-  color: var(--gw-color-primary);
-  border-color: var(--gw-color-primary);
-}
-
-.se-prev-btn:hover {
-  background-color: var(--gw-color-primary);
-  color: var(--gw-color-text-inverse);
-}
-
-.se-prev-btn:active {
-  transform: translateY(1px);
-}
-
-.se-next-btn {
-  background-color: var(--gw-color-primary);
-  color: var(--gw-color-text-inverse);
-  border-color: var(--gw-color-primary);
-}
-
-.se-next-btn:hover {
-  background-color: var(--gw-color-primary-hover);
-  border-color: var(--gw-color-primary-hover);
-}
-
-.se-next-btn:active {
-  transform: translateY(1px);
 }
 
 /* Icon spacing helpers */
@@ -1591,8 +1349,8 @@ html:has(.document-editor-root) {
 }
 
 .se-sidebar__btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
 }
 
 .se-sidebar__number {

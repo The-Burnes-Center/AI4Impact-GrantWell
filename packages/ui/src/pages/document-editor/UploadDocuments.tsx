@@ -362,7 +362,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           <label htmlFor="additional-info" className="sr-only">
             Additional information about your application
           </label>
-          <textarea
+          <textarea className="gw-input"
             id="additional-info"
             value={additionalInfo}
             onChange={(e) => {
@@ -374,11 +374,6 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             aria-describedby="additional-info-help"
             style={{
               width: "100%",
-              padding: spacing.md,
-              border: `1px solid ${colors.inputBorder}`,
-              borderRadius: borderRadius.md,
-              fontSize: typography.fontSize.base,
-              fontFamily: typography.fontFamily,
               minHeight: "120px",
               resize: "vertical",
             }}
@@ -401,17 +396,8 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         {submitError && (
           <div
             role="alert"
-            style={{
-              marginTop: spacing.lg,
-              padding: `${spacing.md} ${spacing.lg}`,
-              borderRadius: borderRadius.md,
-              backgroundColor: colors.errorLight,
-              border: `1px solid ${colors.danger}`,
-              color: colors.danger,
-              fontSize: typography.fontSize.sm,
-              fontFamily: typography.fontFamily,
-              whiteSpace: "pre-line",
-            }}
+            className="gw-alert gw-alert--urgent"
+            style={{ marginTop: spacing.lg, whiteSpace: "pre-line" }}
           >
             {submitError}
           </div>

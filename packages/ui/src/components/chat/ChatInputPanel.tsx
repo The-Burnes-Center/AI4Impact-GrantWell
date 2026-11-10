@@ -50,19 +50,9 @@ const styles = {
     boxShadow: "0 0 0 3px color-mix(in srgb, var(--gw-color-info) 10%, transparent), 0 10px 15px -3px color-mix(in srgb, var(--gw-color-text-strong) 5%, transparent)",
   },
   micButton: {
-    padding: "10px",
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-    color: "var(--gw-color-text-muted)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
     minWidth: "44px",
     minHeight: "44px",
-    borderRadius: "var(--gw-radius-container)",
     margin: "0 4px 0 0",
-    transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
   },
   micActive: {
     color: "var(--gw-color-danger-text)",
@@ -78,36 +68,7 @@ const styles = {
     minHeight: "44px",
     margin: "0 4px 0 0",
   },
-  sendButton: {
-    padding: "12px",
-    background: "linear-gradient(135deg, var(--gw-color-primary) 0%, var(--gw-color-primary-active) 100%)",
-    border: "none",
-    cursor: "pointer",
-    color: "white",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-    borderRadius: "var(--gw-radius-container)",
-    minWidth: "44px",
-    minHeight: "44px",
-  },
-  sendButtonDisabled: {
-    background: "var(--gw-color-surface-subtle)",
-    color: "var(--gw-color-text-muted)",
-    cursor: "not-allowed",
-  },
-  stopButton: {
-    padding: "12px",
-    background: "var(--gw-color-danger)",
-    border: "none",
-    cursor: "pointer",
-    color: "white",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-    borderRadius: "var(--gw-radius-container)",
+  chatControl: {
     minWidth: "44px",
     minHeight: "44px",
   },
@@ -119,24 +80,6 @@ const styles = {
     maxWidth: "800px",
     minWidth: "280px",
     margin: "0 auto 8px",
-    padding: "10px 14px",
-    borderRadius: "var(--gw-radius-container)",
-    border: "1px solid var(--gw-color-warning)",
-    background: "var(--gw-color-warning-light)",
-    color: "var(--gw-color-warning-text)",
-    fontSize: "14px",
-  },
-  timeoutExtendButton: {
-    marginLeft: "auto",
-    padding: "6px 12px",
-    minHeight: "32px",
-    borderRadius: "var(--gw-radius-container)",
-    border: "1px solid var(--gw-color-warning)",
-    background: "white",
-    color: "var(--gw-color-warning-text)",
-    fontSize: "14px",
-    fontWeight: 600,
-    cursor: "pointer",
   },
 };
 
@@ -221,8 +164,6 @@ function ChatInputPanel(props: ChatInputPanelProps) {
     value: "",
   });
   const messageHistoryRef = useRef<ChatBotHistoryItem[]>([]);
-  const [isHovered, setIsHovered] = useState(false);
-  const [micHovered, setMicHovered] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
 
   // Handle microphone permission check with enhanced error handling
@@ -684,7 +625,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
         {waitStatus}
       </div>
       {responseTimeoutWarning && (
-        <div style={styles.timeoutWarning}>
+        <div className="gw-alert gw-alert--warning" style={styles.timeoutWarning}>
           <LuCircleAlert size={18} aria-hidden="true" />
           {/* Only the message is live — the button inside it made the alert
               announce "...to respond.Keep waiting". */}
@@ -693,7 +634,8 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           </span>
           <button
             type="button"
-            style={styles.timeoutExtendButton}
+            className="gw-btn gw-btn--secondary gw-btn--slim"
+            style={{ marginLeft: "auto" }}
             onClick={handleKeepWaiting}
             aria-label="Keep waiting for the response"
           >
@@ -713,10 +655,11 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       {/* Microphone button with enhanced feedback */}
       {browserSupportsSpeechRecognition ? (
         <button
+          type="button"
+          className="gw-btn gw-btn--icon"
           style={{
             ...styles.micButton,
             ...(listening ? styles.micActive : {}),
-            ...(micHovered && !listening ? { backgroundColor: "var(--gw-color-border)", color: "var(--gw-color-primary)" } : {}),
             ...(micPermissionDenied ? { color: "var(--gw-color-danger-text)" } : {}),
           }}
           aria-label={
@@ -728,8 +671,6 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           }
           aria-pressed={listening}
           onClick={handleMicrophoneToggle}
-          onMouseEnter={() => setMicHovered(true)}
-          onMouseLeave={() => setMicHovered(false)}
           title={
             micPermissionDenied
               ? "Microphone access denied. Click to try again."
@@ -831,7 +772,9 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       {/* Send / Stop button */}
       {props.running ? (
         <button
-          style={styles.stopButton}
+          type="button"
+          className="gw-btn gw-btn--danger gw-btn--icon"
+          style={styles.chatControl}
           onClick={handleStopGeneration}
           aria-label="Stop generating response"
           title="Stop generating"
@@ -840,23 +783,11 @@ function ChatInputPanel(props: ChatInputPanelProps) {
         </button>
       ) : (
         <button
-          style={{
-            ...(state.value.trim().length === 0 || props.session.loading
-              ? { ...styles.sendButton, ...styles.sendButtonDisabled }
-              : {
-                  ...styles.sendButton,
-                  ...(isHovered
-                    ? {
-                        transform: "scale(1.05)",
-                        boxShadow: "var(--gw-shadow-mid)",
-                      }
-                    : {}),
-                }),
-          }}
+          type="button"
+          className="gw-btn gw-btn--primary gw-btn--icon"
+          style={styles.chatControl}
           disabled={state.value.trim().length === 0 || props.session.loading}
           onClick={handleSendMessage}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
           aria-label="Send message"
           title="Send message"
         >

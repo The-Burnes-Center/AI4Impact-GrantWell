@@ -73,17 +73,17 @@ export default function MfaGate({ children }: { children: React.ReactNode }) {
       aria-labelledby="mfa-gate-title"
       ref={dialogRef}
     >
-      <div className={`profile-gate__panel${expanded ? " profile-gate__panel--wide" : ""}`}>
-        <header className="profile-gate__header">
+      <div className={`gw-modal profile-gate__panel${expanded ? " profile-gate__panel--wide" : ""}`}>
+        <header className="gw-modal__header profile-gate__header">
           <span className="profile-gate__header-icon" aria-hidden="true">
             <LuShieldCheck size={22} />
           </span>
-          <h2 className="profile-gate__title" id="mfa-gate-title">
+          <h2 className="gw-modal__title profile-gate__title" id="mfa-gate-title">
             Set up two-step verification to continue
           </h2>
         </header>
 
-        <div className="profile-gate__body">
+        <div className="gw-modal__body profile-gate__body">
           <p className="profile-gate__lead">
             {MFA_DEADLINE_ISO
               ? `Since ${deadlineDateText(MFA_DEADLINE_ISO, true)}, GrantWell asks`

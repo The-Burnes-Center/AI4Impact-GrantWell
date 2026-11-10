@@ -191,7 +191,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
                   <button
                     ref={infoButtonRef}
                     type="button"
-                    className="feedback-info-button"
+                    className="gw-btn gw-btn--icon gw-btn--slim feedback-info-button"
                     aria-expanded={showInfoTooltip}
                     aria-controls="feedback-info-tooltip"
                     onClick={() => setShowInfoTooltip((prev) => !prev)}
@@ -235,7 +235,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
                 <textarea
                   ref={textareaRef}
                   id="feedback-text"
-                  className="feedback-textarea"
+                  className="gw-input feedback-textarea"
                   maxLength={MAX_CHARS}
                   value={feedbackText}
                   onChange={handleTextChange}
@@ -254,7 +254,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
 
               <div role="status" aria-live="polite">
                 {showContactWarning && (
-                  <p id={warningId} className="feedback-warning">
+                  <p id={warningId} className="gw-alert gw-alert--warning feedback-warning">
                     This looks like it contains an email address or phone number. You
                     can still send your feedback &mdash; we just can&rsquo;t reply to
                     it, so please remove personal contact details if you can.
@@ -272,7 +272,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
                   aria-live="assertive"
                   className="feedback-error-container"
                 >
-                  <p className="feedback-error" id={errorId}>
+                  <p className="gw-alert gw-alert--urgent feedback-error" id={errorId}>
                     {feedbackError}
                   </p>
                 </div>

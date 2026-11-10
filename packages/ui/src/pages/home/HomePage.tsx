@@ -277,7 +277,7 @@ export default function HomePage() {
 
         {/* Error state */}
         {error && (
-          <div className="redirect-banner" role="alert" aria-live="assertive">
+          <div className="gw-alert gw-alert--info redirect-banner" role="alert" aria-live="assertive">
             <div style={{ flex: 1 }}>
               <p className="redirect-banner__text">{error}</p>
             </div>
@@ -345,13 +345,13 @@ export default function HomePage() {
               aria-label={`Actions for ${selectedDocument.label}`}
               className={`cta-buttons-container cta-nav${highlightCTAButtons ? " highlight cta-nav--highlighted" : ""}`}
             >
-              <button ref={firstCTAButtonRef} className="cta-btn" onClick={handleViewRequirements}>
+              <button ref={firstCTAButtonRef} className="gw-btn gw-btn--primary cta-btn" onClick={handleViewRequirements}>
                 Requirements
               </button>
-              <button className="cta-btn" onClick={handleWriteNarrative}>
+              <button className="gw-btn gw-btn--primary cta-btn" onClick={handleWriteNarrative}>
                 Write Application
               </button>
-              <button className="cta-btn" onClick={handleGetHelp}>
+              <button className="gw-btn gw-btn--primary cta-btn" onClick={handleGetHelp}>
                 Chat with AI
               </button>
             </div>

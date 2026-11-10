@@ -323,56 +323,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 15px 30px;
-  border-radius: var(--gw-radius-pill);
-  font-family: var(--gw-font-button);
-  font-size: 14px;
-  line-height: 22px;
-  font-weight: 600;
-  letter-spacing: var(--gw-button-letter-spacing, 1.4px);
-  text-transform: var(--gw-button-text-transform);
-  text-decoration: none;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
   white-space: nowrap;
-}
-
-.mk-btn:active {
-  transform: translateY(1px);
-}
-
-.mk-btn--primary {
-  background-color: var(--mk-green);
-  color: var(--gw-color-text-inverse);
-  border-color: var(--mk-green);
-}
-
-.mk-btn--primary:hover {
-  background-color: var(--mk-green-dark);
-  border-color: var(--mk-green-dark);
-}
-
-.mk-btn--outline {
-  background-color: var(--mk-off-white);
-  color: var(--mk-green);
-  border-color: var(--mk-green);
-}
-
-.mk-btn--outline:hover {
-  background-color: var(--mk-green);
-  color: var(--gw-color-text-inverse);
-}
-
-.mk-btn--light {
-  background-color: var(--mk-green-light);
-  color: var(--mk-green-deepest);
-  border-color: var(--mk-green-light);
-}
-
-.mk-btn--light:hover {
-  background-color: var(--mk-white);
-  border-color: var(--mk-white);
 }
 
 .mk-btn__arrow {
@@ -626,11 +577,6 @@
   color: var(--mk-green-deepest);
 }
 
-.marketing__signin .form-control:focus {
-  border-color: var(--mk-green);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gw-color-primary) 15%, transparent);
-}
-
 .marketing__footer {
   background-color: var(--mk-green-dark);
   color: var(--mk-off-white);
@@ -669,8 +615,8 @@
 }
 
 .marketing__footer-links a:focus-visible {
-  outline: 2px solid var(--mk-off-white);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
   border-radius: var(--gw-radius-check);
 }
 
@@ -786,8 +732,8 @@
 }
 
 .marketing__partner-link:focus-visible {
-  outline: 2px solid var(--gw-color-focus-on-dark);
-  outline-offset: 4px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus-on-dark);
+  outline-offset: var(--gw-focus-offset);
 }
 
 @media (max-width: 960px) {

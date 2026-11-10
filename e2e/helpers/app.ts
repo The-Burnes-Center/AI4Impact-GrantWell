@@ -114,7 +114,7 @@ const PROJECT_BASICS: Record<string, string> = {
 export async function startApplication(page: Page, nofoName: string): Promise<string> {
   const actions = await selectNofo(page, nofoName);
   await actions.getByRole("button", { name: "Write Application", exact: true }).click();
-  await page.getByRole("button", { name: "Get Started" }).click();
+  await page.getByRole("button", { name: "Get started" }).click();
   await expect(page).toHaveURL(/\/document-editor\/[0-9a-f-]{36}\?.*step=projectBasics/);
   return new URL(page.url()).pathname.split("/").pop()!;
 }

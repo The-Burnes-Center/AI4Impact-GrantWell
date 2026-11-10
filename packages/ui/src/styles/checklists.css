@@ -40,8 +40,8 @@
 }
 
 .custom-markdown a:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
 }
 
 /* WCAG 1.4.10 Reflow: Responsive breakpoints */
@@ -191,29 +191,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 18px;
-  background-color: transparent;
-  color: var(--gw-color-primary);
-  border: 1px solid var(--gw-color-primary);
-  border-radius: var(--gw-radius-pill);
-  cursor: pointer;
-  font-family: var(--gw-font-button);
-  font-weight: 600;
-  font-size: 12px;
-  letter-spacing: var(--gw-button-letter-spacing, 1.2px);
-  text-transform: var(--gw-button-text-transform);
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
   flex-shrink: 0;
-}
-
-.checklist-help-btn:hover {
-  background-color: var(--gw-color-primary);
-  color: var(--gw-color-text-inverse);
-}
-
-.checklist-help-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
 }
 
 /* Tabs */
@@ -256,8 +234,8 @@
 }
 
 .checklist-tab:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
 }
 
 .checklist-tabs__content {
@@ -301,10 +279,6 @@
 /* Grant type badge */
 .checklist-grant-badge {
   display: inline-block;
-  font-size: 14px;
-  font-weight: 500;
-  padding: 4px 12px;
-  border-radius: var(--gw-radius-container);
   margin-left: 12px;
   vertical-align: middle;
 }
@@ -391,28 +365,6 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 26px;
-  background-color: var(--gw-color-primary);
-  color: var(--gw-color-text-inverse);
-  border: 1px solid var(--gw-color-primary);
-  border-radius: var(--gw-radius-pill);
-  cursor: pointer;
-  font-family: var(--gw-font-button);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
-  text-transform: var(--gw-button-text-transform);
-  text-decoration: none;
-  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
-}
-
-.checklist-error__btn:hover {
-  background-color: var(--gw-color-primary-hover);
-  border-color: var(--gw-color-primary-hover);
-}
-
-.checklist-error__btn:active {
-  transform: translateY(1px);
 }
 
 /* Help modal */
@@ -422,7 +374,6 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--gw-color-overlay);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -432,9 +383,6 @@
 .help-modal {
   width: 650px;
   max-width: calc(100vw - 32px);
-  background-color: var(--gw-color-surface);
-  border-radius: var(--gw-radius-container);
-  box-shadow: var(--gw-shadow-high);
   max-height: 90vh;
   overflow: hidden;
   display: flex;
@@ -443,45 +391,21 @@
 }
 
 .help-modal__header {
-  background-color: var(--gw-color-primary);
-  padding: 20px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .help-modal__title {
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--gw-color-text-inverse);
   margin: 0;
 }
 
 .help-modal__close {
-  background: color-mix(in srgb, var(--gw-color-surface) 20%, transparent);
-  border: none;
-  cursor: pointer;
   font-size: 24px;
-  color: var(--gw-color-text-inverse);
-  padding: 4px 10px;
-  border-radius: var(--gw-radius-control);
   line-height: 1;
-  transition: background 0.2s;
-}
-
-.help-modal__close:hover {
-  background: color-mix(in srgb, var(--gw-color-surface) 30%, transparent);
-}
-
-.help-modal__close:focus-visible {
-  background: var(--gw-color-surface);
-  color: var(--gw-color-primary);
-  outline: 2px solid var(--gw-color-surface);
-  outline-offset: 2px;
 }
 
 .help-modal__body {
-  padding: 28px 32px;
   overflow-y: auto;
   flex: 1;
 }
@@ -542,32 +466,5 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 14px 30px;
-  background-color: var(--gw-color-primary);
-  color: var(--gw-color-text-inverse);
-  border: 1px solid var(--gw-color-primary);
-  border-radius: var(--gw-radius-pill);
-  cursor: pointer;
-  font-family: var(--gw-font-button);
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: var(--gw-button-letter-spacing, 1.4px);
-  text-transform: var(--gw-button-text-transform);
   width: 100%;
-  min-height: 48px;
-  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
-}
-
-.help-modal__confirm-btn:hover {
-  background-color: var(--gw-color-primary-hover);
-  border-color: var(--gw-color-primary-hover);
-}
-
-.help-modal__confirm-btn:active {
-  transform: translateY(1px);
-}
-
-.help-modal__confirm-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
 }

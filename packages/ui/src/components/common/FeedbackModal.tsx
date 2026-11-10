@@ -73,7 +73,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
           <div className="modal-actions">
             <button
               type="button"
-              className="modal-button primary"
+              className="gw-btn gw-btn--primary modal-button primary"
               onClick={onClose}
             >
               Close
@@ -116,7 +116,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
             <label htmlFor={textId} style={fieldLabelStyle}>
               Tell us more <span style={{ fontWeight: 400 }}>(optional)</span>
             </label>
-            <textarea
+            <textarea className="gw-input"
               id={textId}
               value={text}
               onChange={(e) => setText(e.target.value)}
@@ -124,12 +124,6 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
               maxLength={2000}
               style={{
                 width: "100%",
-                boxSizing: "border-box",
-                padding: "10px 12px",
-                borderRadius: "var(--gw-radius-control, 4px)",
-                border: "1px solid var(--gw-color-border-input, #767676)",
-                fontFamily: "inherit",
-                fontSize: "var(--gw-font-size-base, 16px)",
                 resize: "vertical",
               }}
             />
@@ -146,14 +140,14 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
           <div className="modal-actions">
             <button
               type="button"
-              className="modal-button secondary"
+              className="gw-btn gw-btn--secondary modal-button secondary"
               onClick={onClose}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="modal-button primary"
+              className="gw-btn gw-btn--primary modal-button primary"
               disabled={submitting || !found}
             >
               {submitting ? "Sending…" : "Send feedback"}

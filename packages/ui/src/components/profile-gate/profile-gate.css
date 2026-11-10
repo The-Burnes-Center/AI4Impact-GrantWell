@@ -18,9 +18,6 @@
   margin: auto;
   width: 100%;
   max-width: 440px;
-  background: var(--gw-color-surface);
-  border-radius: var(--gw-radius-container);
-  box-shadow: var(--gw-shadow-high);
   overflow: hidden;
 }
 
@@ -29,9 +26,6 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px 24px;
-  background: var(--mk-green, var(--gw-color-primary));
-  color: var(--gw-color-text-inverse);
 }
 
 .profile-gate__header-icon {
@@ -41,19 +35,13 @@
   width: 38px;
   height: 38px;
   border-radius: var(--gw-radius-container);
-  background: color-mix(in srgb, var(--gw-color-surface) 16%, transparent);
+  background: var(--gw-color-primary-light);
+  color: var(--gw-color-primary);
   flex-shrink: 0;
 }
 
 .profile-gate__title {
   margin: 0;
-  font-size: 19px;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.profile-gate__body {
-  padding: 22px 24px 24px;
 }
 
 .profile-gate__lead {
@@ -93,29 +81,32 @@
 }
 
 /* Input with a leading icon */
+/* The shared field box (.gw-input in components.css) drawn on the wrapper, so the icon sits inside it. */
 .profile-gate__input-wrap {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: 40px;
   padding: 0 12px;
-  border: 1px solid var(--gw-color-border-input, #767676);
-  border-radius: var(--gw-radius-container);
+  border: 1px solid var(--gw-color-border-input);
+  border-radius: var(--gw-radius-control);
   background: var(--gw-color-surface);
-  transition: border-color 0.12s ease, box-shadow 0.12s ease;
 }
 
+.profile-gate__input-wrap:hover {
+  border-color: var(--gw-color-border-input-hover);
+}
+
+/* The ring goes on the whole field, not the bare input inside it. */
 .profile-gate__input-wrap:focus-within {
-  border-color: var(--mk-green-dark, var(--gw-color-primary-hover));
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gw-color-primary-hover) 14%, transparent);
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
 }
 
-.profile-gate__input-wrap--error {
-  border-color: var(--gw-color-danger);
-}
-
-.profile-gate__input-wrap--error:focus-within {
-  border-color: var(--gw-color-danger);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gw-color-danger) 14%, transparent);
+.profile-gate__input-wrap--error,
+.profile-gate__input-wrap--error:hover {
+  border: 2px solid var(--gw-color-danger);
+  padding: 0 11px;
 }
 
 .profile-gate__field-icon {
@@ -128,21 +119,21 @@
 .profile-gate__input-wrap select {
   flex: 1;
   border: none;
-  padding: 11px 0;
-  font-size: 14px;
+  padding: 8px 0;
+  font-family: var(--gw-font-family);
+  font-size: var(--gw-font-size-base);
   background: transparent;
   color: var(--gw-color-text);
 }
 
 .profile-gate__input-wrap input:focus-visible,
 .profile-gate__input-wrap select:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
+  outline: none;
 }
 
 /* Read-only field (State): assigned by an admin, shown for confirmation but not editable. */
 .profile-gate__input-wrap--readonly {
-  background: var(--gw-color-surface-subtle);
+  background: var(--gw-color-disabled-bg);
   border-color: var(--gw-color-border);
 }
 
@@ -167,7 +158,8 @@
   gap: 5px;
   margin: 6px 0 0;
   color: var(--gw-color-danger-text);
-  font-size: 12.5px;
+  font-size: var(--gw-font-size-sm);
+  font-weight: var(--gw-font-weight-semibold);
 }
 
 .profile-gate__submit-content {

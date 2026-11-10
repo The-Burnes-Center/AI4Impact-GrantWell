@@ -98,7 +98,7 @@ export default function Playground() {
             <div className="pg-header-actions">
               {documentIdentifier && (
                 <button
-                  className="pg-upload-btn"
+                  className="gw-btn gw-btn--primary pg-upload-btn"
                   onClick={() => setUploadModalOpen(true)}
                   aria-label={`Supporting Documents — choose what the AI reads in this chat${uploadedFileCount > 0 ? `. ${uploadedFileCount} selected.` : ""}`}
                 >
@@ -113,7 +113,7 @@ export default function Playground() {
               )}
               <button
                 ref={helpButtonRef}
-                className="pg-help-btn"
+                className="gw-btn gw-btn--secondary pg-help-btn"
                 onClick={() => setHelpOpen(!helpOpen)}
                 aria-label={helpOpen ? "Close help dialog" : "Open help dialog"}
                 aria-expanded={helpOpen}
@@ -144,7 +144,7 @@ export default function Playground() {
 
       {/* Help Modal */}
       {helpOpen && (
-        <div className="pg-modal-overlay">
+        <div className="gw-modal__overlay pg-modal-overlay">
           <div
             ref={modalRef}
             tabIndex={-1}
@@ -152,16 +152,16 @@ export default function Playground() {
             aria-modal="true"
             aria-labelledby={titleId}
             aria-describedby={descriptionId}
-            className="pg-modal"
+            className="gw-modal pg-modal"
           >
             {/* Header */}
-            <div className="pg-modal-header">
-              <h2 id={titleId} className="pg-modal-title">
+            <div className="gw-modal__header pg-modal-header">
+              <h2 id={titleId} className="gw-modal__title pg-modal-title">
                 Welcome to Chat with AI
               </h2>
               <button
                 onClick={handleCloseModal}
-                className="pg-modal-close-btn"
+                className="gw-btn gw-btn--icon pg-modal-close-btn"
                 aria-label="Close help dialog"
               >
                 <span aria-hidden="true">×</span>
@@ -169,7 +169,7 @@ export default function Playground() {
             </div>
 
             {/* Content */}
-            <div id={descriptionId} className="pg-modal-body">
+            <div id={descriptionId} className="gw-modal__body pg-modal-body">
               <p className="pg-modal-intro">
                 This AI-powered assistant is your expert guide for understanding
                 a grant. Ask questions about any aspect of the grant application
@@ -234,7 +234,7 @@ export default function Playground() {
 
               <button
                 onClick={handleCloseModal}
-                className="pg-got-it-btn"
+                className="gw-btn gw-btn--primary pg-got-it-btn"
               >
                 Got it
               </button>

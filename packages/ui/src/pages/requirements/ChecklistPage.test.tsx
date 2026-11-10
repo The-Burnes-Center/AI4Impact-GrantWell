@@ -101,7 +101,7 @@ describe("ChecklistPage missing grant", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Go to Home" })).toHaveAttribute("href", "/home");
     expect(screen.queryByText("Grant not found")).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Try Again" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Try again" })).not.toBeInTheDocument();
   });
 
   it("keeps the retry message for a server error on a listed grant", async () => {

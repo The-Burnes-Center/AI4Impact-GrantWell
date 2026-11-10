@@ -69,7 +69,7 @@ export default function SignUpStep({
             readOnly={loading}
             autoComplete="email"
             required
-            className="form-input"
+            className="gw-input form-input"
             aria-required="true"
             aria-invalid={emailErrorId ? true : undefined}
             aria-describedby={emailErrorId}
@@ -88,7 +88,7 @@ export default function SignUpStep({
             readOnly={loading}
             autoComplete="new-password"
             required
-            className="form-input"
+            className="gw-input form-input"
             aria-required="true"
             aria-invalid={passwordErrorId ? true : undefined}
             aria-describedby={
@@ -115,7 +115,7 @@ export default function SignUpStep({
             readOnly={loading}
             autoComplete="new-password"
             required
-            className="form-input"
+            className="gw-input form-input"
             aria-required="true"
             aria-invalid={confirmPasswordErrorId ? true : undefined}
             aria-describedby={confirmPasswordErrorId}
@@ -132,7 +132,7 @@ export default function SignUpStep({
             onChange={(event) => onStateChange(event.target.value)}
             disabled={loading}
             autoComplete="address-level1"
-            className="form-input"
+            className="gw-input form-input"
             aria-describedby="signup-state-help"
           >
             <option value="">Other</option>
@@ -165,7 +165,7 @@ export default function SignUpStep({
         {!handoffUrl && turnstile}
         <div className="login-form-actions">
           {handoffUrl ? (
-            <a href={handoffUrl} className="btn btn-primary login-submit-button" aria-describedby="signup-state-site-note">
+            <a href={handoffUrl} className="gw-btn gw-btn--primary btn btn-primary login-submit-button" aria-describedby="signup-state-site-note">
               Go to GrantWell {stateNameFromCode(stateSite.state)}
             </a>
           ) : (
@@ -173,7 +173,7 @@ export default function SignUpStep({
             variant="primary"
             type="submit"
             aria-disabled={loading || undefined}
-            className="login-submit-button"
+            className="gw-btn gw-btn--primary login-submit-button"
           >
             {loading ? (
               <>

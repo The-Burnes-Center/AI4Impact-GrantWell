@@ -18,7 +18,7 @@
  * // Card with custom header actions
  * <Card
  *   header="Users"
- *   headerActions={<Button size="sm">Add User</Button>}
+ *   headerActions={<Button size="sm">Add user</Button>}
  * >
  *   <UserList />
  * </Card>

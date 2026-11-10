@@ -13,7 +13,6 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--gw-color-overlay);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,9 +21,6 @@
 
 /* ── Modal container ── */
 .dm-container {
-  background-color: var(--gw-color-surface, #ffffff);
-  border-radius: var(--gw-radius-container, 8px);
-  box-shadow: var(--gw-shadow-mid);
   width: 700px;
   max-width: 90vw;
   max-height: 80vh;
@@ -34,42 +30,21 @@
 
 /* ── Header ── */
 .dm-header {
-  padding: var(--gw-spacing-lg, 16px) var(--gw-spacing-2xl, 24px);
-  border-bottom: 1px solid var(--gw-color-border, #e2e8f0);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .dm-title {
-  font-size: var(--gw-font-size-xl, 20px);
-  font-weight: var(--gw-font-weight-semibold, 600);
-  color: var(--gw-color-heading);
   margin: 0;
 }
 
 .dm-close-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
   color: var(--gw-color-text-secondary, #5a5a5a);
   min-width: 44px;
-  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--gw-radius-control, 4px);
-  transition: var(--gw-transition-normal, all 0.2s ease);
-}
-
-.dm-close-btn:hover {
-  background-color: var(--gw-color-background, #f9fafb);
-  color: var(--gw-color-text, #333333);
-}
-
-.dm-close-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
 }
 
 /* ── Tabs ── */
@@ -101,7 +76,7 @@
 }
 
 .dm-tab:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
   outline-offset: -2px;
 }
 
@@ -112,7 +87,6 @@
 
 /* ── Body ── */
 .dm-body {
-  padding: var(--gw-spacing-2xl, 24px);
   overflow-y: auto;
   flex-grow: 1;
 }
@@ -150,8 +124,8 @@
 }
 
 .dm-drop-label:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
   background-color: var(--gw-color-primary-light);
 }
 
@@ -227,8 +201,8 @@
 }
 
 .dm-file-details-clickable:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
   border-radius: var(--gw-radius-control, 4px);
 }
 
@@ -253,62 +227,20 @@
 
 /* ── Action buttons ── */
 .dm-delete-btn {
-  background: none;
-  border: none;
   color: var(--gw-color-danger, #CD0D0D);
-  cursor: pointer;
-  padding: var(--gw-spacing-sm, 8px);
-  border-radius: var(--gw-radius-control, 4px);
   min-width: 44px;
-  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: var(--gw-transition-normal, all 0.2s ease);
-}
-
-.dm-delete-btn:hover {
-  background-color: var(--gw-color-danger-light, #fdeceb);
-}
-
-.dm-delete-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
-}
-
-.dm-delete-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .dm-download-btn {
-  background: none;
-  border: none;
   color: var(--gw-color-primary);
-  cursor: pointer;
-  padding: var(--gw-spacing-sm, 8px);
-  border-radius: var(--gw-radius-control, 4px);
   margin-right: 6px;
   min-width: 44px;
-  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: var(--gw-transition-normal, all 0.2s ease);
-}
-
-.dm-download-btn:hover {
-  background-color: var(--gw-color-primary-light);
-}
-
-.dm-download-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
-}
-
-.dm-download-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .dm-download-spinner {
@@ -322,35 +254,10 @@
 
 /* ── Upload button ── */
 .dm-upload-btn {
-  background-color: var(--gw-color-primary);
-  color: var(--gw-color-surface, #ffffff);
-  border: none;
-  border-radius: var(--gw-radius-control, 4px);
-  padding: var(--gw-spacing-sm, 8px) var(--gw-spacing-lg, 16px);
-  font-size: var(--gw-font-size-sm, 14px);
-  font-weight: var(--gw-font-weight-medium, 500);
-  cursor: pointer;
   display: flex;
   align-items: center;
   gap: var(--gw-spacing-sm, 8px);
   margin-top: var(--gw-spacing-lg, 16px);
-  min-height: 44px;
-  transition: var(--gw-transition-normal, all 0.2s ease);
-}
-
-.dm-upload-btn:hover:not(:disabled) {
-  background-color: var(--gw-color-primary-hover);
-}
-
-.dm-upload-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
-}
-
-.dm-upload-btn:disabled {
-  background-color: var(--gw-color-disabled-bg, #F0F0F0);
-  color: var(--gw-color-disabled-text, #707070);
-  cursor: not-allowed;
 }
 
 /* ── Error text ── */
@@ -369,28 +276,11 @@
 
 /* ── Refresh button ── */
 .dm-refresh-btn {
-  background: none;
-  border: none;
   color: var(--gw-color-primary);
-  cursor: pointer;
   display: flex;
   align-items: center;
   gap: var(--gw-spacing-xs, 4px);
-  font-size: var(--gw-font-size-sm, 14px);
   margin-left: auto;
-  padding: var(--gw-spacing-xs, 4px) var(--gw-spacing-sm, 8px);
-  border-radius: var(--gw-radius-control, 4px);
-  transition: var(--gw-transition-normal, all 0.2s ease);
-}
-
-.dm-refresh-btn:hover {
-  background-color: var(--gw-color-primary-light);
-  color: var(--gw-color-primary-hover);
-}
-
-.dm-refresh-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
 }
 
 /* ── Loading ── */
@@ -412,33 +302,8 @@
 
 /* ── Footer ── */
 .dm-footer {
-  padding: var(--gw-spacing-lg, 16px) var(--gw-spacing-2xl, 24px);
-  border-top: 1px solid var(--gw-color-border, #e2e8f0);
   display: flex;
   justify-content: flex-end;
-}
-
-.dm-footer-close-btn {
-  padding: var(--gw-spacing-sm, 8px) var(--gw-spacing-lg, 16px);
-  border-radius: var(--gw-radius-control, 4px);
-  font-size: var(--gw-font-size-sm, 14px);
-  font-weight: var(--gw-font-weight-medium, 500);
-  cursor: pointer;
-  min-height: 44px;
-  background-color: var(--gw-color-surface, #ffffff);
-  color: var(--gw-color-text, #333333);
-  border: 1px solid var(--gw-color-border, #e2e8f0);
-  transition: var(--gw-transition-normal, all 0.2s ease);
-}
-
-.dm-footer-close-btn:hover {
-  background-color: var(--gw-color-background, #f9fafb);
-  border-color: var(--gw-color-text-secondary, #5a5a5a);
-}
-
-.dm-footer-close-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
 }
 
 /* ── Delete confirmation dialog ── */
@@ -448,7 +313,6 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--gw-color-overlay);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -456,19 +320,12 @@
 }
 
 .dm-confirm-dialog {
-  background-color: var(--gw-color-surface, #ffffff);
-  border-radius: var(--gw-radius-container, 8px);
-  box-shadow: var(--gw-shadow-high, 0 16px 32px color-mix(in srgb, var(--gw-color-text-strong) 12%, transparent));
   width: 420px;
   max-width: 90vw;
-  padding: var(--gw-spacing-2xl, 24px);
   outline: none;
 }
 
 .dm-confirm-title {
-  font-size: var(--gw-font-size-lg, 18px);
-  font-weight: var(--gw-font-weight-semibold, 600);
-  color: var(--gw-color-heading);
   margin: 0 0 var(--gw-spacing-md, 12px) 0;
 }
 
@@ -492,47 +349,11 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 22px;
-  border-radius: var(--gw-radius-pill);
-  font-family: var(--gw-font-button);
-  font-size: 13px;
-  line-height: 22px;
-  font-weight: 600;
-  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
-  text-transform: var(--gw-button-text-transform);
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
-  min-height: 44px;
   white-space: nowrap;
-  border: 1px solid transparent;
-}
-
-.dm-confirm-cancel-btn {
-  background-color: transparent;
-  color: var(--gw-color-primary-hover);
-  border-color: transparent;
-  letter-spacing: var(--gw-button-letter-spacing, 1px);
 }
 
 .dm-confirm-cancel-btn:hover {
-  color: var(--gw-color-primary-active);
-  text-decoration: underline;
   text-underline-offset: 4px;
-}
-
-.dm-confirm-delete-btn {
-  background-color: var(--gw-color-danger);
-  color: var(--gw-color-text-inverse);
-  border-color: var(--gw-color-danger);
-}
-
-.dm-confirm-delete-btn:hover {
-  background-color: var(--gw-color-danger);
-  border-color: var(--gw-color-danger);
-}
-
-.dm-confirm-delete-btn:active {
-  transform: translateY(1px);
 }
 
 /* ── Per-file upload status ── */
@@ -594,29 +415,10 @@
 
 /* ── Retry button ── */
 .dm-retry-btn {
-  background-color: var(--gw-color-warning, #d97706);
-  color: var(--gw-color-heading);
-  border: none;
-  border-radius: var(--gw-radius-control, 4px);
-  padding: var(--gw-spacing-sm, 8px) var(--gw-spacing-lg, 16px);
-  font-size: var(--gw-font-size-sm, 14px);
-  font-weight: var(--gw-font-weight-medium, 500);
-  cursor: pointer;
   display: flex;
   align-items: center;
   gap: var(--gw-spacing-sm, 8px);
   margin-top: var(--gw-spacing-sm, 8px);
-  min-height: 44px;
-  transition: var(--gw-transition-normal, all 0.2s ease);
-}
-
-.dm-retry-btn:hover {
-  background-color: var(--gw-color-highlight);
-}
-
-.dm-retry-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
 }
 
 /* ── Upload actions row ── */
@@ -684,8 +486,8 @@
 }
 
 .dm-toast-close:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
 }
 
 /* ── Duplicate confirmation dialog ── */
@@ -707,21 +509,6 @@
 
 .dm-duplicate-item:last-child {
   border-bottom: none;
-}
-
-.dm-confirm-replace-btn {
-  background-color: var(--gw-color-primary);
-  color: var(--gw-color-text-inverse);
-  border-color: var(--gw-color-primary);
-}
-
-.dm-confirm-replace-btn:hover {
-  background-color: var(--gw-color-primary-hover);
-  border-color: var(--gw-color-primary-hover);
-}
-
-.dm-confirm-replace-btn:active {
-  transform: translateY(1px);
 }
 
 /* ── Toolbar (search, sort, bulk actions) ── */
@@ -752,18 +539,6 @@
 .dm-search-input {
   width: 100%;
   padding: 6px 10px 6px 30px;
-  border: 1px solid var(--gw-color-border-input, #767676);
-  border-radius: var(--gw-radius-control);
-  font-size: var(--gw-font-size-sm, 14px);
-  background: var(--gw-color-surface, #ffffff);
-  color: var(--gw-color-text, #333333);
-  transition: border-color 0.2s;
-}
-
-.dm-search-input:focus {
-  border-color: var(--gw-color-primary);
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 1px;
 }
 
 .dm-sort-controls {
@@ -804,40 +579,16 @@
 }
 
 .dm-sort-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
 }
 
 .dm-bulk-delete-btn {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 5px 12px;
-  font-size: var(--gw-font-size-xs, 12px);
-  border: 1px solid var(--gw-color-danger, #CD0D0D);
-  border-radius: var(--gw-radius-control);
-  background: var(--gw-color-surface, #ffffff);
-  color: var(--gw-color-danger, #CD0D0D);
-  cursor: pointer;
   white-space: nowrap;
-  transition: all 0.15s;
-  min-height: 32px;
   min-width: 44px;
-}
-
-.dm-bulk-delete-btn:hover {
-  background: var(--gw-color-danger, #CD0D0D);
-  color: var(--gw-color-surface, #ffffff);
-}
-
-.dm-bulk-delete-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.dm-bulk-delete-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
 }
 
 /* ── Select all row ── */

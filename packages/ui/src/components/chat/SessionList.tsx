@@ -207,7 +207,7 @@ export default function Sessions(props: SessionsProps) {
         </div>
         <div className="dashboard-actions">
           <button
-            className="action-button add-button"
+            className="gw-btn gw-btn--primary action-button add-button"
             onClick={() => {
               if (props.documentIdentifier) {
                 startChat(props.documentIdentifier);
@@ -220,7 +220,7 @@ export default function Sessions(props: SessionsProps) {
             <span>New Chat</span>
           </button>
           <button
-            className="action-button danger-button"
+            className="gw-btn gw-btn--danger action-button danger-button"
             onClick={() => setShowModalDelete(true)}
             disabled={selectedItems.length === 0}
             style={{
@@ -233,7 +233,7 @@ export default function Sessions(props: SessionsProps) {
             <span>Delete</span>
           </button>
           <button
-            className="action-button refresh-button"
+            className="gw-btn gw-btn--secondary action-button refresh-button"
             onClick={async () => {
               setIsLoading(true);
               await getSessions();
@@ -459,7 +459,7 @@ export default function Sessions(props: SessionsProps) {
                   setPageSize(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-                className="form-input"
+                className="gw-input form-input"
               >
                 <option value={10}>10</option>
                 <option value={20}>20</option>

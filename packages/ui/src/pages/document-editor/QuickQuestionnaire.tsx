@@ -150,7 +150,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
   if (error) {
     return (
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 0", textAlign: "center" }}>
-        <p role="alert" style={{ color: colors.error, marginBottom: "16px" }}>{error}</p>
+        <p role="alert" className="gw-alert gw-alert--urgent" style={{ marginBottom: "16px", textAlign: "left" }}>{error}</p>
         <button
           onClick={() => window.location.reload()}
           style={{
@@ -241,7 +241,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
                   </span>
                 )}
               </label>
-              <textarea
+              <textarea className="gw-input"
                 id={`question_${questionItem.id}`}
                 name={`question_${questionItem.id}`}
                 value={formData[`question_${questionItem.id}`] || ""}
@@ -250,13 +250,8 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
                 aria-describedby={`question_${questionItem.id}_help`}
                 style={{
                   width: "100%",
-                  padding: "12px",
-                  border: `1px solid ${colors.inputBorder}`,
-                  borderRadius: "var(--gw-radius-control)",
-                  fontSize: typography.fontSize.base,
                   minHeight: "120px",
                   resize: "vertical",
-                  fontFamily: typography.fontFamily,
                 }}
                 placeholder="Enter your answer here."
               />

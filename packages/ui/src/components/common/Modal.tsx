@@ -29,24 +29,8 @@ export const Modal = React.memo<ModalProps>(
 
     return (
       <div
-        className="modal-overlay"
+        className="gw-modal__overlay modal-overlay"
         role="presentation"
-        style={{
-          position: "fixed",
-          // Full-viewport: an offset would leave the top bar clickable behind an aria-modal dialog.
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: "var(--gw-color-overlay)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 1000,
-          backdropFilter: "blur(3px)",
-          padding: "20px",
-          boxSizing: "border-box",
-        }}
         onClick={
           hideCloseButton
             ? undefined
@@ -57,51 +41,20 @@ export const Modal = React.memo<ModalProps>(
       >
         <div
           ref={modalRef}
-          className="modal-content"
+          className="gw-modal modal-content"
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
-          style={{
-            backgroundColor: "white",
-            borderRadius: "var(--gw-radius-container)",
-            width: "100%",
-            maxWidth: maxWidth,
-            maxHeight: "85vh",
-            boxShadow: "var(--gw-shadow-high)",
-            position: "relative",
-            display: "flex",
-            flexDirection: "column",
-            overflow: "hidden",
-          }}
+          style={{ maxWidth }}
         >
-          <div
-            className="modal-header"
-            style={{
-              padding: "20px 25px",
-              borderBottom: "1px solid var(--gw-color-border)",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              backgroundColor: "var(--gw-color-background)",
-              borderTopLeftRadius: "var(--gw-radius-container)",
-              borderTopRightRadius: "var(--gw-radius-container)",
-              flexShrink: 0,
-            }}
-          >
-            <h2
-              id={titleId}
-              style={{
-                margin: 0,
-                color: "var(--gw-color-primary)",
-                fontSize: "20px",
-                fontWeight: 600,
-              }}
-            >
+          <div className="gw-modal__header modal-header">
+            <h2 id={titleId} className="gw-modal__title">
               {title}
             </h2>
             {!hideCloseButton && (
               <button
-                className="modal-close-button"
+                type="button"
+                className="gw-btn gw-btn--icon modal-close-button"
                 onClick={onClose}
                 aria-label="Close modal"
               >
@@ -109,16 +62,7 @@ export const Modal = React.memo<ModalProps>(
               </button>
             )}
           </div>
-          <div
-            className="modal-body"
-            style={{
-              padding: "25px",
-              overflowY: "auto",
-              backgroundColor: "white",
-            }}
-          >
-            {children}
-          </div>
+          <div className="gw-modal__body modal-body">{children}</div>
         </div>
       </div>
     );

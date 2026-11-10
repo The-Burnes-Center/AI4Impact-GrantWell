@@ -44,33 +44,6 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 22px;
-  background-color: var(--gw-color-primary);
-  color: var(--gw-color-text-inverse);
-  border: 1px solid var(--gw-color-primary);
-  border-radius: var(--gw-radius-pill);
-  font-family: var(--gw-font-button);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
-  text-transform: var(--gw-button-text-transform);
-  cursor: pointer;
-  min-height: 44px;
-  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
-}
-
-.pg-upload-btn:hover {
-  background-color: var(--gw-color-primary-hover);
-  border-color: var(--gw-color-primary-hover);
-}
-
-.pg-upload-btn:active {
-  transform: translateY(1px);
-}
-
-.pg-upload-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
 }
 
 .pg-upload-badge {
@@ -91,33 +64,6 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 22px;
-  background-color: transparent;
-  color: var(--gw-color-primary);
-  border: 1px solid var(--gw-color-primary);
-  border-radius: var(--gw-radius-pill);
-  font-family: var(--gw-font-button);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
-  text-transform: var(--gw-button-text-transform);
-  cursor: pointer;
-  min-height: 44px;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
-}
-
-.pg-help-btn:hover {
-  background-color: var(--gw-color-primary);
-  color: var(--gw-color-text-inverse);
-}
-
-.pg-help-btn:active {
-  transform: translateY(1px);
-}
-
-.pg-help-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
 }
 
 /* ── Chat content area ── */
@@ -136,7 +82,6 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--gw-color-overlay);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -146,9 +91,6 @@
 .pg-modal {
   width: 650px;
   max-width: calc(100vw - 32px);
-  background-color: var(--gw-color-surface, #ffffff);
-  border-radius: var(--gw-radius-container);
-  box-shadow: var(--gw-shadow-high);
   max-height: 90vh;
   overflow: hidden;
   display: flex;
@@ -158,51 +100,24 @@
 
 /* ── Modal header ── */
 .pg-modal-header {
-  background-color: var(--gw-color-primary);
-  padding: 20px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .pg-modal-title {
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--gw-color-surface, #ffffff);
   margin: 0;
 }
 
 .pg-modal-close-btn {
-  background: color-mix(in srgb, var(--gw-color-surface) 20%, transparent);
-  border: none;
-  cursor: pointer;
-  font-size: 24px;
-  color: var(--gw-color-surface, #ffffff);
-  padding: 8px 12px;
-  border-radius: var(--gw-radius-control);
-  line-height: 1;
-  transition: background 0.2s;
   min-width: 44px;
-  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.pg-modal-close-btn:hover {
-  background: color-mix(in srgb, var(--gw-color-surface) 30%, transparent);
-}
-
-.pg-modal-close-btn:focus-visible {
-  background: var(--gw-color-surface, #ffffff);
-  color: var(--gw-color-primary);
-  outline: 2px solid var(--gw-color-surface, #ffffff);
-  outline-offset: 2px;
-}
-
 /* ── Modal body ── */
 .pg-modal-body {
-  padding: 28px 32px;
   overflow-y: auto;
   flex: 1;
 }
@@ -303,34 +218,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 14px 30px;
-  background-color: var(--gw-color-primary);
-  color: var(--gw-color-text-inverse);
-  border: 1px solid var(--gw-color-primary);
-  border-radius: var(--gw-radius-pill);
-  cursor: pointer;
-  font-family: var(--gw-font-button);
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: var(--gw-button-letter-spacing, 1.4px);
-  text-transform: var(--gw-button-text-transform);
   width: 100%;
-  min-height: 48px;
-  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
-}
-
-.pg-got-it-btn:hover {
-  background-color: var(--gw-color-primary-hover);
-  border-color: var(--gw-color-primary-hover);
-}
-
-.pg-got-it-btn:active {
-  transform: translateY(1px);
-}
-
-.pg-got-it-btn:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
 }
 
 /* ── Mobile responsive ── */
@@ -355,10 +243,5 @@
   .pg-upload-btn,
   .pg-help-btn {
     width: 100%;
-  }
-
-  .pg-upload-btn:hover,
-  .pg-help-btn:hover {
-    transform: none;
   }
 }

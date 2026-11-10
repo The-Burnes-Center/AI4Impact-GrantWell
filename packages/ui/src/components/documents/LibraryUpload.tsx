@@ -83,7 +83,7 @@ export default function LibraryUpload({ library, onUploaded, variant = "dropzone
         >
           <LuUpload size={40} className="dm-upload-icon" aria-hidden="true" />
           <p className="dm-drop-text">Drag and drop files here, or</p>
-          <button type="button" className="dm-upload-btn" onClick={browse} disabled={busy} aria-describedby={instructionsId}>
+          <button type="button" className="gw-btn gw-btn--primary dm-upload-btn" onClick={browse} disabled={busy} aria-describedby={instructionsId}>
             <LuUpload size={16} aria-hidden="true" /> {busy ? "Uploading..." : "Browse files"}
           </button>
           <p className="dm-browse-text" id={instructionsId}>
@@ -91,7 +91,7 @@ export default function LibraryUpload({ library, onUploaded, variant = "dropzone
           </p>
         </div>
       ) : (
-        <button type="button" className="dm-upload-btn" onClick={browse} disabled={busy}>
+        <button type="button" className="gw-btn gw-btn--primary dm-upload-btn" onClick={browse} disabled={busy}>
           <LuUpload size={16} aria-hidden="true" /> {busy ? "Uploading..." : buttonLabel}
         </button>
       )}
@@ -139,12 +139,12 @@ export default function LibraryUpload({ library, onUploaded, variant = "dropzone
           ))}
         </ul>
         <div className="dm-confirm-actions">
-          <button type="button" className="dm-confirm-cancel-btn" onClick={() => setPending(null)}>
+          <button type="button" className="gw-btn gw-btn--secondary dm-confirm-cancel-btn" onClick={() => setPending(null)}>
             Cancel
           </button>
           <button
             type="button"
-            className="dm-confirm-cancel-btn"
+            className="gw-btn gw-btn--secondary dm-confirm-cancel-btn"
             onClick={() => {
               const dupes = new Set(pending?.duplicates.map((f) => f.name));
               void send((pending?.files ?? []).filter((f) => !dupes.has(f.name)));
@@ -152,7 +152,7 @@ export default function LibraryUpload({ library, onUploaded, variant = "dropzone
           >
             Skip duplicates
           </button>
-          <button type="button" className="dm-confirm-replace-btn" onClick={() => void send(pending?.files ?? [])}>
+          <button type="button" className="gw-btn gw-btn--primary dm-confirm-replace-btn" onClick={() => void send(pending?.files ?? [])}>
             Replace
           </button>
         </div>

@@ -58,7 +58,7 @@ const AddSectionForm: React.FC<AddSectionFormProps> = ({ onAdd, disabled, startO
         ref={inputRef}
         id={inputId}
         type="text"
-        className="se-add-section__input"
+        className="gw-input se-add-section__input"
         value={name}
         maxLength={200}
         onChange={(e) => setName(e.target.value)}

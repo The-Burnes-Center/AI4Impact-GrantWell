@@ -88,7 +88,7 @@ export default function DocumentsPage() {
                   </div>
                   <button
                     type="button"
-                    className="dm-download-btn"
+                    className="gw-btn gw-btn--icon dm-download-btn"
                     onClick={() => void download(doc)}
                     aria-label={`Download ${doc.name}`}
                   >
@@ -96,7 +96,7 @@ export default function DocumentsPage() {
                   </button>
                   <button
                     type="button"
-                    className="dm-delete-btn"
+                    className="gw-btn gw-btn--icon dm-delete-btn"
                     onClick={() => setToDelete(doc)}
                     aria-label={`Delete ${doc.name}`}
                   >

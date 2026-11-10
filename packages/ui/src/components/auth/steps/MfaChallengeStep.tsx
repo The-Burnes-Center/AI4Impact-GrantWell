@@ -42,7 +42,7 @@ export default function MfaChallengeStep({
             variant="primary"
             type="submit"
             aria-disabled={loading || undefined}
-            className="login-submit-button"
+            className="gw-btn gw-btn--primary login-submit-button"
           >
             {loading ? (
               <>

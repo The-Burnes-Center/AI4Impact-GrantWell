@@ -85,7 +85,7 @@ export default function MfaSetupPanel({
     return (
       <div>
         {error ? (
-          <div className="profile-alert profile-alert--error" role="alert">
+          <div className="gw-alert gw-alert--urgent profile-alert profile-alert--error" role="alert">
             {error}
           </div>
         ) : (
@@ -112,7 +112,7 @@ export default function MfaSetupPanel({
   return (
     <form onSubmit={confirm}>
       {error && (
-        <div className="profile-alert profile-alert--error" role="alert">
+        <div className="gw-alert gw-alert--urgent profile-alert profile-alert--error" role="alert">
           {error}
         </div>
       )}

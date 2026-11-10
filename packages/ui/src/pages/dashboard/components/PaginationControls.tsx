@@ -156,7 +156,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = React.memo(({
             id={itemsPerPageSelectId}
             value={itemsPerPage}
             onChange={onItemsPerPageChange}
-            className="form-input"
+            className="gw-input form-input"
           >
             {itemsPerPageOptions.map((option) => (
               <option key={option} value={option}>

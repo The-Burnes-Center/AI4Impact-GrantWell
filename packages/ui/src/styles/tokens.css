@@ -206,9 +206,14 @@
   --gw-font-weight-semibold: 600;
   --gw-font-weight-bold: 700;
 
-  /* Caps on buttons and tabs. --gw-button-letter-spacing is unset by default so each control
-     keeps its own tracking; a theme sets both, e.g. none and normal. */
-  --gw-button-text-transform: uppercase;
+  /* Buttons and tabs use sentence case on every deployment (Colorado Design System). */
+  --gw-button-text-transform: none;
+  --gw-button-letter-spacing: normal;
+  --gw-radius-button: var(--gw-radius-control);
+
+  /* Keyboard focus: one ring shape everywhere, in each deployment's focus color. */
+  --gw-focus-width: 2px;
+  --gw-focus-offset: 2px;
 
   /* ==============================
    * Transitions

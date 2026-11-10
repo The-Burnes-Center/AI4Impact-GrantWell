@@ -29,7 +29,7 @@ export default function OutcomeFields({ idPrefix, value, onChange, disabled, all
         <label htmlFor={`${idPrefix}-status`}>Outcome</label>
         <select
           id={`${idPrefix}-status`}
-          className="form-input"
+          className="gw-input form-input"
           value={value.status}
           onChange={(e) => set({ status: e.target.value as OutcomeStatus | "" })}
           disabled={disabled}
@@ -50,7 +50,7 @@ export default function OutcomeFields({ idPrefix, value, onChange, disabled, all
           <input
             id={`${idPrefix}-submitted`}
             type="date"
-            className="form-input"
+            className="gw-input form-input"
             value={value.submittedDate}
             max={today}
             onChange={(e) => set({ submittedDate: e.target.value })}
@@ -65,7 +65,7 @@ export default function OutcomeFields({ idPrefix, value, onChange, disabled, all
           <input
             id={`${idPrefix}-decision`}
             type="date"
-            className="form-input"
+            className="gw-input form-input"
             value={value.decisionDate}
             max={today}
             onChange={(e) => set({ decisionDate: e.target.value })}
@@ -81,7 +81,7 @@ export default function OutcomeFields({ idPrefix, value, onChange, disabled, all
             id={`${idPrefix}-amount`}
             type="text"
             inputMode="numeric"
-            className="form-input"
+            className="gw-input form-input"
             value={value.amountAwarded}
             placeholder="e.g. 25000"
             onChange={(e) => set({ amountAwarded: e.target.value })}

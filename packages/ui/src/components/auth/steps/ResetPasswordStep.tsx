@@ -47,7 +47,7 @@ export default function ResetPasswordStep({
             onChange={(event) => onVerificationCodeChange(event.target.value)}
             readOnly={loading}
             required
-            className="form-input"
+            className="gw-input form-input"
             inputMode="numeric"
             autoComplete="one-time-code"
             aria-required="true"
@@ -68,7 +68,7 @@ export default function ResetPasswordStep({
             readOnly={loading}
             autoComplete="new-password"
             required
-            className="form-input"
+            className="gw-input form-input"
             aria-required="true"
             aria-invalid={newPasswordErrorId ? true : undefined}
             aria-describedby={
@@ -97,7 +97,7 @@ export default function ResetPasswordStep({
             variant="primary"
             type="submit"
             aria-disabled={loading || undefined}
-            className="login-submit-button"
+            className="gw-btn gw-btn--primary login-submit-button"
             aria-busy={loading}
           >
             {loading ? (

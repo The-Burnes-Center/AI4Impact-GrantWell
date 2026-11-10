@@ -159,7 +159,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="actions-dropdown-button"
+        className="gw-btn gw-btn--secondary gw-btn--icon gw-btn--slim actions-dropdown-button"
         aria-label={`More actions for ${nofo.name}`}
         aria-expanded={isOpen}
         aria-haspopup="menu"

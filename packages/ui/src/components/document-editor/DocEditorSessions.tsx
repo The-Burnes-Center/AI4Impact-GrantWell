@@ -325,7 +325,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
         </div>
         <div className="dashboard-actions">
           <button
-            className="action-button add-button"
+            className="gw-btn gw-btn--primary action-button add-button"
             onClick={() => {
               if (props.documentIdentifier) {
                 navigate(`/document-editor?grant=${encodeURIComponent(props.documentIdentifier)}`);
@@ -340,7 +340,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
           </button>
           {hasDocId && onToggleShowAllNOFOs && (
             <button
-              className="action-button invite-button"
+              className="gw-btn gw-btn--secondary action-button invite-button"
               onClick={onToggleShowAllNOFOs}
               aria-label="Show all grants — include applications for other grants"
               aria-pressed={showAllNOFOs}
@@ -350,7 +350,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             </button>
           )}
           <button
-            className="action-button danger-button"
+            className="gw-btn gw-btn--danger action-button danger-button"
             onClick={() => setShowModalDelete(true)}
             disabled={selectedItems.length === 0}
             style={{
@@ -365,7 +365,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             <span>Delete</span>
           </button>
           <button
-            className="action-button refresh-button"
+            className="gw-btn gw-btn--secondary action-button refresh-button"
             onClick={async () => {
               if (isLoading) return;
               setListNotice("");
@@ -593,7 +593,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                   setCurrentPage(1);
                 }}
                 aria-label="Show items per page"
-                className="form-input"
+                className="gw-input form-input"
               >
                 <option value={10}>10</option>
                 <option value={20}>20</option>

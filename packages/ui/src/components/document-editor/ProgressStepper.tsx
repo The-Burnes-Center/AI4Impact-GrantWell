@@ -318,15 +318,12 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                         e.currentTarget.style.boxShadow = "none";
                       }
                     }}
-                    onFocus={(e) => {
+                    onFocus={() => {
                       setFocusedIndex(index);
                       setTooltipDismissed(false);
-                      e.currentTarget.style.outline = "2px solid var(--gw-color-primary)";
-                      e.currentTarget.style.outlineOffset = "2px";
                     }}
-                    onBlur={(e) => {
+                    onBlur={() => {
                       setFocusedIndex(null);
-                      e.currentTarget.style.outline = "none";
                     }}
                   >
                     {completed ? (

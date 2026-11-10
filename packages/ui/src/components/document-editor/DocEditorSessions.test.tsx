@@ -63,7 +63,7 @@ describe("DocEditorSessions list actions", () => {
     await user.click(await screen.findByRole("checkbox", { name: /^Select application: Fiber plan, last modified / }));
     await user.click(screen.getByRole("button", { name: "Delete 1 selected application" }));
     const dialog = await screen.findByRole("dialog", { name: "Delete application" });
-    await user.click(within(dialog).getByRole("button", { name: /Delete Permanently/ }));
+    await user.click(within(dialog).getByRole("button", { name: /Delete permanently/ }));
 
     expect(await screen.findByText("Application deleted.")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "My Applications" })).toHaveFocus();
@@ -74,7 +74,7 @@ describe("DocEditorSessions list actions", () => {
     await user.click(await screen.findByRole("checkbox", { name: /^Select application: Fiber plan, last modified / }));
     await user.click(screen.getByRole("button", { name: "Delete 1 selected application" }));
     const dialog = await screen.findByRole("dialog", { name: "Delete application" });
-    await user.click(within(dialog).getByRole("button", { name: /Delete Permanently/ }));
+    await user.click(within(dialog).getByRole("button", { name: /Delete permanently/ }));
 
     const message = await screen.findByText("The applications could not be deleted. Please try again.");
     expect(screen.getByRole("alert")).toContainElement(message);

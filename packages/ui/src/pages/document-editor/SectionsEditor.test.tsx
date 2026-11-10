@@ -221,12 +221,12 @@ describe("SectionsEditor rewriting failed sections", () => {
       </NotificationProvider>
     );
 
-    const retry = await screen.findByRole("button", { name: "Retry Failed Sections" }, { timeout: 5000 });
+    const retry = await screen.findByRole("button", { name: "Retry failed sections" }, { timeout: 5000 });
     await user.click(retry);
 
     const message = await screen.findByText("This grant is being reviewed and will be back soon.");
     expect(screen.getAllByRole("alert").some((region) => region.contains(message))).toBe(true);
-    expect(screen.getByRole("button", { name: "Retry Failed Sections" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Retry failed sections" })).toBeInTheDocument();
     expect(net.last("POST /draft-generation").body).toMatchObject({ sectionIds: ["budget"] });
     expect(net.to(SUMMARY).every((r) => r.url.searchParams.get("for") === "application")).toBe(true);
   });

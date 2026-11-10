@@ -41,8 +41,8 @@ textarea:focus-visible,
 [role="menuitemradio"]:focus-visible,
 [role="checkbox"]:focus-visible,
 [tabindex]:focus-visible:not([tabindex="-1"]) {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
 }
 
 [data-dark-bg="true"] button:focus-visible,

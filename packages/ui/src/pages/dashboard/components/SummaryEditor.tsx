@@ -86,7 +86,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
             <span className="summary-field__text" style={{ display: "flex", gap: "8px", flex: 1 }}>
               <input
                 type="text"
-                className="review-text-input"
+                className="gw-input review-text-input"
                 placeholder="Item name"
                 value={item.item}
                 onChange={(e) => handleItemEdit(fieldName, idx, "item", e.target.value)}
@@ -95,7 +95,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
               />
               <input
                 type="text"
-                className="review-text-input"
+                className="gw-input review-text-input"
                 placeholder="Description"
                 value={item.description}
                 onChange={(e) => handleItemEdit(fieldName, idx, "description", e.target.value)}
@@ -136,7 +136,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
         <input
           id="review-grant-name"
           type="text"
-          className="review-text-input"
+          className="gw-input review-text-input"
           value={(editedSummary.GrantName as string) || ""}
           onChange={(e) =>
             onSummaryChange({ ...editedSummary, GrantName: e.target.value })
@@ -152,7 +152,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
           <input
             id="review-agency"
             type="text"
-            className="review-text-input"
+            className="gw-input review-text-input"
             value={(editedSummary.Agency as string) || ""}
             onChange={(e) =>
               onSummaryChange({ ...editedSummary, Agency: e.target.value })
@@ -165,7 +165,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
           </label>
           <select
             id="review-category"
-            className="review-text-input"
+            className="gw-input review-text-input"
             value={(editedSummary.Category as string) || ""}
             onChange={(e) =>
               onSummaryChange({ ...editedSummary, Category: e.target.value })

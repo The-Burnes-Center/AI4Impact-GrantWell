@@ -121,7 +121,7 @@ export default function RowActionsMenu({
         ref={buttonRef}
         type="button"
         onClick={() => setIsOpen((open) => !open)}
-        className="actions-dropdown-button"
+        className="gw-btn gw-btn--secondary gw-btn--icon gw-btn--slim actions-dropdown-button"
         aria-label={label}
         aria-expanded={isOpen}
         aria-haspopup="menu"

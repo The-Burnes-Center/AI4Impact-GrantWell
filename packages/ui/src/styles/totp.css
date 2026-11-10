@@ -88,8 +88,8 @@
    border-colour change alone is only a 1.18:1 luminance shift. */
 .otp-input__box:focus {
   border-color: var(--gw-color-focus);
-  outline: 3px solid var(--gw-color-focus);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
 }
 
 .otp-input__box:disabled {

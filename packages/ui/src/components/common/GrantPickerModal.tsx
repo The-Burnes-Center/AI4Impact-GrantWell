@@ -103,7 +103,7 @@ export default function GrantPickerModal({
       <input
         id={searchId}
         type="search"
-        className="form-input"
+        className="gw-input form-input"
         placeholder="Filter grants by name"
         value={query}
         onChange={(e) => setQuery(e.target.value)}

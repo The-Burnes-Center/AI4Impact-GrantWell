@@ -35,7 +35,7 @@ const HelpModal = React.memo(function HelpModal({ isOpen, onClose }: HelpModalPr
   return createPortal(
     <div
       role="presentation"
-      className="help-modal-overlay"
+      className="gw-modal__overlay help-modal-overlay"
       onClick={(e) => { if (e.target === e.currentTarget) handleClose(); }}
     >
       <div
@@ -45,23 +45,23 @@ const HelpModal = React.memo(function HelpModal({ isOpen, onClose }: HelpModalPr
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
-        className="help-modal"
+        className="gw-modal help-modal"
       >
-        <div className="help-modal__header">
-          <h2 id={titleId} className="help-modal__title">
+        <div className="gw-modal__header help-modal__header">
+          <h2 id={titleId} className="gw-modal__title help-modal__title">
             How to use this page
           </h2>
           <button
             ref={closeButtonRef}
             onClick={handleClose}
-            className="help-modal__close"
+            className="gw-btn gw-btn--icon help-modal__close"
             aria-label="Close help dialog"
           >
             &times;
           </button>
         </div>
 
-        <div id={descriptionId} className="help-modal__body">
+        <div id={descriptionId} className="gw-modal__body help-modal__body">
           <p className="help-modal__text">
             GrantWell uses generative AI to extract and summarize the key
             elements of the grant.
@@ -101,7 +101,7 @@ const HelpModal = React.memo(function HelpModal({ isOpen, onClose }: HelpModalPr
             </label>
           </div>
 
-          <button onClick={handleClose} className="help-modal__confirm-btn">
+          <button onClick={handleClose} className="gw-btn gw-btn--primary help-modal__confirm-btn">
             Got it
           </button>
         </div>

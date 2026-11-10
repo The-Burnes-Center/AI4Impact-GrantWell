@@ -134,7 +134,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
               </label>
               <select
                 id="analytics-state"
-                className="analytics__state-select"
+                className="gw-input analytics__state-select"
                 value={stateFilter}
                 onChange={(e) => setStateFilter(e.target.value)}
               >

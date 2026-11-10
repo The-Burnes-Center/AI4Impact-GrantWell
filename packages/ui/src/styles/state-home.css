@@ -117,8 +117,8 @@
 }
 
 .state-home__sign-in .auth-tab:focus-visible {
-  outline: 3px solid var(--gw-color-focus);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
 }
 
 .state-home__sign-in .auth-card-header {
@@ -240,6 +240,6 @@
 }
 
 .state-home__link:focus-visible {
-  outline: 3px solid var(--gw-color-focus);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
 }

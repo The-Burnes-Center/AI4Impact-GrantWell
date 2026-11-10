@@ -118,20 +118,34 @@ describe("ProfilePage region", () => {
 
   it("shows no region field on a deployment without regions", async () => {
     renderWithProfile();
-    await screen.findByLabelText("Department");
-    expect(screen.queryByLabelText("Region")).toBeNull();
+    await screen.findByRole("textbox", { name: "Department" });
+    expect(screen.queryByRole("combobox", { name: "Region" })).toBeNull();
   });
 
   it("changes the region with the other organization details", async () => {
     instance.REGIONS = ["Region 1", "Region 2"];
     const { net, user } = renderWithProfile();
-    const region = await screen.findByLabelText("Region");
+    const region = await screen.findByRole("combobox", { name: "Region" });
     await screen.findByDisplayValue("DOT");
     expect(region).toHaveValue("Region 1");
     await user.selectOptions(region, "Region 2");
     await user.click(screen.getByRole("button", { name: "Save changes" }));
     expect(await screen.findByText("Organization details saved.")).toBeInTheDocument();
     expect(net.to(SAVE_PROFILE)[0].body).toEqual({ agency: "DOT", organization: "Denver", jobTitle: "Manager", region: "Region 2" });
+  });
+  it("marks an empty required field, links its message and moves focus there instead of saving", async () => {
+    const { net, user } = renderWithProfile();
+    const department = await screen.findByRole("textbox", { name: "Department" });
+    await screen.findByDisplayValue("DOT");
+    await user.clear(department);
+    await user.click(screen.getByRole("button", { name: "Save changes" }));
+    expect(department).toHaveAttribute("aria-invalid", "true");
+    expect(department).toHaveAccessibleDescription("Enter your department");
+    expect(department).toHaveFocus();
+    expect(screen.getByRole("alert")).toHaveTextContent("Fill in the fields marked below.");
+    expect(net.to(SAVE_PROFILE)).toHaveLength(0);
+    await user.type(department, "DOT");
+    expect(department).not.toHaveAttribute("aria-invalid");
   });
 });
 
@@ -146,14 +160,14 @@ describe("ProfilePage form semantics", () => {
   it("stops the organization fields at the 200 characters the server keeps", async () => {
     renderProfile();
     for (const label of ["Department", "Organization", "Role / Title"]) {
-      expect(await screen.findByLabelText(label)).toHaveAttribute("maxlength", "200");
+      expect(await screen.findByRole("textbox", { name: label })).toHaveAttribute("maxlength", "200");
     }
   });
 
   it("autocompletes the organization fields and shows the password rules with a show-password toggle", async () => {
     const { user } = renderProfile();
-    expect(await screen.findByLabelText("Organization")).toHaveAttribute("autocomplete", "organization");
-    expect(screen.getByLabelText("Role / Title")).toHaveAttribute("autocomplete", "organization-title");
+    expect(await screen.findByRole("textbox", { name: "Organization" })).toHaveAttribute("autocomplete", "organization");
+    expect(screen.getByRole("textbox", { name: "Role / Title" })).toHaveAttribute("autocomplete", "organization-title");
 
     await user.click(screen.getByRole("button", { name: "Change password" }));
     const current = screen.getByLabelText("Current password");

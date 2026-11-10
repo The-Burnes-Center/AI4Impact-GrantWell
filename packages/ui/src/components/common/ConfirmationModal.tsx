@@ -46,7 +46,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         {warning && <p className="warning-text">{warning}</p>}
         <div className="modal-actions">
           <button
-            className="modal-button secondary"
+            className="gw-btn gw-btn--secondary modal-button secondary"
             onClick={onCancel ?? onClose}
             disabled={confirming}
             aria-label={cancelLabel}
@@ -54,7 +54,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
             {cancelLabel}
           </button>
           <button
-            className={`modal-button ${variant}`}
+            className={`gw-btn gw-btn--${variant} modal-button ${variant}`}
             onClick={onConfirm}
             disabled={confirming}
             aria-label={confirmLabel}

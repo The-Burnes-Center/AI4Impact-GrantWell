@@ -30,19 +30,7 @@
 }
 
 .analytics__state-select {
-  padding: 8px 12px;
-  border: 1px solid var(--gw-color-border-input, #767676);
-  border-radius: var(--gw-radius-container);
-  background: var(--gw-color-surface);
-  font-size: 13px;
-  color: var(--gw-color-text);
   cursor: pointer;
-}
-
-.analytics__state-select:focus-visible {
-  outline: 2px solid var(--mk-green-dark, var(--gw-color-primary-hover));
-  outline-offset: 0;
-  border-color: var(--mk-green-dark, var(--gw-color-primary-hover));
 }
 
 .analytics__window {
@@ -82,7 +70,7 @@
 
 /* Dark outer ring plus a white inner one: visible on the white buttons and on the filled active one. */
 .analytics__window-btn:focus-visible {
-  outline: 2px solid var(--gw-color-primary-active);
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
   outline-offset: -2px;
   box-shadow: inset 0 0 0 4px var(--gw-color-surface, #ffffff);
 }

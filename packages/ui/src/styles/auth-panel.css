@@ -61,43 +61,14 @@
 .auth-login-card .form-control.form-input {
   width: 100%;
   height: 52px;
-  padding: 0 16px;
-  font-size: 15px;
   font-weight: 400;
-  line-height: 1.2;
-  color: var(--gw-color-text);
-  border: 1px solid var(--gw-color-border-input);
-  border-radius: var(--gw-radius-container);
-  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
-  background: var(--gw-color-background);
   box-sizing: border-box;
-  box-shadow: none !important;
-  font-family: var(--gw-font-family);
   appearance: none;
-}
-
-.auth-login-card .form-input:hover,
-.auth-login-card .form-control.form-input:hover {
-  border-color: var(--gw-color-border-input-hover);
-  background: var(--gw-color-surface);
-}
-
-/* The base rule sets `box-shadow: none !important`, so a box-shadow ring here
-   would never paint; and var(--gw-color-border-input) -> var(--gw-color-primary) is only a 1.18:1 luminance change.
-   Use a real outline (5.35:1 on the card) as the focus indicator. */
-.auth-login-card .form-input:focus,
-.auth-login-card .form-control.form-input:focus {
-  border-color: var(--gw-color-primary);
-  outline: 3px solid var(--gw-color-primary);
-  outline-offset: 2px;
-  background: var(--gw-color-surface);
 }
 
 .auth-login-card .form-input:disabled,
 .auth-login-card .form-control.form-input:disabled,
 .auth-login-card .form-control.form-input[readonly] {
-  color: var(--gw-color-text-muted);
-  background: var(--gw-color-surface-subtle);
   opacity: 1;
 }
 
@@ -145,8 +116,8 @@
 }
 
 .show-password-checkbox .form-check-input:focus-visible {
-  outline: 3px solid var(--gw-color-primary);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--gw-color-primary) 15%, transparent);
 }
 
@@ -208,11 +179,9 @@
 .create-account-link.btn:focus,
 .create-account-link.btn-link:focus,
 .create-account-link.btn:focus-visible,
-.create-account-link.btn-link:focus-visible,
-/* .btn so this outranks Bootstrap's .btn:focus-visible { outline: 0 }, which loads later. */
-.btn.login-submit-button:focus-visible {
-  outline: 3px solid var(--gw-color-primary);
-  outline-offset: 2px;
+.create-account-link.btn-link:focus-visible {
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
   border-radius: var(--gw-radius-check);
   box-shadow: none !important;
 }
@@ -226,24 +195,10 @@
 
 .login-submit-button {
   width: 100%;
-  padding: 16px 24px;
-  font-size: 16px;
-  font-weight: 600;
-  background: linear-gradient(135deg, var(--gw-color-primary) 0%, var(--gw-color-primary-hover) 100%);
-  border: none;
-  border-radius: var(--gw-radius-container);
-  color: var(--gw-color-text-inverse);
-  cursor: pointer;
-  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 14px;
-  box-shadow: 0 4px 14px color-mix(in srgb, var(--gw-color-primary) 40%, transparent);
-}
-
-a.login-submit-button {
-  text-decoration: none;
 }
 
 .auth-state-site-note {
@@ -254,22 +209,6 @@ a.login-submit-button {
   border-radius: var(--gw-radius-control);
   color: var(--gw-color-text);
   font-size: var(--gw-font-size-sm, 14px);
-}
-
-.login-submit-button:hover {
-  background: linear-gradient(135deg, var(--gw-color-primary-hover) 0%, var(--gw-color-primary-active) 100%);
-  box-shadow: 0 6px 20px color-mix(in srgb, var(--gw-color-primary) 50%, transparent);
-  transform: translateY(-1px);
-}
-
-.login-submit-button:active {
-  transform: translateY(1px);
-}
-
-.login-submit-button:disabled {
-  background: var(--gw-color-disabled-bg);
-  cursor: not-allowed;
-  transform: none;
 }
 
 .login-form-footer {
@@ -416,24 +355,13 @@ a.login-submit-button {
   .auth-login-card .form-input,
   .auth-login-card .form-control.form-input {
     height: 48px;
-    padding: 0 12px;
-    font-size: 16px;
-  }
-
-  .login-submit-button {
-    padding: 12px 20px;
-    font-size: 15px;
-  }
+}
 }
 
 @media (prefers-reduced-motion: reduce) {
   .forgot-password-link,
-  .create-account-link,
-  .login-submit-button {
+  .create-account-link {
     transition: none;
   }
 
-  .login-submit-button:active {
-    transform: none;
-  }
 }

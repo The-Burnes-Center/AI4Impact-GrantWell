@@ -73,7 +73,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
     return (
       <div className="review-expanded-row__actions">
         <button
-          className="review-btn review-btn--approve review-btn--recommended"
+          className="gw-btn gw-btn--primary review-btn review-btn--approve review-btn--recommended"
           onClick={onReupload}
           disabled={busy}
           aria-label={`${reuploadDocLabel} — upload the correct grant document (recommended)`}
@@ -82,7 +82,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
           {reuploadDocLabel}
         </button>
         <button
-          className="review-btn review-btn--reject"
+          className="gw-btn gw-btn--danger review-btn review-btn--reject"
           onClick={onReject}
           disabled={busy}
           aria-label={`${rejectLabel} — ${rejectPurpose}`}
@@ -110,7 +110,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
   const approveBtn = canApprove ? (
     <button
       key="approve"
-      className={`review-btn review-btn--approve ${recommended === "approve" ? "review-btn--recommended" : ""}`}
+      className={`gw-btn ${recommended && recommended !== "approve" ? "gw-btn--secondary" : "gw-btn--primary"} review-btn review-btn--approve ${recommended === "approve" ? "review-btn--recommended" : ""}`}
       onClick={onApprove}
       disabled={busy}
       aria-label={rec("approve", `${approveLabel} — publish this grant`)}
@@ -125,7 +125,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
   const reuploadBtn = (
     <button
       key="reupload"
-      className={`review-btn ${recommended === "reupload" ? "review-btn--approve review-btn--recommended" : "review-btn--secondary"}`}
+      className={`gw-btn ${recommended === "reupload" ? "gw-btn--primary" : "gw-btn--secondary"} review-btn ${recommended === "reupload" ? "review-btn--approve review-btn--recommended" : "review-btn--secondary"}`}
       onClick={onReupload}
       disabled={busy}
       aria-label={rec("reupload", `${reuploadLabel} — upload a replacement grant document`)}
@@ -138,7 +138,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
   const reprocessBtn = (
     <button
       key="reprocess"
-      className={`review-btn ${recommended === "reprocess" ? "review-btn--approve review-btn--recommended" : "review-btn--reprocess"}`}
+      className={`gw-btn ${recommended === "reprocess" ? "gw-btn--primary" : "gw-btn--secondary"} review-btn ${recommended === "reprocess" ? "review-btn--approve review-btn--recommended" : "review-btn--reprocess"}`}
       onClick={onReprocess}
       disabled={busy}
       aria-label={rec("reprocess", `${reprocessLabel} — reprocess this grant through the pipeline`)}
@@ -155,7 +155,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
   const rejectBtn = (
     <button
       key="reject"
-      className={`review-btn ${recommended === "reject" ? "review-btn--reject review-btn--recommended" : "review-btn--reject"}`}
+      className={`gw-btn gw-btn--danger review-btn ${recommended === "reject" ? "review-btn--reject review-btn--recommended" : "review-btn--reject"}`}
       onClick={onReject}
       disabled={busy}
       aria-label={rec("reject", `${rejectLabel} — ${rejectPurpose}`)}
@@ -170,7 +170,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
   const needsReuploadBtn = (
     <button
       key="needs_reupload"
-      className="review-btn review-btn--needs-reupload"
+      className="gw-btn gw-btn--secondary review-btn review-btn--needs-reupload"
       onClick={onNeedsReupload}
       disabled={busy}
       aria-label={`${needsReuploadLabel} — mark this grant as needing a new document upload`}

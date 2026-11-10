@@ -36,32 +36,12 @@
 
 .landing-filter-dropdown {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--gw-color-border-input, #767676);
-  border-radius: var(--gw-radius-control);
-  font-size: 14px;
-  background-color: white;
-  color: var(--gw-color-text);
   cursor: pointer;
-  transition: all 0.2s ease;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
   padding-right: 35px;
-}
-
-.landing-filter-dropdown:hover {
-  border-color: var(--gw-color-primary);
-}
-
-.landing-filter-dropdown:focus {
-  border-color: var(--gw-color-primary);
-}
-
-.landing-filter-dropdown:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
 }
 
 /* Table Container */
@@ -72,8 +52,8 @@
 }
 
 .landing-table-scroll:focus-visible {
-  outline: 3px solid var(--gw-color-primary);
-  outline-offset: 3px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
   border-radius: var(--gw-radius-container);
 }
 
@@ -160,8 +140,8 @@
 }
 
 .landing-nofo-name-button:focus-visible {
-  outline: 3px solid var(--gw-color-primary);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
   border-radius: var(--gw-radius-check);
 }
 
@@ -189,14 +169,7 @@
 
 .landing-expired-badge {
   display: inline-block;
-  background-color: var(--gw-color-danger);
-  color: white;
-  font-size: 10px;
-  font-weight: 600;
-  padding: 2px 6px;
-  border-radius: var(--gw-radius-control);
   margin-left: 6px;
-  text-transform: uppercase;
   white-space: nowrap;
 }
 
@@ -208,18 +181,13 @@
 .landing-grant-type-badge {
   display: inline-flex;
   align-items: center;
-  padding: 4px 10px;
-  font-size: 12px;
-  font-weight: 500;
-  border-radius: var(--gw-radius-container);
-  border: 1px solid;
   white-space: nowrap;
 }
 
 .landing-grant-type-badge.unset {
-  background-color: var(--gw-color-surface-subtle);
-  color: var(--gw-color-text-secondary);
-  border-color: var(--gw-color-border);
+  --gw-tag-ink: var(--gw-color-text-secondary);
+  --gw-tag-fill: var(--gw-color-surface-subtle);
+  --gw-tag-line: var(--gw-color-border);
 }
 
 .landing-expiry-date {
@@ -315,24 +283,6 @@
   cursor: not-allowed;
 }
 
-.landing-show-more-button {
-  padding: 10px 28px;
-  background-color: var(--gw-color-primary);
-  color: var(--gw-color-text-inverse);
-  border: none;
-  border-radius: var(--gw-radius-pill);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 2px 6px color-mix(in srgb, var(--gw-color-primary) 30%, transparent);
-}
-
-.landing-show-more-button:hover {
-  background-color: var(--gw-color-primary-hover);
-  box-shadow: 0 3px 10px color-mix(in srgb, var(--gw-color-primary) 40%, transparent);
-}
-
 .landing-pagination-pages {
   display: flex;
   align-items: center;
@@ -384,58 +334,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 16px;
   margin-bottom: 12px;
-  background-color: var(--gw-color-surface-subtle);
-  border: 1px solid var(--gw-color-info-border);
-  border-radius: var(--gw-radius-container);
-  font-size: 14px;
-  color: var(--gw-color-primary);
   gap: 12px;
-}
-
-.search-status-banner--error {
-  background-color: var(--gw-color-surface-subtle);
-  border-color: var(--gw-color-danger-border);
-  color: var(--gw-color-danger-text);
 }
 
 .search-clear-button {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 6px 14px;
-  border: 1px solid var(--gw-color-primary);
-  border-radius: var(--gw-radius-control);
-  background-color: transparent;
-  color: var(--gw-color-primary);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
   min-width: 44px;
-  min-height: 44px;
   justify-content: center;
-}
-
-.search-clear-button:hover {
-  background-color: var(--gw-color-primary);
-  color: var(--gw-color-text-inverse);
-}
-
-.search-clear-button:focus-visible {
-  outline: 2px solid var(--gw-color-primary);
-  outline-offset: 2px;
-}
-
-.search-status-banner--error .search-clear-button {
-  border-color: var(--gw-color-danger);
-  color: var(--gw-color-danger-text);
-}
-
-.search-status-banner--error .search-clear-button:hover {
-  background-color: var(--gw-color-danger);
-  color: var(--gw-color-text-inverse);
 }
 
 /* SearchInput provides a labelled clear button; Blink/WebKit add a second unlabelled X. */
@@ -567,7 +475,7 @@
 }
 
 .landing-header-cell--sortable:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
   outline-offset: -2px;
 }
 
@@ -602,8 +510,8 @@
 }
 
 .landing-sort-reset-link:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
   border-radius: var(--gw-radius-check);
 }
 
@@ -612,28 +520,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 10px 14px;
-  height: 42px;
-  border: 1px solid var(--gw-color-border-input, #767676);
-  border-radius: var(--gw-radius-control);
-  background-color: var(--gw-color-surface, #ffffff);
-  color: var(--gw-color-primary);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
   white-space: nowrap;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-}
-
-.landing-clear-filters-button:hover {
-  background-color: var(--gw-color-primary);
-  border-color: var(--gw-color-primary);
-  color: var(--gw-color-surface, #ffffff);
-}
-
-.landing-clear-filters-button:focus-visible {
-  outline: 2px solid var(--gw-color-focus);
-  outline-offset: 2px;
 }
 
 /* Pinned grant icon */
@@ -648,28 +535,13 @@
    it's standing metadata, not news. */
 .landing-state-badge {
   display: inline-block;
-  background-color: var(--gw-color-surface-subtle);
-  color: var(--gw-color-info);
-  border: 1px solid var(--gw-color-border-strong);
-  font-size: 10px;
-  font-weight: 600;
-  padding: 1px 5px;
-  border-radius: var(--gw-radius-control);
   margin-left: 6px;
-  letter-spacing: 0.02em;
   white-space: nowrap;
 }
 
 .landing-new-badge {
   display: inline-block;
-  background-color: var(--gw-color-success, #047857);
-  color: white;
-  font-size: 10px;
-  font-weight: 600;
-  padding: 2px 6px;
-  border-radius: var(--gw-radius-control);
   margin-left: 6px;
-  text-transform: uppercase;
   white-space: nowrap;
 }
 

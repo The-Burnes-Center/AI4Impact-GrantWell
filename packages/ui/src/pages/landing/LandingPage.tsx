@@ -73,15 +73,15 @@ export default function LandingPage() {
             <div className="marketing__hero-actions">
               <button
                 type="button"
-                className="mk-btn mk-btn--primary"
+                className="gw-btn gw-btn--primary mk-btn mk-btn--primary"
                 onClick={goToLogin}
               >
-                <span>Get Started</span>
+                <span>Get started</span>
                 <ArrowRight className="mk-btn__arrow mk-btn__arrow--lg" />
               </button>
               <button
                 type="button"
-                className="mk-btn mk-btn--outline"
+                className="gw-btn gw-btn--secondary mk-btn mk-btn--outline"
                 onClick={scrollToFeatures}
               >
                 <span>Learn More</span>
@@ -142,10 +142,10 @@ export default function LandingPage() {
           </p>
           <button
             type="button"
-            className="mk-btn mk-btn--light"
+            className="gw-btn gw-btn--inverse mk-btn mk-btn--light"
             onClick={goToLogin}
           >
-            <span>Get Started</span>
+            <span>Get started</span>
             <ArrowRight className="mk-btn__arrow mk-btn__arrow--lg" />
           </button>
         </div>

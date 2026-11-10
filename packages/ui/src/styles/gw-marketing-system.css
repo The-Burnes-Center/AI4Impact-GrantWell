@@ -26,73 +26,9 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 13px 28px;
-  border-radius: var(--gw-radius-pill);
-  background-color: var(--mk-green);
-  color: var(--gw-color-text-inverse);
-  border: 1px solid var(--mk-green);
-  font-family: var(--gw-font-button);
-  font-size: 13px;
-  line-height: 22px;
-  font-weight: 600;
-  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
-  text-transform: var(--gw-button-text-transform);
-  text-decoration: none;
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
   white-space: nowrap;
 }
-
-.marketing .cta-btn:hover,
-.marketing .upload-button:hover,
-.marketing .welcome-modal-btn--primary:hover,
-.marketing .help-modal__confirm-btn:hover,
-.marketing .checklist-help-btn:hover,
-.marketing .ra-export-pdf-btn:hover:not(:disabled),
-.marketing .se-save-btn:hover,
-.marketing .se-next-btn:hover,
-.marketing .pg-upload-btn:hover,
-.marketing .pg-help-btn:hover,
-.marketing .pg-got-it-btn:hover {
-  background-color: var(--mk-green-dark);
-  border-color: var(--mk-green-dark);
-  color: var(--gw-color-text-inverse);
-}
-
-.marketing .cta-btn:active,
-.marketing .upload-button:active,
-.marketing .welcome-modal-btn--primary:active,
-.marketing .help-modal__confirm-btn:active,
-.marketing .checklist-help-btn:active,
-.marketing .ra-export-pdf-btn:active,
-.marketing .se-save-btn:active,
-.marketing .se-next-btn:active,
-.marketing .pg-upload-btn:active,
-.marketing .pg-help-btn:active,
-.marketing .pg-got-it-btn:active {
-  transform: translateY(1px);
-}
-
-/* Disabled state for primary pill buttons */
-.marketing .ra-export-pdf-btn:disabled,
-.marketing .se-save-btn:disabled,
-.marketing .se-next-btn:disabled {
-  background-color: var(--gw-color-disabled-bg);
-  border-color: var(--gw-color-disabled-bg);
-  color: var(--gw-color-disabled-text);
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* ==========================================================================
- * Outline / secondary pill button
- * ======================================================================== */
-.marketing .welcome-modal-btn--secondary,
-.marketing .ra-edit-btn,
-.marketing .ra-back-btn,
-.marketing .se-prev-btn,
-.marketing .se-suggestion-btn,
-.marketing .se-regenerate-btn {
+.marketing .ra-edit-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -114,23 +50,27 @@
   white-space: nowrap;
 }
 
-.marketing .welcome-modal-btn--secondary:hover,
-.marketing .ra-edit-btn:hover,
-.marketing .ra-back-btn:hover,
-.marketing .se-prev-btn:hover,
-.marketing .se-suggestion-btn:hover,
-.marketing .se-regenerate-btn:hover {
+/* ==========================================================================
+ * Outline / secondary pill button
+ * ======================================================================== */
+.marketing .welcome-modal-btn--secondary,
+.marketing .ra-back-btn,
+.marketing .se-prev-btn,
+.marketing .se-suggestion-btn,
+.marketing .se-regenerate-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+.marketing .ra-edit-btn:hover {
   background-color: var(--mk-green);
   color: var(--gw-color-text-inverse);
   border-color: var(--mk-green);
 }
 
-.marketing .welcome-modal-btn--secondary:active,
-.marketing .ra-edit-btn:active,
-.marketing .ra-back-btn:active,
-.marketing .se-prev-btn:active,
-.marketing .se-suggestion-btn:active,
-.marketing .se-regenerate-btn:active {
+.marketing .ra-edit-btn:active {
   transform: translateY(1px);
 }
 
@@ -228,9 +168,7 @@
 
 /* Modal title sits on the teal header, so keep the serif treatment but white text for contrast */
 .marketing .pg-modal-title {
-  font-family: var(--gw-font-serif);
   letter-spacing: 0;
-  color: var(--gw-color-surface, #ffffff);
 }
 
 /* Slightly larger size for top-level panel headings */

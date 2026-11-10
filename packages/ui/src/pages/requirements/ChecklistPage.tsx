@@ -174,7 +174,7 @@ const Checklists: React.FC = () => {
           ) : inReviewMessage ? (
             <div className="checklist-error">
               <h1 className="checklist-error__title">{inReviewMessage}</h1>
-              <Link className="checklist-error__btn" to="/home">
+              <Link className="gw-btn gw-btn--primary checklist-error__btn" to="/home">
                 Go to Home
               </Link>
             </div>
@@ -184,7 +184,7 @@ const Checklists: React.FC = () => {
               <p className="checklist-error__text">
                 We couldn&apos;t find this grant. It may have been removed, or the link is wrong.
               </p>
-              <Link className="checklist-error__btn" to="/home">
+              <Link className="gw-btn gw-btn--primary checklist-error__btn" to="/home">
                 Go to Home
               </Link>
             </div>
@@ -192,8 +192,8 @@ const Checklists: React.FC = () => {
             <div className="checklist-error" role="alert">
               <h1 className="checklist-error__title">Unable to Load Requirements</h1>
               <p className="checklist-error__text">{error}</p>
-              <button className="checklist-error__btn" onClick={() => window.location.reload()}>
-                Try Again
+              <button className="gw-btn gw-btn--primary checklist-error__btn" onClick={() => window.location.reload()}>
+                Try again
               </button>
             </div>
           ) : (
@@ -207,7 +207,7 @@ const Checklists: React.FC = () => {
                       <>
                         <span className="visually-hidden">,</span>{" "}
                         <span
-                          className="checklist-grant-badge"
+                          className="gw-tag checklist-grant-badge"
                           style={{
                             backgroundColor: grantTypeTint(GRANT_TYPES[grantType].color, 8),
                             color: GRANT_TYPES[grantType].color,
@@ -225,7 +225,7 @@ const Checklists: React.FC = () => {
                     you&#39;ll need to prepare.
                   </p>
                 </div>
-                <button className="checklist-help-btn" onClick={() => setShowHelp(true)}>
+                <button className="gw-btn gw-btn--secondary checklist-help-btn" onClick={() => setShowHelp(true)}>
                   <LuInfo size={16} aria-hidden="true" /> Help
                 </button>
               </div>

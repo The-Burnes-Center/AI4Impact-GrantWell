@@ -245,7 +245,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           </h3>
         </div>
         <button
-          className="review-btn review-btn--collapse"
+          className="gw-btn gw-btn--secondary gw-btn--slim review-btn review-btn--collapse"
           onClick={onCollapse}
           aria-label="Collapse review details"
         >
@@ -256,7 +256,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
 
       {detail.adminGuidance && (
         <div
-          className="review-dlq-alert"
+          className="gw-alert gw-alert--warning review-dlq-alert"
           style={{
             borderLeft: `4px solid ${detail.adminGuidance.severity === "critical" ? "var(--gw-color-danger)" : "var(--gw-color-warning)"}`,
           }}
@@ -292,7 +292,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       )}
 
       {review.status === "needs_reupload" && (
-        <div className="review-dlq-alert" style={{ borderLeft: "4px solid var(--gw-color-warning)" }}>
+        <div className="gw-alert gw-alert--warning review-dlq-alert" style={{ borderLeft: "4px solid var(--gw-color-warning)" }}>
           <h4 className="review-dlq-alert__title">Awaiting Document Re-upload</h4>
           <p style={{ margin: "8px 0 0" }}>
             This grant has been marked as needing a new document upload. Upload a corrected grant document to trigger reprocessing.
@@ -301,7 +301,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       )}
 
       {(detail.errorMessage || review.source !== "pipeline") && !detail.adminGuidance && (
-        <div className="review-dlq-alert">
+        <div className="gw-alert gw-alert--warning review-dlq-alert">
           {review.source === "dlq" && (
             <>
               <h4 className="review-dlq-alert__title">Processing Failed (Dead Letter Queue)</h4>
@@ -372,7 +372,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           {getCorrections() !== undefined && (
             <button
               type="button"
-              className="review-btn review-btn--apply-all"
+              className="gw-btn gw-btn--secondary gw-btn--slim review-btn review-btn--apply-all"
               onClick={() => setShowDiff(!showDiff)}
               aria-pressed={showDiff}
               aria-label={showDiff ? "Show editor" : "Review changes"}
@@ -447,7 +447,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
             <textarea
               ref={notesRef}
               id={`admin-notes-${review.review_id}`}
-              className={`review-admin-notes ${notesError ? "review-admin-notes--error" : ""}`}
+              className={`gw-input review-admin-notes ${notesError ? "review-admin-notes--error" : ""}`}
               value={adminNotes}
               onChange={(e) => {
                 setAdminNotes(e.target.value);
@@ -517,14 +517,14 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
               )}
               <div className="modal-actions">
                 <button
-                  className="modal-button secondary"
+                  className="gw-btn gw-btn--secondary modal-button secondary"
                   onClick={() => setRejectModalOpen(false)}
                   aria-label="Cancel reject"
                 >
                   Cancel
                 </button>
                 <button
-                  className="modal-button danger"
+                  className="gw-btn gw-btn--danger modal-button danger"
                   onClick={confirmReject}
                   aria-label={keepsLive ? "Reject new version" : "Reject and delete this grant"}
                 >

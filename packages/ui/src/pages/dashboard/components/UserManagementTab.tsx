@@ -362,10 +362,10 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           </div>
           <button
             type="button"
-            className="feature-rollouts-primary-button"
+            className="gw-btn gw-btn--primary feature-rollouts-primary-button"
             onClick={() => setAddUserModalOpen(true)}
           >
-            <LuUserPlus size={16} aria-hidden="true" /> Add User
+            <LuUserPlus size={16} aria-hidden="true" /> Add user
           </button>
         </div>
 
@@ -378,19 +378,19 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               ref={searchInputRef}
               id="user-management-search"
               type="search"
-              className="feature-rollouts-search-input"
+              className="gw-input feature-rollouts-search-input"
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
               placeholder="Search by email or username"
             />
           </div>
           <div className="feature-rollouts-search-actions">
-            <button type="submit" className="feature-rollouts-primary-button" aria-disabled={loading}>
+            <button type="submit" className="gw-btn gw-btn--primary feature-rollouts-primary-button" aria-disabled={loading}>
               Search
             </button>
             <button
               type="button"
-              className="feature-rollouts-secondary-button"
+              className="gw-btn gw-btn--secondary feature-rollouts-secondary-button"
               onClick={handleClearSearch}
               disabled={!hasActiveSearch && !searchQuery.trim()}
             >
@@ -443,7 +443,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                       </div>
                     </th>
                     <td>
-                      <span className={`user-management-status-pill ${user.enabled ? "is-enabled" : "is-disabled"}`}>
+                      <span className={`gw-tag user-management-status-pill ${user.enabled ? "is-enabled" : "is-disabled"}`}>
                         {user.enabled ? user.status : "DISABLED"}
                       </span>
                     </td>
@@ -453,7 +453,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                       </label>
                       <select
                         id={`role-select-${user.username}`}
-                        className="user-management-role-select"
+                        className="gw-input user-management-role-select"
                         value={draftRole}
                         onChange={(event) =>
                           setDraftRoles((current) => ({
@@ -481,7 +481,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                       </label>
                       <select
                         id={`state-select-${user.username}`}
-                        className="user-management-role-select"
+                        className="gw-input user-management-role-select"
                         value={draftState}
                         onChange={(event) =>
                           setDraftStates((current) => ({
@@ -506,7 +506,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                         {(hasChanges || isSaving) && (
                           <button
                             type="button"
-                            className="feature-rollouts-primary-button"
+                            className="gw-btn gw-btn--primary feature-rollouts-primary-button"
                             onClick={() => !isSaving && void handleSave(user)}
                             aria-disabled={isSaving}
                           >
@@ -577,7 +577,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               id="add-user-email"
               value={addEmail}
               onChange={(e) => setAddEmail(e.target.value)}
-              className="form-input"
+              className="gw-input form-input"
               placeholder="user@example.com"
               autoComplete="email"
               aria-invalid={addEmail.length > 0 && !EMAIL_PATTERN.test(addEmail)}
@@ -588,7 +588,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
             <label htmlFor="add-user-state">{isStateAdmin ? "State" : "State (optional)"}</label>
             <select
               id="add-user-state"
-              className="form-input"
+              className="gw-input form-input"
               value={isStateAdmin ? userState : addState}
               onChange={(e) => setAddState(e.target.value)}
               disabled={isStateAdmin}
@@ -609,18 +609,18 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           )}
           <div className="modal-actions">
             <button
-              className="modal-button secondary"
+              className="gw-btn gw-btn--secondary modal-button secondary"
               onClick={() => setAddUserModalOpen(false)}
               disabled={isCreating}
             >
               Cancel
             </button>
             <button
-              className="modal-button primary"
+              className="gw-btn gw-btn--primary modal-button primary"
               onClick={() => void handleCreateUser()}
               disabled={isCreating || !addEmailValid}
             >
-              {isCreating ? "Adding..." : "Add User"}
+              {isCreating ? "Adding..." : "Add user"}
             </button>
           </div>
         </div>
@@ -641,14 +641,14 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           </p>
           <div className="modal-actions">
             <button
-              className="modal-button secondary"
+              className="gw-btn gw-btn--secondary modal-button secondary"
               onClick={() => setDeleteTarget(null)}
               disabled={isDeleting}
             >
               Cancel
             </button>
             <button
-              className="modal-button danger"
+              className="gw-btn gw-btn--danger modal-button danger"
               onClick={() => void handleDeleteUser()}
               disabled={isDeleting}
             >
@@ -674,14 +674,14 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           </p>
           <div className="modal-actions">
             <button
-              className="modal-button secondary"
+              className="gw-btn gw-btn--secondary modal-button secondary"
               onClick={() => setMfaResetTarget(null)}
               disabled={isResettingMfa}
             >
               Cancel
             </button>
             <button
-              className="modal-button danger"
+              className="gw-btn gw-btn--danger modal-button danger"
               onClick={() => void handleMfaReset()}
               disabled={isResettingMfa}
             >

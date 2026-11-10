@@ -280,7 +280,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
                       <span className="vh-row-time">
                         {DateTime.fromISO(version.created_at).toRelative() || version.created_at}
                       </span>
-                      <span className={`vh-badge vh-badge--${badgeVariant(badgeLabel)}`}>
+                      <span className={`gw-tag vh-badge vh-badge--${badgeVariant(badgeLabel)}`}>
                         {badgeLabel}
                       </span>
                       {version.label && (
@@ -322,7 +322,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
               {restorableSections.length > 1 && (
                 <div className="vh-scope-row">
                   <label htmlFor="vh-scope-select">Section to compare and restore</label>
-                  <select
+                  <select className="gw-input"
                     id="vh-scope-select"
                     value={scopeSection ?? ""}
                     onChange={(e) => setScopeSection(e.target.value || null)}
@@ -342,7 +342,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
 
               <div className="vh-label-row">
                 <label htmlFor="vh-label-input">Label this version</label>
-                <input
+                <input className="gw-input"
                   id="vh-label-input"
                   type="text"
                   maxLength={120}
@@ -350,7 +350,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
                   onChange={(e) => setLabelDraft(e.target.value)}
                   placeholder="e.g. Before budget rewrite"
                 />
-                <button type="button" className="vh-btn" onClick={handleLabel}>Save label</button>
+                <button type="button" className="gw-btn gw-btn--secondary vh-btn" onClick={handleLabel}>Save label</button>
               </div>
 
               {isCurrent && (
@@ -382,7 +382,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
               {scopeSection && (
                 <button
                   type="button"
-                  className="vh-btn vh-btn--primary"
+                  className="gw-btn gw-btn--primary vh-btn vh-btn--primary"
                   onClick={() => setRestoreScope("section")}
                   disabled={!canRestoreSection}
                 >
@@ -391,7 +391,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
               )}
               <button
                 type="button"
-                className="vh-btn"
+                className="gw-btn gw-btn--secondary vh-btn"
                 onClick={() => setRestoreScope("all")}
                 disabled={wouldEraseDraft}
               >

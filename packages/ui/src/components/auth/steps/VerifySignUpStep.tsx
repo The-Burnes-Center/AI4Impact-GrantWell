@@ -43,7 +43,7 @@ export default function VerifySignUpStep({
             onChange={(event) => onVerificationCodeChange(event.target.value)}
             readOnly={loading}
             required
-            className="form-input"
+            className="gw-input form-input"
             inputMode="numeric"
             autoComplete="one-time-code"
             aria-required="true"
@@ -57,7 +57,7 @@ export default function VerifySignUpStep({
             variant="primary"
             type="submit"
             aria-disabled={loading || undefined}
-            className="login-submit-button"
+            className="gw-btn gw-btn--primary login-submit-button"
           >
             {loading ? (
               <>

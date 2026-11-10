@@ -137,7 +137,7 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
             </label>
             <select
               id="outcomes-status"
-              className="analytics__state-select"
+              className="gw-input analytics__state-select"
               value={status}
               onChange={(e) => {
                 setStatus(e.target.value as OutcomeStatus | "");
@@ -157,7 +157,7 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
             <input
               id="outcomes-search"
               type="search"
-              className="analytics__state-select"
+              className="gw-input analytics__state-select"
               placeholder="Search grant, organization, email"
               value={query}
               onChange={(e) => {

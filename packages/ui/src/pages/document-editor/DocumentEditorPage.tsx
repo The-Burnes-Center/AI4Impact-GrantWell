@@ -384,7 +384,7 @@ const DocumentEditor: React.FC = () => {
       <div className="checklist-error" style={{ padding: 40 }}>
         <h2 className="checklist-error__title">Error</h2>
         <p className="checklist-error__text">{error}</p>
-        <button className="checklist-error__btn" onClick={() => window.location.reload()}>Retry</button>
+        <button className="gw-btn gw-btn--primary checklist-error__btn" onClick={() => window.location.reload()}>Retry</button>
       </div>
     );
   }

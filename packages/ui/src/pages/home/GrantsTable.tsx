@@ -308,7 +308,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
     );
   }
 
-  const getGrantTypeBadgeClassName = () => "landing-grant-type-badge";
+  const getGrantTypeBadgeClassName = () => "gw-tag landing-grant-type-badge";
 
   return (
     <div className="landing-grants-table-container">
@@ -318,7 +318,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
           <label htmlFor="status-filter" className="landing-filter-label">Status</label>
           <select
             id="status-filter"
-            className="landing-filter-dropdown"
+            className="gw-input landing-filter-dropdown"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as "all" | "active" | "archived")}
           >
@@ -335,7 +335,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
           <label htmlFor="category-filter" className="landing-filter-label">Category</label>
           <select
             id="category-filter"
-            className="landing-filter-dropdown"
+            className="gw-input landing-filter-dropdown"
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
           >
@@ -358,7 +358,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
           <label htmlFor="grant-type-filter" className="landing-filter-label">Grant Type</label>
           <select
             id="grant-type-filter"
-            className="landing-filter-dropdown"
+            className="gw-input landing-filter-dropdown"
             value={grantTypeFilter}
             onChange={(e) => setGrantTypeFilter(e.target.value as GrantTypeId | "all")}
           >
@@ -381,7 +381,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
         {hasActiveFilters && (
           <button
             type="button"
-            className="landing-clear-filters-button"
+            className="gw-btn gw-btn--secondary landing-clear-filters-button"
             onClick={clearFilters}
             aria-label="Clear filters — reset all active filters"
           >
@@ -395,10 +395,10 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
           together with its text and sweep the dismiss button's label into the
           message, so the alert below carries the announcement instead. */}
       {searchError && (
-        <div className="search-status-banner search-status-banner--error">
+        <div className="gw-alert gw-alert--urgent search-status-banner search-status-banner--error">
           <span>Search failed: {searchError}</span>
           {onClearSearch && (
-            <button className="search-clear-button" onClick={onClearSearch} aria-label="Dismiss error">
+            <button className="gw-btn gw-btn--secondary gw-btn--slim search-clear-button" onClick={onClearSearch} aria-label="Dismiss error">
               <LuX size={16} aria-hidden="true" />
             </button>
           )}
@@ -411,7 +411,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
       {/* Results summary. Announced by the results region below, not here — this
           banner is built at the same moment as its text and contains a button. */}
       {searchResults && !isSearching && !searchError && (
-        <div className="search-status-banner">
+        <div className="gw-alert gw-alert--info search-status-banner">
           <span>
             Found <strong>{filteredNofos.length}</strong> grant{filteredNofos.length !== 1 ? "s" : ""} matching
             your search{!showAllAIResults && filteredNofos.length > AI_INITIAL_LIMIT
@@ -538,14 +538,14 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                     </span>
                   </button>
                   {stateBadge && (
-                    <span className="landing-state-badge" title={`Maintained by ${stateBadge}`}>
+                    <span className="gw-tag gw-tag--neutral landing-state-badge" title={`Maintained by ${stateBadge}`}>
                       <span aria-hidden="true">{nofo.state}</span>
                       <span className="visually-hidden">Maintained by {stateBadge}</span>
                     </span>
                   )}
                   {!isArchived && isRecentlyAdded(nofo.createdAt) && (
                     <span
-                      className="landing-new-badge"
+                      className="gw-tag gw-tag--info landing-new-badge"
                       title={`Added within the last ${NEW_GRANT_WINDOW_DAYS} days`}
                     >
                       New
@@ -554,7 +554,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                   )}
                   {isArchived && (
                     <span
-                      className="landing-expired-badge"
+                      className="gw-tag gw-tag--neutral landing-expired-badge"
                       title="This grant has expired and is no longer accepting applications"
                     >
                       Expired
@@ -581,7 +581,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                       {GRANT_TYPES[nofo.grantType].label}
                     </span>
                   ) : (
-                    <span className="landing-grant-type-badge unset">Unset</span>
+                    <span className="gw-tag landing-grant-type-badge unset">Unset</span>
                   )}
                 </div>
                 <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "var(--gw-color-text-muted)" : undefined }}>
@@ -606,7 +606,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
       {!awaitingAIResults && hasRankedResults && filteredNofos.length > AI_INITIAL_LIMIT && (
         <div className="landing-table-pagination" style={{ justifyContent: "center" }}>
           <button
-            className="landing-show-more-button"
+            className="gw-btn gw-btn--primary landing-show-more-button"
             onClick={() => setShowAllAIResults((prev) => !prev)}
             aria-label={showAllAIResults
               ? `Show less — top ${AI_INITIAL_LIMIT} results only`

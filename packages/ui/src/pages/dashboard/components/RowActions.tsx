@@ -73,7 +73,7 @@ const RowActions = React.memo(function RowActions({ onEdit, onDelete }: RowActio
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="actions-button"
+        className="gw-btn gw-btn--icon actions-button"
         aria-label="Row actions menu"
         aria-haspopup="menu"
         aria-expanded={isOpen}

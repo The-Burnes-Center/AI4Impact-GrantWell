@@ -85,6 +85,7 @@ export default function ProfilePage() {
   const [orgBaseline, setOrgBaseline] = useState({ agency: "", organization: "", jobTitle: "", region: "" });
   const [orgSaving, setOrgSaving] = useState(false);
   const [orgError, setOrgError] = useState<string | null>(null);
+  const [orgMissing, setOrgMissing] = useState<string[]>([]);
   const [orgSaved, setOrgSaved] = useState(false);
 
   useEffect(() => {
@@ -119,8 +120,16 @@ export default function ProfilePage() {
 
   const onSaveOrg = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!orgAgency.trim() || !orgOrganization.trim() || !orgJobTitle.trim() || (REGIONS.length > 0 && !orgRegion)) {
-      setOrgError(REGIONS.length ? "Please complete all four fields." : "Please complete all three fields.");
+    const missing = [
+      !orgAgency.trim() && "profile-agency",
+      !orgOrganization.trim() && "profile-org",
+      !orgJobTitle.trim() && "profile-title",
+      REGIONS.length > 0 && !orgRegion && "profile-region",
+    ].filter((id): id is string => Boolean(id));
+    setOrgMissing(missing);
+    if (missing.length) {
+      setOrgError("Fill in the fields marked below.");
+      document.getElementById(missing[0])?.focus();
       return;
     }
     setOrgSaving(true);
@@ -343,12 +352,12 @@ export default function ProfilePage() {
                   using GrantWell.
                 </p>
                 {orgError && (
-                  <div className="profile-alert profile-alert--error" role="alert">
+                  <div className="gw-alert gw-alert--urgent profile-alert profile-alert--error" role="alert">
                     {orgError}
                   </div>
                 )}
                 {orgSaved && (
-                  <div className="profile-alert profile-alert--success" role="status">
+                  <div className="gw-alert gw-alert--success profile-alert profile-alert--success" role="status">
                     Organization details saved.
                   </div>
                 )}
@@ -356,69 +365,98 @@ export default function ProfilePage() {
                   <div className="profile-section">
                     <label className="profile-field-label" htmlFor="profile-agency">
                       Department
+                      <span className="gw-field__required" aria-hidden="true">*</span>
                     </label>
                     <input
                       id="profile-agency"
+                      aria-required="true"
+                      aria-invalid={orgMissing.includes("profile-agency") || undefined}
+                      aria-describedby={orgMissing.includes("profile-agency") ? "profile-agency-error" : undefined}
                       type="text"
                       value={orgAgency}
                       onChange={(e) => {
                         setOrgAgency(e.target.value);
+                        setOrgMissing((m) => m.filter((id) => id !== "profile-agency"));
                         setOrgSaved(false);
                       }}
-                      className="profile-input"
+                      className="gw-input profile-input"
                       placeholder="e.g. Department of Transportation"
                       maxLength={PROFILE_FIELD_MAX_LENGTH}
                     />
+                    {orgMissing.includes("profile-agency") && (
+                      <p id="profile-agency-error" className="gw-field__message">Enter your department</p>
+                    )}
                   </div>
                   <div className="profile-section">
                     <label className="profile-field-label" htmlFor="profile-org">
                       Organization
+                      <span className="gw-field__required" aria-hidden="true">*</span>
                     </label>
                     <input
                       id="profile-org"
+                      aria-required="true"
+                      aria-invalid={orgMissing.includes("profile-org") || undefined}
+                      aria-describedby={orgMissing.includes("profile-org") ? "profile-org-error" : undefined}
                       type="text"
                       autoComplete="organization"
                       value={orgOrganization}
                       onChange={(e) => {
                         setOrgOrganization(e.target.value);
+                        setOrgMissing((m) => m.filter((id) => id !== "profile-org"));
                         setOrgSaved(false);
                       }}
-                      className="profile-input"
+                      className="gw-input profile-input"
                       placeholder="e.g. Planning Division"
                       maxLength={PROFILE_FIELD_MAX_LENGTH}
                     />
+                    {orgMissing.includes("profile-org") && (
+                      <p id="profile-org-error" className="gw-field__message">Enter your organization</p>
+                    )}
                   </div>
                   <div className="profile-section">
                     <label className="profile-field-label" htmlFor="profile-title">
                       Role / Title
+                      <span className="gw-field__required" aria-hidden="true">*</span>
                     </label>
                     <input
                       id="profile-title"
+                      aria-required="true"
+                      aria-invalid={orgMissing.includes("profile-title") || undefined}
+                      aria-describedby={orgMissing.includes("profile-title") ? "profile-title-error" : undefined}
                       type="text"
                       autoComplete="organization-title"
                       value={orgJobTitle}
                       onChange={(e) => {
                         setOrgJobTitle(e.target.value);
+                        setOrgMissing((m) => m.filter((id) => id !== "profile-title"));
                         setOrgSaved(false);
                       }}
-                      className="profile-input"
+                      className="gw-input profile-input"
                       placeholder="e.g. Grants Manager"
                       maxLength={PROFILE_FIELD_MAX_LENGTH}
                     />
+                    {orgMissing.includes("profile-title") && (
+                      <p id="profile-title-error" className="gw-field__message">Enter your role or title</p>
+                    )}
                   </div>
                   {REGIONS.length > 0 && (
                     <div className="profile-section">
                       <label className="profile-field-label" htmlFor="profile-region">
                         Region
+                        <span className="gw-field__required" aria-hidden="true">*</span>
                       </label>
                       <select
                         id="profile-region"
+                        aria-required="true"
+                        aria-invalid={orgMissing.includes("profile-region") || undefined}
+                        aria-describedby={orgMissing.includes("profile-region") ? "profile-region-error" : undefined}
                         value={orgRegion}
                         onChange={(e) => {
                           setOrgRegion(e.target.value);
+                        setOrgMissing((m) => m.filter((id) => id !== "profile-region"));
                           setOrgSaved(false);
                         }}
-                        className="profile-input"
+                        className="gw-input profile-input"
                       >
                         <option value="">Select a region</option>
                         {REGIONS.map((r) => (
@@ -427,6 +465,9 @@ export default function ProfilePage() {
                           </option>
                         ))}
                       </select>
+                      {orgMissing.includes("profile-region") && (
+                        <p id="profile-region-error" className="gw-field__message">Choose your region</p>
+                      )}
                     </div>
                   )}
                   <div className="profile-actions">
@@ -450,8 +491,8 @@ export default function ProfilePage() {
                     Leave every filter empty to be notified of all new grants.
                   </p>
 
-                  {error && <div className="profile-alert profile-alert--error" role="alert">{error}</div>}
-                  {saved && <div className="profile-alert profile-alert--success" role="status">Preferences saved.</div>}
+                  {error && <div className="gw-alert gw-alert--urgent profile-alert profile-alert--error" role="alert">{error}</div>}
+                  {saved && <div className="gw-alert gw-alert--success profile-alert profile-alert--success" role="status">Preferences saved.</div>}
 
                   {loading ? (
                     <p role="status">Loading…</p>
@@ -491,7 +532,7 @@ export default function ProfilePage() {
                           <div className="profile-chip-toolbar">
                             <input
                               type="search"
-                              className="profile-chip-search"
+                              className="gw-input profile-chip-search"
                               value={categoryQuery}
                               onChange={(e) => setCategoryQuery(e.target.value)}
                               placeholder="Search categories"
@@ -557,7 +598,7 @@ export default function ProfilePage() {
                               setSaved(false);
                             }}
                             placeholder="e.g. broadband, workforce"
-                            className="profile-input"
+                            className="gw-input profile-input"
                           />
                         </div>
                       </fieldset>
@@ -637,7 +678,7 @@ function MfaSection() {
   return (
     <div className="profile-section">
       <span className="profile-field-label">Two-step verification</span>
-      {error && <div className="profile-alert profile-alert--error" role="alert">{error}</div>}
+      {error && <div className="gw-alert gw-alert--urgent profile-alert profile-alert--error" role="alert">{error}</div>}
 
       {status === "on" ? (
         <>
@@ -754,23 +795,23 @@ function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
     <Card header="Sign-in & security" headerStyle="default">
       {MFA_ENABLED && <MfaSection />}
 
-      {pwError && <div className="profile-alert profile-alert--error" role="alert">{pwError}</div>}
-      {pwOk && <div className="profile-alert profile-alert--success" role="status">Password changed. You have been signed out on every device — sign in again with your new password.</div>}
+      {pwError && <div className="gw-alert gw-alert--urgent profile-alert profile-alert--error" role="alert">{pwError}</div>}
+      {pwOk && <div className="gw-alert gw-alert--success profile-alert profile-alert--success" role="status">Password changed. You have been signed out on every device — sign in again with your new password.</div>}
 
       {showPw ? (
         <form onSubmit={changePassword}>
           <div className="profile-section">
             <label className="profile-field-label" htmlFor="pw-old">Current password</label>
-            <input id="pw-old" type={revealPw ? "text" : "password"} autoComplete="current-password" value={oldPw} onChange={(e) => setOldPw(e.target.value)} required className="profile-input" />
+            <input id="pw-old" type={revealPw ? "text" : "password"} autoComplete="current-password" value={oldPw} onChange={(e) => setOldPw(e.target.value)} required className="gw-input profile-input" />
           </div>
           <div className="profile-section">
             <label className="profile-field-label" htmlFor="pw-new">New password</label>
-            <input id="pw-new" type={revealPw ? "text" : "password"} autoComplete="new-password" aria-describedby="pw-new-requirements" value={newPw} onChange={(e) => setNewPw(e.target.value)} required className="profile-input" />
+            <input id="pw-new" type={revealPw ? "text" : "password"} autoComplete="new-password" aria-describedby="pw-new-requirements" value={newPw} onChange={(e) => setNewPw(e.target.value)} required className="gw-input profile-input" />
             <PasswordRequirementsList id="pw-new-requirements" requirements={getPasswordRequirements(newPw)} />
           </div>
           <div className="profile-section">
             <label className="profile-field-label" htmlFor="pw-confirm">Confirm new password</label>
-            <input id="pw-confirm" type={revealPw ? "text" : "password"} autoComplete="new-password" value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} required className="profile-input" />
+            <input id="pw-confirm" type={revealPw ? "text" : "password"} autoComplete="new-password" value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} required className="gw-input profile-input" />
           </div>
           <div className="profile-section">
             <label className="profile-show-password">

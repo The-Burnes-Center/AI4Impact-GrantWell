@@ -79,7 +79,7 @@ export default function DocumentManager({
 
   return (
     <div
-      className="dm-overlay"
+      className="gw-modal__overlay dm-overlay"
       role="presentation"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -87,20 +87,20 @@ export default function DocumentManager({
     >
       <div
         ref={modalRef}
-        className="dm-container"
+        className="gw-modal dm-container"
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         style={{ position: "relative" }}
       >
-        <div className="dm-header">
-          <h2 id={titleId} className="dm-title">Supporting Documents</h2>
-          <button className="dm-close-btn" onClick={onClose} aria-label="Close supporting documents">
+        <div className="gw-modal__header dm-header">
+          <h2 id={titleId} className="gw-modal__title dm-title">Supporting Documents</h2>
+          <button className="gw-btn gw-btn--icon dm-close-btn" onClick={onClose} aria-label="Close supporting documents">
             <LuX size={20} aria-hidden="true" />
           </button>
         </div>
 
-        <div className="dm-body">
+        <div className="gw-modal__body dm-body">
           <DocumentPicker
             library={library}
             selected={selected}
@@ -111,8 +111,8 @@ export default function DocumentManager({
           {saveError && <p className="dm-error" role="alert">{saveError}</p>}
         </div>
 
-        <div className="dm-footer">
-          <button className="dm-footer-close-btn" onClick={onClose}>
+        <div className="gw-modal__footer dm-footer">
+          <button className="gw-btn gw-btn--secondary dm-footer-close-btn" onClick={onClose}>
             Close
           </button>
         </div>

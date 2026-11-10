@@ -30,7 +30,9 @@ export default function NotificationBar() {
       variant={mapNotificationTypeToVariant(notif.type)}
       dismissible={notif.dismissible}
       onClose={() => notif.onDismiss()}
-      className="mb-2"
+      className={`gw-toast gw-toast--${
+        notif.type === "error" ? "urgent" : notif.type === "success" || notif.type === "warning" ? notif.type : "info"
+      } mb-2`}
       transition={false}
       role={undefined}
     >

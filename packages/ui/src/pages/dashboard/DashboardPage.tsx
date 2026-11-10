@@ -473,7 +473,7 @@ const Dashboard: React.FC = () => {
             </div>
             <div className="dashboard-actions">
               <button
-                className="action-button refresh-button"
+                className="gw-btn gw-btn--secondary action-button refresh-button"
                 onClick={handleRefresh}
                 aria-disabled={isRefreshing}
                 aria-busy={isRefreshing}
@@ -487,7 +487,7 @@ const Dashboard: React.FC = () => {
               </button>
               {hasProcessingNofos && (
                 <button
-                  className="action-button refresh-button"
+                  className="gw-btn gw-btn--secondary action-button refresh-button"
                   onClick={() => setAutoRefreshPaused((prev) => !prev)}
                   aria-pressed={autoRefreshPaused}
                 >
@@ -501,14 +501,14 @@ const Dashboard: React.FC = () => {
             {showGrantBanner ? `Success! Grant "${addedGrantName}" has been added` : ""}
           </div>
           {showGrantBanner && (
-            <div className="success-banner">
+            <div className="gw-alert gw-alert--success success-banner">
               <div className="success-banner-content"><LuCheck size={20} className="success-icon" aria-hidden="true" /><span>Success! Grant &quot;{addedGrantName}&quot; has been added</span></div>
               <button
                 onClick={() => {
                   setShowGrantBanner(false);
                   tabRefs[activeTab].current?.focus();
                 }}
-                className="banner-close-button"
+                className="gw-btn gw-btn--icon gw-btn--slim banner-close-button"
                 aria-label="Close notification"
               ><LuX size={18} aria-hidden="true" /></button>
             </div>
@@ -664,7 +664,7 @@ const Dashboard: React.FC = () => {
                 ) : (
                 <>
                 {isAdmin && !processingBannerDismissed && (processingCount > 0 || finishedCount > 0) && (
-                  <div className="processing-banner">
+                  <div className="gw-alert gw-alert--info processing-banner">
                     <div className="processing-banner__message" role="status" aria-atomic="true">
                       {processingCount > 0 ? (
                         <LuLoader size={16} className="processing-banner__spin" aria-hidden="true" />
@@ -705,11 +705,11 @@ const Dashboard: React.FC = () => {
                     <div className="search-input-wrapper">
                       <LuSearch className="search-icon" size={18} aria-hidden="true" />
                       <label htmlFor="grant-search" className="visually-hidden">Search grants</label>
-                      <input id="grant-search" type="text" className="search-input" placeholder="Search grants..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                      <input id="grant-search" type="text" className="gw-input search-input" placeholder="Search grants..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                     </div>
 
                     <div className="filter-container" onBlur={handleFilterFocusOut}>
-                      <button ref={filterButtonRef} className={`filter-button ${filterCount > 0 ? "active" : ""}`}
+                      <button ref={filterButtonRef} className={`gw-btn gw-btn--icon filter-button ${filterCount > 0 ? "active" : ""}`}
                         onClick={toggleFilterMenu} onKeyDown={handleFilterMenuKeyDown} onBlur={handleFilterFocusOut} aria-label={filterCount > 0 ? `Filter grants, ${filterCount} active` : "Filter grants"} aria-expanded={filterMenuOpen} aria-haspopup="menu">
                         <LuFilter size={18} aria-hidden="true" />
                         {filterCount > 0 && <span className="filter-badge" aria-hidden="true">{filterCount}</span>}
@@ -759,11 +759,11 @@ const Dashboard: React.FC = () => {
                   </div>
 
                   <div className="action-buttons">
-                    <button className="action-button add-button" onClick={() => setUploadNofoModalOpen(true)}>
+                    <button className="gw-btn gw-btn--primary action-button add-button" onClick={() => setUploadNofoModalOpen(true)}>
                       <LuUpload size={16} className="button-icon" aria-hidden="true" /><span>Add Grant</span>
                     </button>
                     {canScrape && (
-                      <button className="action-button scraper-button" onClick={() => !isScraping && setScrapeConfirmModalOpen(true)} aria-disabled={isScraping} aria-busy={isScraping}>
+                      <button className="gw-btn gw-btn--secondary action-button scraper-button" onClick={() => !isScraping && setScrapeConfirmModalOpen(true)} aria-disabled={isScraping} aria-busy={isScraping}>
                         <LuDownload size={16} className="button-icon" aria-hidden="true" /><span>{isScraping ? "Scraping..." : "Auto-Scrape Grants"}</span><span className="visually-hidden"> from grants.gov</span>
                       </button>
                     )}
@@ -778,8 +778,8 @@ const Dashboard: React.FC = () => {
                     </div>
                     <p className="warning-text">This will search for new grants on grants.gov and add them to the system. This process may take a few minutes.</p>
                     <div className="modal-actions">
-                      <button className="modal-button secondary" onClick={() => setScrapeConfirmModalOpen(false)}>Cancel</button>
-                      <button className="modal-button primary" onClick={confirmAutomatedScraper}>Yes, Scrape Now</button>
+                      <button className="gw-btn gw-btn--secondary modal-button secondary" onClick={() => setScrapeConfirmModalOpen(false)}>Cancel</button>
+                      <button className="gw-btn gw-btn--primary modal-button primary" onClick={confirmAutomatedScraper}>Yes, scrape now</button>
                     </div>
                   </div>
                 </Modal>

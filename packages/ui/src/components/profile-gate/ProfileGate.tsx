@@ -200,17 +200,17 @@ export default function ProfileGate({ children }: ProfileGateProps) {
           aria-labelledby="profile-gate-title"
           ref={dialogRef}
         >
-          <div className="profile-gate__panel">
-            <header className="profile-gate__header">
+          <div className="gw-modal profile-gate__panel">
+            <header className="gw-modal__header profile-gate__header">
               <span className="profile-gate__header-icon" aria-hidden="true">
                 <LuBuilding2 size={22} />
               </span>
-              <h2 className="profile-gate__title" id="profile-gate-title">
+              <h2 className="gw-modal__title profile-gate__title" id="profile-gate-title">
                 Complete your profile
               </h2>
             </header>
 
-            <div className="profile-gate__body">
+            <div className="gw-modal__body profile-gate__body">
               <p className="profile-gate__lead">
                 One-time setup. Tell us a little about where you work — this helps us
                 understand who&apos;s using GrantWell.
@@ -219,7 +219,7 @@ export default function ProfileGate({ children }: ProfileGateProps) {
               {/* The empty slot is the live region; the styled alert is inserted into it. */}
               <div role="alert">
                 {error && (
-                  <div className="profile-gate__alert">
+                  <div className="gw-alert gw-alert--urgent profile-gate__alert">
                     <LuTriangleAlert size={16} aria-hidden="true" />
                     <span>{error}</span>
                   </div>

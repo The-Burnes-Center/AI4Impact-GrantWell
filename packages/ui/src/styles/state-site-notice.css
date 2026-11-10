@@ -4,11 +4,6 @@
   align-items: flex-start;
   gap: var(--gw-spacing-md);
   margin: var(--gw-spacing-lg) var(--gw-spacing-lg) 0;
-  padding: var(--gw-spacing-md) var(--gw-spacing-lg);
-  background: var(--gw-color-primary-light);
-  border-left: 4px solid var(--gw-color-primary);
-  border-radius: var(--gw-radius-control);
-  color: var(--gw-color-text);
 }
 
 .state-site-notice__text {
@@ -44,6 +39,6 @@
 
 .state-site-notice__close:focus-visible,
 .state-site-notice__text a:focus-visible {
-  outline: 3px solid var(--gw-color-focus);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
 }

@@ -435,7 +435,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
       )}
 
       {exportError && (
-        <div className="ra-export-error">
+        <div className="gw-alert gw-alert--urgent ra-export-error">
           <LuTriangleAlert className="ra-export-error__icon" aria-hidden="true" />
           <span>{exportError}</span>
         </div>
@@ -461,7 +461,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
       <div className="ra-actions">
         <button
           onClick={() => onNavigate("sectionEditor")}
-          className="ra-back-btn"
+          className="gw-btn gw-btn--secondary ra-back-btn"
         >
           <LuArrowLeft className="ra-back-btn__icon" aria-hidden="true" />
           Back to Editing
@@ -478,7 +478,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             disabled={!completenessPassed}
             // Stays focusable while busy: export moves focus here once the menu closes.
             aria-disabled={exportingFormat !== null || undefined}
-            className="ra-export-pdf-btn"
+            className="gw-btn gw-btn--primary ra-export-pdf-btn"
             aria-haspopup="menu"
             aria-expanded={exportDropdownOpen}
             aria-busy={exportingFormat !== null}

@@ -67,7 +67,7 @@ const FeatureRolloutAllowlistManager: React.FC<FeatureRolloutAllowlistManagerPro
                   </div>
                 </div>
                 <button
-                  className="feature-rollouts-secondary-button"
+                  className="gw-btn gw-btn--secondary feature-rollouts-secondary-button"
                   onClick={() => onRevokeAccess(user.email)}
                   disabled={pendingEmail === user.email}
                   type="button"
@@ -94,7 +94,7 @@ const FeatureRolloutAllowlistManager: React.FC<FeatureRolloutAllowlistManagerPro
             <input
               id="feature-rollouts-user-search"
               type="text"
-              className="feature-rollouts-search-input"
+              className="gw-input feature-rollouts-search-input"
               value={searchQuery}
               onChange={(event) => onSearchQueryChange(event.target.value)}
               onKeyDown={handleKeyDown}
@@ -103,7 +103,7 @@ const FeatureRolloutAllowlistManager: React.FC<FeatureRolloutAllowlistManagerPro
           </div>
           <div className="feature-rollouts-search-actions">
             <button
-              className="feature-rollouts-primary-button"
+              className="gw-btn gw-btn--primary feature-rollouts-primary-button"
               onClick={onSearchUsers}
               disabled={searchingUsers}
               type="button"
@@ -111,7 +111,7 @@ const FeatureRolloutAllowlistManager: React.FC<FeatureRolloutAllowlistManagerPro
               {searchingUsers ? "Searching..." : "Search"}
             </button>
             <button
-              className="feature-rollouts-secondary-button"
+              className="gw-btn gw-btn--secondary feature-rollouts-secondary-button"
               onClick={onClearSearch}
               disabled={!hasActiveSearchState}
               type="button"
@@ -142,7 +142,7 @@ const FeatureRolloutAllowlistManager: React.FC<FeatureRolloutAllowlistManagerPro
                 </div>
                 {user.hasAccess ? (
                   <button
-                    className="feature-rollouts-secondary-button"
+                    className="gw-btn gw-btn--secondary feature-rollouts-secondary-button"
                     onClick={() => onRevokeAccess(user.email)}
                     disabled={pendingEmail === user.email}
                     type="button"
@@ -151,7 +151,7 @@ const FeatureRolloutAllowlistManager: React.FC<FeatureRolloutAllowlistManagerPro
                   </button>
                 ) : (
                   <button
-                    className="feature-rollouts-primary-button"
+                    className="gw-btn gw-btn--primary feature-rollouts-primary-button"
                     onClick={() => onGrantAccess(user.email)}
                     disabled={pendingEmail === user.email}
                     type="button"

@@ -132,10 +132,10 @@ export default function OutcomeReminder({ onDone }: { onDone?: () => void }) {
           ))}
         </ul>
         <div className="modal-actions">
-          <button type="button" className="modal-button secondary" onClick={() => void notNow()} disabled={saving}>
+          <button type="button" className="gw-btn gw-btn--secondary modal-button secondary" onClick={() => void notNow()} disabled={saving}>
             Not now
           </button>
-          <button type="submit" className="modal-button primary" disabled={saving}>
+          <button type="submit" className="gw-btn gw-btn--primary modal-button primary" disabled={saving}>
             {saving ? "Saving..." : "Save"}
           </button>
         </div>

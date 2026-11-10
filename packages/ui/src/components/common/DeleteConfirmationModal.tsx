@@ -58,18 +58,18 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
         <p className="warning-text">This action cannot be undone.</p>
         <div className="modal-actions">
           <button
-            className="modal-button secondary"
+            className="gw-btn gw-btn--secondary modal-button secondary"
             onClick={onClose}
             aria-label="Cancel delete"
           >
             Cancel
           </button>
           <button
-            className="modal-button danger"
+            className="gw-btn gw-btn--danger modal-button danger"
             onClick={onConfirm}
-            aria-label={`Delete Permanently — ${itemCount ?? 1} ${itemLabel}${isPlural ? "s" : ""}`}
+            aria-label={`Delete permanently — ${itemCount ?? 1} ${itemLabel}${isPlural ? "s" : ""}`}
           >
-            Delete Permanently
+            Delete permanently
           </button>
         </div>
       </div>
