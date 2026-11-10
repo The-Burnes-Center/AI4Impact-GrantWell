@@ -75,56 +75,6 @@
 }
 
 /* ==========================================================================
- * Pill tabs (segmented controls)
- *
- * Wraps a tab group in the pill chrome, like the login page auth-tabs.
- * Apply by adding `gw-tabs` to the parent of `.tab-button` / `.checklist-tab`.
- * Without the wrapper class, individual tabs still get pill styling.
- * ======================================================================== */
-.marketing .gw-tabs {
-  display: inline-flex;
-  gap: 0;
-  background-color: color-mix(in srgb, var(--gw-color-primary) 8%, transparent);
-  border-radius: var(--gw-radius-pill);
-  padding: 4px;
-}
-
-.marketing .tab-button,
-.marketing .checklist-tab {
-  flex: 1 1 0;
-  padding: 10px 22px;
-  border: none;
-  background: transparent;
-  color: var(--mk-green-deepest);
-  font-family: var(--gw-font-button);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: var(--gw-button-letter-spacing, 1.2px);
-  text-transform: var(--gw-button-text-transform);
-  border-radius: var(--gw-radius-pill);
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
-
-.marketing .tab-button:hover,
-.marketing .checklist-tab:hover {
-  color: var(--mk-green-dark);
-  background-color: color-mix(in srgb, var(--gw-color-primary) 12%, transparent);
-}
-
-.marketing .tab-button.active,
-.marketing .checklist-tab--active {
-  background-color: var(--mk-green);
-  color: var(--gw-color-text-inverse);
-}
-
-.marketing .tab-button.active:hover,
-.marketing .checklist-tab--active:hover {
-  background-color: var(--mk-green-dark);
-  color: var(--gw-color-text-inverse);
-}
-
-/* ==========================================================================
  * Auth-card surface (white, soft shadow, 16px radius)
  * ======================================================================== */
 .marketing .history-card,

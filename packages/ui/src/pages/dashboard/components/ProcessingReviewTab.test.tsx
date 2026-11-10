@@ -261,7 +261,7 @@ describe("requirements the grant doesn't support", () => {
     ["a new grant", { ...held, nofo_name: "New-Grant", source: "pipeline" as const }, { ...detail, nofo_name: "New-Grant", source: "pipeline" as const }],
   ])("recommends Approve for %s", async (_label, item, shown) => {
     await openDetail(item, shown);
-    expect(screen.getByRole("button", { name: /^Approve As-Is .*\(recommended\)$/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^Approve as is .*\(recommended\)$/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /^Reprocess — / })).not.toHaveAccessibleName(/recommended/);
   });
 
@@ -355,6 +355,6 @@ describe("requirements the grant doesn't support", () => {
       },
     });
     expect(screen.getByRole("button", { name: /^Re-upload grant document .*\(recommended\)$/ })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /^Approve As-Is — / })).not.toHaveAccessibleName(/recommended/);
+    expect(screen.getByRole("button", { name: /^Approve as is — / })).not.toHaveAccessibleName(/recommended/);
   });
 });

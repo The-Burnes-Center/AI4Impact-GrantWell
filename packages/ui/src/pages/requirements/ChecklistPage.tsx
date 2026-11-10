@@ -251,13 +251,13 @@ const Checklists: React.FC = () => {
               )}
 
               <div className="checklist-tabs">
-                <div className="checklist-tabs__header" role="tablist" tabIndex={-1} aria-label="Grant requirements" onKeyDown={handleTabsKeyDown}>
+                <div className="gw-tabs checklist-tabs__header" role="tablist" tabIndex={-1} aria-label="Grant requirements" onKeyDown={handleTabsKeyDown}>
                   {TAB_CONFIG.map((tab) => {
                     const isActive = tab.id === activeTabId;
                     return (
                       <button
                         key={tab.id}
-                        className={`checklist-tab${isActive ? " checklist-tab--active" : ""}`}
+                        className={`gw-tab checklist-tab${isActive ? " checklist-tab--active" : ""}`}
                         onClick={() => handleTabClick(tab.id)}
                         role="tab"
                         tabIndex={isActive ? 0 : -1}

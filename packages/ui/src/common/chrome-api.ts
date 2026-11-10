@@ -97,6 +97,8 @@ export const CHROME_CLASSES = [
   "gw-toast--warning",
   "gw-toast--urgent",
   "gw-toast--success",
+  "gw-tabs",
+  "gw-tab",
   "gw-tag",
   "gw-tag--neutral",
   "gw-tag--info",

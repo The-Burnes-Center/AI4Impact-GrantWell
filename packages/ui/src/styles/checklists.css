@@ -205,37 +205,7 @@
 }
 
 .checklist-tabs__header {
-  border-bottom: 1px solid var(--gw-color-border);
-  display: flex;
-  flex-wrap: wrap;
-  font-family: var(--gw-font-family);
-}
-
-.checklist-tab {
-  padding: 18px 28px;
-  cursor: pointer;
-  background-color: transparent;
-  font-weight: normal;
-  font-size: 17px;
-  transition: all 0.2s ease;
-  color: var(--gw-color-text);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border: none;
-  border-bottom: 3px solid transparent;
-}
-
-.checklist-tab--active {
-  background-color: var(--gw-color-primary-light);
-  font-weight: 600;
-  color: var(--gw-color-primary-active);
-  border-bottom: 3px solid var(--gw-color-primary);
-}
-
-.checklist-tab:focus-visible {
-  outline: var(--gw-focus-width) solid var(--gw-color-focus);
-  outline-offset: var(--gw-focus-offset);
+  padding: 0 var(--gw-spacing-lg);
 }
 
 .checklist-tabs__content {

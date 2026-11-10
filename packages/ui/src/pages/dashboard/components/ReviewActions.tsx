@@ -105,7 +105,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
       ? "Publishing..."
       : hasCorrections
         ? "Approve with edits"
-        : "Approve As-Is";
+        : "Approve as is";
 
   const approveBtn = canApprove ? (
     <button

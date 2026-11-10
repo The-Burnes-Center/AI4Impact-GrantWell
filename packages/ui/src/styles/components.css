@@ -384,3 +384,49 @@
 .gw-tag--success { --gw-tag-ink: var(--gw-color-success-text); --gw-tag-fill: var(--gw-color-success-light); --gw-tag-line: var(--gw-color-success-border); }
 .gw-tag--warning { --gw-tag-ink: var(--gw-color-warning-text); --gw-tag-fill: var(--gw-color-warning-light); --gw-tag-line: var(--gw-color-warning-border); }
 .gw-tag--danger { --gw-tag-ink: var(--gw-color-danger-text); --gw-tag-fill: var(--gw-color-danger-light); --gw-tag-line: var(--gw-color-danger-border); }
+
+/* ==============================
+ * Tabs
+ * ============================== */
+
+/* The kit's header tab: a 4px underline marks the selected tab, and hover shows the same line. On narrow
+   screens the strip wraps rather than scrolls, so no tab is hidden. The ring sits inside the tab, as in
+   the kit's focus state. */
+.gw-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--gw-spacing-lg);
+  box-shadow: inset 0 -1px 0 var(--gw-color-border);
+}
+.gw-tab {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gw-spacing-sm);
+  min-height: 52px;
+  margin: 0;
+  padding: 16px 8px 12px;
+  border: 0;
+  border-bottom: 4px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--gw-color-text-strong);
+  font-family: inherit;
+  font-size: var(--gw-font-size-base);
+  font-weight: var(--gw-font-weight-semibold);
+  line-height: 1.25;
+  white-space: nowrap;
+  text-transform: none;
+  letter-spacing: normal;
+  transform: none;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.gw-tab:hover { color: var(--gw-color-primary); border-bottom-color: var(--gw-color-primary); }
+.gw-tab[aria-selected="true"] { border-bottom-color: var(--gw-color-primary); }
+.gw-tab.gw-tab:focus-visible {
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: calc(-1 * var(--gw-focus-width));
+  box-shadow: none;
+}

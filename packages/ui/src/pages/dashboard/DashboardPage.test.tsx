@@ -63,16 +63,16 @@ describe("Admin Dashboard tabs", () => {
     expect(await tabNames()).toEqual(["Grants", "Analytics", "User management"]);
   });
 
-  it("shows Auto-Scrape Grants to a developer but not to a state admin on a multi-state site", async () => {
+  it("shows Auto-scrape grants to a developer but not to a state admin on a multi-state site", async () => {
     signedInAs({ "custom:role": '["Admin"]', "custom:state": "MA" });
     const { unmount } = renderDashboard();
     await tabNames();
-    expect(screen.queryByRole("button", { name: /Auto-Scrape Grants/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /Auto-scrape grants/ })).toBeNull();
     unmount();
     signedInAs({ "custom:role": '["Developer"]' });
     renderDashboard();
     await tabNames();
-    expect(await screen.findByRole("button", { name: /Auto-Scrape Grants/ })).toBeTruthy();
+    expect(await screen.findByRole("button", { name: /Auto-scrape grants/ })).toBeTruthy();
   });
 
   it("adds Feature Rollouts and Digest Preview for a developer", async () => {

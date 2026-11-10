@@ -70,40 +70,7 @@ body {
 
 /* Tab controls */
 .tab-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
   margin-bottom: 20px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--gw-color-border);
-}
-
-.tab-button {
-  background: var(--gw-color-surface);
-  border: 1px solid var(--gw-color-border);
-  border-radius: var(--gw-radius-pill);
-  padding: 12px 18px;
-  font-size: var(--gw-font-size-sm);
-  font-weight: var(--gw-font-weight-semibold);
-  line-height: 1.4;
-  color: var(--gw-color-text-secondary);
-  cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
-  min-height: 44px;
-  font-family: inherit;
-}
-
-.tab-button.active {
-  color: var(--mk-green-dark);
-  border-color: var(--gw-color-primary);
-  background: var(--gw-color-primary-light);
-  box-shadow: var(--gw-shadow-low);
-}
-
-.tab-button:hover:not(.active) {
-  color: var(--gw-color-heading);
-  border-color: var(--gw-color-primary);
-  transform: translateY(-1px);
 }
 
 /* Segmented control inside the Grants tab: browse vs. triage */
@@ -476,8 +443,7 @@ body {
 }
 
 .feature-rollouts-search-input:focus-visible,
-.feature-rollouts-mode-option-label input:focus-visible,
-.tab-button:focus-visible {
+.feature-rollouts-mode-option-label input:focus-visible {
   outline: var(--gw-focus-width) solid var(--gw-color-focus);
   outline-offset: var(--gw-focus-offset);
 }

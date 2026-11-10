@@ -514,11 +514,11 @@ const Dashboard: React.FC = () => {
             </div>
           )}
 
-          <div className="tab-controls" role="tablist" aria-label="Admin Dashboard sections">
+          <div className="gw-tabs tab-controls" role="tablist" aria-label="Admin Dashboard sections">
             <button
               id="dashboard-tab-grants"
               ref={grantsTabRef}
-              className={`tab-button ${activeTab === "grants" ? "active" : ""}`}
+              className={`gw-tab tab-button ${activeTab === "grants" ? "active" : ""}`}
               onClick={() => setActiveTab("grants")}
               onKeyDown={handleTabKeyDown}
               role="tab"
@@ -532,7 +532,7 @@ const Dashboard: React.FC = () => {
               <button
                 id="dashboard-tab-analytics"
                 ref={analyticsTabRef}
-                className={`tab-button ${activeTab === "analytics" ? "active" : ""}`}
+                className={`gw-tab tab-button ${activeTab === "analytics" ? "active" : ""}`}
                 onClick={() => setActiveTab("analytics")}
                 onKeyDown={handleTabKeyDown}
                 role="tab"
@@ -547,7 +547,7 @@ const Dashboard: React.FC = () => {
               <button
                 id="dashboard-tab-rollouts"
                 ref={rolloutsTabRef}
-                className={`tab-button ${activeTab === "feature-rollouts" ? "active" : ""}`}
+                className={`gw-tab tab-button ${activeTab === "feature-rollouts" ? "active" : ""}`}
                 onClick={() => setActiveTab("feature-rollouts")}
                 onKeyDown={handleTabKeyDown}
                 role="tab"
@@ -562,7 +562,7 @@ const Dashboard: React.FC = () => {
               <button
                 id="dashboard-tab-user-management"
                 ref={userManagementTabRef}
-                className={`tab-button ${activeTab === "user-management" ? "active" : ""}`}
+                className={`gw-tab tab-button ${activeTab === "user-management" ? "active" : ""}`}
                 onClick={() => setActiveTab("user-management")}
                 onKeyDown={handleTabKeyDown}
                 role="tab"
@@ -577,7 +577,7 @@ const Dashboard: React.FC = () => {
               <button
                 id="dashboard-tab-digest-preview"
                 ref={digestPreviewTabRef}
-                className={`tab-button ${activeTab === "digest-preview" ? "active" : ""}`}
+                className={`gw-tab tab-button ${activeTab === "digest-preview" ? "active" : ""}`}
                 onClick={() => setActiveTab("digest-preview")}
                 onKeyDown={handleTabKeyDown}
                 role="tab"
@@ -764,13 +764,13 @@ const Dashboard: React.FC = () => {
                     </button>
                     {canScrape && (
                       <button className="gw-btn gw-btn--secondary action-button scraper-button" onClick={() => !isScraping && setScrapeConfirmModalOpen(true)} aria-disabled={isScraping} aria-busy={isScraping}>
-                        <LuDownload size={16} className="button-icon" aria-hidden="true" /><span>{isScraping ? "Scraping..." : "Auto-Scrape Grants"}</span><span className="visually-hidden"> from grants.gov</span>
+                        <LuDownload size={16} className="button-icon" aria-hidden="true" /><span>{isScraping ? "Scraping..." : "Auto-scrape grants"}</span><span className="visually-hidden"> from grants.gov</span>
                       </button>
                     )}
                   </div>
                 </div>
 
-                <Modal isOpen={scrapeConfirmModalOpen} onClose={() => setScrapeConfirmModalOpen(false)} title="Confirm Auto-Scrape">
+                <Modal isOpen={scrapeConfirmModalOpen} onClose={() => setScrapeConfirmModalOpen(false)} title="Confirm auto-scrape">
                   <div className="modal-form">
                     <div className="delete-confirmation">
                       <LuInfo size={32} className="warning-icon dashboard-info-icon" aria-hidden="true" />
