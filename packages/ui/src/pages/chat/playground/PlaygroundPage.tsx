@@ -100,9 +100,9 @@ export default function Playground() {
                 <button
                   className="gw-btn gw-btn--primary pg-upload-btn"
                   onClick={() => setUploadModalOpen(true)}
-                  aria-label={`Supporting Documents — choose what the AI reads in this chat${uploadedFileCount > 0 ? `. ${uploadedFileCount} selected.` : ""}`}
+                  aria-label={`Supporting documents — choose what the AI reads in this chat${uploadedFileCount > 0 ? `. ${uploadedFileCount} selected.` : ""}`}
                 >
-                  <LuUpload size={16} aria-hidden="true" /> Supporting Documents
+                  <LuUpload size={16} aria-hidden="true" /> Supporting documents
                   {uploadedFileCount > 0 && (
                     <span className="pg-upload-badge" aria-hidden="true">
                       <LuFileText size={11} aria-hidden="true" />

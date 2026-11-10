@@ -239,7 +239,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
-  // For AI results: show top 10 initially, expand on "Show More".
+  // For AI results: show top 10 initially, expand on "Show more".
   // For normal browsing: use existing pagination.
   const visibleNofos = hasRankedResults
     ? (showAllAIResults ? filteredNofos : filteredNofos.slice(0, AI_INITIAL_LIMIT))
@@ -355,14 +355,14 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
         </div>
 
         <div className="landing-filter-dropdown-wrapper">
-          <label htmlFor="grant-type-filter" className="landing-filter-label">Grant Type</label>
+          <label htmlFor="grant-type-filter" className="landing-filter-label">Grant type</label>
           <select
             id="grant-type-filter"
             className="gw-input landing-filter-dropdown"
             value={grantTypeFilter}
             onChange={(e) => setGrantTypeFilter(e.target.value as GrantTypeId | "all")}
           >
-            <option value="all">All Grant Types ({nofos.filter((nofo) =>
+            <option value="all">All grant types ({nofos.filter((nofo) =>
               (statusFilter === "all" || nofo.status === statusFilter) &&
               (categoryFilter === "all" || nofo.category === categoryFilter)
             ).length})</option>

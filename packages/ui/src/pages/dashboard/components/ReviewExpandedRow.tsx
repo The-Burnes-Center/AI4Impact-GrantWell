@@ -241,7 +241,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       <div className="review-expanded-row__header">
         <div>
           <h3 className="review-expanded-row__title">
-            Review Details
+            Review details
           </h3>
         </div>
         <button
@@ -318,7 +318,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           )}
           {review.source === "duplicate" && (
             <>
-              <h4 className="review-dlq-alert__title">Duplicate Document Detected</h4>
+              <h4 className="review-dlq-alert__title">Duplicate document detected</h4>
               <p style={{ margin: "8px 0 0" }}>This grant was flagged as a duplicate of an existing document already in the system.</p>
               <div className="review-dlq-guidance">
                 <h5 className="review-dlq-guidance__title">What to do:</h5>
@@ -332,7 +332,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           )}
           {review.source === "quality" && (
             <>
-              <h4 className="review-dlq-alert__title">Source Document Quality Check Failed</h4>
+              <h4 className="review-dlq-alert__title">Source document quality check failed</h4>
               <p style={{ margin: "8px 0 0" }}>The uploaded file did not pass the quality check. This usually means the document is not a valid grant document, is corrupted, or contains mostly non-text content (e.g., scanned images without OCR).</p>
               <div className="review-dlq-guidance">
                 <h5 className="review-dlq-guidance__title">What to do:</h5>
@@ -347,7 +347,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           )}
           {review.source === "pipeline" && detail.errorMessage && (
             <>
-              <h4 className="review-dlq-alert__title">Processing Error</h4>
+              <h4 className="review-dlq-alert__title">Processing error</h4>
               <p style={{ margin: "8px 0 0" }}>This grant encountered an error during pipeline processing.</p>
               <div className="review-dlq-guidance">
                 <h5 className="review-dlq-guidance__title">What to do:</h5>
@@ -377,7 +377,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
               aria-pressed={showDiff}
               aria-label={showDiff ? "Show editor" : "Review changes"}
             >
-              {showDiff ? "Show Editor" : "Review Changes"}
+              {showDiff ? "Show editor" : "Review changes"}
             </button>
           )}
           {showDiff && getCorrections() !== undefined ? (
@@ -398,7 +398,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
 
       {detail.documentTextPreview && (
         <details className="review-source-preview">
-          <summary>Source Document Preview</summary>
+          <summary>Source document preview</summary>
           <div className="review-source-preview__content">
             {detail.documentTextPreview}
           </div>
@@ -408,7 +408,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       {isResolved ? (
         <div style={{ marginBottom: "16px" }}>
           <h4 className="summary-field__label">
-            Admin Notes
+            Admin notes
           </h4>
           {adminNotes ? (
             <div
@@ -441,7 +441,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
               htmlFor={`admin-notes-${review.review_id}`}
               className="summary-field__label"
             >
-              Admin Notes
+              Admin notes
               <span className="review-field-required">(Required for rejection)</span>
             </label>
             <textarea
@@ -472,7 +472,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           <Modal
             isOpen={rejectModalOpen}
             onClose={() => setRejectModalOpen(false)}
-            title="Confirm Reject"
+            title="Confirm reject"
           >
             <div className="modal-form">
               <div className="delete-confirmation">
@@ -528,7 +528,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
                   onClick={confirmReject}
                   aria-label={keepsLive ? "Reject new version" : "Reject and delete this grant"}
                 >
-                  {keepsLive ? "Reject new version" : "Reject and Delete"}
+                  {keepsLive ? "Reject new version" : "Reject and delete"}
                 </button>
               </div>
             </div>

@@ -94,7 +94,7 @@ export default function DocumentManager({
         style={{ position: "relative" }}
       >
         <div className="gw-modal__header dm-header">
-          <h2 id={titleId} className="gw-modal__title dm-title">Supporting Documents</h2>
+          <h2 id={titleId} className="gw-modal__title dm-title">Supporting documents</h2>
           <button className="gw-btn gw-btn--icon dm-close-btn" onClick={onClose} aria-label="Close supporting documents">
             <LuX size={20} aria-hidden="true" />
           </button>

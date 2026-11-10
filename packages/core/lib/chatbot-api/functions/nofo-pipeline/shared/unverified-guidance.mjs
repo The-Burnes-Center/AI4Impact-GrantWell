@@ -1,10 +1,10 @@
 /** Admin guidance for a grant whose Requirements page items could not be matched to the grant. */
 
 export const CATEGORY_LABELS = {
-  EligibilityCriteria: "Eligibility Criteria",
-  RequiredDocuments: "Required Documents",
-  ProjectNarrativeSections: "Project Narrative Sections",
-  KeyDeadlines: "Key Deadlines",
+  EligibilityCriteria: "Eligibility criteria",
+  RequiredDocuments: "Required documents",
+  ProjectNarrativeSections: "Project narrative sections",
+  KeyDeadlines: "Key deadlines",
   application_deadline: "Application deadline",
   grant_text: "Grant text",
 };

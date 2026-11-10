@@ -45,7 +45,7 @@ describe("GrantsTable with AI search results", () => {
     expect(names[1]).toContain("Federal Bridges");
     expect(screen.getByText(/grants? matching/).textContent).toMatch(/^Found 2 grants matching/);
 
-    await user.selectOptions(screen.getByLabelText("Grant Type"), "federal");
+    await user.selectOptions(screen.getByLabelText("Grant type"), "federal");
     expect(rowNames()).toEqual([expect.stringContaining("Federal Bridges")]);
     expect(screen.getByText(/grants? matching/).textContent).toMatch(/^Found 1 grant matching/);
   });

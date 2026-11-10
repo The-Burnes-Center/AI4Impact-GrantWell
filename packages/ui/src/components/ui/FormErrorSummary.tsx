@@ -21,7 +21,7 @@
  *   errors={formErrors}
  *   title="Please fix the following issues:"
  *   fieldLabels={{
- *     orgName: "Organization Name",
+ *     orgName: "Organization name",
  *     einNumber: "EIN Number"
  *   }}
  * />

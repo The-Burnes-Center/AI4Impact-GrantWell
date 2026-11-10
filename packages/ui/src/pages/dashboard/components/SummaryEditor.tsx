@@ -55,7 +55,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
               color: "var(--gw-color-text)",
             }}
           >
-            <span aria-hidden="true">+ </span>Add Item<span className="visually-hidden"> to {label}</span>
+            <span aria-hidden="true">+ </span>Add item<span className="visually-hidden"> to {label}</span>
           </button>
         </div>
         {items.length > 0 && (
@@ -107,7 +107,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
         ))}
         {items.length === 0 && (
           <div style={{ fontSize: "12px", color: "var(--gw-color-text-secondary)", padding: "8px 0 0 28px" }}>
-            No items extracted. Click &quot;+ Add Item&quot; to add manually.
+            No items extracted. Click &quot;+ Add item&quot; to add manually.
           </div>
         )}
       </div>
@@ -131,7 +131,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
           htmlFor="review-grant-name"
           className="summary-field__label"
         >
-          Grant Name
+          Grant name
         </label>
         <input
           id="review-grant-name"
@@ -179,10 +179,10 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
         </div>
       </div>
 
-      {renderField("Eligibility Criteria", "EligibilityCriteria")}
-      {renderField("Required Documents", "RequiredDocuments")}
-      {renderField("Project Narrative Sections", "ProjectNarrativeSections")}
-      {renderField("Key Deadlines", "KeyDeadlines")}
+      {renderField("Eligibility criteria", "EligibilityCriteria")}
+      {renderField("Required documents", "RequiredDocuments")}
+      {renderField("Project narrative sections", "ProjectNarrativeSections")}
+      {renderField("Key deadlines", "KeyDeadlines")}
     </div>
   );
 };

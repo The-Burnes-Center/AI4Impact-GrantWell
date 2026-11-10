@@ -91,8 +91,8 @@ test("uses a document from My Documents in a chat, leaves it unticked in a new a
     expect(await downloadDocument(key), "stored file").toBe(contents);
   });
 
-  const opener = page.getByRole("button", { name: /^Supporting Documents/ });
-  const dialog = page.getByRole("dialog", { name: "Supporting Documents" });
+  const opener = page.getByRole("button", { name: /^Supporting documents/ });
+  const dialog = page.getByRole("dialog", { name: "Supporting documents" });
   const chatPicker = dialog.getByRole("group", { name: "Use in this chat" });
 
   await test.step("tick it in a new chat", async () => {
@@ -134,7 +134,7 @@ test("uses a document from My Documents in a chat, leaves it unticked in a new a
     await expect(sources).toBeVisible();
     expect(Number((await sources.innerText()).match(/\((\d+)\)/)![1]), "grant document plus the file").toBeGreaterThanOrEqual(2);
     await sources.click();
-    await expect(answer.getByRole("group", { name: "Your Supporting Documents" }).getByRole("listitem")).toHaveText([fileName]);
+    await expect(answer.getByRole("group", { name: "Your supporting documents" }).getByRole("listitem")).toHaveText([fileName]);
 
     expect(await chatDocumentKeys(sessionId!), "selection kept by the chat's first save").toEqual({
       document_keys: [key],

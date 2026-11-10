@@ -217,7 +217,7 @@ describe("requirements the grant doesn't support", () => {
       missingCategories: [],
       canApprove: true,
       failingItems: [
-        { category: "EligibilityCriteria", label: "Eligibility Criteria", item: "Tribes", reason: "No passage in the grant states this." },
+        { category: "EligibilityCriteria", label: "Eligibility criteria", item: "Tribes", reason: "No passage in the grant states this." },
         { category: "application_deadline", label: "Application deadline", item: "2027-04-01", reason: "The date 2027-04-01 does not appear in the grant." },
       ],
     },
@@ -238,7 +238,7 @@ describe("requirements the grant doesn't support", () => {
     const heading = await screen.findByText("Requirements not confirmed in the grant:");
     const items = within(heading.parentElement as HTMLElement).getAllByRole("listitem").map((li) => li.textContent);
     expect(items).toEqual([
-      "Eligibility Criteria: “Tribes” — No passage in the grant states this.",
+      "Eligibility criteria: “Tribes” — No passage in the grant states this.",
       "Application deadline: “2027-04-01” — The date 2027-04-01 does not appear in the grant.",
     ]);
   });
@@ -267,10 +267,10 @@ describe("requirements the grant doesn't support", () => {
 
   it("warns that rejecting a grant that was live deletes it for everyone", async () => {
     const { user } = await openDetail(held, detail);
-    await user.type(screen.getByRole("textbox", { name: /Admin Notes/ }), "Not a real grant");
+    await user.type(screen.getByRole("textbox", { name: /Admin notes/ }), "Not a real grant");
     await user.click(screen.getByRole("button", { name: /^Reject — / }));
 
-    const dialog = await screen.findByRole("dialog", { name: "Confirm Reject" });
+    const dialog = await screen.findByRole("dialog", { name: "Confirm reject" });
     expect(within(dialog).getByText("This grant was live. Rejecting deletes it and its files for everyone.")).toBeInTheDocument();
   });
 
@@ -279,19 +279,19 @@ describe("requirements the grant doesn't support", () => {
       { ...held, nofo_name: "New-Grant", source: "pipeline" },
       { ...detail, nofo_name: "New-Grant", source: "pipeline" }
     );
-    await user.type(screen.getByRole("textbox", { name: /Admin Notes/ }), "Duplicate");
+    await user.type(screen.getByRole("textbox", { name: /Admin notes/ }), "Duplicate");
     await user.click(screen.getByRole("button", { name: /^Reject — / }));
 
-    const dialog = await screen.findByRole("dialog", { name: "Confirm Reject" });
+    const dialog = await screen.findByRole("dialog", { name: "Confirm reject" });
     expect(within(dialog).queryByText(/This grant was live/)).not.toBeInTheDocument();
     expect(within(dialog).getByText(/permanently delete the grant document/)).toBeInTheDocument();
   });
 
   const rejectDialog = async (item: ReviewItem, shown: ReviewDetail, routes: Parameters<typeof stubFetch>[0] = {}) => {
     const view = await openDetail(item, shown, routes);
-    await view.user.type(screen.getByRole("textbox", { name: /Admin Notes/ }), "Wrong document");
+    await view.user.type(screen.getByRole("textbox", { name: /Admin notes/ }), "Wrong document");
     await view.user.click(screen.getByRole("button", { name: /^Reject( new version)? — / }));
-    return { ...view, dialog: await screen.findByRole("dialog", { name: "Confirm Reject" }) };
+    return { ...view, dialog: await screen.findByRole("dialog", { name: "Confirm reject" }) };
   };
 
   it("warns for a held grant that was live before, whatever step held it this time", async () => {
@@ -354,7 +354,7 @@ describe("requirements the grant doesn't support", () => {
         failingItems: [{ category: "grant_text", label: "Grant text", item: "Grant text", reason: "The grant text is missing." }],
       },
     });
-    expect(screen.getByRole("button", { name: /^Re-upload Grant Document .*\(recommended\)$/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^Re-upload grant document .*\(recommended\)$/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /^Approve As-Is — / })).not.toHaveAccessibleName(/recommended/);
   });
 });

@@ -217,7 +217,7 @@ export default function Sessions(props: SessionsProps) {
             }}
           >
             <LuPlus size={16} className="button-icon" aria-hidden="true" />
-            <span>New Chat</span>
+            <span>New chat</span>
           </button>
           <button
             className="gw-btn gw-btn--danger action-button danger-button"

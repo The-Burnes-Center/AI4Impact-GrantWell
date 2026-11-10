@@ -84,7 +84,7 @@ export default function LandingPage() {
                 className="gw-btn gw-btn--secondary mk-btn mk-btn--outline"
                 onClick={scrollToFeatures}
               >
-                <span>Learn More</span>
+                <span>Learn more</span>
                 <ArrowRight className="mk-btn__arrow mk-btn__arrow--lg" />
               </button>
             </div>

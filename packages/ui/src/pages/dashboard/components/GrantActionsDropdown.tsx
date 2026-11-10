@@ -192,7 +192,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
                 {nofo.status === "active" ? (
                   <><LuArchive size={16} className="menu-icon" aria-hidden="true" /><span>Archive</span></>
                 ) : (
-                  <><LuCheck size={16} className="menu-icon" aria-hidden="true" /><span>Mark Active</span></>
+                  <><LuCheck size={16} className="menu-icon" aria-hidden="true" /><span>Mark active</span></>
                 )}
               </button>
               <button
@@ -211,7 +211,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
                 tabIndex={-1}
               >
                 <LuFilePen size={16} className="menu-icon" aria-hidden="true" />
-                <span>Edit Requirements</span>
+                <span>Edit requirements</span>
               </button>
               <button
                 onClick={() => { onDelete(); closeMenu(); }}

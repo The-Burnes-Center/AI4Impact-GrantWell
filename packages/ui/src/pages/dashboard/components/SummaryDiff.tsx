@@ -14,10 +14,10 @@ interface SummaryDiffProps {
 }
 
 const ARRAY_FIELDS = [
-  { key: "EligibilityCriteria", label: "Eligibility Criteria" },
-  { key: "RequiredDocuments", label: "Required Documents" },
-  { key: "ProjectNarrativeSections", label: "Project Narrative Sections" },
-  { key: "KeyDeadlines", label: "Key Deadlines" },
+  { key: "EligibilityCriteria", label: "Eligibility criteria" },
+  { key: "RequiredDocuments", label: "Required documents" },
+  { key: "ProjectNarrativeSections", label: "Project narrative sections" },
+  { key: "KeyDeadlines", label: "Key deadlines" },
 ] as const;
 
 const SummaryDiff: React.FC<SummaryDiffProps> = ({ original, edited, headingLevel = 3 }) => {
@@ -109,9 +109,9 @@ const SummaryDiff: React.FC<SummaryDiffProps> = ({ original, edited, headingLeve
           color: "var(--gw-color-heading)",
         }}
       >
-        Requirements Changes
+        Requirements changes
       </Heading>
-      {renderScalarDiff("Grant Name", "GrantName")}
+      {renderScalarDiff("Grant name", "GrantName")}
       {renderScalarDiff("Agency", "Agency")}
       {renderScalarDiff("Category", "Category")}
       {ARRAY_FIELDS.map(({ key, label }) => renderArrayDiff(label, key))}

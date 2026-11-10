@@ -75,7 +75,7 @@ describe("Write Application documents", () => {
     expect(await screen.findByRole("checkbox", { name: /plan\.pdf/ })).toBeChecked();
     expect(screen.getByRole("checkbox", { name: /budget\.pdf/ })).not.toBeChecked();
 
-    await user.click(screen.getByRole("button", { name: "Create Draft" }));
+    await user.click(screen.getByRole("button", { name: "Create draft" }));
 
     await waitFor(() => expect(net.to(START)).toHaveLength(1));
     expect(net.last(START).body).toMatchObject({ documentKeys: ["user-1/documents/plan.pdf"] });
@@ -104,7 +104,7 @@ describe("Write Application documents", () => {
     );
     await screen.findByRole("checkbox", { name: /budget\.pdf/ });
 
-    await user.click(screen.getByRole("button", { name: "Create Draft" }));
+    await user.click(screen.getByRole("button", { name: "Create draft" }));
 
     expect(await screen.findByText("This grant is being reviewed and will be back soon.")).toBeInTheDocument();
     expect(screen.queryByText(/GRANT_IN_REVIEW/)).not.toBeInTheDocument();

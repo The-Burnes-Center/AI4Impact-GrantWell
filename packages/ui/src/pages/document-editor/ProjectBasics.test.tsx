@@ -7,7 +7,7 @@ const HINT = "Enter the amount in numbers only, for example 25000";
 describe("ProjectBasics requested amount", () => {
   it("says to use numbers when letters are typed, then clears once the amount is valid", () => {
     render(<ProjectBasics onContinue={vi.fn()} />);
-    const amount = screen.getByLabelText(/Requested Amount/);
+    const amount = screen.getByLabelText(/Requested amount/);
 
     fireEvent.change(amount, { target: { value: "abc" } });
     expect(screen.getByRole("alert")).toHaveTextContent(HINT);

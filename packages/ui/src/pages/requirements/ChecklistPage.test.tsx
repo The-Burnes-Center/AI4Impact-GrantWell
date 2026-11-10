@@ -81,7 +81,7 @@ describe("ChecklistPage missing grant", () => {
     renderChecklist(summary, json({ nofoData: [] }));
     expect(await screen.findByRole("heading", { level: 1, name: "Grant not found" })).toBeInTheDocument();
     expect(screen.getByText("We couldn't find this grant. It may have been removed, or the link is wrong.")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Go to Home" })).toHaveAttribute("href", "/home");
+    expect(screen.getByRole("link", { name: "Go to home" })).toHaveAttribute("href", "/home");
     expect(screen.queryByText(/Please try again/)).not.toBeInTheDocument();
   });
 
@@ -99,7 +99,7 @@ describe("ChecklistPage missing grant", () => {
     expect(
       await screen.findByRole("heading", { level: 1, name: "This grant is being reviewed and will be back soon." })
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Go to Home" })).toHaveAttribute("href", "/home");
+    expect(screen.getByRole("link", { name: "Go to home" })).toHaveAttribute("href", "/home");
     expect(screen.queryByText("Grant not found")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Try again" })).not.toBeInTheDocument();
   });
@@ -107,7 +107,7 @@ describe("ChecklistPage missing grant", () => {
   it("keeps the retry message for a server error on a listed grant", async () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     renderChecklist(json({}, 500));
-    expect(await screen.findByRole("heading", { level: 1, name: "Unable to Load Requirements" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 1, name: "Unable to load requirements" })).toBeInTheDocument();
     expect(screen.getByText("Failed to load grant requirements. Please try again.")).toBeInTheDocument();
   });
 });
@@ -127,17 +127,17 @@ describe("ChecklistPage heading and tabs", () => {
 
     await user.click(eligibility);
     await user.keyboard("{ArrowRight}");
-    const documents = screen.getByRole("tab", { name: "Required Documents" });
+    const documents = screen.getByRole("tab", { name: "Required documents" });
     await waitFor(() => expect(documents).toHaveFocus());
     expect(documents).toHaveAttribute("aria-selected", "true");
     expect(screen.getAllByRole("tab").map((t) => t.tabIndex)).toEqual([-1, 0, -1, -1]);
 
     await user.keyboard("{End}");
-    await waitFor(() => expect(screen.getByRole("tab", { name: "Key Deadlines" })).toHaveFocus());
+    await waitFor(() => expect(screen.getByRole("tab", { name: "Key deadlines" })).toHaveFocus());
     await user.keyboard("{ArrowRight}");
     await waitFor(() => expect(eligibility).toHaveFocus());
     await user.keyboard("{ArrowLeft}");
-    await waitFor(() => expect(screen.getByRole("tab", { name: "Key Deadlines" })).toHaveFocus());
+    await waitFor(() => expect(screen.getByRole("tab", { name: "Key deadlines" })).toHaveFocus());
     await user.keyboard("{Home}");
     await waitFor(() => expect(eligibility).toHaveFocus());
     expect(eligibility).toHaveAttribute("aria-selected", "true");

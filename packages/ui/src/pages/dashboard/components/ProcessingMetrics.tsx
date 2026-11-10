@@ -59,20 +59,20 @@ const ProcessingMetrics: React.FC<ProcessingMetricsProps> = ({
     <div className="metrics-grid" role="region" aria-label="Processing pipeline metrics">
       <div className="metric-card">
         <div className="metric-card__value">{metrics.totalProcessed}</div>
-        <div className="metric-card__label">Total Processed</div>
+        <div className="metric-card__label">Total processed</div>
       </div>
       <div className="metric-card">
         <div className={`metric-card__value review-quality-score--${successRating}`}>
           {metrics.successRate}%
         </div>
-        <div className="metric-card__label">Success Rate</div>
+        <div className="metric-card__label">Success rate</div>
         <ScoreFlag rating={successRating} label={RATING_LABELS[successRating]} />
       </div>
       <div className="metric-card">
         <div className={`metric-card__value ${metrics.pendingCount > 0 ? "review-quality-score--medium" : ""}`}>
           {metrics.pendingCount}
         </div>
-        <div className="metric-card__label">Pending Review</div>
+        <div className="metric-card__label">Pending review</div>
         {metrics.pendingCount > 0 && <ScoreFlag rating="medium" label="Needs review" />}
       </div>
       <div className="metric-card">

@@ -555,7 +555,7 @@ const Dashboard: React.FC = () => {
                 aria-controls={activeTab === "feature-rollouts" ? "dashboard-panel-rollouts" : undefined}
                 tabIndex={activeTab === "feature-rollouts" ? 0 : -1}
               >
-                Feature Rollouts
+                Feature rollouts
               </button>
             )}
             {canManageUsers && (
@@ -570,7 +570,7 @@ const Dashboard: React.FC = () => {
                 aria-controls={activeTab === "user-management" ? "dashboard-panel-user-management" : undefined}
                 tabIndex={activeTab === "user-management" ? 0 : -1}
               >
-                User Management
+                User management
               </button>
             )}
             {isDeveloper && EMAIL_DIGEST && (
@@ -585,7 +585,7 @@ const Dashboard: React.FC = () => {
                 aria-controls={activeTab === "digest-preview" ? "dashboard-panel-digest-preview" : undefined}
                 tabIndex={activeTab === "digest-preview" ? 0 : -1}
               >
-                Digest Preview
+                Digest preview
               </button>
             )}
           </div>
@@ -718,7 +718,7 @@ const Dashboard: React.FC = () => {
                       {filterMenuOpen && (
                         <div ref={filterMenuRef} className="filter-menu" role="menu" tabIndex={-1} onKeyDown={handleFilterMenuKeyDown} onBlur={handleFilterFocusOut}>
                           <div className="filter-menu-group" role="group" aria-labelledby={statusGroupId}>
-                            <div className="filter-menu-header" id={statusGroupId}>Filter by Status</div>
+                            <div className="filter-menu-header" id={statusGroupId}>Filter by status</div>
                             {STATUS_FILTERS.map((status, index) => (
                               <button key={status} onClick={() => setStatusFilter(status)}
                                 ref={(el) => { filterItemRefs.current[index] = el; }}
@@ -728,14 +728,14 @@ const Dashboard: React.FC = () => {
                                 tabIndex={focusedFilterIndex === index ? 0 : -1}>
                                 <div className="filter-option-content">
                                   <span className="filter-option-check">{statusFilter === status ? "✓" : ""}</span>
-                                  {status === "all" ? "All Status" : status.charAt(0).toUpperCase() + status.slice(1)}
+                                  {status === "all" ? "All statuses" : status.charAt(0).toUpperCase() + status.slice(1)}
                                 </div>
                               </button>
                             ))}
                           </div>
                           <div className="filter-menu-divider" />
                           <div className="filter-menu-group" role="group" aria-labelledby={grantTypeGroupId}>
-                            <div className="filter-menu-header" id={grantTypeGroupId}>Filter by Grant Type</div>
+                            <div className="filter-menu-header" id={grantTypeGroupId}>Filter by grant type</div>
                             {GRANT_TYPE_FILTERS.map((type, typeIndex) => {
                               const index = STATUS_FILTERS.length + typeIndex;
                               return (
@@ -747,7 +747,7 @@ const Dashboard: React.FC = () => {
                                   tabIndex={focusedFilterIndex === index ? 0 : -1}>
                                   <div className="filter-option-content">
                                     <span className="filter-option-check">{grantTypeFilter === type ? "✓" : ""}</span>
-                                    {type === "all" ? "All Types" : GRANT_TYPES[type].label}
+                                    {type === "all" ? "All types" : GRANT_TYPES[type].label}
                                   </div>
                                 </button>
                               );
@@ -760,7 +760,7 @@ const Dashboard: React.FC = () => {
 
                   <div className="action-buttons">
                     <button className="gw-btn gw-btn--primary action-button add-button" onClick={() => setUploadNofoModalOpen(true)}>
-                      <LuUpload size={16} className="button-icon" aria-hidden="true" /><span>Add Grant</span>
+                      <LuUpload size={16} className="button-icon" aria-hidden="true" /><span>Add grant</span>
                     </button>
                     {canScrape && (
                       <button className="gw-btn gw-btn--secondary action-button scraper-button" onClick={() => !isScraping && setScrapeConfirmModalOpen(true)} aria-disabled={isScraping} aria-busy={isScraping}>

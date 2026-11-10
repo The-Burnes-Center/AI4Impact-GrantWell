@@ -349,7 +349,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             marginBottom: spacing.sm,
             fontFamily: typography.fontFamily,
           }}>
-            Additional Context
+            Additional context
           </h3>
           <p style={{
             fontSize: typography.fontSize.sm,
@@ -451,8 +451,8 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               isLoading
                 ? "Processing..."
                 : hasExistingDraft
-                  ? "Generate Again"
-                  : "Create Draft"
+                  ? "Generate again"
+                  : "Create draft"
             }
             continueDisabled={isLoading || library.uploading}
             continueLoading={isLoading}

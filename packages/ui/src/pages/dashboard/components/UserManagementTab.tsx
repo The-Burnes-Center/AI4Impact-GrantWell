@@ -339,9 +339,9 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
         <div className="feature-rollouts-card__header">
           <div>
             <span className="feature-rollouts-eyebrow">
-              {isStateAdmin ? "State Administration" : "Developer Controls"}
+              {isStateAdmin ? "State administration" : "Developer controls"}
             </span>
-            <h2>User Management</h2>
+            <h2>User management</h2>
             <p>
               {isStateAdmin
                 ? `Manage users in ${userState}. You can add users, change roles between User and Admin, and remove users — all scoped to ${userState}.`
@@ -565,13 +565,13 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
         )}
       </div>
 
-      <Modal isOpen={addUserModalOpen} onClose={() => setAddUserModalOpen(false)} title="Add New User">
+      <Modal isOpen={addUserModalOpen} onClose={() => setAddUserModalOpen(false)} title="Add new user">
         <div className="modal-form">
           <p className="modal-description">
             Enter the email address of the user to add. They will receive an email with instructions to set up their account.
           </p>
           <div className="form-group">
-            <label htmlFor="add-user-email">Email Address</label>
+            <label htmlFor="add-user-email">Email address</label>
             <input
               type="email"
               id="add-user-email"
@@ -633,7 +633,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
             setDeleteTarget(null);
           }
         }}
-        title="Delete User"
+        title="Delete user"
       >
         <div className="modal-form">
           <p className="modal-description">
@@ -652,7 +652,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               onClick={() => void handleDeleteUser()}
               disabled={isDeleting}
             >
-              {isDeleting ? "Deleting..." : "Delete User"}
+              {isDeleting ? "Deleting..." : "Delete user"}
             </button>
           </div>
         </div>

@@ -114,7 +114,7 @@ function buildAdminGuidance(reason, context) {
       guidance.actions = [
         "Verify the correct file was uploaded — this should be the full grant document, not an amendment or appendix.",
         "Check if the PDF is readable (not scanned images without OCR, not password-protected).",
-        "Use the 'Re-upload Grant Document' button below to upload the correct document without leaving this page.",
+        "Use the 'Re-upload grant document' button below to upload the correct document without leaving this page.",
         "If this is an amendment or supplement, upload the full original grant document instead.",
       ];
       break;
@@ -128,7 +128,7 @@ function buildAdminGuidance(reason, context) {
       guidance.actions = [
         "Check if this is the complete grant document or just a section/chapter of a larger document.",
         "Verify the PDF is not corrupted — try opening it manually to confirm all pages are present.",
-        "Use the 'Re-upload Grant Document' button below to upload the correct document without leaving this page.",
+        "Use the 'Re-upload grant document' button below to upload the correct document without leaving this page.",
         "If the grant document has multiple parts, upload the main part that contains eligibility and narrative requirements.",
       ];
       break;

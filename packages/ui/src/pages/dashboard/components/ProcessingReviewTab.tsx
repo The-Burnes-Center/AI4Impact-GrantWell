@@ -20,8 +20,8 @@ interface ProcessingReviewTabProps {
 type StatusFilter = "all" | "pending_review" | "approved" | "rejected" | "failed" | "needs_reupload" | "superseded";
 
 const STATUS_LABELS: Record<string, string> = {
-  all: "All Statuses",
-  pending_review: "Pending Review",
+  all: "All statuses",
+  pending_review: "Pending review",
   needs_reupload: "Needs Re-upload",
   approved: "Approved",
   rejected: "Rejected",
@@ -411,10 +411,10 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
               className="gw-btn gw-btn--primary review-btn review-btn--bulk-reprocess"
               onClick={() => void handleBulkReprocess()}
               disabled={!canReprocess || bulkAction !== null}
-              aria-label={`${bulkAction === "reprocess" ? "Reprocessing..." : "Reprocess Selected"} — ${selected.size} grant${selected.size === 1 ? "" : "s"}`}
+              aria-label={`${bulkAction === "reprocess" ? "Reprocessing..." : "Reprocess selected"} — ${selected.size} grant${selected.size === 1 ? "" : "s"}`}
             >
               <LuRefreshCw size={14} className={bulkAction === "reprocess" ? "refresh-icon" : ""} aria-hidden="true" />
-              <span>{bulkAction === "reprocess" ? "Reprocessing..." : "Reprocess Selected"}</span>
+              <span>{bulkAction === "reprocess" ? "Reprocessing..." : "Reprocess selected"}</span>
             </button>
             <button
               className="gw-btn gw-btn--secondary review-btn review-btn--needs-reupload"
@@ -457,7 +457,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                   disabled={reviews.length === 0}
                 />
               </div>
-              <div className="header-cell" role="columnheader">Grant Name</div>
+              <div className="header-cell" role="columnheader">Grant name</div>
               <div className="header-cell" role="columnheader">Reason</div>
               <div className="header-cell" role="columnheader">Status</div>
               <div

@@ -71,7 +71,7 @@ const HelpModal = React.memo(function HelpModal({ isOpen, onClose }: HelpModalPr
             <p style={{ margin: 0, lineHeight: "1.6", fontSize: "15px", color: "var(--gw-color-text)" }}>
               Click through the tabs above (
               <strong style={{ fontWeight: 600 }}>
-                Eligibility, Required Documents, Narrative Sections, Key Deadlines
+                Eligibility, Required documents, Narrative sections, Key deadlines
               </strong>
               ) to see what you need for this grant.
             </p>

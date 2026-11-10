@@ -362,7 +362,7 @@ export default function HomePage() {
         <ContentBox>
           <section aria-labelledby="grants-table-heading" className="grants-table-section">
             <h2 id="grants-table-heading" className="visually-hidden">
-              Grants Table with Filters
+              Grants table with filters
             </h2>
             <GrantsTable
               nofos={tableNofos}

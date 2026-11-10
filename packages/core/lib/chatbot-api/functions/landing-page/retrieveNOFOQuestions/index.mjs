@@ -178,7 +178,7 @@ export const handler = async (event) => {
         body: JSON.stringify({
           error: "GRANT_IN_REVIEW",
           message: GRANT_IN_REVIEW_MESSAGE,
-          cta: { label: "Go to Home", target: "/home" },
+          cta: { label: "Go to home", target: "/home" },
         }),
       };
     }

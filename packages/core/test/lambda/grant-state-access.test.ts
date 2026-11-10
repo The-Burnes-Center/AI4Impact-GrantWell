@@ -373,7 +373,7 @@ describe("grants held for review", () => {
   it("the summary refuses a grant in review with the message and a way home", async () => {
     const res = await landing(summaryHandler, signedInAs(null, "MA"), "Held Grant/summary.json");
     expect(res.statusCode).toBe(409);
-    expect(JSON.parse(res.body)).toEqual({ error: "GRANT_IN_REVIEW", message: IN_REVIEW, cta: { label: "Go to Home", target: "/home" } });
+    expect(JSON.parse(res.body)).toEqual({ error: "GRANT_IN_REVIEW", message: IN_REVIEW, cta: { label: "Go to home", target: "/home" } });
     expect(s3.commandCalls(GetObjectCommand)).toHaveLength(0);
   });
 
@@ -414,7 +414,7 @@ describe("grants held for review", () => {
     for (const grant of ["Held Grant", "New Grant"]) {
       const res = await landing(questionsHandler, signedInAs(null, "MA"), `${grant}/questions.json`);
       expect(res.statusCode).toBe(409);
-      expect(JSON.parse(res.body)).toEqual({ error: "GRANT_IN_REVIEW", message: IN_REVIEW, cta: { label: "Go to Home", target: "/home" } });
+      expect(JSON.parse(res.body)).toEqual({ error: "GRANT_IN_REVIEW", message: IN_REVIEW, cta: { label: "Go to home", target: "/home" } });
     }
     expect(s3.commandCalls(GetObjectCommand)).toHaveLength(0);
   });

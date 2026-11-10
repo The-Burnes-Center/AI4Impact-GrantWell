@@ -126,7 +126,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
           style={{ margin: 0 }}
           onSubmit={handleSubmit}
         >
-          <h2 className="feedback-heading">Help Us Improve GrantWell</h2>
+          <h2 className="feedback-heading">Help us improve GrantWell</h2>
 
           <div className="feedback-divider" />
 
@@ -283,7 +283,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
                 className="feedback-submit"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Submitting..." : "Send Feedback"}
+                {isSubmitting ? "Submitting..." : "Send feedback"}
               </button>
             </div>
           )}

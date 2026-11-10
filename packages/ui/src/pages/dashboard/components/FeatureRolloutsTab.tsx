@@ -207,8 +207,8 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
   return (
     <div className="feature-rollouts-panel">
       <FeatureRolloutPanel
-        eyebrow="Developer Controls"
-        title="Maintenance Mode"
+        eyebrow="Developer controls"
+        title="Maintenance mode"
         description="Take the site offline for all users and admins. Developers bypass the maintenance page automatically."
         overview={
           <section className="feature-rollouts-overview" aria-label="Maintenance mode summary">
@@ -288,8 +288,8 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
       <div style={{ marginTop: "2rem" }} />
 
       <FeatureRolloutPanel
-        eyebrow="Developer Controls"
-        title="AI Search Beta"
+        eyebrow="Developer controls"
+        title="AI search beta"
         description="Control who sees the AI-powered grant search."
         overview={
           <FeatureRolloutOverview

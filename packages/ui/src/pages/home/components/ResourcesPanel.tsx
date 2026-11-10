@@ -2,7 +2,7 @@ import React from "react";
 
 const RESOURCES = [
   {
-    title: "Federal Grant Finder",
+    title: "Federal grant finder",
     href: "https://simpler.grants.gov/",
     description:
       "Find grants you are eligible for with Grants.gov Federal Grants Finder.",
@@ -12,7 +12,7 @@ const RESOURCES = [
 const ResourcesPanel = React.memo(function ResourcesPanel() {
   return (
   <div className="resources-panel">
-    <h2 className="resources-panel__heading">Additional Resources</h2>
+    <h2 className="resources-panel__heading">Additional resources</h2>
     {RESOURCES.map((resource, index) => (
       <div key={index} className="resource-card">
         <a

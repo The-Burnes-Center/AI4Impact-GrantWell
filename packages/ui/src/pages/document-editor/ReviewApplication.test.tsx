@@ -31,7 +31,7 @@ describe("ReviewApplication after-export steps", () => {
   it.each(["state", "quasi", "philanthropic"])("points a %s grant at the funder's own process", async (type) => {
     await grantTypeLoaded(renderReview(type));
     expect(await screen.findByText(/Submit it through the funder's own application portal or process/)).toBeInTheDocument();
-    expect(screen.getByText(/Key Deadlines/)).toBeInTheDocument();
+    expect(screen.getByText(/Key deadlines/)).toBeInTheDocument();
     expect(screen.queryByText(/grants\.gov/)).not.toBeInTheDocument();
     expect(screen.queryByText(/SF-424/)).not.toBeInTheDocument();
   });

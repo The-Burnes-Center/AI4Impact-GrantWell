@@ -6,9 +6,9 @@ import { runInfo } from "../helpers/config";
 
 const TABS: [string, keyof NofoSummary][] = [
   ["Eligibility", "EligibilityCriteria"],
-  ["Required Documents", "RequiredDocuments"],
-  ["Narrative Sections", "ProjectNarrativeSections"],
-  ["Key Deadlines", "KeyDeadlines"],
+  ["Required documents", "RequiredDocuments"],
+  ["Narrative sections", "ProjectNarrativeSections"],
+  ["Key deadlines", "KeyDeadlines"],
 ];
 
 test.afterEach(async () => {

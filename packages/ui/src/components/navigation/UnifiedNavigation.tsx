@@ -504,7 +504,7 @@ export const AppSidebar: React.FC = () => {
 
           {docId && (
             <div style={{ marginTop: "24px" }}>
-              {showLabels && <h2 style={groupHeadingStyle}>This Grant</h2>}
+              {showLabels && <h2 style={groupHeadingStyle}>This grant</h2>}
 
               <NavItem
                 onClick={go(handleRequirementsNavigation)}
@@ -539,7 +539,7 @@ export const AppSidebar: React.FC = () => {
             currentStep !== "welcome" && (
               <div style={{ marginTop: "24px" }}>
                 {showLabels && (
-                  <h2 style={groupHeadingStyle}>Current Application</h2>
+                  <h2 style={groupHeadingStyle}>Current application</h2>
                 )}
 
                 {STEP_ITEMS.filter((_, index) => index <= furthestStepIndex).map((item) => (

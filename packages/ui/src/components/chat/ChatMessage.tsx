@@ -372,7 +372,7 @@ function ChatMessage(props: ChatMessageProps) {
                             }}
                           >
                             {grantSources.length > 0 && (
-                              <div role="group" aria-label={grantName || "Grant Document"}>
+                              <div role="group" aria-label={grantName || "Grant"}>
                                 <div aria-hidden="true" style={{
                                   fontSize: "11px",
                                   fontWeight: 600,
@@ -381,7 +381,7 @@ function ChatMessage(props: ChatMessageProps) {
                                   letterSpacing: "0.5px",
                                   marginBottom: "4px",
                                 }}>
-                                  {grantName || "Grant Document"}
+                                  {grantName || "Grant"}
                                 </div>
                                 <div role="list">
                                 {grantSources.map((source, idx) => (
@@ -408,7 +408,7 @@ function ChatMessage(props: ChatMessageProps) {
                             )}
 
                             {uploadedFiles.length > 0 && (
-                              <div role="group" aria-label="Your Supporting Documents" style={{ marginTop: grantSources.length > 0 ? "6px" : "0" }}>
+                              <div role="group" aria-label="Your supporting documents" style={{ marginTop: grantSources.length > 0 ? "6px" : "0" }}>
                                 <div aria-hidden="true" style={{
                                   fontSize: "11px",
                                   fontWeight: 600,
@@ -417,7 +417,7 @@ function ChatMessage(props: ChatMessageProps) {
                                   letterSpacing: "0.5px",
                                   marginBottom: "4px",
                                 }}>
-                                  Your Supporting Documents
+                                  Your supporting documents
                                 </div>
                                 <div role="list">
                                 {uploadedFiles.map((file, idx) => (

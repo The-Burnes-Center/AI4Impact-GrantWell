@@ -209,7 +209,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       case 'uploading_documents':
         return 'Additional Information';
       case 'generating_draft':
-        return 'Generating Draft';
+        return 'Generating draft';
       case 'editing_sections':
         return 'Section Editor';
       case 'reviewing':
@@ -336,7 +336,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             aria-label="Create new application"
           >
             <LuPlus size={16} className="button-icon" aria-hidden="true" />
-            <span>New Application</span>
+            <span>New application</span>
           </button>
           {hasDocId && onToggleShowAllNOFOs && (
             <button
@@ -346,7 +346,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
               aria-pressed={showAllNOFOs}
             >
               {showAllNOFOs && <LuCheck size={16} className="button-icon" aria-hidden="true" />}
-              <span>Show All Grants</span>
+              <span>Show all grants</span>
             </button>
           )}
           <button

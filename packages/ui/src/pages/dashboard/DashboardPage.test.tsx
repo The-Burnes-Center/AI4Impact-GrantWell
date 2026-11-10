@@ -24,9 +24,9 @@ vi.mock("./components/NOFOsTab", () => ({
 vi.mock("./components/ProcessingTab", () => stub("Processing"));
 vi.mock("./components/ProcessingReviewTab", () => stub("Review"));
 vi.mock("./components/AnalyticsTab", () => stub("Analytics"));
-vi.mock("./components/FeatureRolloutsTab", () => stub("Feature Rollouts"));
-vi.mock("./components/UserManagementTab", () => stub("User Management"));
-vi.mock("./components/DigestPreviewTab", () => stub("Digest Preview"));
+vi.mock("./components/FeatureRolloutsTab", () => stub("Feature rollouts"));
+vi.mock("./components/UserManagementTab", () => stub("User management"));
+vi.mock("./components/DigestPreviewTab", () => stub("Digest preview"));
 
 const metrics = {
   totalProcessed: 0, successRate: 0, pendingCount: 0, failedCount: 0, approvedCount: 0,
@@ -60,7 +60,7 @@ describe("Admin Dashboard tabs", () => {
   it("gives a state admin Grants, Analytics and User Management", async () => {
     signedInAs({ "custom:role": '["Admin"]', "custom:state": "MA" });
     renderDashboard();
-    expect(await tabNames()).toEqual(["Grants", "Analytics", "User Management"]);
+    expect(await tabNames()).toEqual(["Grants", "Analytics", "User management"]);
   });
 
   it("shows Auto-Scrape Grants to a developer but not to a state admin on a multi-state site", async () => {
@@ -78,14 +78,14 @@ describe("Admin Dashboard tabs", () => {
   it("adds Feature Rollouts and Digest Preview for a developer", async () => {
     signedInAs({ "custom:role": '["Developer"]' });
     renderDashboard();
-    expect(await tabNames()).toEqual(["Grants", "Analytics", "Feature Rollouts", "User Management", "Digest Preview"]);
+    expect(await tabNames()).toEqual(["Grants", "Analytics", "Feature rollouts", "User management", "Digest preview"]);
   });
 
   it("drops Digest Preview on a deployment without digests", async () => {
     instance.EMAIL_DIGEST = false;
     signedInAs({ "custom:role": '["Developer"]' });
     renderDashboard();
-    expect(await tabNames()).not.toContain("Digest Preview");
+    expect(await tabNames()).not.toContain("Digest preview");
   });
 
   it("sends a non-admin to /home", async () => {
@@ -109,14 +109,14 @@ describe("Admin Dashboard tabs", () => {
     expect(screen.getByText("Analytics panel")).toBeInTheDocument();
 
     await user.keyboard("{End}");
-    expect(tab("User Management")).toHaveFocus();
-    expect(screen.getByText("User Management panel")).toBeInTheDocument();
+    expect(tab("User management")).toHaveFocus();
+    expect(screen.getByText("User management panel")).toBeInTheDocument();
 
     await user.keyboard("{ArrowRight}");
     expect(tab("Grants")).toHaveFocus();
 
     await user.keyboard("{ArrowLeft}");
-    expect(tab("User Management")).toHaveFocus();
+    expect(tab("User management")).toHaveFocus();
     expect(tab("Grants")).toHaveAttribute("tabindex", "-1");
   });
 });

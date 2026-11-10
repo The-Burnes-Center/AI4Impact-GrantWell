@@ -36,9 +36,9 @@ type TabId = typeof TAB_IDS[number];
 
 const TAB_CONFIG: { id: TabId; label: string; icon: React.ReactNode }[] = [
   { id: "eligibility", label: "Eligibility", icon: <LuUser size={18} aria-hidden="true" /> },
-  { id: "documents", label: "Required Documents", icon: <LuFileText size={18} aria-hidden="true" /> },
-  { id: "narrative", label: "Narrative Sections", icon: <LuList size={18} aria-hidden="true" /> },
-  { id: "deadlines", label: "Key Deadlines", icon: <LuClock size={18} aria-hidden="true" /> },
+  { id: "documents", label: "Required documents", icon: <LuFileText size={18} aria-hidden="true" /> },
+  { id: "narrative", label: "Narrative sections", icon: <LuList size={18} aria-hidden="true" /> },
+  { id: "deadlines", label: "Key deadlines", icon: <LuClock size={18} aria-hidden="true" /> },
 ];
 
 const Checklists: React.FC = () => {
@@ -162,7 +162,7 @@ const Checklists: React.FC = () => {
           {isLoading ? (
             <div className="checklist-loading" role="status" aria-live="polite">
               <div className="checklist-loading__spinner"><div className="loading-spinner" /></div>
-              <h2 className="checklist-loading__title">Loading Requirements</h2>
+              <h2 className="checklist-loading__title">Loading requirements</h2>
               <p className="checklist-loading__text">Retrieving grant information and requirements...</p>
               <div className="checklist-loading__tip">
                 <span style={{ fontSize: "24px" }} aria-hidden="true">💡</span>
@@ -175,7 +175,7 @@ const Checklists: React.FC = () => {
             <div className="checklist-error">
               <h1 className="checklist-error__title">{inReviewMessage}</h1>
               <Link className="gw-btn gw-btn--primary checklist-error__btn" to="/home">
-                Go to Home
+                Go to home
               </Link>
             </div>
           ) : notFound ? (
@@ -185,12 +185,12 @@ const Checklists: React.FC = () => {
                 We couldn&apos;t find this grant. It may have been removed, or the link is wrong.
               </p>
               <Link className="gw-btn gw-btn--primary checklist-error__btn" to="/home">
-                Go to Home
+                Go to home
               </Link>
             </div>
           ) : error ? (
             <div className="checklist-error" role="alert">
-              <h1 className="checklist-error__title">Unable to Load Requirements</h1>
+              <h1 className="checklist-error__title">Unable to load requirements</h1>
               <p className="checklist-error__text">{error}</p>
               <button className="gw-btn gw-btn--primary checklist-error__btn" onClick={() => window.location.reload()}>
                 Try again

@@ -385,7 +385,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
   const uploadNOFO = async () => {
     if (!selectedFile) { addNotification("error", "Please select a file first"); return; }
     if (!customGrantName.trim()) { addNotification("error", "Grant name cannot be empty"); return; }
-    if (!uploadGrantType) { addNotification("error", "Grant Type is required"); return; }
+    if (!uploadGrantType) { addNotification("error", "Grant type is required"); return; }
     if (uploadGrantType === "state" && !uploadState) {
       addNotification("error", "State is required for state grants");
       return;
@@ -589,10 +589,10 @@ const NOFOsTab = React.memo(function NOFOsTab({
       </TableScrollRegion>
 
       {/* Edit NOFO Modal */}
-      <Modal isOpen={editModalOpen} onClose={() => setEditModalOpen(false)} title="Edit Grant">
+      <Modal isOpen={editModalOpen} onClose={() => setEditModalOpen(false)} title="Edit grant">
         <div className="modal-form">
           <div className="form-group">
-            <label htmlFor="nofo-name">Grant Name</label>
+            <label htmlFor="nofo-name">Grant name</label>
             <input type="text" id="nofo-name" value={editedNofoName} onChange={(e) => setEditedNofoName(e.target.value)} className="gw-input form-input" placeholder="Enter grant name" />
           </div>
           <div className="form-group">
@@ -622,7 +622,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
             <div id="nofo-expiration-date-help" className="gw-field__help field-note">Leave empty if no expiration date. Grants will be auto-archived after this date.</div>
           </div>
           <div className="form-group">
-            <label htmlFor="nofo-grant-type">Grant Type</label>
+            <label htmlFor="nofo-grant-type">Grant type</label>
             <div className="select-wrapper">
               <select id="nofo-grant-type" aria-describedby="nofo-grant-type-help" value={editedNofoGrantType} onChange={(e) => setEditedNofoGrantType(e.target.value as GrantTypeId | "")} className="gw-input form-input">
                 <option value="">Select type...</option>
@@ -641,7 +641,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
         </div>
       </Modal>
 
-      <DeleteConfirmationModal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} onConfirm={confirmDeleteNofo} title="Delete Grant" itemName={selectedNofo?.name} itemLabel="grant" />
+      <DeleteConfirmationModal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} onConfirm={confirmDeleteNofo} title="Delete grant" itemName={selectedNofo?.name} itemLabel="grant" />
 
       <ConfirmationModal
         isOpen={promoteModalOpen}
@@ -658,7 +658,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
       <Modal
         isOpen={summaryModalOpen}
         onClose={closeSummaryModal}
-        title={`Edit Requirements — ${selectedNofo?.name || ""}`}
+        title={`Edit requirements — ${selectedNofo?.name || ""}`}
         maxWidth="800px"
       >
         <div className="modal-form">
@@ -730,7 +730,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
                   Cancel
                 </button>
                 <button className="gw-btn gw-btn--primary modal-button primary" onClick={confirmSaveOverlay} disabled={overlaySaving}>
-                  {overlaySaving ? "Saving..." : "Save Guidance"}
+                  {overlaySaving ? "Saving..." : "Save guidance"}
                 </button>
               </div>
             </>
@@ -812,7 +812,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
                   Cancel
                 </button>
                 <button className="gw-btn gw-btn--primary modal-button primary" onClick={confirmSaveCustomQuestions} disabled={customQuestionsSaving}>
-                  {customQuestionsSaving ? "Saving..." : "Save Questions"}
+                  {customQuestionsSaving ? "Saving..." : "Save questions"}
                 </button>
               </div>
             </>
@@ -824,7 +824,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
       <Modal
         isOpen={uploadNofoModalOpen}
         onClose={() => { setUploadNofoModalOpen(false); setSelectedFile(null); setCustomGrantName(""); setUploadGrantType(""); setUploadState(DEFAULT_UPLOAD_STATE); setUploadCategory(""); setUploadAgency(""); }}
-        title="Add Grant"
+        title="Add grant"
       >
         <div className="modal-form">
           <p className="modal-description">Upload a grant document in PDF, TXT, or DOCX format.</p>
@@ -833,10 +833,10 @@ const NOFOsTab = React.memo(function NOFOsTab({
             <span>After you upload, the grant appears in the list above and processes automatically (about 5&ndash;7 minutes). You can watch each stage on its row &mdash; most grants publish on their own, and only ones that need a closer look are flagged for review.</span>
           </div>
           <div className="form-group">
-            <label htmlFor="file-upload">Select File</label>
+            <label htmlFor="file-upload">Select file</label>
             <div className="file-upload-container">
               <input id="file-upload" type="file" accept=".pdf,.txt,.docx" onChange={handleFileSelect} className="file-input" />
-              <div className="gw-btn gw-btn--secondary file-upload-button"><LuUpload size={16} className="button-icon" aria-hidden="true" /><span>Select File</span></div>
+              <div className="gw-btn gw-btn--secondary file-upload-button"><LuUpload size={16} className="button-icon" aria-hidden="true" /><span>Select file</span></div>
             </div>
             {selectedFile && (
               <div className="selected-file"><LuFile size={16} className="file-icon" aria-hidden="true" /><span>{selectedFile.name}</span></div>
@@ -845,12 +845,12 @@ const NOFOsTab = React.memo(function NOFOsTab({
           {selectedFile && (
             <>
               <div className="form-group">
-                <label htmlFor="custom-grant-name">Grant Name</label>
+                <label htmlFor="custom-grant-name">Grant name</label>
                 <input type="text" id="custom-grant-name" aria-describedby="custom-grant-name-help" value={customGrantName} onChange={(e) => setCustomGrantName(e.target.value)} className="gw-input form-input" placeholder="Enter grant name" />
                 <div id="custom-grant-name-help" className="gw-field__help field-note">This name will be used to identify the grant in the system.</div>
               </div>
               <div className="form-group">
-                <label htmlFor="upload-grant-type">Grant Type<span className="gw-field__required" aria-hidden="true">*</span></label>
+                <label htmlFor="upload-grant-type">Grant type<span className="gw-field__required" aria-hidden="true">*</span></label>
                 <div className="select-wrapper">
                   <select
                     id="upload-grant-type" aria-describedby="upload-grant-type-help"
@@ -924,7 +924,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 !uploadCategory
               }
             >
-              <LuUpload size={16} className="button-icon" aria-hidden="true" /><span>Upload Grant</span>
+              <LuUpload size={16} className="button-icon" aria-hidden="true" /><span>Upload grant</span>
             </button>
           </div>
         </div>

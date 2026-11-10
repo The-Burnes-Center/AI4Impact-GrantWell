@@ -104,7 +104,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
     actionInProgress === "approve"
       ? "Publishing..."
       : hasCorrections
-        ? "Approve with Edits"
+        ? "Approve with edits"
         : "Approve As-Is";
 
   const approveBtn = canApprove ? (
@@ -120,7 +120,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
     </button>
   ) : null;
 
-  const reuploadLabel = actionInProgress === "reupload" ? "Uploading..." : "Re-upload Grant Document";
+  const reuploadLabel = actionInProgress === "reupload" ? "Uploading..." : "Re-upload grant document";
 
   const reuploadBtn = (
     <button

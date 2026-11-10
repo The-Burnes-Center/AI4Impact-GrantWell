@@ -140,7 +140,7 @@ const FinishedCard: React.FC<{
           className="processing-tab__action processing-tab__action--primary"
           onClick={() => onViewSummary(nofo.name)}
         >
-          View Requirements <LuArrowRight size={14} aria-hidden="true" />
+          View requirements <LuArrowRight size={14} aria-hidden="true" />
         </button>
       ) : (
         <button

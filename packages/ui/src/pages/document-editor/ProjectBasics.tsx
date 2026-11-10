@@ -49,13 +49,13 @@ interface FormErrors {
 
 // Field labels for error summary
 const FIELD_LABELS: Record<string, string> = {
-  projectName: "Project Name",
-  organizationName: "Organization Name",
-  requestedAmount: "Requested Amount",
+  projectName: "Project name",
+  organizationName: "Organization name",
+  requestedAmount: "Requested amount",
   location: "Location",
-  zipCode: "Zip Code",
-  contactName: "Primary Contact Name",
-  contactEmail: "Contact Email",
+  zipCode: "Zip code",
+  contactName: "Primary contact name",
+  contactEmail: "Contact email",
 };
 
 // Input field component - defined outside to prevent re-creation on each render
@@ -403,7 +403,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
           <InputField
             name="projectName"
-            label="Project Name"
+            label="Project name"
             helpText={`Keep it clear and descriptive. (${formData.projectName.length}/200 characters)`}
             maxLength={200}
             value={formData.projectName}
@@ -415,7 +415,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
           <InputField
             name="organizationName"
-            label="Organization Name"
+            label="Organization name"
             helpText={`Enter the name of your municipality, tribal nation, or community organization. (${formData.organizationName.length}/200 characters)`}
             maxLength={200}
             autoComplete="organization"
@@ -428,7 +428,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
           <InputField
             name="requestedAmount"
-            label="Requested Amount"
+            label="Requested amount"
             helpText="Enter the total funding amount you're requesting for this project."
             placeholder="250,000"
             prefix="$"
@@ -458,7 +458,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             <div style={{ flex: "1", minWidth: "min(260px, 100%)" }}>
               <InputField
                 name="zipCode"
-                label="Zip Code"
+                label="Zip code"
                 helpText="Enter the 5-digit ZIP code for the project location."
                 maxLength={5}
                 placeholder="02119"
@@ -474,7 +474,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
           <InputField
             name="contactName"
-            label="Primary Contact Name"
+            label="Primary contact name"
             helpText={`Enter the name of the primary person responsible for this grant application. (${formData.contactName.length}/100 characters)`}
             maxLength={100}
             autoComplete="name"
@@ -487,7 +487,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
           <InputField
             name="contactEmail"
-            label="Contact Email"
+            label="Contact email"
             type="email"
             helpText="Enter a valid email address for project-related communications."
             maxLength={254}

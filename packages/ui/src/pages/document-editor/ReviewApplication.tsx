@@ -295,7 +295,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             <div className="ra-stat-card__value ra-stat-card__value--words">
               {stats.wordCount}
             </div>
-            <div className="ra-stat-card__label">Total Word Count</div>
+            <div className="ra-stat-card__label">Total word count</div>
             <div className="ra-stat-card__sublabel">Across all sections</div>
           </div>
 
@@ -303,7 +303,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             <div className="ra-stat-card__value ra-stat-card__value--pages">
               {stats.pageCount}
             </div>
-            <div className="ra-stat-card__label">Estimated Pages</div>
+            <div className="ra-stat-card__label">Estimated pages</div>
             <div className="ra-stat-card__sublabel">In PDF format</div>
           </div>
 
@@ -311,7 +311,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             <div className={`ra-stat-card__value ${completenessPassed ? "ra-stat-card__value--passed" : "ra-stat-card__value--incomplete"}`}>
               {stats.complete}/{sections.length}
             </div>
-            <div className="ra-stat-card__label">Completion Status</div>
+            <div className="ra-stat-card__label">Completion status</div>
             <div className="ra-stat-card__sublabel">Sections complete</div>
           </div>
         </div>
@@ -325,8 +325,8 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
           <div>
             <h3 className="ra-compliance__title">
               {completenessPassed
-                ? "All Sections Complete"
-                : "Some Sections Incomplete"}
+                ? "All sections complete"
+                : "Some sections incomplete"}
             </h3>
             <p className="ra-compliance__text">
               {completenessPassed
@@ -339,7 +339,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
 
       {/* Before You Export Section */}
       <div className="ra-card">
-        <h3 className="ra-export-section__title">Before You Export</h3>
+        <h3 className="ra-export-section__title">Before you export</h3>
 
         {unviewedSections.length > 0 && (
           <div className="ra-unviewed">
@@ -382,7 +382,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
               <LuSquarePen className="ra-edit-btn__icon" aria-hidden="true" />
             </div>
             <div className="ra-edit-btn__text">
-              <div className="ra-edit-btn__title">Make Final Edits</div>
+              <div className="ra-edit-btn__title">Make final edits</div>
               <div className="ra-edit-btn__subtitle">
                 Return to Section Editor
               </div>
@@ -396,7 +396,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
         <div className="ra-info-header">
           <LuInfo className="ra-info-header__icon" aria-hidden="true" />
           <h3 className="ra-info-header__title">
-            What Happens After Export?
+            What happens after export?
           </h3>
         </div>
         <ul className="ra-info-list">
@@ -420,7 +420,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
                 described in the grant&apos;s requirements
               </li>
               <li className="ra-info-list__item">
-                Check the grant&apos;s Key Deadlines so you submit on time
+                Check the grant&apos;s Key deadlines so you submit on time
               </li>
             </>
           )}
@@ -464,7 +464,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
           className="gw-btn gw-btn--secondary ra-back-btn"
         >
           <LuArrowLeft className="ra-back-btn__icon" aria-hidden="true" />
-          Back to Editing
+          Back to editing
         </button>
 
         {/* Export As dropdown */}
@@ -491,7 +491,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             ) : (
               <>
                 <LuDownload className="ra-export-pdf-btn__icon" aria-hidden="true" />
-                Export As
+                Export as
                 <LuChevronDown
                   size={16}
                   style={{ marginLeft: "6px" }}

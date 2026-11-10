@@ -57,7 +57,7 @@ test("generates every narrative section and exports the application as Word and 
   const started = page.waitForResponse(
     (r) => r.request().method() === "POST" && new URL(r.url()).pathname.endsWith("/draft-generation")
   );
-  await page.getByRole("button", { name: "Create Draft" }).click();
+  await page.getByRole("button", { name: "Create draft" }).click();
   const response = await started;
   expect(response.ok(), "draft generation started").toBe(true);
   jobId = (await response.json()).jobId;
@@ -81,7 +81,7 @@ test("generates every narrative section and exports the application as Word and 
     expect(text.trim().length, `"${narrativeSections[i]}" length`).toBeGreaterThanOrEqual(MIN_SECTION_CHARS);
   }
   await page.getByRole("button", { name: "Save section & review application" }).click();
-  await expect(page.getByText("All Sections Complete")).toBeVisible();
+  await expect(page.getByText("All sections complete")).toBeVisible();
 
   const exportMenu = page.locator("#ra-export-trigger");
 

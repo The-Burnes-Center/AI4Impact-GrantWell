@@ -535,7 +535,7 @@ export default function Chat(props: {
             <li style={styles.unavailable}>
               <p style={{ margin: 0 }}>{inReviewMessage}</p>
               <Link to="/home" style={styles.unavailableLink}>
-                Go to Home
+                Go to home
               </Link>
             </li>
           )}

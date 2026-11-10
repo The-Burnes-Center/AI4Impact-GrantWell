@@ -342,9 +342,9 @@ describe("ContentCheck with verification", () => {
 
     expect(out.validationResult).toEqual({ overallVerdict: "NEEDS_REVIEW" });
     expect(out.adminGuidance).toMatchObject({ reason: "unverified_items", canApprove: true });
-    expect(out.adminGuidance.message).toContain('Eligibility Criteria: "Tribes"; Application deadline: "2027-04-01"');
+    expect(out.adminGuidance.message).toContain('Eligibility criteria: "Tribes"; Application deadline: "2027-04-01"');
     expect(out.adminGuidance.failingItems).toEqual([
-      { category: "EligibilityCriteria", label: "Eligibility Criteria", item: "Tribes", reason: "No passage in the grant states this." },
+      { category: "EligibilityCriteria", label: "Eligibility criteria", item: "Tribes", reason: "No passage in the grant states this." },
       { category: "application_deadline", label: "Application deadline", item: "2027-04-01", reason: "The date 2027-04-01 does not appear in the grant." },
     ]);
   });

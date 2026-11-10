@@ -164,6 +164,6 @@ describe("UserManagementTab", () => {
 
     await ui.click(within(menu).getByRole("menuitem", { name: "Delete" }));
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();
-    expect(await screen.findByRole("dialog", { name: "Delete User" })).toBeInTheDocument();
+    expect(await screen.findByRole("dialog", { name: "Delete user" })).toBeInTheDocument();
   });
 });

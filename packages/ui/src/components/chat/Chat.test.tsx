@@ -237,7 +237,7 @@ describe("Chat new and unavailable chats", () => {
     });
     const { container } = renderApp(<Chat sessionId="s1" documentIdentifier="Held Grant" />);
 
-    const home = await screen.findByRole("link", { name: "Go to Home" });
+    const home = await screen.findByRole("link", { name: "Go to home" });
     expect(home).toHaveAttribute("href", "/home");
     expect(home.closest("li")).toHaveTextContent("This grant is being reviewed and will be back soon.");
     expect(screen.queryByTestId("chat-input")).not.toBeInTheDocument();
