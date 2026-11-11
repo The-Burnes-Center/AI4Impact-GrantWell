@@ -101,7 +101,7 @@ export default function DocumentPicker({ library, selected, onChange, legend, de
       <div className="dm-picker-actions">
         <LibraryUpload library={library} variant="button" onUploaded={addUploaded} />
         <Link to="/documents" className="dm-link">
-          Manage My Documents
+          Manage My documents
         </Link>
       </div>
     </div>

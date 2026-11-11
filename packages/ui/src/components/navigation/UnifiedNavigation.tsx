@@ -114,7 +114,7 @@ const GroupHeading: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 const STEP_ITEMS: { step: string; label: string; icon: React.ReactNode }[] = [
   {
     step: "projectBasics",
-    label: "Project Basics",
+    label: "Project basics",
     icon: <LuPencilLine size={20} aria-hidden="true" />,
   },
   {
@@ -124,12 +124,12 @@ const STEP_ITEMS: { step: string; label: string; icon: React.ReactNode }[] = [
   },
   {
     step: "uploadDocuments",
-    label: "Additional Information",
+    label: "Additional information",
     icon: <LuFilePlus2 size={20} aria-hidden="true" />,
   },
   {
     step: "sectionEditor",
-    label: "Section Editor",
+    label: "Section editor",
     icon: <LuFileText size={20} aria-hidden="true" />,
   },
   {
@@ -500,7 +500,7 @@ export const AppSidebar: React.FC = () => {
 
           <NavItem
             onClick={go(handleChatSessionsNavigation)}
-            label="My Chats"
+            label="My chats"
             icon={<LuMessagesSquare size={20} aria-hidden="true" />}
             active={isChatSessions}
             expanded={showLabels}
@@ -508,7 +508,7 @@ export const AppSidebar: React.FC = () => {
 
           <NavItem
             onClick={go(handleDraftsNavigation)}
-            label="My Applications"
+            label="My applications"
             icon={<LuFileText size={20} aria-hidden="true" />}
             active={isDrafts}
             expanded={showLabels}
@@ -516,7 +516,7 @@ export const AppSidebar: React.FC = () => {
 
           <NavItem
             onClick={go(() => navigate("/documents"))}
-            label="My Documents"
+            label="My documents"
             icon={<LuFolderOpen size={20} aria-hidden="true" />}
             active={isDocuments}
             expanded={showLabels}
@@ -525,7 +525,7 @@ export const AppSidebar: React.FC = () => {
           {isAdmin && (
             <NavItem
               onClick={go(() => navigate("/admin"))}
-              label="Admin Dashboard"
+              label="Admin dashboard"
               icon={<LuLayoutDashboard size={20} aria-hidden="true" />}
               active={isDashboard}
               expanded={showLabels}
@@ -555,7 +555,7 @@ export const AppSidebar: React.FC = () => {
 
               <NavItem
                 onClick={go(handleDocumentEditorNavigation)}
-                label="Write Application"
+                label="Write application"
                 icon={<LuUpload size={20} aria-hidden="true" />}
                 active={isDocumentEditor}
                 expanded={showLabels}

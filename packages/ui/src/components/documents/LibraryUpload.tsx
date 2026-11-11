@@ -127,7 +127,7 @@ export default function LibraryUpload({ library, onUploaded, variant = "dropzone
         title={pending?.duplicates.length === 1 ? "File already in your documents" : "Files already in your documents"}
       >
         <p className="dm-confirm-message">
-          {pending?.duplicates.length === 1 ? "A file with this name is" : "Files with these names are"} already in My Documents.
+          {pending?.duplicates.length === 1 ? "A file with this name is" : "Files with these names are"} already in My documents.
           Replace {pending?.duplicates.length === 1 ? "it" : "them"}, or skip and upload the rest?
         </p>
         <ul className="dm-duplicate-list">

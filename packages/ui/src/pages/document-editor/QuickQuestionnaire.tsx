@@ -266,7 +266,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
                   fontFamily: typography.fontFamily,
                 }}
               >
-                {questionItem.helpText || "Provide a detailed answer. You can edit this later in the Section Editor."}
+                {questionItem.helpText || "Provide a detailed answer. You can edit this later in the Section editor."}
                 {` (${characterCount(formData[`question_${questionItem.id}`] || "")})`}
               </span>
             </li>

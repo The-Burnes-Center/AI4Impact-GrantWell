@@ -206,11 +206,11 @@ export default function Playground() {
               </div>
 
               <div className="pg-info-section">
-                <h3 className="pg-info-heading">My Chats</h3>
+                <h3 className="pg-info-heading">My chats</h3>
                 <p className="pg-info-text">
                   All chats are saved and can be accessed later via the{" "}
                   <Link to="/chat/sessions" className="pg-info-link">
-                    My Chats
+                    My chats
                   </Link>{" "}
                   page.
                 </p>

@@ -106,7 +106,7 @@ export default function DocumentManager({
             selected={selected}
             onChange={(keys) => void change(keys)}
             legend="Use in this chat"
-            description="The AI reads the documents you tick when it answers in this chat. New uploads go to My Documents, where every chat and application can use them."
+            description="The AI reads the documents you tick when it answers in this chat. New uploads go to My documents, where every chat and application can use them."
           />
           {saveError && <p className="dm-error" role="alert">{saveError}</p>}
         </div>

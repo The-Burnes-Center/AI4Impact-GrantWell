@@ -578,7 +578,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
 
           <div className="se-section-header">
             <h2 className="se-section-title" id="se-section-title" ref={sectionTitleRef} tabIndex={-1}>
-              {activeSectionName || "Section Editor"}
+              {activeSectionName || "Section editor"}
             </h2>
             <div className="se-section-header-actions">
               <AutoSaveIndicator

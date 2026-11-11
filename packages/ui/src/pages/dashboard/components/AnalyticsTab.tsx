@@ -71,11 +71,11 @@ const GRID = "#e1e0d9";
 const WINDOWS: AnalyticsWindow[] = [7, 30, 90];
 
 const STAGE_LABELS: Record<string, string> = {
-  project_basics: "Project Basics",
+  project_basics: "Project basics",
   questionnaire: "Questionnaire",
-  uploading_documents: "Additional Information",
+  uploading_documents: "Additional information",
   generating_draft: "Generating draft",
-  editing_sections: "Section Editor",
+  editing_sections: "Section editor",
   reviewing: "Review",
   submitted: "Submitted",
 };

@@ -39,7 +39,7 @@ function server(row: Record<string, unknown>) {
 
 const BASE_ROW = { session_id: "s1", document_identifier: "Grant A/", sections: {}, questionnaire: {}, project_basics: {} };
 
-describe("Write Application documents", () => {
+describe("Write application documents", () => {
   it("reads the grant's old uploads for an application from before the library until changed", async () => {
     server(BASE_ROW);
     const draftSave = fakeDraftSave();

@@ -311,7 +311,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
                 <ol>
                   <li>Check the error details below to identify the failure reason.</li>
                   <li>Reject this entry to clean up the failed attempt.</li>
-                  <li>Re-upload the grant document using the same grant name in the Admin Dashboard.</li>
+                  <li>Re-upload the grant document using the same grant name in the Admin dashboard.</li>
                 </ol>
               </div>
             </>

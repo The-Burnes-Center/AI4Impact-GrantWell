@@ -757,7 +757,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
           ) : (
             <>
               <p className="modal-description" style={{ marginBottom: "16px" }}>
-                Add questions applicants answer in Write Application, alongside any questions from the grant document. Useful when the grant doesn&apos;t spell out what your state wants to ask.
+                Add questions applicants answer in Write application, alongside any questions from the grant document. Useful when the grant doesn&apos;t spell out what your state wants to ask.
               </p>
               {customQuestions.length === 0 ? (
                 <p style={{ color: "var(--gw-color-text-secondary)", marginBottom: "16px" }}>
@@ -889,7 +889,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
                       ))}
                     </select>
                   </div>
-                  <div id="upload-state-help" className="gw-field__help field-note">Required for state grants. Users from this state will see it in Chat with AI and Write Application.</div>
+                  <div id="upload-state-help" className="gw-field__help field-note">Required for state grants. Users from this state will see it in Chat with AI and Write application.</div>
                 </div>
               )}
               <div className="form-group">

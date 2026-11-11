@@ -315,7 +315,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       {draftPhaseRegion}
 
       <Card
-        header="Additional Information"
+        header="Additional information"
         headerActions={
           <AutoSaveIndicator
             status={draftSave.saveStatus}
@@ -336,7 +336,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             selected={selected}
             onChange={changeSelection}
             legend="Use in this application"
-            description="The AI reads the documents you tick when it writes this application (e.g., organizational details, past performance reports, budgets). New uploads go to My Documents."
+            description="The AI reads the documents you tick when it writes this application (e.g., organizational details, past performance reports, budgets). New uploads go to My documents."
           />
         </div>
 
@@ -423,7 +423,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             <button
               type="button"
               onClick={() => onNavigate("sectionEditor")}
-              aria-label="Skip to Section Editor"
+              aria-label="Skip to Section editor"
               style={{
                 display: "flex",
                 alignItems: "center",

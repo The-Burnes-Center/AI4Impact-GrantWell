@@ -47,7 +47,7 @@ export function AppSiteHeader() {
 
   if (!CHROME.Header) return null;
   const links: ChromeLink[] = [
-    ...(isAdmin ? [{ label: "Admin Dashboard", href: "/admin" }] : []),
+    ...(isAdmin ? [{ label: "Admin dashboard", href: "/admin" }] : []),
     { label: "Profile", href: "/profile" },
   ];
   const handleSignOut = async () => {

@@ -696,7 +696,7 @@ html:has(.document-editor-root) {
   }
 }
 
-/* ===== Section Editor (se-) ===== */
+/* ===== Section editor (se-) ===== */
 
 .se-container {
   display: flex;

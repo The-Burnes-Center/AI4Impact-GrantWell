@@ -52,11 +52,11 @@ function renderDashboard() {
 }
 
 const tabNames = async () => {
-  await screen.findByRole("tablist", { name: "Admin Dashboard sections" });
+  await screen.findByRole("tablist", { name: "Admin dashboard sections" });
   return screen.getAllByRole("tab").map((t) => t.textContent);
 };
 
-describe("Admin Dashboard tabs", () => {
+describe("Admin dashboard tabs", () => {
   it("gives a state admin Grants, Analytics and User Management", async () => {
     signedInAs({ "custom:role": '["Admin"]', "custom:state": "MA" });
     renderDashboard();
@@ -121,7 +121,7 @@ describe("Admin Dashboard tabs", () => {
   });
 });
 
-describe("Admin Dashboard grant list", () => {
+describe("Admin dashboard grant list", () => {
   it("keeps a live grant listed while its new version runs or waits for review, and leaves new ones to Processing", async () => {
     stubFetch({
       "GET /s3-nofo-bucket-data": json({

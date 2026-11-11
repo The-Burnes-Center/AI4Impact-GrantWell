@@ -194,7 +194,7 @@ export default function HomePage() {
     ) {
       setHighlightCTAButtons(true);
       setSrAnnouncement(
-        `${selectedDocument.label} selected. Choose an action: Requirements, Write Application, or Chat with AI.`
+        `${selectedDocument.label} selected. Choose an action: Requirements, Write application, or Chat with AI.`
       );
       const focusTimer = setTimeout(() => firstCTAButtonRef.current?.focus(), 300);
       const highlightTimer = setTimeout(() => setHighlightCTAButtons(false), 2000);
@@ -299,7 +299,7 @@ export default function HomePage() {
             Click a grant&apos;s name to select it, then select{" "}
             <strong className="how-it-works__action-label">Requirements</strong>{" "}
             to see the grant&apos;s eligibility and requirements,{" "}
-            <strong className="how-it-works__action-label">Write Application</strong>{" "}
+            <strong className="how-it-works__action-label">Write application</strong>{" "}
             to start your application, or{" "}
             <strong className="how-it-works__action-label">Chat with AI</strong>{" "}
             to ask questions about the grant.
@@ -349,7 +349,7 @@ export default function HomePage() {
                 Requirements
               </button>
               <button className="gw-btn gw-btn--primary cta-btn" onClick={handleWriteNarrative}>
-                Write Application
+                Write application
               </button>
               <button className="gw-btn gw-btn--primary cta-btn" onClick={handleGetHelp}>
                 Chat with AI

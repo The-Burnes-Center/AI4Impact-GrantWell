@@ -79,7 +79,7 @@ const HelpModal = React.memo(function HelpModal({ isOpen, onClose }: HelpModalPr
 
           {[
             { title: "Have a question?", text: 'Use "Chat with AI" in the left sidebar to get help understanding the grant requirements.' },
-            { title: "Ready to start writing?", text: 'Click "Write Application" in the left sidebar to begin drafting.' },
+            { title: "Ready to start writing?", text: 'Click "Write application" in the left sidebar to begin drafting.' },
             { title: "Want a different grant?", text: 'Use "Recently viewed grants" on the Home page to return to a grant you viewed before, or choose a new grant from the list there.' },
           ].map((section) => (
             <div key={section.title} style={{ marginBottom: 20 }}>

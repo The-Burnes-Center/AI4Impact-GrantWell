@@ -76,7 +76,7 @@ export default function SessionPage() {
         <Breadcrumbs
           items={[
             { label: "Home", href: "/home" },
-            { label: "My Chats" },
+            { label: "My chats" },
           ]}
         />
 

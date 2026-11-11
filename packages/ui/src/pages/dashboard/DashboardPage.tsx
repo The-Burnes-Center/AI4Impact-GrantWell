@@ -133,11 +133,11 @@ const Dashboard: React.FC = () => {
       }
 
       if (showRefreshNotification) {
-        addNotification("success", "Admin Dashboard refreshed successfully");
+        addNotification("success", "Admin dashboard refreshed successfully");
       }
     } catch {
       if (showRefreshNotification) {
-        addNotification("error", "Failed to refresh Admin Dashboard data");
+        addNotification("error", "Failed to refresh Admin dashboard data");
       }
     } finally {
       if (!background) setIsRefreshing(false);
@@ -447,7 +447,7 @@ const Dashboard: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [filterMenuOpen]);
 
-  if (loading || roleLoading) return <div className="loading" role="status">Loading Admin Dashboard...</div>;
+  if (loading || roleLoading) return <div className="loading" role="status">Loading Admin dashboard...</div>;
   if (!isAdmin) return <Navigate to="/home" replace />;
 
   const filterCount = getActiveFilterCount();
@@ -459,14 +459,14 @@ const Dashboard: React.FC = () => {
         <Breadcrumbs
           items={[
             { label: "Home", href: "/home" },
-            { label: "Admin Dashboard" },
+            { label: "Admin dashboard" },
           ]}
         />
 
         <div className="dashboard-main-content">
           <div className="dashboard-header">
             <div>
-              <h1>Admin Dashboard</h1>
+              <h1>Admin dashboard</h1>
               <p style={{ marginTop: "4px", color: "var(--gw-color-text-secondary)", fontSize: "14px" }}>
                 Manage grants, users, and processing across your instance
               </p>
@@ -483,7 +483,7 @@ const Dashboard: React.FC = () => {
                 ) : (
                   <><LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" /><span>Refresh</span></>
                 )}
-                <span className="visually-hidden"> Admin Dashboard</span>
+                <span className="visually-hidden"> Admin dashboard</span>
               </button>
               {hasProcessingNofos && (
                 <button
@@ -514,7 +514,7 @@ const Dashboard: React.FC = () => {
             </div>
           )}
 
-          <div className="gw-tabs tab-controls" role="tablist" aria-label="Admin Dashboard sections">
+          <div className="gw-tabs tab-controls" role="tablist" aria-label="Admin dashboard sections">
             <button
               id="dashboard-tab-grants"
               ref={grantsTabRef}

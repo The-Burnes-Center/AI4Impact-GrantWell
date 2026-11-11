@@ -147,7 +147,7 @@ export interface ChromeMenu {
 export interface HeaderProps {
   /** Undefined on public pages. */
   user?: ChromeUser;
-  /** For signed-in users: Admin Dashboard (admins only) and Profile; the sidebar keeps the rest. */
+  /** For signed-in users: Admin dashboard (admins only) and Profile; the sidebar keeps the rest. */
   links: ChromeLink[];
   /** Client-side navigation to an app path such as "/home". */
   navigate: (href: string) => void;

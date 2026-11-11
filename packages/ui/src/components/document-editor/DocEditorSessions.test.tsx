@@ -66,7 +66,7 @@ describe("DocEditorSessions list actions", () => {
     await user.click(within(dialog).getByRole("button", { name: /Delete permanently/ }));
 
     expect(await screen.findByText("Application deleted.")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "My Applications" })).toHaveFocus();
+    expect(screen.getByRole("heading", { name: "My applications" })).toHaveFocus();
   });
 
   it("announces a failed delete", async () => {

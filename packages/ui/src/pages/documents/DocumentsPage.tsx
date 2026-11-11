@@ -51,10 +51,10 @@ export default function DocumentsPage() {
     <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
       <UnifiedNavigation />
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        <Breadcrumbs items={[{ label: "Home", href: "/home" }, { label: "My Documents" }]} />
+        <Breadcrumbs items={[{ label: "Home", href: "/home" }, { label: "My documents" }]} />
 
         <div className="dashboard-main-content" style={{ maxWidth: 900 }}>
-          <h1>My Documents</h1>
+          <h1>My documents</h1>
           <p className="dm-file-size" style={{ fontSize: 15 }}>
             Upload a document once and choose it in any chat or application. The AI reads only the
             documents you tick there.
@@ -115,7 +115,7 @@ export default function DocumentsPage() {
         onConfirm={() => void confirmDelete()}
         title="Delete document?"
         message={toDelete ? `Delete "${toDelete.name}"?` : ""}
-        warning="This removes it from My Documents and from every chat and application that uses it. This can't be undone."
+        warning="This removes it from My documents and from every chat and application that uses it. This can't be undone."
         confirmLabel="Delete"
         variant="danger"
         confirming={deleting}

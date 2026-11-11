@@ -376,7 +376,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
           <button
             onClick={() => onNavigate("sectionEditor")}
             className="ra-edit-btn"
-            aria-label="Make final edits - return to the Section Editor"
+            aria-label="Make final edits - return to the Section editor"
           >
             <div className="ra-edit-btn__icon-wrapper">
               <LuSquarePen className="ra-edit-btn__icon" aria-hidden="true" />
@@ -384,7 +384,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             <div className="ra-edit-btn__text">
               <div className="ra-edit-btn__title">Make final edits</div>
               <div className="ra-edit-btn__subtitle">
-                Return to Section Editor
+                Return to Section editor
               </div>
             </div>
           </button>

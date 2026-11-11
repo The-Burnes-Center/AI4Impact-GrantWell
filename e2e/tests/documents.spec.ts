@@ -1,5 +1,5 @@
 /**
- * Journey 7: upload a file to My Documents, tick it in a chat and ask about it, check that a new
+ * Journey 7: upload a file to My documents, tick it in a chat and ask about it, check that a new
  * application starts with it unticked, then delete it. The answer is checked for one number and
  * otherwise by structure only.
  */
@@ -56,7 +56,7 @@ test.afterEach(async ({ page }) => {
   await clearRecentlyViewed();
 });
 
-test("uses a document from My Documents in a chat, leaves it unticked in a new application, and deletes it", async ({
+test("uses a document from My documents in a chat, leaves it unticked in a new application, and deletes it", async ({
   page,
 }, testInfo) => {
   test.setTimeout(10 * 60_000);
@@ -73,12 +73,12 @@ test("uses a document from My Documents in a chat, leaves it unticked in a new a
   fs.writeFileSync(file, contents);
   const key = `${username}/documents/${fileName}`;
 
-  await test.step("upload it in My Documents", async () => {
+  await test.step("upload it in My documents", async () => {
     await page.goto(appUrl("/home"));
     await page.getByRole("button", { name: "Open main menu" }).click();
-    await page.getByRole("navigation", { name: "Main" }).getByRole("button", { name: "My Documents" }).click();
+    await page.getByRole("navigation", { name: "Main" }).getByRole("button", { name: "My documents" }).click();
     await expect(page).toHaveURL(/\/documents$/);
-    await expect(page.getByRole("heading", { level: 1, name: "My Documents" })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: "My documents" })).toBeVisible();
     await expect(page.getByText("Loading your documents...")).toHaveCount(0);
 
     documentKey = key;
@@ -172,8 +172,8 @@ test("uses a document from My Documents in a chat, leaves it unticked in a new a
     await expect(picker.getByRole("checkbox", { checked: true }), "ticked in a new application").toHaveCount(0);
   });
 
-  await test.step("delete it from My Documents", async () => {
-    await page.getByRole("navigation", { name: "Main" }).getByRole("button", { name: "My Documents" }).click();
+  await test.step("delete it from My documents", async () => {
+    await page.getByRole("navigation", { name: "Main" }).getByRole("button", { name: "My documents" }).click();
     await expect(page).toHaveURL(/\/documents$/);
     const item = library(page).getByRole("listitem").filter({ hasText: fileName });
     await item.getByRole("button", { name: `Delete ${fileName}` }).click();

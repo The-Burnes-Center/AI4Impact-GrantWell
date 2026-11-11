@@ -20,7 +20,7 @@ describe("draft steps", () => {
     expect(statusToStep("something_new")).toBe("projectBasics");
   });
 
-  it("saves the review step as reviewing, so My Applications shows Review", () => {
+  it("saves the review step as reviewing, so My applications shows Review", () => {
     expect(stepToStatus("reviewApplication")).toBe("reviewing");
     expect(statusToStep(stepToStatus("reviewApplication"))).toBe("reviewApplication");
     expect(stepToStatus("unknown")).toBe("project_basics");

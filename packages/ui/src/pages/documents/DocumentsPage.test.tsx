@@ -14,12 +14,12 @@ const LIBRARY = [
   { key: "user-1/documents/plan.pdf", name: "plan.pdf", folder: "documents", size: 10, lastModified: "2026-11-01T00:00:00Z" },
 ];
 
-describe("My Documents", () => {
+describe("My documents", () => {
   it("lists every document, newest first, with where older ones were uploaded", async () => {
     stubFetch({ [LIST]: json({ documents: LIBRARY }) });
     renderApp(<DocumentsPage />, { route: "/documents" });
 
-    expect(await screen.findByRole("heading", { level: 1, name: "My Documents" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 1, name: "My documents" })).toBeInTheDocument();
     const list = await screen.findByRole("list", { name: /Your documents/ });
     const items = within(list).getAllByRole("listitem");
     expect(items.map((li) => within(li).getByText(/\.pdf$/).textContent)).toEqual(["plan.pdf", "budget.pdf"]);

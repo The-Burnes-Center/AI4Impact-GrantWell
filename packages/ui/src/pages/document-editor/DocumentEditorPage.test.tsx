@@ -54,12 +54,12 @@ describe("DocumentEditorPage", () => {
 
     expect(await screen.findByRole("heading", { level: 1, name: "Application not found" })).toBeInTheDocument();
     expect(screen.getByText("This application doesn't exist. It may have been deleted.")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Go to My Applications" })).toHaveAttribute("href", "/document-editor/drafts");
+    expect(screen.getByRole("link", { name: "Go to My applications" })).toHaveAttribute("href", "/document-editor/drafts");
     expect(screen.queryByText(/This may take 30-60 seconds/)).not.toBeInTheDocument();
     expect(net.to(DRAFT)).toHaveLength(1);
   });
 
-  it("opens Project Basics for an application with no row yet", async () => {
+  it("opens Project basics for an application with no row yet", async () => {
     stubServer(null);
     renderEditor("?step=projectBasics&grant=Grant%20A");
     expect(await screen.findByRole("heading", { level: 1, name: "Grant A" })).toBeInTheDocument();

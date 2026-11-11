@@ -26,7 +26,7 @@ const tabs = () => within(screen.getByRole("navigation", { name: "Main" }));
 describe("header tabs layout", () => {
   it("puts the main pages in header tabs and shows no side menu on a list page", () => {
     shellAt("/chat/sessions");
-    expect(tabs().getByRole("link", { name: "My Chats" })).toHaveAttribute("aria-current", "page");
+    expect(tabs().getByRole("link", { name: "My chats" })).toHaveAttribute("aria-current", "page");
     expect(tabs().getByRole("link", { name: "Home" })).not.toHaveAttribute("aria-current");
     expect(screen.getByRole("button", { name: "Sign out" })).toBeInTheDocument();
     expect(screen.queryByRole("navigation", { name: "This grant" })).toBeNull();
@@ -38,13 +38,13 @@ describe("header tabs layout", () => {
     const side = within(screen.getByRole("navigation", { name: "This grant" }));
     expect(side.getByRole("button", { name: "Requirements" })).toHaveAttribute("aria-current", "page");
     expect(side.getByRole("button", { name: "Chat with AI" })).toBeInTheDocument();
-    expect(side.queryByRole("button", { name: "My Chats" })).toBeNull();
+    expect(side.queryByRole("button", { name: "My chats" })).toBeNull();
     expect(screen.getAllByRole("navigation", { name: "Main" })).toHaveLength(1);
   });
 
-  it("marks My Applications as the section while an application is open", () => {
+  it("marks My applications as the section while an application is open", () => {
     shellAt("/document-editor?grant=Water%20Grant");
-    expect(tabs().getByRole("link", { name: "My Applications" })).toHaveAttribute("aria-current", "true");
+    expect(tabs().getByRole("link", { name: "My applications" })).toHaveAttribute("aria-current", "true");
     expect(screen.getByRole("navigation", { name: "This grant" })).toBeInTheDocument();
   });
 
@@ -56,7 +56,7 @@ describe("header tabs layout", () => {
       </NavigationProvider>,
       { route: "/documents" }
     );
-    expect(within(screen.getByRole("navigation", { name: "Main" })).getByRole("button", { name: "My Documents" })).toHaveAttribute(
+    expect(within(screen.getByRole("navigation", { name: "Main" })).getByRole("button", { name: "My documents" })).toHaveAttribute(
       "aria-current",
       "page"
     );

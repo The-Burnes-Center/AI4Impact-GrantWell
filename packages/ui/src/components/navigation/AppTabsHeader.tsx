@@ -19,11 +19,11 @@ interface Tab {
 
 const TABS: Tab[] = [
   { label: "Home", href: "/home", current: (p) => p === "/" || p.startsWith("/home") || p.startsWith("/requirements") },
-  { label: "My Chats", href: "/chat/sessions", current: (p) => p.startsWith("/chat") },
-  { label: "My Applications", href: "/document-editor/drafts", current: (p) => p.startsWith("/document-editor") },
-  { label: "My Documents", href: "/documents", current: (p) => p === "/documents" },
+  { label: "My chats", href: "/chat/sessions", current: (p) => p.startsWith("/chat") },
+  { label: "My applications", href: "/document-editor/drafts", current: (p) => p.startsWith("/document-editor") },
+  { label: "My documents", href: "/documents", current: (p) => p === "/documents" },
 ];
-const ADMIN_TAB: Tab = { label: "Admin Dashboard", href: "/admin", current: (p) => p.startsWith("/admin") };
+const ADMIN_TAB: Tab = { label: "Admin dashboard", href: "/admin", current: (p) => p.startsWith("/admin") };
 
 /** The signed-in header for the "tabs" navigation layout: wordmark and account links, then the main pages as tabs. */
 export function AppTabsHeader() {

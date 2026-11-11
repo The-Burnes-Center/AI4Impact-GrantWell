@@ -7,7 +7,7 @@ Playwright drives the deployed dev site (`grantwell-burnes-staging`) as one dedi
 | `tests/auth.setup.ts` | Sign in with email, password and TOTP; clear the account's leftovers; pick the run's NOFO |
 | `tests/nofo.spec.ts` | Search the NOFO, select it, read its four requirement tabs |
 | `tests/chat.spec.ts` | Ask the assistant about the NOFO, check the answer and its sources, reload |
-| `tests/documents.spec.ts` | Upload a text file in My Documents, tick it in a new chat, ask about it, check Sources, untick it, see it unticked in a new application, delete it |
+| `tests/documents.spec.ts` | Upload a text file in My documents, tick it in a new chat, ask about it, check Sources, untick it, see it unticked in a new application, delete it |
 | `tests/draft.spec.ts` | Project basics → nothing ticked under Supporting Documents → generate every narrative section → review → export Word and PDF |
 | `tests/search.spec.ts` | Plain-language AI search on the home page with Enter: results arrive, the Status filter stays as set |
 | `tests/admin.spec.ts` | Open User Management, see the user list, find the test account by search (read-only) |
@@ -88,10 +88,10 @@ The saved session in `e2e/.auth/` is deleted when the run ends.
 
 ## Cleanup
 The suite deletes only through the app's own APIs, as the test user. The handlers scope every call to the caller's `sub`, and the suite first checks that the token's email is the test address.
-- **Start of each run:** delete every session and draft the account holds, every `e2e-` file in its My Documents, and clear its recently viewed list.
+- **Start of each run:** delete every session and draft the account holds, every `e2e-` file in its My documents, and clear its recently viewed list.
 - **Chat:** delete the session after the reply has finished saving.
 - **Draft:** wait for the generation job to end, delete the draft, then delete it again 10 s later. The pipeline and the version writer can write after the first delete.
-- **Documents:** the journey deletes its file in My Documents; if it fails first, cleanup deletes it through the API, along with its chat and application.
+- **Documents:** the journey deletes its file in My documents; if it fails first, cleanup deletes it through the API, along with its chat and application.
 
 Some data stays:
 - each run's uploaded file (a few hundred bytes) as a noncurrent version, because the user-documents bucket is versioned with no expiry;

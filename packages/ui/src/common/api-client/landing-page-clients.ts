@@ -40,7 +40,7 @@ export class LandingPageClient {
   // Return NOFO summary from S3 bucket
   /**
    * `citations` adds each requirement's quoted sources; only the Requirements page shows them.
-   * `forApplication` is for Write Application, which still gets the grant's name and narrative
+   * `forApplication` is for Write application, which still gets the grant's name and narrative
    * sections while the grant is in review (the response then has `inReview: true`).
    */
   async getNOFOSummary(
@@ -95,7 +95,7 @@ export class LandingPageClient {
     }
   }
 
-  /** Only Write Application reads these; while the grant is in review it gets the question text alone. */
+  /** Only Write application reads these; while the grant is in review it gets the question text alone. */
   async getNOFOQuestions(documentKey: string) {
     try {
       const token = await Utils.authenticate();

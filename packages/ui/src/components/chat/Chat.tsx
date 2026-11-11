@@ -303,7 +303,7 @@ export default function Chat(props: {
             metadata: {},
           };
           setMessageHistory([initialMessage]);
-          // Saved with the first message, so opening a chat and leaving adds nothing to My Chats.
+          // Saved with the first message, so opening a chat and leaving adds nothing to My chats.
           pendingSessionRef.current = {
             sessionId: props.sessionId,
             userId: username,
@@ -545,7 +545,7 @@ export default function Chat(props: {
                 This chat isn&apos;t available. It may have been deleted, or the link is wrong.
               </p>
               <Link to="/chat/sessions" style={styles.unavailableLink}>
-                Go to My Chats
+                Go to My chats
               </Link>
             </li>
           )}

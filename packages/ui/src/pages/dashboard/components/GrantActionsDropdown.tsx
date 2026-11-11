@@ -230,7 +230,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
               className="dropdown-menu-item"
               role="menuitem"
               tabIndex={-1}
-              title="Add questions applicants answer in Write Application"
+              title="Add questions applicants answer in Write application"
             >
               <LuListChecks size={16} className="menu-icon" aria-hidden="true" />
               <span>Custom questions</span>

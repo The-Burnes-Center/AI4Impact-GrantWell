@@ -101,7 +101,7 @@ describe("chat document picker", () => {
     expect(net.to(UPLOAD_URL)).toHaveLength(0);
   });
 
-  it("asks before replacing a same-named file in My Documents", async () => {
+  it("asks before replacing a same-named file in My documents", async () => {
     server({ document_keys: [], exists: true });
     const { user, container } = open();
     await screen.findByRole("checkbox", { name: /plan\.pdf/ });

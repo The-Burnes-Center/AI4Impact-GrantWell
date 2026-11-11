@@ -52,12 +52,12 @@ function ScrollToTop(): null {
       const exactMatches: { [key: string]: string } = {
         "/": "Home",
         "/home": "Home",
-        "/admin": "Admin Dashboard",
+        "/admin": "Admin dashboard",
         "/profile": "Profile",
-        "/chat/sessions": "My Chats",
-        "/document-editor": "Write Application",
-        "/document-editor/drafts": "My Applications",
-        "/documents": "My Documents",
+        "/chat/sessions": "My chats",
+        "/document-editor": "Write application",
+        "/document-editor/drafts": "My applications",
+        "/documents": "My documents",
       };
 
       if (exactMatches[path]) {
@@ -68,7 +68,7 @@ function ScrollToTop(): null {
         return "Chat with AI";
       }
       if (path.startsWith("/document-editor/") && path !== "/document-editor/drafts") {
-        return "Write Application";
+        return "Write application";
       }
       if (path.startsWith("/requirements/")) {
         return "Requirements";
@@ -80,7 +80,7 @@ function ScrollToTop(): null {
     const label = getPageLabel(pathname);
     const home = pathname === "/" || pathname === "/home";
     const step =
-      label === "Write Application" &&
+      label === "Write application" &&
       EDITOR_STEPS.find((s) => s.id === new URLSearchParams(search).get("step"));
     const baseTitle = !label
       ? appName

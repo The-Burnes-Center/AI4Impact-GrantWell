@@ -211,7 +211,7 @@ describe("Chat new and unavailable chats", () => {
     expect(
       await screen.findByText("This chat isn't available. It may have been deleted, or the link is wrong.")
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Go to My Chats" })).toHaveAttribute("href", "/chat/sessions");
+    expect(screen.getByRole("link", { name: "Go to My chats" })).toHaveAttribute("href", "/chat/sessions");
     expect(net.to(SUMMARY)).toEqual([]);
     expect(screen.queryByTestId("chat-input")).not.toBeInTheDocument();
   });
@@ -225,7 +225,7 @@ describe("Chat new and unavailable chats", () => {
     });
     const { container } = renderApp(<Chat sessionId="s1" documentIdentifier="Missing Grant" />);
 
-    await screen.findByRole("link", { name: "Go to My Chats" });
+    await screen.findByRole("link", { name: "Go to My chats" });
     expect(container.textContent).not.toMatch(/ACCESS_DENIED_STATE|refresh the page/i);
   });
 

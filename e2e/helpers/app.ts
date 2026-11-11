@@ -110,16 +110,16 @@ const PROJECT_BASICS: Record<string, string> = {
   contactEmail: USER_EMAIL,
 };
 
-/** From /home: starts a new application for the NOFO and returns its session id, on Project Basics. */
+/** From /home: starts a new application for the NOFO and returns its session id, on Project basics. */
 export async function startApplication(page: Page, nofoName: string): Promise<string> {
   const actions = await selectNofo(page, nofoName);
-  await actions.getByRole("button", { name: "Write Application", exact: true }).click();
+  await actions.getByRole("button", { name: "Write application", exact: true }).click();
   await page.getByRole("button", { name: "Get started" }).click();
   await expect(page).toHaveURL(/\/document-editor\/[0-9a-f-]{36}\?.*step=projectBasics/);
   return new URL(page.url()).pathname.split("/").pop()!;
 }
 
-/** From Project Basics: fills it, skips the questionnaire, and stops on Additional Information. */
+/** From Project basics: fills it, skips the questionnaire, and stops on Additional information. */
 export async function fillToAdditionalInformation(page: Page): Promise<void> {
   for (const [id, value] of Object.entries(PROJECT_BASICS)) await page.locator(`#${id}`).fill(value);
   await page.getByRole("button", { name: "Continue", exact: true }).click();
@@ -128,7 +128,7 @@ export async function fillToAdditionalInformation(page: Page): Promise<void> {
   await expect(page).toHaveURL(/step=uploadDocuments/);
 }
 
-/** The Additional Information step's document checklist, once the library and the draft's selection have loaded. */
+/** The Additional information step's document checklist, once the library and the draft's selection have loaded. */
 export async function applicationPicker(page: Page) {
   const picker = page.getByRole("group", { name: "Use in this application" });
   await expect(picker).toBeVisible();

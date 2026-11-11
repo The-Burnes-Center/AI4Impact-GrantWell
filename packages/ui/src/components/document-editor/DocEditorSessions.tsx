@@ -204,21 +204,21 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
   const getStatusLabel = (status?: DraftStatus): string => {
     switch (status) {
       case 'project_basics':
-        return 'Project Basics';
+        return 'Project basics';
       case 'questionnaire':
         return 'Questionnaire';
       case 'uploading_documents':
-        return 'Additional Information';
+        return 'Additional information';
       case 'generating_draft':
         return 'Generating draft';
       case 'editing_sections':
-        return 'Section Editor';
+        return 'Section editor';
       case 'reviewing':
         return 'Review';
       case 'submitted':
         return 'Submitted';
       default:
-        return 'Project Basics';
+        return 'Project basics';
     }
   };
 
@@ -319,7 +319,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       {/* Header section */}
       <div className="dashboard-header dashboard-header--wrap">
         <div>
-          <h1 ref={headingRef} tabIndex={-1}>My Applications</h1>
+          <h1 ref={headingRef} tabIndex={-1}>My applications</h1>
           <p style={{ marginTop: "4px", color: "var(--gw-color-text-secondary)", fontSize: "14px" }}>
             Manage and continue your saved grant applications
           </p>

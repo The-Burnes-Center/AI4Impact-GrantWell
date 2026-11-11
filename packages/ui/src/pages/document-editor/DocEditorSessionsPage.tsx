@@ -83,7 +83,7 @@ export default function DocEditorSessionsPage() {
 
   const breadcrumbItems = [
     { label: "Home", href: "/home" },
-    { label: "My Applications" },
+    { label: "My applications" },
   ];
 
   return (
