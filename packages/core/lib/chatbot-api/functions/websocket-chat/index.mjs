@@ -63,7 +63,8 @@ const CHAT_WORKER_MARKER = "grantwellChatWorker";
 
 const ASYNC_PAYLOAD_LIMIT_BYTES = 256 * 1024;
 
-const HISTORY_TURNS = 8;
+// The whole chat up to here, within the character budget; the history is cached between turns.
+const HISTORY_TURNS = 40;
 const HISTORY_CHAR_BUDGET = 60000;
 
 // Sonnet 5.5 reads 1M tokens; the largest grant is ~650 KB (~160k tokens). At ~4 characters a token
@@ -207,10 +208,10 @@ async function invokeSessionHandler(request) {
  * The chat's newest saved turns, oldest first, and the supporting documents ticked for it
  * (`document_keys` on the header; undefined on chats saved before that existed). The greeting
  * (no user text) is left out. Within the character budget the newest turns win; a lone turn over
- * it is shortened. Fails open to no history.
+ * it is shortened. `earlierOmitted` says older turns exist that aren't included. Fails open to no history.
  */
 async function loadSavedChat(userId, sessionId) {
-  const none = { turns: [], documentKeys: undefined };
+  const none = { turns: [], documentKeys: undefined, earlierOmitted: false };
   if (!sessionId || !process.env.SESSION_HANDLER) return none;
   try {
     const result = await invokeSessionHandler({
@@ -226,9 +227,8 @@ async function loadSavedChat(userId, sessionId) {
     const header = JSON.parse(result.body || "{}");
     const documentKeys = Array.isArray(header.document_keys) ? header.document_keys : undefined;
     const entries = header.chat_history || [];
-    const turns = entries
-      .filter((e) => e && typeof e.user === "string" && e.user.trim() && typeof e.chatbot === "string" && e.chatbot.trim())
-      .slice(-HISTORY_TURNS);
+    const answered = entries.filter((e) => e && typeof e.user === "string" && e.user.trim() && typeof e.chatbot === "string" && e.chatbot.trim());
+    const turns = answered.slice(-HISTORY_TURNS);
     const kept = [];
     let used = 0;
     for (const turn of turns.reverse()) {
@@ -244,7 +244,8 @@ async function loadSavedChat(userId, sessionId) {
         break;
       }
     }
-    return { turns: kept, documentKeys };
+    const earlierOmitted = Boolean(header.older_cursor) || answered.length > kept.length;
+    return { turns: kept, documentKeys, earlierOmitted };
   } catch (err) {
     console.warn("Could not load the chat history:", err.message);
     return none;
@@ -475,7 +476,10 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
       }
 
       const today = new Date().toLocaleDateString("en-US", { timeZone: "America/New_York", year: "numeric", month: "long", day: "numeric" });
-      const context = `Active grant (documentIdentifier): ${documentIdentifier}${uploadedFilesList}\n\nToday's date is ${today} (US Eastern). Use it only to tell whether a date the grant states has passed.`;
+      const omitted = savedChat.earlierOmitted
+        ? "\n\nEarlier turns of this chat are not shown here. Don't say the user didn't ask something or that something wasn't discussed: it may be in those turns."
+        : "";
+      const context = `Active grant (documentIdentifier): ${documentIdentifier}${uploadedFilesList}${omitted}\n\nToday's date is ${today} (US Eastern). Use it only to tell whether a date the grant states has passed, and mention it or a date's status only when the answer is about dates or deadlines.`;
       const { system, messages } = buildChatRequest({
         instructions: getPromptText(userState, { source: grantSource.kind }),
         grantText: grantSource.text,
@@ -530,6 +534,8 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
           grantText: grantSource.text,
           baseKeys: sourceKeys([grantSource.text, ...applicant.texts, userText, context]),
           today,
+          history: savedChat.turns,
+          question: userMessage,
         };
       }
       await post(modelResponse);
@@ -615,7 +621,8 @@ async function checkAnswer(options, { session, grant, question }) {
       reason: result.reasons.get(i) ?? null,
       kind: result.kinds.get(i) ?? "meaning",
     }));
-    console.log(`${CHECK_MARKER} ${JSON.stringify({ ...line, sentences: result.units.length, flagged, ms: Date.now() - started })}`);
+    const extra = { ...(result.uncited && { uncited: result.uncited }), ...(result.verbatimTail && { verbatimTail: clip(result.verbatimTail, CHECK_SENTENCE_MAX_CHARS) }) };
+    console.log(`${CHECK_MARKER} ${JSON.stringify({ ...line, sentences: result.units.length, flagged, ...extra, ms: Date.now() - started })}`);
   } catch (error) {
     console.log(`${CHECK_MARKER} ${JSON.stringify({ error: String(error?.message ?? error), ...line, ms: Date.now() - started })}`);
   } finally {

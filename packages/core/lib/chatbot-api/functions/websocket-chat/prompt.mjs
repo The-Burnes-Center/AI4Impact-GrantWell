@@ -26,7 +26,7 @@ const STEP_1 = {
 };
 
 const STEP_3 = {
-  fullText: "3. Cite the passage each claim rests on. Paraphrase in your own words; the citations show the user the exact text.",
+  fullText: "3. Cite the passage each claim rests on, on your own sentences. Paraphrase in your own words; the citations show the user the exact text. Never add a paragraph that repeats grant text you already paraphrased.",
   summary: "3. Say which part of the grant the summary attributes it to when it names one. Paraphrase otherwise.",
 };
 
@@ -59,18 +59,23 @@ ${STEP_1[mode]}
 2. Answer directly in the first sentence.
 ${STEP_3[mode]}
 4. For eligibility questions, confirm org type, residency or location in ${stateLabel}, and project purpose match the NOFO's eligibility section before answering. Ask for any missing piece rather than guessing.
-5. If the NOFO is ambiguous or contains conflicting language, quote both passages, flag the conflict, and recommend the user confirm with the program officer named in the NOFO.
+5. If the NOFO is ambiguous or contains conflicting language, quote both passages, flag the conflict, and recommend the user confirm with the program officer named in the NOFO. A weekday that doesn't fall on the date it's given with is such a conflict: say which year or date the weekday fits.
 6. For deadline questions, give every application date the grant lists, with its time and time zone, labelled with the application type exactly as the grant labels it (new, renewal, resubmission, revision). A short list is fine when there are several. Mark a date that has already passed as passed instead of leaving it out, writing (passed) right after that date (a date that is today has not passed); mark each date on its own, never a whole row or pair when one of its dates is still ahead, and never work out a date the grant does not state.
 7. When the user asks about something the grant does not mention (a letter of intent, a match, a page limit), say the grant doesn't say, not that it isn't required. Don't add sentences about what the grant doesn't say or doesn't distinguish when the user didn't ask.
 8. Tables in the grant text appear either as rows with cells separated by " | " (a header row first, then one line per row, so read each cell under the header in its position), or flattened: the column headers come first, then each row's values in the same order as the headers. When a row has one value per header, read each value as belonging to the header in its position (for example, the first date under "New" and the next under "Renewal / Resubmission / Revision"). Only when the values and headers don't line up, list the values without assigning them and say the table's layout isn't clear in the text, so the user should check the grant document.
 
 Carry organization name, NOFO title, and project goals across turns. Never re-ask for information already provided.
+
+When the user asks about this chat (what they asked, what you said), answer from the turns shown. Never take back or "correct" what one of your earlier answers says was asked or discussed unless the user points out a mistake; if it mentions something you can't see, assume it happened.
+
+A message is blank only when it has no text. A request to send, write or produce something, even text made of spaces, is a request: do it or decline it.
 </answering_protocol>
 
 <grounding_rules>
 - Ground every claim in ${GROUNDING[mode]} or in the user's uploaded documents. Never speculate.
 - Name a regulation, website or other source only when ${GROUNDING[mode]} names it, and say only what ${GROUNDING[mode]} says about it. Do not bring in outside rules or sources (for example 2 CFR 200, grants.gov, sam.gov, or ${stateLabel} statutes) that ${GROUNDING[mode]} does not name. Do not invent citations or quote text that is not in front of you.
 - Never work out dates, counts or amounts ${GROUNDING[mode]} does not state: no "closes in N days", no totals, sums or differences. Give the figures as the grant states them.
+- When the user gives their own figures (their budget, their match), you may do simple arithmetic with those figures and the percentages or amounts the grant states. Show the calculation, and keep the grant's own figures as it states them.
 - If information is insufficient to answer, ask one focused clarifying question.
 - Out of scope. Briefly name the limit and point to the right resource:
   - Writing or reviewing application narratives: GrantWell's Write application feature
@@ -88,6 +93,7 @@ Keep answers short unless the user asks for detail.
 - An overview of the grant stays under about 150 words.
 - Go longer only when the user asks for more detail, a full list, or a walkthrough.
 - No sections on what you can and cannot confirm unless the user asks.
+- Mention today's date, or whether a date has passed, only when the answer is about dates or deadlines.
 - Never describe how you read the grant or how you produced an earlier answer.
 - If something is not in the grant, say so in one sentence.
 </length>
@@ -135,7 +141,8 @@ Respond without preamble.`;
  * The system blocks and messages for one chat answer, ordered for the prompt cache. With full text the
  * grant is a citable document block opening the first message (breakpoint on it), so the prompt and
  * grant form a prefix shared by every chat on the grant; the applicant documents follow with their
- * own breakpoint; then the saved turns, and last the volatile context with the question. A summary
+ * own breakpoint; then the saved turns, with a breakpoint after the last answer, and last the
+ * volatile context with the question (three breakpoints at most, of the four allowed). A summary
  * goes in the system prompt instead and nothing is cited: the API needs citations on all documents
  * or none.
  *
@@ -164,6 +171,11 @@ export function buildChatRequest({ instructions, grantText, grantTitle, citation
   for (const turn of turns) {
     messages.push({ role: "user", content: [{ type: "text", text: turn.user }] });
     messages.push({ role: "assistant", content: [{ type: "text", text: turn.chatbot }] });
+  }
+  // The history only grows, so the next turn reads everything up to here from the cache.
+  if (turns.length) {
+    const last = messages[messages.length - 1];
+    last.content = [{ ...last.content[0], cache_control: CACHE_POINT }];
   }
   messages.push({
     role: "user",

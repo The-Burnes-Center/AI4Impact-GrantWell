@@ -105,13 +105,13 @@ describe("chat request assembly", () => {
     ]);
   });
 
-  it("keeps the date, file list and history after the breakpoint", () => {
+  it("keeps the date, file list and history after the breakpoint, with a breakpoint after the last answer", () => {
     const { system, messages } = buildChatRequest(parts);
 
     expect(JSON.stringify(system)).not.toMatch(/Today's date|Active grant|Earlier question/);
     expect(messages).toEqual([
       { role: "user", content: [{ type: "text", text: "Earlier question" }] },
-      { role: "assistant", content: [{ type: "text", text: "Earlier answer" }] },
+      { role: "assistant", content: [{ type: "text", text: "Earlier answer", cache_control: { type: "ephemeral" } }] },
       {
         role: "user",
         content: [
@@ -270,7 +270,7 @@ describe("chat with the grant's full text", () => {
       .commandCalls(InvokeCommand)
       .map((c) => JSON.parse(JSON.parse(String(c.args[0].input.Payload)).body))
       .filter((b) => b.operation === "get_session");
-    expect(reads).toEqual([{ operation: "get_session", user_id: "user-1", session_id: "s1", limit: 9 }]);
+    expect(reads).toEqual([{ operation: "get_session", user_id: "user-1", session_id: "s1", limit: 41 }]);
   });
 
   it("includes the documents ticked for the chat after the grant text", async () => {

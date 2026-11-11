@@ -280,7 +280,7 @@ describe("chat answers, checked after sending", () => {
     );
     expect(prompt).toContain('<sentence id="2">\n<text>Plan ahead.</text>\n<no_passage/>\n</sentence>');
     expect(prompt).not.toContain("<user_said>");
-    expect(prompt).not.toContain("What is the deadline?");
+    expect(prompt).toContain("<question>What is the deadline?</question>");
     expect(prompt).not.toContain("Filler.");
     const grantBlock = body.messages[0].content[0];
     expect(grantBlock.cache_control).toEqual({ type: "ephemeral" });
@@ -381,7 +381,7 @@ describe("chat answers, checked after sending", () => {
     expect(checkLines()).toEqual([expect.objectContaining({ error: "check timed out after 60000 ms", session: "s1" })]);
   });
 
-  it("lets user-given facts pass the fact check but keeps their messages out of the meaning check", async () => {
+  it("lets user-given facts pass the fact check, and shows the meaning check the chat only to judge sentences about the chat", async () => {
     lambda.on(InvokeCommand).callsFake((input) =>
       String(input.Payload).includes("get_session")
         ? sessionReply({ chat_history: [{ user: "We serve 4,200 residents.", chatbot: "Noted.", metadata: "[]" }] })
@@ -393,9 +393,34 @@ describe("chat answers, checked after sending", () => {
 
     expect(posted()[0]).toBe("Your $250,000 budget for 4,200 residents is yours to set.");
     expect(checkLines()[0].flagged).toEqual([]);
-    const prompt = haikuRequest().messages[0].content.at(-1).text;
-    expect(prompt).not.toContain("We serve 4,200 residents.");
-    expect(prompt).not.toContain("Is that allowed?");
+    const request = haikuRequest();
+    const prompt = request.messages[0].content.at(-1).text;
+    expect(prompt).toContain("for judging sentences about this chat only:\n<chat_history>\n<user>We serve 4,200 residents.</user>\n<assistant>Noted.</assistant>\n</chat_history>");
+    expect(prompt).toContain("<question>Our budget is $250,000. Is that allowed?</question>");
+    expect(request.system).toContain("The chat history is never a source for facts about the grant.");
+  });
+
+  it("tells the model when older turns of the chat are left out", async () => {
+    lambda.on(InvokeCommand).callsFake((input) =>
+      String(input.Payload).includes("get_session")
+        ? sessionReply({ chat_history: [{ user: "Earlier question", chatbot: "Earlier answer", metadata: "[]" }], older_cursor: "12" })
+        : sessionReply({})
+    );
+    bedrock.on(InvokeModelWithResponseStreamCommand).resolves(cited([["Applications are due March 1, 2027.", deadline]]));
+
+    await handler(event("What did we talk about?"));
+
+    const context = sonnetRequest(0).messages.at(-1).content.at(-2).text;
+    expect(context).toContain("Earlier turns of this chat are not shown here.");
+  });
+
+  it("counts claims the answer didn't cite", async () => {
+    bedrock.on(InvokeModelWithResponseStreamCommand).resolves(cited([["Applications are due March 1, 2027.", deadline], " Cities may apply."]));
+
+    await handler(event("Who can apply, and by when?"));
+
+    expect(checkLines()[0]).toMatchObject({ uncited: 1 });
+    expect(checkLines()[0]).not.toHaveProperty("verbatimTail");
   });
 
   it("checks a summary-mode answer against the summary, sent once", async () => {
