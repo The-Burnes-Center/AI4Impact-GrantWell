@@ -48,6 +48,12 @@ describe("state home page", () => {
     expect(screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent)).toEqual(["Discover", "Understand", "Draft"]);
   });
 
+  it("puts the light footer wordmark on the hero band when the branding has one", () => {
+    renderHome({ ...colorado, footer: { ...colorado.footer, wordmark: "/images/co/grantwell-lockup-white.svg" } });
+    const title = screen.getByRole("heading", { level: 1 });
+    expect(within(title).getByRole("img", { name: "GrantWell" })).toHaveAttribute("src", "/images/co/grantwell-lockup-white.svg");
+  });
+
   it("shows the seal beside the logo unless the branding turns it off", () => {
     renderHome(colorado);
     const title = screen.getByRole("heading", { level: 1 });

@@ -1,5 +1,5 @@
-/* The single-state public home (pages/landing/StateHome.tsx): light page, brand band, sign-in card,
-   feature cards under a highlight rule and a tinted trust panel. Colours and type come from tokens.css. */
+/* The single-state public home (pages/landing/StateHome.tsx): the identity and sign-in card on a band in
+   the primary colour, then feature cards and a tinted trust panel on white. Colours and type come from tokens.css. */
 .state-home {
   background: var(--gw-color-surface, #ffffff);
   color: var(--gw-color-text);
@@ -17,10 +17,18 @@
   padding: var(--gw-spacing-3xl) var(--gw-spacing-xl) 48px;
 }
 
+.state-home__band-hero {
+  background: var(--gw-color-primary);
+  color: var(--gw-color-text-inverse);
+}
+
 .state-home__hero {
   display: grid;
   gap: var(--gw-spacing-3xl);
-  align-items: start;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px var(--gw-spacing-xl);
 }
 
 @media (min-width: 900px) {
@@ -35,7 +43,7 @@
   align-items: center;
   gap: var(--gw-spacing-lg);
   margin: 0 0 var(--gw-spacing-xl);
-  color: var(--gw-color-heading);
+  color: var(--gw-color-text-inverse);
   font-family: var(--gw-font-display);
   font-size: var(--gw-font-size-3xl);
 }
@@ -59,7 +67,7 @@
 
 .state-home__tagline {
   margin: 0 0 var(--gw-spacing-md);
-  color: var(--gw-color-heading);
+  color: var(--gw-color-text-inverse);
   font-family: var(--gw-font-display);
   font-size: var(--gw-font-size-2xl);
   font-weight: var(--gw-font-weight-bold);
@@ -69,20 +77,27 @@
 .state-home__description {
   margin: 0;
   max-width: 60ch;
-  color: var(--gw-color-text-secondary);
+  color: color-mix(in srgb, var(--gw-color-text-inverse) 88%, var(--gw-color-primary));
   font-size: var(--gw-font-size-lg);
   line-height: 1.6;
 }
 
 .state-home__identity {
-  padding-top: var(--gw-spacing-2xl);
+  padding-block: var(--gw-spacing-lg);
 }
 
 .state-home__sign-in .auth-login-card {
   padding: var(--gw-spacing-3xl);
-  border: 1px solid var(--gw-color-primary-border);
+  background: var(--gw-color-surface);
+  color: var(--gw-color-text);
+  border: 0;
   border-radius: var(--gw-radius-container);
-  box-shadow: var(--gw-shadow-low);
+  box-shadow: var(--gw-shadow-high);
+}
+
+.state-home__sign-in-pending {
+  background: var(--gw-color-surface);
+  border-radius: var(--gw-radius-container);
 }
 
 /* The page heading already shows the logo. */
@@ -125,9 +140,7 @@
 }
 
 .state-home__features {
-  margin-top: 56px;
-  padding-top: var(--gw-spacing-3xl);
-  border-top: 4px solid var(--gw-color-highlight);
+  margin-top: 0;
 }
 
 .state-home__feature-list {

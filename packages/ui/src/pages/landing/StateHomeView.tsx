@@ -45,26 +45,28 @@ export function SignInPending({ appName }: { appName: string }) {
 }
 
 export function StateHomeView({
-  branding: { appName, logo, govHeader },
+  branding: { appName, logo, govHeader, footer },
   home,
   signIn,
 }: {
-  branding: Pick<Branding, "appName" | "logo" | "govHeader">;
+  branding: Pick<Branding, "appName" | "logo" | "govHeader" | "footer">;
   home: ResolvedHome;
   signIn: ReactNode;
 }) {
   const showSeal = govHeader && govHeader.sealBesideLogo !== false;
+  // The hero sits on the primary colour, so it takes the light wordmark the footer also uses.
+  const heroLogo = footer.wordmark ?? logo;
   return (
     <div className="state-home">
       {/* The government strip already ends in this line. */}
       {!govHeader && <div className="state-home__band" aria-hidden="true" />}
-      <div className="state-home__inner">
+      <div className="state-home__band-hero">
         <div className="state-home__hero">
           <section className="state-home__identity" aria-labelledby="state-home-title">
             <h1 id="state-home-title" className="state-home__title">
               {showSeal && <img className="state-home__seal" src={govHeader.logo} alt="" />}
-              {logo ? (
-                <img className="state-home__logo" src={logo} alt={appName} />
+              {heroLogo ? (
+                <img className="state-home__logo" src={heroLogo} alt={appName} />
               ) : (
                 <span className="state-home__logo">{appName}</span>
               )}
@@ -74,6 +76,8 @@ export function StateHomeView({
           </section>
           <div className="state-home__sign-in">{signIn}</div>
         </div>
+      </div>
+      <div className="state-home__inner">
 
         <section className="state-home__features" aria-labelledby="state-home-features">
           <h2 id="state-home-features" className="visually-hidden">
