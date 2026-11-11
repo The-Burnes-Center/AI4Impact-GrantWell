@@ -48,7 +48,7 @@ body {
   color: var(--gw-color-heading);
   margin: 0;
   font-size: var(--gw-font-size-2xl);
-  font-weight: var(--gw-font-weight-bold);
+  font-weight: var(--gw-font-heading-1-weight, var(--gw-font-weight-bold));
   line-height: 1.2;
   letter-spacing: -0.02em;
 }

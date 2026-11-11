@@ -42,7 +42,7 @@ html:has(.document-editor-root) {
 
 .document-editor-nofo-title {
   font-size: 22px;
-  font-weight: 600;
+  font-weight: var(--gw-font-heading-1-weight, 600);
   color: var(--gw-color-text-strong);
   margin: 0;
   word-wrap: break-word;

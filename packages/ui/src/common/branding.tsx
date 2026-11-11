@@ -75,6 +75,8 @@ export interface Branding {
   govHeader?: { logo: string; label: string; href: string; sealBesideLogo?: boolean };
   /** "tabs": main pages in header tabs, side menu only on a grant's pages. Ignored with a chrome Header. */
   navigation?: { layout?: "sidebar" | "tabs" };
+  /** An https font stylesheet (e.g. an Adobe Fonts kit), linked so it doesn't hold up the first paint. */
+  fonts?: { stylesheet: string };
   analyticsId?: string;
   seo?: {
     title?: string;

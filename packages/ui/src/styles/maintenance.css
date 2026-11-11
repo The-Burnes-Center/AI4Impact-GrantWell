@@ -22,9 +22,9 @@
 }
 
 .maintenance-title {
-  font-family: var(--gw-font-family);
+  font-family: var(--gw-font-heading-1, var(--gw-font-family));
   font-size: 1.75rem;
-  font-weight: 700;
+  font-weight: var(--gw-font-heading-1-weight, 700);
   color: var(--gw-color-primary);
   margin: 0 0 1rem;
   line-height: 1.3;

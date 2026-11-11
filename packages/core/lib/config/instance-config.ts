@@ -75,6 +75,11 @@ export interface Branding {
    * grant's own pages; "sidebar" (default) keeps the side menu on every page. Ignored with a chrome Header.
    */
   navigation?: { layout?: "sidebar" | "tabs" };
+  /**
+   * Fonts beyond GrantWell's own. stylesheet: an https CSS URL (e.g. an Adobe Fonts kit) loaded without
+   * holding up the first paint; the theme's font stacks name its families with fallbacks after them.
+   */
+  fonts?: { stylesheet: string };
   analyticsId?: string;
   seo?: {
     /** Home page <title>, at most 60 characters. Defaults to appName. */
@@ -258,6 +263,16 @@ function brandingProblems(branding: Branding): string[] {
   }
   if (branding.shortName !== undefined && (!isText(branding.shortName) || branding.shortName.length > 12)) {
     problems.push("branding.shortName must be 1-12 characters");
+  }
+  const layout = branding.navigation?.layout;
+  if (layout !== undefined && layout !== "sidebar" && layout !== "tabs") problems.push('branding.navigation.layout must be "sidebar" or "tabs"');
+  const footerLayout = branding.footer.layout;
+  if (footerLayout !== undefined && footerLayout !== "brand" && footerLayout !== "full") problems.push('branding.footer.layout must be "brand" or "full"');
+  if (branding.footer.columns?.some((c) => !c || !isText(c.heading) || !Array.isArray(c.links) || c.links.length === 0 || badLinks(c.links))) {
+    problems.push("branding.footer.columns need a heading and links with a label and an https://, mailto: or / href");
+  }
+  if (branding.fonts !== undefined && !/^https:\/\/[^\s"'<>]+$/.test(branding.fonts?.stylesheet ?? "")) {
+    problems.push("branding.fonts.stylesheet must be an https:// URL");
   }
   return problems;
 }

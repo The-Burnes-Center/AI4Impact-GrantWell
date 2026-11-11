@@ -398,7 +398,7 @@ const DocumentEditor: React.FC = () => {
           <>
             <div ref={headerRef} className="document-editor-header" style={{ background: "var(--gw-color-surface)", borderBottom: "1px solid var(--gw-color-border)", position: "sticky", top: 0, zIndex: 101, boxShadow: "var(--gw-shadow-low)" }}>
               <div style={{ padding: 16 }}>
-                <h1 className="document-editor-nofo-title" style={{ margin: 0, fontSize: "22px", fontWeight: 600, lineHeight: 1.4, wordBreak: "break-word" }}>
+                <h1 className="document-editor-nofo-title" style={{ margin: 0, fontSize: "22px", lineHeight: 1.4, wordBreak: "break-word" }}>
                   {isNofoLoading ? "Loading..." : nofoName || "Write application"}
                 </h1>
               </div>

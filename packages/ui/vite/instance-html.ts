@@ -27,6 +27,20 @@ const attr = (s: string) =>
 const tag = (name: string, attrs: Record<string, string>) =>
   `<${name} ${Object.entries(attrs).map(([k, v]) => `${k}="${attr(v)}"`).join(" ")} />`;
 
+/**
+ * branding.fonts.stylesheet as a preconnect and a stylesheet that loads without holding up the first paint:
+ * text shows in the fallback fonts, then swaps (the kit's font-display). Without script, the noscript copy loads it.
+ */
+export function fontStylesheetTags(fonts: Branding["fonts"]): string[] {
+  if (!fonts?.stylesheet) return [];
+  const href = fonts.stylesheet;
+  return [
+    tag("link", { rel: "preconnect", href: new URL(href).origin, crossorigin: "" }),
+    `<link rel="stylesheet" href="${attr(href)}" media="print" onload="this.media='all'" />`,
+    `<noscript>${tag("link", { rel: "stylesheet", href })}</noscript>`,
+  ];
+}
+
 function headTags(staged: Staged | undefined, publicDir: string): Promise<string[]> | string[] {
   if (!staged?.seo || !staged.siteUrl) {
     return [`<title>GrantWell</title>`, tag("meta", { name: "robots", content: "noindex, nofollow" })];
@@ -281,7 +295,12 @@ export function instanceHtml(stagedInstancePath: string): Plugin {
         ? JSON.parse(fs.readFileSync(stagedInstancePath, "utf8"))
         : undefined;
       const branding: PageBranding = staged?.branding ?? UNSTAGED;
-      const head = [CONFIG_PRELOAD, ...(await headTags(staged, publicDir)), ...instanceFontPreloads(ctx.bundle, base)];
+      const head = [
+        CONFIG_PRELOAD,
+        ...(await headTags(staged, publicDir)),
+        ...instanceFontPreloads(ctx.bundle, base),
+        ...fontStylesheetTags(staged?.branding?.fonts),
+      ];
       const chromeIndex = path.join(root, "src", "instance-chrome", "index.tsx");
       const chromePublicHome = fs.existsSync(chromeIndex) && chromeHasPublicHome(fs.readFileSync(chromeIndex, "utf8"));
       return withBrandColors(landingFallback(html, staged, chromePublicHome), branding.colors)

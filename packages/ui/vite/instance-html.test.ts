@@ -13,7 +13,7 @@ import {
   withBrandColors,
   withoutLandingFallback,
   type Staged,
-} from "./instance-html";
+ fontStylesheetTags } from "./instance-html";
 import { brandColorVars, TINTS_STYLE_ID } from "../src/common/brand-style";
 
 const notes = fs.readFileSync(path.join(__dirname, "..", "RELEASE_NOTES.md"), "utf8");
@@ -139,6 +139,19 @@ describe("landingFallback", () => {
   it("follows an explicit layout over the tenancy default", () => {
     expect(landingFallback(index, staged({ home: { layout: "marketing" } }, "Colorado"), false)).toBe(index);
     expect(landingFallback(index, staged({ home: { layout: "state" } }), false)).toContain('class="state-home"');
+  });
+});
+
+describe("fontStylesheetTags", () => {
+  it("adds nothing without a stylesheet", () => {
+    expect(fontStylesheetTags(undefined)).toEqual([]);
+  });
+
+  it("preconnects and loads the stylesheet without blocking, with a noscript copy", () => {
+    const tags = fontStylesheetTags({ stylesheet: "https://use.typekit.net/abc1234.css" });
+    expect(tags[0]).toBe('<link rel="preconnect" href="https://use.typekit.net" crossorigin="" />');
+    expect(tags[1]).toBe(`<link rel="stylesheet" href="https://use.typekit.net/abc1234.css" media="print" onload="this.media='all'" />`);
+    expect(tags[2]).toBe('<noscript><link rel="stylesheet" href="https://use.typekit.net/abc1234.css" /></noscript>');
   });
 });
 

@@ -386,6 +386,17 @@
 .gw-tag--danger { --gw-tag-ink: var(--gw-color-danger-text); --gw-tag-fill: var(--gw-color-danger-light); --gw-tag-line: var(--gw-color-danger-border); }
 
 /* ==============================
+ * Page titles
+ * ============================== */
+
+/* A deployment can give every H1 its own face and weight (Colorado: Museo Slab 500). The fallbacks are what
+   an H1 gets without them: the inherited font, bold. Classed titles use the same two tokens. */
+h1 {
+  font-family: var(--gw-font-heading-1, inherit);
+  font-weight: var(--gw-font-heading-1-weight, bold);
+}
+
+/* ==============================
  * Tabs
  * ============================== */
 

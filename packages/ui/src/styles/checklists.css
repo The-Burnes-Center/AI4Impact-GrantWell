@@ -154,8 +154,8 @@
 }
 
 .checklist-content__heading {
-  font-family: var(--gw-font-family);
-  font-weight: 600;
+  font-family: var(--gw-font-heading-1, var(--gw-font-family));
+  font-weight: var(--gw-font-heading-1-weight, 600);
   color: var(--gw-color-primary-active);
   letter-spacing: -0.01em;
   font-size: 32px;
@@ -320,7 +320,7 @@
 
 .checklist-error__title {
   font-size: 24px;
-  font-weight: 600;
+  font-weight: var(--gw-font-heading-1-weight, 600);
   color: var(--gw-color-text);
   margin-bottom: 12px;
 }

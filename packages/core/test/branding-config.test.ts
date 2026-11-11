@@ -32,8 +32,12 @@ describe("branding validation", () => {
         links: [{ label: "Contact", href: "mailto:help@example.org" }, { label: "Accessibility", href: "/accessibility" }],
         copyright: "State of Colorado",
         disclaimer: "Not an official grant portal.",
+        layout: "full",
+        columns: [{ heading: "GrantWell", links: [{ label: "What's new", href: "/whats-new" }] }],
       },
       govHeader: { logo: b.logo, label: "Colorado", href: "https://colorado.gov", sealBesideLogo: false },
+      navigation: { layout: "tabs" },
+      fonts: { stylesheet: "https://use.typekit.net/abc1234.css" },
     }));
     expect(() => validateInstanceConfig(config)).not.toThrow();
   });
@@ -48,6 +52,10 @@ describe("branding validation", () => {
     ["a footer link without a label", (b) => ({ ...b, footer: { ...b.footer, links: [{ label: "", href: "/x" }] } }), /footer\.links/],
     ["a blank copyright", (b) => ({ ...b, footer: { ...b.footer, copyright: "" } }), /footer\.copyright/],
     ["a 13-character short name", (b) => ({ ...b, shortName: "x".repeat(13) }), /shortName/],
+    ["an unknown navigation layout", (b) => ({ ...b, navigation: { layout: "top" as never } }), /navigation\.layout/],
+    ["an unknown footer layout", (b) => ({ ...b, footer: { ...b.footer, layout: "big" as never } }), /footer\.layout/],
+    ["a footer column without links", (b) => ({ ...b, footer: { ...b.footer, columns: [{ heading: "GrantWell", links: [] }] } }), /footer\.columns/],
+    ["a font stylesheet over http://", (b) => ({ ...b, fonts: { stylesheet: "http://use.typekit.net/abc.css" } }), /fonts\.stylesheet/],
   ])("rejects %s", (_name, patch, error) => {
     expect(() => validateInstanceConfig(withBranding(patch))).toThrow(error);
   });
