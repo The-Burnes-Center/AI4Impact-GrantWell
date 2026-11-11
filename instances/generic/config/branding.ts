@@ -15,7 +15,9 @@ export const branding: Branding = {
   },
   logo: "/images/marketing/grantwell-wordmark-dark.svg",
   favicon: "/images/marketing/favicon.svg",
-  navigation: { layout: "tabs" },
+  // Untyped until release.sh prepare vendors 3.3.5: the committed config is checked against vendor/ (3.3.4),
+  // which has no `navigation` yet; the source build that burnes-staging deploys turns the tabs on.
+  ...({ navigation: { layout: "tabs" } } as object),
   footer: {
     wordmark: "/images/marketing/grantwell-wordmark-footer.svg",
     madeBy: {
