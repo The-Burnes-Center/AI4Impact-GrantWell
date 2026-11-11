@@ -15,6 +15,7 @@ export const branding: Branding = {
   },
   logo: "/images/marketing/grantwell-wordmark-dark.svg",
   favicon: "/images/marketing/favicon.svg",
+  navigation: { layout: "tabs" },
   footer: {
     wordmark: "/images/marketing/grantwell-wordmark-footer.svg",
     madeBy: {
