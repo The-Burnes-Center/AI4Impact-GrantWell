@@ -100,6 +100,7 @@ export const CHROME_CLASSES = [
   "gw-tabs",
   "gw-app-header",
   "gw-sidenav",
+  "gw-full-footer",
   "gw-toggle",
   "gw-toggle__option",
   "gw-pagination",

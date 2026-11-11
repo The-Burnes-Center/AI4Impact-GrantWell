@@ -47,6 +47,14 @@ export interface Branding {
   shortName?: string;
   home?: HomeCopy;
   footer: {
+    /**
+     * "full": the light footer with Return to top, a brand column (logo + home tagline), `columns`,
+     * Partners (madeBy + partners) and Contact us (supportEmail + postalAddress), then the copyright
+     * and `links`. "brand" (default): GrantWell's own footer.
+     */
+    layout?: "brand" | "full";
+    /** Link columns of the full footer, between the brand column and Partners. */
+    columns?: { heading: string; links: Link[] }[];
     /** Also the digest email header image; falls back to `logo`. */
     wordmark?: string;
     madeBy?: LogoLink;

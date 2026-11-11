@@ -51,6 +51,10 @@ export interface Branding {
   shortName?: string;
   home?: HomeCopy;
   footer: {
+    /** "full": light footer with link, partner and contact columns over a copyright bar. Default "brand". */
+    layout?: "brand" | "full";
+    /** Link columns of the full footer, between the brand column and Partners. */
+    columns?: { heading: string; links: Link[] }[];
     /** Footer wordmark image; omit to fall back to `logo`. */
     wordmark?: string;
     /** "Made by" attribution (e.g. ai4impact), if any. */

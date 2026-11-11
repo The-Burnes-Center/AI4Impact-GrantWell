@@ -282,7 +282,7 @@ function AppLayoutContent({
   if (authenticated) {
     return (
       <NavigationProvider>
-        <div className="marketing marketing__app-shell">
+        <div className={`marketing marketing__app-shell${usesHeaderTabs() ? " gw-shell--tabs" : ""}`}>
           <SkipLink />
           <SiteBanner />
           {usesHeaderTabs() ? <AppTabsHeader /> : <AppSiteHeader />}

@@ -305,8 +305,11 @@ export const AppSidebar: React.FC = () => {
           zIndex: "calc(var(--gw-z-drawer, 900) + 1)",
           boxShadow: "var(--gw-shadow-high, 0 16px 32px color-mix(in srgb, var(--gw-color-text-strong) 12%, transparent))",
         }
+      : grantOnly
+      ? // Runs the full height of the page so short pages don't show a gap; its links stay in view (sticky nav).
+        { width: EXPANDED_WIDTH, alignSelf: "stretch", overflow: "visible" }
       : {
-          width: usesHeaderTabs() || isExpanded ? EXPANDED_WIDTH : COLLAPSED_WIDTH,
+          width: isExpanded ? EXPANDED_WIDTH : COLLAPSED_WIDTH,
           transition: "width 0.3s ease",
           position: "sticky",
           top: 0,
@@ -484,7 +487,7 @@ export const AppSidebar: React.FC = () => {
 
         <nav
           aria-label={grantOnly ? "This grant" : "Main"}
-          style={{ flex: 1, padding: "16px 0", overflowY: "auto" }}
+          style={grantOnly ? { position: "sticky", top: 0, padding: "16px 0" } : { flex: 1, padding: "16px 0", overflowY: "auto" }}
         >
           {!grantOnly && (<>
           <NavItem

@@ -1,10 +1,10 @@
+/* The kit's identity strip: the state mark and label on white, over a 4px line in the primary colour. */
 .gov-banner {
   background-color: var(--gw-color-surface);
-  border-bottom: 1px solid var(--gw-color-border);
+  border-bottom: 4px solid var(--gw-color-primary);
   width: 100%;
-  padding: 4px 60px;
-  font-family: var(--gw-font-marketing);
-  font-size: 13px;
+  padding: 6px var(--gw-spacing-2xl);
+  font-size: var(--gw-font-size-xs);
   line-height: 20px;
 }
 
@@ -22,7 +22,7 @@
 }
 
 .gov-banner__logo {
-  height: 24px;
+  height: 20px;
   width: auto;
 }
 
@@ -38,6 +38,6 @@
 
 @media (max-width: 768px) {
   .gov-banner {
-    padding: 4px 16px;
+    padding: 6px var(--gw-spacing-lg);
   }
 }

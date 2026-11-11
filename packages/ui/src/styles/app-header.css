@@ -47,6 +47,9 @@
   .gw-app-header__wordmark, .gw-app-header__brand .gov-seal { height: 28px; }
 }
 
+/* Short pages: the page's grey runs down to the footer instead of stopping under the content. */
+.gw-shell--tabs .marketing__app-main { background: var(--gw-color-background); }
+
 /* Side menu: light panel, primary links, the current one tinted with a left bar. */
 .gw-sidenav .gw-sidenav__group {
   margin: 0;

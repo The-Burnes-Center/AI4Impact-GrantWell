@@ -56,7 +56,8 @@ export function StateHomeView({
   const showSeal = govHeader && govHeader.sealBesideLogo !== false;
   return (
     <div className="state-home">
-      <div className="state-home__band" aria-hidden="true" />
+      {/* The government strip already ends in this line. */}
+      {!govHeader && <div className="state-home__band" aria-hidden="true" />}
       <div className="state-home__inner">
         <div className="state-home__hero">
           <section className="state-home__identity" aria-labelledby="state-home-title">
