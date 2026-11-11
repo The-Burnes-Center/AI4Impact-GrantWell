@@ -75,8 +75,7 @@ test("uses a document from My documents in a chat, leaves it unticked in a new a
 
   await test.step("upload it in My documents", async () => {
     await page.goto(appUrl("/home"));
-    await page.getByRole("button", { name: "Open main menu" }).click();
-    await page.getByRole("navigation", { name: "Main" }).getByRole("button", { name: "My documents" }).click();
+    await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "My documents" }).click();
     await expect(page).toHaveURL(/\/documents$/);
     await expect(page.getByRole("heading", { level: 1, name: "My documents" })).toBeVisible();
     await expect(page.getByText("Loading your documents...")).toHaveCount(0);
@@ -173,7 +172,7 @@ test("uses a document from My documents in a chat, leaves it unticked in a new a
   });
 
   await test.step("delete it from My documents", async () => {
-    await page.getByRole("navigation", { name: "Main" }).getByRole("button", { name: "My documents" }).click();
+    await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "My documents" }).click();
     await expect(page).toHaveURL(/\/documents$/);
     const item = library(page).getByRole("listitem").filter({ hasText: fileName });
     await item.getByRole("button", { name: `Delete ${fileName}` }).click();
