@@ -424,7 +424,11 @@
   transition: color 0.15s ease, border-color 0.15s ease;
 }
 .gw-tab:hover { color: var(--gw-color-primary); border-bottom-color: var(--gw-color-primary); }
-.gw-tab[aria-selected="true"] { border-bottom-color: var(--gw-color-primary); }
+.gw-tab[aria-selected="true"],
+.gw-tab[aria-current] { border-bottom-color: var(--gw-color-primary); }
+/* Navigation tabs are links in a list. */
+ul.gw-tabs { margin: 0; padding: 0; list-style: none; }
+a.gw-tab { text-decoration: none; }
 .gw-tab.gw-tab:focus-visible {
   outline: var(--gw-focus-width) solid var(--gw-color-focus);
   outline-offset: calc(-1 * var(--gw-focus-width));

@@ -24,6 +24,8 @@ import { StorageHelper } from "../common/helpers/storage-helper";
 import MaintenanceGate from "./MaintenanceGate";
 import { NavigationProvider } from "./navigation/NavigationProvider";
 import { AppSidebar } from "./navigation/UnifiedNavigation";
+import { AppTabsHeader } from "./navigation/AppTabsHeader";
+import { usesHeaderTabs } from "./navigation/navigation-context";
 import ProfileGate from "./profile-gate/ProfileGate";
 import MfaGate from "./auth/MfaGate";
 import SignInNotices from "./SignInNotices";
@@ -36,6 +38,7 @@ import {
   SkipLink,
 } from "../pages/landing/chrome";
 import "../styles/marketing-landing.css";
+import "../styles/app-header.css";
 import { AppSiteHeader, SiteBanner, SiteFooter } from "./common/ChromeSlots";
 import PublicHomePage from "../pages/landing/PublicHomePage";
 import { hasPublicHome, isStateHome } from "../pages/landing/public-home";
@@ -282,8 +285,8 @@ function AppLayoutContent({
         <div className="marketing marketing__app-shell">
           <SkipLink />
           <SiteBanner />
-          <AppSiteHeader />
-          <AppNavbar />
+          {usesHeaderTabs() ? <AppTabsHeader /> : <AppSiteHeader />}
+          {!usesHeaderTabs() && <AppNavbar />}
           <div className="marketing__app-body">
             <AppSidebar />
             <div className="marketing__app-main">

@@ -1,4 +1,6 @@
 import { createContext, useContext, useEffect } from "react";
+import { activeBranding } from "../../common/instance";
+import { HAS_CHROME_HEADER } from "../../common/chrome";
 
 /** Must match the app chrome media query in marketing-landing.css. */
 export const MOBILE_NAV_BREAKPOINT = 960;
@@ -15,6 +17,15 @@ export type LeaveGuard = (proceed: () => void) => void;
 
 export const isUndockedRoute = (pathname: string) =>
   pathname === "/" || pathname.startsWith("/home");
+
+/** Main pages sit in header tabs and the side menu shows only on a grant's pages. A chrome Header keeps the side menu. */
+export const usesHeaderTabs = (): boolean => activeBranding.navigation?.layout === "tabs" && !HAS_CHROME_HEADER;
+
+/** A grant's own pages: its requirements, a chat, and an open application (not the lists). */
+export const isGrantRoute = (pathname: string) =>
+  pathname.startsWith("/requirements") ||
+  (pathname.startsWith("/chat") && pathname !== "/chat/sessions") ||
+  (pathname.startsWith("/document-editor") && pathname !== "/document-editor/drafts");
 
 export interface NavigationContextValue {
   documentIdentifier?: string;
@@ -54,7 +65,7 @@ export function useNavigationMenuButton() {
   }, [registerMenuButton]);
 
   return {
-    showMenuButton: context ? !context.isDocked : false,
+    showMenuButton: context ? (usesHeaderTabs() ? context.isMobile : !context.isDocked) : false,
     isDrawerOpen: context?.isDrawerOpen ?? false,
     toggleDrawer: context?.toggleDrawer ?? (() => undefined),
   };

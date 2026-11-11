@@ -7,6 +7,8 @@ import React, {
 } from "react";
 import { useLocation } from "react-router";
 import {
+  usesHeaderTabs,
+  isGrantRoute,
   isUndockedRoute,
   LeaveGuard,
   MOBILE_NAV_BREAKPOINT,
@@ -31,7 +33,7 @@ export function NavigationProvider({ children }: { children: React.ReactNode }) 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { pathname } = useLocation();
 
-  const isDocked = !isMobile && !isUndockedRoute(pathname);
+  const isDocked = !isMobile && (usesHeaderTabs() ? isGrantRoute(pathname) : !isUndockedRoute(pathname));
 
   useEffect(() => {
     const handleResize = () =>

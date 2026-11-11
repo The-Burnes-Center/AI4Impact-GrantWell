@@ -29,6 +29,7 @@ import FeedbackModal from "../common/FeedbackModal";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import { useFocusTrap } from "../../hooks/use-focus-trap";
 import {
+  usesHeaderTabs,
   NavigationRegistration,
   useNavigationChrome,
 } from "./navigation-context";
@@ -77,7 +78,18 @@ const NavItem: React.FC<{
   active: boolean;
   expanded: boolean;
   currentKind?: "page" | "step";
-}> = ({ onClick, label, icon, active, expanded, currentKind = "page" }) => (
+}> = ({ onClick, label, icon, active, expanded, currentKind = "page" }) =>
+  usesHeaderTabs() ? (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-current={active ? currentKind : undefined}
+      className="gw-sidenav__item"
+    >
+      {icon}
+      <span>{label}</span>
+    </button>
+  ) : (
   <button
     type="button"
     onClick={onClick}
@@ -94,7 +106,10 @@ const NavItem: React.FC<{
     {icon}
     {expanded && <span style={{ marginLeft: "12px" }}>{label}</span>}
   </button>
-);
+  );
+
+const GroupHeading: React.FC<{ children: React.ReactNode }> = ({ children }) =>
+  usesHeaderTabs() ? <h2 className="gw-sidenav__group">{children}</h2> : <h2 style={groupHeadingStyle}>{children}</h2>;
 
 const STEP_ITEMS: { step: string; label: string; icon: React.ReactNode }[] = [
   {
@@ -141,6 +156,8 @@ export const AppSidebar: React.FC = () => {
   const [fallbackChecked, setFallbackChecked] = useState(false);
 
   const isDocked = chrome?.isDocked ?? true;
+  // With header tabs, the side menu is a drawer on phones only; elsewhere it is docked on a grant's pages or absent.
+  const isDrawer = usesHeaderTabs() ? chrome?.isMobile ?? false : !isDocked;
   const isDrawerOpen = chrome?.isDrawerOpen ?? false;
   const closeDrawer = chrome?.closeDrawer;
   const runGuarded = chrome?.runGuarded;
@@ -153,7 +170,7 @@ export const AppSidebar: React.FC = () => {
   const goToStep = chrome?.goToStep;
 
   const drawerRef = useFocusTrap<HTMLDivElement>({
-    isOpen: !isDocked && isDrawerOpen,
+    isOpen: isDrawer && isDrawerOpen,
     onEscape: () => closeDrawer?.(),
   });
 
@@ -260,19 +277,23 @@ export const AppSidebar: React.FC = () => {
     }
   };
 
-  const showLabels = isDocked ? isExpanded : true;
-  const drawerHidden = !isDocked && !isDrawerOpen;
+  const showLabels = usesHeaderTabs() || !isDocked ? true : isExpanded;
+  const drawerHidden = isDrawer && !isDrawerOpen;
+  const grantOnly = usesHeaderTabs() && !isDrawer;
+  const hasGrantItems =
+    Boolean(docId) ||
+    (isDocumentEditor && hasStepNav && Boolean(currentStep) && currentStep !== "drafts" && currentStep !== "welcome");
 
   const panelStyle: React.CSSProperties = {
-    background: "var(--gw-color-nav-bg, #1a202c)",
-    color: "var(--gw-color-surface, #ffffff)",
+    background: usesHeaderTabs() ? "var(--gw-color-surface-subtle)" : "var(--gw-color-nav-bg, #1a202c)",
+    color: usesHeaderTabs() ? "var(--gw-color-text)" : "var(--gw-color-surface, #ffffff)",
     // The inline display would win over the `hidden` attribute's UA rule, so drop it explicitly.
     display: drawerHidden ? "none" : "flex",
     flexDirection: "column",
-    borderRight: "1px solid var(--gw-color-nav-bg-hover, #2d3748)",
+    borderRight: usesHeaderTabs() ? "1px solid var(--gw-color-border)" : "1px solid var(--gw-color-nav-bg-hover, #2d3748)",
     overflow: "hidden",
     flexShrink: 0,
-    ...(!isDocked
+    ...(isDrawer
       ? {
           position: "fixed",
           top: 0,
@@ -285,7 +306,7 @@ export const AppSidebar: React.FC = () => {
           boxShadow: "var(--gw-shadow-high, 0 16px 32px color-mix(in srgb, var(--gw-color-text-strong) 12%, transparent))",
         }
       : {
-          width: isExpanded ? EXPANDED_WIDTH : COLLAPSED_WIDTH,
+          width: usesHeaderTabs() || isExpanded ? EXPANDED_WIDTH : COLLAPSED_WIDTH,
           transition: "width 0.3s ease",
           position: "sticky",
           top: 0,
@@ -298,7 +319,7 @@ export const AppSidebar: React.FC = () => {
   const iconButtonStyle: React.CSSProperties = {
     background: "none",
     border: "none",
-    color: "var(--gw-color-surface, #ffffff)",
+    color: usesHeaderTabs() ? "var(--gw-color-text)" : "var(--gw-color-surface, #ffffff)",
     cursor: "pointer",
     opacity: 0.8,
     transition: "opacity 0.2s",
@@ -309,9 +330,11 @@ export const AppSidebar: React.FC = () => {
     justifyContent: "center",
   };
 
+  if (usesHeaderTabs() && !isDrawer && (!isDocked || !hasGrantItems)) return null;
+
   return (
     <>
-      {!isDocked &&
+      {isDrawer &&
         !isDrawerOpen &&
         fallbackChecked &&
         !chrome?.hasExternalMenuButton && (
@@ -341,7 +364,7 @@ export const AppSidebar: React.FC = () => {
           </button>
         )}
 
-      {!isDocked && isDrawerOpen && (
+      {isDrawer && isDrawerOpen && (
         <div
           onClick={() => closeDrawer?.()}
           style={{
@@ -357,13 +380,15 @@ export const AppSidebar: React.FC = () => {
       <div
         ref={drawerRef}
         id={SIDEBAR_ID}
-        data-dark-bg="true"
+        data-dark-bg={usesHeaderTabs() ? undefined : "true"}
+        className={usesHeaderTabs() ? "gw-sidenav" : undefined}
         hidden={drawerHidden}
-        {...(!isDocked && isDrawerOpen
+        {...(isDrawer && isDrawerOpen
           ? { role: "dialog", "aria-modal": true, "aria-label": "Main menu" }
           : {})}
         style={panelStyle}
       >
+        {!grantOnly && (
         <div
           style={{
             padding: "16px",
@@ -408,7 +433,7 @@ export const AppSidebar: React.FC = () => {
               <BrandLogo
                 // footer.wordmark is the light-on-dark variant; branding.logo is dark green
                 // and disappears against the dark sidebar.
-                src={branding.footer.wordmark ?? branding.logo}
+                src={usesHeaderTabs() ? branding.logo : branding.footer.wordmark ?? branding.logo}
                 alt={branding.appName}
                 style={{
                   display: "block",
@@ -421,7 +446,7 @@ export const AppSidebar: React.FC = () => {
               />
             </a>
           )}
-          {!isDocked ? (
+          {isDrawer ? (
             <button
               type="button"
               onClick={() => closeDrawer?.()}
@@ -455,11 +480,13 @@ export const AppSidebar: React.FC = () => {
             </button>
           )}
         </div>
+        )}
 
         <nav
-          aria-label="Main"
+          aria-label={grantOnly ? "This grant" : "Main"}
           style={{ flex: 1, padding: "16px 0", overflowY: "auto" }}
         >
+          {!grantOnly && (<>
           <NavItem
             onClick={go(() => navigate("/home"))}
             label="Home"
@@ -501,10 +528,11 @@ export const AppSidebar: React.FC = () => {
               expanded={showLabels}
             />
           )}
+          </>)}
 
           {docId && (
-            <div style={{ marginTop: "24px" }}>
-              {showLabels && <h2 style={groupHeadingStyle}>This grant</h2>}
+            <div style={{ marginTop: grantOnly ? 0 : "24px" }}>
+              {showLabels && <GroupHeading>This grant</GroupHeading>}
 
               <NavItem
                 onClick={go(handleRequirementsNavigation)}
@@ -538,9 +566,7 @@ export const AppSidebar: React.FC = () => {
             currentStep !== "drafts" &&
             currentStep !== "welcome" && (
               <div style={{ marginTop: "24px" }}>
-                {showLabels && (
-                  <h2 style={groupHeadingStyle}>Current application</h2>
-                )}
+                {showLabels && <GroupHeading>Current application</GroupHeading>}
 
                 {STEP_ITEMS.filter((_, index) => index <= furthestStepIndex).map((item) => (
                   <NavItem
@@ -557,10 +583,11 @@ export const AppSidebar: React.FC = () => {
             )}
         </nav>
 
+        {!grantOnly && (
         <div
           style={{
             padding: "16px 0 8px 0",
-            borderTop: "1px solid var(--gw-color-nav-bg-hover, #2d3748)",
+            borderTop: usesHeaderTabs() ? "1px solid var(--gw-color-border)" : "1px solid var(--gw-color-nav-bg-hover, #2d3748)",
             flexShrink: 0,
           }}
         >
@@ -588,6 +615,7 @@ export const AppSidebar: React.FC = () => {
             expanded={showLabels}
           />
         </div>
+        )}
       </div>
 
       <FeedbackModal

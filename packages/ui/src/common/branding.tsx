@@ -69,6 +69,8 @@ export interface Branding {
   omniPartners: Link[];
   /** A government deployment's identity: a strip above every page (logo + label, linking to href) and the logo beside the app logo. */
   govHeader?: { logo: string; label: string; href: string; sealBesideLogo?: boolean };
+  /** "tabs": main pages in header tabs, side menu only on a grant's pages. Ignored with a chrome Header. */
+  navigation?: { layout?: "sidebar" | "tabs" };
   analyticsId?: string;
   seo?: {
     title?: string;

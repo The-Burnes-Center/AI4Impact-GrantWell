@@ -4,6 +4,25 @@ import { useInert } from "../hooks/use-inert";
 import { useNavigationChrome } from "../components/navigation/navigation-context";
 
 const DRAWER_NAVBAR_HEIGHT = 60;
+
+/** How far below the page top the app body starts: whatever banner, header or tabs the deployment shows. */
+const useTopChromeHeight = (fallback: number) => {
+  const [top, setTop] = useState<number | null>(null);
+  useLayoutEffect(() => {
+    const body = document.querySelector(".marketing__app-body");
+    if (!body) return;
+    const measure = () => setTop(Math.max(0, Math.round(body.getBoundingClientRect().top + window.scrollY)));
+    measure();
+    const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(measure);
+    observer?.observe(document.body);
+    window.addEventListener("resize", measure);
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+  return top ?? fallback;
+};
 const MIN_CONTENT_HEIGHT = 360;
 
 const useViewportSize = () => {
@@ -161,7 +180,7 @@ export default function BaseAppLayout({
   // Callers render their modals as siblings of this layout, so everything the
   // layout owns is background while one is open.
   const inertRootRef = useInert<HTMLDivElement>(modalOpen);
-  const topChromeHeight = useNavigationChrome()?.isDocked === false ? DRAWER_NAVBAR_HEIGHT : 0;
+  const topChromeHeight = useTopChromeHeight(useNavigationChrome()?.isDocked === false ? DRAWER_NAVBAR_HEIGHT : 0);
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
   const availableHeight = `calc(100vh - ${topChromeHeight}px)`;
   // Zoomed or short windows: the page scrolls and the chat gets a viewport of its own.

@@ -62,6 +62,11 @@ export interface Branding {
    * the logo beside the app logo, unless sealBesideLogo is false.
    */
   govHeader?: { logo: string; label: string; href: string; sealBesideLogo?: boolean };
+  /**
+   * Signed-in navigation. "tabs" puts the main pages in header tabs and shows the side menu only on a
+   * grant's own pages; "sidebar" (default) keeps the side menu on every page. Ignored with a chrome Header.
+   */
+  navigation?: { layout?: "sidebar" | "tabs" };
   analyticsId?: string;
   seo?: {
     /** Home page <title>, at most 60 characters. Defaults to appName. */

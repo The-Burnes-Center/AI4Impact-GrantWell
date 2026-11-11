@@ -98,6 +98,8 @@ export const CHROME_CLASSES = [
   "gw-toast--urgent",
   "gw-toast--success",
   "gw-tabs",
+  "gw-app-header",
+  "gw-sidenav",
   "gw-toggle",
   "gw-toggle__option",
   "gw-pagination",
