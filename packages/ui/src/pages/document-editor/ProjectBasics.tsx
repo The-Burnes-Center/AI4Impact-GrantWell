@@ -11,7 +11,7 @@ import FormErrorSummary from "../../components/ui/FormErrorSummary";
 
 // Stable so handleContinue can re-focus the summary on a repeat submit.
 const PROJECT_BASICS_ERROR_SUMMARY_ID = "project-basics-error-summary";
-import { colors, typography, spacing, borderRadius } from "../../components/ui/styles";
+import { colors, typography, spacing } from "../../components/ui/styles";
 import { readDraftCache } from "../../common/helpers/document-editor-utils";
 import type { DocumentData } from "../../common/types/document";
 

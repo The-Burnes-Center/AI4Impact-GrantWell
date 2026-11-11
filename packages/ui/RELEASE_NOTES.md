@@ -1,8 +1,8 @@
 # GrantWell v3.3.5
 
-**Last Updated:** November 4, 2026
+**Last Updated:** November 11, 2026
 
-This release makes it easier to write and keep track of your applications. You can now pick a grant from a list when you start a new chat or application, look back through earlier versions of an application and restore them, and protect your account with two-step verification. Grant search returns better matches, chats and AI-written applications use a newer AI model, and Word and PDF exports keep their formatting. We have also made the wording and navigation consistent across GrantWell and made the landing page load faster. Since then, grant summaries also use the newer AI model, deadlines show on the right day, GrantWell works better on a phone, two-step verification is quicker, more new grants arrive with the right document, and administrators can search users and see which waiting grants are due soonest. This update also keeps your information safer, keeps your edits while the AI writes, and makes the AI writer use everything you give it. You can now also record how each application turned out, and GrantWell asks once a grant's deadline has passed. In this update, chats and the AI writer work from the whole grant, so answers are quicker, shorter and more complete, and chat answers and the Requirements page show the exact grant passage behind each point; My documents keeps your supporting documents in one place and lets you choose which ones the AI uses; AI search understands what you need in plain words; and GrantWell fixes the issues found in our partner accessibility review. Every requirement on the Requirements page is now checked against the grant before a grant is published.
+This release makes it easier to write and keep track of your applications. You can now pick a grant from a list when you start a new chat or application, look back through earlier versions of an application and restore them, and protect your account with two-step verification. Grant search returns better matches, chats and AI-written applications use a newer AI model, and Word and PDF exports keep their formatting. We have also made the wording and navigation consistent across GrantWell and made the landing page load faster. Since then, grant summaries also use the newer AI model, deadlines show on the right day, GrantWell works better on a phone, two-step verification is quicker, more new grants arrive with the right document, and administrators can search users and see which waiting grants are due soonest. This update also keeps your information safer, keeps your edits while the AI writes, and makes the AI writer use everything you give it. You can now also record how each application turned out, and GrantWell asks once a grant's deadline has passed. In this update, chats and the AI writer work from the whole grant, so answers are quicker, shorter and more complete, and chat answers and the Requirements page show the exact grant passage behind each point; My documents keeps your supporting documents in one place and lets you choose which ones the AI uses; AI search understands what you need in plain words; and GrantWell fixes the issues found in our partner accessibility review. Every requirement on the Requirements page is now checked against the grant before a grant is published. GrantWell also has a cleaner, more consistent look: buttons, forms, messages and tabs look and work the same on every page, and pages are named the same way everywhere.
 
 ## Highlights
 
@@ -12,7 +12,7 @@ This release makes it easier to write and keep track of your applications. You c
 - **Two-step verification**: protect your account with a code from an authenticator app; enter the 6 digits and you're signed in
 - **Safer by design**: state grants stay with their state, AI search shows only grants you may see, and deleting an account removes its chats, applications and supporting documents
 - **Better AI-written applications**: your edits are kept while the AI writes, and Word and PDF exports keep their formatting
-- **Easier to use for everyone**: fixes from our partner accessibility review, pages that fit a phone, consistent navigation and wording, and deadlines that show on the right day
+- **Easier to use for everyone**: fixes from our partner accessibility review, pages that fit a phone, consistent navigation and wording, buttons, forms and messages that match on every page, and deadlines that show on the right day
 - **For admins**: search users, grants in the processing queue sorted by deadline, a weekday email when grants are waiting, fewer grants that need review, and every recorded application outcome with a CSV export
 
 ## New in this release
@@ -36,10 +36,19 @@ This release makes it easier to write and keep track of your applications. You c
 
 ### My documents
 
-- **My documents** in the sidebar holds all your supporting documents: upload, download and delete them in one place
-- In a chat or an application, open **Supporting Documents** and tick the documents the AI should use; nothing is ticked until you choose
+- **My documents** in the menu holds all your supporting documents: upload, download and delete them in one place
+- In a chat or an application, open **Supporting documents** and tick the documents the AI should use; nothing is ticked until you choose
 - Documents you uploaded before keep working in the chats and applications you used them in
 - GrantWell tells you before you start if a document is too large or a type the AI can't read
+
+### A Cleaner, Consistent Look
+
+- Buttons, form fields, messages, pop-up windows, labels and tabs look and work the same on every page, and the outline that shows where you are when using the keyboard is clearer
+- Page names are written the same way everywhere: **My chats**, **My applications**, **My documents**, **Write application** and **Admin dashboard**
+- When a form needs fixing, the message appears under the field and the cursor moves to it
+- Lists with more than one page all use the same page links
+- On sites with tabs along the top, your main pages are one click away, and the side menu shows only the links for the grant you're working on
+- The chat now fits under the header, so the message box is always in view
 
 ### Search That Understands What You Need
 
@@ -157,7 +166,7 @@ This release makes it easier to write and keep track of your applications. You c
 ### Navigation and Wording
 
 - The side menu and top bar now use the same names in the same order: **Home**, **My chats**, **My applications**, **Admin dashboard**, and **Profile**
-- When you have a grant selected, a **This Grant** group shows **Requirements**, **Chat with AI**, and **Write application** for that grant
+- When you have a grant selected, a **This grant** group shows **Requirements**, **Chat with AI**, and **Write application** for that grant
 - The buttons on Home are now **Requirements**, **Write application**, and **Chat with AI**, and Home shows which grant you have selected
 - Wording is consistent everywhere: a funding opportunity is a "grant", what you write is an "application", your AI conversations are "chats", and files you upload are "supporting documents"
 - Sign-in screens now say **Sign in** and **Create account**, and the code from your authenticator app is called the **Authentication code**
@@ -248,7 +257,7 @@ This release makes it easier to write and keep track of your applications. You c
 - Approving a new version of an archived grant makes it active again when its deadline is still ahead
 - While a grant is in review, section guidance is hidden in **Write application**, with a note on that grant's sections
 
-### Admin dashboard Access (Admin)
+### Admin Dashboard Access (Admin)
 
 - The admin section has been removed from Home; use **Admin dashboard** in the main menu instead
 

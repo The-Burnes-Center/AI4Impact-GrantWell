@@ -1,7 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import PaginationControls, { visiblePages } from "./PaginationControls";
+import PaginationControls from "./PaginationControls";
+import { visiblePages } from "./visible-pages";
 
 const noop = () => {};
 
