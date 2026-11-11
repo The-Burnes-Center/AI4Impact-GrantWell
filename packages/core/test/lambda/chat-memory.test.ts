@@ -1,7 +1,7 @@
 // The chat sees its whole history (cached), and the check reports grant text copied into an answer.
 import { describe, expect, it } from "vitest";
 import { buildChatRequest } from "../../lib/chatbot-api/functions/websocket-chat/prompt.mjs";
-import { meaningRequest, verbatimTail } from "../../lib/chatbot-api/functions/websocket-chat/verify.mjs";
+import { calculationResults, meaningRequest, verbatimTail } from "../../lib/chatbot-api/functions/websocket-chat/verify.mjs";
 
 const GRANT = `Applications must be submitted through Grants.gov by the time and date deadline. Applications received after the closing time and date deadline will be deemed ineligible and will not be considered for funding, unless the applicant can document a Grants.gov system problem.`;
 
@@ -58,5 +58,16 @@ describe("copied grant text", () => {
     expect(verbatimTail(`No grace period.\n\nSubmit through Grants.gov before the deadline; a late application is only considered if you can show Grants.gov itself failed.`, GRANT)).toBeNull();
     expect(verbatimTail(GRANT, GRANT)).toBeNull();
     expect(verbatimTail("No grace period.\n\nApplications must be submitted through Grants.gov.", GRANT)).toBeNull();
+  });
+});
+
+describe("arithmetic on the user's figures", () => {
+  it("takes the result of each shown calculation as a known number", () => {
+    const answer = "**Up to $337,500**, using your figures.\n\n- Non-federal match: 25% × $450,000 = $112,500\n- Federal request: $450,000 − $112,500 = $337,500";
+    expect(calculationResults(answer)).toEqual(["$112,500", "$337,500"]);
+  });
+
+  it("ignores equals signs that aren't a calculation", () => {
+    expect(calculationResults("Score = 130 points. Region 1 cap: $3,000,000.")).toEqual([]);
   });
 });

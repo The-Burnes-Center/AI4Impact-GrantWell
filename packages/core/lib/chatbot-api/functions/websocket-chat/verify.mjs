@@ -265,9 +265,20 @@ export function verbatimTail(text, grantText = "") {
   return seen && found / seen >= 0.6 ? last : null;
 }
 
+const CALCULATION = /[×x*+\-−–/]\s*[$\d][^=\n]*=\s*([^\n]+)/gi;
+
+/**
+ * The results of calculations the answer shows ("25% × $450,000 = $112,500" gives "$112,500"). The
+ * prompt allows simple arithmetic on the user's figures, so its results are known numbers, not facts
+ * the grant has to state.
+ */
+export function calculationResults(text) {
+  return [...String(text).matchAll(CALCULATION)].map((m) => m[1]);
+}
+
 export async function verifyAnswer({ text, found = [], documents = [], summary = null, documentText = "", grantText = "", baseKeys, today = "", history = [], question = "" }, deps) {
   const units = splitSentences(text);
-  const keys = unionKeys(baseKeys, found.map((f) => f.citation?.cited_text ?? ""));
+  const keys = unionKeys(baseKeys, [...found.map((f) => f.citation?.cited_text ?? ""), ...calculationResults(text)]);
   const reasons = new Map();
   const kinds = new Map();
   const note = (list, reason) => list.forEach((i) => reasons.has(i) || reasons.set(i, reason));
