@@ -157,12 +157,14 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
       {showContinue && onContinue && (
         <button
           type="button"
-          onClick={onContinue}
-          disabled={continueDisabled || continueLoading}
+          // aria-disabled, not disabled, so a keyboard user's focus stays on the button while it is busy.
+          onClick={() => {
+            if (!continueDisabled && !continueLoading) onContinue();
+          }}
           className="gw-btn gw-btn--primary"
           style={navButtonStyle}
           aria-label={continueLabel}
-          aria-disabled={continueDisabled}
+          aria-disabled={continueDisabled || continueLoading || undefined}
           aria-busy={continueLoading}
         >
           {continueLoading ? <LoadingSpinner /> : continueLabel}

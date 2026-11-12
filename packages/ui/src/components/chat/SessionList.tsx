@@ -236,11 +236,12 @@ export default function Sessions(props: SessionsProps) {
           <button
             className="gw-btn gw-btn--secondary action-button refresh-button"
             onClick={async () => {
+              if (isLoading) return;
               setIsLoading(true);
               await getSessions();
               setIsLoading(false);
             }}
-            disabled={isLoading}
+            aria-disabled={isLoading || undefined}
             aria-label={isLoading ? "Refreshing chats list" : "Refresh chats list"}
             aria-busy={isLoading}
           >

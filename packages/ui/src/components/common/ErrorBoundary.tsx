@@ -1,5 +1,5 @@
 import { Component, ErrorInfo, ReactNode } from "react";
-import { Alert, Button } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -71,15 +71,12 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               </p>
             )}
             <div className="d-flex gap-2">
-              <Button variant="outline-danger" onClick={this.handleReset}>
+              <button type="button" className="gw-btn gw-btn--danger" onClick={this.handleReset}>
                 Try again
-              </Button>
-              <Button
-                variant="outline-secondary"
-                onClick={() => window.location.reload()}
-              >
+              </button>
+              <button type="button" className="gw-btn gw-btn--secondary" onClick={() => window.location.reload()}>
                 Reload page
-              </Button>
+              </button>
             </div>
           </Alert>
         </div>

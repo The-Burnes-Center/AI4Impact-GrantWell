@@ -61,6 +61,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
   onNeedsReupload,
 }) => {
   const busy = actionInProgress !== null;
+  // aria-disabled, not disabled, while an action runs: the button pressed keeps keyboard focus.
   // Accessible names start with the visible (busy) label so SC 2.5.3 holds while an action runs.
   const rejectLabel = actionInProgress === "reject" ? "Rejecting..." : keepsLive ? "Reject new version" : "Reject";
   const rejectPurpose = keepsLive ? "the published version stays live" : "reject this grant";
@@ -74,8 +75,8 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
       <div className="review-expanded-row__actions">
         <button
           className="gw-btn gw-btn--primary review-btn review-btn--approve review-btn--recommended"
-          onClick={onReupload}
-          disabled={busy}
+          onClick={() => !busy && onReupload()}
+          aria-disabled={busy || undefined}
           aria-label={`${reuploadDocLabel} — upload the correct grant document (recommended)`}
         >
           <LuUpload size={14} aria-hidden="true" />
@@ -83,8 +84,8 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
         </button>
         <button
           className="gw-btn gw-btn--danger review-btn review-btn--reject"
-          onClick={onReject}
-          disabled={busy}
+          onClick={() => !busy && onReject()}
+          aria-disabled={busy || undefined}
           aria-label={`${rejectLabel} — ${rejectPurpose}`}
         >
           <LuX size={14} aria-hidden="true" />
@@ -111,8 +112,8 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
     <button
       key="approve"
       className={`gw-btn ${recommended && recommended !== "approve" ? "gw-btn--secondary" : "gw-btn--primary"} review-btn review-btn--approve ${recommended === "approve" ? "review-btn--recommended" : ""}`}
-      onClick={onApprove}
-      disabled={busy}
+      onClick={() => !busy && onApprove()}
+      aria-disabled={busy || undefined}
       aria-label={rec("approve", `${approveLabel} — publish this grant`)}
     >
       <LuCheck size={14} aria-hidden="true" />
@@ -126,8 +127,8 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
     <button
       key="reupload"
       className={`gw-btn ${recommended === "reupload" ? "gw-btn--primary" : "gw-btn--secondary"} review-btn ${recommended === "reupload" ? "review-btn--approve review-btn--recommended" : "review-btn--secondary"}`}
-      onClick={onReupload}
-      disabled={busy}
+      onClick={() => !busy && onReupload()}
+      aria-disabled={busy || undefined}
       aria-label={rec("reupload", `${reuploadLabel} — upload a replacement grant document`)}
     >
       <LuUpload size={14} aria-hidden="true" />
@@ -139,8 +140,8 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
     <button
       key="reprocess"
       className={`gw-btn ${recommended === "reprocess" ? "gw-btn--primary" : "gw-btn--secondary"} review-btn ${recommended === "reprocess" ? "review-btn--approve review-btn--recommended" : "review-btn--reprocess"}`}
-      onClick={onReprocess}
-      disabled={busy}
+      onClick={() => !busy && onReprocess()}
+      aria-disabled={busy || undefined}
       aria-label={rec("reprocess", `${reprocessLabel} — reprocess this grant through the pipeline`)}
     >
       <LuRefreshCw
@@ -156,8 +157,8 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
     <button
       key="reject"
       className={`gw-btn gw-btn--danger review-btn ${recommended === "reject" ? "review-btn--reject review-btn--recommended" : "review-btn--reject"}`}
-      onClick={onReject}
-      disabled={busy}
+      onClick={() => !busy && onReject()}
+      aria-disabled={busy || undefined}
       aria-label={rec("reject", `${rejectLabel} — ${rejectPurpose}`)}
     >
       <LuX size={14} aria-hidden="true" />
@@ -171,8 +172,8 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
     <button
       key="needs_reupload"
       className="gw-btn gw-btn--secondary review-btn review-btn--needs-reupload"
-      onClick={onNeedsReupload}
-      disabled={busy}
+      onClick={() => !busy && onNeedsReupload()}
+      aria-disabled={busy || undefined}
       aria-label={`${needsReuploadLabel} — mark this grant as needing a new document upload`}
     >
       <LuTriangleAlert size={14} aria-hidden="true" />

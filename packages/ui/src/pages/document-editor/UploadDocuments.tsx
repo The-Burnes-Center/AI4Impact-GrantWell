@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useDocumentLibrary } from "../../hooks/use-document-library";
 import { getCurrentUser } from "aws-amplify/auth";
@@ -48,6 +48,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   const [userId, setUserId] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [generatingDraft, setGeneratingDraft] = useState(false);
+  const generationTitle = useRef<HTMLParagraphElement>(null);
   const [draftProgress, setDraftProgress] = useState<string>("");
   const [generationPhase, setGenerationPhase] = useState<string>("preparing");
   const [hasExistingDraft, setHasExistingDraft] = useState(false);
@@ -212,6 +213,11 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
     </div>
   );
 
+  // The form, and the Create draft button that had focus, give way to the progress view.
+  useEffect(() => {
+    if (generatingDraft) generationTitle.current?.focus();
+  }, [generatingDraft]);
+
   // ── Full-page generation view ──────────────────────────────────────
   if (generatingDraft) {
     return (
@@ -232,7 +238,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
               animation: "spin 1s linear infinite",
             }}
           />
-          <p style={{ fontSize: typography.fontSize["2xl"], fontWeight: typography.fontWeight.bold, color: colors.heading, margin: "0 0 8px" }}>
+          <p ref={generationTitle} tabIndex={-1} style={{ fontSize: typography.fontSize["2xl"], fontWeight: typography.fontWeight.bold, color: colors.heading, margin: "0 0 8px" }}>
             Preparing sections...
           </p>
           <p style={{ fontSize: typography.fontSize.base, color: colors.textSecondary, margin: 0 }}>

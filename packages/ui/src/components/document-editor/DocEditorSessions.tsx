@@ -377,7 +377,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             }}
             // aria-disabled, not disabled: disabling the focused button would drop focus to the page.
             aria-disabled={isLoading}
-            aria-label="Refresh applications list"
+            aria-label={isLoading ? "Refreshing applications list" : "Refresh applications list"}
             aria-busy={isLoading}
           >
             {isLoading ? (

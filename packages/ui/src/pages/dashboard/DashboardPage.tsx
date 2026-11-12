@@ -727,7 +727,7 @@ const Dashboard: React.FC = () => {
                                 role="menuitemradio" aria-checked={statusFilter === status}
                                 tabIndex={focusedFilterIndex === index ? 0 : -1}>
                                 <div className="filter-option-content">
-                                  <span className="filter-option-check">{statusFilter === status ? "✓" : ""}</span>
+                                  <span className="filter-option-check" aria-hidden="true">{statusFilter === status ? "✓" : ""}</span>
                                   {status === "all" ? "All statuses" : status.charAt(0).toUpperCase() + status.slice(1)}
                                 </div>
                               </button>
@@ -746,7 +746,7 @@ const Dashboard: React.FC = () => {
                                   role="menuitemradio" aria-checked={grantTypeFilter === type}
                                   tabIndex={focusedFilterIndex === index ? 0 : -1}>
                                   <div className="filter-option-content">
-                                    <span className="filter-option-check">{grantTypeFilter === type ? "✓" : ""}</span>
+                                    <span className="filter-option-check" aria-hidden="true">{grantTypeFilter === type ? "✓" : ""}</span>
                                     {type === "all" ? "All types" : GRANT_TYPES[type].label}
                                   </div>
                                 </button>

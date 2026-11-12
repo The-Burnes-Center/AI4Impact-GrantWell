@@ -36,7 +36,7 @@ describe("ProfilePage notification preferences", () => {
     expect(screen.getByRole("radio", { name: "Weekly digest" })).toBeChecked();
     expect(screen.getByRole("checkbox", { name: "Arts" })).toBeChecked();
     expect(screen.getByLabelText("Keywords (comma-separated)")).toHaveValue("broadband");
-    expect(screen.getByRole("button", { name: "Save preferences" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Save preferences" })).toHaveAttribute("aria-disabled", "true");
   });
 
   it("saves keywords as a trimmed list and confirms", async () => {
@@ -54,7 +54,7 @@ describe("ProfilePage notification preferences", () => {
       categories: ["Arts", "Agriculture"],
       keywords: ["broadband", "workforce"],
     });
-    expect(screen.getByRole("button", { name: "Save preferences" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Save preferences" })).toHaveAttribute("aria-disabled", "true");
   });
 
   it("offers only categories that have grants, keeping ones already chosen", async () => {

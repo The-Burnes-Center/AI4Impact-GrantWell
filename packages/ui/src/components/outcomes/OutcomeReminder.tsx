@@ -104,7 +104,7 @@ export default function OutcomeReminder({ onDone }: { onDone?: () => void }) {
         className="modal-form"
         onSubmit={(e) => {
           e.preventDefault();
-          void save();
+          if (!saving) void save();
         }}
         noValidate
       >
@@ -116,7 +116,9 @@ export default function OutcomeReminder({ onDone }: { onDone?: () => void }) {
         <ul className="outcome-reminder__list">
           {due.map((d, i) => (
             <li key={d.sessionId} className="outcome-reminder__item">
-              <h3 className="outcome-reminder__title">{d.title || "Untitled application"}</h3>
+              {/* The group names the application, so each "Outcome" or "Date submitted" says which one it is for. */}
+              <div role="group" aria-labelledby={`reminder-${i}-title`}>
+              <h3 className="outcome-reminder__title" id={`reminder-${i}-title`}>{d.title || "Untitled application"}</h3>
               <p className="outcome-reminder__meta">
                 {d.grant}
                 {d.deadline ? ` · Deadline ${formatDeadline(d.deadline)}` : ""}
@@ -128,14 +130,15 @@ export default function OutcomeReminder({ onDone }: { onDone?: () => void }) {
                 disabled={saving}
                 allowBlank
               />
+              </div>
             </li>
           ))}
         </ul>
         <div className="modal-actions">
-          <button type="button" className="gw-btn gw-btn--secondary modal-button secondary" onClick={() => void notNow()} disabled={saving}>
+          <button type="button" className="gw-btn gw-btn--secondary modal-button secondary" onClick={() => !saving && void notNow()} aria-disabled={saving || undefined}>
             Not now
           </button>
-          <button type="submit" className="gw-btn gw-btn--primary modal-button primary" disabled={saving}>
+          <button type="submit" className="gw-btn gw-btn--primary modal-button primary" aria-disabled={saving || undefined}>
             {saving ? "Saving..." : "Save"}
           </button>
         </div>

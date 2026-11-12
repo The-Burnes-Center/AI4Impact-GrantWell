@@ -1460,3 +1460,11 @@ html:has(.document-editor-root) {
     white-space: normal;
   }
 }
+
+/* At phone widths the "Make final edits" button wraps its text instead of running off the screen. */
+@media (max-width: 480px) {
+  .marketing .ra-edit-btn.ra-edit-btn {
+    max-width: 100%;
+    white-space: normal;
+  }
+}

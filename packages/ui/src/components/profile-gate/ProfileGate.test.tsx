@@ -50,7 +50,9 @@ describe("ProfileGate region", () => {
     instance.REGIONS = ["Region 1", "Region 2"];
     const { net, user } = renderGate();
     await fillOrgFields(user);
-    expect(screen.getByRole("button", { name: /Save and continue/ })).toBeDisabled();
+    await user.click(screen.getByRole("button", { name: /Save and continue/ }));
+    expect(await screen.findByText("Please complete all four fields.")).toBeInTheDocument();
+    expect(net.to(SAVE)).toHaveLength(0);
     const region = screen.getByLabelText(/Region/);
     expect(region).toBeRequired();
     await user.selectOptions(region, "Region 2");

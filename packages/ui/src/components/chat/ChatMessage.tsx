@@ -312,7 +312,7 @@ function ChatMessage(props: ChatMessageProps) {
                           marginTop: "8px",
                           fontSize: "12px",
                           fontStyle: "italic",
-                          color: "var(--gw-color-text-muted)",
+                          color: "var(--gw-color-text-secondary)",
                         }}
                       >
                         <FaRegStopCircle size={12} aria-hidden="true" />

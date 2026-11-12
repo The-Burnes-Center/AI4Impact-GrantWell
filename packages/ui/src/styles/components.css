@@ -50,6 +50,7 @@
 }
 .gw-btn.gw-btn--secondary:active:not(:disabled) {
   background: var(--gw-color-primary-border);
+  color: var(--gw-color-primary-hover);
 }
 
 .gw-btn.gw-btn--danger {
@@ -68,6 +69,7 @@
 }
 .gw-btn.gw-btn--inverse:hover:not(:disabled) {
   background: var(--gw-color-primary-light);
+  color: var(--gw-color-primary-hover);
 }
 
 /* Tight spaces: table rows, toolbars, headers. */
@@ -171,6 +173,25 @@
 .gw-input:hover:not(:disabled):not([readonly]) {
   border-color: var(--gw-color-border-input-hover);
 }
+/* Doubled classes outrank Bootstrap's .form-control:focus / .form-select:focus { outline: 0 }, which
+   would otherwise leave only its pale blue border and glow. */
+.gw-input.gw-input:focus-visible,
+.form-control.form-control:focus-visible,
+.form-select.form-select:focus-visible {
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
+  box-shadow: none;
+}
+/* Bootstrap's .form-control / .form-select border (light grey, 1.3:1 on white; pale blue on focus) outranks
+   :where(.gw-input); the sign-in fields carry both, so restate the kit border for them. */
+.gw-input.form-control:not([aria-invalid="true"]):not(.gw-input--error):not(.gw-input--success),
+.gw-input.form-select:not([aria-invalid="true"]):not(.gw-input--error):not(.gw-input--success) {
+  border-color: var(--gw-color-border-input);
+}
+.gw-input.form-control:hover:not(:disabled):not([readonly]):not([aria-invalid="true"]):not(.gw-input--error):not(.gw-input--success),
+.gw-input.form-select:hover:not(:disabled):not([readonly]):not([aria-invalid="true"]):not(.gw-input--error):not(.gw-input--success) {
+  border-color: var(--gw-color-border-input-hover);
+}
 :where(textarea.gw-input) {
   min-height: 96px;
   resize: vertical;
@@ -195,6 +216,8 @@
   cursor: not-allowed;
 }
 .gw-input[readonly] {
+  color: var(--gw-color-text);
+  border-color: var(--gw-color-border-input);
   cursor: default;
 }
 
@@ -506,6 +529,11 @@ a.gw-tab { text-decoration: none; }
 /* Joined outlined buttons for one choice among a few; the chosen one is filled. Works for aria-pressed
    button groups and role="radio" groups alike. Sized like .gw-btn. */
 .gw-toggle { display: inline-flex; flex-wrap: nowrap; max-width: 100%; }
+/* On a phone labels wrap inside their options, and options wrap onto a second row, so the group fits. */
+@media (max-width: 480px) {
+  .gw-toggle.gw-toggle { flex-wrap: wrap; }
+  .gw-toggle__option.gw-toggle__option { white-space: normal; margin-top: -1px; }
+}
 .gw-toggle__option {
   position: relative;
   display: inline-flex;

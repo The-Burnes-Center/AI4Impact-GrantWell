@@ -757,7 +757,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            handleSendMessage();
+            void handleSendMessage();
           }
         }}
         onFocus={() => setIsInputFocused(true)}
@@ -786,8 +786,13 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           type="button"
           className="gw-btn gw-btn--primary gw-btn--icon"
           style={styles.chatControl}
-          disabled={state.value.trim().length === 0 || props.session.loading}
-          onClick={handleSendMessage}
+          // aria-disabled, not disabled: after Stop the same button turns back into Send with an empty
+          // box, and a natively disabled button would drop keyboard focus to <body>.
+          aria-disabled={state.value.trim().length === 0 || props.session.loading || undefined}
+          onClick={() => {
+            if (state.value.trim().length === 0 || props.session.loading) return;
+            void handleSendMessage();
+          }}
           aria-label="Send message"
           title="Send message"
         >

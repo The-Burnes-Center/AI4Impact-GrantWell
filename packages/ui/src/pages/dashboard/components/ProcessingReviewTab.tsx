@@ -409,8 +409,8 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
           <div className="review-bulk-bar__actions">
             <button
               className="gw-btn gw-btn--primary review-btn review-btn--bulk-reprocess"
-              onClick={() => void handleBulkReprocess()}
-              disabled={!canReprocess || bulkAction !== null}
+              onClick={() => canReprocess && bulkAction === null && void handleBulkReprocess()}
+              aria-disabled={!canReprocess || bulkAction !== null || undefined}
               aria-label={`${bulkAction === "reprocess" ? "Reprocessing..." : "Reprocess selected"} — ${selected.size} grant${selected.size === 1 ? "" : "s"}`}
             >
               <LuRefreshCw size={14} className={bulkAction === "reprocess" ? "refresh-icon" : ""} aria-hidden="true" />
@@ -418,8 +418,8 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
             </button>
             <button
               className="gw-btn gw-btn--secondary review-btn review-btn--needs-reupload"
-              onClick={() => void handleBulkNeedsReupload()}
-              disabled={!canMarkReupload || bulkAction !== null}
+              onClick={() => canMarkReupload && bulkAction === null && void handleBulkNeedsReupload()}
+              aria-disabled={!canMarkReupload || bulkAction !== null || undefined}
               aria-label={`${bulkAction === "needs_reupload" ? "Marking..." : "Needs Re-upload"} — mark ${selected.size} selected grant${selected.size === 1 ? "" : "s"} as needs re-upload`}
             >
               <LuUpload size={14} aria-hidden="true" />

@@ -103,7 +103,6 @@ export default function ResetPasswordStep({
             {loading ? (
               <>
                 <Spinner animation="border" size="sm" aria-hidden="true" className="me-2" />
-                <span className="visually-hidden">Loading</span>
                 Resetting...
               </>
             ) : (

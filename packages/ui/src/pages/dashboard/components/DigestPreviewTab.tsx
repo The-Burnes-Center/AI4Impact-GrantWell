@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { ApiClient } from "../../../common/api-client/api-client";
 import type { DigestPreviewResult } from "../../../common/api-client/notifications-client";
 import { ConfirmationModal } from "../../../components/common/ConfirmationModal";
+import { LiveStatus } from "../../../components/common/LiveStatus";
 
 interface DigestPreviewTabProps {
   apiClient: ApiClient;
@@ -113,17 +114,17 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
         <div className="dashboard-actions">
           <button
             className="gw-btn gw-btn--secondary action-button refresh-button"
-            onClick={() => onSend("me")}
-            disabled={busy || loading}
-            aria-label={`Send to me — send the real ${frequency} digest to your own email`}
+            onClick={() => !busy && !loading && onSend("me")}
+            aria-disabled={busy || loading || undefined}
+            aria-label={`${sending === "me" ? "Sending…" : "Send to me"} — send the real ${frequency} digest to your own email`}
           >
             {sending === "me" ? "Sending…" : "Send to me"}
           </button>
           <button
             className="gw-btn gw-btn--primary action-button add-button"
-            onClick={() => onSend("all")}
-            disabled={busy || loading}
-            aria-label={`Send to all users — send the real ${frequency} digest to all subscribed users`}
+            onClick={() => !busy && !loading && onSend("all")}
+            aria-disabled={busy || loading || undefined}
+            aria-label={`${sending === "all" ? "Sending…" : "Send to all users"} — send the real ${frequency} digest to all subscribed users`}
           >
             {sending === "all" ? "Sending…" : "Send to all users"}
           </button>
@@ -169,12 +170,14 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
         <div role="status" aria-live="polite" className="visually-hidden">
           {refreshing ? `Refreshing ${frequency} digest preview` : ""}
         </div>
+        <LiveStatus>
         {count === 0 && (
-          <div className="digest-preview__empty-note" role="status">
+          <div className="digest-preview__empty-note">
             No grants currently match your notification preferences for this cadence, so no digest
             would be sent. The empty layout below is what a zero-match run renders.
           </div>
         )}
+        </LiveStatus>
         <div
           className={`digest-preview ${refreshing ? "is-refreshing" : ""}`}
           aria-busy={refreshing}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useId, useState } from "react";
 import { useNavigate, useLocation, useSearchParams } from "react-router";
 import { v4 as uuidv4 } from "uuid";
 import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
@@ -121,8 +121,13 @@ const NavItem: React.FC<{
   );
 };
 
-const GroupHeading: React.FC<{ children: React.ReactNode }> = ({ children }) =>
-  usesHeaderTabs() ? <h2 className="gw-sidenav__group">{children}</h2> : <h2 style={groupHeadingStyle}>{children}</h2>;
+/** A group's label, not a heading: the menu sits before the page's h1, and its landmark already names it. */
+const GroupHeading: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) =>
+  usesHeaderTabs() ? (
+    <p className="gw-sidenav__group" id={id}>{children}</p>
+  ) : (
+    <p style={groupHeadingStyle} id={id}>{children}</p>
+  );
 
 const STEP_ITEMS: { step: string; label: string; icon: React.ReactNode }[] = [
   {
@@ -168,6 +173,7 @@ export const AppSidebar: React.FC = () => {
   const [showFeedback, setShowFeedback] = useState(false);
   const [fallbackChecked, setFallbackChecked] = useState(false);
   const [linkChatId] = useState(() => uuidv4());
+  const groupId = useId();
 
   const isDocked = chrome?.isDocked ?? true;
   // With header tabs, the side menu is a drawer on phones only; elsewhere it is docked on a grant's pages or absent.
@@ -534,8 +540,13 @@ export const AppSidebar: React.FC = () => {
           </>)}
 
           {docId && (
-            <div style={{ marginTop: grantOnly ? 0 : "24px" }}>
-              {showLabels && <GroupHeading>This grant</GroupHeading>}
+            <div
+              role="group"
+              aria-labelledby={showLabels ? `${groupId}-grant` : undefined}
+              aria-label={showLabels ? undefined : "This grant"}
+              style={{ marginTop: grantOnly ? 0 : "24px" }}
+            >
+              {showLabels && <GroupHeading id={`${groupId}-grant`}>This grant</GroupHeading>}
 
               <NavItem
                 href={requirementsHref}
@@ -571,8 +582,13 @@ export const AppSidebar: React.FC = () => {
             currentStep &&
             currentStep !== "drafts" &&
             currentStep !== "welcome" && (
-              <div style={{ marginTop: "24px" }}>
-                {showLabels && <GroupHeading>Current application</GroupHeading>}
+              <div
+                role="group"
+                aria-labelledby={showLabels ? `${groupId}-application` : undefined}
+                aria-label={showLabels ? undefined : "Current application"}
+                style={{ marginTop: "24px" }}
+              >
+                {showLabels && <GroupHeading id={`${groupId}-application`}>Current application</GroupHeading>}
 
                 {STEP_ITEMS.filter((_, index) => index <= furthestStepIndex).map((item) => (
                   <NavItem

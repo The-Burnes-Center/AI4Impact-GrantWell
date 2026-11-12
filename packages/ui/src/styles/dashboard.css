@@ -120,7 +120,7 @@ body {
 .feature-rollouts-card {
   background: var(--gw-color-surface);
   border: 1px solid var(--gw-color-border);
-  border-radius: var(--gw-radius-pill);
+  border-radius: var(--gw-radius-container);
   padding: 24px;
   box-shadow: var(--gw-shadow-low);
 }
@@ -635,6 +635,10 @@ body {
 
 .table-container:has(.table-row) {
   min-width: var(--gw-table-min-width, 720px);
+}
+/* An empty table keeps its phone width, so its column headers would be cut off; the empty message is enough. */
+@media (max-width: 720px) {
+  .table-container:not(:has(.table-row)) .table-header { display: none; }
 }
 
 .table-header {

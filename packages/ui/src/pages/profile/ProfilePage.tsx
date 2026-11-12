@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   fetchAuthSession,
   fetchMFAPreference,
@@ -15,6 +15,7 @@ import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import { useNavigationChrome } from "../../components/navigation/navigation-context";
 import { ConfirmationModal } from "../../components/common/ConfirmationModal";
 import MfaSetupPanel from "../../components/auth/MfaSetupPanel";
+import { LiveStatus } from "../../components/common/LiveStatus";
 import PasswordRequirementsList from "../../components/auth/PasswordRequirementsList";
 import { getPasswordRequirements } from "../../components/auth/auth-utils";
 import { clearMfaPromptSnooze } from "../../common/mfa-snooze";
@@ -120,6 +121,7 @@ export default function ProfilePage() {
 
   const onSaveOrg = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!orgDirty) return;
     const missing = [
       !orgAgency.trim() && "profile-agency",
       !orgOrganization.trim() && "profile-org",
@@ -278,6 +280,7 @@ export default function ProfilePage() {
 
   const onSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!dirty) return;
     setSaving(true);
     setError(null);
     setSaved(false);
@@ -356,11 +359,13 @@ export default function ProfilePage() {
                     {orgError}
                   </div>
                 )}
-                {orgSaved && (
-                  <div className="gw-alert gw-alert--success profile-alert profile-alert--success" role="status">
-                    Organization details saved.
-                  </div>
-                )}
+                <LiveStatus>
+                  {orgSaved && (
+                    <div className="gw-alert gw-alert--success profile-alert profile-alert--success">
+                      Organization details saved.
+                    </div>
+                  )}
+                </LiveStatus>
                 <form onSubmit={onSaveOrg}>
                   <div className="profile-section">
                     <label className="profile-field-label" htmlFor="profile-agency">
@@ -471,7 +476,7 @@ export default function ProfilePage() {
                     </div>
                   )}
                   <div className="profile-actions">
-                    <Button type="submit" loading={orgSaving} disabled={!orgDirty}>
+                    <Button type="submit" loading={orgSaving} aria-disabled={!orgDirty || undefined}>
                       Save changes
                     </Button>
                   </div>
@@ -492,7 +497,9 @@ export default function ProfilePage() {
                   </p>
 
                   {error && <div className="gw-alert gw-alert--urgent profile-alert profile-alert--error" role="alert">{error}</div>}
-                  {saved && <div className="gw-alert gw-alert--success profile-alert profile-alert--success" role="status">Preferences saved.</div>}
+                  <LiveStatus>
+                    {saved && <div className="gw-alert gw-alert--success profile-alert profile-alert--success">Preferences saved.</div>}
+                  </LiveStatus>
 
                   {loading ? (
                     <p role="status">Loading…</p>
@@ -542,8 +549,8 @@ export default function ProfilePage() {
                               type="button"
                               variant="secondary"
                               size="sm"
-                              onClick={() => setVisibleSelected(true)}
-                              disabled={allVisibleSelected}
+                              onClick={() => !allVisibleSelected && setVisibleSelected(true)}
+                              aria-disabled={allVisibleSelected || undefined}
                             >
                               {categoryQuery.trim()
                                 ? `Select all ${visibleCategories.length} shown`
@@ -553,8 +560,8 @@ export default function ProfilePage() {
                               type="button"
                               variant="secondary"
                               size="sm"
-                              onClick={() => setVisibleSelected(false)}
-                              disabled={!someVisibleSelected}
+                              onClick={() => someVisibleSelected && setVisibleSelected(false)}
+                              aria-disabled={!someVisibleSelected || undefined}
                             >
                               Clear
                             </Button>
@@ -604,7 +611,7 @@ export default function ProfilePage() {
                       </fieldset>
 
                       <div className="profile-actions">
-                        <Button type="submit" loading={saving} disabled={!dirty}>
+                        <Button type="submit" loading={saving} aria-disabled={!dirty || undefined}>
                           Save preferences
                         </Button>
                       </div>
@@ -640,6 +647,14 @@ function MfaSection() {
   const [enrolling, setEnrolling] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // After turning it on or off, or cancelling setup, the control that had focus is gone: move it to the new state.
+  const hint = useRef<HTMLParagraphElement>(null);
+  const [focusHint, setFocusHint] = useState(false);
+  useEffect(() => {
+    if (!focusHint) return;
+    hint.current?.focus();
+    setFocusHint(false);
+  }, [focusHint]);
 
   const load = async () => {
     try {
@@ -665,6 +680,7 @@ function MfaSection() {
     try {
       await updateMFAPreference({ totp: "DISABLED" });
       setStatus("off");
+      setFocusHint(true);
     } catch (err) {
       console.error("Could not disable MFA", err);
       setError("Could not turn off two-step verification. Try again in a moment.");
@@ -683,17 +699,17 @@ function MfaSection() {
       {status === "on" ? (
         <>
           {MFA_DEADLINE_ISO ? (
-            <p className="profile-hint">
+            <p className="profile-hint" ref={hint} tabIndex={-1}>
               Two-step verification is on. GrantWell requires it from{" "}
               {deadlineDateText(MFA_DEADLINE_ISO, true)}, so it can&apos;t be turned off.
             </p>
           ) : MFA_REQUIRED ? (
-            <p className="profile-hint">
+            <p className="profile-hint" ref={hint} tabIndex={-1}>
               On. Two-step verification is required on GrantWell, so it can&apos;t be turned off.
             </p>
           ) : (
             <>
-              <p className="profile-hint">
+              <p className="profile-hint" ref={hint} tabIndex={-1}>
                 On. You are asked for a code from your authenticator app when you sign in.
               </p>
               <div className="profile-actions">
@@ -711,12 +727,16 @@ function MfaSection() {
             setEnrolling(false);
             clearMfaPromptSnooze(userId);
             setStatus("on");
+            setFocusHint(true);
           }}
-          onCancel={() => setEnrolling(false)}
+          onCancel={() => {
+            setEnrolling(false);
+            setFocusHint(true);
+          }}
         />
       ) : (
         <>
-          <p className="profile-hint">
+          <p className="profile-hint" ref={hint} tabIndex={-1}>
             {MFA_DEADLINE_ISO
               ? `Off. GrantWell requires it from ${deadlineDateText(MFA_DEADLINE_ISO, true)}.`
               : MFA_REQUIRED
@@ -743,6 +763,14 @@ function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
   const [busy, setBusy] = useState(false);
   const [pwError, setPwError] = useState<string | null>(null);
   const [pwOk, setPwOk] = useState(false);
+  const firstPwField = useRef<HTMLInputElement>(null);
+  const changePwButton = useRef<HTMLButtonElement>(null);
+  const [pwFocus, setPwFocus] = useState<"form" | "button" | null>(null);
+  useEffect(() => {
+    if (pwFocus === "form") firstPwField.current?.focus();
+    if (pwFocus === "button") changePwButton.current?.focus();
+    setPwFocus(null);
+  }, [pwFocus]);
 
   const changePassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -802,7 +830,7 @@ function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
         <form onSubmit={changePassword}>
           <div className="profile-section">
             <label className="profile-field-label" htmlFor="pw-old">Current password</label>
-            <input id="pw-old" type={revealPw ? "text" : "password"} autoComplete="current-password" value={oldPw} onChange={(e) => setOldPw(e.target.value)} required className="gw-input profile-input" />
+            <input ref={firstPwField} id="pw-old" type={revealPw ? "text" : "password"} autoComplete="current-password" value={oldPw} onChange={(e) => setOldPw(e.target.value)} required className="gw-input profile-input" />
           </div>
           <div className="profile-section">
             <label className="profile-field-label" htmlFor="pw-new">New password</label>
@@ -821,12 +849,12 @@ function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
           </div>
           <div className="profile-actions">
             <Button type="submit" loading={busy}>Update password</Button>
-            <Button type="button" variant="ghost" onClick={() => { setShowPw(false); setRevealPw(false); }} disabled={busy}>Cancel</Button>
+            <Button type="button" variant="ghost" onClick={() => { if (busy) return; setShowPw(false); setRevealPw(false); setPwFocus("button"); }} aria-disabled={busy || undefined}>Cancel</Button>
           </div>
         </form>
       ) : (
         <div className="profile-actions">
-          <Button type="button" variant="secondary" onClick={() => setShowPw(true)}>Change password</Button>
+          <Button ref={changePwButton} type="button" variant="secondary" onClick={() => { setShowPw(true); setPwFocus("form"); }}>Change password</Button>
           <Button type="button" variant="danger" onClick={signOutEverywhere} loading={busy}>Sign out of all devices</Button>
         </div>
       )}

@@ -20,7 +20,18 @@ interface MfaSetupPanelProps {
  * OPTIONAL that challenge never fires, so we start the enrolment ourselves via setUpTOTP, as soon
  * as the panel opens: whatever opened it was already the "set it up" click.
  */
-export default function MfaSetupPanel({
+/** Takes focus when it opens: it replaces the button that opened it, which would leave focus on <body>. */
+export default function MfaSetupPanel(props: MfaSetupPanelProps) {
+  const root = useRef<HTMLDivElement>(null);
+  useEffect(() => root.current?.focus(), []);
+  return (
+    <div ref={root} tabIndex={-1} aria-label="Set up two-step verification" role="group">
+      <SetupSteps {...props} />
+    </div>
+  );
+}
+
+function SetupSteps({
   email,
   onEnrolled,
   onCancel,

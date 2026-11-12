@@ -24,7 +24,8 @@
 /* Account identity list */
 .profile-identity {
   display: grid;
-  grid-template-columns: 140px 1fr;
+  grid-template-columns: minmax(0, 140px) minmax(0, 1fr);
+  column-gap: var(--gw-spacing-sm, 8px);
   row-gap: var(--gw-spacing-sm, 8px);
   margin: 0;
 }
@@ -35,6 +36,12 @@
 .profile-identity dd {
   margin: 0;
   color: var(--gw-color-text, #333333);
+  overflow-wrap: anywhere;
+}
+/* On a phone the label sits above its value, so a long email has the full width. */
+@media (max-width: 480px) {
+  .profile-identity { grid-template-columns: minmax(0, 1fr); row-gap: 2px; }
+  .profile-identity dd { margin-bottom: var(--gw-spacing-sm, 8px); }
 }
 
 .profile-field-label {

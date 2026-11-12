@@ -886,11 +886,12 @@ export default function AuthPanel({
       <div className="auth-card-content">
         {/* Always mounted and text-only: a region created together with its text is
             not announced, and keeping the dismiss buttons out of it stops "Close
-            alert" being read as part of the message. The Alerts below need
+            alert" being read as part of the message. "Please wait…" announces the busy
+            state, which otherwise only changes the button's own text. The Alerts below need
             transition={false} for role={undefined} to reach the div — otherwise
             react-bootstrap's hardcoded role="alert" announces the same text again. */}
         <div aria-live="polite" aria-atomic="true" className="visually-hidden">
-          {error || success || notice || ""}
+          {error || success || notice || (loading ? "Please wait…" : "")}
         </div>
         {notice ? (
           <Alert

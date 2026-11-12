@@ -8,6 +8,7 @@ import { LuTag, LuX } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useFocusTrap } from "../../hooks/use-focus-trap";
 import ConfirmationModal from "../common/ConfirmationModal";
+import { LiveStatus } from "../common/LiveStatus";
 import VersionDiff from "./VersionDiff";
 import type { DraftVersionDetail, DraftVersionMeta } from "../../common/api-client/drafts-client";
 import {
@@ -249,9 +250,8 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
           {error && <p role="alert" className="vh-error">{error}</p>}
           <p role="status" className="visually-hidden">{notice}</p>
 
-          {loading ? (
-            <p className="vh-status" role="status">Loading versions...</p>
-          ) : versions.length === 0 ? (
+          <LiveStatus>{loading && <p className="vh-status">Loading versions...</p>}</LiveStatus>
+          {loading ? null : versions.length === 0 ? (
             <p className="vh-status">
               No earlier versions yet. One is kept automatically whenever your application changes.
             </p>
@@ -311,7 +311,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
             </ul>
           )}
 
-          {detailLoading && <p className="vh-status" role="status">Loading that version...</p>}
+          <LiveStatus>{detailLoading && <p className="vh-status">Loading that version...</p>}</LiveStatus>
 
           {selected && !detailLoading && (
             <div className="vh-detail">

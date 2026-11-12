@@ -374,7 +374,6 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
               type="button"
               className="gw-btn gw-btn--secondary gw-btn--slim review-btn review-btn--apply-all"
               onClick={() => setShowDiff(!showDiff)}
-              aria-pressed={showDiff}
               aria-label={showDiff ? "Show editor" : "Review changes"}
             >
               {showDiff ? "Show editor" : "Review changes"}

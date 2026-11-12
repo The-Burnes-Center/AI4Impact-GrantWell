@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 
 const FOCUSABLE_SELECTOR = [
   "button",
@@ -11,21 +11,30 @@ const FOCUSABLE_SELECTOR = [
   .map((s) => `${s}:not([disabled]):not([aria-hidden="true"]):not([inert])`)
   .join(", ");
 
-const trapStack: symbol[] = [];
+const trapStack: { id: symbol; container: RefObject<HTMLElement | null> }[] = [];
 
 const isDisabled = (el: HTMLElement) => (el as HTMLButtonElement).disabled === true;
 
+const tryFocus = (el: HTMLElement | null | undefined) => {
+  if (!el || !el.isConnected || isDisabled(el)) return false;
+  el.focus();
+  return document.activeElement === el;
+};
+
 /**
- * Focus `target`, or when it was removed or disabled while the trap was open, the nearest of its
- * original ancestors that can still take focus, so focus never falls back to <body>.
+ * Where focus goes when a trap closes, so it never falls back to <body>: nowhere if the page already
+ * moved it outside the closing container; else `target`; else, when `target` was removed or disabled
+ * meanwhile, into the dialog still open beneath this one, then the nearest original ancestor that can
+ * take focus, then the page's main content.
  */
-function restoreFocus(target: HTMLElement, ancestors: HTMLElement[]) {
-  for (const el of [target, ...ancestors]) {
-    if (!el.isConnected || isDisabled(el)) continue;
-    if (el !== target && !el.hasAttribute("tabindex")) continue;
-    el.focus();
-    if (document.activeElement === el) return;
-  }
+function restoreFocus(target: HTMLElement, ancestors: HTMLElement[], closing: HTMLElement | null) {
+  const active = document.activeElement as HTMLElement | null;
+  if (active && active !== document.body && active.isConnected && !closing?.contains(active)) return;
+  if (target !== document.body && tryFocus(target)) return;
+  const outer = trapStack[trapStack.length - 1]?.container.current;
+  if (outer?.isConnected && (tryFocus(outer.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)) || tryFocus(outer))) return;
+  for (const el of ancestors) if (el.hasAttribute("tabindex") && tryFocus(el)) return;
+  tryFocus(document.getElementById("main-content"));
 }
 
 function ancestorsOf(el: HTMLElement): HTMLElement[] {
@@ -67,9 +76,9 @@ export function useFocusTrap<T extends HTMLElement = HTMLDivElement>({
   useEffect(() => {
     if (!isOpen) return;
     const id = trapId.current;
-    trapStack.push(id);
+    trapStack.push({ id, container: containerRef });
     return () => {
-      const i = trapStack.lastIndexOf(id);
+      const i = trapStack.findIndex((t) => t.id === id);
       if (i !== -1) trapStack.splice(i, 1);
     };
   }, [isOpen]);
@@ -80,6 +89,7 @@ export function useFocusTrap<T extends HTMLElement = HTMLDivElement>({
 
     const previous = document.activeElement as HTMLElement | null;
     previousFocusRef.current = previous;
+    const container = containerRef.current;
     const previousAncestors = previous && previous !== document.body ? ancestorsOf(previous) : [];
 
     const timer = setTimeout(() => {
@@ -98,7 +108,7 @@ export function useFocusTrap<T extends HTMLElement = HTMLDivElement>({
         document.body.style.overflow = "";
       }
       if (previousFocusRef.current) {
-        restoreFocus(previousFocusRef.current, previousAncestors);
+        restoreFocus(previousFocusRef.current, previousAncestors, container);
       }
     };
   }, [isOpen, lockScroll]);
@@ -108,7 +118,7 @@ export function useFocusTrap<T extends HTMLElement = HTMLDivElement>({
     if (!isOpen || !containerRef.current) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (trapStack[trapStack.length - 1] !== trapId.current) return;
+      if (trapStack[trapStack.length - 1]?.id !== trapId.current) return;
 
       if (e.key === "Escape" && onEscape) {
         onEscape();

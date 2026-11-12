@@ -29,6 +29,8 @@ const FIELDS: {
   key: FieldKey;
   label: string;
   placeholder: string;
+  /** WCAG 1.3.5 input purpose, where the HTML list has one (it has none for a department). */
+  autoComplete?: string;
   Icon: React.ComponentType<{ size?: number; "aria-hidden"?: boolean }>;
 }[] = [
   {
@@ -41,12 +43,14 @@ const FIELDS: {
     key: "organization",
     label: "Organization",
     placeholder: "e.g. City of Springfield",
+    autoComplete: "organization",
     Icon: LuBuilding2,
   },
   {
     key: "jobTitle",
     label: "Role / Title",
     placeholder: "e.g. Grants Manager",
+    autoComplete: "organization-title",
     Icon: LuBriefcase,
   },
 ];
@@ -227,7 +231,7 @@ export default function ProfileGate({ children }: ProfileGateProps) {
               </div>
 
               <form onSubmit={onSubmit} noValidate>
-                {FIELDS.map(({ key, label, placeholder, Icon }) => {
+                {FIELDS.map(({ key, label, placeholder, autoComplete, Icon }) => {
                   const showError = touched[key] && values[key].trim().length === 0;
                   const inputId = `gate-${key}`;
                   return (
@@ -252,6 +256,7 @@ export default function ProfileGate({ children }: ProfileGateProps) {
                             setTouched((prev) => ({ ...prev, [key]: true }))
                           }
                           placeholder={placeholder}
+                          autoComplete={autoComplete}
                           maxLength={PROFILE_FIELD_MAX_LENGTH}
                           required
                           aria-invalid={showError}
@@ -342,7 +347,6 @@ export default function ProfileGate({ children }: ProfileGateProps) {
                 <Button
                   type="submit"
                   loading={saving}
-                  disabled={!allFilled}
                   fullWidth
                 >
                   <span className="profile-gate__submit-content">

@@ -77,7 +77,6 @@ export default function NewPasswordStep({
             {loading ? (
               <>
                 <Spinner animation="border" size="sm" aria-hidden="true" className="me-2" />
-                <span className="visually-hidden">Loading</span>
                 Setting password...
               </>
             ) : (

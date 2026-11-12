@@ -24,6 +24,7 @@ import { DailyLimitError } from "../../common/api-client/daily-limit";
 import { InputTooLongError } from "../../common/api-client/drafts-client";
 import { GrantInReviewError } from "../../common/api-client/grant-in-review";
 import { SKIP_REASON_TEXT } from "../../common/helpers/user-documents";
+import { LiveStatus } from "../../components/common/LiveStatus";
 import "../../styles/document-editor.css";
 
 interface SectionEditorProps {
@@ -448,6 +449,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       });
       await reloadAfterRestore();
       await refreshUndoCandidate();
+      addNotification("success", "The earlier text is back.");
     } catch (error) {
       console.error("Error undoing generation:", error);
       addNotification(
@@ -518,7 +520,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               >
                 Retry failed sections
               </button>
-              <span style={{ color: 'var(--gw-color-text-muted)' }}>or write them manually below.</span>
+              <span style={{ color: 'var(--gw-color-text-secondary)' }}>or write them manually below.</span>
             </div>
           )}
 
@@ -614,8 +616,9 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
             </div>
           </div>
 
+          <LiveStatus>
           {skippedDocuments.length > 0 && (
-            <div className="gw-alert gw-alert--warning se-storage-warning" role="status">
+            <div className="gw-alert gw-alert--warning se-storage-warning">
               <p style={{ margin: 0 }}>
                 The AI couldn&apos;t read {skippedDocuments.length === 1 ? "one of your selected documents" : `${skippedDocuments.length} of your selected documents`} for this draft:
               </p>
@@ -628,13 +631,16 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               </ul>
             </div>
           )}
+          </LiveStatus>
 
+          <LiveStatus>
           {nearStorageLimit && (
-            <p className="gw-alert gw-alert--warning se-storage-warning" role="status">
+            <p className="gw-alert gw-alert--warning se-storage-warning">
               This application is close to its size limit. Shorten long sections or move background
               material into supporting documents.
             </p>
           )}
+          </LiveStatus>
 
           {active && heldSectionIds?.has(active.id) ? (
             <div className="se-section-description">
