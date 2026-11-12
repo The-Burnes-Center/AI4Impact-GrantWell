@@ -2,6 +2,7 @@ import { useId, useMemo } from "react";
 import { Link } from "react-router";
 import { LuFileText } from "react-icons/lu";
 import LibraryUpload from "./LibraryUpload";
+import { LiveStatus } from "../common/LiveStatus";
 import type { DocumentLibrary } from "../../hooks/use-document-library";
 import {
   LIBRARY_FOLDER,
@@ -54,7 +55,9 @@ export default function DocumentPicker({ library, selected, onChange, legend, de
         )}
 
         {library.loading || selected === null ? (
-          <p role="status">Loading your documents...</p>
+          <LiveStatus>
+            <p>Loading your documents...</p>
+          </LiveStatus>
         ) : library.loadError ? (
           <p className="dm-error" role="alert">{library.loadError}</p>
         ) : docs.length === 0 ? (

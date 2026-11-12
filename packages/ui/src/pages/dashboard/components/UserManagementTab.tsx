@@ -4,8 +4,10 @@ import type { ApiClient } from "../../../common/api-client/api-client";
 import type { ManagedUser, UserRolePreset } from "../../../common/types/user-management";
 import { SUPPORTED_STATES } from "../../../common/types/user-management";
 import { MFA_ENABLED, REGIONS, SINGLE_STATE } from "../../../common/instance";
+import { LiveStatus } from "../../../components/common/LiveStatus";
 import { Modal } from "../../../components/common/Modal";
 import PaginationControls from "../../../components/common/PaginationControls";
+import TableScrollRegion from "../../../components/ui/TableScrollRegion";
 import RowActionsMenu, { type RowAction } from "./RowActionsMenu";
 
 interface UserManagementTabProps {
@@ -78,6 +80,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
 
   const [addUserModalOpen, setAddUserModalOpen] = useState(false);
   const [addEmail, setAddEmail] = useState("");
+  const [addEmailAttempted, setAddEmailAttempted] = useState(false);
   const [addState, setAddState] = useState("");
   const [isCreating, setIsCreating] = useState(false);
 
@@ -88,6 +91,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
 
   const tableRef = useRef<HTMLTableElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const addEmailRef = useRef<HTMLInputElement>(null);
   // Set when a reload may remove the row that has focus; checked once the new rows render.
   const refocusAfterReload = useRef(false);
   const savedUsername = useRef<string | null>(null);
@@ -325,13 +329,18 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
 
   if (!loaded) {
     return (
-      <div className="feature-rollouts-panel" aria-busy="true">
-        <span role="status">Loading users...</span>
-      </div>
+      <>
+        <div className="feature-rollouts-panel" aria-busy="true">
+          <span aria-hidden="true">Loading users...</span>
+        </div>
+        <LiveStatus className="visually-hidden">Loading users...</LiveStatus>
+      </>
     );
   }
 
   const addEmailValid = addEmail.trim().length > 0 && EMAIL_PATTERN.test(addEmail);
+  const addEmailInvalid = (addEmailAttempted || addEmail.length > 0) && !addEmailValid;
+  const savingEmail = savingUsername ? users.find((user) => user.username === savingUsername)?.email : undefined;
 
   return (
     <div className="user-management-panel">
@@ -363,7 +372,10 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           <button
             type="button"
             className="gw-btn gw-btn--primary feature-rollouts-primary-button"
-            onClick={() => setAddUserModalOpen(true)}
+            onClick={() => {
+              setAddEmailAttempted(false);
+              setAddUserModalOpen(true);
+            }}
           >
             <LuUserPlus size={16} aria-hidden="true" /> Add user
           </button>
@@ -399,14 +411,15 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           </div>
         </form>
 
+        <LiveStatus className="visually-hidden">{savingEmail ? `Saving changes for ${savingEmail}` : null}</LiveStatus>
         <p className="feature-rollouts-results-status" role="status" aria-live="polite">
           {hasActiveSearch && !loading
             ? `${users.length === 0 ? "No" : users.length} user${users.length === 1 ? "" : "s"} found for "${activeSearchQuery}".`
             : ""}
         </p>
 
-        <div className="user-management-table-wrapper" aria-busy={loading}>
-          <table className="user-management-table" ref={tableRef} tabIndex={-1} aria-label="Users">
+        <TableScrollRegion label="Users table" className="user-management-table-wrapper">
+          <table className="user-management-table" ref={tableRef} tabIndex={-1} aria-label="Users" aria-busy={loading}>
             <thead>
               <tr>
                 <th scope="col">User</th>
@@ -547,7 +560,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               })}
             </tbody>
           </table>
-        </div>
+        </TableScrollRegion>
         {!hasActiveSearch && (
           <PaginationControls
             mode="token"
@@ -573,6 +586,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           <div className="form-group">
             <label htmlFor="add-user-email">Email address</label>
             <input
+              ref={addEmailRef}
               type="email"
               id="add-user-email"
               value={addEmail}
@@ -580,8 +594,14 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               className="gw-input form-input"
               placeholder="user@example.com"
               autoComplete="email"
-              aria-invalid={addEmail.length > 0 && !EMAIL_PATTERN.test(addEmail)}
+              aria-invalid={addEmailInvalid}
+              aria-describedby={addEmailInvalid ? "add-user-email-error" : undefined}
             />
+            {addEmailInvalid && (
+              <p id="add-user-email-error" className="gw-field__message user-management-field-error">
+                Enter an email address in the format user@example.com.
+              </p>
+            )}
           </div>
           {!SINGLE_STATE && (
           <div className="form-group">
@@ -620,13 +640,20 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
             <button
               className="gw-btn gw-btn--primary modal-button primary"
               onClick={() => {
-                if (!(isCreating || !addEmailValid)) void handleCreateUser();
+                if (isCreating) return;
+                if (!addEmailValid) {
+                  setAddEmailAttempted(true);
+                  addEmailRef.current?.focus();
+                  return;
+                }
+                void handleCreateUser();
               }}
-              aria-disabled={isCreating || !addEmailValid || undefined}
+              aria-disabled={isCreating || undefined}
             >
               {isCreating ? "Adding..." : "Add user"}
             </button>
           </div>
+          <LiveStatus className="visually-hidden">{isCreating ? "Adding user" : null}</LiveStatus>
         </div>
       </Modal>
 

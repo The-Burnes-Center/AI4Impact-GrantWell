@@ -133,7 +133,7 @@ function withTableBorders(html) {
 }
 
 function renderSectionBody(content) {
-  return withTableBorders(sanitizeContentHtml(markdownToContentHtml(content)));
+  return withTableBorders(sanitizeContentHtml(markdownToContentHtml(content), { links: true }));
 }
 
 /**

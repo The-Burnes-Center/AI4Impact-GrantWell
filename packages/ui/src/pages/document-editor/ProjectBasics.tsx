@@ -8,15 +8,13 @@ import Card from "../../components/ui/Card";
 import AutoSaveIndicator, { type SaveStatus } from "../../components/ui/AutoSaveIndicator";
 import NavigationButtons from "../../components/ui/NavigationButtons";
 import FormErrorSummary from "../../components/ui/FormErrorSummary";
-
-// Stable so handleContinue can re-focus the summary on a repeat submit.
-const PROJECT_BASICS_ERROR_SUMMARY_ID = "project-basics-error-summary";
 import { colors, typography, spacing } from "../../components/ui/styles";
 import { readDraftCache } from "../../common/helpers/document-editor-utils";
 import type { DocumentData } from "../../common/types/document";
 
 const AUTOSAVE_IDLE_BEFORE_FIRST_SAVE = "Changes save automatically";
 const AUTOSAVE_IDLE_AFTER_FIRST_SAVE = "Saved";
+const AMOUNT_NUMBERS_ONLY = "Enter the amount in numbers only, for example 25000";
 
 interface ProjectBasicsProps {
   onContinue: () => void;
@@ -51,7 +49,7 @@ interface FormErrors {
 const FIELD_LABELS: Record<string, string> = {
   projectName: "Project name",
   organizationName: "Organization name",
-  requestedAmount: "Requested amount",
+  requestedAmount: "Requested amount (USD)",
   location: "Location",
   zipCode: "Zip code",
   contactName: "Primary contact name",
@@ -118,6 +116,7 @@ const InputField: React.FC<InputFieldProps> = React.memo(({
               fontSize: typography.fontSize.base,
               pointerEvents: "none",
             }}
+            aria-hidden="true"
           >
             {prefix}
           </span>
@@ -154,10 +153,10 @@ const InputField: React.FC<InputFieldProps> = React.memo(({
       >
         {helpText}
       </span>
+      {/* Not an alert: on submit the focused summary reads every error at once. */}
       {hasError && (
         <span
           id={`${name}-error`}
-          role="alert"
           style={{
             display: "block",
             fontSize: typography.fontSize.sm,
@@ -200,6 +199,9 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [summaryFocusRequest, setSummaryFocusRequest] = useState(0);
+  // Typed letters are dropped from the field, so this hint is the only sign anything happened.
+  const [typingHint, setTypingHint] = useState("");
   const isInitialLoad = useRef(true);
   const hasLoadedFromDocumentData = useRef(false);
 
@@ -311,10 +313,14 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
       return updatedData;
     });
 
-    if (name === "requestedAmount" && /[^\d,.$\s]/.test(value)) {
-      setTouched((prev) => ({ ...prev, requestedAmount: true }));
-      setFormErrors((prev) => ({ ...prev, requestedAmount: "Enter the amount in numbers only, for example 25000" }));
-      return;
+    if (name === "requestedAmount") {
+      if (/[^\d,.$\s]/.test(value)) {
+        setTypingHint(AMOUNT_NUMBERS_ONLY);
+        setTouched((prev) => ({ ...prev, requestedAmount: true }));
+        setFormErrors((prev) => ({ ...prev, requestedAmount: AMOUNT_NUMBERS_ONLY }));
+        return;
+      }
+      setTypingHint("");
     }
 
     setTouched((prevTouched) => {
@@ -362,8 +368,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
   const handleContinue = () => {
     if (!validateForm()) {
-      const errorSummary = document.getElementById(PROJECT_BASICS_ERROR_SUMMARY_ID);
-      if (errorSummary) errorSummary.focus();
+      setSummaryFocusRequest((n) => n + 1);
       return;
     }
 
@@ -399,7 +404,10 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             <span style={{ color: colors.error }} aria-hidden="true">*</span> Indicates required field
           </div>
 
-          <FormErrorSummary id={PROJECT_BASICS_ERROR_SUMMARY_ID} errors={displayErrors} fieldLabels={FIELD_LABELS} />
+          <FormErrorSummary errors={displayErrors} fieldLabels={FIELD_LABELS} focusRequest={summaryFocusRequest} />
+          <div role="status" aria-live="polite" className="visually-hidden">
+            {typingHint}
+          </div>
 
           <InputField
             name="projectName"
@@ -428,7 +436,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
           <InputField
             name="requestedAmount"
-            label="Requested amount"
+            label="Requested amount (USD)"
             helpText="Enter the total funding amount you're requesting for this project."
             placeholder="250,000"
             prefix="$"

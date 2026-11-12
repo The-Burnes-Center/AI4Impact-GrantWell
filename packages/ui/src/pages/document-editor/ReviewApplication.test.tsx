@@ -36,3 +36,10 @@ describe("ReviewApplication after-export steps", () => {
     expect(screen.queryByText(/SF-424/)).not.toBeInTheDocument();
   });
 });
+
+describe("ReviewApplication edit link", () => {
+  it("names Make final edits by its visible text", async () => {
+    await grantTypeLoaded(renderReview("federal"));
+    expect(await screen.findByRole("button", { name: "Make final edits Return to Section editor" })).toBeInTheDocument();
+  });
+});

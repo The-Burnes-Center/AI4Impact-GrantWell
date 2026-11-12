@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { fetchAuthSession, fetchMFAPreference, signOut } from "aws-amplify/auth";
 import { LuShieldCheck } from "react-icons/lu";
 import Button from "../ui/Button";
@@ -20,6 +20,8 @@ export default function MfaGate({ children }: { children: React.ReactNode }) {
   const [blocked, setBlocked] = useState(false);
   const [email, setEmail] = useState("");
   const [expanded, setExpanded] = useState(false);
+  const [backFromSetup, setBackFromSetup] = useState(false);
+  const setUpButton = useRef<HTMLButtonElement>(null);
   const dialogRef = useFocusTrap<HTMLDivElement>({ isOpen: blocked });
   const { appName } = useBranding();
 
@@ -31,6 +33,13 @@ export default function MfaGate({ children }: { children: React.ReactNode }) {
       document.title = previous;
     };
   }, [blocked, appName]);
+
+  // Back removes the panel that holds focus.
+  useEffect(() => {
+    if (!backFromSetup) return;
+    setUpButton.current?.focus();
+    setBackFromSetup(false);
+  }, [backFromSetup]);
 
   useEffect(() => {
     if (phase !== "after") return;
@@ -96,13 +105,16 @@ export default function MfaGate({ children }: { children: React.ReactNode }) {
             <MfaSetupPanel
               email={email}
               onEnrolled={() => setBlocked(false)}
-              onCancel={() => setExpanded(false)}
+              onCancel={() => {
+                setExpanded(false);
+                setBackFromSetup(true);
+              }}
               cancelLabel="Back"
             />
           ) : (
             <>
               <div className="profile-actions">
-                <Button type="button" onClick={() => setExpanded(true)}>
+                <Button ref={setUpButton} type="button" onClick={() => setExpanded(true)}>
                   Set it up
                 </Button>
                 <Button type="button" variant="ghost" onClick={onSignOut}>

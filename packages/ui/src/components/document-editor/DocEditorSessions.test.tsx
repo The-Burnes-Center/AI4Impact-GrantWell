@@ -89,3 +89,18 @@ describe("DocEditorSessions list actions", () => {
     );
   });
 });
+
+describe("DocEditorSessions table semantics", () => {
+  it("names the select column Select, apart from its Select all checkbox", async () => {
+    renderList();
+    await rowFor("Fiber plan");
+    const header = screen.getByRole("columnheader", { name: "Select" });
+    expect(header).toContainElement(screen.getByRole("checkbox", { name: "Select all applications" }));
+  });
+
+  it("puts the shown range in a status region so a page change is announced", async () => {
+    renderList();
+    await rowFor("Fiber plan");
+    expect(screen.getByText("Showing 1 to 2 of 2 applications")).toHaveAttribute("role", "status");
+  });
+});

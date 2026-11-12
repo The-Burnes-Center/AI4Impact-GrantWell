@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { act, screen, waitFor } from "@testing-library/react";
 import { Route, Routes } from "react-router";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { signedInAs } from "../../test/amplify";
@@ -141,5 +141,109 @@ describe("Admin dashboard grant list", () => {
     await screen.findByText("Plain Grant");
     const list = screen.getByRole("list", { name: "Listed grants" });
     expect([...list.querySelectorAll("li")].map((li) => li.textContent)).toEqual(["Live Grant", "Plain Grant", "Waiting Grant"]);
+  });
+});
+
+describe("Admin dashboard Refresh", () => {
+  it("announces Refreshing from a status region already in the page, and not on the first load", async () => {
+    let hold = false;
+    let release = () => {};
+    stubFetch({
+      "GET /s3-nofo-bucket-data": () =>
+        hold
+          ? new Promise<Response>((resolve) => { release = () => resolve(json({ nofoData: [] })); })
+          : json({ nofoData: [] }),
+      "GET /admin/processing-metrics": json({ metrics }),
+    });
+    signedInAs({ "custom:role": '["Developer"]' });
+    const { user } = renderDashboard();
+    const refresh = await screen.findByRole("button", { name: /^Refresh/ });
+    const statuses = () => screen.getAllByRole("status").map((r) => r.textContent);
+    await new Promise((r) => setTimeout(r, 150));
+    expect(statuses()).not.toContain("Refreshing Admin dashboard");
+
+    hold = true;
+    await user.click(refresh);
+    await waitFor(() => expect(statuses()).toContain("Refreshing Admin dashboard"));
+    expect(refresh).toHaveFocus();
+    release();
+    await waitFor(() => expect(statuses()).not.toContain("Refreshing Admin dashboard"));
+  });
+});
+
+describe("Admin dashboard auto-refresh", () => {
+  const processing = { name: "New Grant", status: "processing", processing_status: "extracting_text" };
+  const done = { name: "New Grant", status: "active" };
+
+  function stubPoll() {
+    let grants: object[] = [processing];
+    stubFetch({
+      "GET /s3-nofo-bucket-data": () => json({ nofoData: grants }),
+      "GET /admin/processing-metrics": json({ metrics }),
+    });
+    return { finish: () => { grants = [done]; } };
+  }
+
+  async function pollOnce() {
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(10_000);
+    });
+  }
+
+  it("swaps the Pause label instead of also reporting a pressed state", async () => {
+    stubPoll();
+    signedInAs({ "custom:role": '["Developer"]' });
+    const { user } = renderDashboard();
+    const pause = await screen.findByRole("button", { name: "Pause auto-refresh" });
+    expect(pause).not.toHaveAttribute("aria-pressed");
+    await user.click(pause);
+    expect(screen.getByRole("button", { name: "Resume auto-refresh" })).not.toHaveAttribute("aria-pressed");
+  });
+
+  it("moves focus from Pause to Refresh when a poll sees processing end", async () => {
+    vi.useFakeTimers({ toFake: ["setInterval", "clearInterval"] });
+    const poll = stubPoll();
+    signedInAs({ "custom:role": '["Developer"]' });
+    renderDashboard();
+    const pause = await screen.findByRole("button", { name: "Pause auto-refresh" });
+    act(() => pause.focus());
+
+    poll.finish();
+    await pollOnce();
+
+    await waitFor(() => expect(screen.queryByRole("button", { name: "Pause auto-refresh" })).toBeNull());
+    expect(screen.getByRole("button", { name: /^Refresh/ })).toHaveFocus();
+  });
+
+  it("moves focus from the processing banner to the grant search when the banner goes away", async () => {
+    vi.useFakeTimers({ toFake: ["setInterval", "clearInterval"] });
+    const poll = stubPoll();
+    signedInAs({ "custom:role": '["Developer"]' });
+    renderDashboard();
+    const view = await screen.findByRole("button", { name: "View" });
+    act(() => view.focus());
+
+    poll.finish();
+    await pollOnce();
+
+    await waitFor(() => expect(screen.queryByRole("button", { name: "View" })).toBeNull());
+    expect(screen.getByRole("textbox", { name: "Search grants" })).toHaveFocus();
+  });
+
+  it("leaves focus alone when it was elsewhere", async () => {
+    vi.useFakeTimers({ toFake: ["setInterval", "clearInterval"] });
+    const poll = stubPoll();
+    signedInAs({ "custom:role": '["Developer"]' });
+    const { user } = renderDashboard();
+    const pause = await screen.findByRole("button", { name: "Pause auto-refresh" });
+    act(() => pause.focus());
+    await user.tab();
+    const elsewhere = document.activeElement;
+
+    poll.finish();
+    await pollOnce();
+
+    await waitFor(() => expect(screen.queryByRole("button", { name: "Pause auto-refresh" })).toBeNull());
+    expect(document.activeElement).toBe(elsewhere);
   });
 });

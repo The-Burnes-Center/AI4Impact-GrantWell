@@ -128,8 +128,8 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
         </p>
         <div className="analytics__controls">
           {!isStateAdmin && !SINGLE_STATE && (
-            <div className="analytics__state">
-              <label className="visually-hidden" htmlFor="analytics-state">
+            <div className="gw-field analytics__state">
+              <label className="gw-field__label" htmlFor="analytics-state">
                 Filter by state
               </label>
               <select

@@ -91,3 +91,16 @@ describe("application docx generator cover", () => {
     expect(JSON.parse(res.body).error).toBe("draftData is required");
   });
 });
+
+describe("application docx generator section bodies", () => {
+  it("hands html-to-docx real links and nested lists", async () => {
+    const html = await exportDocx({
+      draftData: {
+        ...draftData,
+        sections: { Summary: "See the [plan](https://example.org/plan).\n\n- one\n  - inner\n- two" },
+      },
+    });
+    expect(html).toContain('See the <a href="https://example.org/plan">plan</a>.');
+    expect(html).toContain("<ul><li>one<ul><li>inner</li></ul></li><li>two</li></ul>");
+  });
+});

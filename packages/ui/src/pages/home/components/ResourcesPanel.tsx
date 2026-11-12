@@ -21,10 +21,10 @@ const ResourcesPanel = React.memo(function ResourcesPanel() {
           rel="noopener noreferrer"
           className="resource-card__link"
         >
-          <span className="resource-card__title">
+          <h3 className="resource-card__title">
             {resource.title}
             <span className="visually-hidden"> (opens in new tab)</span>
-          </span>
+          </h3>
           <div className="resource-card__desc">{resource.description}</div>
         </a>
       </div>

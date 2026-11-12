@@ -82,4 +82,59 @@ describe("ProgressStepper all-steps list", () => {
       "3 ReviewLockedCheck everything.",
     ]);
   });
+
+  it("unpins the stepper while the list is open, and closes the list on a step change", async () => {
+    const user = userEvent.setup();
+    const props = { steps: STEPS, completedSteps: [0], isStepClickable: (idx: number) => idx <= 1, onStepClick: vi.fn() };
+    const { rerender } = render(<ProgressStepper {...props} activeStep={0} />);
+    const nav = screen.getByRole("navigation", { name: "Application steps" });
+    const list = screen.getByText("All steps").closest("details")!;
+    expect(nav).toHaveStyle({ position: "sticky" });
+    expect(nav).not.toHaveClass("progress-stepper-container--list-open");
+
+    await user.click(screen.getByText("All steps"));
+    expect(list).toHaveAttribute("open");
+    expect(nav).toHaveClass("progress-stepper-container--list-open");
+    expect(nav.querySelector("style")!.textContent).toMatch(
+      /@media \(max-width: 768px\)[\s\S]*\.progress-stepper-container\.progress-stepper-container--list-open,\s*\.document-editor-header:has\(\+ \.progress-stepper-container--list-open\) \{\s*position: static !important;/
+    );
+
+    rerender(<ProgressStepper {...props} activeStep={1} />);
+    expect(list).not.toHaveAttribute("open");
+    expect(nav).not.toHaveClass("progress-stepper-container--list-open");
+  });
+
+  describe.each([
+    [false, "smooth"],
+    [true, "auto"],
+  ])("on a phone, with reduced motion %s", (reduce, behavior) => {
+    it(`scrolls the opened list's summary into view (${behavior})`, async () => {
+      vi.stubGlobal("matchMedia", (query: string) => ({
+        matches: query === "(max-width: 768px)" || (reduce && query === "(prefers-reduced-motion: reduce)"),
+      }));
+      const scrollIntoView = vi.fn();
+      Element.prototype.scrollIntoView = scrollIntoView;
+      const { user } = renderStepper();
+      const summary = screen.getByText("All steps");
+
+      await user.click(summary);
+      expect(scrollIntoView).toHaveBeenCalledTimes(1);
+      expect(scrollIntoView.mock.contexts[0]).toBe(summary);
+      expect(scrollIntoView).toHaveBeenCalledWith({ block: "nearest", behavior });
+
+      await user.click(summary);
+      expect(scrollIntoView).toHaveBeenCalledTimes(1);
+      vi.unstubAllGlobals();
+    });
+  });
+
+  it("leaves the scroll alone on a wide screen", async () => {
+    vi.stubGlobal("matchMedia", () => ({ matches: false }));
+    const scrollIntoView = vi.fn();
+    Element.prototype.scrollIntoView = scrollIntoView;
+    const { user } = renderStepper();
+    await user.click(screen.getByText("All steps"));
+    expect(scrollIntoView).not.toHaveBeenCalled();
+    vi.unstubAllGlobals();
+  });
 });

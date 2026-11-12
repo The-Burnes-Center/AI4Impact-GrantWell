@@ -52,6 +52,8 @@ interface UseFocusTrapOptions {
   onEscape?: () => void;
   /** Whether to lock body scroll when open (default: true) */
   lockScroll?: boolean;
+  /** Takes the initial focus instead of the first focusable element. */
+  initialFocus?: RefObject<HTMLElement | null>;
 }
 
 /**
@@ -68,10 +70,13 @@ export function useFocusTrap<T extends HTMLElement = HTMLDivElement>({
   isOpen,
   onEscape,
   lockScroll = true,
+  initialFocus,
 }: UseFocusTrapOptions) {
   const containerRef = useRef<T>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const trapId = useRef<symbol>(Symbol("focus-trap"));
+  const initialFocusRef = useRef(initialFocus);
+  initialFocusRef.current = initialFocus;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -93,8 +98,10 @@ export function useFocusTrap<T extends HTMLElement = HTMLDivElement>({
     const previousAncestors = previous && previous !== document.body ? ancestorsOf(previous) : [];
 
     const timer = setTimeout(() => {
+      // Someone already working inside the dialog keeps their place.
+      if (containerRef.current?.contains(document.activeElement)) return;
       const firstFocusable =
-        containerRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
+        initialFocusRef.current?.current ?? containerRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
       firstFocusable?.focus();
     }, 100);
 

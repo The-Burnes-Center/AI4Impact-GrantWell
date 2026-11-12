@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { Suspense, lazy, useState, useEffect, useCallback, useRef } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
 import { getCurrentUser } from "aws-amplify/auth";
 import { LuSave, LuChevronLeft, LuChevronRight, LuHistory, LuUndo2 } from "react-icons/lu";
@@ -25,6 +25,7 @@ import { InputTooLongError } from "../../common/api-client/drafts-client";
 import { GrantInReviewError } from "../../common/api-client/grant-in-review";
 import { SKIP_REASON_TEXT } from "../../common/helpers/user-documents";
 import { LiveStatus } from "../../components/common/LiveStatus";
+import type { SectionRichTextEditorHandle } from "../../components/document-editor/rich-text/SectionRichTextEditor";
 import "../../styles/document-editor.css";
 
 interface SectionEditorProps {
@@ -35,6 +36,8 @@ interface SectionEditorProps {
   isGenerating?: boolean;
   draftSave: ReturnType<typeof useDraftSave>;
 }
+
+const SectionRichTextEditor = lazy(() => import("../../components/document-editor/rich-text/SectionRichTextEditor"));
 
 /** Share of the per-application storage limit at which the editor starts warning. */
 const STORAGE_WARNING_SHARE = 0.75;
@@ -73,6 +76,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   // sectionAnswers/editorContent) cannot tear down and restart the interval.
   const editorAreaRef = useRef<HTMLDivElement>(null);
   const sectionTitleRef = useRef<HTMLHeadingElement>(null);
+  const textEditorRef = useRef<SectionRichTextEditorHandle>(null);
   const previousSectionRef = useRef(activeSection);
   const sectionsRef = useRef(sections);
   const grantSectionsRef = useRef<ApplicationSection[]>([]);
@@ -253,19 +257,18 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     writeDraftCache(sessionId, "sectionsViewed", [...seen, section.id]);
   }, [activeSection, sections, sessionId]);
 
-  const handleEditorChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleEditorChange = (value: string) => {
     if (generating) return;
-    const value = e.target.value;
     setEditorContent(value);
 
     const section = sections[activeSection];
     if (!section) return;
 
-    setSectionAnswers((prev) => {
-      const updated = { ...prev, [section.id]: value };
-      saveSections(updated, sectionsRef.current, { changedSections: [section.id], source: "autosave" });
-      return updated;
-    });
+    // Not in a state updater: editor changes arrive outside React events, where an updater runs during render.
+    const updated = { ...sectionAnswersRef.current, [section.id]: value };
+    sectionAnswersRef.current = updated;
+    setSectionAnswers(updated);
+    saveSections(updated, sectionsRef.current, { changedSections: [section.id], source: "autosave" });
   };
 
   const commitActiveSection = useCallback(async () => {
@@ -407,11 +410,11 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     writeDraftCache(sessionId, "sections", resolved.answers);
   }, [apiClient, sessionId, draftSave]);
 
-  const refreshUndoCandidate = useCallback(async () => {
+  const refreshUndoCandidate = useCallback(async (): Promise<DraftVersionMeta | null> => {
     const section = sections[activeSection];
     if (!section || !sessionId) {
       setUndoCandidate(null);
-      return;
+      return null;
     }
     // Version rows written before section ids existed name the section instead.
     const isThisSection = (key: string) => key === section.id || key === section.name;
@@ -427,14 +430,16 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       // for this section are worth offering.
       const words = (version: DraftVersionMeta) =>
         version.section_word_counts?.[section.id] ?? version.section_word_counts?.[section.name] ?? 0;
-      setUndoCandidate(
+      const candidate =
         (aiIndex === -1
           ? undefined
-          : versions.slice(aiIndex + 1).find((version) => !version.oversize && words(version) > 0)) || null
-      );
+          : versions.slice(aiIndex + 1).find((version) => !version.oversize && words(version) > 0)) || null;
+      setUndoCandidate(candidate);
+      return candidate;
     } catch (error) {
       console.warn("Could not check for an undoable generation:", error);
       setUndoCandidate(null);
+      return null;
     }
   }, [apiClient, sessionId, sections, activeSection]);
 
@@ -452,7 +457,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
         sectionsOnly: [section.id],
       });
       await reloadAfterRestore();
-      await refreshUndoCandidate();
+      // The dialog would return focus to the Undo button, which goes away with the last candidate.
+      if (!(await refreshUndoCandidate())) textEditorRef.current?.focus();
       addNotification("success", "The earlier text is back.");
     } catch (error) {
       console.error("Error undoing generation:", error);
@@ -531,10 +537,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
           {/* Generating banner */}
           {generating && (
             <div style={{ marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {/* Not a live region: the sidebar already announces the running count. */}
               <div
-                role="status"
-                aria-live="polite"
-                aria-atomic="true"
                 style={{
                   background: 'var(--gw-color-primary-light)',
                   padding: '12px 16px',
@@ -560,8 +564,6 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                 />
                 Generating sections ({completedSectionCount}/{generationTotal ?? sections.length})...
               </div>
-              {/* Outside the atomic region: it never changes, so re-reading it on
-                  every 2s poll would bury the count. */}
               <p id="se-lock-note" style={{ margin: 0, fontSize: '14px', color: 'var(--gw-color-primary-hover)' }}>
                 Sections are read-only while they are being written. You can edit them when writing finishes.
               </p>
@@ -678,16 +680,18 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                 </div>
               </div>
             ) : (
-              <textarea
-                value={editorContent}
-                onChange={handleEditorChange}
-                className={`se-textarea${generating ? " se-textarea--locked" : ""}`}
-                aria-labelledby="se-section-title"
-                readOnly={generating}
-                aria-readonly={generating || undefined}
-                aria-describedby={generating ? "se-lock-note" : undefined}
-                placeholder={active ? `Start writing your ${active.name} here...` : undefined}
-              />
+              <Suspense fallback={<div className="se-rich-text-loading" />}>
+                <SectionRichTextEditor
+                  key={active?.id}
+                  ref={textEditorRef}
+                  value={editorContent}
+                  onChange={handleEditorChange}
+                  readOnly={generating}
+                  labelledBy="se-section-title"
+                  describedBy={generating ? "se-lock-note" : undefined}
+                  placeholder={active ? `Start writing your ${active.name} here...` : undefined}
+                />
+              </Suspense>
             )}
           </div>
 
@@ -703,12 +707,6 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               <LuSave size={18} className="se-icon--left" aria-hidden="true" />
               {savingVersion ? "Saving version..." : "Save version"}
             </button>
-            <span role="status" aria-live="polite" className="visually-hidden">
-              {saveStatus === "saved" ? "Progress saved" : ""}
-            </span>
-            <span role="alert" className="visually-hidden">
-              {saveStatus === "error" ? "Save failed. Your changes are stored locally; try saving again." : ""}
-            </span>
 
             <div className="se-nav-buttons">
               {activeSection > 0 && (

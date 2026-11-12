@@ -395,18 +395,20 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       {/* Table section */}
       <TableScrollRegion label="Applications table" minWidth={880}>
       <div className="table-container" role="table" aria-label="Applications">
-        <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "48px 2fr 1.3fr 1.5fr 1fr 1.4fr" }}>
+        <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "104px 2fr 1.3fr 1.5fr 1fr 1.4fr" }}>
           <div role="row" style={{ display: "contents" }}>
-            <div className="header-cell" role="columnheader">
-              <span className="visually-hidden">Select</span>
-              <input
-                type="checkbox"
-                checked={selectedItems.length === sessions.length && sessions.length > 0}
-                onChange={handleSelectAll}
-                aria-label="Select all applications"
-                style={{ cursor: "pointer" }}
-                disabled={isLoading || sessions.length === 0}
-              />
+            <div className="header-cell" role="columnheader" aria-label="Select">
+              <label className="gw-select-all">
+                <input
+                  type="checkbox"
+                  checked={selectedItems.length === sessions.length && sessions.length > 0}
+                  onChange={handleSelectAll}
+                  aria-label="Select all applications"
+                  style={{ cursor: "pointer" }}
+                  disabled={isLoading || sessions.length === 0}
+                />
+                <span aria-hidden="true">Select all</span>
+              </label>
             </div>
             <div
               className="header-cell"
@@ -454,7 +456,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             </div>
           ) : (
             paginatedItems.map((item) => (
-              <div key={item.draft_id} className="table-row" role="row" style={{ gridTemplateColumns: "48px 2fr 1.3fr 1.5fr 1fr 1.4fr" }}>
+              <div key={item.draft_id} className="table-row" role="row" style={{ gridTemplateColumns: "104px 2fr 1.3fr 1.5fr 1fr 1.4fr" }}>
                 <div className="row-cell" role="cell">
                   <input
                     type="checkbox"
@@ -553,6 +555,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
           itemsPerPageOptions={[10, 20, 50]}
           itemLabel="applications"
           selectId={pageSizeSelectId}
+          live
           onPageChange={setCurrentPage}
           onItemsPerPageChange={(e) => {
             setPageSize(Number(e.target.value));

@@ -261,21 +261,23 @@ export default function Sessions(props: SessionsProps) {
       <TableScrollRegion label="Chats table" minWidth={520}>
       <div className="table-container">
         <div role="table" aria-label="Chats">
-          <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "48px 2.5fr 1fr" }}>
+          <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "104px 2.5fr 1fr" }}>
             <div role="row" style={{ display: "contents" }}>
-              <div className="header-cell" role="columnheader">
-                <span className="visually-hidden">Select</span>
-                <input
-                  type="checkbox"
-                  checked={
-                    paginatedItems.length > 0 &&
-                    selectedItems.length === paginatedItems.length
-                  }
-                  onChange={handleSelectAll}
-                  aria-label="Select all chats"
-                  style={{ cursor: "pointer" }}
-                  disabled={isLoading || sortedSessions.length === 0}
-                />
+              <div className="header-cell" role="columnheader" aria-label="Select">
+                <label className="gw-select-all">
+                  <input
+                    type="checkbox"
+                    checked={
+                      paginatedItems.length > 0 &&
+                      selectedItems.length === paginatedItems.length
+                    }
+                    onChange={handleSelectAll}
+                    aria-label="Select all chats"
+                    style={{ cursor: "pointer" }}
+                    disabled={isLoading || sortedSessions.length === 0}
+                  />
+                  <span aria-hidden="true">Select all</span>
+                </label>
               </div>
               <div
                 className="header-cell"
@@ -335,7 +337,7 @@ export default function Sessions(props: SessionsProps) {
                 </div>
               ) : (
                 paginatedItems.map((item) => (
-                  <div key={item.session_id} className="table-row" role="row" style={{ gridTemplateColumns: "48px 2.5fr 1fr" }}>
+                  <div key={item.session_id} className="table-row" role="row" style={{ gridTemplateColumns: "104px 2.5fr 1fr" }}>
                     <div className="row-cell" role="cell">
                       <input
                         type="checkbox"
@@ -421,6 +423,7 @@ export default function Sessions(props: SessionsProps) {
           itemsPerPageOptions={[10, 20, 50]}
           itemLabel="chats"
           selectId={pageSizeSelectId}
+          live
           onPageChange={setCurrentPage}
           onItemsPerPageChange={(e) => {
             setPageSize(Number(e.target.value));

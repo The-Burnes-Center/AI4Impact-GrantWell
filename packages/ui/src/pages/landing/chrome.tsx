@@ -159,7 +159,7 @@ export function AppNavbar() {
 }
 
 export function LandingFooter() {
-  const { footer, logo } = useBranding();
+  const { footer, logo, appName } = useBranding();
   const { madeBy, partners, links = [], copyright, disclaimer } = footer;
 
   return (
@@ -168,7 +168,7 @@ export function LandingFooter() {
         <BrandLogo
           className="marketing__footer-wordmark"
           src={footer.wordmark ?? logo}
-          alt=""
+          alt={appName}
         />
         {madeBy && (
           <div className="marketing__footer-madeby">

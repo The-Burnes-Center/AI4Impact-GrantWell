@@ -455,11 +455,9 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             showBack={false}
             onContinue={handleSubmit}
             continueLabel={
-              isLoading
-                ? "Processing..."
-                : hasExistingDraft
-                  ? "Generate again"
-                  : "Create draft"
+              hasExistingDraft
+                ? isLoading ? "Regenerating draft…" : "Generate again"
+                : isLoading ? "Creating draft…" : "Create draft"
             }
             continueDisabled={isLoading || library.uploading}
             continueLoading={isLoading}

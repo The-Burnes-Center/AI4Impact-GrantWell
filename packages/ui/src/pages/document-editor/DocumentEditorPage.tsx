@@ -22,6 +22,7 @@ import WelcomeModal from "./components/WelcomeModal";
 import GrantPickerModal, { type PickedGrant } from "../../components/common/GrantPickerModal";
 import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
 import ProgressStepper from "../../components/document-editor/ProgressStepper";
+import { LiveStatus } from "../../components/common/LiveStatus";
 import { getCurrentUser } from "aws-amplify/auth";
 import type { DocumentDraft } from "../../common/api-client/drafts-client";
 import type { DocumentData } from "../../common/types/document";
@@ -117,6 +118,7 @@ const DocumentEditor: React.FC = () => {
   const [isNofoLoading, setIsNofoLoading] = useState(false);
   const [welcomeModalOpen, setWelcomeModalOpen] = useState(false);
   const [grantPickerOpen, setGrantPickerOpen] = useState(false);
+  const [startingDraft, setStartingDraft] = useState(false);
   const [activeJobId, setActiveJobId] = useState<string | undefined>(undefined);
   const [isGeneratingDraft, setIsGeneratingDraft] = useState(false);
   const navigate = useNavigate();
@@ -249,6 +251,7 @@ const DocumentEditor: React.FC = () => {
   }, [selectedNofo, apiClient]);
 
   const startNewDocument = useCallback(async (nofo: string) => {
+    setStartingDraft(true);
     try {
       const url = await startDraft(nofo);
       setCurrentStep("projectBasics");
@@ -256,12 +259,14 @@ const DocumentEditor: React.FC = () => {
     } catch (err) {
       console.error("Failed to start new document:", err);
       setError(ERROR_MESSAGES.START_FAILED);
+    } finally {
+      setStartingDraft(false);
+      setGrantPickerOpen(false);
     }
   }, [startDraft, navigate, setError]);
 
   const handleGrantPicked = useCallback(async (grant: PickedGrant) => {
     addToRecentlyViewed(grant);
-    setGrantPickerOpen(false);
     await startNewDocument(grant.value);
   }, [startNewDocument]);
 
@@ -333,6 +338,9 @@ const DocumentEditor: React.FC = () => {
   };
 
   const activeStep = stepToIndex(currentStep);
+  // Until the new draft has loaded there is no form to fill in, so the loading view stands in for it.
+  const showLoading = isLoading || startingDraft || (!!sessionId && loadedDraft === undefined);
+  const waitMessage = startingDraft ? "Starting application..." : loadingMessage;
   const draftsPath = selectedNofo
     ? `/document-editor/drafts?grant=${encodeURIComponent(selectedNofo)}`
     : "/document-editor/drafts";
@@ -363,7 +371,7 @@ const DocumentEditor: React.FC = () => {
       window.removeEventListener("resize", update);
       document.documentElement.style.removeProperty("--gw-editor-sticky-height");
     };
-  }, [welcomeModalOpen, error]);
+  }, [welcomeModalOpen, grantPickerOpen, error]);
 
   if (notFound) {
     return (
@@ -386,7 +394,7 @@ const DocumentEditor: React.FC = () => {
       <UnifiedNavigation documentIdentifier={selectedNofo} currentStep={currentStep} furthestStepIndex={furthestStepIndex} onNavigate={navigateToStep} />
 
       <div className="document-content" style={{ flex: 1, display: "flex", flexDirection: "column", margin: 0, padding: 0 }}>
-        {!welcomeModalOpen && (
+        {!welcomeModalOpen && !grantPickerOpen && (
           <>
             <div ref={headerRef} className="document-editor-header" style={{ background: "var(--gw-color-surface)", borderBottom: "1px solid var(--gw-color-border)", position: "sticky", top: 0, zIndex: 101, boxShadow: "var(--gw-shadow-low)" }}>
               <div style={{ padding: 16 }}>
@@ -412,15 +420,15 @@ const DocumentEditor: React.FC = () => {
 
             <div className="document-editor-workspace" style={{ flex: 1 }}>
               {/* Outlives the loading view, so both the wait and its end are announced. */}
-              <div role="status" aria-live="polite" className="visually-hidden">
-                {isLoading ? loadingMessage : documentData ? "Application ready." : ""}
-              </div>
+              <LiveStatus className="visually-hidden">
+                {isLoading || startingDraft ? waitMessage : documentData ? "Application ready." : ""}
+              </LiveStatus>
 
-              {isLoading ? (
+              {showLoading ? (
                 <div id="document-loading-region" aria-busy="true" tabIndex={-1} style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "60vh" }}>
                   <div style={{ textAlign: "center", maxWidth: 400 }}>
                     <div className="loading-spinner" style={{ margin: "0 auto 16px" }} />
-                    <p style={{ color: "var(--gw-color-text-secondary)", fontSize: 16, marginBottom: 8 }}>{loadingMessage}</p>
+                    <p style={{ color: "var(--gw-color-text-secondary)", fontSize: 16, marginBottom: 8 }}>{waitMessage}</p>
                     {loadingMessage.includes("generation") && (
                       <p style={{ color: "var(--gw-color-text-muted)", fontSize: 14, marginTop: 8 }}>This may take 30-60 seconds. Please don&apos;t close this page.</p>
                     )}
@@ -460,6 +468,7 @@ const DocumentEditor: React.FC = () => {
         onSelect={handleGrantPicked}
         title="Start a new application"
         description="Choose the grant you want to apply for."
+        busy={startingDraft}
       />
     </div>
   );

@@ -41,17 +41,21 @@ interface TurnstileWidgetProps {
   onToken: (token: string) => void;
   /** Changing this discards the current token and re-runs the challenge. */
   resetKey: number;
+  className?: string;
 }
 
 export default function TurnstileWidget({
   action,
   onToken,
   resetKey,
+  className = "mb-3",
 }: TurnstileWidgetProps) {
+  const fieldRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const widgetIdRef = useRef<string | null>(null);
   const onTokenRef = useRef(onToken);
   const [failed, setFailed] = useState(false);
+  const [retrying, setRetrying] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const { supportEmail } = useBranding();
 
@@ -66,15 +70,20 @@ export default function TurnstileWidget({
       .then(() => {
         if (cancelled || !containerRef.current || !window.turnstile) return;
 
+        // A visible challenge is a fixed 300px wide; compact is the only size that fits a narrower column.
+        const width = containerRef.current.getBoundingClientRect().width;
         widgetIdRef.current = window.turnstile.render(containerRef.current, {
           sitekey: TURNSTILE_SITE_KEY,
           action,
+          ...(width > 0 && width < 300 ? { size: "compact" as const } : {}),
           callback: (token) => {
             setFailed(false);
+            setRetrying(false);
             onTokenRef.current(token);
           },
           "error-callback": () => {
             setFailed(true);
+            setRetrying(false);
             onTokenRef.current("");
           },
           "expired-callback": () => onTokenRef.current(""),
@@ -82,7 +91,9 @@ export default function TurnstileWidget({
         });
       })
       .catch(() => {
-        if (!cancelled) setFailed(true);
+        if (cancelled) return;
+        setFailed(true);
+        setRetrying(false);
       });
 
     return () => {
@@ -105,15 +116,17 @@ export default function TurnstileWidget({
   if (!TURNSTILE_SITE_KEY) return null;
 
   return (
-    <div className="turnstile-field mb-3">
+    <div className={`turnstile-field ${className}`} ref={fieldRef} tabIndex={-1}>
       <div className="turnstile-widget" ref={containerRef} />
       <div aria-live="polite" aria-atomic="true">
-        {failed && (
+        {failed ? (
           <Alert variant="danger" className="mb-0 mt-2" transition={false} role={undefined}>
             The security check didn&apos;t load.{" "}
             {supportEmail ? <>If it keeps failing, email {supportEmail}.</> : "If it keeps failing, refresh the page."}
           </Alert>
-        )}
+        ) : retrying ? (
+          <span className="visually-hidden">Running the security check again…</span>
+        ) : null}
       </div>
       {/* Outside the live region, so the button isn't read out as part of the message. */}
       {failed && (
@@ -121,7 +134,10 @@ export default function TurnstileWidget({
           type="button"
           className="gw-btn gw-btn--secondary gw-btn--slim mt-2"
           onClick={() => {
+            // The button goes away with the message, so hold focus in the same place in the tab order.
+            fieldRef.current?.focus();
             setFailed(false);
+            setRetrying(true);
             setAttempt((n) => n + 1);
           }}
         >

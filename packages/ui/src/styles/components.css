@@ -32,10 +32,10 @@
   background: var(--gw-color-primary);
   color: var(--gw-color-text-inverse);
 }
-.gw-btn.gw-btn--primary:hover:not(:disabled) {
+.gw-btn.gw-btn--primary:hover:not(:disabled):not([aria-disabled="true"]) {
   background: var(--gw-color-primary-hover);
 }
-.gw-btn.gw-btn--primary:active:not(:disabled) {
+.gw-btn.gw-btn--primary:active:not(:disabled):not([aria-disabled="true"]) {
   background: var(--gw-color-primary-active);
 }
 
@@ -44,11 +44,11 @@
   color: var(--gw-color-primary);
   border-color: var(--gw-color-primary);
 }
-.gw-btn.gw-btn--secondary:hover:not(:disabled) {
+.gw-btn.gw-btn--secondary:hover:not(:disabled):not([aria-disabled="true"]) {
   background: var(--gw-color-primary-light);
   color: var(--gw-color-primary-hover);
 }
-.gw-btn.gw-btn--secondary:active:not(:disabled) {
+.gw-btn.gw-btn--secondary:active:not(:disabled):not([aria-disabled="true"]) {
   background: var(--gw-color-primary-border);
   color: var(--gw-color-primary-hover);
 }
@@ -57,8 +57,8 @@
   background: var(--gw-color-danger);
   color: var(--gw-color-text-inverse);
 }
-.gw-btn.gw-btn--danger:hover:not(:disabled),
-.gw-btn.gw-btn--danger:active:not(:disabled) {
+.gw-btn.gw-btn--danger:hover:not(:disabled):not([aria-disabled="true"]),
+.gw-btn.gw-btn--danger:active:not(:disabled):not([aria-disabled="true"]) {
   background: var(--gw-color-danger-text);
 }
 
@@ -67,7 +67,7 @@
   background: var(--gw-color-surface);
   color: var(--gw-color-primary);
 }
-.gw-btn.gw-btn--inverse:hover:not(:disabled) {
+.gw-btn.gw-btn--inverse:hover:not(:disabled):not([aria-disabled="true"]) {
   background: var(--gw-color-primary-light);
   color: var(--gw-color-primary-hover);
 }
@@ -89,7 +89,7 @@
   background: transparent;
   color: var(--gw-color-text-secondary);
 }
-.gw-btn.gw-btn--icon:not(.gw-btn--primary):not(.gw-btn--secondary):not(.gw-btn--danger):hover:not(:disabled) {
+.gw-btn.gw-btn--icon:not(.gw-btn--primary):not(.gw-btn--secondary):not(.gw-btn--danger):hover:not(:disabled):not([aria-disabled="true"]) {
   background: var(--gw-color-surface-subtle);
 }
 .gw-btn.gw-btn--icon.gw-btn--slim {
@@ -114,6 +114,35 @@
   outline: var(--gw-focus-width) solid var(--gw-color-focus);
   outline-offset: var(--gw-focus-offset);
   box-shadow: none;
+}
+
+/* A react-bootstrap <Button> is also .btn, whose state rules load later and win ties, so they are fed
+   the kit colours. .btn:focus-visible paints --bs-btn-hover-bg, hence the rest colour until hovered. */
+.gw-btn.gw-btn--primary {
+  --bs-btn-color: var(--gw-color-text-inverse);
+  --bs-btn-bg: var(--gw-color-primary);
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-color: var(--gw-color-text-inverse);
+  --bs-btn-hover-bg: var(--gw-color-primary);
+  --bs-btn-hover-border-color: transparent;
+  --bs-btn-active-color: var(--gw-color-text-inverse);
+  --bs-btn-active-bg: var(--gw-color-primary-active);
+  --bs-btn-active-border-color: transparent;
+  --bs-btn-focus-box-shadow: none;
+  --bs-btn-disabled-color: var(--gw-color-disabled-text);
+  --bs-btn-disabled-bg: var(--gw-color-disabled-bg);
+  --bs-btn-disabled-border-color: transparent;
+}
+.gw-btn.gw-btn--primary:hover {
+  --bs-btn-hover-bg: var(--gw-color-primary-hover);
+}
+.gw-btn.gw-btn--primary:is(:disabled, [aria-disabled="true"]) {
+  --bs-btn-color: var(--gw-color-disabled-text);
+  --bs-btn-bg: var(--gw-color-disabled-bg);
+  --bs-btn-hover-color: var(--gw-color-disabled-text);
+  --bs-btn-hover-bg: var(--gw-color-disabled-bg);
+  --bs-btn-active-color: var(--gw-color-disabled-text);
+  --bs-btn-active-bg: var(--gw-color-disabled-bg);
 }
 
 /* ==============================
@@ -272,6 +301,10 @@
   color: var(--gw-color-text);
   padding: var(--gw-spacing-md) var(--gw-spacing-lg);
   font-size: var(--gw-font-size-sm);
+}
+/* The padding above outranks Bootstrap's .alert-dismissible, which reserves room for the absolute close button. */
+.alert.alert.alert-dismissible {
+  padding-right: 3rem;
 }
 .alert.alert-info, .alert.alert-primary, .alert.alert-secondary, .alert.alert-light { --gw-alert-bar: var(--gw-color-info); --gw-alert-fill: var(--gw-color-info-light); --gw-alert-title: var(--gw-color-info-text); }
 .alert.alert-warning { --gw-alert-bar: var(--gw-color-warning); --gw-alert-fill: var(--gw-color-warning-light); --gw-alert-title: var(--gw-color-warning-text); }
@@ -570,4 +603,15 @@ a.gw-tab { text-decoration: none; }
   outline: var(--gw-focus-width) solid var(--gw-color-focus);
   outline-offset: var(--gw-focus-offset);
   box-shadow: none;
+}
+
+.gw-select-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+  text-transform: none;
+  letter-spacing: normal;
 }

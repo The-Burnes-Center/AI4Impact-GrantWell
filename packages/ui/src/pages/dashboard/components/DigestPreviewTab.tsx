@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ApiClient } from "../../../common/api-client/api-client";
 import type { DigestPreviewResult } from "../../../common/api-client/notifications-client";
 import { ConfirmationModal } from "../../../components/common/ConfirmationModal";
@@ -25,6 +25,7 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
   const [sending, setSending] = useState<"me" | "all" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [confirmBroadcastOpen, setConfirmBroadcastOpen] = useState(false);
+  const frequencyRefs = useRef<Partial<Record<Frequency, HTMLButtonElement | null>>>({});
 
   const load = useCallback(async () => {
     // Full spinner only when there's nothing to show yet; otherwise dim the stale preview.
@@ -79,13 +80,15 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
 
   const onSegmentKey = (e: React.KeyboardEvent, values: Frequency[], current: Frequency) => {
     const idx = values.indexOf(current);
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-      e.preventDefault();
-      setFrequency(values[(idx + 1) % values.length]);
-    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-      e.preventDefault();
-      setFrequency(values[(idx - 1 + values.length) % values.length]);
-    }
+    let next: Frequency | null = null;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = values[(idx + 1) % values.length];
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = values[(idx - 1 + values.length) % values.length];
+    else if (e.key === "Home") next = values[0];
+    else if (e.key === "End") next = values[values.length - 1];
+    if (next === null) return;
+    e.preventDefault();
+    setFrequency(next);
+    frequencyRefs.current[next]?.focus();
   };
 
   const busy = sending !== null;
@@ -140,6 +143,7 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
           {FREQUENCIES.map(({ value, label }) => (
             <button
               key={value}
+              ref={(el) => { frequencyRefs.current[value] = el; }}
               role="radio"
               aria-checked={frequency === value}
               tabIndex={frequency === value ? 0 : -1}
@@ -156,7 +160,9 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
 
       {error ? (
         <div className="no-data">
-          <div style={{ fontSize: "18px", fontWeight: 500, marginBottom: 12 }}>{error}</div>
+          <LiveStatus>
+            <div style={{ fontSize: "18px", fontWeight: 500, marginBottom: 12 }}>{error}</div>
+          </LiveStatus>
           <button className="gw-btn gw-btn--secondary action-button refresh-button" onClick={load}>
             Retry
           </button>
@@ -202,7 +208,15 @@ export default function DigestPreviewTab({ apiClient, addNotification }: DigestP
             </div>
             <div className="digest-preview__pane">
               <div className="digest-preview__pane-label">Plain text</div>
-              <pre className="digest-preview__text">{rendered.text}</pre>
+              <pre
+                className="digest-preview__text"
+                role="region"
+                aria-label="Plain text digest"
+                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- scrollable region needs keyboard access (WCAG 2.1.1)
+                tabIndex={0}
+              >
+                {rendered.text}
+              </pre>
             </div>
           </div>
         </div>

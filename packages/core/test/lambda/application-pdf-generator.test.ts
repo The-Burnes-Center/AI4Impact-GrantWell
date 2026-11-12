@@ -156,3 +156,17 @@ describe("application pdf generator cover", () => {
     expect(JSON.parse(res.body).error).toBe("draftData is required");
   });
 });
+
+describe("application pdf generator section bodies", () => {
+  it("renders the editor's headings, real links and nested lists", async () => {
+    const html = await exportPdf({
+      draftData: {
+        ...draftData,
+        sections: { Summary: "### Goal\n\nSee the [plan](https://example.org/plan).\n\n- one\n  - inner" },
+      },
+    });
+    expect(html).toContain("<h3>Goal</h3>");
+    expect(html).toContain('See the <a href="https://example.org/plan">plan</a>.');
+    expect(html).toContain("<ul><li>one<ul><li>inner</li></ul></li></ul>");
+  });
+});

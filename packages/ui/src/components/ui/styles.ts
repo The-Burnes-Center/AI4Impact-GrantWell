@@ -46,7 +46,7 @@ export const colors = {
 
   // Disabled state
   disabledBg: "#F0F0F0",
-  disabledText: "#707070",
+  disabledText: "#666666",
 
   // Overlay
   overlay: "rgba(0, 0, 0, 0.6)",

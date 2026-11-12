@@ -151,7 +151,7 @@ function generateHtmlFromDraft(draftData) {
     sectionsHtml += `
         <section id="section-${idx}" class="section">
             <h2>${idx}. ${escapeHtml(sectionName)}</h2>
-            <div class="content">${sanitizeContentHtml(markdownToContentHtml(content))}</div>
+            <div class="content">${sanitizeContentHtml(markdownToContentHtml(content), { links: true })}</div>
         </section>
         `;
     idx++;

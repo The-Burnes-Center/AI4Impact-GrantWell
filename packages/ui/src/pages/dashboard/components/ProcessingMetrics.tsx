@@ -2,6 +2,7 @@ import React from "react";
 import type { IconType } from "react-icons";
 import { LuCircleAlert, LuCircleCheck, LuTriangleAlert } from "react-icons/lu";
 import type { ProcessingMetrics as MetricsType } from "../../../common/types/processing-review";
+import { LiveStatus } from "../../../components/common/LiveStatus";
 
 interface ProcessingMetricsProps {
   metrics: MetricsType | null;
@@ -44,12 +45,14 @@ const ProcessingMetrics: React.FC<ProcessingMetricsProps> = ({
 }) => {
   if (loading || !metrics) {
     return (
-      <div className="metrics-grid" aria-busy="true">
-        <span role="status" className="visually-hidden">Loading processing metrics</span>
-        {[1, 2, 3, 4, 5].map((i) => (
-          <div key={i} className="metric-card metric-card--skeleton" />
-        ))}
-      </div>
+      <>
+        <LiveStatus className="visually-hidden">Loading processing metrics</LiveStatus>
+        <div className="metrics-grid" aria-busy="true">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="metric-card metric-card--skeleton" />
+          ))}
+        </div>
+      </>
     );
   }
 

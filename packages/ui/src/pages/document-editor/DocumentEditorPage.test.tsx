@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import { Route, Routes } from "react-router";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { json, stubFetch, type RouteRequest } from "../../test/fetch-routes";
@@ -6,6 +6,10 @@ import { renderApp } from "../../test/render";
 import DocumentEditor from "./DocumentEditorPage";
 
 vi.mock("../../components/navigation/UnifiedNavigation", () => ({ default: (): null => null }));
+vi.mock("../../common/helpers/recently-viewed-nofos", () => ({
+  addToRecentlyViewed: vi.fn(),
+  fetchRecentlyViewed: async (): Promise<never[]> => [],
+}));
 
 const DRAFT = "POST /user-draft";
 const SUMMARY = "GET /s3-nofo-summary";
@@ -79,5 +83,38 @@ describe("DocumentEditorPage", () => {
 
     await waitFor(() => expect(updates(net).map((b) => b.status)).toEqual(["reviewing"]));
     expect(updates(net)[0].sections).toEqual({ Budget: "We need $10." });
+  });
+
+  it("keeps the grant picker open and says it is starting, with no empty form behind it", async () => {
+    let finishCreate: (reply: Response) => void = () => {};
+    stubFetch({
+      [SUMMARY]: json(GRANT),
+      [NOFOS]: json({ nofoData: [{ name: "Grant A", status: "active" }] }),
+      [DRAFT]: (req: RouteRequest) => {
+        const body = req.body as Record<string, unknown>;
+        if (body.operation === "add_draft") return new Promise<Response>((resolve) => { finishCreate = resolve; });
+        if (body.operation === "get_draft") return json({ session_id: body.session_id, document_identifier: "Grant A/", status: "project_basics", rev: 1 });
+        return json({});
+      },
+    });
+    const { user } = renderApp(
+      <Routes>
+        <Route path="/document-editor" element={<DocumentEditor />} />
+        <Route path="/document-editor/:sessionId" element={<DocumentEditor />} />
+      </Routes>,
+      { route: "/document-editor" }
+    );
+
+    await user.click(await screen.findByRole("button", { name: "Get started" }));
+    const picker = await screen.findByRole("dialog", { name: "Start a new application" });
+    await user.click(await within(picker).findByRole("button", { name: "Grant A" }));
+
+    expect(await within(picker).findByText("Starting…")).toBeInTheDocument();
+    expect(within(picker).getByText("Starting…").closest("[aria-busy='true']")).toBeNull();
+    expect(screen.queryByRole("textbox", { name: /Project name/ })).not.toBeInTheDocument();
+
+    finishCreate(json({ session_id: "new" }));
+    await waitFor(() => expect(screen.queryByRole("dialog", { name: "Start a new application" })).not.toBeInTheDocument());
+    expect(await screen.findByRole("textbox", { name: /Project name/ })).toBeInTheDocument();
   });
 });

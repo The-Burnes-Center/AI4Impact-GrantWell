@@ -111,7 +111,8 @@ export default function GrantPickerModal({
         disabled={loading}
         autoComplete="off"
       />
-      <div className="grant-picker-results" aria-busy={loading || busy}>
+      {/* Not busy while starting: some screen readers hold back "Starting…" inside a busy region. */}
+      <div className="grant-picker-results" aria-busy={loading}>
         {loading && <p className="grant-picker-status">Loading grants…</p>}
         {error && (
           <p className="grant-picker-status" role="alert">

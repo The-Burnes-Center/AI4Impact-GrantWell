@@ -88,7 +88,7 @@
 
   /* States */
   --gw-color-disabled-bg: #F0F0F0;
-  --gw-color-disabled-text: #707070;
+  --gw-color-disabled-text: #666666;
   --gw-color-focus: var(--gw-color-primary);
   --gw-color-focus-inner: #ffffff;
   --gw-color-focus-on-dark: var(--gw-color-primary-light);

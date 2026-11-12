@@ -88,7 +88,17 @@ describe("ProcessingReviewTab", () => {
     await screen.findByText("Pending Grant");
     await user.selectOptions(screen.getByLabelText("Filter by status"), "rejected");
     expect(await screen.findByText('No reviews with status "Rejected"')).toBeInTheDocument();
-    expect(screen.getByRole("status")).toHaveTextContent("0 reviews shown");
+    expect(screen.getByText("0 reviews shown")).toHaveAttribute("role", "status");
+  });
+
+  it("names missing sections in words, not raw keys", async () => {
+    renderTab(json({ reviews: [review("Gap Grant", "pending_review", { missingSections: ["ProjectNarrativeSections", "RequiredDocuments", "EligibilityCriteria", "KeyDeadlines"] })], expiredOpenCount: 0 }));
+    expect(await screen.findByText("Missing: narrative sections, required documents, eligibility criteria, key deadlines")).toBeInTheDocument();
+  });
+
+  it("splits an unknown section key into words, keeping acronyms", async () => {
+    renderTab(json({ reviews: [review("Odd Grant", "pending_review", { missingSections: ["FundingRestrictions", "SAMRegistration"] })], expiredOpenCount: 0 }));
+    expect(await screen.findByText("Missing: funding restrictions, SAM registration")).toBeInTheDocument();
   });
 
   it("raises an error notification when the queue fails to load", async () => {
@@ -141,6 +151,40 @@ describe("ProcessingReviewTab", () => {
     await user.click(selectAll);
     expect(selectAll.indeterminate).toBe(false);
     expect(selectAll).toBeChecked();
+  });
+
+  it("announces the selection count from a status region that is already in the page", async () => {
+    const { user } = renderTab(json({ reviews: QUEUE, expiredOpenCount: 1 }));
+    await screen.findByText("Today Grant");
+    const before = screen.getAllByRole("status");
+
+    await user.click(screen.getByRole("checkbox", { name: "Select Soon Grant" }));
+    const region = screen.getAllByRole("status").find((el) => el.textContent === "1 selected");
+    expect(before).toContain(region);
+    await user.click(screen.getByRole("checkbox", { name: "Select Far Grant" }));
+    expect(region).toHaveTextContent("2 selected");
+    await user.click(screen.getByRole("button", { name: "Clear selection" }));
+    expect(region).toBeEmptyDOMElement();
+  });
+
+  it("announces a bulk reprocess in the selection status region while it runs", async () => {
+    let release!: () => void;
+    const net = stubFetch({
+      [REVIEWS]: json({ reviews: QUEUE, expiredOpenCount: 1 }),
+      [METRICS]: json({ metrics }),
+      "POST /admin/reprocess-nofo": () =>
+        new Promise<Response>((resolve) => { release = () => resolve(json({ message: "ok" })); }),
+    });
+    const { user } = renderApp(<ProcessingReviewTab apiClient={testApiClient()} addNotification={vi.fn()} />);
+    await screen.findByText("Today Grant");
+    await user.click(screen.getByRole("checkbox", { name: "Select Soon Grant" }));
+    const region = screen.getAllByRole("status").find((el) => el.textContent === "1 selected")!;
+
+    await user.click(screen.getByRole("button", { name: /^Reprocess selected — / }));
+    expect(region).toHaveTextContent("Reprocessing 1 grant");
+    release();
+    await waitFor(() => expect(region).toBeEmptyDOMElement());
+    expect(net.to("POST /admin/reprocess-nofo")).toHaveLength(1);
   });
 
   it("disables Close all expired when no open review is for an expired grant", async () => {
@@ -334,6 +378,22 @@ describe("requirements the grant doesn't support", () => {
       await waitFor(() => expect(net.to("POST /admin/processing-reviews/Live-Grant/reject")).toHaveLength(1));
       expect(net.to("POST /admin/processing-reviews/Live-Grant/reject")[0].body).toMatchObject({ reviewId: shown.review_id });
     });
+  });
+
+  it("announces Publishing in the panel's status region, then leaves the result to the notification", async () => {
+    let release!: () => void;
+    const { user } = await openDetail(held, detail, {
+      "POST /admin/processing-reviews/Held-Grant/approve": () =>
+        new Promise<Response>((resolve) => { release = () => resolve(json({ message: "ok" })); }),
+    });
+    const region = screen.getAllByRole("status").find((el) => el.closest('[role="cell"]'))!;
+    expect(region).toBeEmptyDOMElement();
+
+    await user.click(screen.getByRole("button", { name: /^Approve as is — / }));
+    expect(screen.getByRole("button", { name: /^Publishing\.\.\. — / })).toHaveFocus();
+    expect(region).toHaveTextContent("Publishing the grant");
+    release();
+    await waitFor(() => expect(screen.queryByText("Publishing the grant")).not.toBeInTheDocument());
   });
 
   it("shows the guidance that users keep seeing the published version", async () => {

@@ -166,4 +166,84 @@ describe("UserManagementTab", () => {
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();
     expect(await screen.findByRole("dialog", { name: "Delete user" })).toBeInTheDocument();
   });
+
+  it("names a bad email in text tied to the field, and says so when Add user is pressed empty", async () => {
+    const net = stubFetch({ [USERS]: json({ users: [user(1)], nextPaginationToken: null, pageSize: 25 }) });
+    const { user: ui } = renderTab();
+    await screen.findByText("person1@example.org");
+    await ui.click(screen.getByRole("button", { name: "Add user" }));
+    const dialog = await screen.findByRole("dialog", { name: "Add new user" });
+    const email = within(dialog).getByLabelText("Email address");
+
+    expect(email).not.toHaveAttribute("aria-invalid", "true");
+    expect(within(dialog).getByRole("button", { name: "Add user" })).not.toHaveAttribute("aria-disabled");
+    await ui.click(within(dialog).getByRole("button", { name: "Add user" }));
+    expect(email).toHaveAttribute("aria-invalid", "true");
+    expect(email).toHaveAccessibleDescription("Enter an email address in the format user@example.com.");
+    expect(email).toHaveFocus();
+
+    await ui.type(email, "person@example");
+    expect(email).toHaveAccessibleDescription(/format user@example\.com/);
+    expect(within(dialog).getByRole("button", { name: "Add user" })).not.toHaveAttribute("aria-disabled");
+    await ui.type(email, ".org");
+    expect(email).toHaveValue("person@example.org");
+    expect(email).not.toHaveAttribute("aria-invalid", "true");
+    expect(email).not.toHaveAccessibleDescription();
+    expect(net.calls.filter((c) => c.method === "POST")).toHaveLength(0);
+  });
+
+  it("puts the first-load message in a status region that was empty when it mounted", async () => {
+    let release!: () => void;
+    stubFetch({
+      [USERS]: () => new Promise<Response>((resolve) => {
+        release = () => resolve(json({ users: [user(1)], nextPaginationToken: null, pageSize: 25 }));
+      }),
+    });
+    renderTab();
+    const region = screen.getByRole("status");
+    expect(region).toBeEmptyDOMElement();
+    await waitFor(() => expect(region).toHaveTextContent("Loading users..."));
+    release();
+    expect(await screen.findByText("person1@example.org")).toBeInTheDocument();
+  });
+
+  it("announces Saving and Adding through status regions already in the page", async () => {
+    const replies: Array<() => void> = [];
+    const later = (body: unknown) => () =>
+      new Promise<Response>((resolve) => replies.push(() => resolve(json(body))));
+    stubFetch({
+      [USERS]: json({ users: [user(0), user(1)], nextPaginationToken: null, pageSize: 25 }),
+      "PATCH /user-management/users/u1/roles": later({ username: "u1", roles: ["Admin"] }),
+      "POST /user-management/users": later({}),
+    });
+    const { user: ui } = renderTab();
+    await screen.findByText("person1@example.org");
+    const statuses = () => screen.getAllByRole("status").map((r) => r.textContent);
+
+    await ui.selectOptions(screen.getByLabelText("Role for person1@example.org"), "admin");
+    await ui.click(screen.getByRole("button", { name: /^Save ?changes for person1@example\.org$/ }));
+    await waitFor(() => expect(statuses()).toContain("Saving changes for person1@example.org"));
+    replies.shift()!();
+    await waitFor(() => expect(statuses()).not.toContain("Saving changes for person1@example.org"));
+
+    await ui.click(screen.getByRole("button", { name: "Add user" }));
+    const dialog = await screen.findByRole("dialog", { name: "Add new user" });
+    await ui.type(within(dialog).getByLabelText("Email address"), "new@example.org");
+    const status = within(dialog).getByRole("status");
+    expect(status).toBeEmptyDOMElement();
+    await ui.click(within(dialog).getByRole("button", { name: "Add user" }));
+    expect(within(dialog).getByRole("button", { name: "Adding..." })).toHaveAttribute("aria-disabled", "true");
+    await waitFor(() => expect(status).toHaveTextContent("Adding user"));
+    replies.shift()!();
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+  });
+
+  it("puts the users table in a named scroll region the keyboard can reach", async () => {
+    stubFetch({ [USERS]: json({ users: [user(1)], nextPaginationToken: null, pageSize: 25 }) });
+    renderTab();
+    await screen.findByText("person1@example.org");
+    const region = screen.getByRole("region", { name: /^Users table/ });
+    expect(region).toHaveAttribute("tabindex", "0");
+    expect(region).toContainElement(screen.getByRole("table", { name: "Users" }));
+  });
 });

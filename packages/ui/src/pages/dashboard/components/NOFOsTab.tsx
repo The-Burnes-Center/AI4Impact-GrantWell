@@ -14,6 +14,7 @@ import { Utils } from "../../../common/utils";
 import type { NOFO, GrantTypeId, CustomQuestion, ReviewFlag } from "../../../common/types/nofo";
 import { GRANT_TYPES, grantTypeTint, GRANT_CATEGORIES } from "../../../common/types/nofo";
 import { SINGLE_STATE, SUPPORTED_STATES } from "../../../common/states";
+import { sectionLabel } from "./section-labels";
 
 // A single-state deployment's state grants always belong to its state.
 const DEFAULT_UPLOAD_STATE = SINGLE_STATE?.code ?? "";
@@ -24,7 +25,7 @@ function getErrorMessage(error: unknown, fallback: string) {
 
 function reviewFlagTitle(flag: ReviewFlag) {
   const parts = [
-    flag.missingCategories.length > 0 ? `Missing: ${flag.missingCategories.join(", ")}` : "",
+    flag.missingCategories.length > 0 ? `Missing: ${flag.missingCategories.map(sectionLabel).join(", ")}` : "",
     flag.missingParts ?? "",
   ].filter(Boolean);
   return parts.length > 0 ? parts.join(". ") : undefined;

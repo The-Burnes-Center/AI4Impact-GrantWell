@@ -73,7 +73,28 @@ function MovesFocusOnClose() {
   );
 }
 
+function Form() {
+  const ref = useFocusTrap<HTMLDivElement>({ isOpen: true, lockScroll: false });
+  return (
+    <div ref={ref} role="dialog" aria-label="Add user">
+      <button>Close</button>
+      <label>
+        Email <input />
+      </label>
+    </div>
+  );
+}
+
 describe("useFocusTrap", () => {
+  it("leaves focus alone when someone is already typing in the dialog before its first focus runs", async () => {
+    render(<Form />);
+    const field = screen.getByLabelText("Email");
+    field.focus();
+    await new Promise((r) => setTimeout(r, 150));
+    expect(field).toHaveFocus();
+  });
+
+
   it("returns focus to the element that opened it", async () => {
     render(<Harness removeTrigger={false} />);
     await userEvent.click(screen.getByRole("button", { name: "Open" }));

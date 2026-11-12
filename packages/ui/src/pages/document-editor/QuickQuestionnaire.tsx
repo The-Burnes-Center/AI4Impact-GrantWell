@@ -6,6 +6,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
 import Card from "../../components/ui/Card";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
+import { LiveStatus } from "../../components/common/LiveStatus";
 import AutoSaveIndicator, { type SaveStatus } from "../../components/ui/AutoSaveIndicator";
 import NavigationButtons from "../../components/ui/NavigationButtons";
 import { colors, typography } from "../../components/ui/styles";
@@ -173,9 +174,11 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
     return (
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 0" }}>
         <Card>
-          <p role="status" style={{ fontSize: "16px", marginBottom: "16px", textAlign: "center" }}>
-            This grant has no questions yet. You can continue to the next step.
-          </p>
+          <LiveStatus>
+            <p style={{ fontSize: "16px", marginBottom: "16px", textAlign: "center" }}>
+              This grant has no questions yet. You can continue to the next step.
+            </p>
+          </LiveStatus>
         </Card>
         <NavigationButtons
           onBack={() => onNavigate("projectBasics")}

@@ -27,7 +27,7 @@
  */
 
 import React from "react";
-import { colors, spacing } from "./styles";
+import { spacing } from "./styles";
 
 export interface NavigationButtonsProps {
   /** Handler for back button click */
@@ -110,14 +110,16 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
     </svg>
   );
 
+  // currentColor, so on the grey busy fill the arc takes the button's text colour (WCAG 1.4.11).
   const LoadingSpinner = () => (
     <>
       <div
         style={{
           width: "16px",
           height: "16px",
-          border: "2px solid color-mix(in srgb, var(--gw-color-surface) 30%, transparent)",
-          borderTopColor: colors.white,
+          flexShrink: 0,
+          border: "2px solid color-mix(in srgb, currentColor 25%, transparent)",
+          borderTopColor: "currentColor",
           borderRadius: "50%",
           animation: "nav-spin 0.8s linear infinite",
         }}
@@ -136,7 +138,7 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
       {/* Outside the button: ARIA treats button children as presentational, so a live
           region nested in one never fires. Always mounted so the text is an update. */}
       <div role="status" aria-live="polite" className="visually-hidden">
-        {continueLoading ? `${continueLabel} in progress` : ""}
+        {continueLoading ? continueLabel : ""}
       </div>
 
       {showBack && onBack ? (
@@ -163,11 +165,11 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
           }}
           className="gw-btn gw-btn--primary"
           style={navButtonStyle}
-          aria-label={continueLabel}
           aria-disabled={continueDisabled || continueLoading || undefined}
           aria-busy={continueLoading}
         >
-          {continueLoading ? <LoadingSpinner /> : continueLabel}
+          {continueLoading && <LoadingSpinner />}
+          {continueLabel}
           {!continueLoading && <RightArrow />}
         </button>
       )}

@@ -56,11 +56,7 @@ const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
   variant = "default",
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-
-  if (status === "idle" && !idleText) {
-    return null;
-  }
-
+  const visible = status !== "idle" || !!idleText;
   const onPrimary = variant === "onPrimary";
 
   const containerStyle: React.CSSProperties = {
@@ -95,106 +91,117 @@ const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
           outline-offset: 2px;
         }
       `}</style>
-      {/* With idleText the region mounts before the first save: one created with its message is not announced. */}
-      <div
-        ref={containerRef}
-        className={onPrimary ? "autosave--on-primary" : undefined}
-        style={containerStyle}
-        {...(announce
-          ? { role: "status", "aria-live": "polite" as const, tabIndex: -1 }
-          : { "aria-hidden": true })}
-      >
-        {status === "idle" && idleText && <span>{idleText}</span>}
+      {visible && (
+        <div
+          ref={containerRef}
+          className={onPrimary ? "autosave--on-primary" : undefined}
+          style={containerStyle}
+          {...(announce ? { tabIndex: -1 } : { "aria-hidden": true })}
+        >
+          {status === "idle" && idleText && <span>{idleText}</span>}
 
-        {status === "pending" && (
-          <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <polyline points="12 6 12 12 16 14" />
-            </svg>
-            {pendingText}
-          </span>
-        )}
-
-        {status === "saving" && (
-          <>
-            <div style={spinnerStyle} aria-hidden="true" />
-            <span>{savingText}</span>
-          </>
-        )}
-
-        {status === "saved" && (
-          <span style={{ display: "flex", alignItems: "center", gap: "6px", color: onPrimary ? colors.white : colors.success }}>
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-            {savedText}
-          </span>
-        )}
-
-        {status === "error" && (
-          <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <line x1="15" y1="9" x2="9" y2="15" />
-              <line x1="9" y1="9" x2="15" y2="15" />
-            </svg>
-            {errorText}
-            {onRetry && (
-              <button
-                type="button"
-                onClick={() => {
-                  // The button unmounts once the retry starts; the status keeps focus in place.
-                  containerRef.current?.focus();
-                  onRetry();
-                }}
-                style={{
-                  background: "none",
-                  border: "none",
-                  padding: 0,
-                  color: onPrimary ? colors.white : colors.error,
-                  font: "inherit",
-                  fontWeight: typography.fontWeight.semibold,
-                  textDecoration: "underline",
-                  cursor: "pointer",
-                }}
+          {status === "pending" && (
+            <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
               >
-                Retry
-              </button>
-            )}
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              {pendingText}
+            </span>
+          )}
+
+          {status === "saving" && (
+            <>
+              <div style={spinnerStyle} aria-hidden="true" />
+              <span>{savingText}</span>
+            </>
+          )}
+
+          {status === "saved" && (
+            <span style={{ display: "flex", alignItems: "center", gap: "6px", color: onPrimary ? colors.white : colors.success }}>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              {savedText}
+            </span>
+          )}
+
+          {status === "error" && (
+            <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="15" y1="9" x2="9" y2="15" />
+                <line x1="9" y1="9" x2="15" y2="15" />
+              </svg>
+              {errorText}
+              {onRetry && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    // The button unmounts once the retry starts; the status keeps focus in place.
+                    containerRef.current?.focus();
+                    onRetry();
+                  }}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    padding: 0,
+                    color: onPrimary ? colors.white : colors.error,
+                    font: "inherit",
+                    fontWeight: typography.fontWeight.semibold,
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                  }}
+                >
+                  Retry
+                </button>
+              )}
+            </span>
+          )}
+        </div>
+      )}
+      {/* WCAG 4.1.3: one "Saved" per save and one alert per failure, not every pending/saving step.
+          Always mounted, so each message lands as an update. */}
+      {announce && (
+        <>
+          <span role="status" aria-live="polite" className="visually-hidden">
+            {status === "saved" ? savedText : ""}
           </span>
-        )}
-      </div>
+          <span role="alert" className="visually-hidden">
+            {status === "error" ? errorText : ""}
+          </span>
+        </>
+      )}
     </>
   );
 };

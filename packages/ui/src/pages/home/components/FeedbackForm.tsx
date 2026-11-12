@@ -34,6 +34,19 @@ const FeedbackForm = React.memo(function FeedbackForm() {
   }, [feedbackSubmitted]);
   const errorId = useId();
   const warningId = useId();
+  const errorTimer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(errorTimer.current), []);
+
+  const showError = (message: string) => {
+    window.clearTimeout(errorTimer.current);
+    if (message !== feedbackError) {
+      setFeedbackError(message);
+      return;
+    }
+    // The alert only speaks when it is re-inserted, so the same message is cleared first.
+    setFeedbackError(null);
+    errorTimer.current = window.setTimeout(() => setFeedbackError(message), 100);
+  };
 
   useEffect(() => {
     if (selectedOption && textareaRef.current) {
@@ -42,6 +55,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
   }, [selectedOption]);
 
   const handleOptionChange = (option: "yes" | "no") => {
+    window.clearTimeout(errorTimer.current);
     setSelectedOption(option);
     setFeedbackText("");
     setFeedbackError(null);
@@ -66,10 +80,11 @@ const FeedbackForm = React.memo(function FeedbackForm() {
     if (!selectedOption) return;
 
     if (selectedOption === "no" && feedbackText.trim().length === 0) {
-      setFeedbackError("Please tell us how we can improve the page.");
+      showError("Please tell us how we can improve the page.");
       return;
     }
 
+    window.clearTimeout(errorTimer.current);
     setIsSubmitting(true);
     setFeedbackError(null);
 
@@ -85,9 +100,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
       });
       setFeedbackSubmitted(true);
     } catch {
-      setFeedbackError(
-        "There was a problem submitting your feedback. Please try again."
-      );
+      showError("There was a problem submitting your feedback. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -164,18 +177,18 @@ const FeedbackForm = React.memo(function FeedbackForm() {
               <div className="feedback-divider" />
 
               {selectedOption === "yes" ? (
-                <p className="feedback-prompt">
+                <label htmlFor="feedback-text" className="feedback-prompt">
                   If you have any suggestions for the website, please let us
                   know.
-                </p>
+                </label>
               ) : (
-                <p className="feedback-prompt">
+                <label htmlFor="feedback-text" className="feedback-prompt">
                   How can we improve the page?{" "}
                   <span className="feedback-required" aria-hidden="true">
                     *
                   </span>
                   <span className="visually-hidden">required</span>
-                </p>
+                </label>
               )}
 
               <p className="feedback-notice">
@@ -226,11 +239,6 @@ const FeedbackForm = React.memo(function FeedbackForm() {
               </div>
 
               <div className="feedback-textarea-wrapper">
-                <label htmlFor="feedback-text" className="visually-hidden">
-                  {selectedOption === "yes"
-                    ? "Suggestions for the website"
-                    : "How can we improve the page"}
-                </label>
                 <textarea
                   ref={textareaRef}
                   id="feedback-text"

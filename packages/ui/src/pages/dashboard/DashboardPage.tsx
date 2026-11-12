@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useId, useMemo, useRef } from "react";
+import React, { useState, useEffect, useCallback, useId, useLayoutEffect, useMemo, useRef } from "react";
 import { SINGLE_STATE } from "../../common/states";
 import { useNavigate, useLocation, Navigate } from "react-router";
 import { useApiClient } from "../../hooks/use-api-client";
@@ -53,6 +53,7 @@ const Dashboard: React.FC = () => {
   const [autoRefreshPaused, setAutoRefreshPaused] = useState(false);
   const [addedGrantName, setAddedGrantName] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [manualRefresh, setManualRefresh] = useState(false);
 
   const [uploadNofoModalOpen, setUploadNofoModalOpen] = useState(false);
   const [isScraping, setIsScraping] = useState(false);
@@ -78,6 +79,9 @@ const Dashboard: React.FC = () => {
   const processingSegmentRef = useRef<HTMLButtonElement>(null);
   const attentionSegmentRef = useRef<HTMLButtonElement>(null);
   const [resultsAnnouncement, setResultsAnnouncement] = useState("");
+  const refreshButtonRef = useRef<HTMLButtonElement>(null);
+  // Which poll-driven control holds focus, kept when it is removed so focus can be put back.
+  const focusInPollControl = useRef<"pause" | "banner" | null>(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -178,7 +182,9 @@ const Dashboard: React.FC = () => {
   }, [isAdmin, roleLoading]);
 
   const handleRefresh = useCallback(() => {
-    if (!isRefreshing) fetchNofos(true);
+    if (isRefreshing) return;
+    setManualRefresh(true);
+    void fetchNofos(true).finally(() => setManualRefresh(false));
   }, [fetchNofos, isRefreshing]);
 
   // Deep-link a quarantined grant's row into the review queue (stable identity so
@@ -397,6 +403,36 @@ const Dashboard: React.FC = () => {
     prevProcessingCount.current = processingCount;
   }, [processingCount]);
 
+  const processingBannerShown =
+    activeTab === "grants" && grantsSegment === "all" && isAdmin && !processingBannerDismissed &&
+    (processingCount > 0 || finishedCount > 0);
+
+  const trackPollControlFocus = useCallback((key: "pause" | "banner") => ({
+    onFocus: () => { focusInPollControl.current = key; },
+    onBlur: (event: React.FocusEvent<HTMLElement>) => {
+      const control = event.currentTarget;
+      if (event.relatedTarget) {
+        focusInPollControl.current = null;
+        return;
+      }
+      setTimeout(() => {
+        const movedOff = control.isConnected && document.activeElement !== control;
+        if (focusInPollControl.current === key && movedOff) focusInPollControl.current = null;
+      }, 0);
+    },
+  }), []);
+
+  useLayoutEffect(() => {
+    const lost = focusInPollControl.current;
+    if ((lost === "pause" && !hasProcessingNofos) || (lost === "banner" && !processingBannerShown)) {
+      focusInPollControl.current = null;
+      const active = document.activeElement;
+      if (active && active !== document.body && active.isConnected) return;
+      if (lost === "pause") refreshButtonRef.current?.focus();
+      else document.getElementById("grant-search")?.focus();
+    }
+  }, [hasProcessingNofos, processingBannerShown]);
+
   const paginatedData = useMemo(() => {
     const totalPages = Math.ceil(filteredNofos.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -477,6 +513,7 @@ const Dashboard: React.FC = () => {
             </div>
             <div className="dashboard-actions">
               <button
+                ref={refreshButtonRef}
                 className="gw-btn gw-btn--secondary action-button refresh-button"
                 onClick={handleRefresh}
                 aria-disabled={isRefreshing}
@@ -493,7 +530,7 @@ const Dashboard: React.FC = () => {
                 <button
                   className="gw-btn gw-btn--secondary action-button refresh-button"
                   onClick={() => setAutoRefreshPaused((prev) => !prev)}
-                  aria-pressed={autoRefreshPaused}
+                  {...trackPollControlFocus("pause")}
                 >
                   {autoRefreshPaused ? "Resume auto-refresh" : "Pause auto-refresh"}
                 </button>
@@ -501,6 +538,7 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
+          <LiveStatus className="visually-hidden">{manualRefresh ? "Refreshing Admin dashboard" : null}</LiveStatus>
           <div role="status" aria-live="polite" className="visually-hidden">
             {showGrantBanner ? `Success! Grant "${addedGrantName}" has been added` : ""}
           </div>
@@ -677,7 +715,7 @@ const Dashboard: React.FC = () => {
                       ].filter(Boolean).join(", ")
                     : null}
                 </LiveStatus>
-                {isAdmin && !processingBannerDismissed && (processingCount > 0 || finishedCount > 0) && (
+                {processingBannerShown && (
                   <div className="gw-alert gw-alert--info processing-banner">
                     <div className="processing-banner__message">
                       {processingCount > 0 ? (
@@ -694,6 +732,7 @@ const Dashboard: React.FC = () => {
                     <button
                       type="button"
                       className="processing-banner__view"
+                      {...trackPollControlFocus("banner")}
                       onClick={() => {
                         setGrantsSegment("processing");
                         processingSegmentRef.current?.focus();
@@ -704,6 +743,7 @@ const Dashboard: React.FC = () => {
                     <button
                       type="button"
                       className="processing-banner__dismiss"
+                      {...trackPollControlFocus("banner")}
                       onClick={() => {
                         setProcessingBannerDismissed(true);
                         document.getElementById("grant-search")?.focus();
@@ -722,7 +762,7 @@ const Dashboard: React.FC = () => {
                       <input id="grant-search" type="text" className="gw-input search-input" placeholder="Search grants..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                     </div>
 
-                    <div className="filter-container" onBlur={handleFilterFocusOut}>
+                    <div className="filter-container">
                       <button ref={filterButtonRef} className={`gw-btn gw-btn--icon filter-button ${filterCount > 0 ? "active" : ""}`}
                         onClick={toggleFilterMenu} onKeyDown={handleFilterMenuKeyDown} onBlur={handleFilterFocusOut} aria-label={filterCount > 0 ? `Filter grants, ${filterCount} active` : "Filter grants"} aria-expanded={filterMenuOpen} aria-haspopup="menu">
                         <LuFilter size={18} aria-hidden="true" />

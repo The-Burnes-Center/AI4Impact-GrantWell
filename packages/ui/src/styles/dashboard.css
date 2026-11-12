@@ -431,6 +431,10 @@ body {
   overflow-x: auto;
 }
 
+.user-management-field-error {
+  margin: 4px 0 0;
+}
+
 .user-management-table {
   width: 100%;
   border-collapse: collapse;
@@ -619,10 +623,18 @@ body {
   margin-bottom: 0;
 }
 
-.table-scroll:focus-visible {
+.table-scroll:focus-visible,
+.user-management-table-wrapper:focus-visible {
   outline: var(--gw-focus-width) solid var(--gw-color-focus);
   outline-offset: var(--gw-focus-offset);
   border-radius: var(--gw-radius-container);
+}
+
+/* Tables take focus after an action; their scroller would clip an outside ring. */
+[role="table"][tabindex="-1"]:focus-visible,
+.user-management-table:focus-visible {
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: calc(-1 * var(--gw-focus-width));
 }
 
 .table-container {
@@ -1112,8 +1124,8 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: var(--gw-radius-control);
   border: none;
   background: transparent;
@@ -1208,10 +1220,6 @@ body {
   font-size: var(--gw-font-size-xs);
   line-height: 1.4;
   color: var(--gw-color-text-secondary);
-}
-
-.grant-review-link:not(:disabled):hover {
-  filter: brightness(0.95);
 }
 
 /* Summary diff view */
@@ -1371,6 +1379,7 @@ body {
 /* Custom dropdown arrow */
 .select-wrapper::after {
   content: "▼";
+  content: "▼" / "";
   font-size: 14px;
   color: var(--gw-color-text-secondary);
   position: absolute;
@@ -1484,6 +1493,7 @@ select.form-input {
 
 .modal-actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 12px;
   margin-top: 30px;
@@ -1672,6 +1682,10 @@ select.form-input {
 
 .filter-option:last-child {
   border-bottom: none;
+}
+
+.filter-option:focus-visible {
+  outline-offset: calc(-1 * var(--gw-focus-width));
 }
 
 .filter-menu-group:not(:last-child) .filter-option:last-child {
@@ -2192,7 +2206,7 @@ select.form-input {
 }
 
 .review-table-grid-select {
-  grid-template-columns: 44px minmax(0, 2fr) minmax(0, 0.8fr) 110px 120px 100px 80px;
+  grid-template-columns: 104px minmax(0, 2fr) minmax(0, 0.8fr) 110px 120px 100px 80px;
   padding-right: 8px;
 }
 
@@ -2408,7 +2422,7 @@ select.form-input {
   margin-bottom: 16px;
   border: 1px solid var(--gw-color-border);
   border-radius: var(--gw-radius-container);
-  overflow: hidden;
+  background-color: var(--gw-color-surface);
 }
 
 .review-source-preview summary {
@@ -2417,7 +2431,6 @@ select.form-input {
   font-weight: 600;
   color: var(--gw-color-heading);
   cursor: pointer;
-  background-color: var(--gw-color-surface);
 }
 
 .review-source-preview summary:focus-visible {
@@ -2433,7 +2446,13 @@ select.form-input {
   color: var(--gw-color-text-secondary);
   max-height: 200px;
   overflow-y: auto;
-  background-color: var(--gw-color-surface);
+  border-radius: 0 0 var(--gw-radius-container) var(--gw-radius-container);
+}
+
+.review-source-preview__content:focus-visible,
+.digest-preview__text:focus-visible {
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: calc(-1 * var(--gw-focus-width));
 }
 
 /* Metric cards */
@@ -2579,6 +2598,8 @@ select.form-input {
   display: inline-flex;
   align-items: center;
   gap: 3px;
+  min-width: 0;
+  overflow-wrap: anywhere;
   font-size: 12px;
 }
 

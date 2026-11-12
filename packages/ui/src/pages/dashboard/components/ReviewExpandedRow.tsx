@@ -9,6 +9,7 @@ import SummaryEditor from "./SummaryEditor";
 import SummaryDiff from "./SummaryDiff";
 import ReviewActions from "./ReviewActions";
 import { Modal } from "../../../components/common/Modal";
+import { sectionLabel } from "./section-labels";
 
 interface ReviewExpandedRowProps {
   review: ReviewItem;
@@ -19,6 +20,14 @@ interface ReviewExpandedRowProps {
   /** Columns of the parent ARIA table this panel spans. */
   colSpan: number;
 }
+
+const BUSY_MESSAGES: Record<string, string> = {
+  approve: "Publishing the grant",
+  reject: "Rejecting the grant",
+  reprocess: "Reprocessing the grant",
+  reupload: "Uploading the replacement document",
+  needs_reupload: "Marking the grant as needs re-upload",
+};
 
 const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   review,
@@ -48,7 +57,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
     <div role="row">
       <div role="cell" aria-colspan={colSpan}>
         <span role="status" className="visually-hidden">
-          {loading && statusMounted ? "Loading review details" : ""}
+          {!statusMounted ? "" : loading ? "Loading review details" : (actionInProgress && BUSY_MESSAGES[actionInProgress]) || ""}
         </span>
         {content}
       </div>
@@ -285,7 +294,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
           )}
           {detail.adminGuidance.missingCategories.length > 0 && (
             <p style={{ margin: "8px 0 0", fontSize: "12px", color: "var(--gw-color-text-secondary)" }}>
-              Missing categories: {detail.adminGuidance.missingCategories.join(", ")}
+              Missing categories: {detail.adminGuidance.missingCategories.map(sectionLabel).join(", ")}
             </p>
           )}
         </div>
@@ -398,7 +407,13 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       {detail.documentTextPreview && (
         <details className="review-source-preview">
           <summary>Source document preview</summary>
-          <div className="review-source-preview__content">
+          <div
+            className="review-source-preview__content"
+            role="region"
+            aria-label="Source document text"
+            // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- scrollable region needs keyboard access (WCAG 2.1.1)
+            tabIndex={0}
+          >
             {detail.documentTextPreview}
           </div>
         </details>

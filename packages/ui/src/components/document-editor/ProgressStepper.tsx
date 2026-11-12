@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { LuCheck } from "react-icons/lu";
 
 interface ProgressStepperProps {
@@ -26,6 +26,8 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const [tooltipDismissed, setTooltipDismissed] = useState(false);
+  const [allStepsOpen, setAllStepsOpen] = useState(false);
+  const allStepsSummaryRef = useRef<HTMLElement>(null);
   const tooltipShown = !tooltipDismissed && (hoveredIndex !== null || focusedIndex !== null);
 
   // WCAG 1.4.13: Escape also dismisses a tooltip opened by hover, while focus is elsewhere.
@@ -37,6 +39,17 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [tooltipShown]);
+
+  useEffect(() => {
+    setAllStepsOpen(false);
+  }, [activeStep]);
+
+  // Opening the list unpins the stepper on phones, which can leave the summary above the viewport.
+  useEffect(() => {
+    if (!allStepsOpen || !window.matchMedia?.("(max-width: 768px)").matches) return;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    allStepsSummaryRef.current?.scrollIntoView({ block: "nearest", behavior: reduceMotion ? "auto" : "smooth" });
+  }, [allStepsOpen]);
 
   const progressPercentage = ((activeStep + 1) / steps.length) * 100;
   const isStepCompleted = (index: number) => completedSteps.includes(index);
@@ -67,7 +80,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
 
   return (
     <nav
-      className="progress-stepper-container"
+      className={`progress-stepper-container${allStepsOpen ? " progress-stepper-container--list-open" : ""}`}
       aria-label="Application steps"
       style={{
         width: "100%",
@@ -235,6 +248,11 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
             .progress-stepper-container .step-summary,
             .progress-stepper-container .step-all {
               display: block;
+            }
+            /* WCAG 2.4.11: the open list can be taller than a phone screen, so it scrolls with the page. */
+            .progress-stepper-container.progress-stepper-container--list-open,
+            .document-editor-header:has(+ .progress-stepper-container--list-open) {
+              position: static !important;
             }
             .step-tooltip {
               display: none; /* Hide tooltips on mobile for better UX */
@@ -441,8 +459,12 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
       )}
 
       {/* Phones hide the step names and their tooltips, so the full list, with what is locked, is one tap away. */}
-      <details className="step-all">
-        <summary>All steps</summary>
+      <details
+        className="step-all"
+        open={allStepsOpen}
+        onToggle={(e) => setAllStepsOpen(e.currentTarget.open)}
+      >
+        <summary ref={allStepsSummaryRef}>All steps</summary>
         <ol>
           {steps.map((step, index) => (
             <li key={step.id} aria-current={isStepActive(index) ? "step" : undefined}>

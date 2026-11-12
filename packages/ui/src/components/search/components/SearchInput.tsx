@@ -19,6 +19,7 @@ interface SearchInputProps {
   onFocus: () => void;
   onKeyDown: (e: React.KeyboardEvent) => void;
   onClear: () => void;
+  describedBy?: string;
 }
 
 export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
@@ -33,6 +34,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       onFocus,
       onKeyDown,
       onClear,
+      describedBy,
     },
     ref
   ) => {
@@ -57,7 +59,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             type="search"
             className="gw-input gw-search-input"
             placeholder={placeholder}
-            aria-describedby="search-help-text"
+            aria-describedby={describedBy ? `search-help-text ${describedBy}` : "search-help-text"}
             aria-busy={isLoading || isSearching}
             style={{
               ...inputStyle,

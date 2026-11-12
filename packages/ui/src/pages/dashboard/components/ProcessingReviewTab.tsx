@@ -9,6 +9,7 @@ import ProcessingMetrics from "./ProcessingMetrics";
 import ReviewExpandedRow from "./ReviewExpandedRow";
 import TableScrollRegion from "../../../components/ui/TableScrollRegion";
 import { Modal } from "../../../components/common/Modal";
+import { sectionLabel } from "./section-labels";
 
 interface ProcessingReviewTabProps {
   apiClient: ApiClient;
@@ -295,7 +296,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
     if (review.missingSections && review.missingSections.length > 0) {
       return (
         <span className="review-issue-count review-issue-count--warning">
-          Missing: {review.missingSections.join(", ")}
+          Missing: {review.missingSections.map(sectionLabel).join(", ")}
         </span>
       );
     }
@@ -400,7 +401,15 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
         </div>
       </Modal>
 
-      {/* Bulk action bar */}
+      <div role="status" className="visually-hidden">
+        {bulkAction === "reprocess"
+          ? `Reprocessing ${selected.size} grant${selected.size === 1 ? "" : "s"}`
+          : bulkAction === "needs_reupload"
+            ? `Marking ${selected.size} grant${selected.size === 1 ? "" : "s"} as needs re-upload`
+            : selected.size > 0
+              ? `${selected.size} selected`
+              : ""}
+      </div>
       {selected.size > 0 && (
         <div className="review-bulk-bar">
           <span className="review-bulk-bar__count">
@@ -443,19 +452,21 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
         <div role="table" aria-label="Processing reviews" ref={tableRef} tabIndex={-1} aria-busy={loading}>
           <div className="table-header review-table-grid-select" role="rowgroup">
             <div role="row" style={{ display: "contents" }}>
-              <div className="header-cell review-checkbox-cell" role="columnheader">
-                <span className="visually-hidden">Select</span>
-                <input
-                  type="checkbox"
-                  ref={(el) => {
-                    selectAllRef.current = el;
-                    if (el) el.indeterminate = selected.size > 0 && selected.size < reviews.length;
-                  }}
-                  checked={reviews.length > 0 && selected.size === reviews.length}
-                  onChange={toggleSelectAll}
-                  aria-label="Select all reviews"
-                  disabled={reviews.length === 0}
-                />
+              <div className="header-cell review-checkbox-cell" role="columnheader" aria-label="Select">
+                <label className="gw-select-all">
+                  <input
+                    type="checkbox"
+                    ref={(el) => {
+                      selectAllRef.current = el;
+                      if (el) el.indeterminate = selected.size > 0 && selected.size < reviews.length;
+                    }}
+                    checked={reviews.length > 0 && selected.size === reviews.length}
+                    onChange={toggleSelectAll}
+                    aria-label="Select all reviews"
+                    disabled={reviews.length === 0}
+                  />
+                  <span aria-hidden="true">Select all</span>
+                </label>
               </div>
               <div className="header-cell" role="columnheader">Grant name</div>
               <div className="header-cell" role="columnheader">Reason</div>

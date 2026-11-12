@@ -87,6 +87,28 @@
   justify-content: center;
 }
 
+.auth-timeout-warning {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gw-spacing-sm) var(--gw-spacing-md);
+  margin-bottom: var(--gw-spacing-lg);
+}
+
+.auth-timeout-warning__text {
+  flex: 1 1 10rem;
+  margin: 0;
+}
+
+.auth-timeout-warning__button {
+  flex: none;
+}
+
+/* Its own line; the negative margin cancels the row gap while an invisible check shows nothing. */
+.auth-timeout-warning__check {
+  flex: 1 0 100%;
+  margin-top: calc(-1 * var(--gw-spacing-sm));
+}
+
 .show-password-checkbox {
   margin: 0;
   display: inline-flex;

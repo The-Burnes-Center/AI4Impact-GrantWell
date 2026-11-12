@@ -45,6 +45,13 @@ textarea:focus-visible,
   outline-offset: var(--gw-focus-offset);
 }
 
+/* Menus clip their overflow, so an outset ring loses its sides; the extra attribute outranks app.scss's menuitem ring. */
+[role="menu"] [role="menuitem"]:focus-visible,
+[role="menu"] [role="menuitemradio"]:focus-visible {
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: calc(-1 * var(--gw-focus-width));
+}
+
 [data-dark-bg="true"] button:focus-visible,
 .marketing__band button:focus-visible,
 .marketing__band a:focus-visible,

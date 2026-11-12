@@ -108,6 +108,8 @@ The message gives you, in order: the grant (<grant_document>), the applicant's m
 9. If the section description marks it conditional ("if applicable") and the questionnaire
    responses indicate it does not apply, return a single sentence saying so — do not
    fabricate a narrative to fill it
+10. Use Markdown headings inside the section: "### " for a heading and "#### " for a
+    subheading, each on its own line. Never use a line of only bold text as a heading
 
 Return the section as JSON whose "content" field holds the complete section as a single string.
 </instructions>`;

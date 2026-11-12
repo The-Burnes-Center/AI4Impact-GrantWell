@@ -52,6 +52,21 @@ describe("MfaGate", () => {
     expect(gate()).not.toBeInTheDocument();
   });
 
+  it("puts focus back on Set it up after Back", async () => {
+    vi.useFakeTimers({ toFake: ["Date"], now: Date.parse("2026-11-03T12:00:00Z") });
+    withMfaDeadline(PAST);
+    const user = userEvent.setup();
+    renderGate();
+
+    const setItUp = await screen.findByRole("button", { name: "Set it up" });
+    await waitFor(() => expect(setItUp).toHaveFocus());
+    await user.click(setItUp);
+    await screen.findByText("SECRET123");
+    await user.click(screen.getByRole("button", { name: "Back" }));
+
+    expect(screen.getByRole("button", { name: "Set it up" })).toHaveFocus();
+  });
+
   it("never blocks an enrolled user", async () => {
     vi.useFakeTimers({ toFake: ["Date"], now: Date.parse("2026-11-03T12:00:00Z") });
     withMfaDeadline(PAST);

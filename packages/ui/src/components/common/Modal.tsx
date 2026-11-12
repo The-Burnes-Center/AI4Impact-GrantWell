@@ -12,6 +12,8 @@ interface ModalProps {
   hideCloseButton?: boolean;
   /** "h1" when the dialog stands in for a page that has no h1 of its own while it is open. */
   titleLevel?: "h1" | "h2";
+  /** Takes the initial focus instead of the first focusable element (the close button). */
+  initialFocusRef?: React.RefObject<HTMLElement | null>;
 }
 
 /**
@@ -23,9 +25,9 @@ interface ModalProps {
  * - Consistent styling matching Dashboard
  */
 export const Modal = React.memo<ModalProps>(
-  ({ isOpen, onClose, title, children, maxWidth = "500px", hideCloseButton = false, titleLevel = "h2" }) => {
+  ({ isOpen, onClose, title, children, maxWidth = "500px", hideCloseButton = false, titleLevel = "h2", initialFocusRef }) => {
     const Title = titleLevel;
-    const modalRef = useFocusTrap<HTMLDivElement>({ isOpen, onEscape: onClose });
+    const modalRef = useFocusTrap<HTMLDivElement>({ isOpen, onEscape: onClose, initialFocus: initialFocusRef });
     const titleId = useId();
 
     if (!isOpen) return null;

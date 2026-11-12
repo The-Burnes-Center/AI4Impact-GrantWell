@@ -672,7 +672,7 @@ html:has(.document-editor-root) {
 }
 
 .ra-export-dropdown__item:disabled {
-  color: var(--gw-color-disabled-text, #707070);
+  color: var(--gw-color-disabled-text, #666666);
   cursor: not-allowed;
 }
 
@@ -1076,36 +1076,323 @@ html:has(.document-editor-root) {
   margin: 0;
 }
 
+/* Not overflow: hidden, which would clip the toolbar's menus and tooltips. */
 .se-editor-card {
   border: 1px solid var(--gw-color-border-input, #767676);
   border-radius: var(--gw-radius-container);
-  overflow: hidden;
   margin-bottom: 24px;
   background: var(--gw-color-surface, #ffffff);
 }
 
-.se-textarea {
-  width: 100%;
+.se-rich-text-loading {
+  min-height: 365px;
+}
+
+.se-rt-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--gw-color-border-strong);
+  border-radius: var(--gw-radius-container) var(--gw-radius-container) 0 0;
+  background: var(--gw-color-surface-subtle);
+}
+
+.se-rt-separator {
+  align-self: stretch;
+  width: 1px;
+  margin: 4px 2px;
+  background: var(--gw-color-border-strong);
+}
+
+.se-rt-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-radius: var(--gw-radius-control);
+  background: transparent;
+  color: var(--gw-color-text-strong);
+  font-family: var(--gw-font-button);
+  font-size: var(--gw-font-size-sm);
+  font-weight: var(--gw-font-weight-semibold);
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.se-rt-btn--icon {
+  padding: 0;
+}
+
+.se-rt-btn:hover:not([aria-disabled="true"]) {
+  border-color: var(--gw-color-border-input);
+  background: var(--gw-color-surface);
+}
+
+/* The border, not only the fill, tells a pressed button apart (WCAG 1.4.11). */
+.se-rt-btn[aria-pressed="true"],
+.se-rt-btn[aria-pressed="true"]:hover:not([aria-disabled="true"]) {
+  border-color: var(--gw-color-primary);
+  background: var(--gw-color-primary-light);
+  color: var(--gw-color-primary-hover);
+}
+
+.se-rt-btn[aria-disabled="true"] {
+  color: var(--gw-color-disabled-text);
+  cursor: not-allowed;
+}
+
+.se-rt-btn.se-rt-btn:focus-visible {
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
+  z-index: 1;
+}
+
+.se-rt-tooltip {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--gw-z-tooltip);
+  padding: 4px 8px;
+  border-radius: var(--gw-radius-control);
+  background: var(--gw-color-text-strong);
+  color: var(--gw-color-text-inverse);
+  font-family: var(--gw-font-family);
+  font-size: var(--gw-font-size-xs);
+  font-weight: var(--gw-font-weight-normal);
+  line-height: 1.4;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.se-rt-btn:focus-visible .se-rt-tooltip {
+  display: block;
+}
+
+@media (hover: hover) {
+  .se-rt-btn:hover .se-rt-tooltip {
+    display: block;
+  }
+}
+
+/* Escape dismisses the tooltip without moving focus (WCAG 1.4.13). */
+.se-rt-toolbar--tooltips-hidden .se-rt-btn .se-rt-tooltip {
+  display: none;
+}
+
+.se-rt-menu {
+  position: relative;
+}
+
+.se-rt-menu__button {
+  border-color: var(--gw-color-border-input);
+  background: var(--gw-color-surface);
+  padding: 0 6px 0 10px;
+}
+
+.se-rt-menu__value {
+  min-width: 6.5em;
+  text-align: left;
+}
+
+.se-rt-menu__chevron {
+  flex-shrink: 0;
+}
+
+.se-rt-menu__list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: var(--gw-z-dropdown);
+  min-width: 12rem;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  border: 1px solid var(--gw-color-border-input);
+  border-radius: var(--gw-radius-control);
+  background: var(--gw-color-surface);
+  box-shadow: var(--gw-shadow-mid);
+}
+
+.se-rt-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 6px 12px 6px 8px;
+  border-radius: var(--gw-radius-control);
+  color: var(--gw-color-text-strong);
+  font-family: var(--gw-font-button);
+  font-size: var(--gw-font-size-sm);
+  font-weight: var(--gw-font-weight-semibold);
+  cursor: pointer;
+}
+
+.se-rt-menu__item:hover,
+.se-rt-menu__item:focus {
+  background: var(--gw-color-primary-light);
+  color: var(--gw-color-primary-hover);
+}
+
+.se-rt-menu__item:focus {
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: calc(-1 * var(--gw-focus-width));
+}
+
+.se-rt-menu__check {
+  display: inline-flex;
+  width: 16px;
+  flex-shrink: 0;
+}
+
+.se-rt-menu__separator {
+  height: 1px;
+  margin: 4px 0;
+  background: var(--gw-color-border-strong);
+}
+
+.se-rich-text__content {
   min-height: 320px;
   padding: 16px;
-  border: none;
-  outline: none;
-  resize: vertical;
+  border-radius: 0 0 var(--gw-radius-container) var(--gw-radius-container);
   font-size: 16px;
   line-height: 1.6;
   color: var(--gw-color-text-strong);
+  overflow-wrap: anywhere;
   box-sizing: border-box;
 }
 
-.se-textarea:focus-visible {
+.se-rich-text__content:focus {
+  outline: none;
+}
+
+.se-rich-text__content:focus-visible {
   outline: var(--gw-focus-width) solid var(--gw-color-focus);
   outline-offset: -2px;
 }
 
-.se-textarea--locked {
+.se-rich-text__content--locked {
   background: var(--gw-color-disabled-bg, #F0F0F0);
   color: var(--gw-color-text-secondary, #5a5a5a);
   cursor: not-allowed;
+}
+
+.se-rich-text__content > :first-child {
+  margin-top: 0;
+}
+
+.se-rich-text__content p {
+  margin: 0 0 12px;
+}
+
+.se-rich-text__content h3 {
+  margin: 24px 0 8px;
+  font-size: 20px;
+  font-weight: var(--gw-font-weight-semibold);
+  line-height: 1.35;
+  color: var(--gw-color-text-strong);
+}
+
+.se-rich-text__content h4 {
+  margin: 20px 0 6px;
+  font-size: 17px;
+  font-weight: var(--gw-font-weight-semibold);
+  line-height: 1.4;
+  color: var(--gw-color-text-strong);
+}
+
+.se-rich-text__content ul,
+.se-rich-text__content ol {
+  margin: 0 0 12px;
+  padding-left: 1.5em;
+}
+
+.se-rich-text__content li > p {
+  margin-bottom: 4px;
+}
+
+.se-rich-text__content a {
+  color: var(--gw-color-primary);
+  text-decoration: underline;
+}
+
+.se-rich-text__content blockquote {
+  margin: 0 0 12px;
+  padding-left: 12px;
+  border-left: 3px solid var(--gw-color-border-strong);
+}
+
+.se-rich-text__content pre {
+  padding: 12px;
+  border-radius: var(--gw-radius-control);
+  background: var(--gw-color-surface-subtle);
+  white-space: pre-wrap;
+}
+
+/* A wide table scrolls inside its own box instead of widening the page (WCAG 1.4.10). */
+.se-rich-text__content .tableWrapper {
+  margin: 0 0 12px;
+  overflow-x: auto;
+}
+
+.se-rich-text__content table {
+  border-collapse: collapse;
+  overflow-wrap: normal;
+}
+
+.se-rich-text__content th,
+.se-rich-text__content td {
+  min-width: 6em;
+  padding: 6px 8px;
+  border: 1px solid var(--gw-color-border-input);
+  vertical-align: top;
+  text-align: left;
+}
+
+.se-rich-text__content th {
+  background: var(--gw-color-surface-subtle);
+  font-weight: var(--gw-font-weight-semibold);
+}
+
+.se-rich-text__content th > p,
+.se-rich-text__content td > p {
+  margin: 0;
+}
+
+.se-rich-text__content p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  color: var(--gw-color-text-muted);
+  pointer-events: none;
+}
+
+/* Pinned below the title bar and stepper; not on phones or short screens, where those bars unpin too. */
+@media (min-width: 769px) and (min-height: 501px) {
+  .se-rt-toolbar {
+    position: sticky;
+    top: var(--se-rt-toolbar-top, 0px);
+    z-index: 5;
+  }
+}
+
+@media (max-width: 768px) {
+  .se-rt-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .se-rt-menu__item {
+    min-height: 44px;
+  }
 }
 
 .se-storage-warning {
@@ -1145,7 +1432,7 @@ html:has(.document-editor-root) {
 }
 
 .se-add-section__toggle:disabled {
-  color: var(--gw-color-disabled-text, #707070);
+  color: var(--gw-color-disabled-text, #666666);
   cursor: not-allowed;
 }
 
@@ -1196,7 +1483,7 @@ html:has(.document-editor-root) {
 
 .se-add-section__submit:disabled {
   background: var(--gw-color-disabled-bg, #F0F0F0);
-  color: var(--gw-color-disabled-text, #707070);
+  color: var(--gw-color-disabled-text, #666666);
   cursor: not-allowed;
 }
 

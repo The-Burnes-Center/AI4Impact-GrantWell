@@ -90,14 +90,17 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
       <div role="status" aria-live="polite" className="visually-hidden">
         {overallStatus}
       </div>
-      <h3 className="se-sidebar__title">
-        Sections
+      {/* The running count sits beside the heading, not in it, so the heading text stays put. */}
+      <div style={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', marginBottom: 16 }}>
+        <h2 className="se-sidebar__title" style={{ margin: 0 }}>
+          Sections
+        </h2>
         {generating && (
           <span style={{ fontSize: '13px', fontWeight: 400, color: 'var(--gw-color-text-muted)', marginLeft: 8 }}>
             {completedSectionCount}/{total} generated
           </span>
         )}
-      </h3>
+      </div>
       <div className="se-sidebar__list">
         {sections.map((section, idx) => {
           const locked = generating && !isSectionReady(section);
@@ -107,7 +110,7 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
               key={section.id}
               onClick={() => { if (!locked) setActiveSection(idx); }}
               className={`se-sidebar__btn${activeSection === idx ? " se-sidebar__btn--active" : ""}${locked ? " se-sidebar__btn--locked" : ""}`}
-              aria-label={`Section ${idx + 1} of ${sections.length}: ${section.name}${status ? `, ${status}` : ""}${locked ? " (not yet available)" : ""}`}
+              aria-label={`${idx + 1} ${section.name}, section ${idx + 1} of ${sections.length}${status ? `, ${status}` : ""}${locked ? ", not yet available" : ""}`}
               aria-current={activeSection === idx ? "true" : undefined}
               aria-disabled={locked}
               title={locked ? "This section is still being generated" : undefined}
