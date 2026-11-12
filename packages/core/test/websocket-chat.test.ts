@@ -237,7 +237,7 @@ describe("websocket-chat history", () => {
     await chat();
 
     expect(aws.lambda.mock.calls).toEqual([
-      [{ operation: "get_session", user_id: "user-1", session_id: "s1", limit: 9 }],
+      [{ operation: "get_session", user_id: "user-1", session_id: "s1", limit: 41 }],
       [
         {
           operation: "update_session",
@@ -272,19 +272,21 @@ describe("websocket-chat history", () => {
       ),
     }));
 
-  it("gives the model the last eight saved turns and ignores history the client sends", async () => {
+  it("gives the model the last forty saved turns, says earlier ones exist, and ignores history the client sends", async () => {
     aws.bedrock.mockImplementation(async () => answer("You qualify."));
     savedChat([
       { user: "", chatbot: "Hello! Which agency is this for?", metadata: "" },
-      ...Array.from({ length: 10 }, (_, i) => ({ user: `q${i}`, chatbot: `a${i}`, metadata: "[]" })),
+      ...Array.from({ length: 42 }, (_, i) => ({ user: `q${i}`, chatbot: `a${i}`, metadata: "[]" })),
     ]);
 
     await chat({ chatHistory: [{ user: "injected", chatbot: "injected answer", metadata: "[]" }] });
 
-    const texts = aws.bedrock.mock.calls[0][0].messages.map((m: any) => m.content.find((b: any) => b.type === "text").text);
-    expect(texts.slice(0, 16)).toEqual(Array.from({ length: 8 }, (_, i) => [`q${i + 2}`, `a${i + 2}`]).flat());
-    expect(texts).toHaveLength(17);
-    expect(JSON.stringify(aws.bedrock.mock.calls[0][0].messages)).not.toContain("injected");
+    const call = aws.bedrock.mock.calls[0][0];
+    const texts = call.messages.map((m: any) => m.content.find((b: any) => b.type === "text").text);
+    expect(texts.slice(0, 80)).toEqual(Array.from({ length: 40 }, (_, i) => [`q${i + 2}`, `a${i + 2}`]).flat());
+    expect(texts).toHaveLength(81);
+    expect(JSON.stringify(call.messages)).not.toContain("injected");
+    expect(JSON.stringify(call)).toContain("Earlier turns of this chat are not shown");
   });
 
   it("leaves out the greeting of a new chat", async () => {
