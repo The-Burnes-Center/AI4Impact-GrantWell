@@ -498,14 +498,14 @@ const NOFOsTab = React.memo(function NOFOsTab({
                       type="button"
                       className="grant-review-link grant-review-link--suggested"
                       onClick={() => handleEditSummary(nofo)}
-                      title={reviewFlagTitle(nofo.reviewFlag)}
                       aria-describedby={reviewFlagTitle(nofo.reviewFlag) ? `${reviewFlagIdPrefix}-${nofo.id}` : undefined}
                     >
                       <LuInfo size={12} aria-hidden="true" />
                       Review suggested
                     </button>
+                    {/* Shown, not a hover tooltip, so keyboard and touch users see why too. */}
                     {reviewFlagTitle(nofo.reviewFlag) && (
-                      <span id={`${reviewFlagIdPrefix}-${nofo.id}`} className="visually-hidden">
+                      <span id={`${reviewFlagIdPrefix}-${nofo.id}`} className="grant-review-reason">
                         {reviewFlagTitle(nofo.reviewFlag)}
                       </span>
                     )}

@@ -172,8 +172,45 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
             transform: translateX(calc(-50% + 16px)) translateY(2px);
           }
 
-          .progress-stepper-container .step-summary {
+          .progress-stepper-container .step-summary,
+          .progress-stepper-container .step-all {
             display: none;
+          }
+          .step-all {
+            margin: 8px auto 0;
+            max-width: 360px;
+            border-top: 1px solid var(--gw-color-border);
+            padding-top: 6px;
+            font-family: var(--gw-font-family);
+            font-size: 13px;
+          }
+          .step-all > summary {
+            cursor: pointer;
+            text-align: center;
+            color: var(--gw-color-primary-hover);
+            font-weight: 600;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+          }
+          .step-all ol {
+            display: grid;
+            gap: 4px;
+            margin: 8px 0 0;
+            padding: 0;
+            list-style: none;
+          }
+          .step-all li {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            color: var(--gw-color-text);
+          }
+          .step-all li[aria-current] {
+            font-weight: 600;
+          }
+          .step-all .step-all__state {
+            color: var(--gw-color-text-secondary);
+            white-space: nowrap;
           }
 
           @media (max-width: 768px) {
@@ -187,7 +224,8 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
             .progress-stepper-container .step-progress {
               display: none;
             }
-            .progress-stepper-container .step-summary {
+            .progress-stepper-container .step-summary,
+            .progress-stepper-container .step-all {
               display: block;
             }
             .step-tooltip {
@@ -393,6 +431,27 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
           {`Step ${activeStep + 1} of ${steps.length}: ${current.label}${current.description ? ` — ${current.description}` : ""}`}
         </p>
       )}
+
+      {/* Phones hide the step names and their tooltips, so the full list, with what is locked, is one tap away. */}
+      <details className="step-all">
+        <summary>All steps</summary>
+        <ol>
+          {steps.map((step, index) => (
+            <li key={step.id} aria-current={isStepActive(index) ? "step" : undefined}>
+              <span>{`${index + 1} ${step.label}`}</span>
+              <span className="step-all__state">
+                {isStepActive(index)
+                  ? "You are here"
+                  : isStepCompleted(index)
+                    ? "Done"
+                    : isStepClickable(index)
+                      ? "Not started"
+                      : "Locked"}
+              </span>
+            </li>
+          ))}
+        </ol>
+      </details>
 
       {showProgress && (
         <div

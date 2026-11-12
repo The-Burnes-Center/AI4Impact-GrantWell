@@ -1199,6 +1199,14 @@ body {
   border-color: color-mix(in srgb, var(--gw-color-warning) 40%, transparent);
 }
 
+.grant-review-reason {
+  display: block;
+  margin-top: 4px;
+  font-size: var(--gw-font-size-xs);
+  line-height: 1.4;
+  color: var(--gw-color-text-secondary);
+}
+
 .grant-review-link:not(:disabled):hover {
   filter: brightness(0.95);
 }

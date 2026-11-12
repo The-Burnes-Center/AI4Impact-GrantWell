@@ -59,3 +59,27 @@ describe("ProgressStepper", () => {
     expect(tooltip).not.toHaveClass("step-tooltip--visible");
   });
 });
+
+describe("ProgressStepper all-steps list", () => {
+  it("names every step with its state for phones, where the step names are hidden", async () => {
+    const user = userEvent.setup();
+    render(
+      <ProgressStepper
+        steps={STEPS}
+        activeStep={1}
+        completedSteps={[0]}
+        isStepClickable={(idx) => idx <= 1}
+        onStepClick={vi.fn()}
+      />
+    );
+    const toggle = screen.getByText("All steps");
+    await user.click(toggle);
+    const list = toggle.closest("details")!;
+    expect(list).toHaveAttribute("open");
+    expect(within(list).getAllByRole("listitem", { hidden: true }).map((li) => li.textContent)).toEqual([
+      "1 BasicsDone",
+      "2 QuestionsYou are here",
+      "3 ReviewLocked",
+    ]);
+  });
+});
