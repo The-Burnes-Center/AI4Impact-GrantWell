@@ -73,15 +73,14 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
     }
   };
 
-  // Coarse on purpose: the generator flips up to CONCURRENCY_WINDOW sections at
-  // once, so announcing each pending -> generating -> completed step would flood
-  // the queue. Empty until the section list arrives, so the text lands as a
-  // mutation on an already-mounted region.
+  // The running count, not each section's pending -> generating -> completed step: the generator flips
+  // several sections at once, and the count matches the visible "n/total generated". Empty until the
+  // section list arrives, so the text lands as a mutation on an already-mounted region.
   const overallStatus =
     sections.length === 0
       ? ""
       : generating
-        ? `Generating ${total} sections.`
+        ? `Generating sections: ${completedSectionCount} of ${total} done.`
         : completedSectionCount > 0
           ? `Section generation finished. ${completedSectionCount} of ${total} sections generated.`
           : "";

@@ -188,7 +188,7 @@ export function LandingFooter() {
               href={madeBy.href}
               target="_blank"
               rel="noreferrer"
-              aria-label={madeBy.label || "AI for Impact"}
+              aria-label={`${madeBy.label || "AI for Impact"} (opens in new tab)`}
             >
               <AiForImpactWordmark />
             </a>

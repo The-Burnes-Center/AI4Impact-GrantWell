@@ -61,7 +61,7 @@ describe("ProgressStepper", () => {
 });
 
 describe("ProgressStepper all-steps list", () => {
-  it("names every step with its state for phones, where the step names are hidden", async () => {
+  it("names every step with its state and help text for phones, where names and tooltips are hidden", async () => {
     const user = userEvent.setup();
     render(
       <ProgressStepper
@@ -77,9 +77,9 @@ describe("ProgressStepper all-steps list", () => {
     const list = toggle.closest("details")!;
     expect(list).toHaveAttribute("open");
     expect(within(list).getAllByRole("listitem", { hidden: true }).map((li) => li.textContent)).toEqual([
-      "1 BasicsDone",
-      "2 QuestionsYou are here",
-      "3 ReviewLocked",
+      "1 BasicsDoneEnter the basics.",
+      "2 QuestionsYou are hereAnswer questions.",
+      "3 ReviewLockedCheck everything.",
     ]);
   });
 });

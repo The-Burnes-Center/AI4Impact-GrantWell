@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Alert } from "react-bootstrap";
 import { TURNSTILE_SITE_KEY } from "./turnstile-config";
+import { useBranding } from "../../common/branding";
 
 const SCRIPT_SRC =
   "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
@@ -51,6 +52,8 @@ export default function TurnstileWidget({
   const widgetIdRef = useRef<string | null>(null);
   const onTokenRef = useRef(onToken);
   const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const { supportEmail } = useBranding();
 
   onTokenRef.current = onToken;
 
@@ -89,7 +92,7 @@ export default function TurnstileWidget({
         widgetIdRef.current = null;
       }
     };
-  }, [action]);
+  }, [action, attempt]);
 
   // Turnstile tokens are single-use, so every submission needs a freshly issued one.
   useEffect(() => {
@@ -107,10 +110,24 @@ export default function TurnstileWidget({
       <div aria-live="polite" aria-atomic="true">
         {failed && (
           <Alert variant="danger" className="mb-0 mt-2" transition={false} role={undefined}>
-            Security check could not load. Refresh the page and try again.
+            The security check didn&apos;t load.{" "}
+            {supportEmail ? <>If it keeps failing, email {supportEmail}.</> : "If it keeps failing, refresh the page."}
           </Alert>
         )}
       </div>
+      {/* Outside the live region, so the button isn't read out as part of the message. */}
+      {failed && (
+        <button
+          type="button"
+          className="gw-btn gw-btn--secondary gw-btn--slim mt-2"
+          onClick={() => {
+            setFailed(false);
+            setAttempt((n) => n + 1);
+          }}
+        >
+          Try the check again
+        </button>
+      )}
     </div>
   );
 }

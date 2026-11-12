@@ -133,6 +133,11 @@ async function signInFresh(
 
 const PENDING_STATE_KEY = "grantwell.pendingSignupState";
 
+/** Cognito ends a sign-in left at the code step after the app client's authSessionValidity (core: 15 minutes). */
+const CODE_STEP_LIMIT_MS = 15 * 60_000;
+/** WCAG 2.2.1: warn with time to spare, and let the user extend as often as they need. */
+const CODE_STEP_WARNING_MS = 2 * 60_000;
+
 function writePendingSignupState(email: string, state: string) {
   try {
     if (!state) {
@@ -182,6 +187,8 @@ export default function AuthPanel({
   const [signupState, setSignupState] = useState(SINGLE_STATE?.code ?? "");
   const [turnstileToken, setTurnstileToken] = useState("");
   const [turnstileResetKey, setTurnstileResetKey] = useState(0);
+  const [codeStepStartedAt, setCodeStepStartedAt] = useState<number | null>(null);
+  const [codeStepWarning, setCodeStepWarning] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [errorFields, setErrorFields] = useState<AuthErrorField[]>([]);
@@ -197,6 +204,19 @@ export default function AuthPanel({
   const Heading = headingLevel === 2 ? "h2" : "h1";
 
   const normalizedEmail = useMemo(() => normalizeEmail(email), [email]);
+  const inCodeStep = view === "mfa-challenge" || view === "mfa-setup";
+
+  useEffect(() => {
+    setCodeStepWarning(false);
+    setCodeStepStartedAt(inCodeStep ? Date.now() : null);
+  }, [inCodeStep]);
+
+  useEffect(() => {
+    if (codeStepStartedAt === null) return;
+    const warnIn = CODE_STEP_LIMIT_MS - CODE_STEP_WARNING_MS - (Date.now() - codeStepStartedAt);
+    const timer = setTimeout(() => setCodeStepWarning(true), Math.max(0, warnIn));
+    return () => clearTimeout(timer);
+  }, [codeStepStartedAt]);
 
   // Every Turnstile token is single-use, so a widget that produced one must be reset before the
   // same form can be submitted again.
@@ -327,6 +347,30 @@ export default function AuthPanel({
     setPassword("");
     clearMessages();
     setView("sign-up");
+  };
+
+  // Cognito can't lengthen a sign-in in progress, so start a fresh one with the password still in the form.
+  // On the code screen nothing else changes; first-time setup gets a new QR code (the warning says so).
+  const keepSigningIn = async () => {
+    if (loading) return;
+    const checkError = getTurnstileValidationError(turnstileToken);
+    if (checkError) {
+      setStepError(checkError);
+      return;
+    }
+    setLoading(true);
+    try {
+      const { nextStep } = await signInFresh(normalizedEmail, password, turnstileClientMetadata(turnstileToken));
+      consumeTurnstileToken();
+      setCodeStepWarning(false);
+      setCodeStepStartedAt(Date.now());
+      applySignInStep(nextStep);
+    } catch {
+      consumeTurnstileToken();
+      switchToSignIn("Your sign-in timed out. Sign in again to continue.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const applySignInStep = (nextStep: SignInOutput["nextStep"]) => {
@@ -932,6 +976,23 @@ export default function AuthPanel({
             {success}
           </Alert>
         ) : null}
+        {inCodeStep && codeStepWarning && (
+          <div className="gw-alert gw-alert--warning auth-timeout-warning" role="alert">
+            <p className="mb-2">
+              For your security, this sign-in times out in 2 minutes.
+              {view === "mfa-setup" ? " If you keep signing in, scan the new QR code that appears." : ""}
+            </p>
+            {turnstileSlot("sign-in")}
+            <button
+              type="button"
+              className="gw-btn gw-btn--secondary gw-btn--slim"
+              onClick={() => void keepSigningIn()}
+              aria-disabled={loading || undefined}
+            >
+              Keep signing in
+            </button>
+          </div>
+        )}
         {renderStep()}
       </div>
     </div>

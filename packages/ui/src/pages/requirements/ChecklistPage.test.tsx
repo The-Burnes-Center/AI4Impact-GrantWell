@@ -45,7 +45,7 @@ describe("ChecklistPage grant summary", () => {
       expect(a).toHaveAttribute("target", "_blank");
       expect(a).toHaveAttribute("rel", "noopener noreferrer");
     }
-    expect(markdown.textContent).toMatch(/js plain secure mail/);
+    expect(markdown.textContent).toMatch(/js plain secure \(opens in new tab\) mail/);
     expect(markdown.innerHTML).not.toMatch(/javascript:|insecure\.example|evil\.example/);
     expect(screen.getByRole("heading", { level: 2, name: "Not sure if your organization qualifies?" })).toBeInTheDocument();
   });

@@ -49,6 +49,8 @@
 
 .totp-enrollment-secret .btn-link {
   padding: 0;
+  min-width: 24px;
+  min-height: 24px;
   font-size: var(--gw-font-size-sm);
 }
 

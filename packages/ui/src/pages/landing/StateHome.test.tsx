@@ -76,7 +76,9 @@ describe("state home page", () => {
   it("links attribution, marking links that open a new tab", () => {
     renderHome(colorado);
 
-    expect(screen.getByRole("link", { name: /^AI for Impact ?\(opens in new tab\)$/ })).toHaveAttribute("target", "_blank");
+    for (const link of screen.getAllByRole("link", { name: /^AI for Impact ?\(opens in new tab\)$/ })) {
+      expect(link).toHaveAttribute("target", "_blank");
+    }
     const email = screen.getByRole("link", { name: "help@grantwell.us" });
     expect(email).toHaveAttribute("href", "mailto:help@grantwell.us");
     expect(email).not.toHaveAttribute("target");

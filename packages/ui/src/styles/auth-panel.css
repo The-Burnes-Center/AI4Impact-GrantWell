@@ -234,7 +234,7 @@
 .create-account-link.btn,
 .create-account-link.btn-link {
   padding: 0;
-  min-height: auto;
+  min-height: 24px;
   font-size: 14px;
   color: var(--gw-color-primary-hover);
   text-decoration: none !important;

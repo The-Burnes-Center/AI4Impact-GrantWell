@@ -200,10 +200,18 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
             list-style: none;
           }
           .step-all li {
+            display: grid;
+            gap: 1px;
+            color: var(--gw-color-text);
+          }
+          .step-all .step-all__row {
             display: flex;
             justify-content: space-between;
             gap: 12px;
-            color: var(--gw-color-text);
+          }
+          .step-all .step-all__desc {
+            font-size: 12px;
+            color: var(--gw-color-text-secondary);
           }
           .step-all li[aria-current] {
             font-weight: 600;
@@ -438,16 +446,19 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
         <ol>
           {steps.map((step, index) => (
             <li key={step.id} aria-current={isStepActive(index) ? "step" : undefined}>
-              <span>{`${index + 1} ${step.label}`}</span>
-              <span className="step-all__state">
-                {isStepActive(index)
-                  ? "You are here"
-                  : isStepCompleted(index)
-                    ? "Done"
-                    : isStepClickable(index)
-                      ? "Not started"
-                      : "Locked"}
+              <span className="step-all__row">
+                <span>{`${index + 1} ${step.label}`}</span>
+                <span className="step-all__state">
+                  {isStepActive(index)
+                    ? "You are here"
+                    : isStepCompleted(index)
+                      ? "Done"
+                      : isStepClickable(index)
+                        ? "Not started"
+                        : "Locked"}
+                </span>
               </span>
+              {(step.tooltip ?? step.description) && <span className="step-all__desc">{step.tooltip ?? step.description}</span>}
             </li>
           ))}
         </ol>

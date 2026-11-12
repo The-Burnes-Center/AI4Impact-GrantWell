@@ -13,6 +13,7 @@ const SAFE_COMPONENTS: Components = {
     return (
       <a href={href} title={title} target="_blank" rel="noopener noreferrer">
         {children}
+        {/^https:/i.test(href) && <span className="visually-hidden"> (opens in new tab)</span>}
       </a>
     );
   },

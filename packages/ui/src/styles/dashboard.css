@@ -922,6 +922,7 @@ body {
   border: none;
   border-radius: var(--gw-radius-control);
   cursor: pointer;
+  min-height: 24px;
 }
 
 .processing-banner__view:hover {
@@ -932,8 +933,8 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: var(--gw-radius-control);
   border: none;
   background: transparent;

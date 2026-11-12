@@ -24,7 +24,7 @@ describe("ChatMessage markdown", () => {
       expect(a).toHaveAttribute("target", "_blank");
       expect(a).toHaveAttribute("rel", "noopener noreferrer");
     }
-    expect(container.textContent).toMatch(/js plain secure mail/);
+    expect(container.textContent).toMatch(/js plain secure \(opens in new tab\) mail/);
     expect(container.innerHTML).not.toMatch(/javascript:|insecure\.example|evil\.example/);
   });
 });

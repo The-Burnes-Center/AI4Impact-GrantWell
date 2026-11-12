@@ -207,7 +207,8 @@ export class AuthorizationStack extends Construct {
       idTokenValidity: cdk.Duration.minutes(15),
       refreshTokenValidity: cdk.Duration.days(7),
       // Cognito's 3-minute default ends the sign-in before many users can find their authenticator app.
-      authSessionValidity: cdk.Duration.minutes(10),
+      // 15 is Cognito's maximum; the UI warns 2 minutes before and lets people keep signing in (WCAG 2.2.1).
+      authSessionValidity: cdk.Duration.minutes(15),
       readAttributes: clientAttributes,
       writeAttributes: new cognito.ClientAttributes()
         .withStandardAttributes({ email: true }),
