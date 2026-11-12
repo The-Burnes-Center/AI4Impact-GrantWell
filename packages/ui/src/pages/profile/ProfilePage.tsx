@@ -824,7 +824,9 @@ function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
       {MFA_ENABLED && <MfaSection />}
 
       {pwError && <div className="gw-alert gw-alert--urgent profile-alert profile-alert--error" role="alert">{pwError}</div>}
-      {pwOk && <div className="gw-alert gw-alert--success profile-alert profile-alert--success" role="status">Password changed. You have been signed out on every device — sign in again with your new password.</div>}
+      <LiveStatus>
+        {pwOk && <div className="gw-alert gw-alert--success profile-alert profile-alert--success">Password changed. You have been signed out on every device — sign in again with your new password.</div>}
+      </LiveStatus>
 
       {showPw ? (
         <form onSubmit={changePassword}>

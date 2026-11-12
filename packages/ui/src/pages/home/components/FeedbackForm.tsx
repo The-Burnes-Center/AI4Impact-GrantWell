@@ -27,6 +27,11 @@ const FeedbackForm = React.memo(function FeedbackForm() {
   const [showContactWarning, setShowContactWarning] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const infoButtonRef = useRef<HTMLButtonElement>(null);
+  const successRef = useRef<HTMLDivElement>(null);
+  // The form, with its focused Send button, is replaced by the thanks: focus it so it is read out.
+  useEffect(() => {
+    if (feedbackSubmitted) successRef.current?.focus();
+  }, [feedbackSubmitted]);
   const errorId = useId();
   const warningId = useId();
 
@@ -56,6 +61,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSubmitting) return;
 
     if (!selectedOption) return;
 
@@ -106,15 +112,8 @@ const FeedbackForm = React.memo(function FeedbackForm() {
       className="feedback-form-container ma__feedback-form"
       data-mass-feedback-form="true"
     >
-      {/* Success replaces the whole form, so the visible panel is created together
-          with its text. This region is mounted from the start and fills instead. */}
-      <div role="status" aria-live="polite" className="visually-hidden">
-        {feedbackSubmitted
-          ? "Thank you for your feedback! Your response has been submitted successfully."
-          : ""}
-      </div>
       {feedbackSubmitted ? (
-        <div className="feedback-success">
+        <div className="feedback-success" ref={successRef} tabIndex={-1}>
           <p style={{ margin: 0 }}>
             Thank you for your feedback! Your response has been submitted
             successfully.
@@ -281,7 +280,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
               <button
                 type="submit"
                 className="feedback-submit"
-                disabled={isSubmitting}
+                aria-disabled={isSubmitting || undefined}
               >
                 {isSubmitting ? "Submitting..." : "Send feedback"}
               </button>

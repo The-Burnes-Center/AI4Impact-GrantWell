@@ -289,6 +289,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       setSections(updated);
       setSectionAnswers(answers);
       setActiveSection(updated.length - 1);
+      // Focus the new section's title (the empty-state form that had focus is gone after the first one).
+      requestAnimationFrame(() => sectionTitleRef.current?.focus());
       saveSections(answers, updated, { changedSections: [id], source: "manual", immediate: true }).catch(
         (error) => console.error("Error saving the new section:", error)
       );
@@ -339,6 +341,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     try {
       setGenerating(true);
       setFailedSections([]);
+      // The Retry button goes away with the failure notice; keep focus on the section being written.
+      requestAnimationFrame(() => sectionTitleRef.current?.focus());
       setCompletedSectionCount(0);
       setGenerationTotal(retrying.length);
 

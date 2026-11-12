@@ -441,7 +441,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
               className="summary-field__label"
             >
               Admin notes
-              <span className="review-field-required">(Required for rejection)</span>
+              <span className="review-field-required">(Required to reject or ask for a re-upload)</span>
             </label>
             <textarea
               ref={notesRef}

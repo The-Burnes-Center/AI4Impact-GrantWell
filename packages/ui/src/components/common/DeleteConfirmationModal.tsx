@@ -32,7 +32,7 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
       <div className="modal-form">
         <div className="delete-confirmation">
-          <LuTriangle size={32} className="warning-icon" />
+          <LuTriangle size={32} className="warning-icon" aria-hidden="true" />
           <p>
             Are you sure you want to delete{" "}
             {itemCount !== undefined ? (

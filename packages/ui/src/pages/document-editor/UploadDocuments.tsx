@@ -357,7 +357,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           }}>
             Additional context
           </h3>
-          <p style={{
+          <p id="additional-info-prompt" style={{
             fontSize: typography.fontSize.sm,
             color: colors.textSecondary,
             marginBottom: spacing.lg,
@@ -365,8 +365,9 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           }}>
             Is there anything else you'd like to share about your application?
           </p>
+          {/* Same words as the visible heading, so voice users can say "Additional context". */}
           <label htmlFor="additional-info" className="sr-only">
-            Additional information about your application
+            Additional context
           </label>
           <textarea className="gw-input"
             id="additional-info"
@@ -377,7 +378,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             }}
             placeholder="Enter any additional context or notes about your application..."
             maxLength={MAX_INPUT_CHARS}
-            aria-describedby="additional-info-help"
+            aria-describedby="additional-info-prompt additional-info-help"
             style={{
               width: "100%",
               minHeight: "120px",

@@ -497,15 +497,15 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                   </div>
                 </div>
                 <div className="row-cell" role="cell">
-                  <span aria-label={`Grant: ${withoutTrailingSlash(item.document_identifier || '') || 'Not specified'}`}>
-                    {withoutTrailingSlash(item.document_identifier || '') || '—'}
-                  </span>
+                  {withoutTrailingSlash(item.document_identifier || '') || (
+                    <>
+                      <span aria-hidden="true">—</span>
+                      <span className="visually-hidden">Not specified</span>
+                    </>
+                  )}
                 </div>
                 <div className="row-cell" role="cell" style={{ justifyContent: 'center' }}>
-                  <span
-                    aria-label={`Application status: ${getStatusLabel(item.status)}`}
-                    style={statusBadgeStyle(item.status)}
-                  >
+                  <span style={statusBadgeStyle(item.status)}>
                     {getStatusLabel(item.status)}
                   </span>
                 </div>

@@ -126,6 +126,7 @@
 
 
 .analytics__outcomes-filters {
+  align-items: center;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;

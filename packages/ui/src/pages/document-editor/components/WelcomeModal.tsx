@@ -28,9 +28,10 @@ const WelcomeModal = React.memo(function WelcomeModal({
     onClose={onClose}
     title="Welcome to GrantWell"
     maxWidth="900px"
+    titleLevel="h1"
   >
     <div className="welcome-modal-intro">
-      <h3 className="welcome-modal-subtitle">Write application</h3>
+      <p className="welcome-modal-subtitle">Write application</p>
       <p className="welcome-modal-desc">
         GrantWell uses AI to help you write your grant application. We&#39;ll guide you through
         these five steps, and your progress is saved as you go.
@@ -42,7 +43,7 @@ const WelcomeModal = React.memo(function WelcomeModal({
         <li key={step.num} className="welcome-modal-step">
           <div className="welcome-modal-step__number" aria-hidden="true">{step.num}</div>
           <div>
-            <h3 className="welcome-modal-step__title">{step.title}</h3>
+            <h2 className="welcome-modal-step__title">{step.title}</h2>
             <p className="welcome-modal-step__text">{step.text}</p>
           </div>
         </li>

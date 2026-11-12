@@ -969,6 +969,8 @@ body {
 }
 
 .processing-tab__name {
+  font-size: inherit;
+  line-height: inherit;
   font-weight: 600;
   color: var(--gw-color-text);
   margin: 0;
@@ -1274,6 +1276,11 @@ body {
   cursor: pointer;
   z-index: 2;
 }
+/* The real input is invisible, so its focus ring is drawn on the button it covers. */
+.file-input:focus-visible + .file-upload-button {
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
+}
 
 .file-upload-button {
   display: flex;
@@ -1469,11 +1476,9 @@ body {
   width: 100%;
 }
 
+/* Keeps the browser's own arrow: no custom one was ever drawn, so appearance:none left selects looking like text fields. */
 select.form-input {
-  padding-right: 30px; /* Make room for the custom arrow */
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+  padding-right: 30px;
 }
 
 .modal-actions {

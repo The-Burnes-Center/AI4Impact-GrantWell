@@ -555,7 +555,12 @@ export default function Chat(props: {
       {/* Scroll to bottom button */}
       {showScrollToBottom && (
         <button
-          onClick={scrollToBottom}
+          onClick={(e) => {
+            const fromKeyboard = document.activeElement === e.currentTarget;
+            scrollToBottom();
+            // The button goes away once the bottom is in view; carry on in the message box.
+            if (fromKeyboard) document.getElementById("chat-input")?.focus({ preventScroll: true });
+          }}
           aria-label="Scroll to bottom"
           style={{
             ...styles.scrollToBottomButton,

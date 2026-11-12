@@ -40,24 +40,23 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
       <div className="modal-form">
         <div className="delete-confirmation">
-          {variant === "danger" && <LuTriangle size={32} className="warning-icon" />}
+          {variant === "danger" && <LuTriangle size={32} className="warning-icon" aria-hidden="true" />}
           <p>{message}</p>
         </div>
         {warning && <p className="warning-text">{warning}</p>}
         <div className="modal-actions">
+          {/* aria-disabled while working, so the pressed button keeps keyboard focus. */}
           <button
             className="gw-btn gw-btn--secondary modal-button secondary"
-            onClick={onCancel ?? onClose}
-            disabled={confirming}
-            aria-label={cancelLabel}
+            onClick={() => !confirming && (onCancel ?? onClose)()}
+            aria-disabled={confirming || undefined}
           >
             {cancelLabel}
           </button>
           <button
             className={`gw-btn gw-btn--${variant} modal-button ${variant}`}
-            onClick={onConfirm}
-            disabled={confirming}
-            aria-label={confirmLabel}
+            onClick={() => !confirming && onConfirm()}
+            aria-disabled={confirming || undefined}
           >
             {confirming ? "Working…" : confirmLabel}
           </button>

@@ -281,7 +281,7 @@
 .search-tip {
   margin: 8px 4px 0;
   font-size: 13px;
-  color: var(--gw-color-text-muted);
+  color: var(--gw-color-text-secondary);
   line-height: 1.4;
 }
 

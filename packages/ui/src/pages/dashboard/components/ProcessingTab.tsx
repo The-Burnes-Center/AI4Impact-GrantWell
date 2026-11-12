@@ -37,7 +37,7 @@ const InProgressCard: React.FC<{ nofo: NOFO }> = ({ nofo }) => {
   return (
     <div className="processing-tab__card">
       <div className="processing-tab__header">
-        <p className="processing-tab__name">{nofo.name}</p>
+        <h4 className="processing-tab__name">{nofo.name}</h4>
         <span className="processing-tab__count">
           Step {stepNumber} of {TOTAL_STAGES} &middot; {percent}%
         </span>
@@ -101,7 +101,7 @@ const FinishedCard: React.FC<{
       className={`processing-tab__card processing-tab__card--${published ? "published" : "failed"}`}
     >
       <div className="processing-tab__header">
-        <p className="processing-tab__name">{nofo.name}</p>
+        <h4 className="processing-tab__name">{nofo.name}</h4>
         <span className="processing-tab__header-right">
           <span
             className={`processing-tab__outcome processing-tab__outcome--${published ? "published" : "failed"}`}
@@ -119,7 +119,14 @@ const FinishedCard: React.FC<{
           <button
             type="button"
             className="processing-tab__dismiss"
-            onClick={() => onDismiss(nofo.name)}
+            onClick={(e) => {
+              // The card goes away: move focus to the next card's Dismiss, else the previous, else the page.
+              const all = [...document.querySelectorAll<HTMLElement>(".processing-tab__dismiss")];
+              const i = all.indexOf(e.currentTarget);
+              const next = all[i + 1] ?? all[i - 1] ?? document.getElementById("main-content");
+              onDismiss(nofo.name);
+              requestAnimationFrame(() => next?.focus());
+            }}
             aria-label={`Dismiss ${nofo.name} from processing`}
             title="Dismiss"
           >

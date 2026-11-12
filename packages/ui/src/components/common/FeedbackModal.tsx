@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useId, useState } from "react";
+import React, { useContext, useEffect, useId, useRef, useState } from "react";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { useBranding } from "../../common/branding";
@@ -30,6 +30,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
   const [found, setFound] = useState<Found | null>(null);
   const [text, setText] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const thanks = useRef<HTMLParagraphElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
@@ -42,9 +43,13 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
     setSubmitted(false);
   }, [isOpen]);
 
+  useEffect(() => {
+    if (submitted) thanks.current?.focus();
+  }, [submitted]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!found || !appContext) return;
+    if (!found || !appContext || submitting) return;
 
     setSubmitting(true);
     setError(null);
@@ -67,7 +72,8 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
     >
       {submitted ? (
         <div>
-          <p style={{ margin: "0 0 20px 0", color: "var(--gw-color-text, #333333)" }}>
+          {/* The form and its focused Send button are gone, so the thanks takes focus and is read out. */}
+          <p ref={thanks} tabIndex={-1} style={{ margin: "0 0 20px 0", color: "var(--gw-color-text, #333333)" }}>
             Thanks — your feedback has been sent to the {appName} team.
           </p>
           <div className="modal-actions">
@@ -148,7 +154,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
             <button
               type="submit"
               className="gw-btn gw-btn--primary modal-button primary"
-              disabled={submitting || !found}
+              aria-disabled={submitting || !found || undefined}
             >
               {submitting ? "Sending…" : "Send feedback"}
             </button>

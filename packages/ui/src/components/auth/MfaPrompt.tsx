@@ -32,6 +32,18 @@ export default function MfaPrompt({ onDone }: { onDone?: () => void }) {
   const [authTime, setAuthTime] = useState(0);
   const [phase] = useState(() => mfaDeadlinePhase());
   const onDoneRef = useRef(onDone);
+  // The dialog stays open while its content changes, so move focus off the button that just went away.
+  const doneButton = useRef<HTMLButtonElement>(null);
+  const setUpButton = useRef<HTMLButtonElement>(null);
+  const [backFromSetup, setBackFromSetup] = useState(false);
+  useEffect(() => {
+    if (done) doneButton.current?.focus();
+  }, [done]);
+  useEffect(() => {
+    if (!backFromSetup) return;
+    setUpButton.current?.focus();
+    setBackFromSetup(false);
+  }, [backFromSetup]);
   onDoneRef.current = onDone;
 
   useEffect(() => {
@@ -98,7 +110,7 @@ export default function MfaPrompt({ onDone }: { onDone?: () => void }) {
           in.
         </p>
         <div className="profile-actions">
-          <Button type="button" onClick={close}>
+          <Button ref={doneButton} type="button" onClick={close}>
             Done
           </Button>
         </div>
@@ -134,12 +146,15 @@ export default function MfaPrompt({ onDone }: { onDone?: () => void }) {
         <MfaSetupPanel
           email={email}
           onEnrolled={() => setDone(true)}
-          onCancel={() => setExpanded(false)}
+          onCancel={() => {
+            setExpanded(false);
+            setBackFromSetup(true);
+          }}
           cancelLabel="Back"
         />
       ) : (
         <div className="profile-actions">
-          <Button type="button" onClick={() => setExpanded(true)}>
+          <Button ref={setUpButton} type="button" onClick={() => setExpanded(true)}>
             Set it up
           </Button>
           <Button type="button" variant="ghost" onClick={dismiss}>

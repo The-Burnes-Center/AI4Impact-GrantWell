@@ -132,7 +132,7 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
           </div>
 
           <div className="analytics__outcomes-filters">
-            <label className="visually-hidden" htmlFor="outcomes-status">
+            <label className="gw-field__label" htmlFor="outcomes-status">
               Filter by outcome
             </label>
             <select
@@ -151,7 +151,7 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
                 </option>
               ))}
             </select>
-            <label className="visually-hidden" htmlFor="outcomes-search">
+            <label className="gw-field__label" htmlFor="outcomes-search">
               Search outcomes
             </label>
             <input
@@ -202,7 +202,16 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
           </TableScrollRegion>
           {filtered.length === 0 && <div className="no-data">No outcomes match.</div>}
           {filtered.length > shown && (
-            <button type="button" className="gw-btn gw-btn--secondary gw-btn--slim" onClick={() => setShown((n) => n + PAGE)}>
+            <button
+              type="button"
+              className="gw-btn gw-btn--secondary gw-btn--slim"
+              onClick={() => {
+                const last = filtered.length - shown <= PAGE;
+                setShown((n) => n + PAGE);
+                // This button goes away with the last page; carry on in the table.
+                if (last) requestAnimationFrame(() => document.querySelector<HTMLElement>('[aria-label^="Application outcomes table"]')?.focus());
+              }}
+            >
               Show {Math.min(PAGE, filtered.length - shown)} more of {filtered.length - shown}
             </button>
           )}

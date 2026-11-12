@@ -21,6 +21,7 @@ import { Modal } from "../../components/common/Modal";
 import Breadcrumbs from "../../components/common/Breadcrumbs";
 import { GRANT_TYPES, type NOFO, type GrantTypeId } from "../../common/types/nofo";
 import type { RawNOFOData } from "../../common/types/document";
+import { LiveStatus } from "../../components/common/LiveStatus";
 import { EMAIL_DIGEST } from "../../common/instance";
 import "../../styles/dashboard.css";
 
@@ -75,6 +76,7 @@ const Dashboard: React.FC = () => {
     "digest-preview": digestPreviewTabRef,
   };
   const processingSegmentRef = useRef<HTMLButtonElement>(null);
+  const attentionSegmentRef = useRef<HTMLButtonElement>(null);
   const [resultsAnnouncement, setResultsAnnouncement] = useState("");
 
   const navigate = useNavigate();
@@ -184,6 +186,8 @@ const Dashboard: React.FC = () => {
   const handleOpenReview = useCallback((nofoName: string) => {
     setReviewFocus(nofoName);
     setGrantsSegment("attention");
+    // The link pressed was in the view that just closed; land on the view switch, now on Needs attention.
+    requestAnimationFrame(() => attentionSegmentRef.current?.focus());
   }, []);
 
   const handleTabKeyDown = useCallback(
@@ -623,6 +627,7 @@ const Dashboard: React.FC = () => {
                       )}
                     </button>
                     <button
+                      ref={attentionSegmentRef}
                       className={`gw-toggle__option grants-segment__btn ${grantsSegment === "attention" ? "grants-segment__btn--active" : ""}`}
                       onClick={() => setGrantsSegment("attention")}
                       aria-pressed={grantsSegment === "attention"}
@@ -663,9 +668,18 @@ const Dashboard: React.FC = () => {
                   />
                 ) : (
                 <>
+                {/* Always in the page, so a banner that appears with its text is still announced. */}
+                <LiveStatus className="visually-hidden">
+                  {isAdmin && !processingBannerDismissed && (processingCount > 0 || finishedCount > 0)
+                    ? [
+                        processingCount > 0 && `${processingCount} grant${processingCount === 1 ? "" : "s"} processing`,
+                        finishedCount > 0 && `${finishedCount} recently finished`,
+                      ].filter(Boolean).join(", ")
+                    : null}
+                </LiveStatus>
                 {isAdmin && !processingBannerDismissed && (processingCount > 0 || finishedCount > 0) && (
                   <div className="gw-alert gw-alert--info processing-banner">
-                    <div className="processing-banner__message" role="status" aria-atomic="true">
+                    <div className="processing-banner__message">
                       {processingCount > 0 ? (
                         <LuLoader size={16} className="processing-banner__spin" aria-hidden="true" />
                       ) : (

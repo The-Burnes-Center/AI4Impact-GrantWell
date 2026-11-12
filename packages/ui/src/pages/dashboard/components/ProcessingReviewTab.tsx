@@ -334,7 +334,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
             htmlFor="review-status-filter"
             className="review-filter-label"
           >
-            Filter:
+            Filter by status
           </label>
           <div className="select-wrapper" style={{ minWidth: "160px" }}>
             <select
@@ -383,16 +383,16 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
             <button
               type="button"
               className="gw-btn gw-btn--secondary modal-button secondary"
-              onClick={() => setConfirmCloseExpired(false)}
-              disabled={closingExpired}
+              onClick={() => !closingExpired && setConfirmCloseExpired(false)}
+              aria-disabled={closingExpired || undefined}
             >
               Cancel
             </button>
             <button
               type="button"
               className="gw-btn gw-btn--primary modal-button primary"
-              onClick={() => void handleCloseExpired()}
-              disabled={closingExpired}
+              onClick={() => !closingExpired && void handleCloseExpired()}
+              aria-disabled={closingExpired || undefined}
             >
               {closingExpired ? "Closing..." : `Close ${expiredOpenCount} review${expiredOpenCount === 1 ? "" : "s"}`}
             </button>

@@ -83,7 +83,7 @@ export default function LibraryUpload({ library, onUploaded, variant = "dropzone
         >
           <LuUpload size={40} className="dm-upload-icon" aria-hidden="true" />
           <p className="dm-drop-text">Drag and drop files here, or</p>
-          <button type="button" className="gw-btn gw-btn--primary dm-upload-btn" onClick={browse} disabled={busy} aria-describedby={instructionsId}>
+          <button type="button" className="gw-btn gw-btn--primary dm-upload-btn" onClick={() => !busy && browse()} aria-disabled={busy || undefined} aria-describedby={instructionsId}>
             <LuUpload size={16} aria-hidden="true" /> {busy ? "Uploading..." : "Browse files"}
           </button>
           <p className="dm-browse-text" id={instructionsId}>
@@ -91,7 +91,7 @@ export default function LibraryUpload({ library, onUploaded, variant = "dropzone
           </p>
         </div>
       ) : (
-        <button type="button" className="gw-btn gw-btn--primary dm-upload-btn" onClick={browse} disabled={busy}>
+        <button type="button" className="gw-btn gw-btn--primary dm-upload-btn" onClick={() => !busy && browse()} aria-disabled={busy || undefined}>
           <LuUpload size={16} aria-hidden="true" /> {busy ? "Uploading..." : buttonLabel}
         </button>
       )}

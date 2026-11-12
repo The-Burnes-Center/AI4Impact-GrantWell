@@ -69,7 +69,7 @@ describe("ProcessingReviewTab", () => {
   it("opens on Pending Review and asks the server for that status", async () => {
     const { net } = renderTab();
     expect(await screen.findByText("Pending Grant")).toBeInTheDocument();
-    expect(screen.getByLabelText("Filter:")).toHaveValue("pending_review");
+    expect(screen.getByLabelText("Filter by status")).toHaveValue("pending_review");
     expect(net.to(REVIEWS)[0].url.searchParams.get("status")).toBe("pending_review");
   });
 
@@ -77,7 +77,7 @@ describe("ProcessingReviewTab", () => {
     const { net, user } = renderTab();
     await screen.findByText("Pending Grant");
 
-    await user.selectOptions(screen.getByLabelText("Filter:"), "all");
+    await user.selectOptions(screen.getByLabelText("Filter by status"), "all");
     expect(await screen.findByText("Approved Grant")).toBeInTheDocument();
     expect(screen.getByText("Failed Grant")).toBeInTheDocument();
     expect(net.last(REVIEWS).url.searchParams.get("status")).toBe("all");
@@ -86,7 +86,7 @@ describe("ProcessingReviewTab", () => {
   it("names the filter when a status has no reviews", async () => {
     const { user } = renderTab();
     await screen.findByText("Pending Grant");
-    await user.selectOptions(screen.getByLabelText("Filter:"), "rejected");
+    await user.selectOptions(screen.getByLabelText("Filter by status"), "rejected");
     expect(await screen.findByText('No reviews with status "Rejected"')).toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveTextContent("0 reviews shown");
   });

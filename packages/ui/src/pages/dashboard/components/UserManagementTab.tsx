@@ -610,15 +610,19 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           <div className="modal-actions">
             <button
               className="gw-btn gw-btn--secondary modal-button secondary"
-              onClick={() => setAddUserModalOpen(false)}
-              disabled={isCreating}
+              onClick={() => {
+                if (!isCreating) setAddUserModalOpen(false);
+              }}
+              aria-disabled={isCreating || undefined}
             >
               Cancel
             </button>
             <button
               className="gw-btn gw-btn--primary modal-button primary"
-              onClick={() => void handleCreateUser()}
-              disabled={isCreating || !addEmailValid}
+              onClick={() => {
+                if (!(isCreating || !addEmailValid)) void handleCreateUser();
+              }}
+              aria-disabled={isCreating || !addEmailValid || undefined}
             >
               {isCreating ? "Adding..." : "Add user"}
             </button>
@@ -642,15 +646,19 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           <div className="modal-actions">
             <button
               className="gw-btn gw-btn--secondary modal-button secondary"
-              onClick={() => setDeleteTarget(null)}
-              disabled={isDeleting}
+              onClick={() => {
+                if (!isDeleting) setDeleteTarget(null);
+              }}
+              aria-disabled={isDeleting || undefined}
             >
               Cancel
             </button>
             <button
               className="gw-btn gw-btn--danger modal-button danger"
-              onClick={() => void handleDeleteUser()}
-              disabled={isDeleting}
+              onClick={() => {
+                if (!isDeleting) void handleDeleteUser();
+              }}
+              aria-disabled={isDeleting || undefined}
             >
               {isDeleting ? "Deleting..." : "Delete user"}
             </button>
@@ -675,15 +683,19 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           <div className="modal-actions">
             <button
               className="gw-btn gw-btn--secondary modal-button secondary"
-              onClick={() => setMfaResetTarget(null)}
-              disabled={isResettingMfa}
+              onClick={() => {
+                if (!isResettingMfa) setMfaResetTarget(null);
+              }}
+              aria-disabled={isResettingMfa || undefined}
             >
               Cancel
             </button>
             <button
               className="gw-btn gw-btn--danger modal-button danger"
-              onClick={() => void handleMfaReset()}
-              disabled={isResettingMfa}
+              onClick={() => {
+                if (!isResettingMfa) void handleMfaReset();
+              }}
+              aria-disabled={isResettingMfa || undefined}
             >
               {isResettingMfa ? "Resetting..." : "Reset"}
             </button>

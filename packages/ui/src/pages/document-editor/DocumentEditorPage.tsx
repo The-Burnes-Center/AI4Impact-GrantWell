@@ -379,15 +379,7 @@ const DocumentEditor: React.FC = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="checklist-error" style={{ padding: 40 }}>
-        <h2 className="checklist-error__title">Error</h2>
-        <p className="checklist-error__text">{error}</p>
-        <button className="gw-btn gw-btn--primary checklist-error__btn" onClick={() => window.location.reload()}>Retry</button>
-      </div>
-    );
-  }
+  if (error) return <EditorError message={error} />;
 
   return (
     <div ref={rootRef} className="document-editor-root" style={{ display: "flex", alignItems: "stretch", flex: "1 0 auto", width: "100%", margin: 0, padding: 0 }}>
@@ -474,3 +466,16 @@ const DocumentEditor: React.FC = () => {
 };
 
 export default DocumentEditor;
+
+/** Replaces the whole editor, so it takes focus (the control that had it is gone) and is the page's h1. */
+function EditorError({ message }: { message: string }) {
+  const title = useRef<HTMLHeadingElement>(null);
+  useEffect(() => title.current?.focus(), []);
+  return (
+    <div className="checklist-error" style={{ padding: 40 }}>
+      <h1 ref={title} tabIndex={-1} className="checklist-error__title">Error</h1>
+      <p className="checklist-error__text">{message}</p>
+      <button className="gw-btn gw-btn--primary checklist-error__btn" onClick={() => window.location.reload()}>Retry</button>
+    </div>
+  );
+}

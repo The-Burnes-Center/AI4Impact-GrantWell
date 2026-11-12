@@ -480,6 +480,12 @@ html:has(.document-editor-root) {
   color: var(--gw-color-warning-text);
 }
 
+/* The button fills with the brand colour on hover, so its text turns white with it. */
+.ra-edit-btn:hover .ra-edit-btn__title,
+.ra-edit-btn:hover .ra-edit-btn__subtitle {
+  color: var(--gw-color-text-inverse);
+}
+
 /* Info Section (What Happens After Export) */
 .ra-info-section {
   background: var(--gw-color-primary-light);

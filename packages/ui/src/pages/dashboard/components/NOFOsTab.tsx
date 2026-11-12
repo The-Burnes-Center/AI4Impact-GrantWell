@@ -685,8 +685,8 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 </button>
                 <button
                   className="gw-btn gw-btn--primary modal-button primary"
-                  onClick={confirmSaveSummary}
-                  disabled={!isSummaryChanged() || summarySaving}
+                  onClick={() => isSummaryChanged() && !summarySaving && confirmSaveSummary()}
+                  aria-disabled={!isSummaryChanged() || summarySaving || undefined}
                 >
                   {summarySaving ? "Saving..." : "Save changes"}
                 </button>
@@ -717,19 +717,20 @@ const NOFOsTab = React.memo(function NOFOsTab({
               <p className="modal-description" style={{ marginBottom: "16px" }}>
                 Add guidance for this federal grant shown only to your state's users. The federal grant itself is unchanged. Leave empty to remove.
               </p>
+              <label htmlFor="state-guidance-note" className="gw-field__label">State guidance note</label>
               <textarea className="gw-input"
+                id="state-guidance-note"
                 value={overlayNote}
                 onChange={(e) => setOverlayNote(e.target.value)}
                 rows={8}
                 style={{ width: "100%" }}
                 placeholder="e.g. Applicants from our state should also submit Form X and contact our office before applying."
-                aria-label="State guidance note"
               />
               <div className="modal-actions" style={{ marginTop: "16px" }}>
                 <button className="gw-btn gw-btn--secondary modal-button secondary" onClick={() => { setOverlayModalOpen(false); setSelectedNofo(null); setOverlayNote(""); }}>
                   Cancel
                 </button>
-                <button className="gw-btn gw-btn--primary modal-button primary" onClick={confirmSaveOverlay} disabled={overlaySaving}>
+                <button className="gw-btn gw-btn--primary modal-button primary" onClick={() => !overlaySaving && confirmSaveOverlay()} aria-disabled={overlaySaving || undefined}>
                   {overlaySaving ? "Saving..." : "Save guidance"}
                 </button>
               </div>
@@ -801,8 +802,8 @@ const NOFOsTab = React.memo(function NOFOsTab({
               <button
                 type="button"
                 className="gw-btn gw-btn--secondary modal-button secondary"
-                onClick={() => setCustomQuestions((prev) => [...prev, { question: "" }])}
-                disabled={customQuestions.length >= 25}
+                onClick={() => customQuestions.length < 25 && setCustomQuestions((prev) => [...prev, { question: "" }])}
+                aria-disabled={customQuestions.length >= 25 || undefined}
                 style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
               >
                 <LuPlus size={16} aria-hidden="true" /> Add question
@@ -811,7 +812,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 <button className="gw-btn gw-btn--secondary modal-button secondary" onClick={() => { setCustomQuestionsModalOpen(false); setSelectedNofo(null); setCustomQuestions([]); }}>
                   Cancel
                 </button>
-                <button className="gw-btn gw-btn--primary modal-button primary" onClick={confirmSaveCustomQuestions} disabled={customQuestionsSaving}>
+                <button className="gw-btn gw-btn--primary modal-button primary" onClick={() => !customQuestionsSaving && confirmSaveCustomQuestions()} aria-disabled={customQuestionsSaving || undefined}>
                   {customQuestionsSaving ? "Saving..." : "Save questions"}
                 </button>
               </div>

@@ -58,7 +58,7 @@ export default function OutcomeDialog({ application, current, onSave, onClose }:
         className="modal-form"
         onSubmit={(e) => {
           e.preventDefault();
-          void save();
+          if (!saving && value.status) void save();
         }}
         noValidate
       >
@@ -68,10 +68,10 @@ export default function OutcomeDialog({ application, current, onSave, onClose }:
         <div role="alert">{error && <p className="modal-description outcome-error">{error}</p>}</div>
         <OutcomeFields idPrefix="outcome" value={value} onChange={setValue} disabled={saving} />
         <div className="modal-actions">
-          <button type="button" className="gw-btn gw-btn--secondary modal-button secondary" onClick={onClose} disabled={saving}>
+          <button type="button" className="gw-btn gw-btn--secondary modal-button secondary" onClick={() => !saving && onClose()} aria-disabled={saving || undefined}>
             Cancel
           </button>
-          <button type="submit" className="gw-btn gw-btn--primary modal-button primary" disabled={saving || !value.status}>
+          <button type="submit" className="gw-btn gw-btn--primary modal-button primary" aria-disabled={saving || !value.status || undefined}>
             {saving ? "Saving..." : "Save outcome"}
           </button>
         </div>

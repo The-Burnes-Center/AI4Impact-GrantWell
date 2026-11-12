@@ -10,6 +10,8 @@ interface ModalProps {
   children: React.ReactNode;
   maxWidth?: string;
   hideCloseButton?: boolean;
+  /** "h1" when the dialog stands in for a page that has no h1 of its own while it is open. */
+  titleLevel?: "h1" | "h2";
 }
 
 /**
@@ -21,7 +23,8 @@ interface ModalProps {
  * - Consistent styling matching Dashboard
  */
 export const Modal = React.memo<ModalProps>(
-  ({ isOpen, onClose, title, children, maxWidth = "500px", hideCloseButton = false }) => {
+  ({ isOpen, onClose, title, children, maxWidth = "500px", hideCloseButton = false, titleLevel = "h2" }) => {
+    const Title = titleLevel;
     const modalRef = useFocusTrap<HTMLDivElement>({ isOpen, onEscape: onClose });
     const titleId = useId();
 
@@ -48,9 +51,9 @@ export const Modal = React.memo<ModalProps>(
           style={{ maxWidth }}
         >
           <div className="gw-modal__header modal-header">
-            <h2 id={titleId} className="gw-modal__title">
+            <Title id={titleId} className="gw-modal__title">
               {title}
-            </h2>
+            </Title>
             {!hideCloseButton && (
               <button
                 type="button"

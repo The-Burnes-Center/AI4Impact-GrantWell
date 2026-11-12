@@ -589,7 +589,7 @@
 }
 
 .marketing__footer-links a:focus-visible {
-  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline: var(--gw-focus-width) solid var(--gw-color-focus-on-dark);
   outline-offset: var(--gw-focus-offset);
   border-radius: var(--gw-radius-check);
 }

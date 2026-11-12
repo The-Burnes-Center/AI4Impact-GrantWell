@@ -508,6 +508,10 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
               tabIndex={-1}
               aria-labelledby="ra-export-trigger"
               onKeyDown={handleExportMenuKeyDown}
+              // Tabbing out closes it, so an open menu is never left behind.
+              onBlur={(e) => {
+                if (!exportDropdownRef.current?.contains(e.relatedTarget as Node | null)) setExportDropdownOpen(false);
+              }}
             >
               <button
                 className="ra-export-dropdown__item"
