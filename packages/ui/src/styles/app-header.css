@@ -61,6 +61,7 @@
   text-transform: uppercase;
 }
 .gw-sidenav .gw-sidenav__item {
+  text-decoration: none;
   display: flex;
   align-items: center;
   gap: var(--gw-spacing-md);

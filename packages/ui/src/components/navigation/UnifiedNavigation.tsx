@@ -68,45 +68,58 @@ const itemStyle = (active: boolean): React.CSSProperties => ({
   cursor: "pointer",
   transition: "background 0.2s, color 0.2s",
   textAlign: "left",
+  textDecoration: "none",
   fontFamily: "var(--gw-font-family, 'Noto Sans', sans-serif)",
 });
 
 const NavItem: React.FC<{
   onClick: () => void;
+  /** Items that go to another page are links, so screen readers say "link"; actions stay buttons. */
+  href?: string;
   label: string;
   icon: React.ReactNode;
   active: boolean;
   expanded: boolean;
   currentKind?: "page" | "step";
-}> = ({ onClick, label, icon, active, expanded, currentKind = "page" }) =>
-  usesHeaderTabs() ? (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-current={active ? currentKind : undefined}
-      className="gw-sidenav__item"
-    >
+}> = ({ onClick, href, label, icon, active, expanded, currentKind = "page" }) => {
+  const follow = (e: React.MouseEvent<HTMLElement>) => {
+    if (href && (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0)) return;
+    e.preventDefault();
+    onClick();
+  };
+  const tabs = usesHeaderTabs();
+  const props = {
+    onClick: follow,
+    "aria-label": tabs || expanded ? undefined : label,
+    "aria-current": active ? currentKind : undefined,
+    ...(tabs
+      ? { className: "gw-sidenav__item" }
+      : {
+          style: itemStyle(active),
+          onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
+            if (!active) e.currentTarget.style.background = "var(--gw-color-nav-bg-hover, #2d3748)";
+          },
+          onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
+            if (!active) e.currentTarget.style.background = "none";
+          },
+        }),
+  };
+  const content = (
+    <>
       {icon}
-      <span>{label}</span>
-    </button>
-  ) : (
-  <button
-    type="button"
-    onClick={onClick}
-    aria-label={expanded ? undefined : label}
-    aria-current={active ? currentKind : undefined}
-    style={itemStyle(active)}
-    onMouseEnter={(e) => {
-      if (!active) e.currentTarget.style.background = "var(--gw-color-nav-bg-hover, #2d3748)";
-    }}
-    onMouseLeave={(e) => {
-      if (!active) e.currentTarget.style.background = "none";
-    }}
-  >
-    {icon}
-    {expanded && <span style={{ marginLeft: "12px" }}>{label}</span>}
-  </button>
+      {tabs ? <span>{label}</span> : expanded && <span style={{ marginLeft: "12px" }}>{label}</span>}
+    </>
   );
+  return href ? (
+    <a href={href} {...props}>
+      {content}
+    </a>
+  ) : (
+    <button type="button" {...props}>
+      {content}
+    </button>
+  );
+};
 
 const GroupHeading: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   usesHeaderTabs() ? <h2 className="gw-sidenav__group">{children}</h2> : <h2 style={groupHeadingStyle}>{children}</h2>;
@@ -154,6 +167,7 @@ export const AppSidebar: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [showFeedback, setShowFeedback] = useState(false);
   const [fallbackChecked, setFallbackChecked] = useState(false);
+  const [linkChatId] = useState(() => uuidv4());
 
   const isDocked = chrome?.isDocked ?? true;
   // With header tabs, the side menu is a drawer on phones only; elsewhere it is docked on a grant's pages or absent.
@@ -233,38 +247,19 @@ export const AppSidebar: React.FC = () => {
     else run();
   };
 
-  const handleChatNavigation = () => {
-    navigate(
-      `/chat/${uuidv4()}${docId ? `?grant=${encodeURIComponent(docId)}` : ""}`
-    );
-  };
+  const grantQuery = docId ? `?grant=${encodeURIComponent(docId)}` : "";
+  const chatSessionsHref = `/chat/sessions${grantQuery}`;
+  const draftsHref = `/document-editor/drafts${grantQuery}`;
+  const requirementsHref = docId ? `/requirements/${encodeURIComponent(docId)}${grantQuery}` : "";
+  const editorHref = `/document-editor${grantQuery}`;
 
-  const handleDraftsNavigation = () => {
-    navigate(
-      docId
-        ? `/document-editor/drafts?grant=${encodeURIComponent(docId)}`
-        : "/document-editor/drafts"
-    );
-  };
+  // A new chat id per click; the link's own id is only for opening one in a new tab.
+  const handleChatNavigation = () => navigate(`/chat/${uuidv4()}${grantQuery}`);
 
   const handleRequirementsNavigation = () => {
     if (!docId) return;
     addToRecentlyViewed({ label: docId.replace("/", ""), value: docId });
-    navigate(
-      `/requirements/${encodeURIComponent(docId)}?grant=${encodeURIComponent(docId)}`
-    );
-  };
-
-  const handleDocumentEditorNavigation = () => {
-    navigate(
-      docId ? `/document-editor?grant=${encodeURIComponent(docId)}` : "/document-editor"
-    );
-  };
-
-  const handleChatSessionsNavigation = () => {
-    navigate(
-      `/chat/sessions${docId ? `?grant=${encodeURIComponent(docId)}` : ""}`
-    );
+    navigate(requirementsHref);
   };
 
   const handleSignOut = async () => {
@@ -491,6 +486,7 @@ export const AppSidebar: React.FC = () => {
         >
           {!grantOnly && (<>
           <NavItem
+            href="/home"
             onClick={go(() => navigate("/home"))}
             label="Home"
             icon={<LuHouse size={20} aria-hidden="true" />}
@@ -499,7 +495,8 @@ export const AppSidebar: React.FC = () => {
           />
 
           <NavItem
-            onClick={go(handleChatSessionsNavigation)}
+            href={chatSessionsHref}
+            onClick={go(() => navigate(chatSessionsHref))}
             label="My chats"
             icon={<LuMessagesSquare size={20} aria-hidden="true" />}
             active={isChatSessions}
@@ -507,7 +504,8 @@ export const AppSidebar: React.FC = () => {
           />
 
           <NavItem
-            onClick={go(handleDraftsNavigation)}
+            href={draftsHref}
+            onClick={go(() => navigate(draftsHref))}
             label="My applications"
             icon={<LuFileText size={20} aria-hidden="true" />}
             active={isDrafts}
@@ -515,6 +513,7 @@ export const AppSidebar: React.FC = () => {
           />
 
           <NavItem
+            href="/documents"
             onClick={go(() => navigate("/documents"))}
             label="My documents"
             icon={<LuFolderOpen size={20} aria-hidden="true" />}
@@ -524,6 +523,7 @@ export const AppSidebar: React.FC = () => {
 
           {isAdmin && (
             <NavItem
+              href="/admin"
               onClick={go(() => navigate("/admin"))}
               label="Admin dashboard"
               icon={<LuLayoutDashboard size={20} aria-hidden="true" />}
@@ -538,6 +538,7 @@ export const AppSidebar: React.FC = () => {
               {showLabels && <GroupHeading>This grant</GroupHeading>}
 
               <NavItem
+                href={requirementsHref}
                 onClick={go(handleRequirementsNavigation)}
                 label="Requirements"
                 icon={<LuSquareCheckBig size={20} aria-hidden="true" />}
@@ -546,6 +547,7 @@ export const AppSidebar: React.FC = () => {
               />
 
               <NavItem
+                href={`/chat/${linkChatId}${grantQuery}`}
                 onClick={go(handleChatNavigation)}
                 label="Chat with AI"
                 icon={<LuMessageSquare size={20} aria-hidden="true" />}
@@ -554,7 +556,8 @@ export const AppSidebar: React.FC = () => {
               />
 
               <NavItem
-                onClick={go(handleDocumentEditorNavigation)}
+                href={editorHref}
+                onClick={go(() => navigate(editorHref))}
                 label="Write application"
                 icon={<LuUpload size={20} aria-hidden="true" />}
                 active={isDocumentEditor}
@@ -603,6 +606,7 @@ export const AppSidebar: React.FC = () => {
           />
 
           <NavItem
+            href="/profile"
             onClick={go(() => navigate("/profile"))}
             label="Profile"
             icon={<LuUser size={20} aria-hidden="true" />}

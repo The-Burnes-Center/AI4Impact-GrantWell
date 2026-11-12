@@ -36,9 +36,11 @@ describe("header tabs layout", () => {
     shellAt("/requirements/Water%20Grant?grant=Water%20Grant");
     expect(tabs().getByRole("link", { name: "Home" })).toHaveAttribute("aria-current", "true");
     const side = within(screen.getByRole("navigation", { name: "This grant" }));
-    expect(side.getByRole("button", { name: "Requirements" })).toHaveAttribute("aria-current", "page");
-    expect(side.getByRole("button", { name: "Chat with AI" })).toBeInTheDocument();
-    expect(side.queryByRole("button", { name: "My chats" })).toBeNull();
+    expect(side.getByRole("link", { name: "Requirements" })).toHaveAttribute("aria-current", "page");
+    expect(side.getByRole("link", { name: "Requirements" })).toHaveAttribute("href", "/requirements/Water%20Grant?grant=Water%20Grant");
+    expect(side.getByRole("link", { name: "Chat with AI" })).toHaveAttribute("href", expect.stringMatching(/^\/chat\/[0-9a-f-]{36}\?grant=Water%20Grant$/));
+    expect(side.getByRole("link", { name: "Write application" })).toHaveAttribute("href", "/document-editor?grant=Water%20Grant");
+    expect(side.queryByRole("link", { name: "My chats" })).toBeNull();
     expect(screen.getAllByRole("navigation", { name: "Main" })).toHaveLength(1);
   });
 
@@ -56,7 +58,7 @@ describe("header tabs layout", () => {
       </NavigationProvider>,
       { route: "/documents" }
     );
-    expect(within(screen.getByRole("navigation", { name: "Main" })).getByRole("button", { name: "My documents" })).toHaveAttribute(
+    expect(within(screen.getByRole("navigation", { name: "Main" })).getByRole("link", { name: "My documents" })).toHaveAttribute(
       "aria-current",
       "page"
     );

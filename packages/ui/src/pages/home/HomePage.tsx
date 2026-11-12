@@ -308,7 +308,7 @@ export default function HomePage() {
             Screen-reader note: Use the search bar below to filter grants by name, agency, or category.
             {featureCopyResolved && canUseAIGrantSearch
               ? " AI search is enabled for your account, so descriptive searches will return ranked matches."
-              : ""}
+              : ""}{" "}
             The table shows filtered results. Use the dropdown filters to narrow by status,
             category, or grant type. Each grant name is a button. Activate it to select that grant,
             then action buttons will appear.

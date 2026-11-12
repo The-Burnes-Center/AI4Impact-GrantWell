@@ -22,8 +22,8 @@ const sidebarAt = async (route: string, { drawer = false } = {}) => {
 describe("app sidebar", () => {
   it("marks Home as the current page on /home", async () => {
     const { nav } = await sidebarAt("/home", { drawer: true });
-    expect(nav.getByRole("button", { name: "Home" })).toHaveAttribute("aria-current", "page");
-    expect(nav.getByRole("button", { name: "My chats" })).not.toHaveAttribute("aria-current");
+    expect(nav.getByRole("link", { name: "Home" })).toHaveAttribute("aria-current", "page");
+    expect(nav.getByRole("link", { name: "My chats" })).not.toHaveAttribute("aria-current");
     for (const link of screen.getAllByRole("link").filter((a) => a.getAttribute("href") === "/home")) {
       expect(link).toHaveAttribute("aria-current", "page");
     }
@@ -31,7 +31,7 @@ describe("app sidebar", () => {
 
   it("links My documents and marks it current on its page", async () => {
     const { nav } = await sidebarAt("/documents");
-    expect(nav.getByRole("button", { name: "My documents" })).toHaveAttribute("aria-current", "page");
-    expect(nav.getByRole("button", { name: "Home" })).not.toHaveAttribute("aria-current");
+    expect(nav.getByRole("link", { name: "My documents" })).toHaveAttribute("aria-current", "page");
+    expect(nav.getByRole("link", { name: "Home" })).not.toHaveAttribute("aria-current");
   });
 });

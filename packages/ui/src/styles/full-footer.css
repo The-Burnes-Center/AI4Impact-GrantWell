@@ -71,8 +71,8 @@
   details.gw-full-footer__col:last-child { border-bottom: 1px solid var(--gw-color-border); }
   details.gw-full-footer__col > summary { display: flex; align-items: center; justify-content: space-between; min-height: 48px; margin: 0; cursor: pointer; list-style: none; }
   details.gw-full-footer__col > summary::-webkit-details-marker { display: none; }
-  details.gw-full-footer__col > summary::after { content: "+"; font-size: 20px; font-weight: var(--gw-font-weight-normal); }
-  details.gw-full-footer__col[open] > summary::after { content: "−"; }
+  details.gw-full-footer__col > summary::after { content: "+" / ""; font-size: 20px; font-weight: var(--gw-font-weight-normal); }
+  details.gw-full-footer__col[open] > summary::after { content: "−" / ""; }
   details.gw-full-footer__col > .gw-full-footer__list { padding-bottom: var(--gw-spacing-lg); }
   .gw-full-footer__bar { flex-direction: column; align-items: flex-start; }
 }

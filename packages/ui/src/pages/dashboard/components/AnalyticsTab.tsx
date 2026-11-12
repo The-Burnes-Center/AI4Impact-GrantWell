@@ -206,6 +206,8 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
                 </pattern>
               </defs>
             </svg>
+            {/* Screen readers get the table below instead of the drawing. */}
+            <div aria-hidden="true">
             <ResponsiveContainer width="100%" height={280}>
               <BarChart
                 accessibilityLayer={false}
@@ -229,6 +231,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
+            </div>
             <VisuallyHiddenTable
               caption="Users by state"
               columns={["State", "Registered", "Active"]}
@@ -250,6 +253,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
             }
             empty={data.draftFunnel.total === 0}
           >
+            <div aria-hidden="true">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart
                 accessibilityLayer={false}
@@ -278,6 +282,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
+            </div>
             <VisuallyHiddenTable
               caption="Grant application funnel"
               columns={["Stage", "Applications"]}
