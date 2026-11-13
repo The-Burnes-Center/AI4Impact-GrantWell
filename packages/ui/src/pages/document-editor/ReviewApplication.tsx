@@ -278,8 +278,8 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   };
 
   const completenessClass = completenessPassed
-    ? "ra-compliance--passed"
-    : "ra-compliance--incomplete";
+    ? "gw-alert--success"
+    : "gw-alert--warning";
 
   return (
     <div className="ra-container">
@@ -317,13 +317,13 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
         </div>
 
         {/* Completeness Check Message */}
-        <div className={`ra-compliance ${completenessClass}`}>
+        <div className={`gw-alert ${completenessClass} ra-compliance`}>
           {completenessPassed
-            ? <LuCircleCheckBig className="ra-compliance__icon" aria-hidden="true" />
-            : <LuTriangleAlert className="ra-compliance__icon" aria-hidden="true" />
+            ? <LuCircleCheckBig size={20} aria-hidden="true" />
+            : <LuTriangleAlert size={20} aria-hidden="true" />
           }
           <div>
-            <h3 className="ra-compliance__title">
+            <h3 className="gw-alert__title">
               {completenessPassed
                 ? "All sections complete"
                 : "Some sections incomplete"}
@@ -342,10 +342,10 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
         <h3 className="ra-export-section__title">Before you export</h3>
 
         {unviewedSections.length > 0 && (
-          <div className="ra-unviewed">
-            <LuEye className="ra-unviewed__icon" aria-hidden="true" />
+          <div className="gw-alert gw-alert--warning ra-unviewed">
+            <LuEye size={20} aria-hidden="true" />
             <div className="ra-unviewed__body">
-              <h4 className="ra-unviewed__title">
+              <h4 className="gw-alert__title">
                 {unviewedSections.length === 1
                   ? "1 section hasn't been opened yet"
                   : `${unviewedSections.length} sections haven't been opened yet`}
@@ -364,7 +364,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
               <button
                 type="button"
                 onClick={() => onNavigate("sectionEditor")}
-                className="ra-unviewed__action"
+                className="gw-btn gw-btn--secondary"
               >
                 Review these sections
               </button>

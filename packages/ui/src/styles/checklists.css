@@ -217,33 +217,17 @@
   line-height: 1.7;
 }
 
-/* Info box inside eligibility tab */
-.checklist-info-box {
-  background-color: var(--gw-color-info-light);
-  padding: 20px 24px;
-  max-width: 850px;
-  margin-top: 24px;
-  margin-left: 0;
-  margin-right: auto;
-  border-radius: var(--gw-radius-control);
-  border: 1px solid var(--gw-color-primary);
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
+.checklist-state-guidance {
+  margin: 0 0 20px;
 }
 
-.checklist-info-box__title {
-  margin: 0 0 10px 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--gw-color-primary-active);
+.checklist-info-box {
+  max-width: 850px;
+  margin-top: 24px;
 }
 
 .checklist-info-box__text {
   margin: 0;
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--gw-color-text);
 }
 
 /* Grant type badge */

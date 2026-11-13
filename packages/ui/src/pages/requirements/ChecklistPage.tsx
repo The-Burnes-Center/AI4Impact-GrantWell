@@ -160,6 +160,8 @@ const Checklists: React.FC = () => {
       <div ref={inertMainRef} className="checklist-main" aria-hidden={showHelp}>
         <div className="checklist-main-container">
           {isLoading ? (
+            <>
+            <h1 className="visually-hidden">Requirements</h1>
             <div className="checklist-loading" role="status" aria-live="polite">
               <div className="checklist-loading__spinner"><div className="loading-spinner" /></div>
               <h2 className="checklist-loading__title">Loading requirements</h2>
@@ -171,6 +173,7 @@ const Checklists: React.FC = () => {
                 </p>
               </div>
             </div>
+            </>
           ) : inReviewMessage ? (
             <div className="checklist-error">
               <h1 className="checklist-error__title">{inReviewMessage}</h1>
@@ -231,22 +234,11 @@ const Checklists: React.FC = () => {
               </div>
 
               {stateGuidance && (
-                <div
-                  role="note"
-                  className="checklist-state-guidance"
-                  style={{
-                    margin: "0 0 20px",
-                    padding: "14px 16px",
-                    borderRadius: "var(--gw-radius-container)",
-                    border: "1px solid var(--gw-color-border, #e2e8f0)",
-                    borderLeft: "4px solid var(--gw-color-primary, #23776C)",
-                    background: "var(--gw-color-surface-subtle, #f0f2f4)",
-                  }}
-                >
-                  <h2 style={{ margin: "0 0 6px", fontSize: "inherit", fontWeight: 700, lineHeight: "inherit" }}>
-                    Additional guidance for {stateGuidance.stateName}
-                  </h2>
-                  <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{stateGuidance.note}</p>
+                <div role="note" className="gw-alert gw-alert--info checklist-state-guidance">
+                  <div>
+                    <h2 className="gw-alert__title">Additional guidance for {stateGuidance.stateName}</h2>
+                    <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{stateGuidance.note}</p>
+                  </div>
                 </div>
               )}
 
@@ -287,10 +279,10 @@ const Checklists: React.FC = () => {
                       <RequirementsList text={tabContents[tabId].content} />
 
                       {tabId === "eligibility" && (
-                        <div className="checklist-info-box">
-                          <LuInfo size={22} color="var(--gw-color-primary)" aria-hidden="true" />
+                        <div className="gw-alert gw-alert--info checklist-info-box">
+                          <LuInfo size={20} aria-hidden="true" />
                           <div>
-                            <h2 className="checklist-info-box__title">Not sure if your organization qualifies?</h2>
+                            <h2 className="gw-alert__title">Not sure if your organization qualifies?</h2>
                             <p className="checklist-info-box__text">
                               Chat with AI can help assess your organization&#39;s eligibility based on
                               these criteria. Click &quot;Chat with AI&quot; in the navigation panel
