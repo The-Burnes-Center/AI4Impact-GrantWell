@@ -26,6 +26,7 @@ import { LiveStatus } from "../../components/common/LiveStatus";
 import { getCurrentUser } from "aws-amplify/auth";
 import type { DocumentDraft } from "../../common/api-client/drafts-client";
 import type { DocumentData } from "../../common/types/document";
+import { usePageTitle } from "../../common/page-title";
 import "../../styles/document-editor.css";
 
 const ERROR_MESSAGES = {
@@ -372,6 +373,8 @@ const DocumentEditor: React.FC = () => {
       document.documentElement.style.removeProperty("--gw-editor-sticky-height");
     };
   }, [welcomeModalOpen, grantPickerOpen, error]);
+
+  usePageTitle(notFound ? "Application not found" : null);
 
   if (notFound) {
     return (
