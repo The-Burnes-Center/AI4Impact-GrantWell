@@ -491,7 +491,7 @@ async function assertNotLastPrivilegedUser(target, nextRoles, nextState, context
     return;
   }
 
-  const { developers, platformAdmins } = await countPrivilegedUsers();
+  const { developers, platformAdmins } = await countPrivilegedUsers(context);
 
   if (losesDeveloper && developers <= 1) {
     const error = new Error("Cannot remove the last developer");
@@ -505,13 +505,21 @@ async function assertNotLastPrivilegedUser(target, nextRoles, nextState, context
   }
 }
 
-async function countPrivilegedUsers() {
+// Reads every page, with no page cap. If time runs out first the count could be short, so the
+// change is refused rather than risk removing the last one.
+async function countPrivilegedUsers(context) {
   let developers = 0;
   let platformAdmins = 0;
   let paginationToken;
-  let pages = 0;
 
   do {
+    if (outOfTime(context)) {
+      const error = new Error(
+        "Couldn't check that another developer or platform administrator remains. Try again."
+      );
+      error.statusCode = 503;
+      throw error;
+    }
     const response = await cognitoClient.send(
       new ListUsersCommand({
         UserPoolId: USER_POOL_ID,
@@ -528,8 +536,7 @@ async function countPrivilegedUsers() {
       }
     }
     paginationToken = response.PaginationToken;
-    pages += 1;
-  } while (paginationToken && pages < MAX_LIST_PAGES);
+  } while (paginationToken);
 
   return { developers, platformAdmins };
 }

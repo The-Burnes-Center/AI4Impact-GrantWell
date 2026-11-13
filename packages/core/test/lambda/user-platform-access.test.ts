@@ -245,4 +245,26 @@ describe("last developer and platform admin guard", () => {
     expect((await patch(handler, "developer", { rolePreset: "platformadmin" })).status).toBe(409);
     expect((await remove(handler, "developer")).status).toBe(409);
   });
+
+  it("counts past 50 pages", async () => {
+    const handler = await load();
+    const users = Array.from({ length: 3100 }, () => TARGETS.user);
+    servePool(TARGETS.platformAdmin, [...users, TARGETS.platformAdmin, TARGETS.developer]);
+    expect((await remove(handler, "developer")).status).toBe(200);
+    expect(cognito.commandCalls(ListUsersCommand).length).toBeGreaterThan(50);
+
+    cognito.reset();
+    servePool(TARGETS.platformAdmin, [...users, TARGETS.developer]);
+    expect((await remove(handler, "developer")).status).toBe(409);
+  });
+
+  it("refuses the change when time runs out before every account is counted", async () => {
+    const handler = await load();
+    servePool(TARGETS.platformAdmin, [...Array.from({ length: 300 }, () => TARGETS.user), TARGETS.platformAdmin]);
+    let remaining = 30000;
+    const context = { getRemainingTimeInMillis: () => (remaining -= 5000) };
+    const res = await remove(handler, "developer", context);
+    expect(res.status).toBe(503);
+    expect(cognito.commandCalls(AdminDeleteUserCommand)).toHaveLength(0);
+  });
 });
