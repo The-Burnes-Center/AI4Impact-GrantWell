@@ -260,6 +260,10 @@
   margin-top: var(--gw-spacing-lg, 16px);
 }
 
+.dm-drop-zone .dm-upload-btn {
+  margin-inline: auto;
+}
+
 /* ── Error text ── */
 .dm-error {
   color: var(--gw-color-danger, #CD0D0D);
