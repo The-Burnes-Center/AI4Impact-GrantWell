@@ -27,7 +27,7 @@ describe("Not Found", () => {
       { route: "/requirements/a/b" }
     );
     expect(await screen.findByRole("heading", { level: 1, name: "Page not found" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Find grants on the home page" })).toHaveAttribute("href", "/home");
+    expect(screen.getByRole("link", { name: "Go to home" })).toHaveAttribute("href", "/home");
     expect(screen.getByTestId("where")).toHaveTextContent("/requirements/a/b");
     expect(document.title).toBe("Page not found – GrantWell");
   });

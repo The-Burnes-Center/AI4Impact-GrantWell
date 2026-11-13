@@ -7,7 +7,7 @@ function Boom(): never {
 }
 
 describe("ErrorBoundary", () => {
-  it("names the fallback screen with an h1", () => {
+  it("names the fallback screen with an h1, one sentence and Try again", () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     const quiet = (e: ErrorEvent) => e.preventDefault();
     window.addEventListener("error", quiet);
@@ -21,6 +21,7 @@ describe("ErrorBoundary", () => {
       window.removeEventListener("error", quiet);
     }
     expect(screen.getByRole("heading", { level: 1, name: "Something went wrong" })).toBeInTheDocument();
-    expect(screen.getByRole("alert")).toHaveTextContent("kaboom");
+    expect(screen.getByRole("alert")).toHaveTextContent("This page hit an unexpected error.");
+    expect(screen.getAllByRole("button").map((b) => b.textContent)).toEqual(["Try again"]);
   });
 });

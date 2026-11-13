@@ -96,9 +96,8 @@ describe("ChecklistPage missing grant", () => {
     renderChecklist(
       json({ error: "GRANT_IN_REVIEW", message: "This grant is being reviewed and will be back soon." }, 409)
     );
-    expect(
-      await screen.findByRole("heading", { level: 1, name: "This grant is being reviewed and will be back soon." })
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 1, name: "This grant isn't available right now" })).toBeInTheDocument();
+    expect(screen.getByText("This grant is being reviewed and will be back soon.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Go to home" })).toHaveAttribute("href", "/home");
     expect(screen.queryByText("Grant not found")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Try again" })).not.toBeInTheDocument();

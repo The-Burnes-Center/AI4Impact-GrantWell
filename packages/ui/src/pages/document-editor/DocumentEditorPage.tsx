@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useDraftsClient } from "../../hooks/use-drafts-client";
 import { useDraftSave } from "../../hooks/use-draft-save";
@@ -23,6 +23,7 @@ import GrantPickerModal, { type PickedGrant } from "../../components/common/Gran
 import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
 import ProgressStepper from "../../components/document-editor/ProgressStepper";
 import { LiveStatus } from "../../components/common/LiveStatus";
+import PageMessage from "../../components/common/PageMessage";
 import { getCurrentUser } from "aws-amplify/auth";
 import type { DocumentDraft } from "../../common/api-client/drafts-client";
 import type { DocumentData } from "../../common/types/document";
@@ -384,19 +385,26 @@ const DocumentEditor: React.FC = () => {
 
   if (notFound) {
     return (
-      <div style={{ maxWidth: "560px", margin: "0 auto", padding: "48px 16px", lineHeight: 1.5 }}>
-        <h1 style={{ fontSize: "1.75rem", marginBottom: "12px" }}>Application not found</h1>
-        <p>This application doesn&apos;t exist. It may have been deleted.</p>
-        <p>
-          <Link to="/document-editor/drafts" style={{ color: "var(--gw-color-primary)", fontWeight: 600 }}>
-            Go to My applications
-          </Link>
-        </p>
-      </div>
+      <PageMessage
+        title="Application not found"
+        message="This application doesn't exist. It may have been deleted."
+        action={{ label: "Go to My applications", to: "/document-editor/drafts" }}
+      />
     );
   }
 
-  if (error) return <EditorError message={error} />;
+  // Replaces the whole editor, so it takes focus: the control that had it is gone.
+  if (error) {
+    return (
+      <PageMessage
+        alert
+        focusTitle
+        title="Something went wrong"
+        message={`${error}. Try again in a moment.`}
+        action={{ label: "Try again", onClick: () => window.location.reload() }}
+      />
+    );
+  }
 
   return (
     <div ref={rootRef} className="document-editor-root" style={{ display: "flex", alignItems: "stretch", flex: "1 0 auto", width: "100%", margin: 0, padding: 0 }}>
@@ -483,16 +491,3 @@ const DocumentEditor: React.FC = () => {
 };
 
 export default DocumentEditor;
-
-/** Replaces the whole editor, so it takes focus (the control that had it is gone) and is the page's h1. */
-function EditorError({ message }: { message: string }) {
-  const title = useRef<HTMLHeadingElement>(null);
-  useEffect(() => title.current?.focus(), []);
-  return (
-    <div className="checklist-error" style={{ padding: 40 }}>
-      <h1 ref={title} tabIndex={-1} className="checklist-error__title">Error</h1>
-      <p className="checklist-error__text">{message}</p>
-      <button className="gw-btn gw-btn--primary checklist-error__btn" onClick={() => window.location.reload()}>Retry</button>
-    </div>
-  );
-}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link, useParams, useLocation, useNavigate, useSearchParams } from "react-router";
+import { useParams, useLocation, useNavigate, useSearchParams } from "react-router";
 import ModelMarkdown from "../../components/common/ModelMarkdown";
 import { citationSup } from "../../components/chat/citation-sup";
 import { remarkCitationMarkers } from "../../components/chat/citations";
@@ -9,6 +9,7 @@ import { useApiClient } from "../../hooks/use-api-client";
 import { useInert } from "../../hooks/use-inert";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import HelpModal from "./components/HelpModal";
+import PageMessage from "../../components/common/PageMessage";
 import { GRANT_TYPES, grantTypeTint, type GrantTypeId } from "../../common/types/nofo";
 import { GrantInReviewError } from "../../common/api-client/grant-in-review";
 import "../../styles/checklists.css";
@@ -175,30 +176,24 @@ const Checklists: React.FC = () => {
               </div>
             </>
           ) : inReviewMessage ? (
-            <div className="checklist-error">
-              <h1 className="checklist-error__title">{inReviewMessage}</h1>
-              <Link className="gw-btn gw-btn--primary checklist-error__btn" to="/home">
-                Go to home
-              </Link>
-            </div>
+            <PageMessage
+              title="This grant isn't available right now"
+              message={inReviewMessage}
+              action={{ label: "Go to home", to: "/home" }}
+            />
           ) : notFound ? (
-            <div className="checklist-error">
-              <h1 className="checklist-error__title">Grant not found</h1>
-              <p className="checklist-error__text">
-                We couldn&apos;t find this grant. It may have been removed, or the link is wrong.
-              </p>
-              <Link className="gw-btn gw-btn--primary checklist-error__btn" to="/home">
-                Go to home
-              </Link>
-            </div>
+            <PageMessage
+              title="Grant not found"
+              message="We couldn't find this grant. It may have been removed, or the link is wrong."
+              action={{ label: "Go to home", to: "/home" }}
+            />
           ) : error ? (
-            <div className="checklist-error" role="alert">
-              <h1 className="checklist-error__title">Unable to load requirements</h1>
-              <p className="checklist-error__text">{error}</p>
-              <button className="gw-btn gw-btn--primary checklist-error__btn" onClick={() => window.location.reload()}>
-                Try again
-              </button>
-            </div>
+            <PageMessage
+              alert
+              title="Unable to load requirements"
+              message={error}
+              action={{ label: "Try again", onClick: () => window.location.reload() }}
+            />
           ) : (
             <div className="checklist-content">
               <div className="checklist-content__header">

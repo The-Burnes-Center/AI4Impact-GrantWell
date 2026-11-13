@@ -668,3 +668,35 @@ a.gw-tab { text-decoration: none; }
 .gw-step-band.gw-step-band :focus-visible {
   outline-color: var(--gw-color-focus-on-dark);
 }
+
+/* ==============================
+ * Page message: not found, unavailable, something went wrong
+ * ============================== */
+
+.gw-page-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gw-spacing-md);
+  width: calc(100% - 2 * var(--gw-spacing-lg));
+  max-width: 560px;
+  margin: var(--gw-spacing-4xl) auto;
+  padding: var(--gw-spacing-3xl) var(--gw-spacing-2xl);
+  background: var(--gw-color-surface);
+  border: 1px solid var(--gw-color-border);
+  border-radius: var(--gw-radius-container);
+  text-align: center;
+}
+.gw-page-message__title {
+  margin: 0;
+  font-size: var(--gw-font-size-2xl);
+  font-weight: var(--gw-font-weight-semibold);
+  line-height: 1.3;
+  color: var(--gw-color-text-strong);
+}
+.gw-page-message__text {
+  margin: 0 0 var(--gw-spacing-sm);
+  max-width: 420px;
+  color: var(--gw-color-text-secondary);
+}
+.gw-page-message .gw-btn { min-height: 44px; }

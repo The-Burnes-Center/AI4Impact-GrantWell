@@ -292,35 +292,6 @@
 }
 
 /* Error state */
-.checklist-error {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 300px;
-  padding: 40px;
-  text-align: center;
-}
-
-.checklist-error__title {
-  font-size: 24px;
-  font-weight: var(--gw-font-heading-1-weight, 600);
-  color: var(--gw-color-text);
-  margin-bottom: 12px;
-}
-
-.checklist-error__text {
-  font-size: 16px;
-  color: var(--gw-color-text-secondary);
-  margin-bottom: 24px;
-}
-
-.checklist-error__btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
 /* Help modal */
 .help-modal__text {
   margin-bottom: 20px;
