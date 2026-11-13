@@ -33,7 +33,7 @@ export default function StateSiteNotice() {
   };
 
   return (
-    <aside className="state-site-notice" aria-label={`${name} has its own GrantWell`}>
+    <aside className="gw-alert gw-alert--info state-site-notice" aria-label={`${name} has its own GrantWell`}>
       <p className="state-site-notice__text">
         {name} now has its own GrantWell at <a href={site.url}>{new URL(site.url).host}</a>. Your chats and
         applications will move there soon.

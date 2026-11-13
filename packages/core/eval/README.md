@@ -72,7 +72,9 @@ Rules:
 - Budget narratives and justifications are `requiredDocuments` with `userWrites: true`, never `sections`. An applicant-written short description or abstract is a section.
 - A section is prose the applicant drafts for this application. Biosketches, Current and Pending Support, title pages, tables of contents and forms are `requiredDocuments` (`userWrites: true` when the applicant prepares them). A plan with notice-specific instructions (resource sharing, data management) is a section; without them it goes in `libraryRequired`.
 - NIH Research Strategy is one section per component, with the notice's own instructions in its quote, never split by review factor or unlimited sub-part. Parts the notice gives their own page limits (CTSA Elements A–E) stay separate.
-- `libraryRequired` holds standard prose sections the notice defers to a guide (Specific Aims, Research Strategy, Project Summary, Resource Sharing Plan…). Biosketches, Current and Pending Support, Facilities, Equipment and Bibliography are `requiredDocuments` with `userWrites: true`.
+- `libraryRequired` holds standard prose sections the notice defers to a guide (Specific Aims, Research Strategy, Project Summary, Resource Sharing Plan…). Biosketches, Current and Pending Support, Facilities, Equipment and Bibliography are `requiredDocuments` with `userWrites: true`. Either list holds only what the notice names; one it covers only by deferring to a guide is left out.
+- The application deadline is the last date the notice accepts any application. A grant that accepts applications at any time (rolling, rolling with quarterly or review cutoffs, or target dates only) has one `application` entry with `date: null`, and its cutoffs and target dates are `other`.
+- `eligibility` leaves out award amounts, budget caps, project periods and "no cost sharing required". A required cost share is an eligibility item.
 - "Should", "encouraged" and "recommended" are not requirements: leave them out of `eligibility` and `requiredDocuments`; recommended page allowances go in `format.other`.
 - When the notice contradicts itself, record each statement with its quote and set `"conflict": true` on each; scorers accept either value.
 - Pass/fail screens and eligibility gates are criteria with `scored: false`.
@@ -87,3 +89,27 @@ Rules:
 ## Output
 
 `eval/out/<runner>-<time>/` (gitignored) holds `<slug>.json` per grant, with the output, every model call (`stage`, `model`, `promptHash`, tokens, `stop`, `ms`) and its cost, plus `run.json` with the code sha, model ids and totals. Cost uses the US-profile prices in `lib/cost.mjs`. Model ids are read from `functions.ts`, so they always match the deployment.
+
+## Grant search recall
+
+`search-recall.mjs` compares today's OpenSearch grant search with the per-grant index on one deployment's real grants. It is read-only: it scans the metadata table, reads summaries and raw text, queries the OpenSearch index and calls Titan, Haiku and Cohere Rerank. It builds each index variant in memory with the real builder and runs the real search handlers against it. Any other AWS call, any write, and any fetch other than an OpenSearch `_search` or a rerank throws.
+
+```
+cd packages/core
+node eval/search-recall.mjs --profile 530075910224_AdministratorAccess --region us-east-1 --stack grantwell-burnes-staging
+node eval/search-recall.mjs --profile 530075910224_AdministratorAccess --region us-east-1 --stack grantwell-staging --sample 500 --rerank --sweep
+```
+
+`--stack` finds the metadata table, artifacts and grant buckets, Titan profile and OpenSearch endpoint from the stack's Lambda settings. Before the switch is deployed, ai-grant-search still carries `OPENSEARCH_ENDPOINT` and `OPENSEARCH_INDEX`. After it, pass them yourself: `--aoss-endpoint <collection id>.us-east-1.aoss.amazonaws.com --aoss-index <aws.knowledgeBaseIndexName>`. The collection id comes from `aws opensearchserverless list-collections`. Pass `--no-legacy` to skip today's search. `--artifacts-bucket`, `--nofo-bucket`, `--table`, `--titan-model` and `--haiku-model` override what the stack lookup finds.
+
+| Option | Default | |
+|---|---|---|
+| `--sample` | 300 | grants that get title and need queries; every grant is indexed |
+| `--titles-per-grant` | 2 | the cleaned title, and its three rarest words |
+| `--need-per-grant` | 1 | Haiku-written need queries per grant, marked `need` (0 to skip) |
+| `--state-queries` | 40 | "<state> <topic>" queries, plus 10 for states with no state grants |
+| `--variants` | profile,no-profile,one-vector,raw-2000 | index variants (also profile-bm25-only, profile-view) |
+| `--rerank` | off | also reranks the first variant's top 30 with Cohere |
+| `--sweep` | off | sweeps fusion weights, thresholds and the semantic floor on the first variant |
+
+The report gives recall@30, top-1, top-3 and MRR, overall, by query kind and by category. junk@5 is the share of a state query's top five outside its topic. Title and need queries run as a Developer, who sees every grant. State queries run as a user in that state when the deployment supports it. Latency is wall time from your machine. `eval/out/search-recall-<time>/` holds `report.md`, `results.json` (per-query ranks and top 30) and `queries.json`. Model responses are cached in `eval/out/search-cache/<stack>/`, so a rerun or another variant only pays for new text. SSO credentials must outlive the run; a first run on about 2,000 grants writes about 2,000 profiles and takes roughly 20 to 40 minutes.

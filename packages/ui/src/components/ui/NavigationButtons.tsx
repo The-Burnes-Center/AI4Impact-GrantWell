@@ -27,7 +27,7 @@
  */
 
 import React from "react";
-import { colors, spacing } from "./styles";
+import { spacing } from "./styles";
 
 export interface NavigationButtonsProps {
   /** Handler for back button click */
@@ -65,63 +65,13 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
     display: "flex",
     justifyContent: justify,
     alignItems: "center",
+    flexWrap: "wrap",
     gap: spacing.lg,
     marginTop: spacing["2xl"],
   };
 
-  const pillBase: React.CSSProperties = {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "8px",
-    padding: "10px 26px",
-    borderRadius: "var(--gw-radius-pill)",
-    fontFamily: "var(--gw-font-button)",
-    fontSize: "13px",
-    lineHeight: "22px",
-    fontWeight: 600,
-    letterSpacing: "var(--gw-button-letter-spacing, 1.3px)",
-    textTransform: "var(--gw-button-text-transform, uppercase)",
-    cursor: "pointer",
-    transition: "background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease",
-    minHeight: "44px",
-    whiteSpace: "nowrap",
-  };
-
-  const backButtonStyle: React.CSSProperties = {
-    ...pillBase,
-    background: "transparent",
-    border: `1px solid ${colors.primary}`,
-    color: colors.primary,
-  };
-
-  const continueButtonStyle: React.CSSProperties = {
-    ...pillBase,
-    background: continueDisabled ? "var(--gw-color-primary-border)" : colors.primary,
-    color: colors.white,
-    border: `1px solid ${continueDisabled ? "var(--gw-color-primary-border)" : colors.primary}`,
-    cursor: continueDisabled ? "not-allowed" : "pointer",
-  };
-
-  const handleBackHover = (e: React.MouseEvent<HTMLButtonElement>, isHover: boolean) => {
-    e.currentTarget.style.backgroundColor = isHover ? colors.primary : "transparent";
-    e.currentTarget.style.color = isHover ? colors.white : colors.primary;
-  };
-
-  const handleContinueHover = (e: React.MouseEvent<HTMLButtonElement>, isHover: boolean) => {
-    if (!continueDisabled) {
-      e.currentTarget.style.backgroundColor = isHover ? colors.primaryHover : colors.primary;
-      e.currentTarget.style.borderColor = isHover ? colors.primaryHover : colors.primary;
-    }
-  };
-
-  const handleFocus = (e: React.FocusEvent<HTMLButtonElement>) => {
-    e.currentTarget.style.outline = `2px solid ${colors.primary}`;
-    e.currentTarget.style.outlineOffset = "2px";
-  };
-
-  const handleBlur = (e: React.FocusEvent<HTMLButtonElement>) => {
-    e.currentTarget.style.outline = "none";
-  };
+  // A 44px touch target; the look comes from the shared button classes.
+  const navButtonStyle: React.CSSProperties = { minHeight: "44px" };
 
   // Arrow icons
   const LeftArrow = () => (
@@ -160,14 +110,16 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
     </svg>
   );
 
+  // currentColor, so on the grey busy fill the arc takes the button's text colour (WCAG 1.4.11).
   const LoadingSpinner = () => (
     <>
       <div
         style={{
           width: "16px",
           height: "16px",
-          border: "2px solid rgba(255, 255, 255, 0.3)",
-          borderTopColor: colors.white,
+          flexShrink: 0,
+          border: "2px solid color-mix(in srgb, currentColor 25%, transparent)",
+          borderTopColor: "currentColor",
           borderRadius: "50%",
           animation: "nav-spin 0.8s linear infinite",
         }}
@@ -186,18 +138,15 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
       {/* Outside the button: ARIA treats button children as presentational, so a live
           region nested in one never fires. Always mounted so the text is an update. */}
       <div role="status" aria-live="polite" className="visually-hidden">
-        {continueLoading ? `${continueLabel} in progress` : ""}
+        {continueLoading ? continueLabel : ""}
       </div>
 
       {showBack && onBack ? (
         <button
           type="button"
           onClick={onBack}
-          style={backButtonStyle}
-          onMouseEnter={(e) => handleBackHover(e, true)}
-          onMouseLeave={(e) => handleBackHover(e, false)}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
+          className="gw-btn gw-btn--secondary"
+          style={navButtonStyle}
           aria-label={backLabel}
         >
           <LeftArrow />
@@ -210,18 +159,17 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({
       {showContinue && onContinue && (
         <button
           type="button"
-          onClick={onContinue}
-          disabled={continueDisabled || continueLoading}
-          style={continueButtonStyle}
-          onMouseEnter={(e) => handleContinueHover(e, true)}
-          onMouseLeave={(e) => handleContinueHover(e, false)}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          aria-label={continueLabel}
-          aria-disabled={continueDisabled}
+          // aria-disabled, not disabled, so a keyboard user's focus stays on the button while it is busy.
+          onClick={() => {
+            if (!continueDisabled && !continueLoading) onContinue();
+          }}
+          className="gw-btn gw-btn--primary"
+          style={navButtonStyle}
+          aria-disabled={continueDisabled || continueLoading || undefined}
           aria-busy={continueLoading}
         >
-          {continueLoading ? <LoadingSpinner /> : continueLabel}
+          {continueLoading && <LoadingSpinner />}
+          {continueLabel}
           {!continueLoading && <RightArrow />}
         </button>
       )}

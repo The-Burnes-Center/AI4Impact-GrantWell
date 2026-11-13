@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { LuDownload } from "react-icons/lu";
 import type { ApiClient } from "../../../common/api-client/api-client";
 import type { AdminOutcome } from "../../../common/api-client/outcomes-client";
@@ -6,6 +6,7 @@ import {
   OUTCOME_LABELS,
   OUTCOME_STATUSES,
   formatDollars,
+  formatRequestedAmount,
   type OutcomeStatus,
 } from "../../../common/application-outcomes";
 import { REGIONS } from "../../../common/instance";
@@ -37,6 +38,8 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
   const [status, setStatus] = useState<OutcomeStatus | "">("");
   const [query, setQuery] = useState("");
   const [shown, setShown] = useState(PAGE);
+  const [resultsAnnouncement, setResultsAnnouncement] = useState("");
+  const filtersTouched = useRef(false);
 
   useEffect(() => {
     let active = true;
@@ -63,6 +66,20 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
     );
   }, [rows, status, query]);
 
+  const filteredCount = useRef(0);
+  filteredCount.current = filtered.length;
+  useEffect(() => {
+    if (!filtersTouched.current) {
+      filtersTouched.current = true;
+      return;
+    }
+    const timer = setTimeout(() => {
+      const n = filteredCount.current;
+      setResultsAnnouncement(`${n} outcome${n === 1 ? "" : "s"} found`);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [status, query]);
+
   const totals = useMemo(() => {
     const all = rows ?? [];
     const count = (s: OutcomeStatus) => all.filter((o) => o.status === s).length;
@@ -87,7 +104,7 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
         </div>
         <button
           type="button"
-          className="analytics__window-btn"
+          className="gw-btn gw-btn--secondary gw-btn--slim"
           onClick={exportCsv}
           disabled={!rows || filtered.length === 0}
         >
@@ -95,8 +112,11 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
         </button>
       </div>
 
+      <div role="status" className="visually-hidden">
+        {rows === null ? "Loading outcomes" : resultsAnnouncement}
+      </div>
       {rows === null ? (
-        <div role="status" className="no-data">
+        <div className="no-data" aria-hidden="true">
           Loading outcomes
         </div>
       ) : rows.length === 0 ? (
@@ -112,12 +132,12 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
           </div>
 
           <div className="analytics__outcomes-filters">
-            <label className="visually-hidden" htmlFor="outcomes-status">
+            <label className="gw-field__label" htmlFor="outcomes-status">
               Filter by outcome
             </label>
             <select
               id="outcomes-status"
-              className="analytics__state-select"
+              className="gw-input analytics__state-select"
               value={status}
               onChange={(e) => {
                 setStatus(e.target.value as OutcomeStatus | "");
@@ -131,13 +151,13 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
                 </option>
               ))}
             </select>
-            <label className="visually-hidden" htmlFor="outcomes-search">
+            <label className="gw-field__label" htmlFor="outcomes-search">
               Search outcomes
             </label>
             <input
               id="outcomes-search"
               type="search"
-              className="analytics__state-select"
+              className="gw-input analytics__state-select"
               placeholder="Search grant, organization, email"
               value={query}
               onChange={(e) => {
@@ -172,7 +192,7 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
                     {REGIONS.length > 0 && <td>{o.region || "—"}</td>}
                     <td>{o.deleted ? "Deleted account" : o.email || "—"}</td>
                     <td>{OUTCOME_LABELS[o.status] ?? o.status}</td>
-                    <td className="analytics__num">{o.requestedAmount || "—"}</td>
+                    <td className="analytics__num">{o.requestedAmount ? formatRequestedAmount(o.requestedAmount) : "—"}</td>
                     <td className="analytics__num">{o.amountAwarded === null ? "—" : formatDollars(o.amountAwarded)}</td>
                     <td>{o.decisionDate ? formatDeadline(o.decisionDate) : "—"}</td>
                   </tr>
@@ -182,7 +202,16 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
           </TableScrollRegion>
           {filtered.length === 0 && <div className="no-data">No outcomes match.</div>}
           {filtered.length > shown && (
-            <button type="button" className="analytics__window-btn" onClick={() => setShown((n) => n + PAGE)}>
+            <button
+              type="button"
+              className="gw-btn gw-btn--secondary gw-btn--slim"
+              onClick={() => {
+                const last = filtered.length - shown <= PAGE;
+                setShown((n) => n + PAGE);
+                // This button goes away with the last page; carry on in the table.
+                if (last) requestAnimationFrame(() => document.querySelector<HTMLElement>('[aria-label^="Application outcomes table"]')?.focus());
+              }}
+            >
               Show {Math.min(PAGE, filtered.length - shown)} more of {filtered.length - shown}
             </button>
           )}
@@ -194,7 +223,7 @@ export default function OutcomesSection({ apiClient, state, addNotification }: O
 
 function Tile({ label, value }: { label: string; value: string }) {
   return (
-    <div className="metric-card" aria-label={`${label}: ${value}`}>
+    <div className="metric-card">
       <div className="metric-card__value">{value}</div>
       <div className="metric-card__label">{label}</div>
     </div>

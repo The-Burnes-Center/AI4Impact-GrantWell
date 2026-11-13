@@ -51,6 +51,10 @@ export interface Branding {
   shortName?: string;
   home?: HomeCopy;
   footer: {
+    /** "full": light footer with link, partner and contact columns over a copyright bar. Default "brand". */
+    layout?: "brand" | "full";
+    /** Link columns of the full footer, between the brand column and Partners. */
+    columns?: { heading: string; links: Link[] }[];
     /** Footer wordmark image; omit to fall back to `logo`. */
     wordmark?: string;
     /** "Made by" attribution (e.g. ai4impact), if any. */
@@ -69,6 +73,10 @@ export interface Branding {
   omniPartners: Link[];
   /** A government deployment's identity: a strip above every page (logo + label, linking to href) and the logo beside the app logo. */
   govHeader?: { logo: string; label: string; href: string; sealBesideLogo?: boolean };
+  /** "tabs": main pages in header tabs, side menu only on a grant's pages. Ignored with a chrome Header. */
+  navigation?: { layout?: "sidebar" | "tabs" };
+  /** An https font stylesheet (e.g. an Adobe Fonts kit), linked so it doesn't hold up the first paint. */
+  fonts?: { stylesheet: string };
   analyticsId?: string;
   seo?: {
     title?: string;

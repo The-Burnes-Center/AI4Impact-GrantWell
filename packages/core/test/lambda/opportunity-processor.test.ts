@@ -16,6 +16,7 @@ let handler: (event: any) => Promise<{ batchItemFailures: { itemIdentifier: stri
 beforeAll(async () => {
   vi.stubEnv("GRANTS_GOV_API_KEY", "key");
   vi.stubEnv("BUCKET", "nofo-bucket");
+  vi.stubEnv("ARTIFACTS_BUCKET", "grant-artifacts");
   vi.stubEnv("NOFO_METADATA_TABLE_NAME", "nofos");
   vi.stubEnv("HAIKU_MODEL_ID", "haiku");
   ({ handler } = await import("../../lib/chatbot-api/functions/nofo-scraper/opportunity-processor/index.mjs"));
@@ -449,25 +450,49 @@ describe("opportunity processor", () => {
       expect(metadata()[0]).toMatchObject({ scope: "federal", status: "active", content_hash: expect.any(String) });
     });
 
-    it("writes the row before the document upload that starts processing", async () => {
+    const recordOrder = () => {
       const order: string[] = [];
       ddb.on(UpdateItemCommand).callsFake((input) => {
         order.push(`ddb:${/content_hash/.test(input.UpdateExpression) ? "hash" : "row"}`);
         return {};
       });
       s3.on(PutObjectCommand).callsFake((input) => {
-        order.push(`s3:${input.Key}`);
+        order.push(`s3:${input.Bucket}/${input.Key}`);
         return {};
       });
+      return order;
+    };
+
+    it("writes the row before the document upload that starts processing", async () => {
+      ddb.on(GetItemCommand).resolves({ Item: marshall({ ...stored, status: "quarantined" }) });
+      const order = recordOrder();
 
       await handler(message({ isUpdate: true }));
 
       expect(order).toEqual([
         "ddb:row",
-        "s3:Test Grant/NOFO-File-PDF",
-        "s3:Test Grant/NOFO-File-PDF.metadata.json",
+        "s3:nofo-bucket/Test Grant/NOFO-File-PDF",
+        "s3:nofo-bucket/Test Grant/NOFO-File-PDF.metadata.json",
         "ddb:hash",
       ]);
+    });
+
+    it.each(["active", "archived"])("stages an update of a %s grant in _pending/, leaving the published document alone", async (status) => {
+      ddb.on(GetItemCommand).resolves({ Item: marshall({ ...stored, status }) });
+      const order = recordOrder();
+
+      await handler(message({ isUpdate: true }));
+
+      expect(order).toEqual(["ddb:row", "s3:grant-artifacts/_pending/Test Grant/NOFO-File-PDF", "ddb:hash"]);
+    });
+
+    it("stages the update when the row can't be read, in case the grant is live", async () => {
+      ddb.on(GetItemCommand).rejects(new Error("throttled"));
+
+      await handler(message({ isUpdate: true }));
+
+      expect(uploads().map((u) => `${u.Bucket}/${u.Key}`)).toEqual(["grant-artifacts/_pending/Test Grant/NOFO-File-PDF"]);
+      expect(sidecars()).toEqual([]);
     });
 
     it("leaves the stored hash and source date alone when the upload fails, so the retry uploads again", async () => {

@@ -1,7 +1,9 @@
 import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
 import { apiFetch } from "../session-ended";
+import type { LibraryDocument } from "../helpers/user-documents";
 
+/** Every call takes an object's real key: older uploads keep their per-grant keys. */
 export class UserDocumentsClient {
   private readonly API: string;
 
@@ -9,29 +11,20 @@ export class UserDocumentsClient {
     this.API = _appConfig.httpEndpoint;
   }
 
-  async getUploadURL(
-    fileName: string,
-    fileType: string,
-    userId: string,
-    nofoName: string,
-    fileSize: number
-  ): Promise<string> {
+  private async post(path: string, body: unknown): Promise<Response> {
+    const auth = await Utils.authenticate();
+    return apiFetch(`${this.API}${path}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: auth },
+      body: JSON.stringify(body),
+    });
+  }
+
+  async getUploadURL(key: string, fileType: string, fileSize: number): Promise<string> {
     if (!fileType) {
       throw new Error("Must have valid file type");
     }
-
-    const auth = await Utils.authenticate();
-    const filePath = `${userId}/${nofoName}/${fileName}`;
-
-    const response = await apiFetch(`${this.API}/user-documents/upload-url`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: auth,
-      },
-      body: JSON.stringify({ fileName: filePath, fileType, fileSize }),
-    });
-
+    const response = await this.post("/user-documents/upload-url", { fileName: key, fileType, fileSize });
     if (!response.ok) {
       let message = "Failed to get upload URL";
       try {
@@ -42,77 +35,31 @@ export class UserDocumentsClient {
       }
       throw new Error(message);
     }
-
     const data = await response.json();
     return data.signedUrl;
   }
 
-  async getDownloadURL(
-    fileName: string,
-    userId: string,
-    nofoName: string
-  ): Promise<string> {
-    const auth = await Utils.authenticate();
-    const filePath = `${userId}/${nofoName}/${fileName}`;
-
-    const response = await apiFetch(`${this.API}/user-documents/download-url`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: auth,
-      },
-      body: JSON.stringify({ fileName: filePath }),
-    });
-
+  async getDownloadURL(key: string): Promise<string> {
+    const response = await this.post("/user-documents/download-url", { fileName: key });
     if (!response.ok) {
       throw new Error("Failed to get download URL");
     }
-
     const data = await response.json();
     return data.signedUrl;
   }
 
-  async getDocuments(
-    userId: string,
-    nofoName: string,
-    continuationToken?: string,
-    pageIndex?: number
-  ) {
-    const auth = await Utils.authenticate();
-    const folderPrefix = `${userId}/${nofoName}/`;
-
-    const response = await apiFetch(`${this.API}/user-documents/list`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: auth,
-      },
-      body: JSON.stringify({
-        folderPrefix,
-        continuationToken,
-        pageIndex,
-      }),
-    });
-
+  /** The whole library, older per-grant uploads included. */
+  async listDocuments(): Promise<LibraryDocument[]> {
+    const response = await this.post("/user-documents/list", {});
     if (!response.ok) {
       throw new Error("Failed to get files");
     }
-    return await response.json();
+    const data = await response.json();
+    return Array.isArray(data?.documents) ? data.documents : [];
   }
 
-  async deleteFile(userId: string, nofoName: string, fileName: string) {
-    const auth = await Utils.authenticate();
-    const key = `${userId}/${nofoName}/${fileName}`;
-
-    const response = await apiFetch(`${this.API}/user-documents/delete`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: auth,
-      },
-      body: JSON.stringify({ KEY: key }),
-    });
-
+  async deleteFile(key: string) {
+    const response = await this.post("/user-documents/delete", { KEY: key });
     if (!response.ok) {
       throw new Error("Failed to delete file");
     }

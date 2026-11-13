@@ -4,7 +4,7 @@ export interface ReviewItem {
   status: "pending_review" | "approved" | "rejected" | "failed" | "reprocessing" | "needs_reupload" | "superseded";
   created_at: string;
   retryCount: number;
-  source: "pipeline" | "dlq" | "duplicate" | "quality";
+  source: "pipeline" | "dlq" | "duplicate" | "quality" | "verification";
   errorMessage: string | null;
   /** DLQ failures fold repeats into one row; absent on rows from before that. */
   failure_count?: number;
@@ -12,6 +12,8 @@ export interface ReviewItem {
   guidanceTitle: string | null;
   guidanceSeverity: "critical" | "warning" | null;
   missingSections: string[];
+  /** Requirements the grant doesn't support; absent on rows from before the check. */
+  unverifiedCount?: number;
   /** The grant's deadline (YYYY-MM-DD), or null when none is known. */
   deadline: string | null;
   /** Days from today (Eastern) to the deadline; negative once it has passed. */
@@ -36,6 +38,15 @@ export interface AdminGuidance {
   actions: string[];
   missingCategories: string[];
   canApprove: boolean;
+  /** Requirements page items that could not be matched to the grant. */
+  failingItems?: UnverifiedItem[];
+}
+
+export interface UnverifiedItem {
+  category: string;
+  label: string;
+  item: string;
+  reason: string;
 }
 
 export interface ReviewDetail extends ReviewItem {
@@ -50,6 +61,10 @@ export interface ReviewDetail extends ReviewItem {
   admin_notes: string | null;
   corrections: Record<string, unknown> | null;
   adminGuidance: AdminGuidance | null;
+  /** The status a held grant had before it was held; approving restores it. */
+  previous_status?: string;
+  /** Set when the grant's published version stays live while this new version is reviewed. */
+  live_status?: string;
 }
 
 export interface ProcessingMetrics {

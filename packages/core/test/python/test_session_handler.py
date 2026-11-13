@@ -297,3 +297,50 @@ def test_a_malformed_cursor_is_a_400(sessions, cursor):
     res = sessions.lambda_handler(http_event({"operation": "get_session", "session_id": "s1", "cursor": cursor}), None)
 
     assert res["statusCode"] == 400
+
+
+def keys_call(sessions, operation, session_id="s1", **body):
+    res = sessions.lambda_handler(
+        http_event({"operation": operation, "session_id": session_id, **body}, **{"cognito:username": "alex"}), None
+    )
+    return res["statusCode"], json.loads(res["body"])
+
+
+GREETING = {"operation": "add_session", "session_id": "s1", "title": "Chat", "document_identifier": "Grant A",
+            "chat_history": [{"user": "", "chatbot": "Hello", "metadata": ""}]}
+
+
+def test_a_new_chat_starts_with_no_documents_selected(sessions):
+    sessions.lambda_handler(http_event(GREETING), None)
+
+    assert header(sessions, "s1")["document_keys"] == []
+    assert keys_call(sessions, "get_document_keys") == (200, {"document_keys": [], "exists": True})
+
+
+def test_a_chat_from_before_the_library_has_no_selection(sessions):
+    put(sessions.test_table, "user-1", "s1", history=[{"user": "q"}])
+
+    assert keys_call(sessions, "get_document_keys") == (200, {"document_keys": None, "exists": True})
+
+
+def test_an_unsaved_chat_is_reported_as_new(sessions):
+    assert keys_call(sessions, "get_document_keys", "nope") == (200, {"document_keys": None, "exists": False})
+
+
+def test_a_selection_keeps_only_the_callers_own_keys_and_survives_the_first_save(sessions):
+    status, body = keys_call(sessions, "set_document_keys", document_keys=[
+        "alex/documents/plan.pdf", "alex/documents/plan.pdf", "sam/documents/x.pdf", "alex/../sam/y.pdf",
+    ])
+    assert (status, body) == (200, {"document_keys": ["alex/documents/plan.pdf"]})
+
+    sessions.lambda_handler(http_event(GREETING), None)
+    sessions.lambda_handler(http_event(append_body("s1", "Am I eligible?")), None)
+
+    item = header(sessions, "s1")
+    assert item["document_keys"] == ["alex/documents/plan.pdf"]
+    assert item["title"] == "Chat"
+
+
+def test_setting_a_selection_needs_the_keys(sessions):
+    status, _ = keys_call(sessions, "set_document_keys")
+    assert status == 400

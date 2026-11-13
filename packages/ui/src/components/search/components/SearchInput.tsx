@@ -14,12 +14,12 @@ interface SearchInputProps {
   isLoading: boolean;
   isSearching?: boolean;
   placeholder?: string;
-  ariaLabel?: string;
   disabled: boolean;
   onChange: (value: string) => void;
   onFocus: () => void;
   onKeyDown: (e: React.KeyboardEvent) => void;
   onClear: () => void;
+  describedBy?: string;
 }
 
 export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
@@ -29,12 +29,12 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       isLoading,
       isSearching = false,
       placeholder = "Search by keyword, category, or describe what you need...",
-      ariaLabel = "Search grants by name, agency, or category",
       disabled,
       onChange,
       onFocus,
       onKeyDown,
       onClear,
+      describedBy,
     },
     ref
   ) => {
@@ -57,10 +57,9 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             id="grant-search-input"
             ref={ref}
             type="search"
-            className="gw-search-input"
+            className="gw-input gw-search-input"
             placeholder={placeholder}
-            aria-label={ariaLabel}
-            aria-describedby="search-help-text"
+            aria-describedby={describedBy ? `search-help-text ${describedBy}` : "search-help-text"}
             aria-busy={isLoading || isSearching}
             style={{
               ...inputStyle,
@@ -75,14 +74,9 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           />
           {searchTerm && !isLoading && !isSearching && (
             <button
+              className="gw-btn gw-btn--icon gw-btn--slim"
               style={clearButtonStyle}
               onClick={onClear}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = "#333";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = "#666";
-              }}
               aria-label="Clear search"
               type="button"
             >

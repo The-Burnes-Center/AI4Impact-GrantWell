@@ -1,30 +1,44 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useParams, useLocation, useNavigate, useSearchParams } from "react-router";
+import { Link, useParams, useLocation, useNavigate, useSearchParams } from "react-router";
 import ModelMarkdown from "../../components/common/ModelMarkdown";
+import { citationSup } from "../../components/chat/citation-sup";
+import { remarkCitationMarkers } from "../../components/chat/citations";
+import { EMPTY_TAB, requirementsMarkdown, type TabText } from "./requirements-markdown";
 import { LuUser, LuFileText, LuList, LuClock, LuInfo } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useInert } from "../../hooks/use-inert";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import HelpModal from "./components/HelpModal";
-import { GRANT_TYPES, type GrantTypeId } from "../../common/types/nofo";
+import { GRANT_TYPES, grantTypeTint, type GrantTypeId } from "../../common/types/nofo";
+import { GrantInReviewError } from "../../common/api-client/grant-in-review";
 import "../../styles/checklists.css";
+
+function RequirementsList({ text }: { text: TabText }) {
+  const plugins = React.useMemo(() => (text.citations.length ? [remarkCitationMarkers(text.citations)] : []), [text.citations]);
+  const sup = React.useMemo(() => citationSup(text.citations), [text.citations]);
+  return (
+    <ModelMarkdown className="custom-markdown" remarkPlugins={plugins} components={{ sup }}>
+      {text.markdown}
+    </ModelMarkdown>
+  );
+}
 
 interface LlmData {
   grantName: string;
-  eligibility: string;
-  documents: string;
-  narrative: string;
-  deadlines: string;
+  eligibility: TabText;
+  documents: TabText;
+  narrative: TabText;
+  deadlines: TabText;
 }
 
 const TAB_IDS = ["eligibility", "documents", "narrative", "deadlines"] as const;
 type TabId = typeof TAB_IDS[number];
 
 const TAB_CONFIG: { id: TabId; label: string; icon: React.ReactNode }[] = [
-  { id: "eligibility", label: "Eligibility", icon: <LuUser size={18} /> },
-  { id: "documents", label: "Required Documents", icon: <LuFileText size={18} /> },
-  { id: "narrative", label: "Narrative Sections", icon: <LuList size={18} /> },
-  { id: "deadlines", label: "Key Deadlines", icon: <LuClock size={18} /> },
+  { id: "eligibility", label: "Eligibility", icon: <LuUser size={18} aria-hidden="true" /> },
+  { id: "documents", label: "Required documents", icon: <LuFileText size={18} aria-hidden="true" /> },
+  { id: "narrative", label: "Narrative sections", icon: <LuList size={18} aria-hidden="true" /> },
+  { id: "deadlines", label: "Key deadlines", icon: <LuClock size={18} aria-hidden="true" /> },
 ];
 
 const Checklists: React.FC = () => {
@@ -36,11 +50,13 @@ const Checklists: React.FC = () => {
     searchParams.get("grant") ?? searchParams.get("folder") ?? searchParams.get("nofo") ?? documentIdentifier;
   const apiClient = useApiClient();
 
-  const [llmData, setLlmData] = useState<LlmData>({ grantName: "", eligibility: "", documents: "", narrative: "", deadlines: "" });
+  const [llmData, setLlmData] = useState<LlmData>({ grantName: "", eligibility: EMPTY_TAB, documents: EMPTY_TAB, narrative: EMPTY_TAB, deadlines: EMPTY_TAB });
   const [grantType, setGrantType] = useState<GrantTypeId | null>(null);
   const [stateGuidance, setStateGuidance] = useState<{ stateName: string; note: string } | null>(null);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [notFound, setNotFound] = useState(false);
+  const [inReviewMessage, setInReviewMessage] = useState<string | null>(null);
   const [activeTabId, setActiveTabId] = useState<TabId>("eligibility");
   const [showHelp, setShowHelp] = useState(false);
   const inertMainRef = useInert<HTMLDivElement>(showHelp);
@@ -62,24 +78,20 @@ const Checklists: React.FC = () => {
   useEffect(() => {
     if (!documentIdentifier) return;
 
-    const processApiItems = (items: Array<{ item?: unknown; description?: unknown }>) => {
-      if (!items || !Array.isArray(items)) return "";
-      return items
-        .map((section) => {
-          const itemText = section.item !== undefined
-            ? (typeof section.item === "object" ? JSON.stringify(section.item) : String(section.item))
-            : "Unknown";
-          const descText = section.description !== undefined
-            ? (typeof section.description === "object" ? JSON.stringify(section.description) : String(section.description))
-            : "No description";
-          return `- **${itemText}**: ${descText}`;
-        })
-        .join("\n");
+    // The summary answers 403 for a grant with no metadata row, and an admin gets a 500 when its files are gone.
+    const grantIsMissing = async (err: unknown) => {
+      if ((err as { status?: number })?.status === 404 || (err as Error)?.message === "ACCESS_DENIED_STATE") return true;
+      try {
+        const nofoResult = await apiClient.landingPage.getNOFOs();
+        return Array.isArray(nofoResult?.nofoData) && !nofoResult.nofoData.some((n: { name: string }) => n.name === documentIdentifier);
+      } catch {
+        return false;
+      }
     };
 
     const fetchData = async () => {
       try {
-        const result = await apiClient.landingPage.getNOFOSummary(documentIdentifier);
+        const result = await apiClient.landingPage.getNOFOSummary(documentIdentifier, { citations: true });
 
         try {
           const nofoResult = await apiClient.landingPage.getNOFOs();
@@ -91,10 +103,10 @@ const Checklists: React.FC = () => {
 
         setLlmData({
           grantName: result.data.GrantName || "Grant",
-          eligibility: processApiItems(result.data.EligibilityCriteria),
-          documents: processApiItems(result.data.RequiredDocuments),
-          narrative: processApiItems(result.data.ProjectNarrativeSections),
-          deadlines: processApiItems(result.data.KeyDeadlines),
+          eligibility: requirementsMarkdown(result.data.EligibilityCriteria),
+          documents: requirementsMarkdown(result.data.RequiredDocuments),
+          narrative: requirementsMarkdown(result.data.ProjectNarrativeSections),
+          deadlines: requirementsMarkdown(result.data.KeyDeadlines),
         });
 
         // Server merges the viewer's own state's overlay onto federal grants (if any).
@@ -102,7 +114,9 @@ const Checklists: React.FC = () => {
         setStateGuidance(guidance?.note ? { stateName: guidance.stateName || "your state", note: guidance.note } : null);
       } catch (err) {
         console.error("Error loading NOFO summary:", err);
-        setError("Failed to load grant requirements. Please try again.");
+        if (err instanceof GrantInReviewError) setInReviewMessage(err.message);
+        else if (await grantIsMissing(err)) setNotFound(true);
+        else setError("Failed to load grant requirements. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -132,7 +146,7 @@ const Checklists: React.FC = () => {
     else if (e.key === "End") { e.preventDefault(); handleTabClick(TAB_IDS[TAB_IDS.length - 1]); }
   }, [activeTabId, handleTabClick]);
 
-  const tabContents: Record<TabId, { title: string; content: string }> = {
+  const tabContents: Record<TabId, { title: string; content: TabText }> = {
     eligibility: { title: "Ensure you adhere to the extracted eligibility criteria before continuing with your application.", content: llmData.eligibility },
     documents: { title: "Include the following documents in your application.", content: llmData.documents },
     narrative: { title: "The following sections must be included in your application.", content: llmData.narrative },
@@ -148,7 +162,7 @@ const Checklists: React.FC = () => {
           {isLoading ? (
             <div className="checklist-loading" role="status" aria-live="polite">
               <div className="checklist-loading__spinner"><div className="loading-spinner" /></div>
-              <h2 className="checklist-loading__title">Loading Requirements</h2>
+              <h2 className="checklist-loading__title">Loading requirements</h2>
               <p className="checklist-loading__text">Retrieving grant information and requirements...</p>
               <div className="checklist-loading__tip">
                 <span style={{ fontSize: "24px" }} aria-hidden="true">💡</span>
@@ -157,12 +171,29 @@ const Checklists: React.FC = () => {
                 </p>
               </div>
             </div>
+          ) : inReviewMessage ? (
+            <div className="checklist-error">
+              <h1 className="checklist-error__title">{inReviewMessage}</h1>
+              <Link className="gw-btn gw-btn--primary checklist-error__btn" to="/home">
+                Go to home
+              </Link>
+            </div>
+          ) : notFound ? (
+            <div className="checklist-error">
+              <h1 className="checklist-error__title">Grant not found</h1>
+              <p className="checklist-error__text">
+                We couldn&apos;t find this grant. It may have been removed, or the link is wrong.
+              </p>
+              <Link className="gw-btn gw-btn--primary checklist-error__btn" to="/home">
+                Go to home
+              </Link>
+            </div>
           ) : error ? (
             <div className="checklist-error" role="alert">
-              <h2 className="checklist-error__title">Unable to Load Requirements</h2>
+              <h1 className="checklist-error__title">Unable to load requirements</h1>
               <p className="checklist-error__text">{error}</p>
-              <button className="checklist-error__btn" onClick={() => window.location.reload()}>
-                Try Again
+              <button className="gw-btn gw-btn--primary checklist-error__btn" onClick={() => window.location.reload()}>
+                Try again
               </button>
             </div>
           ) : (
@@ -170,19 +201,22 @@ const Checklists: React.FC = () => {
               <div className="checklist-content__header">
                 <div className="checklist-content__header-inner">
                   <h1 className="checklist-content__heading">
-                    <span>Requirements for </span>
+                    Requirements for{" "}
                     <span className="checklist-content__heading-accent">{llmData.grantName}</span>
                     {grantType && GRANT_TYPES[grantType] && (
-                      <span
-                        className="checklist-grant-badge"
-                        style={{
-                          backgroundColor: `${GRANT_TYPES[grantType].color}15`,
-                          color: GRANT_TYPES[grantType].color,
-                          border: `1px solid ${GRANT_TYPES[grantType].color}40`,
-                        }}
-                      >
-                        {GRANT_TYPES[grantType].label}
-                      </span>
+                      <>
+                        <span className="visually-hidden">,</span>{" "}
+                        <span
+                          className="gw-tag checklist-grant-badge"
+                          style={{
+                            backgroundColor: grantTypeTint(GRANT_TYPES[grantType].color, 8),
+                            color: GRANT_TYPES[grantType].color,
+                            border: `1px solid ${grantTypeTint(GRANT_TYPES[grantType].color, 25)}`,
+                          }}
+                        >
+                          {GRANT_TYPES[grantType].label}
+                        </span>
+                      </>
                     )}
                   </h1>
                   <p className="checklist-content__description">
@@ -191,7 +225,7 @@ const Checklists: React.FC = () => {
                     you&#39;ll need to prepare.
                   </p>
                 </div>
-                <button className="checklist-help-btn" onClick={() => setShowHelp(true)}>
+                <button className="gw-btn gw-btn--secondary checklist-help-btn" onClick={() => setShowHelp(true)}>
                   <LuInfo size={16} aria-hidden="true" /> Help
                 </button>
               </div>
@@ -203,27 +237,27 @@ const Checklists: React.FC = () => {
                   style={{
                     margin: "0 0 20px",
                     padding: "14px 16px",
-                    borderRadius: "8px",
-                    border: "1px solid var(--gw-color-border, #d0d7de)",
-                    borderLeft: "4px solid var(--gw-color-primary, #195C53)",
-                    background: "var(--gw-color-surface-subtle, #f6f8fa)",
+                    borderRadius: "var(--gw-radius-container)",
+                    border: "1px solid var(--gw-color-border, #e2e8f0)",
+                    borderLeft: "4px solid var(--gw-color-primary, #23776C)",
+                    background: "var(--gw-color-surface-subtle, #f0f2f4)",
                   }}
                 >
-                  <strong style={{ display: "block", marginBottom: "6px" }}>
+                  <h2 style={{ margin: "0 0 6px", fontSize: "inherit", fontWeight: 700, lineHeight: "inherit" }}>
                     Additional guidance for {stateGuidance.stateName}
-                  </strong>
+                  </h2>
                   <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{stateGuidance.note}</p>
                 </div>
               )}
 
               <div className="checklist-tabs">
-                <div className="checklist-tabs__header" role="tablist" tabIndex={-1} aria-label="Grant requirements" onKeyDown={handleTabsKeyDown}>
+                <div className="gw-tabs checklist-tabs__header" role="tablist" tabIndex={-1} aria-label="Grant requirements" onKeyDown={handleTabsKeyDown}>
                   {TAB_CONFIG.map((tab) => {
                     const isActive = tab.id === activeTabId;
                     return (
                       <button
                         key={tab.id}
-                        className={`checklist-tab${isActive ? " checklist-tab--active" : ""}`}
+                        className={`gw-tab checklist-tab${isActive ? " checklist-tab--active" : ""}`}
                         onClick={() => handleTabClick(tab.id)}
                         role="tab"
                         tabIndex={isActive ? 0 : -1}
@@ -250,15 +284,13 @@ const Checklists: React.FC = () => {
                   >
                     <p className="checklist-content__description">{tabContents[tabId].title}</p>
                     <div className="checklist-tabs__markdown">
-                      <ModelMarkdown className="custom-markdown">
-                        {tabContents[tabId].content}
-                      </ModelMarkdown>
+                      <RequirementsList text={tabContents[tabId].content} />
 
                       {tabId === "eligibility" && (
                         <div className="checklist-info-box">
-                          <LuInfo size={22} color="var(--gw-color-primary)" />
+                          <LuInfo size={22} color="var(--gw-color-primary)" aria-hidden="true" />
                           <div>
-                            <p className="checklist-info-box__title">Not sure if your organization qualifies?</p>
+                            <h2 className="checklist-info-box__title">Not sure if your organization qualifies?</h2>
                             <p className="checklist-info-box__text">
                               Chat with AI can help assess your organization&#39;s eligibility based on
                               these criteria. Click &quot;Chat with AI&quot; in the navigation panel

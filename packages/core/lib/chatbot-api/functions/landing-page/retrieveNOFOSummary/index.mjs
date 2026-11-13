@@ -1,7 +1,18 @@
 import { S3Client } from '@aws-sdk/client-s3';
 import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
-import { getArtifact, recordEvent, touchLastActive, withSectionIds } from 'grantwell-shared';
+import {
+  getArtifact,
+  GRANT_IN_REVIEW_MESSAGE,
+  IN_REVIEW_STATUSES,
+  opensGrantInReview,
+  isMissingObject,
+  recordEvent,
+  touchLastActive,
+  withRequirementCitations,
+  withSectionIds,
+  REQUIREMENT_CITATIONS_FILE,
+} from 'grantwell-shared';
 
 // SUPPORTED_STATES injected as [{code,name}] (from config.states via supportedStatesEnv in lib/config/instance-config.ts).
 const SUPPORTED_STATES = (() => {
@@ -62,7 +73,7 @@ function assertUserCanAccessNofo(callerScope, nofoScope, nofoState) {
   throw err;
 }
 
-// Returns { scope, state } from the grant's metadata row, or null when there is no row or it can't be read.
+// Returns { scope, state, status } from the grant's metadata row, or null when there is no row or it can't be read.
 async function readNofoScope(tableName, nofoName) {
   if (!tableName || !nofoName) return null;
   try {
@@ -78,6 +89,7 @@ async function readNofoScope(tableName, nofoName) {
     return {
       scope: typeof row.scope === "string" ? row.scope : null,
       state: typeof row.state === "string" ? row.state : null,
+      status: typeof row.status === "string" ? row.status : null,
     };
   } catch (err) {
     console.warn(`Could not read scope/state for ${nofoName}:`, err.message);
@@ -155,9 +167,44 @@ export const handler = async (event) => {
       throw authError;
     }
 
-    const result = await getArtifact(s3Client, `${basePath}/summary.json`, s3Bucket);
+    const inReview =
+      IN_REVIEW_STATUSES.has(existingScope?.status) && !opensGrantInReview(callerScope, effectiveScope, effectiveState);
+    // The applicant's own application stays editable while its grant is reviewed, so the editor
+    // still gets the grant's name and narrative section names; nothing else is served.
+    const forApplication = event.queryStringParameters?.for === "application";
+    if (inReview && !forApplication) {
+      return {
+        statusCode: 409,
+        headers: corsHeaders,
+        body: JSON.stringify({
+          error: "GRANT_IN_REVIEW",
+          message: GRANT_IN_REVIEW_MESSAGE,
+          cta: { label: "Go to home", target: "/home" },
+        }),
+      };
+    }
+    if (inReview) {
+      const held = JSON.parse(await streamToString((await getArtifact(s3Client, `${basePath}/summary.json`, s3Bucket)).Body));
+      const sections = Array.isArray(held.ProjectNarrativeSections)
+        ? withSectionIds(held.ProjectNarrativeSections).map(({ item, id }) => ({ item, id }))
+        : [];
+      return {
+        statusCode: 200,
+        headers: corsHeaders,
+        body: JSON.stringify({
+          message: "File retrieved successfully",
+          inReview: true,
+          data: { GrantName: held.GrantName, ProjectNarrativeSections: sections },
+        }),
+      };
+    }
+
+    const [result, citationsFile] = await Promise.all([
+      getArtifact(s3Client, `${basePath}/summary.json`, s3Bucket),
+      event.queryStringParameters?.citations === "1" ? readCitations(s3Client, basePath) : null,
+    ]);
     const fileContent = await streamToString(result.Body);
-    const summary = JSON.parse(fileContent);
+    const summary = withRequirementCitations(JSON.parse(fileContent), citationsFile);
     // Summaries written before section ids existed derive the same ids on every read.
     if (Array.isArray(summary.ProjectNarrativeSections)) {
       summary.ProjectNarrativeSections = withSectionIds(summary.ProjectNarrativeSections);
@@ -207,6 +254,17 @@ export const handler = async (event) => {
     };
   }
 };
+
+/** The grant's requirement citations, or null; the page works without them. */
+async function readCitations(s3Client, basePath) {
+  try {
+    const result = await getArtifact(s3Client, `${basePath}/${REQUIREMENT_CITATIONS_FILE}`, null);
+    return JSON.parse(await streamToString(result.Body));
+  } catch (error) {
+    if (!isMissingObject(error)) console.warn(`Could not read requirement citations for ${basePath}:`, error.message);
+    return null;
+  }
+}
 
 const streamToString = (stream) => {
   return new Promise((resolve, reject) => {

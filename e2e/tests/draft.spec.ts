@@ -6,20 +6,9 @@ import * as fs from "node:fs";
 import { expect, test } from "../helpers/fixtures";
 import JSZip from "jszip";
 import { clearRecentlyViewed, deleteDraftSafely, waitForJob } from "../helpers/api";
-import { selectNofo } from "../helpers/app";
-import { USER_EMAIL, runInfo } from "../helpers/config";
+import { PROJECT_NAME, applicationPicker, fillToAdditionalInformation, startApplication } from "../helpers/app";
+import { runInfo } from "../helpers/config";
 
-const PROJECT_NAME = "E2E Test Project";
-const PROJECT_BASICS: Record<string, string> = {
-  projectName: PROJECT_NAME,
-  organizationName: "GrantWell E2E Test Organization",
-  requestedAmount: "50000",
-  location: "Boston, MA",
-  zipCode: "02115",
-  // Letters and name punctuation only; the form rejects digits here.
-  contactName: "Test Contact",
-  contactEmail: USER_EMAIL,
-};
 const GENERATION_TIMEOUT_MS = 15 * 60_000;
 const MIN_SECTION_CHARS = 200;
 
@@ -31,13 +20,14 @@ test.afterEach(async () => {
   await clearRecentlyViewed();
 });
 
-const SIDEBAR_LABEL = /^Section (\d+) of (\d+): (.*?)(?:, (completed|failed|generating|pending))?(?: \(not yet available\))?$/;
+const SIDEBAR_LABEL = /^(\d+) (.*?), section \1 of (\d+)(?:, (completed|failed|generating|pending))?(?:, not yet available)?$/;
+const SIDEBAR_BUTTON = /^\d+ .*, section \d+ of \d+/;
 
 async function sidebar(page: import("@playwright/test").Page) {
-  const buttons = page.getByRole("button", { name: /^Section \d+ of \d+: / });
+  const buttons = page.getByRole("button", { name: SIDEBAR_BUTTON });
   const labels = await buttons.evaluateAll((els) => els.map((e) => e.getAttribute("aria-label") ?? ""));
   return labels.map((label) => {
-    const [, , , name, status] = label.match(SIDEBAR_LABEL) ?? [];
+    const [, , name, , status] = label.match(SIDEBAR_LABEL) ?? [];
     return { name, status };
   });
 }
@@ -58,22 +48,17 @@ test("generates every narrative section and exports the application as Word and 
   test.setTimeout(30 * 60_000);
   const { nofoName, narrativeSections } = runInfo();
 
-  const actions = await selectNofo(page, nofoName);
-  await actions.getByRole("button", { name: "Write Application", exact: true }).click();
-  await page.getByRole("button", { name: "Get Started" }).click();
-  await expect(page).toHaveURL(/\/document-editor\/[0-9a-f-]{36}\?.*step=projectBasics/);
-  sessionId = new URL(page.url()).pathname.split("/").pop();
+  sessionId = await startApplication(page, nofoName);
+  await fillToAdditionalInformation(page);
 
-  for (const [id, value] of Object.entries(PROJECT_BASICS)) await page.locator(`#${id}`).fill(value);
-  await page.getByRole("button", { name: "Continue", exact: true }).click();
-  await expect(page).toHaveURL(/step=questionnaire/);
-  await page.getByRole("button", { name: "Continue", exact: true }).click();
-  await expect(page).toHaveURL(/step=uploadDocuments/);
+  const picker = await applicationPicker(page);
+  await expect(picker.getByRole("checkbox", { checked: true }), "documents ticked in a new application").toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Upload new" })).toBeVisible();
 
   const started = page.waitForResponse(
     (r) => r.request().method() === "POST" && new URL(r.url()).pathname.endsWith("/draft-generation")
   );
-  await page.getByRole("button", { name: "Create Draft" }).click();
+  await page.getByRole("button", { name: "Create draft" }).click();
   const response = await started;
   expect(response.ok(), "draft generation started").toBe(true);
   jobId = (await response.json()).jobId;
@@ -89,15 +74,15 @@ test("generates every narrative section and exports the application as Word and 
   expect((await sidebar(page)).map((s) => s.name)).toEqual(narrativeSections);
   await expect(page.getByText(/section\(s\) failed to generate/)).toHaveCount(0);
 
-  const buttons = page.getByRole("button", { name: /^Section \d+ of \d+: / });
+  const buttons = page.getByRole("button", { name: SIDEBAR_BUTTON });
   for (let i = 0; i < narrativeSections.length; i++) {
     await buttons.nth(i).click();
     await expect(page.locator("#se-section-title")).toHaveText(narrativeSections[i]);
-    const text = await page.locator("textarea.se-textarea").inputValue();
+    const text = await page.locator('[role="textbox"][contenteditable]').first().innerText();
     expect(text.trim().length, `"${narrativeSections[i]}" length`).toBeGreaterThanOrEqual(MIN_SECTION_CHARS);
   }
   await page.getByRole("button", { name: "Save section & review application" }).click();
-  await expect(page.getByText("All Sections Complete")).toBeVisible();
+  await expect(page.getByText("All sections complete")).toBeVisible();
 
   const exportMenu = page.locator("#ra-export-trigger");
 

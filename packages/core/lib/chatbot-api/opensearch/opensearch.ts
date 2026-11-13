@@ -156,10 +156,10 @@ export class OpenSearchStack extends cdk.Stack {
     this.openSearchCollection = openSearchCollection;
 
     const openSearchCreateIndexFunction = new lambda.Function(scope, 'OpenSearchCreateIndexFunction', {
-      runtime: lambda.Runtime.PYTHON_3_12,
+      runtime: lambda.Runtime.PYTHON_3_13,
       code: lambda.Code.fromAsset(path.join(__dirname, 'create-index-lambda'), {
         bundling: {
-          image: lambda.Runtime.PYTHON_3_12.bundlingImage,
+          image: lambda.Runtime.PYTHON_3_13.bundlingImage,
           command: [
             'bash', '-c',
             'pip install -r requirements.txt -t /asset-output && cp -au . /asset-output',

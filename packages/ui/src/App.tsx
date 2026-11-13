@@ -11,6 +11,7 @@ import NotificationBar from "./components/notifications/NotificationBar";
 import { AccessDeniedProvider } from "./components/access-denied/AccessDeniedManager";
 import { useBranding } from "./common/branding";
 import { IS_PROD } from "./common/instance";
+import { EDITOR_STEPS } from "./common/helpers/document-editor-utils";
 import NotFoundPage from "./pages/not-found/NotFoundPage";
 import "./styles/app.scss";
 
@@ -22,6 +23,7 @@ const DocumentEditor = React.lazy(() => import("./pages/document-editor/Document
 const DocEditorSessionsPage = React.lazy(() => import("./pages/document-editor/DocEditorSessionsPage"));
 const Dashboard = React.lazy(() => import("./pages/dashboard/DashboardPage"));
 const ProfilePage = React.lazy(() => import("./pages/profile/ProfilePage"));
+const DocumentsPage = React.lazy(() => import("./pages/documents/DocumentsPage"));
 const WhatsNewContent = React.lazy(() =>
   import("./pages/whats-new/WhatsNewPage").then((m) => ({ default: m.WhatsNewContent }))
 );
@@ -32,13 +34,13 @@ function ScrollToTop(): null {
   const { appName, analyticsId } = useBranding();
 
   useEffect(() => {
-    const mainContent = document.getElementById("main-content");
-    if (mainContent) {
-      mainContent.focus({ preventScroll: true });
-    }
-
     const fullPath = pathname + search;
     const routeChanged = prevPathRef.current !== fullPath;
+
+    // Not on a hash-only change: in-page jump links and the Requirements tabs write the hash.
+    if (routeChanged) {
+      document.getElementById("main-content")?.focus({ preventScroll: true });
+    }
 
     // Wizard steps navigate by query string only, so the browser keeps the previous offset.
     if (routeChanged && !hash) {
@@ -50,11 +52,12 @@ function ScrollToTop(): null {
       const exactMatches: { [key: string]: string } = {
         "/": "Home",
         "/home": "Home",
-        "/admin": "Admin Dashboard",
+        "/admin": "Admin dashboard",
         "/profile": "Profile",
-        "/chat/sessions": "My Chats",
-        "/document-editor": "Write Application",
-        "/document-editor/drafts": "My Applications",
+        "/chat/sessions": "My chats",
+        "/document-editor": "Write application",
+        "/document-editor/drafts": "My applications",
+        "/documents": "My documents",
       };
 
       if (exactMatches[path]) {
@@ -65,7 +68,7 @@ function ScrollToTop(): null {
         return "Chat with AI";
       }
       if (path.startsWith("/document-editor/") && path !== "/document-editor/drafts") {
-        return "Write Application";
+        return "Write application";
       }
       if (path.startsWith("/requirements/")) {
         return "Requirements";
@@ -76,11 +79,16 @@ function ScrollToTop(): null {
 
     const label = getPageLabel(pathname);
     const home = pathname === "/" || pathname === "/home";
+    const step =
+      label === "Write application" &&
+      EDITOR_STEPS.find((s) => s.id === new URLSearchParams(search).get("step"));
     const baseTitle = !label
       ? appName
       : home
-      ? `${appName} - ${label}`
-      : `${label} - ${appName}`;
+      ? `${label} – ${appName}`
+      : step
+      ? `${step.label} – ${label} – ${appName}`
+      : `${label} – ${appName}`;
     document.title = baseTitle;
 
     const fullUrl = window.location.origin + fullPath;
@@ -139,6 +147,7 @@ function AppContent() {
               element={<DocEditorSessionsPage />}
             />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/documents" element={<DocumentsPage />} />
             <Route path="/whats-new" element={<WhatsNewContent />} />
             <Route path="/admin" element={<Dashboard />} />
             <Route

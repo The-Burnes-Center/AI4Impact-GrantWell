@@ -44,7 +44,9 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   const [exportStatus, setExportStatus] = useState("");
   const [exportError, setExportError] = useState<string | null>(null);
   const [includeContactDetails, setIncludeContactDetails] = useState(false);
+  const [grantType, setGrantType] = useState<string | null>(null);
   const exportDropdownRef = useRef<HTMLDivElement>(null);
+  const exportTriggerRef = useRef<HTMLButtonElement>(null);
   const exportInFlightRef = useRef(false);
   const apiClient = useApiClient();
 
@@ -62,7 +64,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
 
         if (currentDraft) {
           const result =
-            await apiClient.landingPage.getNOFOSummary(selectedNofo);
+            await apiClient.landingPage.getNOFOSummary(selectedNofo, { forApplication: true });
           const resolved = resolveApplicationSections(
             grantSections(result?.data?.ProjectNarrativeSections),
             currentDraft.sections,
@@ -78,6 +80,23 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
 
     fetchDraftData();
   }, [apiClient, selectedNofo, sessionId]);
+
+  useEffect(() => {
+    if (!selectedNofo) return;
+    let active = true;
+    apiClient.landingPage
+      .getNOFOs()
+      .then((result: { nofoData?: Array<{ name: string; grant_type?: string | null }> }) => {
+        const match = result?.nofoData?.find((n) => n.name === selectedNofo);
+        if (active) setGrantType(match?.grant_type ?? null);
+      })
+      .catch(() => {
+        /* the after-export steps fall back to the funder-neutral wording */
+      });
+    return () => {
+      active = false;
+    };
+  }, [apiClient, selectedNofo]);
 
   useEffect(() => {
     if (sections.length === 0) return;
@@ -151,7 +170,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
     if (!selectedNofo) return { draftData: null, grantName: null, resolved: null };
     const username = (await getCurrentUser()).username;
     const draftData = await apiClient.drafts.getDraft({ sessionId, userId: username });
-    const nofoSummary = await apiClient.landingPage.getNOFOSummary(selectedNofo);
+    const nofoSummary = await apiClient.landingPage.getNOFOSummary(selectedNofo, { forApplication: true });
     const grantName = nofoSummary?.data?.GrantName || null;
     const resolved = draftData
       ? resolveApplicationSections(
@@ -205,6 +224,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
     const label = EXPORT_LABELS[format];
     const filename = `grant-application.${format}`;
     setExportDropdownOpen(false);
+    exportTriggerRef.current?.focus();
     setExportingFormat(format);
     setExportError(null);
     setExportStatus(`Generating ${label}. This may take a moment.`);
@@ -275,7 +295,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             <div className="ra-stat-card__value ra-stat-card__value--words">
               {stats.wordCount}
             </div>
-            <div className="ra-stat-card__label">Total Word Count</div>
+            <div className="ra-stat-card__label">Total word count</div>
             <div className="ra-stat-card__sublabel">Across all sections</div>
           </div>
 
@@ -283,7 +303,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             <div className="ra-stat-card__value ra-stat-card__value--pages">
               {stats.pageCount}
             </div>
-            <div className="ra-stat-card__label">Estimated Pages</div>
+            <div className="ra-stat-card__label">Estimated pages</div>
             <div className="ra-stat-card__sublabel">In PDF format</div>
           </div>
 
@@ -291,7 +311,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             <div className={`ra-stat-card__value ${completenessPassed ? "ra-stat-card__value--passed" : "ra-stat-card__value--incomplete"}`}>
               {stats.complete}/{sections.length}
             </div>
-            <div className="ra-stat-card__label">Completion Status</div>
+            <div className="ra-stat-card__label">Completion status</div>
             <div className="ra-stat-card__sublabel">Sections complete</div>
           </div>
         </div>
@@ -305,8 +325,8 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
           <div>
             <h3 className="ra-compliance__title">
               {completenessPassed
-                ? "All Sections Complete"
-                : "Some Sections Incomplete"}
+                ? "All sections complete"
+                : "Some sections incomplete"}
             </h3>
             <p className="ra-compliance__text">
               {completenessPassed
@@ -319,7 +339,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
 
       {/* Before You Export Section */}
       <div className="ra-card">
-        <h3 className="ra-export-section__title">Before You Export</h3>
+        <h3 className="ra-export-section__title">Before you export</h3>
 
         {unviewedSections.length > 0 && (
           <div className="ra-unviewed">
@@ -356,15 +376,14 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
           <button
             onClick={() => onNavigate("sectionEditor")}
             className="ra-edit-btn"
-            aria-label="Make final edits - return to the Section Editor"
           >
             <div className="ra-edit-btn__icon-wrapper">
               <LuSquarePen className="ra-edit-btn__icon" aria-hidden="true" />
             </div>
             <div className="ra-edit-btn__text">
-              <div className="ra-edit-btn__title">Make Final Edits</div>
+              <div className="ra-edit-btn__title">Make final edits</div>
               <div className="ra-edit-btn__subtitle">
-                Return to Section Editor
+                Return to Section editor
               </div>
             </div>
           </button>
@@ -376,7 +395,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
         <div className="ra-info-header">
           <LuInfo className="ra-info-header__icon" aria-hidden="true" />
           <h3 className="ra-info-header__title">
-            What Happens After Export?
+            What happens after export?
           </h3>
         </div>
         <ul className="ra-info-list">
@@ -384,12 +403,26 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             You&apos;ll download a professionally formatted PDF of your
             application
           </li>
-          <li className="ra-info-list__item">
-            Submit the PDF through the official grants.gov portal
-          </li>
-          <li className="ra-info-list__item">
-            Complete the SF-424 form separately (if required)
-          </li>
+          {grantType === "federal" ? (
+            <>
+              <li className="ra-info-list__item">
+                Submit the PDF through the official grants.gov portal
+              </li>
+              <li className="ra-info-list__item">
+                Complete the SF-424 form separately (if required)
+              </li>
+            </>
+          ) : (
+            <>
+              <li className="ra-info-list__item">
+                Submit it through the funder&apos;s own application portal or process, as
+                described in the grant&apos;s requirements
+              </li>
+              <li className="ra-info-list__item">
+                Check the grant&apos;s Key deadlines so you submit on time
+              </li>
+            </>
+          )}
         </ul>
       </div>
 
@@ -401,7 +434,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
       )}
 
       {exportError && (
-        <div className="ra-export-error">
+        <div className="gw-alert gw-alert--urgent ra-export-error">
           <LuTriangleAlert className="ra-export-error__icon" aria-hidden="true" />
           <span>{exportError}</span>
         </div>
@@ -427,19 +460,24 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
       <div className="ra-actions">
         <button
           onClick={() => onNavigate("sectionEditor")}
-          className="ra-back-btn"
+          className="gw-btn gw-btn--secondary ra-back-btn"
         >
           <LuArrowLeft className="ra-back-btn__icon" aria-hidden="true" />
-          Back to Editing
+          Back to editing
         </button>
 
         {/* Export As dropdown */}
         <div className="ra-export-dropdown" ref={exportDropdownRef}>
           <button
             id="ra-export-trigger"
-            onClick={() => setExportDropdownOpen((o) => !o)}
-            disabled={!completenessPassed || exportingFormat !== null}
-            className="ra-export-pdf-btn"
+            ref={exportTriggerRef}
+            onClick={() => {
+              if (exportingFormat === null) setExportDropdownOpen((o) => !o);
+            }}
+            disabled={!completenessPassed}
+            // Stays focusable while busy: export moves focus here once the menu closes.
+            aria-disabled={exportingFormat !== null || undefined}
+            className="gw-btn gw-btn--primary ra-export-pdf-btn"
             aria-haspopup="menu"
             aria-expanded={exportDropdownOpen}
             aria-busy={exportingFormat !== null}
@@ -452,7 +490,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
             ) : (
               <>
                 <LuDownload className="ra-export-pdf-btn__icon" aria-hidden="true" />
-                Export As
+                Export as
                 <LuChevronDown
                   size={16}
                   style={{ marginLeft: "6px" }}
@@ -469,6 +507,10 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
               tabIndex={-1}
               aria-labelledby="ra-export-trigger"
               onKeyDown={handleExportMenuKeyDown}
+              // Tabbing out closes it, so an open menu is never left behind.
+              onBlur={(e) => {
+                if (!exportDropdownRef.current?.contains(e.relatedTarget as Node | null)) setExportDropdownOpen(false);
+              }}
             >
               <button
                 className="ra-export-dropdown__item"

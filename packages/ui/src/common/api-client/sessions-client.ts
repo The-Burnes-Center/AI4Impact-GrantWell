@@ -176,6 +176,37 @@ export class SessionsClient {
     return response.json();
   }
 
+  /**
+   * The chat's selected library documents. `documentKeys` null with `exists` true is a chat from
+   * before the library (it reads its grant's old folder); `exists` false is a chat not saved yet.
+   */
+  async getDocumentKeys(sessionId: string): Promise<{ documentKeys: string[] | null; exists: boolean }> {
+    const data = await this.post({ operation: 'get_document_keys', session_id: sessionId });
+    return { documentKeys: Array.isArray(data.document_keys) ? data.document_keys : null, exists: Boolean(data.exists) };
+  }
+
+  /** Works before the chat's first save; the save keeps it. Returns what the server kept. */
+  async setDocumentKeys(sessionId: string, documentKeys: string[]): Promise<string[]> {
+    const data = await this.post({ operation: 'set_document_keys', session_id: sessionId, document_keys: documentKeys });
+    return Array.isArray(data.document_keys) ? data.document_keys : documentKeys;
+  }
+
+  private async post(body: Record<string, unknown>) {
+    const auth = await Utils.authenticate();
+    const response = await apiFetch(this.API + '/user-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + auth,
+      },
+      body: JSON.stringify(body),
+    });
+    if (response.status !== 200) {
+      throw new Error(`Chat request failed (HTTP ${response.status})`);
+    }
+    return response.json();
+  }
+
   // Deletes a chat session
   async deleteSession(sessionId: string, userId: string) {
     try {

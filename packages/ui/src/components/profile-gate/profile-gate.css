@@ -7,19 +7,17 @@
   inset: 0;
   z-index: 1000;
   display: flex;
-  align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(40, 40, 40, 0.55);
+  background: color-mix(in srgb, var(--gw-color-text) 55%, transparent);
   overflow-y: auto;
 }
 
+/* Auto margins, not align-items: center, so a panel taller than the viewport keeps its top reachable. */
 .profile-gate__panel {
+  margin: auto;
   width: 100%;
   max-width: 440px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
   overflow: hidden;
 }
 
@@ -28,9 +26,6 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px 24px;
-  background: var(--mk-green, var(--gw-color-primary));
-  color: #fff;
 }
 
 .profile-gate__header-icon {
@@ -39,25 +34,19 @@
   justify-content: center;
   width: 38px;
   height: 38px;
-  border-radius: 9px;
-  background: rgba(255, 255, 255, 0.16);
+  border-radius: var(--gw-radius-container);
+  background: var(--gw-color-primary-light);
+  color: var(--gw-color-primary);
   flex-shrink: 0;
 }
 
 .profile-gate__title {
   margin: 0;
-  font-size: 19px;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.profile-gate__body {
-  padding: 22px 24px 24px;
 }
 
 .profile-gate__lead {
   margin: 0 0 18px;
-  color: #555;
+  color: var(--gw-color-text-secondary);
   font-size: 14px;
   line-height: 1.5;
 }
@@ -68,10 +57,10 @@
   gap: 8px;
   margin-bottom: 16px;
   padding: 10px 12px;
-  border-radius: 8px;
-  background: #fdecea;
-  border: 1px solid #f5c6c2;
-  color: #b71c1c;
+  border-radius: var(--gw-radius-container);
+  background: var(--gw-color-surface-subtle);
+  border: 1px solid var(--gw-color-danger-border);
+  color: var(--gw-color-danger-text);
   font-size: 13px;
 }
 
@@ -84,7 +73,7 @@
   margin-bottom: 6px;
   font-size: 13px;
   font-weight: 600;
-  color: #333;
+  color: var(--gw-color-text);
 }
 
 .profile-gate__req {
@@ -92,34 +81,37 @@
 }
 
 /* Input with a leading icon */
+/* The shared field box (.gw-input in components.css) drawn on the wrapper, so the icon sits inside it. */
 .profile-gate__input-wrap {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: 40px;
   padding: 0 12px;
-  border: 1px solid var(--gw-color-border-input, #767676);
-  border-radius: 8px;
-  background: #fff;
-  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+  border: 1px solid var(--gw-color-border-input);
+  border-radius: var(--gw-radius-control);
+  background: var(--gw-color-surface);
 }
 
+.profile-gate__input-wrap:hover {
+  border-color: var(--gw-color-border-input-hover);
+}
+
+/* The ring goes on the whole field, not the bare input inside it. */
 .profile-gate__input-wrap:focus-within {
-  border-color: var(--mk-green-dark, var(--gw-color-primary-hover));
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gw-color-primary-hover) 14%, transparent);
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
 }
 
-.profile-gate__input-wrap--error {
-  border-color: #d03b3b;
-}
-
-.profile-gate__input-wrap--error:focus-within {
-  border-color: #d03b3b;
-  box-shadow: 0 0 0 3px rgba(208, 59, 59, 0.14);
+.profile-gate__input-wrap--error,
+.profile-gate__input-wrap--error:hover {
+  border: 2px solid var(--gw-color-danger);
+  padding: 0 11px;
 }
 
 .profile-gate__field-icon {
   display: inline-flex;
-  color: #8a8a8a;
+  color: var(--gw-color-text-muted);
   flex-shrink: 0;
 }
 
@@ -127,26 +119,26 @@
 .profile-gate__input-wrap select {
   flex: 1;
   border: none;
-  padding: 11px 0;
-  font-size: 14px;
+  padding: 8px 0;
+  font-family: var(--gw-font-family);
+  font-size: var(--gw-font-size-base);
   background: transparent;
-  color: #222;
+  color: var(--gw-color-text);
 }
 
 .profile-gate__input-wrap input:focus-visible,
 .profile-gate__input-wrap select:focus-visible {
-  outline: 2px solid var(--gw-color-focus-light, var(--gw-color-primary));
-  outline-offset: 2px;
+  outline: none;
 }
 
 /* Read-only field (State): assigned by an admin, shown for confirmation but not editable. */
 .profile-gate__input-wrap--readonly {
-  background: #f4f4f2;
-  border-color: #e2e2df;
+  background: var(--gw-color-disabled-bg);
+  border-color: var(--gw-color-border);
 }
 
 .profile-gate__input-wrap--readonly select {
-  color: #555;
+  color: var(--gw-color-text-secondary);
   cursor: not-allowed;
   /* Keep the native chevron hidden so a disabled select doesn't look interactive. */
   appearance: none;
@@ -155,7 +147,7 @@
 
 .profile-gate__hint {
   margin: 6px 0 0;
-  /* #8a8a8a was 3.45:1 on the white panel; this is 6.90:1 (WCAG 1.4.3). */
+  /* var(--gw-color-text-muted) was 3.45:1 on the white panel; this is 6.90:1 (WCAG 1.4.3). */
   color: var(--gw-color-text-secondary, #5a5a5a);
   font-size: 12px;
 }
@@ -165,8 +157,9 @@
   align-items: center;
   gap: 5px;
   margin: 6px 0 0;
-  color: #b71c1c;
-  font-size: 12.5px;
+  color: var(--gw-color-danger-text);
+  font-size: var(--gw-font-size-sm);
+  font-weight: var(--gw-font-weight-semibold);
 }
 
 .profile-gate__submit-content {
@@ -181,15 +174,15 @@
   padding: 4px 8px;
   background: none;
   border: none;
-  border-radius: 4px;
-  color: #5a5a5a;
+  border-radius: var(--gw-radius-control);
+  color: var(--gw-color-text-secondary);
   font-size: 13px;
   text-decoration: underline;
   cursor: pointer;
 }
 
 .profile-gate__signout:hover {
-  color: #1a1a1a;
+  color: var(--gw-color-text-strong);
 }
 
 .profile-gate__loading {

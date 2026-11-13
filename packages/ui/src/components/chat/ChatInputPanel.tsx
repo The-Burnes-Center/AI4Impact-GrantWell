@@ -20,7 +20,7 @@ import {
   ChatInputState,
 } from "./types";
 
-import { assembleHistory, chatErrorText } from "./utils";
+import { chatErrorText, isGatewayErrorFrame, RESET_SENTINEL } from "./utils";
 
 import { Utils } from "../../common/utils";
 import { SessionRefreshContext } from "../../common/session-refresh-context";
@@ -31,9 +31,9 @@ import { LuMic, LuMicOff, LuSend, LuCircleAlert, LuSquare } from "react-icons/lu
 // Styles for the components
 const styles = {
   inputBorder: {
-    border: "2px solid #767676",
-    borderRadius: "16px",
-    overflow: "hidden",
+    border: "2px solid var(--gw-color-border-input)",
+    borderRadius: "var(--gw-radius-container)",
+    position: "relative" as const,
     backgroundColor: "white",
     display: "flex",
     alignItems: "flex-end",
@@ -41,35 +41,25 @@ const styles = {
     maxWidth: "800px",
     minWidth: "280px",
     margin: "0 auto",
-    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
+    boxShadow: "var(--gw-shadow-low)",
     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
     padding: "8px 12px",
   },
   inputBorderFocused: {
     borderColor: "var(--gw-color-primary)",
-    boxShadow: "0 0 0 3px rgba(0, 115, 187, 0.1), 0 10px 15px -3px rgba(0, 0, 0, 0.05)",
+    boxShadow: "0 0 0 3px color-mix(in srgb, var(--gw-color-info) 10%, transparent), 0 10px 15px -3px color-mix(in srgb, var(--gw-color-text-strong) 5%, transparent)",
   },
   micButton: {
-    padding: "10px",
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-    color: "#6b7280",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
     minWidth: "44px",
     minHeight: "44px",
-    borderRadius: "12px",
     margin: "0 4px 0 0",
-    transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
   },
   micActive: {
-    color: "#ef4444",
-    backgroundColor: "rgba(239, 68, 68, 0.1)",
+    color: "var(--gw-color-danger-text)",
+    backgroundColor: "color-mix(in srgb, var(--gw-color-danger) 10%, transparent)",
   },
   micDisabled: {
-    color: "#6b7280",
+    color: "var(--gw-color-text-muted)",
     cursor: "not-allowed",
     display: "flex",
     alignItems: "center",
@@ -78,36 +68,7 @@ const styles = {
     minHeight: "44px",
     margin: "0 4px 0 0",
   },
-  sendButton: {
-    padding: "12px",
-    background: "linear-gradient(135deg, var(--gw-color-primary) 0%, var(--gw-color-primary-active) 100%)",
-    border: "none",
-    cursor: "pointer",
-    color: "white",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-    borderRadius: "12px",
-    minWidth: "44px",
-    minHeight: "44px",
-  },
-  sendButtonDisabled: {
-    background: "#e5e7eb",
-    color: "#9ca3af",
-    cursor: "not-allowed",
-  },
-  stopButton: {
-    padding: "12px",
-    background: "#dc2626",
-    border: "none",
-    cursor: "pointer",
-    color: "white",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-    borderRadius: "12px",
+  chatControl: {
     minWidth: "44px",
     minHeight: "44px",
   },
@@ -119,31 +80,13 @@ const styles = {
     maxWidth: "800px",
     minWidth: "280px",
     margin: "0 auto 8px",
-    padding: "10px 14px",
-    borderRadius: "12px",
-    border: "1px solid #b45309",
-    background: "#fffbeb",
-    color: "#7c2d12",
-    fontSize: "14px",
-  },
-  timeoutExtendButton: {
-    marginLeft: "auto",
-    padding: "6px 12px",
-    minHeight: "32px",
-    borderRadius: "8px",
-    border: "1px solid #b45309",
-    background: "white",
-    color: "#7c2d12",
-    fontSize: "14px",
-    fontWeight: 600,
-    cursor: "pointer",
   },
 };
 
 // WCAG 2.2.1 — the response deadline must be extendable, so warn with enough of the
 // budget left for the user to ask for more time before anything is torn down.
-const RESPONSE_WARN_MS = 40000;
-const RESPONSE_EXTEND_MS = 20000;
+const RESPONSE_WARN_MS = 60000;
+const RESPONSE_EXTEND_MS = 60000;
 
 const LIMIT_SENTINEL = "<!LIMIT!>";
 
@@ -155,6 +98,8 @@ export interface ChatInputPanelProps {
   setMessageHistory: (history: ChatBotHistoryItem[]) => void;
   documentIdentifier: string;
   messageAreaRef?: React.RefObject<HTMLDivElement>;
+  /** Saves a chat that exists only on screen so far; called before its first message goes out. */
+  ensureSession?: () => Promise<void>;
 }
 
 export abstract class ChatScrollState {
@@ -219,8 +164,6 @@ function ChatInputPanel(props: ChatInputPanelProps) {
     value: "",
   });
   const messageHistoryRef = useRef<ChatBotHistoryItem[]>([]);
-  const [isHovered, setIsHovered] = useState(false);
-  const [micHovered, setMicHovered] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
 
   // Handle microphone permission check with enhanced error handling
@@ -376,6 +319,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
     try {
       const username = (await getCurrentUser()).username;
       if (!username) return;
+      await props.ensureSession?.();
       const apiClient = new ApiClient(appContext);
       await apiClient.sessions.appendChatEntry({
         sessionId: props.session.id,
@@ -467,6 +411,8 @@ function ChatInputPanel(props: ChatInputPanelProps) {
         firstTime = true;
       }
 
+      await props.ensureSession?.();
+
       const TEST_URL = appContext.wsEndpoint + "/";
 
       // Get a JWT token for the API to authenticate on
@@ -478,7 +424,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       stoppedRef.current = false;
 
       let incomingMetadata: boolean = false;
-      let sources: Record<string, Array<{ title: string; uri: string }>> = {};
+      let sources: ChatBotHistoryItem["metadata"] = {};
 
       /**If there is no response in time, warn first and only time out if the user
        * declines to extend. Any incoming chunk clears both timers. */
@@ -531,9 +477,6 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           action: "getChatbotResponse",
           data: {
             userMessage: messageToSend,
-            chatHistory: assembleHistory(
-              messageHistoryRef.current.slice(0, -2)
-            ).slice(-2),
             projectId: "apck1608",
             user_id: username,
             session_id: props.session.id,
@@ -545,6 +488,10 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       });
       // Event listener for incoming messages
       ws.addEventListener("message", async function incoming(data) {
+        if (isGatewayErrorFrame(data.data)) {
+          console.warn("Ignored an API Gateway frame on the chat socket:", data.data);
+          return;
+        }
         clearResponseTimeout();
         if (stoppedRef.current) return;
         if (typeof data.data === "string" && data.data.startsWith("<!ACCESS_DENIED!>")) {
@@ -593,10 +540,13 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           incomingMetadata = true;
           return;
         }
-        if (!incomingMetadata) {
+        if (data.data === RESET_SENTINEL) {
+          receivedData = "";
+        } else if (!incomingMetadata) {
           receivedData += data.data;
         } else {
-          const parsed: Array<{ title: string; uri: string }> = JSON.parse(data.data);
+          const meta = JSON.parse(data.data);
+          const parsed: Array<{ title: string; uri: string }> = Array.isArray(meta) ? meta : meta?.Sources ?? [];
           const sourceData = parsed.map((item: { title: string; uri: string }) => {
             if (item.title == "") {
               return {
@@ -609,7 +559,9 @@ function ChatInputPanel(props: ChatInputPanelProps) {
               return item;
             }
           });
-          sources = { Sources: sourceData };
+          sources = Array.isArray(meta?.Citations)
+            ? { Sources: sourceData, Citations: meta.Citations }
+            : { Sources: sourceData };
         }
 
         // Update the chat history state with the new message
@@ -673,7 +625,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
         {waitStatus}
       </div>
       {responseTimeoutWarning && (
-        <div style={styles.timeoutWarning}>
+        <div className="gw-alert gw-alert--warning" style={styles.timeoutWarning}>
           <LuCircleAlert size={18} aria-hidden="true" />
           {/* Only the message is live — the button inside it made the alert
               announce "...to respond.Keep waiting". */}
@@ -682,7 +634,8 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           </span>
           <button
             type="button"
-            style={styles.timeoutExtendButton}
+            className="gw-btn gw-btn--secondary gw-btn--slim"
+            style={{ marginLeft: "auto" }}
             onClick={handleKeepWaiting}
             aria-label="Keep waiting for the response"
           >
@@ -702,11 +655,12 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       {/* Microphone button with enhanced feedback */}
       {browserSupportsSpeechRecognition ? (
         <button
+          type="button"
+          className="gw-btn gw-btn--icon"
           style={{
             ...styles.micButton,
             ...(listening ? styles.micActive : {}),
-            ...(micHovered && !listening ? { backgroundColor: "var(--gw-color-border-light)", color: "var(--gw-color-primary)" } : {}),
-            ...(micPermissionDenied ? { color: "#ef4444" } : {}),
+            ...(micPermissionDenied ? { color: "var(--gw-color-danger-text)" } : {}),
           }}
           aria-label={
             micPermissionDenied
@@ -717,8 +671,6 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           }
           aria-pressed={listening}
           onClick={handleMicrophoneToggle}
-          onMouseEnter={() => setMicHovered(true)}
-          onMouseLeave={() => setMicHovered(false)}
           title={
             micPermissionDenied
               ? "Microphone access denied. Click to try again."
@@ -741,7 +693,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           title="Your browser doesn't support speech recognition"
           aria-hidden="true"
         >
-          <LuMicOff size={20} />
+          <LuMicOff size={20} aria-hidden="true" />
         </span>
       )}
 
@@ -755,14 +707,14 @@ function ChatInputPanel(props: ChatInputPanelProps) {
             bottom: "100%",
             left: "50%",
             transform: "translateX(-50%)",
-            backgroundColor: "#1f2937",
+            backgroundColor: "var(--gw-color-text-strong)",
             color: "white",
             padding: "10px 18px",
-            borderRadius: "12px",
+            borderRadius: "var(--gw-radius-container)",
             fontSize: "14px",
             marginBottom: "12px",
             whiteSpace: "nowrap",
-            boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1)",
+            boxShadow: "var(--gw-shadow-mid)",
             display: "flex",
             alignItems: "center",
             gap: "8px",
@@ -772,9 +724,9 @@ function ChatInputPanel(props: ChatInputPanelProps) {
             width: "6px",
             height: "6px",
             borderRadius: "50%",
-            backgroundColor: "#ef4444",
+            backgroundColor: "var(--gw-color-danger)",
             animation: "pulse 1.5s ease-in-out infinite",
-          }} />
+          }} aria-hidden="true" />
           Listening... Click to stop
         </div>
       )}
@@ -786,6 +738,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
         aria-describedby="chat-input-help"
         style={{
           flex: 1,
+          minWidth: 0,
           resize: "none",
           padding: "12px 8px",
           border: "none",
@@ -793,7 +746,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           fontSize: "15px",
           lineHeight: "1.5",
           backgroundColor: "transparent",
-          color: "#1f2937",
+          color: "var(--gw-color-text-strong)",
         }}
         maxRows={5}
         minRows={1}
@@ -804,7 +757,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            handleSendMessage();
+            void handleSendMessage();
           }
         }}
         onFocus={() => setIsInputFocused(true)}
@@ -819,36 +772,31 @@ function ChatInputPanel(props: ChatInputPanelProps) {
       {/* Send / Stop button */}
       {props.running ? (
         <button
-          style={styles.stopButton}
+          type="button"
+          className="gw-btn gw-btn--danger gw-btn--icon"
+          style={styles.chatControl}
           onClick={handleStopGeneration}
           aria-label="Stop generating response"
           title="Stop generating"
         >
-          <LuSquare size={16} fill="white" />
+          <LuSquare size={16} fill="white" aria-hidden="true" />
         </button>
       ) : (
         <button
-          style={{
-            ...(state.value.trim().length === 0 || props.session.loading
-              ? { ...styles.sendButton, ...styles.sendButtonDisabled }
-              : {
-                  ...styles.sendButton,
-                  ...(isHovered
-                    ? {
-                        transform: "scale(1.05)",
-                        boxShadow: "0 4px 12px rgba(0, 115, 187, 0.3)",
-                      }
-                    : {}),
-                }),
+          type="button"
+          className="gw-btn gw-btn--primary gw-btn--icon"
+          style={styles.chatControl}
+          // aria-disabled, not disabled: after Stop the same button turns back into Send with an empty
+          // box, and a natively disabled button would drop keyboard focus to <body>.
+          aria-disabled={state.value.trim().length === 0 || props.session.loading || undefined}
+          onClick={() => {
+            if (state.value.trim().length === 0 || props.session.loading) return;
+            void handleSendMessage();
           }}
-          disabled={state.value.trim().length === 0 || props.session.loading}
-          onClick={handleSendMessage}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
           aria-label="Send message"
           title="Send message"
         >
-          <LuSend size={20} />
+          <LuSend size={20} aria-hidden="true" />
         </button>
       )}
       </div>

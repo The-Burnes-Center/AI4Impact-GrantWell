@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useId, useState } from "react";
+import React, { useContext, useEffect, useId, useRef, useState } from "react";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { useBranding } from "../../common/branding";
@@ -15,7 +15,7 @@ const fieldLabelStyle: React.CSSProperties = {
   display: "block",
   marginBottom: "8px",
   fontWeight: 600,
-  color: "var(--gw-color-dialog-text, #2d3748)",
+  color: "var(--gw-color-text, #333333)",
   fontSize: "var(--gw-font-size-base, 16px)",
 };
 
@@ -30,6 +30,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
   const [found, setFound] = useState<Found | null>(null);
   const [text, setText] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const thanks = useRef<HTMLParagraphElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
@@ -42,9 +43,13 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
     setSubmitted(false);
   }, [isOpen]);
 
+  useEffect(() => {
+    if (submitted) thanks.current?.focus();
+  }, [submitted]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!found || !appContext) return;
+    if (!found || !appContext || submitting) return;
 
     setSubmitting(true);
     setError(null);
@@ -67,13 +72,14 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
     >
       {submitted ? (
         <div>
-          <p style={{ margin: "0 0 20px 0", color: "var(--gw-color-dialog-text, #2d3748)" }}>
+          {/* The form and its focused Send button are gone, so the thanks takes focus and is read out. */}
+          <p ref={thanks} tabIndex={-1} style={{ margin: "0 0 20px 0", color: "var(--gw-color-text, #333333)" }}>
             Thanks — your feedback has been sent to the {appName} team.
           </p>
           <div className="modal-actions">
             <button
               type="button"
-              className="modal-button primary"
+              className="gw-btn gw-btn--primary modal-button primary"
               onClick={onClose}
             >
               Close
@@ -95,7 +101,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                     alignItems: "center",
                     gap: "8px",
                     cursor: "pointer",
-                    color: "var(--gw-color-dialog-text, #2d3748)",
+                    color: "var(--gw-color-text, #333333)",
                   }}
                 >
                   <input
@@ -116,7 +122,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
             <label htmlFor={textId} style={fieldLabelStyle}>
               Tell us more <span style={{ fontWeight: 400 }}>(optional)</span>
             </label>
-            <textarea
+            <textarea className="gw-input"
               id={textId}
               value={text}
               onChange={(e) => setText(e.target.value)}
@@ -124,12 +130,6 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
               maxLength={2000}
               style={{
                 width: "100%",
-                boxSizing: "border-box",
-                padding: "10px 12px",
-                borderRadius: "var(--gw-radius-md, 6px)",
-                border: "1px solid var(--gw-color-border-input, #767676)",
-                fontFamily: "inherit",
-                fontSize: "var(--gw-font-size-base, 16px)",
                 resize: "vertical",
               }}
             />
@@ -138,7 +138,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
           <p
             role="status"
             aria-live="polite"
-            style={{ margin: "0 0 16px 0", color: "var(--gw-color-dialog-error, #c53030)" }}
+            style={{ margin: "0 0 16px 0", color: "var(--gw-color-danger-text, #b42318)" }}
           >
             {error}
           </p>
@@ -146,22 +146,22 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
           <div className="modal-actions">
             <button
               type="button"
-              className="modal-button secondary"
+              className="gw-btn gw-btn--secondary modal-button secondary"
               onClick={onClose}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="modal-button primary"
-              disabled={submitting || !found}
+              className="gw-btn gw-btn--primary modal-button primary"
+              aria-disabled={submitting || !found || undefined}
             >
               {submitting ? "Sending…" : "Send feedback"}
             </button>
           </div>
 
           {supportEmail && (
-            <p style={{ margin: "20px 0 0 0", color: "var(--gw-color-dialog-text-secondary, #4a5568)" }}>
+            <p style={{ margin: "20px 0 0 0", color: "var(--gw-color-text-secondary, #5a5a5a)" }}>
               Need help with something urgent? Email{" "}
               <a href={`mailto:${supportEmail}`}>{supportEmail}</a>.
             </p>

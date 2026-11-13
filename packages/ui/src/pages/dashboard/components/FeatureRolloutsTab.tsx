@@ -207,13 +207,13 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
   return (
     <div className="feature-rollouts-panel">
       <FeatureRolloutPanel
-        eyebrow="Developer Controls"
-        title="Maintenance Mode"
+        eyebrow="Developer controls"
+        title="Maintenance mode"
         description="Take the site offline for all users and admins. Developers bypass the maintenance page automatically."
         overview={
           <section className="feature-rollouts-overview" aria-label="Maintenance mode summary">
             <article className="feature-rollouts-overview-card">
-              <span className={`feature-rollouts-badge ${maintenanceConfig.mode === "all" ? "feature-rollouts-badge--danger" : "feature-rollouts-badge--success"}`}>
+              <span className={`gw-tag feature-rollouts-badge ${maintenanceConfig.mode === "all" ? "feature-rollouts-badge--danger" : "feature-rollouts-badge--success"}`}>
                 Current state
               </span>
               <h3>{maintenanceConfig.mode === "all" ? "Site is offline" : "Site is live"}</h3>
@@ -224,7 +224,7 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
               </p>
             </article>
             <article className="feature-rollouts-overview-card">
-              <span className="feature-rollouts-badge feature-rollouts-badge--neutral">Audit</span>
+              <span className="gw-tag feature-rollouts-badge feature-rollouts-badge--neutral">Audit</span>
               <h3>Last updated {maintenanceUpdatedAtLabel}</h3>
               <p>{maintenanceConfig.updatedBy ? `Changed by ${maintenanceConfig.updatedBy}.` : "No changes recorded yet."}</p>
             </article>
@@ -273,7 +273,7 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
             </fieldset>
             <div className="feature-rollouts-actions">
               <button
-                className="feature-rollouts-primary-button"
+                className="gw-btn gw-btn--primary feature-rollouts-primary-button"
                 onClick={() => void handleMaintenanceModeChange(maintenanceDraftMode)}
                 disabled={!hasMaintenancePendingChange || savingMaintenance}
                 type="button"
@@ -288,8 +288,8 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
       <div style={{ marginTop: "2rem" }} />
 
       <FeatureRolloutPanel
-        eyebrow="Developer Controls"
-        title="AI Search Beta"
+        eyebrow="Developer controls"
+        title="AI search beta"
         description="Control who sees the AI-powered grant search."
         overview={
           <FeatureRolloutOverview
@@ -325,7 +325,7 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
             />
             <div className="feature-rollouts-actions">
               <button
-                className="feature-rollouts-primary-button"
+                className="gw-btn gw-btn--primary feature-rollouts-primary-button"
                 onClick={() => void handleModeChange(draftMode)}
                 disabled={!hasPendingModeChange || savingToggle}
                 type="button"

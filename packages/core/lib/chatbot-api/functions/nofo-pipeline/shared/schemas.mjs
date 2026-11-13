@@ -23,7 +23,7 @@ export const EXTRACTION_SCHEMA = {
     RequiredDocuments: {
       type: "array",
       items: SUMMARY_ITEM_SCHEMA,
-      description: "All required documents and submission requirements",
+      description: "All required documents",
     },
     ProjectNarrativeSections: {
       type: "array",

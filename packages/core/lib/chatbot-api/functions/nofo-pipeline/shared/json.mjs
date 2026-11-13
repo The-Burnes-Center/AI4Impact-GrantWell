@@ -41,6 +41,8 @@ const PLACEHOLDER_PATTERNS = [
   /^to be determined/i,
   /^tbd$/i,
   /^unknown$/i,
+  /^placeholder$/i,
+  /^(?:the )?(?:grant|nofo|notice|document) does not (?:state|specify|say|mention|list)\b/i,
 ];
 
 export function isPlaceholderText(text) {

@@ -3,6 +3,7 @@ import { DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand, UpdateIte
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { randomUUID } from "crypto";
 import { updateProcessingStatus, setNofoStatus, markProcessingComplete } from "../shared/status.mjs";
+import { liveStatusOf } from "../shared/live.mjs";
 
 const sqsClient = new SQSClient();
 const dynamoClient = new DynamoDBClient();
@@ -55,17 +56,18 @@ async function recordRepeatFailure(reviewTableName, existing, { now, ttl, retryC
   }
 }
 
-async function metadataExists(nofoName) {
+async function readMetadataRow(nofoName) {
   const tableName = process.env.NOFO_METADATA_TABLE_NAME;
-  if (!tableName) return false;
+  if (!tableName) return null;
   const result = await dynamoClient.send(
     new GetItemCommand({
       TableName: tableName,
       Key: marshall({ nofo_name: nofoName }),
-      ProjectionExpression: "nofo_name",
+      ProjectionExpression: "nofo_name, #status",
+      ExpressionAttributeNames: { "#status": "status" },
     })
   );
-  return Boolean(result.Item);
+  return result.Item ? unmarshall(result.Item) : null;
 }
 
 async function drainQueue(dlqUrl, reviewTableName, source) {
@@ -101,7 +103,9 @@ async function drainQueue(dlqUrl, reviewTableName, source) {
             const key = decodeURIComponent(
               parsed.Records[0].s3.object.key.replace(/\+/g, " ")
             );
-            nofoName = key.substring(0, key.lastIndexOf("/"));
+            // A live grant's new version runs from _pending/<grant>/ (PENDING_PREFIX in grantwell-shared).
+            const path = key.startsWith("_pending/") ? key.slice("_pending/".length) : key;
+            nofoName = path.substring(0, path.lastIndexOf("/"));
             documentKey = key;
           }
 
@@ -175,8 +179,12 @@ async function drainQueue(dlqUrl, reviewTableName, source) {
         // Only pipeline failures: a scraper-DLQ message is a failed fetch, often an update of a
         // grant that is still live, and these helpers' UpdateItem would create a stub row for a
         // grant that was never ingested (which the coordinator then treats as existing forever).
-        if (source === "dlq" && nofoName && nofoName !== "unknown" && (await metadataExists(nofoName).catch(() => false))) {
-          await setNofoStatus(nofoName, "quarantined").catch(() => {});
+        // A live grant stays up: only its new version failed.
+        const row = source === "dlq" && nofoName && nofoName !== "unknown" ? await readMetadataRow(nofoName).catch(() => null) : null;
+        if (row) {
+          if (!(await liveStatusOf(nofoName, row, { unknownIsLive: true }))) {
+            await setNofoStatus(nofoName, "quarantined").catch(() => {});
+          }
           await updateProcessingStatus(nofoName, "quarantined").catch(() => {});
           await markProcessingComplete(nofoName, "needs_review").catch(() => {});
         }

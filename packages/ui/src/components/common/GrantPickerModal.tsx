@@ -3,6 +3,7 @@ import { useApiClient } from "../../hooks/use-api-client";
 import { fetchRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
 import type { RawNOFOData } from "../../common/types/document";
 import Modal from "./Modal";
+import { LiveStatus } from "./LiveStatus";
 
 export interface PickedGrant {
   label: string;
@@ -45,7 +46,7 @@ export default function GrantPickerModal({
         if (cancelled) return;
         const names: string[] = result.nofoData
           ? result.nofoData
-              .filter((nofo: RawNOFOData) => !nofo.processing_status && nofo.status === "active")
+              .filter((nofo: RawNOFOData) => nofo.status === "active")
               .map((nofo: RawNOFOData) => nofo.name)
           : result.folders || [];
         names.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
@@ -82,8 +83,8 @@ export default function GrantPickerModal({
           <button
             type="button"
             className="grant-picker-item"
-            onClick={() => onSelect(grant)}
-            disabled={busy}
+            onClick={() => !busy && onSelect(grant)}
+            aria-disabled={busy || undefined}
           >
             {grant.label}
           </button>
@@ -97,31 +98,35 @@ export default function GrantPickerModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title} maxWidth="600px">
       <p className="grant-picker-description">{description}</p>
-      <label htmlFor={searchId} className="visually-hidden">
+      <label htmlFor={searchId} className="gw-field__label">
         Filter grants by name
       </label>
       <input
         id={searchId}
         type="search"
-        className="form-input"
-        placeholder="Filter grants by name"
+        className="gw-input form-input"
+        placeholder="e.g. brownfields"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         disabled={loading}
         autoComplete="off"
       />
-      <div className="grant-picker-results" aria-busy={loading || busy}>
+      {/* Not busy while starting: some screen readers hold back "Starting…" inside a busy region. */}
+      <div className="grant-picker-results" aria-busy={loading}>
         {loading && <p className="grant-picker-status">Loading grants…</p>}
         {error && (
           <p className="grant-picker-status" role="alert">
             {error}
           </p>
         )}
-        {busy && (
-          <p className="grant-picker-status" role="status">
-            Starting…
-          </p>
-        )}
+        <LiveStatus>
+          {busy && <p className="grant-picker-status">Starting…</p>}
+          {noMatches && (
+            <p className="grant-picker-status">
+              {query ? "No grants match that name." : "No grants are available right now."}
+            </p>
+          )}
+        </LiveStatus>
         {recent.length > 0 && (
           <>
             <h3 className="grant-picker-heading">Recently viewed</h3>
@@ -133,11 +138,6 @@ export default function GrantPickerModal({
             {recent.length > 0 && <h3 className="grant-picker-heading">All grants</h3>}
             {renderList(rest)}
           </>
-        )}
-        {noMatches && (
-          <p className="grant-picker-status" role="status">
-            {query ? "No grants match that name." : "No grants are available right now."}
-          </p>
         )}
       </div>
     </Modal>

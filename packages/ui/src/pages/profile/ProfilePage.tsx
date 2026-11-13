@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   fetchAuthSession,
   fetchMFAPreference,
@@ -12,15 +12,21 @@ import { useAdminCheck } from "../../hooks/use-admin-check";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
+import { useNavigationChrome } from "../../components/navigation/navigation-context";
+import { ConfirmationModal } from "../../components/common/ConfirmationModal";
 import MfaSetupPanel from "../../components/auth/MfaSetupPanel";
+import { LiveStatus } from "../../components/common/LiveStatus";
+import PasswordRequirementsList from "../../components/auth/PasswordRequirementsList";
+import { getPasswordRequirements } from "../../components/auth/auth-utils";
 import { clearMfaPromptSnooze } from "../../common/mfa-snooze";
-import { EMAIL_DIGEST, MFA_DEADLINE_ISO, MFA_ENABLED, REGIONS } from "../../common/instance";
+import { EMAIL_DIGEST, MFA_DEADLINE_ISO, MFA_ENABLED, MFA_REQUIRED, REGIONS } from "../../common/instance";
 import { deadlineDateText } from "../../common/mfa-deadline";
 import Breadcrumbs from "../../components/common/Breadcrumbs";
 import { SINGLE_STATE, stateNameFromCode } from "../../common/states";
 import { roleLabel } from "../../common/helpers/auth-roles";
 import { GRANT_CATEGORIES } from "../../common/types/nofo";
 import type { DigestFrequency } from "../../common/api-client/notifications-client";
+import { PROFILE_FIELD_MAX_LENGTH } from "../../common/api-client/user-profile-client";
 import "../../styles/dashboard.css";
 import "./profile.css";
 
@@ -80,6 +86,7 @@ export default function ProfilePage() {
   const [orgBaseline, setOrgBaseline] = useState({ agency: "", organization: "", jobTitle: "", region: "" });
   const [orgSaving, setOrgSaving] = useState(false);
   const [orgError, setOrgError] = useState<string | null>(null);
+  const [orgMissing, setOrgMissing] = useState<string[]>([]);
   const [orgSaved, setOrgSaved] = useState(false);
 
   useEffect(() => {
@@ -114,8 +121,17 @@ export default function ProfilePage() {
 
   const onSaveOrg = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!orgAgency.trim() || !orgOrganization.trim() || !orgJobTitle.trim() || (REGIONS.length > 0 && !orgRegion)) {
-      setOrgError(REGIONS.length ? "Please complete all four fields." : "Please complete all three fields.");
+    if (!orgDirty) return;
+    const missing = [
+      !orgAgency.trim() && "profile-agency",
+      !orgOrganization.trim() && "profile-org",
+      !orgJobTitle.trim() && "profile-title",
+      REGIONS.length > 0 && !orgRegion && "profile-region",
+    ].filter((id): id is string => Boolean(id));
+    setOrgMissing(missing);
+    if (missing.length) {
+      setOrgError("Fill in the fields marked below.");
+      document.getElementById(missing[0])?.focus();
       return;
     }
     setOrgSaving(true);
@@ -152,6 +168,31 @@ export default function ProfilePage() {
   const [categories, setCategories] = useState<string[]>([]);
   const [keywords, setKeywords] = useState("");
   const [categoryQuery, setCategoryQuery] = useState("");
+  const [grantCategories, setGrantCategories] = useState<string[] | null>(null);
+
+  useEffect(() => {
+    if (!EMAIL_DIGEST) return;
+    let active = true;
+    apiClient.landingPage
+      .getNOFOs()
+      .then((result: { nofoData?: { category?: string | null }[] }) => {
+        if (!active) return;
+        setGrantCategories([...new Set((result?.nofoData ?? []).map((n) => n.category).filter((c): c is string => !!c))]);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [apiClient]);
+
+  // Categories that have grants, plus any already chosen so a saved choice never disappears.
+  const offeredCategories = useMemo<string[]>(() => {
+    if (!grantCategories) return [...GRANT_CATEGORIES];
+    const used = new Set([...grantCategories, ...baseline.categories]);
+    const known = GRANT_CATEGORIES.filter((c) => used.has(c));
+    const extra = [...used].filter((c) => !(GRANT_CATEGORIES as readonly string[]).includes(c)).sort();
+    return [...known, ...extra];
+  }, [grantCategories, baseline.categories]);
 
   useEffect(() => {
     if (!EMAIL_DIGEST) return;
@@ -188,6 +229,26 @@ export default function ProfilePage() {
     [frequency, categories, keywords, baseline]
   );
 
+  const unsaved = orgDirty || dirty;
+  const setLeaveGuard = useNavigationChrome()?.setLeaveGuard;
+  const [pendingLeave, setPendingLeave] = useState<(() => void) | null>(null);
+
+  useEffect(() => {
+    if (!unsaved || !setLeaveGuard) return;
+    setLeaveGuard((proceed) => setPendingLeave(() => proceed));
+    return () => setLeaveGuard(null);
+  }, [unsaved, setLeaveGuard]);
+
+  useEffect(() => {
+    if (!unsaved) return;
+    const warn = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [unsaved]);
+
   const toggle = (list: string[], set: (v: string[]) => void, code: string) => {
     set(list.includes(code) ? list.filter((c) => c !== code) : [...list, code]);
     setSaved(false);
@@ -195,9 +256,9 @@ export default function ProfilePage() {
 
   const visibleCategories = useMemo<string[]>(() => {
     const q = categoryQuery.trim().toLowerCase();
-    if (!q) return [...GRANT_CATEGORIES];
-    return GRANT_CATEGORIES.filter((c) => c.toLowerCase().includes(q));
-  }, [categoryQuery]);
+    if (!q) return offeredCategories;
+    return offeredCategories.filter((c) => c.toLowerCase().includes(q));
+  }, [categoryQuery, offeredCategories]);
 
   const allVisibleSelected =
     visibleCategories.length > 0 &&
@@ -219,6 +280,7 @@ export default function ProfilePage() {
 
   const onSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!dirty) return;
     setSaving(true);
     setError(null);
     setSaved(false);
@@ -252,7 +314,7 @@ export default function ProfilePage() {
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <Breadcrumbs
           items={[
-            { label: "Home", onClick: () => navigate("/") },
+            { label: "Home", href: "/home" },
             { label: "Profile" },
           ]}
         />
@@ -261,7 +323,7 @@ export default function ProfilePage() {
           <div className="dashboard-header">
             <div>
               <h1>Profile</h1>
-              <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
+              <p style={{ marginTop: "4px", color: "var(--gw-color-text-secondary)", fontSize: "14px" }}>
                 {EMAIL_DIGEST
                   ? "Your account, sign-in security, and notification preferences"
                   : "Your account and sign-in security"}
@@ -293,77 +355,113 @@ export default function ProfilePage() {
                   using GrantWell.
                 </p>
                 {orgError && (
-                  <div className="profile-alert profile-alert--error" role="alert">
+                  <div className="gw-alert gw-alert--urgent profile-alert profile-alert--error" role="alert">
                     {orgError}
                   </div>
                 )}
-                {orgSaved && (
-                  <div className="profile-alert profile-alert--success" role="status">
-                    Organization details saved.
-                  </div>
-                )}
+                <LiveStatus>
+                  {orgSaved && (
+                    <div className="gw-alert gw-alert--success profile-alert profile-alert--success">
+                      Organization details saved.
+                    </div>
+                  )}
+                </LiveStatus>
                 <form onSubmit={onSaveOrg}>
                   <div className="profile-section">
                     <label className="profile-field-label" htmlFor="profile-agency">
                       Department
+                      <span className="gw-field__required" aria-hidden="true">*</span>
                     </label>
                     <input
                       id="profile-agency"
+                      aria-required="true"
+                      aria-invalid={orgMissing.includes("profile-agency") || undefined}
+                      aria-describedby={orgMissing.includes("profile-agency") ? "profile-agency-error" : undefined}
                       type="text"
                       value={orgAgency}
                       onChange={(e) => {
                         setOrgAgency(e.target.value);
+                        setOrgMissing((m) => m.filter((id) => id !== "profile-agency"));
                         setOrgSaved(false);
                       }}
-                      className="profile-input"
+                      className="gw-input profile-input"
                       placeholder="e.g. Department of Transportation"
+                      maxLength={PROFILE_FIELD_MAX_LENGTH}
                     />
+                    {orgMissing.includes("profile-agency") && (
+                      <p id="profile-agency-error" className="gw-field__message">Enter your department</p>
+                    )}
                   </div>
                   <div className="profile-section">
                     <label className="profile-field-label" htmlFor="profile-org">
                       Organization
+                      <span className="gw-field__required" aria-hidden="true">*</span>
                     </label>
                     <input
                       id="profile-org"
+                      aria-required="true"
+                      aria-invalid={orgMissing.includes("profile-org") || undefined}
+                      aria-describedby={orgMissing.includes("profile-org") ? "profile-org-error" : undefined}
                       type="text"
+                      autoComplete="organization"
                       value={orgOrganization}
                       onChange={(e) => {
                         setOrgOrganization(e.target.value);
+                        setOrgMissing((m) => m.filter((id) => id !== "profile-org"));
                         setOrgSaved(false);
                       }}
-                      className="profile-input"
+                      className="gw-input profile-input"
                       placeholder="e.g. Planning Division"
+                      maxLength={PROFILE_FIELD_MAX_LENGTH}
                     />
+                    {orgMissing.includes("profile-org") && (
+                      <p id="profile-org-error" className="gw-field__message">Enter your organization</p>
+                    )}
                   </div>
                   <div className="profile-section">
                     <label className="profile-field-label" htmlFor="profile-title">
                       Role / Title
+                      <span className="gw-field__required" aria-hidden="true">*</span>
                     </label>
                     <input
                       id="profile-title"
+                      aria-required="true"
+                      aria-invalid={orgMissing.includes("profile-title") || undefined}
+                      aria-describedby={orgMissing.includes("profile-title") ? "profile-title-error" : undefined}
                       type="text"
+                      autoComplete="organization-title"
                       value={orgJobTitle}
                       onChange={(e) => {
                         setOrgJobTitle(e.target.value);
+                        setOrgMissing((m) => m.filter((id) => id !== "profile-title"));
                         setOrgSaved(false);
                       }}
-                      className="profile-input"
+                      className="gw-input profile-input"
                       placeholder="e.g. Grants Manager"
+                      maxLength={PROFILE_FIELD_MAX_LENGTH}
                     />
+                    {orgMissing.includes("profile-title") && (
+                      <p id="profile-title-error" className="gw-field__message">Enter your role or title</p>
+                    )}
                   </div>
                   {REGIONS.length > 0 && (
                     <div className="profile-section">
                       <label className="profile-field-label" htmlFor="profile-region">
                         Region
+                        <span className="gw-field__required" aria-hidden="true">*</span>
                       </label>
                       <select
                         id="profile-region"
+                        aria-required="true"
+                        aria-invalid={orgMissing.includes("profile-region") || undefined}
+                        aria-describedby={orgMissing.includes("profile-region") ? "profile-region-error" : undefined}
                         value={orgRegion}
                         onChange={(e) => {
                           setOrgRegion(e.target.value);
+                        setOrgMissing((m) => m.filter((id) => id !== "profile-region"));
                           setOrgSaved(false);
                         }}
-                        className="profile-input"
+                        className="gw-input profile-input"
                       >
                         <option value="">Select a region</option>
                         {REGIONS.map((r) => (
@@ -372,10 +470,13 @@ export default function ProfilePage() {
                           </option>
                         ))}
                       </select>
+                      {orgMissing.includes("profile-region") && (
+                        <p id="profile-region-error" className="gw-field__message">Choose your region</p>
+                      )}
                     </div>
                   )}
                   <div className="profile-actions">
-                    <Button type="submit" loading={orgSaving} disabled={!orgDirty}>
+                    <Button type="submit" loading={orgSaving} aria-disabled={!orgDirty || undefined}>
                       Save changes
                     </Button>
                   </div>
@@ -395,15 +496,17 @@ export default function ProfilePage() {
                     Leave every filter empty to be notified of all new grants.
                   </p>
 
-                  {error && <div className="profile-alert profile-alert--error" role="alert">{error}</div>}
-                  {saved && <div className="profile-alert profile-alert--success" role="status">Preferences saved.</div>}
+                  {error && <div className="gw-alert gw-alert--urgent profile-alert profile-alert--error" role="alert">{error}</div>}
+                  <LiveStatus>
+                    {saved && <div className="gw-alert gw-alert--success profile-alert profile-alert--success">Preferences saved.</div>}
+                  </LiveStatus>
 
                   {loading ? (
                     <p role="status">Loading…</p>
                   ) : (
                     <form onSubmit={onSave}>
-                      <div className="profile-section">
-                        <h3>Email frequency</h3>
+                      <fieldset className="profile-section profile-fieldset">
+                        <legend className="profile-legend"><h3>Email frequency</h3></legend>
                         <div className="profile-frequency">
                           {FREQUENCIES.map((f) => (
                             <label key={f.value}>
@@ -421,7 +524,7 @@ export default function ProfilePage() {
                             </label>
                           ))}
                         </div>
-                      </div>
+                      </fieldset>
 
                       <fieldset className="profile-fieldset" disabled={frequency === "off"}>
                         <div className="profile-section">
@@ -431,12 +534,12 @@ export default function ProfilePage() {
                           </p>
                         </div>
 
-                        <div className="profile-section">
-                          <h3>Categories</h3>
+                        <fieldset className="profile-section profile-fieldset">
+                          <legend className="profile-legend"><h3>Categories</h3></legend>
                           <div className="profile-chip-toolbar">
                             <input
                               type="search"
-                              className="profile-chip-search"
+                              className="gw-input profile-chip-search"
                               value={categoryQuery}
                               onChange={(e) => setCategoryQuery(e.target.value)}
                               placeholder="Search categories"
@@ -446,8 +549,8 @@ export default function ProfilePage() {
                               type="button"
                               variant="secondary"
                               size="sm"
-                              onClick={() => setVisibleSelected(true)}
-                              disabled={allVisibleSelected}
+                              onClick={() => !allVisibleSelected && setVisibleSelected(true)}
+                              aria-disabled={allVisibleSelected || undefined}
                             >
                               {categoryQuery.trim()
                                 ? `Select all ${visibleCategories.length} shown`
@@ -457,15 +560,15 @@ export default function ProfilePage() {
                               type="button"
                               variant="secondary"
                               size="sm"
-                              onClick={() => setVisibleSelected(false)}
-                              disabled={!someVisibleSelected}
+                              onClick={() => someVisibleSelected && setVisibleSelected(false)}
+                              aria-disabled={!someVisibleSelected || undefined}
                             >
                               Clear
                             </Button>
                             {/* Not a live region: each checkbox already announces its own
                                 state, and this count would talk over that. */}
                             <span className="profile-chip-count">
-                              {categories.length} of {GRANT_CATEGORIES.length} selected
+                              {categories.length} of {offeredCategories.length} selected
                             </span>
                           </div>
                           {visibleCategories.length === 0 ? (
@@ -486,12 +589,12 @@ export default function ProfilePage() {
                               ))}
                             </div>
                           )}
-                        </div>
+                        </fieldset>
 
                         <div className="profile-section">
                           <h3>Keywords</h3>
                           <label className="profile-field-label" htmlFor="profile-keywords">
-                            Comma-separated
+                            Keywords (comma-separated)
                           </label>
                           <input
                             id="profile-keywords"
@@ -502,13 +605,13 @@ export default function ProfilePage() {
                               setSaved(false);
                             }}
                             placeholder="e.g. broadband, workforce"
-                            className="profile-input"
+                            className="gw-input profile-input"
                           />
                         </div>
                       </fieldset>
 
                       <div className="profile-actions">
-                        <Button type="submit" loading={saving} disabled={!dirty}>
+                        <Button type="submit" loading={saving} aria-disabled={!dirty || undefined}>
                           Save preferences
                         </Button>
                       </div>
@@ -520,6 +623,19 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={pendingLeave !== null}
+        title="Leave without saving?"
+        message="You have changes on this page that aren't saved yet."
+        confirmLabel="Leave without saving"
+        cancelLabel="Stay on this page"
+        onConfirm={() => {
+          const proceed = pendingLeave;
+          setPendingLeave(null);
+          proceed?.();
+        }}
+        onClose={() => setPendingLeave(null)}
+      />
     </div>
   );
 }
@@ -531,6 +647,14 @@ function MfaSection() {
   const [enrolling, setEnrolling] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // After turning it on or off, or cancelling setup, the control that had focus is gone: move it to the new state.
+  const hint = useRef<HTMLParagraphElement>(null);
+  const [focusHint, setFocusHint] = useState(false);
+  useEffect(() => {
+    if (!focusHint) return;
+    hint.current?.focus();
+    setFocusHint(false);
+  }, [focusHint]);
 
   const load = async () => {
     try {
@@ -556,6 +680,7 @@ function MfaSection() {
     try {
       await updateMFAPreference({ totp: "DISABLED" });
       setStatus("off");
+      setFocusHint(true);
     } catch (err) {
       console.error("Could not disable MFA", err);
       setError("Could not turn off two-step verification. Try again in a moment.");
@@ -569,18 +694,22 @@ function MfaSection() {
   return (
     <div className="profile-section">
       <span className="profile-field-label">Two-step verification</span>
-      {error && <div className="profile-alert profile-alert--error" role="alert">{error}</div>}
+      {error && <div className="gw-alert gw-alert--urgent profile-alert profile-alert--error" role="alert">{error}</div>}
 
       {status === "on" ? (
         <>
           {MFA_DEADLINE_ISO ? (
-            <p className="profile-hint">
+            <p className="profile-hint" ref={hint} tabIndex={-1}>
               Two-step verification is on. GrantWell requires it from{" "}
               {deadlineDateText(MFA_DEADLINE_ISO, true)}, so it can&apos;t be turned off.
             </p>
+          ) : MFA_REQUIRED ? (
+            <p className="profile-hint" ref={hint} tabIndex={-1}>
+              On. Two-step verification is required on GrantWell, so it can&apos;t be turned off.
+            </p>
           ) : (
             <>
-              <p className="profile-hint">
+              <p className="profile-hint" ref={hint} tabIndex={-1}>
                 On. You are asked for a code from your authenticator app when you sign in.
               </p>
               <div className="profile-actions">
@@ -598,15 +727,21 @@ function MfaSection() {
             setEnrolling(false);
             clearMfaPromptSnooze(userId);
             setStatus("on");
+            setFocusHint(true);
           }}
-          onCancel={() => setEnrolling(false)}
+          onCancel={() => {
+            setEnrolling(false);
+            setFocusHint(true);
+          }}
         />
       ) : (
         <>
-          <p className="profile-hint">
+          <p className="profile-hint" ref={hint} tabIndex={-1}>
             {MFA_DEADLINE_ISO
               ? `Off. GrantWell requires it from ${deadlineDateText(MFA_DEADLINE_ISO, true)}.`
-              : "Off. Recommended — it keeps your account safe if your password is ever exposed."}
+              : MFA_REQUIRED
+                ? "Off. Two-step verification is required on GrantWell."
+                : "Off. Recommended — it keeps your account safe if your password is ever exposed."}
           </p>
           <div className="profile-actions">
             <Button type="button" onClick={() => setEnrolling(true)}>
@@ -621,12 +756,21 @@ function MfaSection() {
 
 function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
   const [showPw, setShowPw] = useState(false);
+  const [revealPw, setRevealPw] = useState(false);
   const [oldPw, setOldPw] = useState("");
   const [newPw, setNewPw] = useState("");
   const [confirmPw, setConfirmPw] = useState("");
   const [busy, setBusy] = useState(false);
   const [pwError, setPwError] = useState<string | null>(null);
   const [pwOk, setPwOk] = useState(false);
+  const firstPwField = useRef<HTMLInputElement>(null);
+  const changePwButton = useRef<HTMLButtonElement>(null);
+  const [pwFocus, setPwFocus] = useState<"form" | "button" | null>(null);
+  useEffect(() => {
+    if (pwFocus === "form") firstPwField.current?.focus();
+    if (pwFocus === "button") changePwButton.current?.focus();
+    setPwFocus(null);
+  }, [pwFocus]);
 
   const changePassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -643,6 +787,7 @@ function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
       setNewPw("");
       setConfirmPw("");
       setShowPw(false);
+      setRevealPw(false);
       // Cognito's ChangePassword leaves existing refresh tokens valid; only a global sign-out revokes them.
       try {
         await signOut({ global: true });
@@ -678,31 +823,40 @@ function AccountActionsCard({ onSignedOut }: { onSignedOut: () => void }) {
     <Card header="Sign-in & security" headerStyle="default">
       {MFA_ENABLED && <MfaSection />}
 
-      {pwError && <div className="profile-alert profile-alert--error" role="alert">{pwError}</div>}
-      {pwOk && <div className="profile-alert profile-alert--success" role="status">Password changed. You have been signed out on every device — sign in again with your new password.</div>}
+      {pwError && <div className="gw-alert gw-alert--urgent profile-alert profile-alert--error" role="alert">{pwError}</div>}
+      <LiveStatus>
+        {pwOk && <div className="gw-alert gw-alert--success profile-alert profile-alert--success">Password changed. You have been signed out on every device — sign in again with your new password.</div>}
+      </LiveStatus>
 
       {showPw ? (
         <form onSubmit={changePassword}>
           <div className="profile-section">
             <label className="profile-field-label" htmlFor="pw-old">Current password</label>
-            <input id="pw-old" type="password" value={oldPw} onChange={(e) => setOldPw(e.target.value)} required className="profile-input" />
+            <input ref={firstPwField} id="pw-old" type={revealPw ? "text" : "password"} autoComplete="current-password" value={oldPw} onChange={(e) => setOldPw(e.target.value)} required className="gw-input profile-input" />
           </div>
           <div className="profile-section">
             <label className="profile-field-label" htmlFor="pw-new">New password</label>
-            <input id="pw-new" type="password" value={newPw} onChange={(e) => setNewPw(e.target.value)} required className="profile-input" />
+            <input id="pw-new" type={revealPw ? "text" : "password"} autoComplete="new-password" aria-describedby="pw-new-requirements" value={newPw} onChange={(e) => setNewPw(e.target.value)} required className="gw-input profile-input" />
+            <PasswordRequirementsList id="pw-new-requirements" requirements={getPasswordRequirements(newPw)} />
           </div>
           <div className="profile-section">
             <label className="profile-field-label" htmlFor="pw-confirm">Confirm new password</label>
-            <input id="pw-confirm" type="password" value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} required className="profile-input" />
+            <input id="pw-confirm" type={revealPw ? "text" : "password"} autoComplete="new-password" value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} required className="gw-input profile-input" />
+          </div>
+          <div className="profile-section">
+            <label className="profile-show-password">
+              <input type="checkbox" checked={revealPw} onChange={(e) => setRevealPw(e.target.checked)} />
+              Show passwords
+            </label>
           </div>
           <div className="profile-actions">
             <Button type="submit" loading={busy}>Update password</Button>
-            <Button type="button" variant="ghost" onClick={() => setShowPw(false)} disabled={busy}>Cancel</Button>
+            <Button type="button" variant="ghost" onClick={() => { if (busy) return; setShowPw(false); setRevealPw(false); setPwFocus("button"); }} aria-disabled={busy || undefined}>Cancel</Button>
           </div>
         </form>
       ) : (
         <div className="profile-actions">
-          <Button type="button" variant="secondary" onClick={() => setShowPw(true)}>Change password</Button>
+          <Button ref={changePwButton} type="button" variant="secondary" onClick={() => { setShowPw(true); setPwFocus("form"); }}>Change password</Button>
           <Button type="button" variant="danger" onClick={signOutEverywhere} loading={busy}>Sign out of all devices</Button>
         </div>
       )}

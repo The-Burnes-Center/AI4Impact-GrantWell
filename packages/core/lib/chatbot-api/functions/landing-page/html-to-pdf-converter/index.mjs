@@ -17,6 +17,9 @@ const s3Client = new S3Client({ region: process.env.AWS_REGION || 'us-east-1' })
 const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION || 'us-east-1' });
 const BUCKET = process.env.BUCKET;
 const REVIEW_TABLE_NAME = process.env.REVIEW_TABLE_NAME;
+const ARTIFACTS_BUCKET = process.env.ARTIFACTS_BUCKET;
+// The staging folder in grantwell-shared (artifacts.mjs), which this function does not load.
+const PENDING_DIR = '_pending';
 
 const STUB_MAX_BYTES = 4096;
 const META_REFRESH_RE =
@@ -80,6 +83,21 @@ async function flagForReview(nofoName, errorMessage) {
   }
 }
 
+const UNSAFE_CHROMIUM_ARGS = new Set(['--disable-web-security', '--allow-running-insecure-content']);
+const LOCAL_URL_RE = /^(data|about|blob):/i;
+
+/** JavaScript off and no network: only inline content renders. */
+async function openOfflinePage(browser) {
+  const page = await browser.newPage();
+  await page.setJavaScriptEnabled(false);
+  await page.setRequestInterception(true);
+  page.on('request', (request) => {
+    if (LOCAL_URL_RE.test(request.url())) request.continue();
+    else request.abort('blockedbyclient');
+  });
+  return page;
+}
+
 /**
  * Generate PDF buffer from HTML content using Puppeteer/Chromium
  */
@@ -89,15 +107,15 @@ const generatePdfBuffer = async (html) => {
     console.log('Launching browser');
     
     browser = await puppeteer.launch({
-      args: chromium.args,
+      // --no-sandbox stays: Lambda has no user namespaces or setuid helper for Chromium's sandbox.
+      args: chromium.args.filter((arg) => !UNSAFE_CHROMIUM_ARGS.has(arg)),
       defaultViewport: { width: 1920, height: 1080, deviceScaleFactor: 1, isMobile: false, hasTouch: false, isLandscape: true },
       executablePath: await chromium.executablePath(),
       headless: 'shell',
-      ignoreHTTPSErrors: true,
     });
 
     console.log('Browser launched');
-    const page = await browser.newPage();
+    const page = await openOfflinePage(browser);
     await page.setContent(html, {
       waitUntil: ['domcontentloaded', 'networkidle0', 'load'],
     });
@@ -144,7 +162,9 @@ export const handler = async (event) => {
         continue;
       }
 
-      const opportunityTitle = pathParts.slice(1, -1).join('/').replace(/\//g, '-');
+      // pending-conversion/_pending/{title}/… is a live grant's new version, which stays staged.
+      const staged = pathParts[1] === PENDING_DIR && pathParts.length > 3;
+      const opportunityTitle = pathParts.slice(staged ? 2 : 1, -1).join('/').replace(/\//g, '-');
 
       // Download HTML from S3
       const htmlResponse = await s3Client.send(
@@ -195,10 +215,10 @@ export const handler = async (event) => {
       }
 
       // Upload PDF to final location
-      const finalPdfKey = `${opportunityTitle}/NOFO-File-PDF`;
+      const finalPdfKey = `${staged ? `${PENDING_DIR}/` : ''}${opportunityTitle}/NOFO-File-PDF`;
       await s3Client.send(
         new PutObjectCommand({
-          Bucket: bucket,
+          Bucket: staged ? ARTIFACTS_BUCKET : bucket,
           Key: finalPdfKey,
           Body: pdfBuffer,
           ContentType: 'application/pdf',

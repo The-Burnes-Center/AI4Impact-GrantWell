@@ -44,6 +44,7 @@ vi.mock("@aws-sdk/client-textract", () => ({
 vi.mock("grantwell-shared", async () => ({
   ...(await import("../lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/grantwell-shared/sections.mjs")),
   ...(await import("../lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/grantwell-shared/artifacts.mjs")),
+  ...(await import("../lib/chatbot-api/functions/layers/js-shared-layer/nodejs/node_modules/grantwell-shared/requirement-citations.mjs")),
 }));
 
 process.env.SONNET_MODEL_ID = "sonnet";
@@ -51,10 +52,11 @@ process.env.ARTIFACTS_BUCKET = "grant-artifacts";
 process.env.NOFO_METADATA_TABLE_NAME = "nofos";
 
 const fns = "../lib/chatbot-api/functions/nofo-pipeline";
-const { handler: extractText, MAX_TEXTRACT_WAIT_MS } = await import(`${fns}/extract-text/index.mjs`);
+const { handler: extractText, MAX_TEXTRACT_WAIT_MS, joinLines } = await import(`${fns}/extract-text/index.mjs`);
 const { handler: extract } = await import(`${fns}/extract-and-analyze/index.mjs`);
 const { handler: validate } = await import(`${fns}/validate/index.mjs`);
 const { handler: publish } = await import(`${fns}/publish/index.mjs`);
+const { itemsHash, requirementItems } = await import(`${fns}/shared/cite.mjs`);
 
 const entry = (item: string) => [{ item, description: `${item} details` }];
 const summaryFor = (name: string) => ({
@@ -166,6 +168,46 @@ describe("extract-text Textract poll", () => {
   });
 });
 
+describe("extract-text page map", () => {
+  it("records where each page starts in the joined text", () => {
+    const lines = [
+      { Text: "Title", Page: 1 },
+      { Text: "Intro", Page: 1 },
+      { Text: "Due March 1", Page: 3 },
+    ];
+    const { text, pageStarts } = joinLines(lines);
+    expect(text).toBe("Title\nIntro\nDue March 1");
+    expect(pageStarts).toEqual([0, 12, 12]);
+    expect(text.slice(pageStarts[2])).toBe("Due March 1");
+  });
+
+  it("saves the map beside raw-text.txt for a PDF", async () => {
+    aws.s3.mockImplementation(async () => ({}));
+    let call = 0;
+    aws.textract.mockImplementation(async (name: string) => {
+      if (name === "StartDocumentTextDetectionCommand") return { JobId: "job-3" };
+      call += 1;
+      if (call === 1) return { JobStatus: "SUCCEEDED" };
+      return {
+        Blocks: [
+          { BlockType: "PAGE", Page: 1 },
+          { BlockType: "LINE", Text: "grant funding eligibility applicant ".repeat(10), Page: 1 },
+          { BlockType: "LINE", Text: "award deadline program ".repeat(10), Page: 2 },
+        ],
+      };
+    });
+
+    const { error } = await settle(extractText({ s3Bucket: "b", documentKey: "G/NOFO-File-PDF", nofoName: "G" }));
+
+    expect(error).toBeNull();
+    const put = aws.s3.mock.calls.find(([name, input]) => name === "PutObjectCommand" && input.Key === "G/raw-text-pages.json");
+    expect(put).toBeDefined();
+    const map = JSON.parse(put![1].Body);
+    const first = "grant funding eligibility applicant ".repeat(10);
+    expect(map).toEqual({ chars: first.length + 1 + "award deadline program ".repeat(10).length, pageStarts: [0, first.length + 1] });
+  });
+});
+
 describe("extract-and-analyze chunk failures", () => {
   it("retries a chunk that hits a 5xx and merges every chunk", async () => {
     serveText(LONG_TEXT);
@@ -267,5 +309,39 @@ describe("partial grants in review", () => {
   it("leaves grants with every part read unflagged", async () => {
     const out = await validate({ nofoName: "G", mergedSummary: summaryFor("A"), questionsData: QUESTIONS });
     expect(out.adminGuidance).toBeNull();
+  });
+});
+
+describe("publish and the review approval record", () => {
+  const QUESTIONS = { totalQuestions: 1, questions: [{ id: 1, question: "Describe your need." }] };
+  const publishEvent = { nofoName: "G", s3Bucket: "b", documentKey: "G/NOFO-File-PDF", mergedSummary: summaryFor("A"), questionsData: QUESTIONS };
+  const citationPuts = () =>
+    aws.s3.mock.calls.filter(([name, input]) => name === "PutObjectCommand" && input.Key === "G/requirements-citations.json");
+
+  it("publishes a grant that passed every check as before, with no approval record", async () => {
+    const out = await publish(publishEvent);
+    expect(out).toMatchObject({ published: true });
+    expect(citationPuts()).toHaveLength(0);
+  });
+
+  it("records an admin approval against the items it publishes, keeping the saved quotes", async () => {
+    aws.s3.mockImplementation(async (name: string, input: any) =>
+      name === "GetObjectCommand" && input.Key === "G/requirements-citations.json"
+        ? { Body: [Buffer.from(JSON.stringify({ version: 1, itemsHash: "h", items: { k: [{ quote: "q" }] } }))] }
+        : {}
+    );
+    const corrections = { EligibilityCriteria: [{ item: "Cities", description: "Cities may apply." }] };
+    await publish({ ...publishEvent, corrections, reviewApproval: { reviewId: "r1", by: "admin@example.com", at: "2026-11-04T12:00:00Z" } });
+
+    const [[, put]] = citationPuts();
+    const saved = JSON.parse(put.Body);
+    expect(saved.items).toEqual({ k: [{ quote: "q" }] });
+    expect(saved.approval).toEqual({
+      at: "2026-11-04T12:00:00Z",
+      by: "admin@example.com",
+      reviewId: "r1",
+      itemsHash: itemsHash(requirementItems({ ...summaryFor("A"), ...corrections })),
+      applicationDeadline: null,
+    });
   });
 });

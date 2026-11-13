@@ -26,10 +26,20 @@ async function fillOrgFields(user: ReturnType<typeof renderApp>["user"]) {
   await user.type(screen.getByLabelText(/Role \/ Title/), "Grants Manager");
 }
 
+describe("ProfileGate fields", () => {
+  it("stops each field at the 200 characters the server keeps", async () => {
+    renderGate();
+    for (const label of [/Department/, /Organization/, /Role \/ Title/]) {
+      expect(await screen.findByLabelText(label)).toHaveAttribute("maxlength", "200");
+    }
+  });
+});
+
 describe("ProfileGate region", () => {
   it("asks no region on a deployment without regions", async () => {
     const { net, user } = renderGate();
     await fillOrgFields(user);
+    await waitFor(() => expect(document.title).toBe("Complete your profile – GrantWell"));
     expect(screen.queryByLabelText(/Region/)).toBeNull();
     await user.click(screen.getByRole("button", { name: /Save and continue/ }));
     expect(await screen.findByText("app")).toBeInTheDocument();
@@ -40,7 +50,9 @@ describe("ProfileGate region", () => {
     instance.REGIONS = ["Region 1", "Region 2"];
     const { net, user } = renderGate();
     await fillOrgFields(user);
-    expect(screen.getByRole("button", { name: /Save and continue/ })).toBeDisabled();
+    await user.click(screen.getByRole("button", { name: /Save and continue/ }));
+    expect(await screen.findByText("Please complete all four fields.")).toBeInTheDocument();
+    expect(net.to(SAVE)).toHaveLength(0);
     const region = screen.getByLabelText(/Region/);
     expect(region).toBeRequired();
     await user.selectOptions(region, "Region 2");

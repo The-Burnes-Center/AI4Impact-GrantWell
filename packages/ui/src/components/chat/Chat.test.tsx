@@ -5,9 +5,18 @@ import { json, stubFetch, type RouteRequest } from "../../test/fetch-routes";
 import { renderApp } from "../../test/render";
 import Chat from "./Chat";
 
-vi.mock("./ChatInputPanel", () => ({ default: (): null => null }));
+const panel = vi.hoisted(() => ({ props: null as null | { ensureSession?: () => Promise<void> } }));
+vi.mock("./ChatInputPanel", () => ({
+  default: (props: { ensureSession?: () => Promise<void> }) => {
+    panel.props = props;
+    return <div data-testid="chat-input" />;
+  },
+}));
 
 const SESSION = "POST /user-session";
+const SUMMARY = "GET /s3-nofo-summary";
+const GREETING =
+  "Hello! I see that you are working on the Grant A Title grant. Could you please tell me which agency, municipality, or tribe we are preparing this application for?";
 
 const turns = (from: number, to: number) =>
   Array.from({ length: to - from + 1 }, (_, i) => ({
@@ -144,5 +153,95 @@ describe("Chat earlier messages", () => {
       expect(screen.getByRole("button", { name: "Show earlier messages" })).toHaveAttribute("aria-disabled", "false")
     );
     expect(questions()).toEqual(["Question 5", "Question 6"]);
+  });
+});
+
+describe("Chat new and unavailable chats", () => {
+  beforeEach(() => {
+    panel.props = null;
+  });
+
+  const operations = (net: ReturnType<typeof stubFetch>) =>
+    net.to(SESSION).map((r) => (r.body as { operation: string }).operation);
+
+  it("greets a new chat without saving it, and saves the greeting once before the first message", async () => {
+    const net = stubFetch({
+      [SESSION]: (req) => json((req.body as { operation: string }).operation === "add_session" ? { message: "ok" } : {}),
+      [SUMMARY]: json({ data: { GrantName: "Grant A Title" } }),
+    });
+    renderApp(<Chat sessionId="s1" documentIdentifier="Grant A" />);
+
+    await screen.findByText(GREETING);
+    expect(operations(net)).toEqual(["get_session"]);
+
+    await act(async () => {
+      await Promise.all([panel.props!.ensureSession!(), panel.props!.ensureSession!()]);
+    });
+    await act(async () => panel.props!.ensureSession!());
+
+    expect(operations(net)).toEqual(["get_session", "add_session"]);
+    expect(net.last(SESSION).body).toMatchObject({
+      session_id: "s1",
+      title: "Chat about Grant A Title",
+      document_identifier: "Grant A",
+      chat_history: [{ user: "", chatbot: GREETING, metadata: "" }],
+    });
+  });
+
+  it("shows the greeting first when a saved chat is reopened", async () => {
+    stubFetch({
+      [SESSION]: json({
+        title: "Chat about Grant A",
+        chat_history: [{ user: "", chatbot: GREETING, metadata: "" }, ...turns(1, 1)],
+        older_cursor: null,
+      }),
+    });
+    renderApp(<Chat sessionId="s1" documentIdentifier="Grant A" />);
+
+    await screen.findByText("Question 1");
+    const articles = screen.getAllByRole("article").map((a) => a.textContent);
+    expect(articles[0]).toContain(GREETING);
+    expect(articles[1]).toContain("Question 1");
+  });
+
+  it("says a chat link without a grant or saved messages isn't available", async () => {
+    const net = stubFetch({ [SESSION]: json({}) });
+    renderApp(<Chat sessionId="s1" />);
+
+    expect(
+      await screen.findByText("This chat isn't available. It may have been deleted, or the link is wrong.")
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Go to My chats" })).toHaveAttribute("href", "/chat/sessions");
+    expect(net.to(SUMMARY)).toEqual([]);
+    expect(screen.queryByTestId("chat-input")).not.toBeInTheDocument();
+  });
+
+  it("says the chat isn't available when its grant can't be loaded, without raw error codes", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    stubFetch({
+      [SESSION]: json({}),
+      [SUMMARY]: json({ error: "ACCESS_DENIED_STATE", message: "We couldn't confirm your access to this grant." }, 403),
+    });
+    const { container } = renderApp(<Chat sessionId="s1" documentIdentifier="Missing Grant" />);
+
+    await screen.findByRole("link", { name: "Go to My chats" });
+    expect(container.textContent).not.toMatch(/ACCESS_DENIED_STATE|refresh the page/i);
+  });
+
+  it("says a new chat's grant is being reviewed, with a Home link and no input or greeting", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const net = stubFetch({
+      [SESSION]: json({}),
+      [SUMMARY]: json({ error: "GRANT_IN_REVIEW", message: "This grant is being reviewed and will be back soon." }, 409),
+    });
+    const { container } = renderApp(<Chat sessionId="s1" documentIdentifier="Held Grant" />);
+
+    const home = await screen.findByRole("link", { name: "Go to home" });
+    expect(home).toHaveAttribute("href", "/home");
+    expect(home.closest("li")).toHaveTextContent("This grant is being reviewed and will be back soon.");
+    expect(screen.queryByTestId("chat-input")).not.toBeInTheDocument();
+    expect(container.textContent).not.toMatch(/GRANT_IN_REVIEW|isn't available/);
+    expect(operations(net)).toEqual(["get_session"]);
   });
 });

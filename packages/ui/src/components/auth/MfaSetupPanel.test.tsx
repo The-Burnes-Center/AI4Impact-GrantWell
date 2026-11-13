@@ -29,10 +29,12 @@ describe("MfaSetupPanel", () => {
     expect(auth.setUpTOTP).toHaveBeenCalledTimes(1);
   });
 
-  it("submits by itself on the sixth digit, then makes TOTP the preferred method", async () => {
+  it("waits for the button after the sixth digit, then makes TOTP the preferred method", async () => {
     const { onEnrolled, user } = renderPanel();
     await screen.findByText("SECRET123");
     await enterCode(user, "123456");
+    expect(auth.verifyTOTPSetup).not.toHaveBeenCalled();
+    await user.click(screen.getByRole("button", { name: "Turn on two-step verification" }));
 
     await waitFor(() => expect(onEnrolled).toHaveBeenCalledTimes(1));
     expect(auth.verifyTOTPSetup).toHaveBeenCalledTimes(1);
@@ -40,11 +42,14 @@ describe("MfaSetupPanel", () => {
     expect(auth.updateMFAPreference).toHaveBeenCalledWith({ totp: "PREFERRED" });
   });
 
-  it("submits a pasted or autofilled code by itself", async () => {
+  it("fills every box from a pasted or autofilled code", async () => {
     const { onEnrolled, user } = renderPanel();
     await screen.findByText("SECRET123");
     await user.click(screen.getByLabelText("Digit 1 of 6"));
     await user.paste("654321");
+    expect(screen.getByLabelText("Digit 6 of 6")).toHaveValue("1");
+    expect(auth.verifyTOTPSetup).not.toHaveBeenCalled();
+    await user.click(screen.getByRole("button", { name: "Turn on two-step verification" }));
 
     await waitFor(() => expect(onEnrolled).toHaveBeenCalledTimes(1));
     expect(auth.verifyTOTPSetup).toHaveBeenCalledWith({ code: "654321" });
@@ -61,12 +66,30 @@ describe("MfaSetupPanel", () => {
     expect(auth.verifyTOTPSetup).not.toHaveBeenCalled();
   });
 
+  it("keeps focus on the button while the code is checked, and ignores a second press", async () => {
+    let finish: () => void = () => {};
+    auth.verifyTOTPSetup.mockReturnValue(new Promise<void>((resolve) => { finish = resolve; }));
+    const { onEnrolled, user } = renderPanel();
+    await screen.findByText("SECRET123");
+    await enterCode(user, "123456");
+    const button = screen.getByRole("button", { name: "Turn on two-step verification" });
+    await user.click(button);
+
+    expect(button).toHaveFocus();
+    expect(button).toHaveAttribute("aria-disabled", "true");
+    await user.click(button);
+    expect(auth.verifyTOTPSetup).toHaveBeenCalledTimes(1);
+    finish();
+    await waitFor(() => expect(onEnrolled).toHaveBeenCalledTimes(1));
+  });
+
   it("keeps the panel open with an error when the code is rejected", async () => {
     auth.verifyTOTPSetup.mockRejectedValue(new Error("CodeMismatchException"));
     vi.spyOn(console, "error").mockImplementation(() => {});
     const { onEnrolled, user } = renderPanel();
     await screen.findByText("SECRET123");
     await enterCode(user, "000000");
+    await user.click(screen.getByRole("button", { name: "Turn on two-step verification" }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent("That code was not accepted.");
     expect(onEnrolled).not.toHaveBeenCalled();

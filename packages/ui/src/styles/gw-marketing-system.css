@@ -26,79 +26,15 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 13px 28px;
-  border-radius: var(--gw-radius-pill);
-  background-color: var(--mk-green);
-  color: #f9fbff;
-  border: 1px solid var(--mk-green);
-  font-family: var(--gw-font-button);
-  font-size: 13px;
-  line-height: 22px;
-  font-weight: 600;
-  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
-  text-transform: var(--gw-button-text-transform);
-  text-decoration: none;
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
   white-space: nowrap;
 }
-
-.marketing .cta-btn:hover,
-.marketing .upload-button:hover,
-.marketing .welcome-modal-btn--primary:hover,
-.marketing .help-modal__confirm-btn:hover,
-.marketing .checklist-help-btn:hover,
-.marketing .ra-export-pdf-btn:hover:not(:disabled),
-.marketing .se-save-btn:hover,
-.marketing .se-next-btn:hover,
-.marketing .pg-upload-btn:hover,
-.marketing .pg-help-btn:hover,
-.marketing .pg-got-it-btn:hover {
-  background-color: var(--mk-green-dark);
-  border-color: var(--mk-green-dark);
-  color: #f9fbff;
-}
-
-.marketing .cta-btn:active,
-.marketing .upload-button:active,
-.marketing .welcome-modal-btn--primary:active,
-.marketing .help-modal__confirm-btn:active,
-.marketing .checklist-help-btn:active,
-.marketing .ra-export-pdf-btn:active,
-.marketing .se-save-btn:active,
-.marketing .se-next-btn:active,
-.marketing .pg-upload-btn:active,
-.marketing .pg-help-btn:active,
-.marketing .pg-got-it-btn:active {
-  transform: translateY(1px);
-}
-
-/* Disabled state for primary pill buttons */
-.marketing .ra-export-pdf-btn:disabled,
-.marketing .se-save-btn:disabled,
-.marketing .se-next-btn:disabled {
-  background-color: var(--gw-color-disabled-bg);
-  border-color: var(--gw-color-disabled-bg);
-  color: var(--gw-color-disabled-text);
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* ==========================================================================
- * Outline / secondary pill button
- * ======================================================================== */
-.marketing .welcome-modal-btn--secondary,
-.marketing .ra-edit-btn,
-.marketing .ra-back-btn,
-.marketing .se-prev-btn,
-.marketing .se-suggestion-btn,
-.marketing .se-regenerate-btn {
+.marketing .ra-edit-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   padding: 12px 26px;
-  border-radius: var(--gw-radius-pill);
+  border-radius: var(--gw-radius-button);
   background-color: transparent;
   color: var(--mk-green);
   border: 1px solid var(--mk-green);
@@ -114,74 +50,28 @@
   white-space: nowrap;
 }
 
-.marketing .welcome-modal-btn--secondary:hover,
-.marketing .ra-edit-btn:hover,
-.marketing .ra-back-btn:hover,
-.marketing .se-prev-btn:hover,
-.marketing .se-suggestion-btn:hover,
-.marketing .se-regenerate-btn:hover {
+/* ==========================================================================
+ * Outline / secondary pill button
+ * ======================================================================== */
+.marketing .welcome-modal-btn--secondary,
+.marketing .ra-back-btn,
+.marketing .se-prev-btn,
+.marketing .se-suggestion-btn,
+.marketing .se-regenerate-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+.marketing .ra-edit-btn:hover {
   background-color: var(--mk-green);
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
   border-color: var(--mk-green);
 }
 
-.marketing .welcome-modal-btn--secondary:active,
-.marketing .ra-edit-btn:active,
-.marketing .ra-back-btn:active,
-.marketing .se-prev-btn:active,
-.marketing .se-suggestion-btn:active,
-.marketing .se-regenerate-btn:active {
+.marketing .ra-edit-btn:active {
   transform: translateY(1px);
-}
-
-/* ==========================================================================
- * Pill tabs (segmented controls)
- *
- * Wraps a tab group in the pill chrome, like the login page auth-tabs.
- * Apply by adding `gw-tabs` to the parent of `.tab-button` / `.checklist-tab`.
- * Without the wrapper class, individual tabs still get pill styling.
- * ======================================================================== */
-.marketing .gw-tabs {
-  display: inline-flex;
-  gap: 0;
-  background-color: color-mix(in srgb, var(--gw-color-primary) 8%, transparent);
-  border-radius: var(--gw-radius-pill);
-  padding: 4px;
-}
-
-.marketing .tab-button,
-.marketing .checklist-tab {
-  flex: 1 1 0;
-  padding: 10px 22px;
-  border: none;
-  background: transparent;
-  color: var(--mk-green-deepest);
-  font-family: var(--gw-font-button);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: var(--gw-button-letter-spacing, 1.2px);
-  text-transform: var(--gw-button-text-transform);
-  border-radius: var(--gw-radius-pill);
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
-
-.marketing .tab-button:hover,
-.marketing .checklist-tab:hover {
-  color: var(--mk-green-dark);
-  background-color: color-mix(in srgb, var(--gw-color-primary) 12%, transparent);
-}
-
-.marketing .tab-button.active,
-.marketing .checklist-tab--active {
-  background-color: var(--mk-green);
-  color: #f9fbff;
-}
-
-.marketing .tab-button.active:hover,
-.marketing .checklist-tab--active:hover {
-  background-color: var(--mk-green-dark);
-  color: #f9fbff;
 }
 
 /* ==========================================================================
@@ -194,7 +84,7 @@
 .marketing .se-editor-card,
 .marketing .se-checklist-card {
   background-color: var(--mk-white);
-  border-radius: 16px;
+  border-radius: var(--gw-radius-container);
   box-shadow: 0 4px 16px color-mix(in srgb, var(--gw-color-primary-active) 8%, transparent);
   border: none;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
@@ -228,9 +118,7 @@
 
 /* Modal title sits on the teal header, so keep the serif treatment but white text for contrast */
 .marketing .pg-modal-title {
-  font-family: var(--gw-font-serif);
   letter-spacing: 0;
-  color: var(--gw-color-white, #ffffff);
 }
 
 /* Slightly larger size for top-level panel headings */
@@ -247,7 +135,7 @@
 .marketing .btn-primary {
   background-color: var(--mk-green);
   border-color: var(--mk-green);
-  color: #f9fbff;
+  color: var(--gw-color-text-inverse);
 }
 
 .marketing .btn-primary:hover,
@@ -255,5 +143,5 @@
 .marketing .btn-primary:active {
   background-color: var(--mk-green-dark) !important;
   border-color: var(--mk-green-dark) !important;
-  color: #f9fbff !important;
+  color: var(--gw-color-text-inverse) !important;
 }

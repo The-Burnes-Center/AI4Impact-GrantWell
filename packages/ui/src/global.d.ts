@@ -17,6 +17,7 @@ interface TurnstileRenderOptions {
   "expired-callback"?: () => void;
   "timeout-callback"?: () => void;
   theme?: "light" | "dark" | "auto";
+  size?: "normal" | "flexible" | "compact";
 }
 
 interface TurnstileApi {

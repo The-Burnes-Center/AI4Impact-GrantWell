@@ -1,4 +1,5 @@
 import * as cdk from "aws-cdk-lib";
+import { NagSuppressions } from "cdk-nag";
 import { Construct } from "constructs";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
 import * as tasks from "aws-cdk-lib/aws-stepfunctions-tasks";
@@ -9,6 +10,7 @@ export interface NofoProcessingStateMachineProps {
   extractTextFunction: lambda.Function;
   extractAndAnalyzeFunction: lambda.Function;
   synthesizeFunction: lambda.Function;
+  verifySummaryFunction: lambda.Function;
   validateFunction: lambda.Function;
   publishFunction: lambda.Function;
   quarantineFunction: lambda.Function;
@@ -36,7 +38,7 @@ export class NofoProcessingStateMachine extends Construct {
       maxAttempts: 4,
       backoffRate: 2,
     });
-    // Must precede States.TaskFailed: a rerun would wait just as long and push past the 30-minute limit.
+    // Must precede States.TaskFailed: a rerun would wait just as long and push past the 45-minute limit.
     extractText.addRetry({
       errors: ["TextractTimeoutError"],
       maxAttempts: 0,
@@ -88,6 +90,20 @@ export class NofoProcessingStateMachine extends Construct {
       retryOnServiceExceptions: true,
     });
     synthesize.addRetry({
+      errors: ["ThrottlingException", "TooManyRequestsException"],
+      interval: cdk.Duration.seconds(20),
+      maxAttempts: 5,
+      backoffRate: 2,
+      jitterStrategy: sfn.JitterType.FULL,
+    });
+
+    // Step 3b: Check every requirement item against the grant; one rewrite for items that fail
+    const verifySummary = new tasks.LambdaInvoke(this, "VerifySummary", {
+      lambdaFunction: props.verifySummaryFunction,
+      outputPath: "$.Payload",
+      retryOnServiceExceptions: true,
+    });
+    verifySummary.addRetry({
       errors: ["ThrottlingException", "TooManyRequestsException"],
       interval: cdk.Duration.seconds(20),
       maxAttempts: 5,
@@ -161,14 +177,15 @@ export class NofoProcessingStateMachine extends Construct {
 
     extractText.next(afterExtractText);
 
-    // Main chain: extract -> synthesize -> validate -> evaluate
-    extractAndAnalyze.next(synthesize).next(validate).next(evaluateValidation);
+    // Main chain: extract -> synthesize -> verify -> validate -> evaluate
+    extractAndAnalyze.next(synthesize).next(verifySummary).next(validate).next(evaluateValidation);
 
     const definition = extractText;
 
     extractText.addCatch(handleExtractTextError, { resultPath: "$.error" });
     extractAndAnalyze.addCatch(handleError, { resultPath: "$.error" });
     synthesize.addCatch(handleError, { resultPath: "$.error" });
+    verifySummary.addCatch(handleError, { resultPath: "$.error" });
     validate.addCatch(handleError, { resultPath: "$.error" });
 
     const logGroup = new logs.LogGroup(this, "NofoProcessingLogs", {
@@ -179,7 +196,7 @@ export class NofoProcessingStateMachine extends Construct {
     this.stateMachine = new sfn.StateMachine(this, "NofoProcessingSFN", {
       definitionBody: sfn.DefinitionBody.fromChainable(definition),
       stateMachineType: sfn.StateMachineType.STANDARD,
-      timeout: cdk.Duration.minutes(30),
+      timeout: cdk.Duration.minutes(45),
       logs: {
         destination: logGroup,
         level: sfn.LogLevel.ERROR,
@@ -187,5 +204,8 @@ export class NofoProcessingStateMachine extends Construct {
       },
       tracingEnabled: true,
     });
+    NagSuppressions.addResourceSuppressions(this.stateMachine, [
+      { id: "AwsSolutions-SF1", reason: "Errors are logged with their execution data; logging every step would copy grant and draft text (user content) into logs." },
+    ]);
   }
 }

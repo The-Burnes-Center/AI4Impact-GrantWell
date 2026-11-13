@@ -44,6 +44,10 @@ export const handler = async (event) => {
     if (sourceRow.scope && sourceRow.scope !== "federal") {
       return jsonResponse(400, { message: "Only federal grants can be promoted to a state copy." });
     }
+    // The copy is written active, so a grant still held for review would go live through it.
+    if (sourceRow.status !== "active" && sourceRow.status !== "archived") {
+      return jsonResponse(409, { message: "Only a published grant can be promoted to a state copy." });
+    }
 
     // Suffix the copy so it's distinguishable and won't collide with the federal original.
     const newName = `${nofoName} (${stateNameFromCode(targetState)})`;

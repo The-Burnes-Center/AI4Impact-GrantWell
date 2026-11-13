@@ -69,18 +69,14 @@ export default function SessionPage() {
     navigate(`/chat/${sessionId}${queryParams}`);
   };
 
-  const handleHomeClick = () => {
-    navigate("/");
-  };
-
   return (
     <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
       <UnifiedNavigation />
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <Breadcrumbs
           items={[
-            { label: "Home", onClick: handleHomeClick },
-            { label: "My Chats" },
+            { label: "Home", href: "/home" },
+            { label: "My chats" },
           ]}
         />
 

@@ -46,7 +46,7 @@ export const colors = {
 
   // Disabled state
   disabledBg: "#F0F0F0",
-  disabledText: "#707070",
+  disabledText: "#666666",
 
   // Overlay
   overlay: "rgba(0, 0, 0, 0.6)",
@@ -118,54 +118,4 @@ export const zIndex = {
 };
 
 // Button base styles
-export const buttonStyles = {
-  base: {
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: spacing.sm,
-    fontFamily: typography.fontFamily,
-    fontWeight: typography.fontWeight.medium,
-    cursor: "pointer",
-    transition: transitions.normal,
-    border: "none",
-  } as React.CSSProperties,
 
-  sizes: {
-    sm: {
-      padding: `${spacing.sm} ${spacing.md}`,
-      fontSize: typography.fontSize.sm,
-      borderRadius: borderRadius.md,
-    },
-    md: {
-      padding: `${spacing.md} ${spacing.xl}`,
-      fontSize: typography.fontSize.base,
-      borderRadius: borderRadius.md,
-    },
-    lg: {
-      padding: `${spacing.lg} ${spacing["2xl"]}`,
-      fontSize: typography.fontSize.lg,
-      borderRadius: borderRadius.lg,
-    },
-  },
-
-  variants: {
-    primary: {
-      backgroundColor: colors.primary,
-      color: colors.white,
-    },
-    secondary: {
-      backgroundColor: colors.white,
-      color: colors.text,
-      border: `1px solid ${colors.border}`,
-    },
-    danger: {
-      backgroundColor: colors.danger,
-      color: colors.white,
-    },
-    ghost: {
-      backgroundColor: "transparent",
-      color: colors.primary,
-    },
-  },
-};

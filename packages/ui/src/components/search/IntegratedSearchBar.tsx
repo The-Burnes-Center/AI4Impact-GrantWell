@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useCallback, useEffect, useId } from "react";
 
 import { IntegratedSearchBarProps } from "./types";
 import { SearchInput } from "./components/SearchInput";
@@ -28,13 +28,13 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   onClearSearch,
   onSearchPendingChange,
   searchPlaceholder,
-  searchAriaLabel,
 }) => {
   const [internalSearchTerm, setInternalSearchTerm] = useState("");
   const [tip] = useState(() => SEARCH_TIPS[Math.floor(Math.random() * SEARCH_TIPS.length)]);
   const searchTerm = externalSearchTerm !== undefined ? externalSearchTerm : internalSearchTerm;
   const setSearchTerm = onSearchTermChange || setInternalSearchTerm;
 
+  const tipId = useId();
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -140,15 +140,15 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
         isLoading={isLoading}
         isSearching={isSearching}
         placeholder={searchPlaceholder}
-        ariaLabel={searchAriaLabel}
         disabled={isLoading}
         onChange={handleInputChange}
         onFocus={() => {}}
         onKeyDown={handleKeyDown}
         onClear={handleClear}
+        describedBy={showSuggestion ? tipId : undefined}
       />
       {showSuggestion && (
-        <p className="search-tip">
+        <p id={tipId} className="search-tip">
           Tip: Try a full sentence for more precise results, e.g.,{" "}
           <em>&ldquo;{tip}&rdquo;</em>
         </p>

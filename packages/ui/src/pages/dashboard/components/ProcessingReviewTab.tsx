@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { LuArrowDown, LuArrowUp, LuArchiveX, LuChevronDown, LuFileX, LuRefreshCw, LuUpload } from "react-icons/lu";
 import { ApiClient } from "../../../common/api-client/api-client";
 import type {
@@ -9,6 +9,7 @@ import ProcessingMetrics from "./ProcessingMetrics";
 import ReviewExpandedRow from "./ReviewExpandedRow";
 import TableScrollRegion from "../../../components/ui/TableScrollRegion";
 import { Modal } from "../../../components/common/Modal";
+import { sectionLabel } from "./section-labels";
 
 interface ProcessingReviewTabProps {
   apiClient: ApiClient;
@@ -20,8 +21,8 @@ interface ProcessingReviewTabProps {
 type StatusFilter = "all" | "pending_review" | "approved" | "rejected" | "failed" | "needs_reupload" | "superseded";
 
 const STATUS_LABELS: Record<string, string> = {
-  all: "All Statuses",
-  pending_review: "Pending Review",
+  all: "All statuses",
+  pending_review: "Pending review",
   needs_reupload: "Needs Re-upload",
   approved: "Approved",
   rejected: "Rejected",
@@ -44,6 +45,7 @@ const SOURCE_LABELS: Record<string, string> = {
   "scraper-dlq": "Scraper failure",
   duplicate: "Duplicate detected",
   quality: "Quality check",
+  verification: "Live grant check",
 };
 
 const REPROCESSABLE_STATUSES = new Set(["failed", "pending_review", "needs_reupload"]);
@@ -77,6 +79,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
   const [reviews, setReviews] = useState<ReviewItem[]>([]);
   const [metrics, setMetrics] = useState<MetricsType | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loaded, setLoaded] = useState(false);
   const [metricsLoading, setMetricsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("pending_review");
   const [expandedNofo, setExpandedNofo] = useState<string | null>(null);
@@ -86,6 +89,14 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
   const [expiredOpenCount, setExpiredOpenCount] = useState(0);
   const [confirmCloseExpired, setConfirmCloseExpired] = useState(false);
   const [closingExpired, setClosingExpired] = useState(false);
+  const [resultsAnnouncement, setResultsAnnouncement] = useState("");
+  const hasLoaded = useRef(false);
+
+  const tableRef = useRef<HTMLDivElement>(null);
+  const selectAllRef = useRef<HTMLInputElement | null>(null);
+  const toggleRefs = useRef(new Map<string, HTMLButtonElement>());
+  // A resolved review can leave the list on reload; then focus falls back to the table.
+  const refocusAfterReload = useRef(false);
 
   const fetchData = useCallback(async () => {
     try {
@@ -94,10 +105,16 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
       const list = await apiClient.landingPage.getProcessingReviews(statusFilter);
       setReviews(list.reviews);
       setExpiredOpenCount(list.expiredOpenCount);
+      if (hasLoaded.current) {
+        const n = list.reviews.length;
+        setResultsAnnouncement(`${n} review${n === 1 ? "" : "s"} shown`);
+      }
     } catch {
       addNotification("error", "Failed to load processing reviews");
     } finally {
       setLoading(false);
+      setLoaded(true);
+      hasLoaded.current = true;
     }
   }, [apiClient, statusFilter, addNotification]);
 
@@ -132,7 +149,26 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
     setExpandedNofo(focusNofo);
   }, [focusNofo]);
 
-  const handleActionComplete = () => {
+  useEffect(() => {
+    if (!refocusAfterReload.current || loading) return;
+    refocusAfterReload.current = false;
+    const active = document.activeElement as HTMLElement | null;
+    if (!active || active === document.body || (active as HTMLButtonElement).disabled) tableRef.current?.focus();
+  }, [loading, reviews]);
+
+  const focusSelectAll = () => {
+    const selectAll = selectAllRef.current;
+    (selectAll && !selectAll.disabled ? selectAll : tableRef.current)?.focus();
+  };
+
+  const collapse = (nofoName: string) => {
+    toggleRefs.current.get(nofoName)?.focus();
+    setExpandedNofo(null);
+  };
+
+  const handleActionComplete = (nofoName?: string) => {
+    if (nofoName) toggleRefs.current.get(nofoName)?.focus();
+    refocusAfterReload.current = true;
     setExpandedNofo(null);
     setSelected(new Set());
     fetchData();
@@ -210,6 +246,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
     }
 
     setBulkAction(null);
+    focusSelectAll();
     handleActionComplete();
   }, [selectedReviews, apiClient, addNotification]);
 
@@ -239,6 +276,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
     }
 
     setBulkAction(null);
+    focusSelectAll();
     handleActionComplete();
   }, [selectedReviews, apiClient, addNotification]);
 
@@ -247,10 +285,18 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
   };
 
   const getReasonSummary = (review: ReviewItem) => {
+    if (review.unverifiedCount) {
+      return (
+        <span className="review-issue-count review-issue-count--critical">
+          Not confirmed: {review.unverifiedCount} {review.unverifiedCount === 1 ? "requirement" : "requirements"}
+        </span>
+      );
+    }
+
     if (review.missingSections && review.missingSections.length > 0) {
       return (
         <span className="review-issue-count review-issue-count--warning">
-          Missing: {review.missingSections.join(", ")}
+          Missing: {review.missingSections.map(sectionLabel).join(", ")}
         </span>
       );
     }
@@ -289,14 +335,14 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
             htmlFor="review-status-filter"
             className="review-filter-label"
           >
-            Filter:
+            Filter by status
           </label>
           <div className="select-wrapper" style={{ minWidth: "160px" }}>
             <select
               id="review-status-filter"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-              className="form-input review-status-filter"
+              className="gw-input form-input review-status-filter"
             >
               {Object.entries(STATUS_LABELS).map(([value, label]) => (
                 <option key={value} value={value}>{label}</option>
@@ -306,7 +352,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
         </div>
         <button
           type="button"
-          className="review-btn review-btn--close-expired"
+          className="gw-btn gw-btn--secondary review-btn review-btn--close-expired"
           onClick={() => setConfirmCloseExpired(true)}
           disabled={expiredOpenCount === 0 || closingExpired}
           aria-describedby="close-expired-hint"
@@ -337,17 +383,17 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
           <div className="modal-actions">
             <button
               type="button"
-              className="modal-button secondary"
-              onClick={() => setConfirmCloseExpired(false)}
-              disabled={closingExpired}
+              className="gw-btn gw-btn--secondary modal-button secondary"
+              onClick={() => !closingExpired && setConfirmCloseExpired(false)}
+              aria-disabled={closingExpired || undefined}
             >
               Cancel
             </button>
             <button
               type="button"
-              className="modal-button primary"
-              onClick={() => void handleCloseExpired()}
-              disabled={closingExpired}
+              className="gw-btn gw-btn--primary modal-button primary"
+              onClick={() => !closingExpired && void handleCloseExpired()}
+              aria-disabled={closingExpired || undefined}
             >
               {closingExpired ? "Closing..." : `Close ${expiredOpenCount} review${expiredOpenCount === 1 ? "" : "s"}`}
             </button>
@@ -355,7 +401,15 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
         </div>
       </Modal>
 
-      {/* Bulk action bar */}
+      <div role="status" className="visually-hidden">
+        {bulkAction === "reprocess"
+          ? `Reprocessing ${selected.size} grant${selected.size === 1 ? "" : "s"}`
+          : bulkAction === "needs_reupload"
+            ? `Marking ${selected.size} grant${selected.size === 1 ? "" : "s"} as needs re-upload`
+            : selected.size > 0
+              ? `${selected.size} selected`
+              : ""}
+      </div>
       {selected.size > 0 && (
         <div className="review-bulk-bar">
           <span className="review-bulk-bar__count">
@@ -363,26 +417,29 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
           </span>
           <div className="review-bulk-bar__actions">
             <button
-              className="review-btn review-btn--bulk-reprocess"
-              onClick={() => void handleBulkReprocess()}
-              disabled={!canReprocess || bulkAction !== null}
-              aria-label={`Reprocess Selected — ${selected.size} grant${selected.size === 1 ? "" : "s"}`}
+              className="gw-btn gw-btn--primary review-btn review-btn--bulk-reprocess"
+              onClick={() => canReprocess && bulkAction === null && void handleBulkReprocess()}
+              aria-disabled={!canReprocess || bulkAction !== null || undefined}
+              aria-label={`${bulkAction === "reprocess" ? "Reprocessing..." : "Reprocess selected"} — ${selected.size} grant${selected.size === 1 ? "" : "s"}`}
             >
-              <LuRefreshCw size={14} className={bulkAction === "reprocess" ? "refresh-icon" : ""} />
-              <span>{bulkAction === "reprocess" ? "Reprocessing..." : "Reprocess Selected"}</span>
+              <LuRefreshCw size={14} className={bulkAction === "reprocess" ? "refresh-icon" : ""} aria-hidden="true" />
+              <span>{bulkAction === "reprocess" ? "Reprocessing..." : "Reprocess selected"}</span>
             </button>
             <button
-              className="review-btn review-btn--needs-reupload"
-              onClick={() => void handleBulkNeedsReupload()}
-              disabled={!canMarkReupload || bulkAction !== null}
-              aria-label={`Mark ${selected.size} selected grants as needs re-upload`}
+              className="gw-btn gw-btn--secondary review-btn review-btn--needs-reupload"
+              onClick={() => canMarkReupload && bulkAction === null && void handleBulkNeedsReupload()}
+              aria-disabled={!canMarkReupload || bulkAction !== null || undefined}
+              aria-label={`${bulkAction === "needs_reupload" ? "Marking..." : "Needs Re-upload"} — mark ${selected.size} selected grant${selected.size === 1 ? "" : "s"} as needs re-upload`}
             >
-              <LuUpload size={14} />
+              <LuUpload size={14} aria-hidden="true" />
               <span>{bulkAction === "needs_reupload" ? "Marking..." : "Needs Re-upload"}</span>
             </button>
             <button
               className="review-bulk-bar__clear"
-              onClick={() => setSelected(new Set())}
+              onClick={() => {
+                focusSelectAll();
+                setSelected(new Set());
+              }}
             >
               Clear selection
             </button>
@@ -390,21 +447,28 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
         </div>
       )}
 
-      <TableScrollRegion label="Processing reviews table" minWidth={960}>
+      <TableScrollRegion label="Processing reviews table" minWidth={960} className="table-scroll review-table-scroll">
       <div className="table-container">
-        <div role="table" aria-label="Processing reviews">
+        <div role="table" aria-label="Processing reviews" ref={tableRef} tabIndex={-1} aria-busy={loading}>
           <div className="table-header review-table-grid-select" role="rowgroup">
             <div role="row" style={{ display: "contents" }}>
-              <div className="header-cell review-checkbox-cell" role="columnheader">
-                <input
-                  type="checkbox"
-                  checked={reviews.length > 0 && selected.size === reviews.length}
-                  onChange={toggleSelectAll}
-                  aria-label="Select all reviews"
-                  disabled={reviews.length === 0}
-                />
+              <div className="header-cell review-checkbox-cell" role="cell">
+                <label className="gw-select-all">
+                  <input
+                    type="checkbox"
+                    ref={(el) => {
+                      selectAllRef.current = el;
+                      if (el) el.indeterminate = selected.size > 0 && selected.size < reviews.length;
+                    }}
+                    checked={reviews.length > 0 && selected.size === reviews.length}
+                    onChange={toggleSelectAll}
+                    aria-label="Select all reviews"
+                    disabled={reviews.length === 0}
+                  />
+                  <span aria-hidden="true">Select all</span>
+                </label>
               </div>
-              <div className="header-cell" role="columnheader">Grant Name</div>
+              <div className="header-cell" role="columnheader">Grant name</div>
               <div className="header-cell" role="columnheader">Reason</div>
               <div className="header-cell" role="columnheader">Status</div>
               <div
@@ -431,16 +495,18 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
               <div className="header-cell" role="columnheader">Details</div>
             </div>
           </div>
-          {!loading && (
-            <div className="table-body" role={reviews.length === 0 ? undefined : "rowgroup"}>
+          {loaded && (
+            <div className="table-body" role="rowgroup">
               {reviews.length === 0 ? (
-                <div className="no-data">
-                  <LuFileX size={24} className="no-data-icon" />
-                  <p>
-                    {statusFilter === "pending_review"
-                      ? "No grants pending review"
-                      : `No reviews with status "${STATUS_LABELS[statusFilter]}"`}
-                  </p>
+                <div role="row">
+                  <div className="no-data" role="cell" aria-colspan={TABLE_COLUMN_COUNT}>
+                    <LuFileX size={24} className="no-data-icon" aria-hidden="true" />
+                    <p>
+                      {statusFilter === "pending_review"
+                        ? "No grants pending review"
+                        : `No reviews with status "${STATUS_LABELS[statusFilter]}"`}
+                    </p>
+                  </div>
                 </div>
               ) : (
                 sortedReviews.map((review) => {
@@ -466,7 +532,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                         </div>
                         <div className="row-cell" role="cell">{getReasonSummary(review)}</div>
                         <div className="row-cell" role="cell">
-                          <span className={`review-status-badge ${STATUS_CLASS_MAP[review.status] || "review-status-badge--pending"}`}>
+                          <span className={`gw-tag review-status-badge ${STATUS_CLASS_MAP[review.status] || "review-status-badge--pending"}`}>
                             {STATUS_LABELS[review.status] || review.status}
                           </span>
                         </div>
@@ -474,7 +540,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                           <span className="review-date">
                             {review.deadline ? formatDeadline(review.deadline) : "No deadline"}
                           </span>
-                          {badge && <span className={`review-deadline-badge ${badge.className}`}>{badge.label}</span>}
+                          {badge && <span className={`gw-tag review-deadline-badge ${badge.className}`}>{badge.label}</span>}
                         </div>
                         <div className="row-cell" role="cell">
                           <span className="review-date">
@@ -484,6 +550,10 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                         <div className="row-cell actions" role="cell">
                           <button
                             type="button"
+                            ref={(el) => {
+                              if (el) toggleRefs.current.set(review.nofo_name, el);
+                              else toggleRefs.current.delete(review.nofo_name);
+                            }}
                             className="review-expand-toggle"
                             onClick={() => toggleExpand(review.nofo_name)}
                             aria-expanded={expandedNofo === review.nofo_name}
@@ -504,9 +574,9 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                         <ReviewExpandedRow
                           review={review}
                           apiClient={apiClient}
-                          onActionComplete={handleActionComplete}
+                          onActionComplete={() => handleActionComplete(review.nofo_name)}
                           addNotification={addNotification}
-                          onCollapse={() => setExpandedNofo(null)}
+                          onCollapse={() => collapse(review.nofo_name)}
                           colSpan={TABLE_COLUMN_COUNT}
                         />
                       )}
@@ -518,10 +588,13 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
           )}
         </div>
         {loading && (
-          <div className="review-loading" aria-busy="true">
-            <span role="status" aria-live="polite">Loading reviews...</span>
+          <div className="review-loading" aria-hidden="true">
+            Loading reviews...
           </div>
         )}
+        <div role="status" className="visually-hidden">
+          {loading ? "Loading reviews" : resultsAnnouncement}
+        </div>
       </div>
       </TableScrollRegion>
     </div>

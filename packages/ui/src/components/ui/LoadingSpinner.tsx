@@ -16,6 +16,7 @@
  */
 
 import React from "react";
+import { LiveStatus } from "../common/LiveStatus";
 import { colors } from "./styles";
 
 export type SpinnerSize = "sm" | "md" | "lg";
@@ -80,22 +81,15 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
           to { transform: rotate(360deg); }
         }
       `}</style>
-      <div style={containerStyle} role="status" aria-live="polite">
+      <div style={containerStyle}>
         <div style={spinnerStyle} aria-hidden="true" />
-        {/* Single copy of the message: visible or screen-reader-only, never both. */}
-        <span
-          className={showMessage ? undefined : "visually-hidden"}
-          style={
-            showMessage
-              ? {
-                  fontSize: size === "sm" ? "12px" : "14px",
-                  color: colors.textSecondary,
-                }
-              : undefined
-          }
-        >
-          {message}
-        </span>
+        {/* The visible copy is hidden from screen readers; the status below reads it once, after it mounts. */}
+        {showMessage && (
+          <span aria-hidden="true" style={{ fontSize: size === "sm" ? "12px" : "14px", color: colors.textSecondary }}>
+            {message}
+          </span>
+        )}
+        <LiveStatus className="visually-hidden">{message}</LiveStatus>
       </div>
     </>
   );

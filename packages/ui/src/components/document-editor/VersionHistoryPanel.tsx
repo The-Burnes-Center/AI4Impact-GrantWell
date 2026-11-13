@@ -8,6 +8,7 @@ import { LuTag, LuX } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useFocusTrap } from "../../hooks/use-focus-trap";
 import ConfirmationModal from "../common/ConfirmationModal";
+import { LiveStatus } from "../common/LiveStatus";
 import VersionDiff from "./VersionDiff";
 import type { DraftVersionDetail, DraftVersionMeta } from "../../common/api-client/drafts-client";
 import {
@@ -91,6 +92,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
   const [restoreScope, setRestoreScope] = useState<"all" | "section" | null>(null);
   const [restoring, setRestoring] = useState(false);
   const [labelDraft, setLabelDraft] = useState("");
+  const [notice, setNotice] = useState("");
   const rowRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   const currentTotal = Object.values(currentSections || {}).reduce(
@@ -116,6 +118,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
     setSelected(null);
     setScopeSection(null);
     setFocusedIndex(0);
+    setNotice("");
     loadVersions();
   }, [isOpen, loadVersions]);
 
@@ -170,6 +173,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
   const handleRestore = async () => {
     if (!selected || !restoreScope) return;
     setRestoring(true);
+    setNotice("");
     try {
       await apiClient.drafts.restoreVersion({
         sessionId,
@@ -179,6 +183,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
       await onRestored();
       await loadVersions();
       setSelected(null);
+      setNotice(restoreScope === "section" ? `Restored "${scopeName}".` : "Application restored.");
     } catch (err) {
       console.error("Restore failed:", err);
       // The server explains refusals precisely (empty version, missing section);
@@ -192,6 +197,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
 
   const handleLabel = async () => {
     if (!selected) return;
+    setNotice("");
     try {
       await apiClient.drafts.labelVersion({
         sessionId,
@@ -200,6 +206,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
       });
       setSelected({ ...selected, label: labelDraft.trim() || undefined });
       await loadVersions();
+      setNotice(labelDraft.trim() ? "Label saved." : "Label removed.");
     } catch (err) {
       console.error("Could not label that version:", err);
       setError("The label could not be saved.");
@@ -241,10 +248,10 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
 
         <div className="vh-body">
           {error && <p role="alert" className="vh-error">{error}</p>}
+          <p role="status" className="visually-hidden">{notice}</p>
 
-          {loading ? (
-            <p className="vh-status" role="status">Loading versions...</p>
-          ) : versions.length === 0 ? (
+          <LiveStatus>{loading && <p className="vh-status">Loading versions...</p>}</LiveStatus>
+          {loading ? null : versions.length === 0 ? (
             <p className="vh-status">
               No earlier versions yet. One is kept automatically whenever your application changes.
             </p>
@@ -265,14 +272,15 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
                       onFocus={() => setFocusedIndex(index)}
                       onKeyDown={(e) => handleRowKeyDown(e, index)}
                       onClick={() => openVersion(version)}
-                      disabled={version.oversize}
+                      // Not disabled: a disabled row could hold the roving tab stop and trap the arrow keys.
+                      aria-disabled={version.oversize || undefined}
                       aria-current={selected?.rev === version.rev}
                       className={`vh-row${selected?.rev === version.rev ? " vh-row--active" : ""}`}
                     >
                       <span className="vh-row-time">
                         {DateTime.fromISO(version.created_at).toRelative() || version.created_at}
                       </span>
-                      <span className={`vh-badge vh-badge--${badgeVariant(badgeLabel)}`}>
+                      <span className={`gw-tag vh-badge vh-badge--${badgeVariant(badgeLabel)}`}>
                         {badgeLabel}
                       </span>
                       {version.label && (
@@ -292,9 +300,9 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
                             ? "No text in this version"
                             : delta === 0
                               ? "Same length as now"
-                              : delta > 0
-                                ? `${delta} words more than now`
-                                : `${Math.abs(delta)} words fewer than now`}
+                              : `${Math.abs(delta)} ${Math.abs(delta) === 1 ? "word" : "words"} ${
+                                  delta > 0 ? "more" : "fewer"
+                                } than now`}
                       </span>
                     </button>
                   </li>
@@ -303,7 +311,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
             </ul>
           )}
 
-          {detailLoading && <p className="vh-status" role="status">Loading that version...</p>}
+          <LiveStatus>{detailLoading && <p className="vh-status">Loading that version...</p>}</LiveStatus>
 
           {selected && !detailLoading && (
             <div className="vh-detail">
@@ -314,7 +322,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
               {restorableSections.length > 1 && (
                 <div className="vh-scope-row">
                   <label htmlFor="vh-scope-select">Section to compare and restore</label>
-                  <select
+                  <select className="gw-input"
                     id="vh-scope-select"
                     value={scopeSection ?? ""}
                     onChange={(e) => setScopeSection(e.target.value || null)}
@@ -334,7 +342,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
 
               <div className="vh-label-row">
                 <label htmlFor="vh-label-input">Label this version</label>
-                <input
+                <input className="gw-input"
                   id="vh-label-input"
                   type="text"
                   maxLength={120}
@@ -342,7 +350,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
                   onChange={(e) => setLabelDraft(e.target.value)}
                   placeholder="e.g. Before budget rewrite"
                 />
-                <button type="button" className="vh-btn" onClick={handleLabel}>Save label</button>
+                <button type="button" className="gw-btn gw-btn--secondary vh-btn" onClick={handleLabel}>Save label</button>
               </div>
 
               {isCurrent && (
@@ -374,7 +382,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
               {scopeSection && (
                 <button
                   type="button"
-                  className="vh-btn vh-btn--primary"
+                  className="gw-btn gw-btn--primary vh-btn vh-btn--primary"
                   onClick={() => setRestoreScope("section")}
                   disabled={!canRestoreSection}
                 >
@@ -383,7 +391,7 @@ const VersionHistoryPanel: React.FC<VersionHistoryPanelProps> = ({
               )}
               <button
                 type="button"
-                className="vh-btn"
+                className="gw-btn gw-btn--secondary vh-btn"
                 onClick={() => setRestoreScope("all")}
                 disabled={wouldEraseDraft}
               >

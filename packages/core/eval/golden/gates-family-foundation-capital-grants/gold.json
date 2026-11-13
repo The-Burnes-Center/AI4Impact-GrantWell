@@ -5,6 +5,15 @@
   "deadlines": [
     {
       "kind": "application",
+      "label": "Rolling: capital grant applications accepted at any time; reviewed twice a year",
+      "date": null,
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "We accept capital grant applications at any time throughout the year; however, funding decisions are made at regular meetings of the Gates Family Foundation board of trustees."
+    },
+    {
+      "kind": "other",
       "label": "Capital grant application deadline (for a mid-June decision); moves to next business day if on a weekend or holiday",
       "date": "2027-03-15",
       "time": "17:00",
@@ -13,7 +22,7 @@
       "quote": "Application deadline: March 15, 2027, 5:00 p.m. (annual deadlines March 15 and September 1; applications accepted any time)"
     },
     {
-      "kind": "application",
+      "kind": "other",
       "label": "Annual September 1 deadline at 5:00 p.m. (for a mid-December decision); year not stated",
       "date": null,
       "time": "17:00",

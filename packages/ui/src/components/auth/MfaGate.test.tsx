@@ -2,7 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { auth, mfaEnrolled } from "../../test/amplify";
-import { withMfaDeadline } from "../../test/instance";
+import { instance, withMfaDeadline } from "../../test/instance";
 import MfaGate from "./MfaGate";
 
 const PAST = "2026-11-02T00:00:00-05:00";
@@ -27,6 +27,7 @@ describe("MfaGate", () => {
     expect(screen.queryByText("App content")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Not now" })).not.toBeInTheDocument();
     expect(screen.getByText(/Since November 2, 2026/)).toBeInTheDocument();
+    await waitFor(() => expect(document.title).toBe("Set up two-step verification – GrantWell"));
 
     await userEvent.keyboard("{Escape}");
     expect(gate()).toBeInTheDocument();
@@ -45,9 +46,25 @@ describe("MfaGate", () => {
     await screen.findByText("SECRET123");
     await user.click(screen.getByLabelText("Digit 1 of 6"));
     await user.keyboard("123456");
+    await user.click(screen.getByRole("button", { name: "Turn on two-step verification" }));
 
     expect(await screen.findByText("App content")).toBeInTheDocument();
     expect(gate()).not.toBeInTheDocument();
+  });
+
+  it("puts focus back on Set it up after Back", async () => {
+    vi.useFakeTimers({ toFake: ["Date"], now: Date.parse("2026-11-03T12:00:00Z") });
+    withMfaDeadline(PAST);
+    const user = userEvent.setup();
+    renderGate();
+
+    const setItUp = await screen.findByRole("button", { name: "Set it up" });
+    await waitFor(() => expect(setItUp).toHaveFocus());
+    await user.click(setItUp);
+    await screen.findByText("SECRET123");
+    await user.click(screen.getByRole("button", { name: "Back" }));
+
+    expect(screen.getByRole("button", { name: "Set it up" })).toHaveFocus();
   });
 
   it("never blocks an enrolled user", async () => {
@@ -58,6 +75,16 @@ describe("MfaGate", () => {
     await waitFor(() => expect(auth.fetchMFAPreference).toHaveBeenCalled());
     expect(screen.getByText("App content")).toBeInTheDocument();
     expect(gate()).not.toBeInTheDocument();
+  });
+
+  it("blocks an unenrolled user on a pool that requires MFA without a deadline", async () => {
+    instance.MFA_REQUIRED = true;
+    renderGate();
+
+    expect(await screen.findByRole("dialog", { name: "Set up two-step verification to continue" })).toBeInTheDocument();
+    expect(screen.queryByText("App content")).not.toBeInTheDocument();
+    expect(screen.getByText(/Two-step verification is required on GrantWell/)).toBeInTheDocument();
+    expect(screen.queryByText(/Since|deadline/)).not.toBeInTheDocument();
   });
 
   it("does nothing before the deadline or without one", () => {

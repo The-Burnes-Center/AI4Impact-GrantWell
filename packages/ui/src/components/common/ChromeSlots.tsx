@@ -8,13 +8,17 @@ import { LandingFooter } from "../../pages/landing/chrome";
 import { useNavigationMenuButton } from "../navigation/navigation-context";
 import { SIDEBAR_ID } from "../navigation/UnifiedNavigation";
 import { GovBanner } from "./GovIdentity";
+import { FullFooter } from "./FullFooter";
+import { useBranding } from "../../common/branding";
 
 export function SiteBanner() {
   return CHROME.Banner ? <CHROME.Banner /> : <GovBanner />;
 }
 
 export function SiteFooter({ signedIn }: { signedIn: boolean }) {
-  return CHROME.Footer ? <CHROME.Footer signedIn={signedIn} /> : <LandingFooter />;
+  const { footer } = useBranding();
+  if (CHROME.Footer) return <CHROME.Footer signedIn={signedIn} />;
+  return footer.layout === "full" ? <FullFooter /> : <LandingFooter />;
 }
 
 export function PublicSiteHeader() {
@@ -43,7 +47,7 @@ export function AppSiteHeader() {
 
   if (!CHROME.Header) return null;
   const links: ChromeLink[] = [
-    ...(isAdmin ? [{ label: "Admin Dashboard", href: "/admin" }] : []),
+    ...(isAdmin ? [{ label: "Admin dashboard", href: "/admin" }] : []),
     { label: "Profile", href: "/profile" },
   ];
   const handleSignOut = async () => {

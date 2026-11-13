@@ -38,6 +38,7 @@ class DraftOperationRequest(BaseModel):
     questionnaire: Optional[Dict[str, Any]] = Field(None, description="Questionnaire responses")
     additional_info: Optional[str] = Field(None, description="Free-text extra context supplied by the applicant")
     uploaded_files: Optional[List[Dict[str, Any]]] = Field(None, description="Metadata for supporting documents")
+    document_keys: Optional[List[str]] = Field(None, max_length=100, description="Library document keys the AI reads for this application")
     last_modified: Optional[str] = Field(None, description="Last modified timestamp")
     status: Optional[Literal[
         'project_basics',
@@ -162,10 +163,13 @@ class SessionOperationRequest(BaseModel):
         'list_sessions_by_user_id',
         'list_all_sessions_by_user_id',
         'delete_session',
-        'delete_user_sessions'
+        'delete_user_sessions',
+        'get_document_keys',
+        'set_document_keys'
     ] = Field(..., description="The operation to perform")
     user_id: str = Field(..., min_length=1, description="User identifier")
     session_id: Optional[str] = Field(None, description="Session identifier")
+    document_keys: Optional[List[str]] = Field(None, max_length=100, description="Library document keys the AI reads in this chat")
     chat_history: Optional[List[Dict[str, Any]]] = Field(None, description="Chat history")
     new_chat_entry: Optional[List[Dict[str, Any]]] = Field(None, description="New chat entry to add")
     title: Optional[str] = Field(None, description="Session title")
@@ -175,12 +179,15 @@ class SessionOperationRequest(BaseModel):
 
     SESSION_ID_OPERATIONS: ClassVar[frozenset] = frozenset({
         'add_session', 'get_session', 'update_session', 'delete_session',
+        'get_document_keys', 'set_document_keys',
     })
 
     @model_validator(mode='after')
     def validate_required_fields_for_operation(self):
         if self.operation in self.SESSION_ID_OPERATIONS and not self.session_id:
             raise ValueError(f'session_id is required for {self.operation} operation')
+        if self.operation == 'set_document_keys' and self.document_keys is None:
+            raise ValueError('document_keys is required for set_document_keys operation')
         return self
 
 

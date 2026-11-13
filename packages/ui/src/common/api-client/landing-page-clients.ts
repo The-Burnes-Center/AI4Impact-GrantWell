@@ -3,6 +3,7 @@ import { AppConfig } from "../types/app";
 import type { ProcessingReviewList, ReviewDetail, ProcessingMetrics } from "../types/processing-review";
 import type { CustomQuestion } from "../types/nofo";
 import { apiFetch } from "../session-ended";
+import { grantInReviewError } from "./grant-in-review";
 
 export class LandingPageClient {
   private readonly baseUrl: string;
@@ -37,11 +38,21 @@ export class LandingPageClient {
   }
 
   // Return NOFO summary from S3 bucket
-  async getNOFOSummary(documentKey: string) {
+  /**
+   * `citations` adds each requirement's quoted sources; only the Requirements page shows them.
+   * `forApplication` is for Write application, which still gets the grant's name and narrative
+   * sections while the grant is in review (the response then has `inReview: true`).
+   */
+  async getNOFOSummary(
+    documentKey: string,
+    { citations = false, forApplication = false }: { citations?: boolean; forApplication?: boolean } = {}
+  ) {
     try {
       const token = await Utils.authenticate();
       const url = new URL(`${this.API}/s3-nofo-summary`);
       url.searchParams.append("documentKey", documentKey);
+      if (citations) url.searchParams.append("citations", "1");
+      if (forApplication) url.searchParams.append("for", "application");
 
       const response = await apiFetch(url, {
         method: "GET",
@@ -68,7 +79,13 @@ export class LandingPageClient {
             throw err;
           }
         }
-        throw new Error(`Error: ${response.status}`);
+        if (response.status === 409) {
+          let body: unknown = null;
+          try { body = await response.json(); } catch { /* ignore */ }
+          const inReview = grantInReviewError(response.status, body);
+          if (inReview) throw inReview;
+        }
+        throw Object.assign(new Error(`Error: ${response.status}`), { status: response.status });
       }
 
       return await response.json();
@@ -78,12 +95,13 @@ export class LandingPageClient {
     }
   }
 
-  // Return NOFO questions from S3 bucket
+  /** Only Write application reads these; while the grant is in review it gets the question text alone. */
   async getNOFOQuestions(documentKey: string) {
     try {
       const token = await Utils.authenticate();
       const url = new URL(`${this.API}/s3-nofo-questions`);
       url.searchParams.append("documentKey", documentKey);
+      url.searchParams.append("for", "application");
 
       const response = await apiFetch(url, {
         method: "GET",

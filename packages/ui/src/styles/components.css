@@ -1,0 +1,617 @@
+/*
+ * Shared components, the same on every deployment: shapes follow the Colorado Design System, and
+ * colors come from each deployment's tokens. Page CSS adds layout (margins, widths), never looks.
+ */
+
+/* ==============================
+ * Buttons
+ * ============================== */
+
+.gw-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gw-spacing-sm);
+  min-height: 40px;
+  padding: 9px 18px;
+  border: 1px solid transparent;
+  border-radius: var(--gw-radius-button);
+  font-family: var(--gw-font-button);
+  font-size: var(--gw-font-size-sm);
+  font-weight: var(--gw-font-weight-semibold);
+  line-height: 1.2;
+  text-transform: var(--gw-button-text-transform);
+  letter-spacing: var(--gw-button-letter-spacing);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.gw-btn.gw-btn--primary {
+  background: var(--gw-color-primary);
+  color: var(--gw-color-text-inverse);
+}
+.gw-btn.gw-btn--primary:hover:not(:disabled):not([aria-disabled="true"]) {
+  background: var(--gw-color-primary-hover);
+}
+.gw-btn.gw-btn--primary:active:not(:disabled):not([aria-disabled="true"]) {
+  background: var(--gw-color-primary-active);
+}
+
+.gw-btn.gw-btn--secondary {
+  background: var(--gw-color-surface);
+  color: var(--gw-color-primary);
+  border-color: var(--gw-color-primary);
+}
+.gw-btn.gw-btn--secondary:hover:not(:disabled):not([aria-disabled="true"]) {
+  background: var(--gw-color-primary-light);
+  color: var(--gw-color-primary-hover);
+}
+.gw-btn.gw-btn--secondary:active:not(:disabled):not([aria-disabled="true"]) {
+  background: var(--gw-color-primary-border);
+  color: var(--gw-color-primary-hover);
+}
+
+.gw-btn.gw-btn--danger {
+  background: var(--gw-color-danger);
+  color: var(--gw-color-text-inverse);
+}
+.gw-btn.gw-btn--danger:hover:not(:disabled):not([aria-disabled="true"]),
+.gw-btn.gw-btn--danger:active:not(:disabled):not([aria-disabled="true"]) {
+  background: var(--gw-color-danger-text);
+}
+
+/* White button on a dark or brand-colored band. */
+.gw-btn.gw-btn--inverse {
+  background: var(--gw-color-surface);
+  color: var(--gw-color-primary);
+}
+.gw-btn.gw-btn--inverse:hover:not(:disabled):not([aria-disabled="true"]) {
+  background: var(--gw-color-primary-light);
+  color: var(--gw-color-primary-hover);
+}
+
+/* Tight spaces: table rows, toolbars, headers. */
+.gw-btn.gw-btn--slim {
+  min-height: 32px;
+  padding: 5px 12px;
+  font-size: var(--gw-font-size-xs);
+}
+
+/* Icon only; the element must carry an accessible name. Alone it is a quiet icon button that keeps
+   its own icon color; with --primary, --secondary or --danger it takes that fill. */
+.gw-btn.gw-btn--icon {
+  min-width: 40px;
+  padding: 8px;
+}
+.gw-btn.gw-btn--icon:not(.gw-btn--primary):not(.gw-btn--secondary):not(.gw-btn--danger) {
+  background: transparent;
+  color: var(--gw-color-text-secondary);
+}
+.gw-btn.gw-btn--icon:not(.gw-btn--primary):not(.gw-btn--secondary):not(.gw-btn--danger):hover:not(:disabled):not([aria-disabled="true"]) {
+  background: var(--gw-color-surface-subtle);
+}
+.gw-btn.gw-btn--icon.gw-btn--slim {
+  min-width: 32px;
+  min-height: 32px;
+  padding: 4px;
+}
+
+.gw-btn:disabled,
+.gw-btn[aria-disabled="true"] {
+  background: var(--gw-color-disabled-bg);
+  color: var(--gw-color-disabled-text);
+  border-color: transparent;
+  cursor: not-allowed;
+}
+.gw-btn.gw-btn--icon:not(.gw-btn--primary):not(.gw-btn--secondary):not(.gw-btn--danger):disabled {
+  background: transparent;
+}
+
+/* Doubled class so the ring outranks Bootstrap's .btn:focus-visible { outline: 0 }, which can load later. */
+.gw-btn.gw-btn:focus-visible {
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
+  box-shadow: none;
+}
+
+/* A react-bootstrap <Button> is also .btn, whose state rules load later and win ties, so they are fed
+   the kit colours. .btn:focus-visible paints --bs-btn-hover-bg, hence the rest colour until hovered. */
+.gw-btn.gw-btn--primary {
+  --bs-btn-color: var(--gw-color-text-inverse);
+  --bs-btn-bg: var(--gw-color-primary);
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-color: var(--gw-color-text-inverse);
+  --bs-btn-hover-bg: var(--gw-color-primary);
+  --bs-btn-hover-border-color: transparent;
+  --bs-btn-active-color: var(--gw-color-text-inverse);
+  --bs-btn-active-bg: var(--gw-color-primary-active);
+  --bs-btn-active-border-color: transparent;
+  --bs-btn-focus-box-shadow: none;
+  --bs-btn-disabled-color: var(--gw-color-disabled-text);
+  --bs-btn-disabled-bg: var(--gw-color-disabled-bg);
+  --bs-btn-disabled-border-color: transparent;
+}
+.gw-btn.gw-btn--primary:hover {
+  --bs-btn-hover-bg: var(--gw-color-primary-hover);
+}
+.gw-btn.gw-btn--primary:is(:disabled, [aria-disabled="true"]) {
+  --bs-btn-color: var(--gw-color-disabled-text);
+  --bs-btn-bg: var(--gw-color-disabled-bg);
+  --bs-btn-hover-color: var(--gw-color-disabled-text);
+  --bs-btn-hover-bg: var(--gw-color-disabled-bg);
+  --bs-btn-active-color: var(--gw-color-disabled-text);
+  --bs-btn-active-bg: var(--gw-color-disabled-bg);
+}
+
+/* ==============================
+ * Form fields
+ * ============================== */
+
+.gw-field {
+  display: grid;
+  gap: var(--gw-spacing-xs);
+  align-content: start;
+}
+
+.gw-field__label {
+  font-size: var(--gw-font-size-sm);
+  font-weight: var(--gw-font-weight-semibold);
+  color: var(--gw-color-text-strong);
+}
+
+.gw-field__required {
+  color: var(--gw-color-danger-text);
+  margin-left: 2px;
+}
+
+.gw-field__help {
+  font-size: var(--gw-font-size-sm);
+  color: var(--gw-color-text-muted);
+}
+
+.gw-field__message {
+  font-size: var(--gw-font-size-sm);
+  font-weight: var(--gw-font-weight-semibold);
+  color: var(--gw-color-danger-text);
+}
+.gw-field__message--success {
+  font-weight: var(--gw-font-weight-normal);
+  color: var(--gw-color-success-text);
+}
+
+/* Text inputs, selects and textareas. 16px text keeps phones from zooming in on focus. The base rule
+   has zero specificity (:where) so a page's layout for a field (icon room, widths) always wins. */
+:where(.gw-input) {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--gw-color-border-input);
+  border-radius: var(--gw-radius-control);
+  background: var(--gw-color-surface);
+  color: var(--gw-color-text);
+  font-family: var(--gw-font-family);
+  font-size: var(--gw-font-size-base);
+  line-height: 1.4;
+  box-shadow: none;
+}
+:where(.gw-input)::placeholder {
+  color: var(--gw-color-text-muted);
+}
+.gw-input:hover:not(:disabled):not([readonly]) {
+  border-color: var(--gw-color-border-input-hover);
+}
+/* Doubled classes outrank Bootstrap's .form-control:focus / .form-select:focus { outline: 0 }, which
+   would otherwise leave only its pale blue border and glow. */
+.gw-input.gw-input:focus-visible,
+.form-control.form-control:focus-visible,
+.form-select.form-select:focus-visible {
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
+  box-shadow: none;
+}
+/* Bootstrap's .form-control / .form-select border (light grey, 1.3:1 on white; pale blue on focus) outranks
+   :where(.gw-input); the sign-in fields carry both, so restate the kit border for them. */
+.gw-input.form-control:not([aria-invalid="true"]):not(.gw-input--error):not(.gw-input--success),
+.gw-input.form-select:not([aria-invalid="true"]):not(.gw-input--error):not(.gw-input--success) {
+  border-color: var(--gw-color-border-input);
+}
+.gw-input.form-control:hover:not(:disabled):not([readonly]):not([aria-invalid="true"]):not(.gw-input--error):not(.gw-input--success),
+.gw-input.form-select:hover:not(:disabled):not([readonly]):not([aria-invalid="true"]):not(.gw-input--error):not(.gw-input--success) {
+  border-color: var(--gw-color-border-input-hover);
+}
+:where(textarea.gw-input) {
+  min-height: 96px;
+  resize: vertical;
+}
+:where(select.gw-input) {
+  padding-right: 32px;
+}
+.gw-input[aria-invalid="true"],
+.gw-input.gw-input--error {
+  border: 2px solid var(--gw-color-danger);
+  padding: 7px 11px;
+}
+.gw-input.gw-input--success {
+  border: 2px solid var(--gw-color-success);
+  padding: 7px 11px;
+}
+.gw-input:disabled,
+.gw-input[readonly] {
+  background: var(--gw-color-disabled-bg);
+  color: var(--gw-color-disabled-text);
+  border-color: var(--gw-color-border);
+  cursor: not-allowed;
+}
+.gw-input[readonly] {
+  color: var(--gw-color-text);
+  border-color: var(--gw-color-border-input);
+  cursor: default;
+}
+
+/* ==============================
+ * Alerts and banners
+ * ============================== */
+
+/* A thick left bar in the status color on a light tint, square corners. A title is optional; add
+   one when the text runs past two lines. Close buttons and spinners sit inside as children. */
+.gw-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gw-spacing-md);
+  padding: var(--gw-spacing-md) var(--gw-spacing-lg);
+  border: 0;
+  border-left: 6px solid var(--gw-alert-bar, var(--gw-color-info));
+  border-radius: var(--gw-radius-none);
+  background: var(--gw-alert-fill, var(--gw-color-info-light));
+  color: var(--gw-color-text);
+  font-size: var(--gw-font-size-sm);
+  line-height: 1.5;
+  box-shadow: none;
+}
+.gw-alert.gw-alert--info { --gw-alert-bar: var(--gw-color-info); --gw-alert-fill: var(--gw-color-info-light); --gw-alert-title: var(--gw-color-info-text); }
+.gw-alert.gw-alert--warning { --gw-alert-bar: var(--gw-color-warning); --gw-alert-fill: var(--gw-color-warning-light); --gw-alert-title: var(--gw-color-warning-text); }
+.gw-alert.gw-alert--urgent { --gw-alert-bar: var(--gw-color-danger); --gw-alert-fill: var(--gw-color-danger-light); --gw-alert-title: var(--gw-color-danger-text); }
+.gw-alert.gw-alert--success { --gw-alert-bar: var(--gw-color-success); --gw-alert-fill: var(--gw-color-success-light); --gw-alert-title: var(--gw-color-success-text); }
+
+.gw-alert__title {
+  display: block;
+  margin: 0 0 2px;
+  font-size: var(--gw-font-size-base);
+  font-weight: var(--gw-font-weight-semibold);
+  color: var(--gw-alert-title, var(--gw-color-text-strong));
+}
+.gw-alert > svg:first-child {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--gw-alert-bar, var(--gw-color-info));
+}
+.gw-alert a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* Bootstrap alerts (react-bootstrap <Alert>) take the same look. */
+.alert.alert {
+  border: 0;
+  border-left: 6px solid var(--gw-alert-bar, var(--gw-color-info));
+  border-radius: var(--gw-radius-none);
+  background: var(--gw-alert-fill, var(--gw-color-info-light));
+  color: var(--gw-color-text);
+  padding: var(--gw-spacing-md) var(--gw-spacing-lg);
+  font-size: var(--gw-font-size-sm);
+}
+/* The padding above outranks Bootstrap's .alert-dismissible, which reserves room for the absolute close button. */
+.alert.alert.alert-dismissible {
+  padding-right: 3rem;
+}
+.alert.alert-info, .alert.alert-primary, .alert.alert-secondary, .alert.alert-light { --gw-alert-bar: var(--gw-color-info); --gw-alert-fill: var(--gw-color-info-light); --gw-alert-title: var(--gw-color-info-text); }
+.alert.alert-warning { --gw-alert-bar: var(--gw-color-warning); --gw-alert-fill: var(--gw-color-warning-light); --gw-alert-title: var(--gw-color-warning-text); }
+.alert.alert-danger { --gw-alert-bar: var(--gw-color-danger); --gw-alert-fill: var(--gw-color-danger-light); --gw-alert-title: var(--gw-color-danger-text); }
+.alert.alert-success { --gw-alert-bar: var(--gw-color-success); --gw-alert-fill: var(--gw-color-success-light); --gw-alert-title: var(--gw-color-success-text); }
+.alert .alert-heading {
+  font-size: var(--gw-font-size-base);
+  font-weight: var(--gw-font-weight-semibold);
+  color: var(--gw-alert-title, var(--gw-color-text-strong));
+}
+
+/* ==============================
+ * Modal and toast
+ * ============================== */
+
+.gw-modal__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--gw-z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: var(--gw-color-overlay);
+}
+
+.gw-modal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 85vh;
+  overflow: hidden;
+  border: 1px solid var(--gw-color-border);
+  border-radius: var(--gw-radius-container);
+  background: var(--gw-color-surface);
+  color: var(--gw-color-text);
+  box-shadow: var(--gw-shadow-high);
+}
+
+.gw-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gw-spacing-md);
+  flex-shrink: 0;
+  padding: var(--gw-spacing-lg) var(--gw-spacing-2xl);
+  border-bottom: 1px solid var(--gw-color-border);
+  background: var(--gw-color-surface);
+}
+
+.gw-modal__title {
+  margin: 0;
+  font-family: var(--gw-font-family);
+  font-size: var(--gw-font-size-lg);
+  font-weight: var(--gw-font-weight-semibold);
+  line-height: 1.3;
+  color: var(--gw-color-text-strong);
+}
+
+.gw-modal__body {
+  padding: var(--gw-spacing-2xl);
+  overflow-y: auto;
+}
+
+/* Actions in a tinted footer, main action on the right. Callers put them in .modal-actions at the
+   end of the body; it stretches to the body's edges. */
+.gw-modal__footer,
+.gw-modal__body > .modal-actions:last-child {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--gw-spacing-sm);
+  margin: var(--gw-spacing-2xl) calc(-1 * var(--gw-spacing-2xl)) calc(-1 * var(--gw-spacing-2xl));
+  padding: var(--gw-spacing-md) var(--gw-spacing-2xl);
+  border-top: 1px solid var(--gw-color-border);
+  background: var(--gw-color-surface-subtle);
+}
+
+@media (max-width: 480px) {
+  .gw-modal__header { padding: var(--gw-spacing-md) var(--gw-spacing-lg); }
+  .gw-modal__body { padding: var(--gw-spacing-lg); }
+  .gw-modal__footer,
+  .gw-modal__body > .modal-actions:last-child {
+    margin: var(--gw-spacing-lg) calc(-1 * var(--gw-spacing-lg)) calc(-1 * var(--gw-spacing-lg));
+    padding: var(--gw-spacing-md) var(--gw-spacing-lg);
+  }
+}
+
+/* Toasts: the alert's left bar on a white card with the mid shadow. */
+.gw-toast {
+  display: flex;
+  align-items: center;
+  gap: var(--gw-spacing-md);
+  padding: var(--gw-spacing-md) var(--gw-spacing-lg);
+  border: 1px solid var(--gw-color-border);
+  border-left: 6px solid var(--gw-toast-bar, var(--gw-color-info));
+  border-radius: var(--gw-radius-container);
+  background: var(--gw-color-surface);
+  color: var(--gw-color-text);
+  font-size: var(--gw-font-size-sm);
+  box-shadow: var(--gw-shadow-mid);
+}
+.gw-toast.gw-toast--success { --gw-toast-bar: var(--gw-color-success); }
+.gw-toast.gw-toast--urgent { --gw-toast-bar: var(--gw-color-danger); }
+.gw-toast.gw-toast--warning { --gw-toast-bar: var(--gw-color-warning); }
+.gw-toast.gw-toast--info { --gw-toast-bar: var(--gw-color-info); }
+
+/* ==============================
+ * Tags and badges
+ * ============================== */
+
+/* A small pill with a tinted fill, a light border and darker text. Status and category modifiers set
+   the three variables; grant-type badges set them inline from the category tokens. */
+.gw-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gw-spacing-xs);
+  padding: 3px 8px;
+  border: 1px solid var(--gw-tag-line, var(--gw-color-border));
+  border-radius: var(--gw-radius-pill);
+  background: var(--gw-tag-fill, var(--gw-color-surface-subtle));
+  color: var(--gw-tag-ink, var(--gw-color-text-secondary));
+  font-size: var(--gw-font-size-xs);
+  font-weight: var(--gw-font-weight-semibold);
+  line-height: 1.3;
+  white-space: nowrap;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.gw-tag--neutral { --gw-tag-ink: var(--gw-color-text-secondary); --gw-tag-fill: var(--gw-color-surface-subtle); --gw-tag-line: var(--gw-color-border); }
+.gw-tag--info { --gw-tag-ink: var(--gw-color-info-text); --gw-tag-fill: var(--gw-color-info-light); --gw-tag-line: var(--gw-color-info-border); }
+.gw-tag--success { --gw-tag-ink: var(--gw-color-success-text); --gw-tag-fill: var(--gw-color-success-light); --gw-tag-line: var(--gw-color-success-border); }
+.gw-tag--warning { --gw-tag-ink: var(--gw-color-warning-text); --gw-tag-fill: var(--gw-color-warning-light); --gw-tag-line: var(--gw-color-warning-border); }
+.gw-tag--danger { --gw-tag-ink: var(--gw-color-danger-text); --gw-tag-fill: var(--gw-color-danger-light); --gw-tag-line: var(--gw-color-danger-border); }
+
+/* ==============================
+ * Page titles
+ * ============================== */
+
+/* A deployment can give every H1 its own face and weight (Colorado: Museo Slab 500). The fallbacks are what
+   an H1 gets without them: the inherited font, bold. Classed titles use the same two tokens. */
+h1 {
+  font-family: var(--gw-font-heading-1, inherit);
+  font-weight: var(--gw-font-heading-1-weight, bold);
+}
+
+/* ==============================
+ * Tabs
+ * ============================== */
+
+/* The kit's header tab: a 4px underline marks the selected tab, and hover shows the same line. On narrow
+   screens the strip wraps rather than scrolls, so no tab is hidden. The ring sits inside the tab, as in
+   the kit's focus state. */
+.gw-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--gw-spacing-lg);
+  box-shadow: inset 0 -1px 0 var(--gw-color-border);
+}
+.gw-tab {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gw-spacing-sm);
+  min-height: 52px;
+  margin: 0;
+  padding: 16px 8px 12px;
+  border: 0;
+  border-bottom: 4px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--gw-color-text-strong);
+  font-family: inherit;
+  font-size: var(--gw-font-size-base);
+  font-weight: var(--gw-font-weight-semibold);
+  line-height: 1.25;
+  white-space: nowrap;
+  text-transform: none;
+  letter-spacing: normal;
+  transform: none;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.gw-tab:hover { color: var(--gw-color-primary); border-bottom-color: var(--gw-color-primary); }
+.gw-tab[aria-selected="true"],
+.gw-tab[aria-current] { border-bottom-color: var(--gw-color-primary); }
+/* Navigation tabs are links in a list. */
+ul.gw-tabs { margin: 0; padding: 0; list-style: none; }
+a.gw-tab { text-decoration: none; }
+.gw-tab.gw-tab:focus-visible {
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: calc(-1 * var(--gw-focus-width));
+  box-shadow: none;
+}
+
+/* ==============================
+ * Pagination
+ * ============================== */
+
+/* Page numbers are links in the primary colour; the current page is a filled square. Previous and Next
+   stay in place on the first and last page (aria-disabled), greyed, so focus never drops. */
+.gw-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gw-spacing-md) var(--gw-spacing-lg);
+  margin-top: var(--gw-spacing-lg);
+  padding: var(--gw-spacing-lg) 0;
+  border-top: 1px solid var(--gw-color-border);
+}
+.gw-pagination__info { color: var(--gw-color-text-secondary); font-size: var(--gw-font-size-sm); }
+.gw-pagination__controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gw-spacing-md) var(--gw-spacing-lg); }
+.gw-pagination__pages { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gw-spacing-xs); }
+.gw-pagination__page,
+.gw-pagination__step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gw-spacing-xs);
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0 var(--gw-spacing-sm);
+  border: 0;
+  border-radius: var(--gw-radius-control);
+  background: transparent;
+  color: var(--gw-color-primary);
+  font-family: inherit;
+  font-size: var(--gw-font-size-base);
+  font-weight: var(--gw-font-weight-semibold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.gw-pagination__page:hover,
+.gw-pagination__step:hover:not([aria-disabled="true"]) { color: var(--gw-color-primary-hover); text-decoration-thickness: 2px; }
+.gw-pagination__page[aria-current="page"] {
+  background: var(--gw-color-primary);
+  color: var(--gw-color-text-inverse);
+  text-decoration: none;
+}
+.gw-pagination__step[aria-disabled="true"] { color: var(--gw-color-disabled-text); text-decoration: none; cursor: not-allowed; }
+.gw-pagination__page:focus-visible,
+.gw-pagination__step:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); }
+.gw-pagination__gap { min-width: 24px; text-align: center; color: var(--gw-color-text-secondary); }
+.gw-pagination__size { display: flex; align-items: center; gap: var(--gw-spacing-sm); font-size: var(--gw-font-size-sm); }
+.gw-pagination__size .gw-input { width: auto; min-height: 36px; padding-block: 4px; }
+
+/* ==============================
+ * Toggles
+ * ============================== */
+
+/* Joined outlined buttons for one choice among a few; the chosen one is filled. Works for aria-pressed
+   button groups and role="radio" groups alike. Sized like .gw-btn. */
+.gw-toggle { display: inline-flex; flex-wrap: nowrap; max-width: 100%; }
+/* On a phone labels wrap inside their options, and options wrap onto a second row, so the group fits. */
+@media (max-width: 480px) {
+  .gw-toggle.gw-toggle { flex-wrap: wrap; }
+  .gw-toggle__option.gw-toggle__option { white-space: normal; margin-top: -1px; }
+}
+.gw-toggle__option {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gw-spacing-xs);
+  min-height: 40px;
+  margin: 0 0 0 -1px;
+  padding: 8px 16px;
+  border: 1px solid var(--gw-color-primary);
+  border-radius: 0;
+  background: var(--gw-color-surface);
+  box-shadow: none;
+  color: var(--gw-color-primary);
+  font-family: inherit;
+  font-size: var(--gw-font-size-sm);
+  font-weight: var(--gw-font-weight-semibold);
+  line-height: 1.25;
+  text-align: center;
+  text-transform: none;
+  letter-spacing: normal;
+  cursor: pointer;
+}
+.gw-toggle__option:first-child { margin-left: 0; border-radius: var(--gw-radius-control) 0 0 var(--gw-radius-control); }
+.gw-toggle__option:last-child { border-radius: 0 var(--gw-radius-control) var(--gw-radius-control) 0; }
+.gw-toggle__option:only-child { border-radius: var(--gw-radius-control); }
+.gw-toggle__option:hover { background: var(--gw-color-primary-light); color: var(--gw-color-primary-hover); }
+.gw-toggle__option[aria-pressed="true"],
+.gw-toggle__option[aria-checked="true"] { z-index: 1; background: var(--gw-color-primary); color: var(--gw-color-text-inverse); }
+.gw-toggle__option[aria-pressed="true"]:hover,
+.gw-toggle__option[aria-checked="true"]:hover { background: var(--gw-color-primary-hover); color: var(--gw-color-text-inverse); }
+.gw-toggle__option.gw-toggle__option:focus-visible {
+  z-index: 2;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
+  box-shadow: none;
+}
+
+.gw-select-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+  text-transform: none;
+  letter-spacing: normal;
+}

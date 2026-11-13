@@ -8,15 +8,13 @@ import Card from "../../components/ui/Card";
 import AutoSaveIndicator, { type SaveStatus } from "../../components/ui/AutoSaveIndicator";
 import NavigationButtons from "../../components/ui/NavigationButtons";
 import FormErrorSummary from "../../components/ui/FormErrorSummary";
-
-// Stable so handleContinue can re-focus the summary on a repeat submit.
-const PROJECT_BASICS_ERROR_SUMMARY_ID = "project-basics-error-summary";
-import { colors, typography, spacing, borderRadius } from "../../components/ui/styles";
+import { colors, typography, spacing } from "../../components/ui/styles";
 import { readDraftCache } from "../../common/helpers/document-editor-utils";
 import type { DocumentData } from "../../common/types/document";
 
 const AUTOSAVE_IDLE_BEFORE_FIRST_SAVE = "Changes save automatically";
 const AUTOSAVE_IDLE_AFTER_FIRST_SAVE = "Saved";
+const AMOUNT_NUMBERS_ONLY = "Enter the amount in numbers only, for example 25000";
 
 interface ProjectBasicsProps {
   onContinue: () => void;
@@ -49,13 +47,13 @@ interface FormErrors {
 
 // Field labels for error summary
 const FIELD_LABELS: Record<string, string> = {
-  projectName: "Project Name",
-  organizationName: "Organization Name",
-  requestedAmount: "Requested Amount",
+  projectName: "Project name",
+  organizationName: "Organization name",
+  requestedAmount: "Requested amount (USD)",
   location: "Location",
-  zipCode: "Zip Code",
-  contactName: "Primary Contact Name",
-  contactEmail: "Contact Email",
+  zipCode: "Zip code",
+  contactName: "Primary contact name",
+  contactEmail: "Contact email",
 };
 
 // Input field component - defined outside to prevent re-creation on each render
@@ -118,11 +116,12 @@ const InputField: React.FC<InputFieldProps> = React.memo(({
               fontSize: typography.fontSize.base,
               pointerEvents: "none",
             }}
+            aria-hidden="true"
           >
             {prefix}
           </span>
         )}
-        <input
+        <input className="gw-input"
           type={type}
           id={name}
           name={name}
@@ -138,11 +137,7 @@ const InputField: React.FC<InputFieldProps> = React.memo(({
           placeholder={placeholder}
           style={{
             width: "100%",
-            padding: prefix ? "12px 12px 12px 28px" : "12px",
-            border: `1px solid ${hasError ? colors.error : colors.inputBorder}`,
-            borderRadius: borderRadius.md,
-            fontSize: typography.fontSize.base,
-            fontFamily: typography.fontFamily,
+            padding: prefix ? "8px 12px 8px 28px" : undefined,
           }}
         />
       </div>
@@ -158,10 +153,10 @@ const InputField: React.FC<InputFieldProps> = React.memo(({
       >
         {helpText}
       </span>
+      {/* Not an alert: on submit the focused summary reads every error at once. */}
       {hasError && (
         <span
           id={`${name}-error`}
-          role="alert"
           style={{
             display: "block",
             fontSize: typography.fontSize.sm,
@@ -204,6 +199,9 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [summaryFocusRequest, setSummaryFocusRequest] = useState(0);
+  // Typed letters are dropped from the field, so this hint is the only sign anything happened.
+  const [typingHint, setTypingHint] = useState("");
   const isInitialLoad = useRef(true);
   const hasLoadedFromDocumentData = useRef(false);
 
@@ -315,6 +313,16 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
       return updatedData;
     });
 
+    if (name === "requestedAmount") {
+      if (/[^\d,.$\s]/.test(value)) {
+        setTypingHint(AMOUNT_NUMBERS_ONLY);
+        setTouched((prev) => ({ ...prev, requestedAmount: true }));
+        setFormErrors((prev) => ({ ...prev, requestedAmount: AMOUNT_NUMBERS_ONLY }));
+        return;
+      }
+      setTypingHint("");
+    }
+
     setTouched((prevTouched) => {
       if (prevTouched[name]) {
         const error = validateField(name, formattedValue);
@@ -360,8 +368,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
   const handleContinue = () => {
     if (!validateForm()) {
-      const errorSummary = document.getElementById(PROJECT_BASICS_ERROR_SUMMARY_ID);
-      if (errorSummary) errorSummary.focus();
+      setSummaryFocusRequest((n) => n + 1);
       return;
     }
 
@@ -378,12 +385,13 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
         <Card
-          header="Project Basics"
+          header="Project basics"
           headerActions={
             <AutoSaveIndicator
               status={saveStatus}
               idleText={autoSaveIdleText}
               onRetry={onRetrySave}
+              variant="onPrimary"
             />
           }
         >
@@ -396,11 +404,14 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
             <span style={{ color: colors.error }} aria-hidden="true">*</span> Indicates required field
           </div>
 
-          <FormErrorSummary id={PROJECT_BASICS_ERROR_SUMMARY_ID} errors={displayErrors} fieldLabels={FIELD_LABELS} />
+          <FormErrorSummary errors={displayErrors} fieldLabels={FIELD_LABELS} focusRequest={summaryFocusRequest} />
+          <div role="status" aria-live="polite" className="visually-hidden">
+            {typingHint}
+          </div>
 
           <InputField
             name="projectName"
-            label="Project Name"
+            label="Project name"
             helpText={`Keep it clear and descriptive. (${formData.projectName.length}/200 characters)`}
             maxLength={200}
             value={formData.projectName}
@@ -412,7 +423,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
           <InputField
             name="organizationName"
-            label="Organization Name"
+            label="Organization name"
             helpText={`Enter the name of your municipality, tribal nation, or community organization. (${formData.organizationName.length}/200 characters)`}
             maxLength={200}
             autoComplete="organization"
@@ -425,7 +436,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
           <InputField
             name="requestedAmount"
-            label="Requested Amount"
+            label="Requested amount (USD)"
             helpText="Enter the total funding amount you're requesting for this project."
             placeholder="250,000"
             prefix="$"
@@ -437,7 +448,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
           />
 
           <div style={{ display: "flex", gap: spacing.lg, marginBottom: spacing.xl, flexWrap: "wrap" }}>
-            <div style={{ flex: "1", minWidth: "260px" }}>
+            <div style={{ flex: "1", minWidth: "min(260px, 100%)" }}>
               <InputField
                 name="location"
                 label="Location"
@@ -452,10 +463,10 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
                 onBlur={handleBlur}
               />
             </div>
-            <div style={{ flex: "1", minWidth: "260px" }}>
+            <div style={{ flex: "1", minWidth: "min(260px, 100%)" }}>
               <InputField
                 name="zipCode"
-                label="Zip Code"
+                label="Zip code"
                 helpText="Enter the 5-digit ZIP code for the project location."
                 maxLength={5}
                 placeholder="02119"
@@ -471,7 +482,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
           <InputField
             name="contactName"
-            label="Primary Contact Name"
+            label="Primary contact name"
             helpText={`Enter the name of the primary person responsible for this grant application. (${formData.contactName.length}/100 characters)`}
             maxLength={100}
             autoComplete="name"
@@ -484,7 +495,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
 
           <InputField
             name="contactEmail"
-            label="Contact Email"
+            label="Contact email"
             type="email"
             helpText="Enter a valid email address for project-related communications."
             maxLength={254}

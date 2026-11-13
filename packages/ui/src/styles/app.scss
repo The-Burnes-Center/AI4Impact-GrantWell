@@ -1,5 +1,6 @@
 @import "./tokens.css";
 @import "./utilities.css";
+@import "./components.css";
 @import "./gw-marketing-system.css";
 
 * {
@@ -81,6 +82,14 @@ textarea:focus-visible,
 select:focus-visible {
   outline: 2px solid var(--gw-color-primary);
   outline-offset: 2px;
+}
+
+/* Doubled classes: Bootstrap's .btn:focus-visible / .btn-close:focus { outline: 0 } load after this file. */
+.btn.btn:focus-visible,
+.btn-close.btn-close:focus-visible {
+  outline: 3px solid var(--gw-color-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #fff;
 }
 
 /* Ensure elements with aria-hidden="true" are excluded from interaction */

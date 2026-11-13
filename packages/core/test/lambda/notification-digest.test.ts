@@ -203,3 +203,155 @@ describe("digest branding", () => {
     }
   });
 });
+
+describe("digest accessibility and client fixes", () => {
+  const grant = (name: string) => ({
+    nofo: { nofo_name: name, agency: "Department of Transportation", category: "Transportation", expiration_date: "2099-01-01" },
+    reasons: ["Category: Transportation"],
+    daysUntil: 3,
+  });
+  const render = async (sections: Record<string, unknown>, branding: Record<string, string> = {}) => {
+    const { buildDigest } = await import("grantwell-shared");
+    return buildDigest("weekly", {
+      sections,
+      appUrl: "https://grantwell.us",
+      unsubscribeUrl: "https://api.example/unsubscribe?u=1&sig=x",
+      branding: { appName: "GrantWell", logoUrl: "https://grantwell.us/w.svg", ...branding },
+    });
+  };
+  const headingLevels = (html: string) => [...html.matchAll(/<h(\d)\b/g)].map((m) => Number(m[1]));
+
+  it("is a full document with lang on both <html> and the wrapper Gmail keeps", async () => {
+    const { html, subject } = await render({ new: [grant("Bridge Grant")] });
+    expect(html.startsWith("<!DOCTYPE html>")).toBe(true);
+    expect(html).toContain('<html lang="en" dir="ltr">');
+    expect(html).toContain(`<title>${subject}</title>`);
+    expect(html).toMatch(/<div role="article"[^>]* lang="en"/);
+    expect(html).toContain('<!--[if mso]><table role="presentation" align="center" width="600"');
+  });
+
+  it("nests headings h1 > h2 section > h3 grant when sections are labelled", async () => {
+    const { html } = await render({ new: [grant("Bridge Grant")], closingSoon: [grant("Roads Grant")] });
+    expect(headingLevels(html)).toEqual([1, 2, 3, 2, 3]);
+  });
+
+  it("uses h2 for grants when a single section shows no heading", async () => {
+    const { html } = await render({ new: [grant("Bridge Grant"), grant("Roads Grant")] });
+    expect(headingLevels(html)).toEqual([1, 2, 2]);
+  });
+
+  it("keeps all text at 14 px or larger", async () => {
+    const { html } = await render(
+      { new: [grant("Bridge Grant")], closingSoon: [grant("Roads Grant")], overflow: 3 },
+      { supportEmail: "help@grantwell.us", orgName: "Org", postalAddress: "1 Main St" }
+    );
+    const sizes = [...html.matchAll(/font-size:(\d+)px/g)].map((m) => Number(m[1]));
+    expect(sizes.length).toBeGreaterThan(0);
+    expect(Math.min(...sizes)).toBeGreaterThanOrEqual(14);
+  });
+
+  it("links each grant once, through its title", async () => {
+    const { html } = await render({ new: [grant("Bridge Grant"), grant("Roads & Rails")] });
+    const grantLinks = [...html.matchAll(/<a href="https:\/\/grantwell\.us\/requirements\/[^"]*"[^>]*>([^<]*)<\/a>/g)];
+    expect(grantLinks.map((m) => m[1])).toEqual(["Bridge Grant", "Roads &amp; Rails"]);
+    expect(html).toMatch(/<h2 [^>]*><a href="https:\/\/grantwell\.us\/requirements\/Bridge%20Grant"/);
+    expect(html).not.toContain("View grant opportunity");
+  });
+
+  it("shows one filled overflow button that says grants", async () => {
+    const { html, text } = await render({ new: [grant("Bridge Grant")], overflow: 4 });
+    expect(html).toMatch(/<td bgcolor="#[0-9a-fA-F]{6}"[^>]*><a href="https:\/\/grantwell\.us"[^>]*>See 4 more matching grants<\/a>/);
+    expect(text).toContain("+4 more matching grants — view all: https://grantwell.us");
+  });
+
+  it("says grants, never grant opportunities, and names the period", async () => {
+    const one = await render({ new: [grant("Bridge Grant")] });
+    expect(one.html).toMatch(/<h1 [^>]*>1 new grant for you<\/h1>/);
+    expect(one.subject).toBe("GrantWell Weekly Digest: 1 new grant");
+    expect(one.html).toContain("We found 1 new grant matching your preferences.");
+    expect(one.html).toContain("subscribed to GrantWell grant notifications.");
+    for (const out of [one.html, one.text]) expect(out).not.toMatch(/opportunit/i);
+    expect(one.text.startsWith("GrantWell Weekly Digest\n1 new grant for you\n\nWe found 1 new grant")).toBe(true);
+    expect(one.text).toContain("  View grant: https://grantwell.us/requirements/");
+
+    const closing = await render({ new: [], closingSoon: [grant("Bridge Grant"), grant("Roads Grant")], newTotal: 0 });
+    expect(closing.html).toMatch(/<h1 [^>]*>2 grants closing soon<\/h1>/);
+    expect(closing.subject).toBe("GrantWell Weekly Digest: grants closing soon");
+  });
+
+  it("names the new section by period", async () => {
+    const { buildDigest } = await import("grantwell-shared");
+    const sections = { new: [grant("Bridge Grant")], closingSoon: [grant("Roads Grant")] };
+    expect(buildDigest("weekly", { sections, appUrl: "https://grantwell.us" }).html).toMatch(/<h2 [^>]*>New this week<\/h2>/);
+    expect(buildDigest("daily", { sections, appUrl: "https://grantwell.us" }).html).toMatch(/<h2 [^>]*>New today<\/h2>/);
+  });
+
+  it("counts every listed grant in the headline when nothing is new", async () => {
+    const { html, text } = await render({
+      new: [],
+      newTotal: 0,
+      closingSoon: [grant("Bridge Grant")],
+      stillOpen: [grant("Roads Grant"), grant("Parks Grant")],
+      closingSoonTotal: 1,
+      stillOpenTotal: 2,
+    });
+    expect(html).toMatch(/<h1 [^>]*>3 open grants for you<\/h1>/);
+    expect(text).toContain("\n3 open grants for you\n");
+  });
+
+  it("drops the Department and Category labels and says when there is no deadline", async () => {
+    const dated = grant("Bridge Grant");
+    const undated = { ...grant("Rolling Grant"), daysUntil: null, nofo: { ...grant("Rolling Grant").nofo, expiration_date: undefined } };
+    const { html, text } = await render({ new: [dated, undated] });
+    for (const out of [html, text]) {
+      expect(out).not.toContain("Department:");
+      expect(out).not.toMatch(/Category: Transportation( ·| &middot;)/);
+      expect(out).toContain("No deadline listed");
+    }
+    expect(html).toContain("Department of Transportation &middot; Transportation");
+    expect(html).toMatch(/Deadline Jan 1, 2099<span aria-hidden="true"[^>]*>[^<]*<\/span><strong [^>]*>Closes in 3 days<\/strong>/);
+    expect(text).toContain("  Department of Transportation · Transportation · Deadline Jan 1, 2099\n");
+    expect(text).toContain("  Department of Transportation · Transportation · No deadline listed\n");
+  });
+
+  it("puts the intro in a hidden preheader before the content", async () => {
+    const { html } = await render({ new: [grant("Bridge Grant")] });
+    const intro = "We found 1 new grant matching your preferences.";
+    const pre = html.match(/<div aria-hidden="true" style="display:none;[^"]*">([^<]*)<\/div>/);
+    expect(pre?.[1].startsWith(intro)).toBe(true);
+    expect(html.indexOf(pre![0])).toBeLessThan(html.indexOf('<div role="article"'));
+  });
+
+  it("is light by default and switches to its own dark palette where the mail app allows", async () => {
+    const { contrastRatio, readableBrandColorOnDark, DIGEST_DARK_BG } = await import("grantwell-shared");
+    const { html } = await render({ new: [grant("Bridge Grant")] }, { brandColor: "#002868" });
+    expect(html).toContain('<meta name="color-scheme" content="light dark">');
+    expect(html).toContain(":root{color-scheme:light dark;supported-color-schemes:light dark}");
+    expect(html).toContain('<body bgcolor="#ffffff" class="gw-body" style="margin:0;padding:0;background-color:#ffffff;background-image:linear-gradient(#ffffff,#ffffff);">');
+    const dark = html.match(/@media \(prefers-color-scheme:dark\)\{([\s\S]*?)\n\}/)?.[1] ?? "";
+    expect(dark).toContain(`.gw-body{background:${DIGEST_DARK_BG}!important}`);
+    const link = readableBrandColorOnDark("#002868");
+    expect(dark).toContain(`.gw-link{color:${link}!important}`);
+    expect(contrastRatio(link, DIGEST_DARK_BG)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio("#b9c4c0", DIGEST_DARK_BG)).toBeGreaterThanOrEqual(4.5);
+    expect(html).toMatch(/<a href="[^"]+" class="gw-link"[^>]*>Bridge Grant<\/a>/);
+    expect(html).toMatch(/<td bgcolor="#002868" class="gw-pad"/);
+  });
+
+  it("falls back to the app name in the brand bar when there is no wordmark", async () => {
+    const { html } = await render({ new: [grant("Bridge Grant")] }, { logoUrl: "", appName: "GrantWell Colorado" });
+    expect(html).not.toContain("<img");
+    expect(html).toMatch(/<td bgcolor="#[0-9a-fA-F]{6}" class="gw-pad"[^>]*><span [^>]*>GrantWell Colorado<\/span><\/td>/);
+  });
+
+  it("darkens a pale brand colour to 4.5:1 on white and leaves passing colours alone", async () => {
+    const { contrastRatio, readableBrandColor } = await import("grantwell-shared");
+    expect(readableBrandColor("#23776C")).toBe("#23776C");
+    expect(readableBrandColor("#002868")).toBe("#002868");
+    const gold = readableBrandColor("#F2B705");
+    expect(contrastRatio(gold, "#ffffff")).toBeGreaterThanOrEqual(4.5);
+    const { html } = await render({ new: [grant("Bridge Grant")] }, { brandColor: "#F2B705" });
+    expect(html).not.toContain("#F2B705");
+    expect(html).toContain(`bgcolor="${gold}"`);
+  });
+});

@@ -1,13 +1,7 @@
-NotificationDigestBroadcastFunctionE682E13B	AWS::Lambda::Function
-NotificationDigestBroadcastFunctionServiceRoleAF23BAFB	AWS::IAM::Role
-NotificationDigestBroadcastFunctionServiceRoleDefaultPolicy3075F8CD	AWS::IAM::Policy
 NotificationDigestDailySchedule656AC8D2	AWS::Scheduler::Schedule
 NotificationDigestFunctionC5B06D80	AWS::Lambda::Function
 NotificationDigestFunctionServiceRole63F94B63	AWS::IAM::Role
 NotificationDigestFunctionServiceRoleDefaultPolicy25D49529	AWS::IAM::Policy
-NotificationDigestPreviewFunctionE2350086	AWS::Lambda::Function
-NotificationDigestPreviewFunctionServiceRole36A89666	AWS::IAM::Role
-NotificationDigestPreviewFunctionServiceRoleDefaultPolicy08D1990C	AWS::IAM::Policy
 NotificationDigestSchedulerRoleDA798E4A	AWS::IAM::Role
 NotificationDigestSchedulerRoleDefaultPolicyBBA31F4A	AWS::IAM::Policy
 NotificationDigestWeeklySchedule38A98CB7	AWS::Scheduler::Schedule

@@ -5,6 +5,15 @@
   "deadlines": [
     {
       "kind": "application",
+      "label": "No deadline: full proposals accepted anytime (target dates only)",
+      "date": null,
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Proposals will be accepted anytime, but they may miss a particular panel or committee meeting."
+    },
+    {
+      "kind": "other",
       "label": "Full Proposal Target Date: September 29, 2025, then the last Monday in September annually; proposals accepted anytime but may miss a panel",
       "date": "2025-09-29",
       "time": null,
@@ -13,7 +22,7 @@
       "quote": "Full Proposal Target Date(s) : September 29, 2025 Last Monday in September, Annually Thereafter January 26, 2026 Last Monday in January, Annually Thereafter Proposers are highly encouraged to submit by a target date."
     },
     {
-      "kind": "application",
+      "kind": "other",
       "label": "Full Proposal Target Date: January 26, 2026, then the last Monday in January annually; proposals accepted anytime but may miss a panel",
       "date": "2026-01-26",
       "time": null,
@@ -254,10 +263,6 @@
       "quote": "Proposals that focus primarily on the design, development, or use of offensive techniques are out of scope"
     },
     {
-      "item": "Budget on the Cover Sheet and budget sheets must not exceed the designation maximum or the proposal is returned without review",
-      "quote": "The maximum budget shown on the Cover Sheet and on the budget sheets must not exceed $300,000 for SEED proposals, $1,200,000 for RES proposals (including the budget for the optional TTE plan)"
-    },
-    {
       "item": "EDU proposals must include detailed assessment and evaluation plans and must request funds for an evaluator independent of the project",
       "quote": "All EDU proposals must have detailed plans for assessment and evaluation that are clearly aligned with the project's stated goals based on appropriate metrics."
     },
@@ -288,24 +293,9 @@
       "quote": "PIs are explicitly required to budget for travel to the PI meetings."
     },
     {
-      "item": "References Cited",
-      "userWrites": true,
-      "quote": null
-    },
-    {
-      "item": "Biographical Sketch",
-      "userWrites": true,
-      "quote": null
-    },
-    {
-      "item": "Current and Pending (Other) Support",
-      "userWrites": true,
-      "quote": null
-    },
-    {
       "item": "Facilities, Equipment and Other Resources",
       "userWrites": true,
-      "quote": null
+      "quote": "Any organizational resources that support BPC activities should also be described in the Facilities, Equipment and Other Resources section of the proposal"
     }
   ],
   "libraryRequired": [

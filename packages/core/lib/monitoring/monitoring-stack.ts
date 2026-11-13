@@ -49,7 +49,9 @@ export const LOG_MARKERS = {
   accountSetupFailed: ["Failed to set custom:state at confirmation", "Failed to revoke sessions after password reset"],
   kbRetrieveFailed: ["could not retrieve Knowledge Base documents"],
   chatAnswerFailed: ["Stream processing error:"],
+  chatVerified: ["CHAT_CHECK"],
   grantSearchFailed: ["Hybrid search error:"],
+  searchIndexBuildFailed: ["Search index build failed:"],
   createMetadataFailed: ["Error processing record:"],
   draftVersionWriteFailed: ["draft-version-writer failed on"],
   pipelineDispatchFailed: ["Error dispatching SQS record:"],
@@ -78,6 +80,8 @@ export interface MonitoringStackProps extends cdk.NestedStackProps {
   readonly draftVersionWriterFunction: lambda.IFunction;
   readonly draftVersionWriterFailures: sqs.IQueue;
   readonly aiGrantSearchFunction: lambda.IFunction;
+  readonly searchIndexBuilderFunction: lambda.IFunction;
+  readonly searchIndexDlq: sqs.IQueue;
   readonly applicationPdfGeneratorFunction: lambda.IFunction;
   readonly nofoPipeline: {
     readonly stateMachine: sfn.IStateMachine;
@@ -138,13 +142,29 @@ export class MonitoringStack extends cdk.NestedStack {
     });
 
     this.alarmTopic = new sns.Topic(this, "AlarmTopic", {
+      enforceSSL: true,
       topicName: `${this.prefix}-alarms`,
       displayName: `GrantWell ${config.id} alarms (raw)`,
     });
     this.alertTopic = new sns.Topic(this, "AlertTopic", {
+      enforceSSL: true,
       topicName: `${this.prefix}-alerts`,
       displayName: `GrantWell ${config.id} alerts`,
     });
+    // enforceSSL replaces the topics' default policy, which is what let CloudWatch alarms publish.
+    for (const topic of [this.alarmTopic, this.alertTopic]) {
+      topic.addToResourcePolicy(
+        new iam.PolicyStatement({
+          principals: [new iam.ServicePrincipal("cloudwatch.amazonaws.com")],
+          actions: ["sns:Publish"],
+          resources: [topic.topicArn],
+          conditions: {
+            ArnLike: { "aws:SourceArn": `arn:${cdk.Aws.PARTITION}:cloudwatch:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:alarm:*` },
+            StringEquals: { "aws:SourceAccount": cdk.Aws.ACCOUNT_ID },
+          },
+        })
+      );
+    }
 
     this.addAlertFormatter();
     this.addSiteAndApiAlarms(props);
@@ -152,6 +172,7 @@ export class MonitoringStack extends cdk.NestedStack {
     this.addEmailAlarms(config);
     this.addChatAndSearchAlarms(props);
     this.addDailyCapMetrics(props);
+    this.markerMetric("ChatVerified", props.chatFunction, LOG_MARKERS.chatVerified, cdk.Duration.hours(1));
     this.addDocumentAlarms(props);
     this.addNofoPipelineAlarms(props);
     this.addDraftAlarms(props);
@@ -160,7 +181,7 @@ export class MonitoringStack extends cdk.NestedStack {
     this.modelCanaryFunctionName = this.addModelCanary(props.bedrockModels);
 
     if (config.monitoring.dailyBrief) {
-      this.addDailyBrief([
+      this.addDailyBrief(props.chatFunction, [
         { label: "chat", fn: props.chatFunction, purpose: "answers every chat message; idle means nobody chatted" },
         { label: "chat sign-in check", fn: props.websocketAuthorizerFunction, purpose: "runs when a chat connection opens" },
         { label: "sign-up / sign-in trigger", fn: props.signupTriggerFunction, purpose: "runs on every sign-up and sign-in; errors include bot rejections" },
@@ -168,6 +189,7 @@ export class MonitoringStack extends cdk.NestedStack {
         { label: "knowledge base sync", fn: props.syncKBFunction, purpose: "starts indexing after uploads and NOFO changes" },
         { label: "draft history", fn: props.draftVersionWriterFunction, purpose: "saves a version each time a draft changes" },
         { label: "AI grant search", fn: props.aiGrantSearchFunction, purpose: "runs on every grant search" },
+        { label: "AI search index", fn: props.searchIndexBuilderFunction, purpose: "rebuilds the search index after grant changes, and nightly at 06:30 UTC" },
         { label: "PDF export", fn: props.applicationPdfGeneratorFunction, purpose: "runs when a user exports a PDF" },
         { label: "NOFO upload dispatch", fn: props.nofoPipeline.dispatcher, purpose: "starts processing for each uploaded NOFO" },
         { label: "NOFO text extraction", fn: props.nofoPipeline.extractText, purpose: "first step of NOFO processing" },
@@ -197,7 +219,7 @@ export class MonitoringStack extends cdk.NestedStack {
    */
   private addAlertFormatter(): void {
     const formatter = new lambda.Function(this, "AlertFormatterFunction", {
-      runtime: lambda.Runtime.PYTHON_3_12,
+      runtime: lambda.Runtime.PYTHON_3_13,
       handler: "handler.lambda_handler",
       code: lambda.Code.fromAsset(path.join(__dirname, "functions/alert-formatter"), {
         exclude: ["__pycache__"],
@@ -422,9 +444,27 @@ export class MonitoringStack extends cdk.NestedStack {
     this.alarm("GrantSearchFailingAlarm", {
       severity: "medium",
       name: "grant search returning nothing",
-      description: "AI grant search is showing users empty results because OpenSearch queries are failing.",
+      description: "AI grant search can't read or rank its search index, so users only get grant name and category matches.",
       metric: this.markerMetric("GrantSearchFailed", props.aiGrantSearchFunction, LOG_MARKERS.grantSearchFailed, cdk.Duration.minutes(15)),
       threshold: 3,
+    });
+
+    // Search keeps serving the last good index, so a broken builder shows up only as stale results.
+    this.alarm("SearchIndexBuildFailingAlarm", {
+      severity: "medium",
+      name: "AI search index not updating",
+      description: "The search index builder is failing, so new or changed grants are missing from AI search until it recovers. Its log says why.",
+      metric: this.markerMetric("SearchIndexBuildFailed", props.searchIndexBuilderFunction, LOG_MARKERS.searchIndexBuildFailed, cdk.Duration.hours(1)),
+      threshold: 2,
+    });
+
+    // Stays in alarm until someone drains the queue.
+    this.alarm("SearchIndexUpdatesLostAlarm", {
+      severity: "medium",
+      name: "AI search index updates dropped",
+      description: "Grant changes failed every rebuild attempt and were set aside. The nightly full rebuild still picks them up; drain the queue once the builder works.",
+      metric: props.searchIndexDlq.metricApproximateNumberOfMessagesVisible({ period: cdk.Duration.minutes(5), statistic: "Maximum" }),
+      threshold: 1,
     });
   }
 
@@ -491,7 +531,7 @@ export class MonitoringStack extends cdk.NestedStack {
     this.alarm("NofoProcessingTimedOutAlarm", {
       severity: "medium",
       name: "NOFO processing timed out",
-      description: "A NOFO ran past the 30-minute limit and is stuck: not published and not in the admin review queue.",
+      description: "A NOFO ran past the 45-minute limit and is stuck: not published and not in the admin review queue.",
       metric: pipeline.stateMachine.metricTimedOut({ period: cdk.Duration.minutes(15), statistic: "Sum" }),
       threshold: 1,
     });
@@ -683,8 +723,9 @@ export class MonitoringStack extends cdk.NestedStack {
         EXCLUDE_LOG_GROUP: logGroup.logGroupName,
         METRIC_NAMESPACE: this.prefix,
         METRIC_NAME: metricName,
+        RETENTION_DAYS: "90",
       },
-      description: "Finds GrantWell Lambdas that failed to start in the last 15 minutes",
+      description: "Finds GrantWell Lambdas that failed to start in the last 15 minutes, and sets 90-day retention on their logs",
       logGroup,
     });
     scan.addToRolePolicy(new iam.PolicyStatement({
@@ -692,7 +733,7 @@ export class MonitoringStack extends cdk.NestedStack {
       resources: [this.formatArn({ service: "logs", resource: "log-group", resourceName: "*", arnFormat: cdk.ArnFormat.COLON_RESOURCE_NAME })],
     }));
     scan.addToRolePolicy(new iam.PolicyStatement({
-      actions: ["logs:StartQuery"],
+      actions: ["logs:StartQuery", "logs:PutRetentionPolicy"],
       resources: [
         this.formatArn({
           service: "logs",
@@ -812,7 +853,8 @@ export class MonitoringStack extends cdk.NestedStack {
     };
   }
 
-  private addDailyBrief(components: BriefComponent[]): void {
+  private addDailyBrief(chatFunction: lambda.IFunction, components: BriefComponent[]): void {
+    const chatLogGroupName = `/aws/lambda/${chatFunction.functionName}`;
     // SSM, not an env var: Lambda caps all environment variables at 4 KB combined.
     const manifest = new ssm.StringParameter(this, "DailyBriefComponents", {
       parameterName: `/${this.prefix}/daily-brief/components`,
@@ -824,7 +866,7 @@ export class MonitoringStack extends cdk.NestedStack {
     });
 
     const brief = new lambda.Function(this, "DailyBriefFunction", {
-      runtime: lambda.Runtime.PYTHON_3_12,
+      runtime: lambda.Runtime.PYTHON_3_13,
       handler: "handler.lambda_handler",
       code: lambda.Code.fromAsset(path.join(__dirname, "functions/daily-brief"), {
         exclude: ["__pycache__"],
@@ -835,6 +877,7 @@ export class MonitoringStack extends cdk.NestedStack {
         STAGE: this.stage,
         BRIEF_COMPONENTS_PARAM: manifest.parameterName,
         ALARM_PREFIX: `${this.prefix} `,
+        CHAT_LOG_GROUP: chatLogGroupName,
       },
       description: "Publishes the daily GrantWell health brief to Slack",
       logGroup: new logs.LogGroup(this, "DailyBriefLogGroup", {
@@ -846,6 +889,15 @@ export class MonitoringStack extends cdk.NestedStack {
       actions: ["cloudwatch:GetMetricData", "cloudwatch:DescribeAlarms"],
       resources: ["*"],
     }));
+    brief.addToRolePolicy(new iam.PolicyStatement({
+      actions: ["logs:StartQuery"],
+      resources: [
+        this.formatArn({ service: "logs", resource: "log-group", resourceName: chatLogGroupName, arnFormat: cdk.ArnFormat.COLON_RESOURCE_NAME }),
+        this.formatArn({ service: "logs", resource: "log-group", resourceName: `${chatLogGroupName}:*`, arnFormat: cdk.ArnFormat.COLON_RESOURCE_NAME }),
+      ],
+    }));
+    // GetQueryResults takes only a query ID, so IAM can't scope it to a log group.
+    brief.addToRolePolicy(new iam.PolicyStatement({ actions: ["logs:GetQueryResults"], resources: ["*"] }));
     this.alertTopic.grantPublish(brief);
     manifest.grantRead(brief);
 

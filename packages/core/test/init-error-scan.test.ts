@@ -20,6 +20,7 @@ vi.mock("@aws-sdk/client-cloudwatch-logs", () => ({
   StartQueryCommand: aws.command("StartQueryCommand"),
   GetQueryResultsCommand: aws.command("GetQueryResultsCommand"),
   StopQueryCommand: aws.command("StopQueryCommand"),
+  PutRetentionPolicyCommand: aws.command("PutRetentionPolicyCommand"),
 }));
 vi.mock("@aws-sdk/client-cloudwatch", () => ({
   CloudWatchClient: aws.client(async (cmd: any) => aws.cloudwatch(cmd.constructor.name, cmd.input)),
@@ -202,6 +203,7 @@ const RUNTIME_SDK_3_1105_0: Record<string, string[]> = {
     "CloudWatchLogsClient",
     "DescribeLogGroupsCommand",
     "GetQueryResultsCommand",
+    "PutRetentionPolicyCommand",
     "StartQueryCommand",
     "StopQueryCommand",
   ],
@@ -217,4 +219,30 @@ it("imports only names the runtime's SDK 3.1105.0 has", () => {
       expect(RUNTIME_SDK_3_1105_0[pkg], `${pkg} ${name}`).toContain(name);
     }
   }
+});
+
+describe("init-error scan: log retention", () => {
+  it("sets the retention only on groups that have none, and keeps going when one fails", async () => {
+    const puts: string[] = [];
+    const logs = {
+      send: async (cmd: any) => {
+        const name = cmd.constructor.name;
+        if (name === "DescribeLogGroupsCommand") {
+          return cmd.input.nextToken
+            ? { logGroups: [{ logGroupName: "/aws/lambda/stack-C" }] }
+            : { logGroups: [{ logGroupName: "/aws/lambda/stack-A" }, { logGroupName: "/aws/lambda/stack-B", retentionInDays: 30 }], nextToken: "t" };
+        }
+        if (name === "PutRetentionPolicyCommand") {
+          if (cmd.input.logGroupName.endsWith("C")) throw Object.assign(new Error("denied"), { name: "AccessDeniedException" });
+          puts.push(`${cmd.input.logGroupName}=${cmd.input.retentionInDays}`);
+          return {};
+        }
+        throw new Error(name);
+      },
+    };
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    expect(await scanModule.enforceRetention(logs, "/aws/lambda/stack-", 90)).toEqual({ set: 1, failed: 1 });
+    expect(puts).toEqual(["/aws/lambda/stack-A=90"]);
+    expect(await scanModule.enforceRetention(logs, "/aws/lambda/stack-", 0)).toEqual({ set: 0, failed: 0 });
+  });
 });

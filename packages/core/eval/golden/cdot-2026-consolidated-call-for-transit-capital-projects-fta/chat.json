@@ -1,0 +1,26 @@
+[
+  {
+    "id": "q1",
+    "kind": "deadline",
+    "question": "When are applications due for the transit capital call?",
+    "expected": "Capital applications are due in COTRAMS by 11:59 p.m. MT on December 11, 2026 (the window opened October 12, 2026), and late applications are not accepted. Agencies new to DTR funding must submit the New Applicant Questionnaire by 11:59 p.m. MT on November 13, 2026.",
+    "quote": "by 11:59 p.m. MT on the day(s) set forth herein. Late applications will not be accepted or considered for",
+    "confirmed": false
+  },
+  {
+    "id": "q2",
+    "kind": "award",
+    "question": "Is there a cap on how much we can request for a bus facility project?",
+    "expected": "Yes. Other capital project requests (facilities, equipment, studies, support vehicles) are capped at $1,000,000. The minimum request is $25,000 (except when state funds are used as local match for federal funds), and every program requires a 20% local match.",
+    "quote": "other capital project requests are capped at a maximum of $1,000,000.00 based on project scope.",
+    "confirmed": false
+  },
+  {
+    "id": "q3",
+    "kind": "absent",
+    "question": "Is there a page limit on the project narrative?",
+    "expected": "Not stated in the notice.",
+    "quote": null,
+    "confirmed": false
+  }
+]

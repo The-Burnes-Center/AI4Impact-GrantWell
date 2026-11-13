@@ -8,7 +8,8 @@
  * promote-copy; review approve, reject, needs-reupload and close-expired; reupload-nofo and
  * reprocess-nofo; /automated-nofo-scraper; digest broadcast and POST preview; /submit-feedback;
  * /draft-generation; /ai-grant-search; PUT /notification-prefs; feature-rollout PATCH/PUT/DELETE;
- * user-documents upload-url and delete.
+ * user-documents upload-url and delete; user-session set_document_keys (documents.spec checks that
+ * it keeps only the caller's own keys).
  */
 import { randomUUID } from "node:crypto";
 import { rawCall } from "../helpers/api";
@@ -22,6 +23,8 @@ interface Probe {
   path: () => string;
   body?: () => Promise<object>;
   status: number;
+  /** Checks the JSON body of the signed-in call. */
+  check?: (body: any) => Promise<void>;
 }
 
 const documentKey = () => encodeURIComponent(`${runInfo().nofoName}/`);
@@ -52,14 +55,24 @@ const READS: Probe[] = [
   get("/admin/processing-reviews", 200),
   get("/user-management/users?limit=1", 200),
   {
-    name: "POST /user-documents/list (own folder)",
+    name: "POST /user-documents/list (own library)",
     method: "POST",
     path: () => "/user-documents/list",
-    body: async () => ({ folderPrefix: `${(await tokens()).username}/${runInfo().nofoName}/` }),
+    body: async () => ({}),
     status: 200,
+    check: async (body) => {
+      const { username } = await tokens();
+      expect(Array.isArray(body.documents), "documents array").toBe(true);
+      for (const doc of body.documents) expect(doc.key.startsWith(`${username}/`), `${doc.key} is the caller's`).toBe(true);
+    },
   },
   operation("/user-session", "list_sessions_by_user_id"),
   operation("/user-session", "list_all_sessions_by_user_id"),
+  {
+    ...operation("/user-session", "get_document_keys", { session_id: randomUUID() }),
+    name: "POST /user-session get_document_keys (<random id>)",
+    check: async (body) => expect(body).toEqual({ document_keys: null, exists: false }),
+  },
   operation("/user-draft", "list_drafts_by_user_id"),
   operation("/user-draft", "list_all_drafts_by_user_id"),
   operation("/user-draft", "list_draft_versions", { session_id: randomUUID() }),
@@ -74,17 +87,32 @@ const NOT_FOUND: Probe[] = [
 const DEVELOPER_ONLY: Probe[] = [
   get("/feature-rollouts/ai-grant-search", 403),
   get("/feature-rollouts/ai-grant-search/users", 403),
-  get("/notification-digest/preview", 403),
 ];
+
+const downloadUrl = (name: string, fileName: () => Promise<string>): Probe => ({
+  name: `POST /user-documents/download-url (${name})`,
+  method: "POST",
+  path: () => "/user-documents/download-url",
+  body: async () => ({ fileName: await fileName() }),
+  status: 403,
+});
+
+const NOT_YOURS: Probe[] = [
+  downloadUrl("another user's key", async () => `e2e-smoke-${randomUUID()}/documents/x.txt`),
+  downloadUrl("own prefix, then ..", async () => `${(await tokens()).username}/../e2e-smoke-${randomUUID()}/x.txt`),
+];
+
+const PROBES = [...READS, ...NOT_FOUND, ...DEVELOPER_ONLY, ...NOT_YOURS];
 
 async function expectStatus(probe: Probe, token: "none" | "user", status: number) {
   const body = token === "user" ? await probe.body?.() : undefined;
   const { status: actual, text } = await rawCall(probe.method, probe.path(), { body, token });
   expect(actual, `${probe.name} → ${actual}: ${text.slice(0, 300)}`).toBe(status);
+  if (token === "user") await probe.check?.(JSON.parse(text));
 }
 
 test.describe("as the admin test user", () => {
-  for (const probe of [...READS, ...NOT_FOUND, ...DEVELOPER_ONLY]) {
+  for (const probe of PROBES) {
     test(`${probe.name} → ${probe.status}`, async () => {
       await expectStatus(probe, "user", probe.status);
     });
@@ -92,7 +120,7 @@ test.describe("as the admin test user", () => {
 });
 
 test.describe("without a token", () => {
-  for (const probe of [...READS, ...NOT_FOUND, ...DEVELOPER_ONLY]) {
+  for (const probe of PROBES) {
     test(`${probe.name} → 401`, async () => {
       await expectStatus(probe, "none", 401);
     });

@@ -246,7 +246,12 @@ describe("callers", () => {
   });
 
   describe("synthesize deadline extraction", () => {
-    const event = () => ({ nofoName: "G", s3Bucket: "b", rawTextKey: "k", mergedSummary: structuredClone(SUMMARY) });
+    const event = () => ({
+      nofoName: "G",
+      s3Bucket: "b",
+      rawTextKey: "k",
+      mergedSummary: { ...structuredClone(SUMMARY), KeyDeadlines: [{ item: "Application due", description: "June 30, 2026; December 1, 2026" }] },
+    });
     const withDeadline = (deadlineReply: () => object) =>
       aws.bedrock.mockImplementation(async (body: any) =>
         body.output_config?.format ? jsonReply(QUESTIONS) : deadlineReply()
@@ -274,6 +279,18 @@ describe("callers", () => {
       withDeadline(() => textReply(text));
       const out = await synthesize(event());
       expect(out.applicationDeadline).toBe(date);
+    });
+
+    it("drops a date whose year the grant never states", async () => {
+      withDeadline(() => textReply("2027-09-01"));
+      const out = await synthesize(event());
+      expect(out.applicationDeadline).toBeNull();
+    });
+
+    it("reads the date on the last line after an explanation", async () => {
+      withDeadline(() => textReply("The last closing date is June 30, 2026.\n\n2026-06-30"));
+      const out = await synthesize(event());
+      expect(out.applicationDeadline).toBe("2026-06-30");
     });
 
     it.each([

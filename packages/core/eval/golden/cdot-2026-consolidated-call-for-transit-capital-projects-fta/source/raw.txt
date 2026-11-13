@@ -1,0 +1,1319 @@
+COLORADO
+Department of Transportation
+CDOT
+Division of Transit & Rail
+TM
+2026
+Notice of Funding Availability and Guidance
+for Capital Projects
+October 12, 2026
+PART 1 Overview
+Introduction
+The Colorado Department of Transportation (CDOT) Division of Transit and Rail (DTR) is issuing a Notice
+of Funding Availability (NOFA), and calling for Capital transit projects that are expected be initiated in
+calendar year 2027 and completed within approximately one to three years (depending on the
+performance period of the specific award), for the following Federal Transit Administration (FTA) and
+State transit grant programs:
+FTA 5310 Enhanced Mobility of Seniors and Individuals with Disabilities Program (49 U.S.C.
+5310)
+FTA 5311 Rural Area Formula Program (49 U.S.C. 5311)
+FTA-5339 Bus and Bus Facilities Program (49 U.S.C. 5339)
+State FASTER Transit funds
+The NOFA and corresponding materials describe the available funding programs, applicant and project
+eligibility, local match requirements, application preparation and submission guidelines, evaluation
+criteria, DTR application review process, and the schedule for this call for projects.
+Application Schedule
+All applications are due to DTR via submission in COTRAMS, DTR's online award management system, by
+11:59 p.m. MT on the day(s) set forth herein. Late applications will not be accepted or considered for
+funding.
+Table 1: Application Schedule
+Application
+Application
+Application Types
+Start Date
+Due Date
+Capital Applications
+10/12/2026
+12/11/2026
+2026 NOFA Webinar will be held on Wednesday, October 28th at 1:00 p.m. MT. Webinar invites will be
+sent via email.
+Page I 1
+October 2026
+COTRAMS Access & New Agency Questionnaire
+If your agency has never received transit funds from DTR or has not received transit funds in the last five
+(5) years, you will need to complete and submit a New Applicant Questionnaire to Audrey Dakan via
+cdot_dtr_pre-award@state.co.us. Please submit the questionnaire no later than 11:59 p.m. MT on
+Friday, November 13, 2026., regardless of your project type. The questionnaire, in MS Word format, is
+included with this NOFA. This questionnaire is intended to determine an agency's eligibility for Federal
+or State funding and ability to meet DTR's threshold criteria for managing funds. If it is determined your
+agency is eligible and meets the threshold criteria, you will be given a COTRAMS user ID and password
+so you can submit your application(s). The COTRAMS Community User Manual Version 4 helps to
+answer many questions concerning COTRAMS. You can also reach out to Audrey Dakan via
+cdot_dtr_pre-award@state.co.us. with COTRAMS questions.
+If you have forgotten your COTRAMS user ID and/or password or need any help accessing COTRAMS,
+contact Erin Kelican via erin.kelican@state.co.us immediately to reset your login credentials.
+Award & Contracting Schedule
+Following is the schedule DTR will generally adhere to for this Call for Projects.
+Table 2: Award and Contracting Schedule.
+Phase
+Application/Evaluation/Selection Milestone
+Date
+Notice of Funding
+Call for projects officially broadcast by DTR
+October 12,
+Availability
+2026
+New Applicant Questionnaire
+November
+New Applicants
+13, 2026
+Application Due
+Applications due to DTR via COTRAMS
+December
+Date
+11, 2026
+Initial application screening by DTR (for subrecipient
+eligibility and threshold criteria/project eligibility)
+January /
+Review, Scoring, &
+Applications evaluated by review committee(s)
+February
+Selection
+Review committee(s) complete scoring and prepare
+2027
+recommended projects lists; final scores and
+recommendations submitted to DTR Director for approval
+DTR issues Award Offer Letters for selected projects.
+Award Discussion
+Agencies review and accept or decline awards in COTRAMS
+& Approval
+DTR creates Awards in COTRAMS and works with
+March 2027
+subrecipients to complete risk assessment.
+Statement of Work (SOW) is developed and finalized
+TIP & STIP amendments processed by MPOs and CDOT
+Grant Contract
+CDOT creates budgets in SAP and COTRAMS
+April 2027 /
+Development
+May 2027
+DTR submits SOW and other other supplemental materials
+for grant award contracting
+CDOT Procurement and Contract Services Center prepares
+Grant Execution
+and finalizes subaward/grant agreements
+June 2027 -
+DocuSign packages circulated for signatures
+August 2027
+Page I 2
+October 2026
+Subaward/grant agreements are executed by CDOT and
+subrecipients
+DTR executes the COTRAMS Project Budgets, making
+project funds available
+Selection Methodology
+In order to fairly evaluate all applications, staff from the DTR Pre-Award Unit (DTR Pre-Award) will
+convene one or more Inter-Agency Evaluation Committees (IAEC) to evaluate and score applications.
+The IAEC may consist of representatives from multiple CDOT Divisions, including DTR, Office of
+Innovative Mobility (OIM), Environmental Justice & Equity branch, and the Division of Transportation
+Development; other State agencies, such as the Colorado Energy Office (CEO) and Colorado Department
+of Public Health & Environment (CDPHE); and other organizations with subject matter expertise.
+DTR Pre-Award will develop a recommended project list and present it to the DTR Director for approval.
+After approval, DTR Pre-Award will distribute the award list to all applicants and issue Proposed
+Awards/Award Offer Letters in COTRAMS for selected projects for awardee review and acceptance.
+Once all Proposed Awards/Award Offer Letters are signed and accepted, DTR Pre-Award will begin the
+process of programming and budgeting the projects in CDOT's systems (E.g. COTRAMS, SAP, and STIP).
+Contact
+The Division of Transit & Rail (DTR) has established a new email address to streamline all capital-related
+inquiries. Email address:
+cdot_dtr_pre-award@state.co.us
+To ensure your inquiries are categorized and addressed efficiently, please include one of the following
+topics in your email's subject line:
+- Application Assistance;
+-
+Multiple applications;
+- Project Eligibility;
+- Vehicle Cost Estimate;
+-
+COTRAM Assistance;
+-
+DBE Program; or
+- Other (please specify)
+Page I 3
+October 2026
+Pre-Award Lead by TPR
+COLORADO
+N
+Department of Transportation
+Upper
+Division o Transportation Development
+Front
+Created: October 2026 by curtissca
+Range
+North
+Data Source: CDOT
+Front
+Northwest
+Range
+Kelly Smith
+Sarah
+Collette
+Greater Denver Area
+Eastern
+Intermountain
+Grand Valley
+Pikes
+Peak
+Central
+Area
+Front
+Range
+Gunnison
+Valley
+Sarah
+Lindsay
+Pueblo Area
+Collette
+Miller
+Southeast
+San Luis
+Valley
+Southwest
+South Central
+0 12.5 25
+50 Miles
+Counties
+-
+Transportation Planning Regions (TPR)
+The Pre-Award team manages activities from funding development through award execution, including
+program planning, Notice of Funding Availability (NOFA) development, application administration,
+project evaluation and selection, grant budgeting, FTA grant application development, and contract
+execution.
+Pre - - Award Staff
+Pre - Award Staff Email
+Sarah Collette
+sarah.collette@state.co.us
+Lindsay Miller
+lindsay.miller@state.co.us
+Kelly Smith
+kelly.smith@state.co.us
+Page I 4
+October 2026
+Grant Manager Regions and TPRs
+COLORADO
+N
+Department of Transportation
+Division of Transit Rail
+Upper
+Front
+Created: October 2026 by curtissca
+Range
+Data Source: CDOT
+North
+Northwest
+Front
+Range
+Katie
+Romero
+Jenna Wyatt
+Greater
+Denver
+Arapahoe Co
+Eastern
+Area
+Intermountain
+Douglas Co
+Grand Valley
+Jim
+Pikes
+Peak
+Bath
+Area
+Gunnison
+Central Front Range
+Valley
+Jeremy
+Leslie
+Pueblo Area
+Ralston
+Szeluga
+Southeast
+San Luis
+Valley
+Southwest
+Montezuma Co
+South Central
+Exceptions
+0 12.5 25
+50 Miles
+Assigned to:
+Jim
+Counties
+Transportation Planning Regions (TPR)
+Leslie
+The Post-Award team oversees grant implementation after award execution, including subrecipient
+monitoring, reimbursement review, compliance oversight, reporting, technical assistance, and project
+closeout.
+Post - Award Staff
+Post - Award Staff Email
+Jim Bath
+jimmy.bath@state.co.us
+Leslie Ralston
+leslie.ralston@state.co.us
+Katie Romero
+katie.romero@state.co.us
+Jeremy Szeluga
+jeremy.szeluga@state.co.us
+Jenna Wyatt
+jenna.wyatt@state.co.us
+PART 2 Definitions
+1. Advance Order Authority: Permits an awardee of federal or state funds to obligate funds before a
+subaward/grant agreement is executed. This authority specifically applies only to long-lead time
+capital projects, such as the purchase of new revenue service vehicles for replacement or expansion,
+Page I 5
+October 2026
+and allows awardees to issue notices to proceed to selected vendors or sign purchase orders prior to
+execution of a subaward/grant agreement. However, it does not permit acceptance or payment for
+procured goods until the subaward/grant agreement is executed. DTR Pre-Award approval is always
+required before exercising Advance Order Authority on any project.
+2. Advance Order Placement: The ordering of a capital transit asset to be reimbursed under a
+subaward/grant agreement, prior to the execution of that subaward/grant agreement.
+3. Capital transit asset: Rolling stock, facility, infrastructure, or equipment with an expected useful life
+of at least one year, and which is eligible for capital assistance.
+4. Clean Transit Enterprise: A government-owned business operating as a division of CDOT. The Clean
+Transit Enterprise's business purposes include but are not necessarily limited to supporting
+Colorado's transit electrification through planning efforts, transit site upgrades, procurement of
+electric transit buses, and deployment of associated charging infrastructure.
+5. COTRAMS: The Colorado Transit and Rail Awards Management System (aka COTRAMS) is DTR's
+cloud-based grant management system. It is designed to be the hub where transit agencies come to
+do business with DTR.
+6. Coordinated Public Transit-Human Service Transportation Plan (Coordinated Plan): A locally
+developed, coordinated transportation plan that identifies the transportation needs of individuals
+with disabilities, seniors, and people with low incomes; provides strategies for meeting those needs;
+and prioritizes transportation services for funding and implementation.
+7. Closed Door Service: Transit service that is limited to a particular clientele, such as the participants
+in a particular program or the residents of a particular facility, as opposed to being offered to the
+public at large or to any senior or person with a disability.
+8. Expansion vehicle: Rolling stock acquired to add to the agency's existing revenue service fleet,
+where the acquired rolling stock expands the agency's fleet and/or service.
+9. An Independent Cost Estimate (ICE): An objective, internal "should-cost" projection of the resources,
+labor, materials, and overall price required for a contract, prepared by the transit agency before
+receiving any bids or proposals
+10. Intelligent Transportation Systems (ITS): The use of electronics, communications, or information
+processing as a single component or in combination to improve efficiency or safety of a transit or
+highway system.
+11. Invitation for Bid (IFB): An official procurement request issued by public entities to request
+competitive price estimates from potential vendors for fully specified equipment, assets, or services.
+12. Large Urbanized Area (Large UZA): Census-designated area with a population over 200,000.
+13. Master Price Agreement: A foundational, long-term contract that establishes the core pricing, legal
+terms, warranties, and delivery standards for future vehicle purchases without needing to
+renegotiate basic terms for individual orders.
+14. Metropolitan Planning Organization (MPO): The policy board of an organization created and
+designated to carry out the metropolitan transportation planning process. MPOs are required to
+represent localities in all urbanized areas (UZAs) with populations over 50,000, as determined by the
+U.S. Census.
+Page I 6
+October 2026
+15. Minimum Useful Life (MUL): The minimum number of years or miles transit vehicles must be in
+service before they can be retired, determined by years or miles accumulated in active revenue
+service. This point assumes that most vehicles still have additional years of useful and cost-effective
+services but that most of the asset's value has been consumed.
+16. Net Operating expenses: Those expenses that remain after the provider subtracts operation
+revenues from eligible operating expenses. Farebox revenue is one of the most common operating
+revenues.
+17. Open Door Public Transportation: Services that are open to any member of the public, in the case of
+public transportation programs, as opposed to services that are limited to a particular sub-group of
+the general population.
+18. Open Door Specialized Transportation: Service available to any elderly or disabled person in need
+and not limited to a particular clientele or facility.
+19. Operating expenses: Those costs necessary to operate and maintain a public transportation system.
+Operating expenses usually include such costs as salaries, benefits, fuel, and items having an
+expected useful life of less than one year.
+20. Participating Addendum: A formal binding contract enabling state agencies, municipal governments,
+and qualifying public bodies to access and execute orders under a pre-negotiated cooperative
+contract, including NASPO ValuePoint master price agreements, subject to state-specific terms and
+conditions.
+21. Pre-Award Authority (pre-grant execution performance): Permits a subrecipient of federal funds to
+obligate funds up to 90 days before a subaward agreement is executed. For example, operating (and
+administrative) and mobility management costs incurred up to 90 days prior to execution of the
+subaward agreement can be reimbursed. For capital and planning projects, subrecipients may issue
+notices to proceed to selected vendors or sign purchase orders for goods/services and, if timing
+permits, accept and pay for procured goods/services, up to 90 days prior to execution of the
+subaward agreement. DTR Pre-Award approval is always required before exercising Pre-Award
+Authority on any project.
+22. Preventive maintenance: All maintenance costs related to vehicles and non-vehicles. Specifically,
+preventive maintenance includes all the activities, supplies, materials, labor, services, and associated
+costs required to preserve or extend the functionality and serviceability of the asset in a cost-
+effective manner, up to and including the current state of art for maintaining such an asset. In this
+call, preventive maintenance can include any equipment that performs a protective measure to
+protect the health and safety of drivers and passengers.
+23. Price Analysis: The evaluation of an overall proposed figure without reviewing individual cost
+components or profit margins, utilized pursuant to Federal Transit Administration (FTA)
+procurement standards to verify that requested pricing remains fair and reasonable.
+24. Replacement vehicle: Rolling stock acquired to replace existing rolling stock, where the existing
+rolling stock is replaced and removed from the agency's revenue service fleet, or is converted to a
+spare vehicle.
+25. Revenue service vehicle: Rolling stock used in the provision of revenue generating transit service to
+passengers.
+Page I 7
+October 2026
+26. Rolling Stock: Buses, cutaways, vans, minivans, train cars, gondola cabins, SUVs, automobiles, trucks,
+or other passenger vehicles.
+27. Rural Area (also called non-urbanized area): Census-designated area with a population under
+50,000.
+28. Small Urbanized Area (Small UZA or Small Urban): Census-designated area with a population
+between 50,000 and 200,000 (e.g. the Boulder, Lafayette-Louisville-Erie, Longmont, Pueblo, Greeley,
+and Grand Junction Urbanized Areas).
+29. Spare Vehicle: A rolling stock vehicle that is not normally used in regular revenue service, but,
+rather, is used as a backup vehicle for those instances when full-time vehicles must be removed
+from regular revenue service for repairs or servicing.
+30. Specialized Transportation Services: Services specifically designed to meet the transportation needs
+of elderly persons, persons with disabilities, veterans, low-income persons, or others with special
+needs.
+31. Special considerations: For applications for replacement vehicles, a request for special
+considerations can be made to retire a vehicle early (i.e., when a vehicle has not accumulated the
+minimum years or miles in active revenue service for that particular vehicle type). Special
+considerations of this type include unexpected declines in vehicle condition, high maintenance
+costs, damage beyond repair, operating conditions, or other relevant factors indicating a need for
+replacement before MUL has been met. See Scenario 3, for Replacement of Revenue Vehicles, in
+FTA-5310, 5311, 5339, FASTER and SB228 Capital Projects Evaluation Criteria, under PART 9 below.
+32. Statewide Transportation Improvement Program (STIP): Each state is required under 49 U.S.C.
+5304(g) to develop a statewide transportation improvement program (STIP) covering a period of at
+least four years. The STIP is a staged, multi-year, statewide intermodal program of transportation
+projects, consistent with the statewide transportation plan and planning processes as well as
+metropolitan plans, transportation improvement programs (TIPs), and planning processes. The STIP
+must be developed in cooperation with the metropolitan planning organizations (MPOs), public
+transit providers, and any Regional Transportation Planning Organizations (RTPO) in the state, and
+must be compatible with the TIPs for the state's metropolitan areas.
+33. Support Vehicle (Non-Revenue Service Vehicle): A vehicle operated by a transit agency for a purpose
+other than passenger revenue services, such as a staff car or a maintenance response truck.
+34. Transportation Improvement Program (TIP): A list of upcoming transportation projects developed by
+each MPO-covering a period of at least four years. The TIP must be developed in cooperation with
+the state and public transit providers. The TIP should include capital and non-capital surface
+transportation projects, bicycle and pedestrian facilities and other transportation enhancements,
+Federal Lands Highway projects, and safety projects included in the State's Strategic Highway Safety
+Plan.
+35. Transportation Development Credits (Toll Credits): Transportation Development Credits (TDCs) can
+be used to fulfill the federal matching fund requirements associated with the use of federal highway
+and transit reimbursements for eligible capital, operating and planning activities (23 U.S.C. 120). By
+fulfilling the requirement for the non-federal share of a federally funded transportation project,
+TDCs allow federal funding to potentially reimburse up to 100 percent of the eligible project cost.
+Toll Credits are not funds, but a funding tool to meet federal funds local match requirements. A
+federal project using Toll Credits still needs to find funds to cover the total project cost. States are
+Page I 8
+October 2026
+awarded and accrue these credits through the Federal Highway Administration (FHWA) based on
+the amount of capital investments made in federally approved toll facilities such as toll roads and
+tolled bridges.
+36. Unified Planning Work Program (UPWP): An annual or biennial statement of work identifying the
+planning priorities and activities to be carried out within a metropolitan planning area. At a
+minimum, a UPWP includes a description of the planning work and resulting products, who will
+perform the work, time frames for completing the work, the cost of the work, and the source(s) of
+funds. Metropolitan Planning Organizations (MPOs) are required to develop UPWPs to govern work
+programs for the expenditure of FHWA and FTA planning funds.
+37. Vehicle or Rolling Stock Overhaul: Systematic replacement or upgrade of systems whose useful life is
+less than the useful life of the entire vehicle. Overhaul is an eligible capital expense and is performed
+as a planned preventive maintenance activity. Overhaul is intended to enable the rolling stock to
+perform to the end of the original useful life. Overhaul does not extend the useful life of rolling
+stock. For rolling stock to be overhauled, it must have accumulated at least 40 percent of its useful
+life.
+38. Vehicle quote for application: An official document or record establishing a binding price proposal,
+precise technical specifications, and fulfillment terms for requested public transit fleet vehicles,
+including buses, vans, or shuttle cutaways.
+39. Zero-Emission Vehicle (ZEV): A vehicle that produces no tailpipe emissions, such as a battery electric
+vehicle or hydrogen fuel cell vehicle. For the purposes of the Clean Transit Enterprise programs,
+compressed natural gas (CNG) vehicles fueled exclusively with renewable natural gas (RNG) are
+sometimes eligible under certain specific conditions.
+Page I 9
+October 2026
+PART 3 Available Funding and Program Descriptions
+Table 4: Available Funding Programs for Capital Call for Projects
+Funding Program
+Amount Available*
+FTA 5310: Enhanced Mobility of Seniors and Individuals
+with Disabilities Formula Program
+Rural (All areas outside of urban areas)
+$757,377
+FTA 5310: Enhanced Mobility of Seniors and Individuals
+with Disabilities Formula Program
+Small Urban (Boulder, Castle Rock, Grand Junction, Greeley, Longmont,
+Lafayette/Louisville/Erie, and Pueblo SUZAs)
+$715,773
+FTA 5311: Formula Grants for Rural Areas Program
+(All areas outside of urban areas)
+$1,706,211
+FTA 5339: Bus and Bus Facilities Formula Program
+Rural (all areas outside of urban areas)
+$4,139,420
+FTA 5339: Bus and Bus Facilities Formula Program
+Small Urban (Boulder, Castle Rock, Grand Junction, Greeley, Longmont,
+Lafayette/Louisville/Erie, and Pueblo SUZAs)
+$3,097,578
+FASTER Transit Funds (Rural / Statewide - Competitive)
+$4,100,000
+FASTER Transit Funds (Urban Set Asides - Rolling Stock)
+$3,900,000
+TOTAL
+$18,416,359
+*Funding amounts are based on available FTA apportionment amounts and annual FASTER allocations,
+including residual funds, and are subject to actual funding availability at the time of project selection
+and award. DTR reserves the right to award less than the amounts listed in this table based on
+application evaluation outcomes.
+FTA 5310 Program Description
+FTA Section 5310 is a formula program that provides capital and operating assistance to states and
+designated recipients for services designed to improve mobility and meet the needs of seniors and
+persons with disabilities. Projects funded through this program must be targeted toward meeting the
+transportation needs of seniors and individuals with disabilities, although 5310-funded services may
+be used by the general public on an incidental basis. However, it is not sufficient that seniors and
+individuals with disabilities are included or assumed to be included among the people who will benefit
+from the project.
+FTA 5310 funds are made available in three separate population categories: rural, small urban, and large
+urban. DTR only administers funds for rural and small urbanized areas. 5310 funds for large urbanized
+areas are administered by the MPOs/COGs.
+5310 program legislation requires that at least fifty-five percent (55%) of 5310 funds be available for
+"traditional" Section 5310 projects (i.e., capital purchases and mobility management), while the
+remaining forty-five percent (45%) can be used for other capital and operating projects that were
+previously associated with the New Freedom program.
+The 5310 program also requires that projects funded through the program must be included in a
+coordinated public transit-human service transportation plan (coordinated plan).
+Page I 10
+October 2026
+FTA 5311 Program Description
+FTA Section 5311 is a formula program that provides capital, planning, and operating (and
+administrative) assistance to states to support public transportation in rural areas with populations less
+than 50,000.
+FTA 5339 Program Description
+FTA Section 5339 is a formula program that provides capital funds to designated recipients in large UZAs
+and to states for small UZAs and rural areas for the purpose of financing capital bus and bus related
+projects that will support the continuation and expansion of public transportation services.
+DTR manages 5339 capital funds for rural and small urbanized areas only. FTA 5339 funds for the
+Denver, Fort Collins, and Colorado Springs large urbanized areas are administered by their respective
+designated recipients of FTA Section 5307 funds.
+FASTER Program Description
+State FASTER funds provide capital and operating assistance for public transportation and open-door
+specialized transportation in both rural and urbanized areas.
+Page I 11
+October 2026
+PART 4
+Subrecipient Eligibility
+FTA 5310 Subrecipient Eligibility
+Eligible subrecipients of FTA Section 5310 funds are as follows:
+1. "Traditional" 5310 funds (i.e.., Mobility Management and Capital projects)
+a. A private non-profit organization; or
+b. A local governmental authority that:
+i.
+Is approved by DTR to coordinate services for seniors and individuals with disabilities.
+This approval must be requested in advance and should demonstrate how the
+governmental authority is coordinating with others in its area.
+OR
+ii.
+Certifies that there are no non-profit organizations readily available in the area to
+provide the service. Governmental authorities must seek this certification prior to
+applying and must demonstrate due diligence in attempting to identify any local
+private nonprofit entity that is or might be interested in providing services for seniors
+and individuals with disabilities.
+Governmental authorities eligible for 5310 funding as "coordinators of services for seniors and
+individuals with disabilities" are those designated by DTR to coordinate human service activities in a
+particular area. Examples of such eligible governmental authorities are a county agency on aging or
+a public transit provider that DTR has identified as the lead agency to coordinate transportation
+services funded by multiple Federal or State human service programs.
+2. "Non-Traditional" Other 5310 funds (i.e., Operating projects):
+A private non-profit organization;
+A state or local governmental authority; or
+An operator of public transportation that receives a Section 5310 award indirectly through a
+recipient.
+FTA 5311 Subrecipient Eligibility
+Eligible subrecipients of Section 5311 funds include federally recognized Indian Tribes, or local
+government authorities, nonprofit organizations, and operators of public transportation. Intercity bus
+service providers who seek 5311(f) funds will need to contact the DTR Bus Operations Team regarding
+funding availability.
+Eligible subrecipients must also meet the following additional criteria:
+Operate a fixed-route and/or demand response service in rural areas of Colorado which are
+clearly promoted as open to the general public;
+Sign annual Certifications & Assurances, certifying compliance with all applicable federal
+and state regulations;
+Comply with federal drug & alcohol testing regulations and quarterly and annual reporting
+requirements; and
+Create and/or maintain the following documents/policies/procedures:
+Title VI plan;
+Limited English Proficiency (LEP) plan;
+Page 12
+October 2026
+Asset management plan;
+Service plan;
+Americans with Disabilities Act (ADA) plan;
+Department of Labor (DOL) policies and procedures;
+Drug & Alcohol policies and procedures; and
+Procurement policies and procedures.
+FTA 5339 Subrecipient Eligibility
+Eligible subrecipients of Section 5339 funds are public agencies or private nonprofit organizations
+engaged in public transportation, including those providing services open to a segment of the general
+public, as defined by age, disability, or low income. Applicants must also certify that they have
+established and implemented a drug and alcohol testing program in accordance with the conditions of
+FTA 5339 funding. See 49 CFR Part 40 and Part 655.
+Eligible applicants must meet a variety of eligibility criteria, including the following:
+Operate a fixed-route and/or demand response service in rural or small UZAs of Colorado which
+are clearly promoted as open to the general public;
+Sign annual Certifications & Assurances, certifying compliance with all applicable federal and
+state regulations;
+Comply with federal drug & alcohol testing regulations and quarterly and annual reporting
+requirements; and
+Create and/or maintain the following documents/policies/procedures:
+Title VI plan;
+Limited English Proficiency (LEP) plan;
+Asset management plan;
+Service plan;
+Americans with Disabilities Act (ADA) plan;
+Department of Labor (DOL) policies and procedures;
+Drug & Alcohol policies and procedures; and
+Procurement policies and procedures.
+FASTER Grantee Eligibility
+Eligible grantees of local competitive State FASTER funding assistance are local public and private
+nonprofit entities, as well as tribal governments, that offer public transportation or open-door
+specialized transportation.
+For the purposes of this Capital Call, $3.9M is made available as a set-aside for the state's three large
+UZAs, with funds going to the three designated recipients in each, as follows: $3M to RTD in Denver,
+$700K to MMT in Colorado Springs, and $200K to Transfort in Fort Collins. $4.1M is made available
+statewide on a competitive basis; the designated recipients in the three large urbanized areas are not
+eligible to apply for the statewide competitive funds because they are guaranteed the set-aside funds,
+just as they are guaranteed a formula amount under FTA 5339 and FTA 5307.
+Page I 13
+October 2026
+Program Eligibility Determination
+DTR staff do not expect applicants to know which of the many funding programs might be the most
+appropriate for them. Therefore, DTR will use a variety of eligibility guidelines to determine the
+appropriate funding source(s) for each applicant and project. However, applicants can state their
+preference for (or against) a certain source(s) for a particular project in their respective applications.
+DTR will largely determine the eligibility of each project based on the agency profile and staff knowledge
+of each applicant's operation, along with the information provided in the application. Staff will consider
+funding selected projects from any of the programs for which an applicant is eligible and under which a
+particular project is eligible, subject to funding availability and project scoring.
+In considering program eligibility, DTR will consider three service area factors, based on whether an
+applicant serves a rural area, a small urbanized area, or a large urbanized area. If an applicant or project
+serves more than one of the three areas, be sure to expressly describe the multiple service areas in the
+application. DTR will also consider three service population factors, based on whether an applicant
+provides public transportation, open door specialized transportation, or closed-door specialized
+transportation. If any applicant or project serves more than one of the three service populations, be
+sure to expressly describe the multiple service populations in the application. Providing this vital
+information in the Project Information section of the application will greatly assist DTR.
+Applicants must be prepared to take full and complete responsibility for carrying out the proposed
+project. Project sponsorship cannot later be transferred or reassigned to another agency without prior,
+express written approval from DTR. DTR encourages agencies to collaborate and select the most
+appropriate applicant agency prior to submitting an application and not assume that DTR will approve
+any project sponsorship change, transfer, or reassignment.
+Page I 14
+October 2026
+PART 5
+Project Eligibility
+FTA and State Funds may be used for any items defined as a capital asset by the FTA (currently defined
+as items costing more than $5,000 and with a useful life of more than one year). However, DTR will not
+accept requests for funding office-related furnishings and administrative staff vehicles, nor for the
+leasing of capital assets or administrative expenses related to a capital purchase. Eligible work
+elements or activities for capital assets include, but are not limited to, the purchase, acquisition, or
+construction of the following:
+Revenue service vehicles;
+Vehicle rehabilitation or rebuild;
+Preventive maintenance or vehicle overhaul;
+Design or construction of transit stations, transfer facilities, bus storage and/or maintenance
+facilities, and other transit facilities;*
+Design or construction of multimodal facilities, such as facilities that accommodate some
+combination of services of multi-regional or statewide significance, such as regional bus service,
+Amtrak, and Greyhound/intercity bus service;*
+Design or construction of park-and-ride facility construction, renovation or improvements;*
+Technology improvements that enable enhanced transit services, including signal prioritization
+and Intelligent Transportation Systems (ITS);
+Technology improvements that significantly improve the coordination of human services
+transportation by means of mobility management tools, such as call centers;
+Wayfinding signage between modes (e.g., signage for intermodal facilities, intercity bus stations,
+Amtrak, park-and-rides, etc.);
+HOV, HoT, queue jump, and bus pull-out lanes, Bus Rapid Transit projects, and bus lanes;
+Bike racks, lockers, bike parking, e-scooter docking, or other micro-mobility elements at
+multimodal stations;
+Enhanced modal connections, such as trails, sidewalks and bike lanes leading to major transit
+stations, provided they have a transit connection and enhance transit ridership;
+Design/engineering and environmental studies, including preliminary or final plans; and
+Support vehicles, including trucks used in maintenance response and towing, but excluding
+automobiles used by staff.
+*All applicants requesting grant funds for new facility construction or horizontal facility expansion must
+ensure and verify full compliance with the Uniform Relocation Assistance and Real Property Acquisition
+Policies Act of 1970 (Uniform Act) and obtain NEPA clearance prior to acquiring property. Any property
+acquisition, regardless of the initial funding source, must comply with the Uniform Act and undergo
+NEPA clearance prior to acquisition to preserve eligibility for current and future state and federal
+funding for major property upgrades or facility construction. CDOT also recommends following Uniform
+Act requirements for land acquisitions not executed through open market transactions to allow the
+application of federal funds in the future. For more information on Transit Capital Projects, please
+Page I 15
+October 2026
+review the Local Agency Manual here.
+PART 6
+Local Match
+All projects funded through the programs in this call for projects require some form of local match. The
+required local match percentage for each funding program, based on total project costs, is described in
+Table 5. It is important that projects adhere to the timelines and milestones outlined in the application
+and ultimately, if awarded, the Statement of Work. Delays can result in vehicle price increases, which
+may ultimately require an increase in the project's total cost and expected local match. Applicants that
+do not show evidence of secured local match at time of application or the ability to secure match by the
+time the project starts will have a negative impact on the application's score.
+Table 5: Federal/State and Local Match Percentages for Capital Call for Projects.
+Federal/State
+Local
+Funding Program & Project Type
+Match
+Match
+FTA 5339
+80%
+20%
+FTA 5311
+80%
+20%
+FTA 5310
+80%
+20%
+FASTER
+80%
+20%
+Local Match - Cash
+Local match can come from many different cash sources, including state or local appropriations, tax
+revenues, private donations, revenue from service contracts, and income generated from advertising
+and concessions-provided its use as match is not prohibited or disallowed by that funding source.
+Local match may consist of any non-USDOT federal funds, such as Medicaid, Older Americans Act
+funding, or other funds that may be used for transportation; local tax revenues; local general operating
+funds; or donations.
+Local match may only be used once (e.g., the same Older Americans Act funds may not be used for a
+5311 grant application and a 5310 grant application).
+DTR requires written letters of support and commitment from partners in a project that will need to
+make a commitment to the project (e.g., organizations providing some or all of the local match,
+providing land or right-of-way for a project, or agreeing to share a multimodal facility). Identify the
+source, amount, and the status of local matching funds (e.g. funds are budgeted, funds will be secured if
+the project is selected for funding, etc.)
+Local Match Relief - Toll Credits
+At CDOT's discretion, Toll Credits can be used in lieu of cash match for federally funded projects in
+situations where worthy projects cannot proceed without the additional assistance because of stated
+financial hardship. Applicants will have an opportunity to explain and justify how essential and critical
+the project is to their transit services and describe their financial hardship in the application(s).
+Page I 16
+October 2026
+PART 7
+Application Process
+All Applications
+Applications must be submitted electronically through COTRAMS on or before 11:59 p.m. on the due
+date described above in PART 1. Applications are available on your Home page under the Available
+Applications list.
+In order to increase the chances an applicant will have a sufficient application, the applicant should go
+through a preparation phase for each application. This phase should consist of the following steps:
+One application must be submitted for each project;
+Clearly identify the project - be sure that you have a clear understanding of what your project
+needs to accomplish and develop the narrative that explains it;
+Develop a clear and concise budget - ensure that you are identifying all elements of this
+project's budget, including your local match; and
+Collect letters of commitment/participation - If your project relies on the participation of other
+agencies or service partners, particularly for local match, you must provide letters of
+commitment from them with your application.
+Important Note:
+A. This NOFA is highly competitive. It is imperative that all applications are thorough and
+complete to ensure they will be considered.
+B. B. All applicants requesting funds for vehicle acquisition (replacement, CTE
+expansion/replacement, or fleet expansion) must submit a current vehicle quote. Applications
+missing current estimates are considered incomplete and will not be evaluated. Past purchase
+quotes are not considered applicable.
+C. Based on historical NOFA funding requests over the past five years, other capital project
+requests are capped at a maximum of $1,000,000.00 based on project scope. This spending
+ceiling was established to ensure a uniform and equitable distribution of limited capital
+resources across all participating agencies statewide. To comply with this threshold without
+compromising project viability, multi-phase applications must demonstrate clear scalability.
+Specifically, each distinct phase of a multi-year or phased capital endeavor must maintain its
+own independent scope of work and self-contained deliverables, ensuring that each funded
+milestone yields a fully functional, usable asset upon completion of the performance period
+regardless of future award cycles.
+CDOT offers two types of capital applications through COTRAMS, for:
+A.
+Revenue Service Vehicle purchase requests.
+B.
+Other Capital project requests (including support vehicles).
+Within those two general categories are subcategories into which each project must fit, as follows:
+A.
+Revenue Service Vehicles
+1) Replacement Vehicles:
+a.
+Acquire rolling stock to replace existing rolling stock.
+Page I 17
+October 2026
+NOTE: Vehicles that have already been awarded for replacement or
+disposed of are not eligible for replacement in this call, regardless of
+their availability in the COTRAMS application. Applicants should update
+their COTRAMS inventory records prior to completing any applications
+and make sure the Vehicle Total Current Mileage, Vehicle Usage, and
+Condition fields reflect current and accurate information.
+2)
+Expansion Vehicles:
+a.
+Acquire rolling stock for fleet and/or service expansion.
+B.
+Other Capital Projects
+Facilities, infrastructure, equipment, engineering and environmental studies, design
+projects, vehicle overhauls, vehicle rehabs and rebuilds, and support (non-revenue
+service) vehicle purchases.
+One revenue service vehicle and one other capital project application will be released to
+each current DTR subrecipient through COTRAMS. If an applicant plans to submit
+requests for multiple replacement vehicles, the applicant may bundle those replacement
+vehicles into one single application; requests for replacement and expansion vehicles,
+though, must be submitted in two separate applications--one for replacements and one
+for expansions.
+In order to submit multiple applications, you will need to request additional application(s) at
+cdot_dtr_pre-award@state.co.us
+The minimum federal or state capital assistance request amount is $25,000, except in cases where an
+applicant is requesting state funds to be used as a local match for federal funds. There is no maximum
+request, but applicants should take into consideration the amounts available and CDOT's preference to
+provide geographic equity.
+Page I 18
+October 2026
+PART 8
+Threshold (Minimum) Criteria for Eligible Subrecipients
+Eligible subrecipients of FTA and State funds must have the capability and capacity to manage any funds
+awarded, ensure satisfactory completion of the applied-for project, and be willing and able to follow all
+applicable federal, state, local, and tribal regulations and guidelines. Eligible subrecipients must also
+meet the following minimum criteria:
+A.
+Legal Standing: The subrecipient must be registered on the official U.S. Government System of
+Award Management (SAM) system, SAM.gov, and not be, at the time of award, suspended,
+debarred, ineligible, or voluntarily excluded from participation in federally assisted
+transactions and procurements. If an agency is not registered at the time of application for
+funds, they must demonstrate their willingness and ability to register with SAM.gov, and
+provide proof of that registration to CDOT, before they can be awarded.
+B. Financial Management and Capacity: The subrecipient must have financial policies and
+procedures; an organizational structure that defines, assigns, and delegates authority; and
+financial management systems in place to match, manage, and charge only allowable cost(s)
+to the award.
+Federal and State funds are awarded on a reimbursement basis; that is, the subrecipient
+must incur the project costs upfront and submit sufficient evidence of those project costs to
+DTR for reimbursement. Therefore, the subrecipient must have the financial ability and cash
+flow to incur those costs upfront and wait for reimbursement from CDOT. Assuming a valid
+reimbursement request is submitted, it is the goal of DTR to pay all reimbursement requests
+within 30 calendar days, but CDOT is afforded 45 calendar days statutorily to complete the
+reimbursement process.
+C. Technical Capacity: The subrecipient must have the capability and resources necessary to
+operate and manage the award and project on an ongoing basis; ensure conformity and
+compliance with all applicable federal, state, local and tribal regulations and guidelines;
+ensure project schedules, budgets, and performance objectives are achieved; and obtain all
+necessary prior approvals and/or waivers before incurring costs or taking any actions.
+D. Procurement: The subrecipient must have its own documented procurement procedures
+which reflect applicable state, local, and tribal laws and regulations, and conform to applicable
+federal law and standards at 2 CFR §§ 200.318-326.
+E.
+Timely implementation: Applicants must demonstrate their ability and commitment to
+implement their proposed project timely once funding has been awarded and contracted. It is
+DTR's expectation that subrecipients will move promptly to procure and implement their
+projects, within guidelines and procedures provided by DTR. Subrecipients that fail to
+implement projects on a timely basis may harm their chances of winning awards in future
+applications or may have funds withdrawn with adequate notice.
+Applicants that have not previously received funds through DTR or applicants that have had delays or
+other problems implementing projects funded through CDOT should be sure to detail their financial and
+award management capability and experience, as well as steps taken to correct any past problems, as
+appropriate.
+Page 19
+October 2026
+PART 9
+Evaluation Criteria for Applications and Projects
+Eligible awardees' applications and projects will be evaluated based on the elements described below.
+Be sure the answers, information, and supporting documentation you provide are relevant, complete,
+and thorough enough that the nature of the proposed project (its goals and objectives, purpose,
+beneficiaries, scope of work, budget, etc.) is clear and easily understood. Once project requests have
+been received, DTR staff will review the applications to ensure that minimum eligibility requirements are
+met. Threshold Criteria for all Applications
+In general, a sufficient application must meet all of the following specific criteria:
+A.
+Application Completeness and Thoroughness
+All questions asked in the application were answered, all information requested in the
+application was provided, and all required and necessary attachments to the application were
+included.
+All applicants requesting funds for vehicle acquisition (replacement, CTE
+expansion/replacement, or fleet expansion) must submit a vehicle cost estimate/quote
+based on applicable vehicle price agreements in the project initiation year (e.g., FY 2027 for
+this NOFA). Applications missing current estimates are considered incomplete and will not
+be evaluated. Past purchase quotes are not considered applicable. See Part 10 for more
+information on applicable price agreements.
+Factors: The answers, information, and attachments provided by the applicant were relevant,
+complete, thorough, and clearly and directly support the application. Incomplete applications
+or applications that lack enough information to be effectively evaluated will receive lower
+scores or may be deemed ineligible for funding without further evaluation.
+B.
+Program Eligibility
+The proposed project is an eligible project for the respective program and includes work
+elements or activities like those described in PART 3 above.
+C. Consistency with the Statewide Transit Plan or Regional Transit Plan
+The proposed project is consistent with an implementation strategy identified in the
+applicant's most recent Regional Transit Plan or in the Statewide Transit Plan.
+Factors: The answers, information, and attachments provided by the applicant effectively
+connect the proposed project to an identified implementation strategy. Projects that are not
+consistent with any such strategy will be deemed ineligible for funding without further
+evaluation.
+Capital Projects Evaluation Criteria
+All capital applications will be evaluated based on the elements described below. Be sure that the
+answers, information, and supporting documentation provided are relevant, complete, and thorough
+enough that the nature of the proposed project (its goals and objectives, purpose, beneficiaries, budget,
+etc.) is clear and easily understood.
+Projects will be evaluated based on the type of project-that is, based on whether they are rolling stock,
+Page I 20
+October 2026
+facilities, equipment or studies, and, further, whether they are replacements or expansions. Please note
+that the sub-criteria will not be weighted equally and that some will not be pertinent. For example, if a
+criterion has four sub-criteria, evaluators do not assign 25% weighting to each; they are given flexibility
+in assigning scores.
+Projects will be evaluated as follows:
+(1)
+For Replacement of Revenue Vehicles:
+Metric 1: Minimum Useful Life: To be eligible for replacement, a vehicle must have met the
+Minimum Useful Life (MUL) in years or miles in revenue service for its size and type at the time
+of application. MUL is established by the vehicle manufacturer and is based on FTA criteria.
+Higher scoring will be awarded to vehicles which have been in revenue service for longer than
+the MUL.
+Scenario 1: Vehicles meeting FTA and CDOT minimum useful life.
+Vehicles will be scored based on the extent they have reached the minimum useful life
+(MUL) established by the FTA and CDOT for that particular vehicle type as of the date of
+submission of the application. See Table 3. The weighting will be 50% years and 50% miles
+accumulated in active revenue service.
+Scenario 2: Vehicles meeting alternative usefulness.
+Applicants who have adopted a replacement criteria that includes MUL years or miles and
+one other measurable criteria (e.g. engine hours, vehicle condition, and lifetime revenue
+service hours) can make a request for special consideration. Applicants must provide
+supporting documents demonstrating the analysis behind the selection of this alternative
+criteria and incorporation of this criteria into their replacement planning and/or budgeting
+processes (e.g. capital replacement schedules, asset maintenance or management plans,
+budgets, etc.). Such vehicles will be scored based on the extent they have reached the MUL
+years or miles for that particular vehicle type (see Table 3) and the alternative usefulness
+established by the applicant, as of the date of submission of the application. The weighting
+will be 50% MUL and 50% alternative usefulness.
+Scenario 3: Vehicles that do not meet MUL but are justifiable for other special
+considerations.
+Applicants seeking to replace vehicles that have not met Scenario 1 and Scenario 2 as of the
+date of submission of the application can make a request for special consideration.
+Applicants must provide documentable, verifiable, data-based evidence of unexpected
+declines in vehicle condition, high maintenance costs, damage beyond repair, operating
+conditions, or other relevant factors related to the need to retire the vehicle before
+accumulating the minimum years or miles in active revenue service. Special considerations
+will only be made upon request. The weighting will be 30% years, 30% miles, and 40%
+special considerations.
+Metric 2: Business Case and Project Readiness: Higher scoring will be awarded to projects that
+effectively demonstrate a solid business case and readiness to implement the project upon
+award. (Scoring will be based on required documents submitted - revised cost estimate, robust
+Page 21
+October 2026
+implementation plan, and verification of local funding commitment)
+Metric 3: Additional Considerations: Higher scoring will be awarded to projects with
+documented capital replacement and asset maintenance plan(s) and who can show strong
+institutional and financial commitment and support. (Scoring will be based on required
+documents submitted - group plan or independent asset maintenance plan)
+The weighting will be 90% Metric 1, 5% Metric 2, and 5% Metric 3.
+(2)
+For Expansion of Revenue Vehicles:
+Metric 1: Demonstrated Need and Benefits: Higher scoring will be awarded to projects that
+effectively demonstrate and/or describe the need for expanded service and how such expansion
+will provide operational and utilization benefits to the transit service and/or system.
+Metric 2. Business Case and Project Readiness: Higher scoring will be awarded to projects that
+effectively demonstrate a solid business case and readiness to implement the project upon
+award. (Scoring will be based on required documents submitted - revised cost estimate, robust
+implementation plan, and verification of local funding commitment)
+Metric 3: Additional Considerations: Higher scoring will be awarded to projects with a
+documented capital replacement/asset maintenance plan(s), who can show community support
+for the expansion, and who can show strong institutional and financial commitment and
+support. (Scoring will be based on required documents submitted - group plan or independent
+asset maintenance plan)
+The weighting will be 40% Metric 1, 40% Metric 2, and 20% Metric 3.
+Table 3: FTA and CDOT Rolling Stock Minimum Useful Life Standard
+CDOT Category
+Representative
+No. Seats
+Approx.
+Minimum Useful
+Vehicles
+Weight (lbs)
+Life
+35'-40'+ (large) heavy-
+Most models from
+27-40
+26,000-
+12 years or
+duty bus and
+Gillig, MCI, NABI &
+40,000
+500,000 miles
+articulated bus
+New Flyer
+30' (small) heavy-duty
+Thomas Transit
+26-35
+26,000-
+10 years or
+bus
+Liner, Bluebird Q-
+33,000
+350,000 miles
+Bus
+25'-35' (medium)
+Champion Defender,
+17-30
+16,000-
+7 years or
+medium-duty body on
+Arboc Spirit of
+26,000
+200,000 miles
+chassis (BOC) vehicle
+Liberty, Goshen G-
+and purpose-built bus
+Force
+Page I 22
+October 2026
+25'-35' (medium) light-
+Champion
+10-25
+10,000-
+5 years or
+duty BOC vehicle
+Challenger, Arboc
+16,000
+150,000 miles
+Spirit of Mobility
+30' or less light-duty
+Vans, minivans,
+3-19
+6,000-
+4 years or
+vehicle (van,
+SUVs, sedans,
+14,000
+100,000 miles
+automobile) and 25' or
+StarTrans Candidate
+less BOC vehicle
+II, Champion
+Crusader
+Vehicle Rebuild: A
+N/A
+N/A
+N/A
+Minimum extension
+recondition near the
+of 4 years
+end of useful life that
+results in additional
+useful life.
+(3)
+For Design/Engineering, Construction of Facilities, and Purchase of Equipment:
+Metric 1: Demonstrated Need and Benefit: Higher scoring will be awarded to projects that
+effectively demonstrate and/or describe the need for the project and how the project will
+provide operational and utilization benefits to the transit service and/or system.
+Metric 2: Business Case and Project Readiness: Higher scoring will be awarded to projects that
+effectively demonstrate a solid business case and readiness to implement the project upon
+award. (Scoring will be based on required documents submitted - revised cost estimate, robust
+implementation plan, and verification of local funding commitment)
+Metric 3: Additional Considerations: Higher scoring will be awarded to projects with
+documented capital replacement and asset management plan(s), who can show community
+support for the project, and who can show strong institutional and financial commitment and
+support. (Scoring will be based on required documents submitted - group plan or independent
+asset maintenance plan)
+The weighting will be 40% Metric 1, 40% Metric 2, and 20% Metric 3.
+Page I 23
+October 2026
+PART 10 Price Agreement
+While DTR awardees have multiple vehicle procurement options, the NASPO Price Agreement is now
+fully available for this NOFA. The NASPO ValuePoint Cooperative Purchasing Program offers Master
+Agreements with suppliers for transit vehicles, options, equipment, and accessories across participating
+states. It covers various vehicle types (from vans to motor coaches) and propulsion systems (gasoline,
+CNG, hybrid, and EV).
+Of the 11 established Master Price Agreements, 9 vendors have fully executed Participating Addendums
+for Colorado entities:
+Vendor
+FTA
+Category
+Fuel Type
+Floor
+Product
+Approved
+Level
+Types
+ABC Bus, Inc
+Yes
+Category 1 -
+Diesel
+High
+1 type
+Motor Coach
+Floor
+Motor Coach Industries, Inc
+Yes
+Category 1 -
+Diesel
+High
+2 type
+Motor Coach
+Floor
+Coach and Equipment Bus
+Yes
+3.1 Light Duty
+Gasoline
+High
+3 type
+Sales, Inc.
+Transit Bus
+Floor
+Endera Motors, LLC
+Yes
+3.1 Light Duty
+Gasoline,
+High
+6 type
+Transit Bus
+EV
+Floor
+Micro Bird USA, LLC
+No
+3.1 Light Duty
+Gasoline
+High
+2 type
+Transit Bus
+Floor
+Letenda, Inc.
+Yes
+3.3 Heavy Duty
+EV
+Low
+1 type
+Transit Bus
+Floor
+New Flyer of America, Inc
+Yes
+3.3 Heavy Duty
+Diesel, EV,
+Low
+14 type
+Transit Bus
+CNG
+Floor
+Eldorado National
+Yes
+3.3 Heavy Duty
+Diesel, EV,
+Low
+3 type
+(California), Inc.
+Transit Bus
+CNG
+Floor
+RIDE Mobility, LLC
+No
+3.3 Heavy Duty
+EV
+Low
+4 type
+Transit Bus
+Floor
+Page I 24
+October 2026
+Master's Motors, LLC
+Yes
+Category 4 -
+Gasoline
+High
+4 type
+ADA Accessible
+Floor
+Van
+Primetime Specialty Vehicles,
+Yes
+Category 4 -
+Gasoline
+High
+12 type
+Inc
+ADA Accessible
+Floor
+Van
+For more information visit:
+https://www.naspovaluepoint.org/portfolios/transit-vehicles-related-options-equipment-accessories/
+All applicants requesting funds for vehicle acquisition (replacement, CTE
+expansion/replacement, or fleet expansion) must submit a current vehicle quote.
+DTR applicants must use FTA-approved NASPO vendors for cost estimates, as not all NASPO
+vendors hold FTA approval. Upon award, entities may switch eligible vendors based on funding
+source. CTE applicants can use all nine vendors including FTA approved and FTA non approved
+vendors.
+If no standard product meets an entity's needs, they may work with any of the nine vendors to
+find an FTA and State compliant vehicle through a different price agreement.
+Participants of the joint agreements, such as the Colorado Mountain Purchasing Consortium
+(CMPC), may use established CMPC or NASPO price agreements. Non-CMPC entities wishing to
+piggyback on CMPC agreements require advance DTR approval and written justification.
+Entities may also use cooperative price agreements from other states for estimates and
+procurement. Using non-NASPO cooperative agreements requires written justification during
+the post-award phase.
+Entities with customized requirements may opt out of NASPO to establish their own price
+agreement or conduct an independent competitive bidding process. Standalone RFPs require
+full CDOT oversight and strict adherence to FTA compliance checks at every stage.
+For detailed information or instructions, please contact Shilpa Kulkarni at shilpa.kulkarni@state.co.us.
+Page I 25
+October 2026
+Part 11 Advance Order Placement Authority
+Grantees can enter into a contract (place an order) with a vendor for long-lead time capital goods (such
+as transit buses) prior to entering into a grant agreement with CDOT for reimbursement.
+The agreement between Awardee and the vendor shall not reference CDOT as a financial backer if a
+default payments situation arises. CDOT will not be a third party to the ordering contracts. An executed
+grant agreement is required to accept the revenue service vehicle.
+If advance order placement authority is needed, an awardee must request the advance order placement
+authority form from the Pre Award Project Manager after award notification. The form and justification
+will need to be filled out by the awardee and submitted to DTR with their award letter. Advance Order
+Placement Authority cannot be used without written approval by DTR.
+Please reach out to Shilpa Kulkarni at shilpa.kulkarni@state.co.us for further coordination and
+understanding of statutory requirements.
+***NOTE: Awardees must still adhere to the procedures outlined in applicable Federal law, including 2
+CFR Part 200 (specifically Sections 200.317-200.326), and FTA Circular 4220.1F, "Third Party Contracting
+Guidance," for vendor selection.
+Part 12 Pre-Award Authority
+Pre-Award Authority does not apply to any capital projects, regardless of funding type. However, there
+is some flexibility with fully Federally funded projects. For more information, please contact Shilpa
+Kulkarni at shilpa.kulkarni@state.co.us.
+Page I 26
+October 2026
+Part 13 Acceptance Deadlines
+Early acceptance and return of award documents are critical to ensuring the timely processing of
+awards. We need your assistance in promptly reviewing, accepting/returning all required award
+documents to avoid delays. To that end, DTR is instituting new deadlines for acceptance of award
+documents to ensure all awards move to execution in a timely manner. If an awardee fails to meet the
+deadlines published below, DTR reserves the right to cancel the award. If an awardee requires an
+extension to the dates below, written justification is required to be sent to the Pre-Award Project
+Manager. Please see the table below for deadlines for each pre-award phase:
+Pre-Award Phase
+Response Deadline
+Award Letter Acceptance
+14 calendar days
+Risk Assessment
+14 calendar days
+Statement of Work (SOW)
+14 calendar days
+Only one extension per pre-award phase is permissible upon timely request.
+Part 14 Post Award Awardee Responsibility
+This NOFA is highly competitive and overly subscribed. It is imperative that all applications are
+thorough and complete. Accordingly, projects should be "shovel ready" at time of application. Once
+awarded, the awardee must demonstrate meaningful progress to initiating and completing the project.
+Meaningful progress will be measured by:
+Procurement Phase
+Response Deadline
+Procurement Concurrence Request (PCR)
+Within one (1) month of grant execution
+Purchase Authorization (PA)
+Within one (1) month of approved PCR
+Notice to Proceed (NTP)
+Within one (1) month of approved PA
+If the awardee fails to demonstrate meaningful progress within these periods and without written
+communication of the status of the project, DTR reserves the right to terminate the award.
+The Awardee must follow procurement steps below as required by the CDOT DTR State Management
+Plan (SMP) for all Rolling stock awards.
+Procurement Steps
+1. Vehicle Cost Estimate - Due with Application.
+Obtaining a current Vehicle Cost Estimate or Quote, at the time of application, is a critical
+requirement for project implementation that establishes local match requirements, project
+feasibility, and the overall procurement strategy. For each application, the estimate must reflect
+an established price proposal and technical specifications valid at the time of submission.
+Page 27
+October 2026
+2. Procurement Concurrence Request (PCR)
+The PCR is made for the purpose of reviewing the request to ensure that it avoids duplicative or
+unnecessary purchases and considers opportunities for intergovernmental or inter-entity
+sharing of goods/services. The Project Coordinator reviews the rationale for the request and
+procurement method, and then approves or rejects the PCR in COTRAMS.
+3. Purchase Authorization (PA)
+Subrecipients must prepare this form and submit it for approval prior to finalizing its agreement
+with the vendor for goods or services purchased with federal/state funding. The Project
+Manager reviews the required documentation and approves or rejects the PA in COTRAMS.
+4. Notice to Proceed (NTP)
+Subrecipients submit the executed contract between selected vendor and subrecipient via email
+indicating date of Notice to Proceed/Purchase Order (PO).
+5. Notice of Acceptance (NA)
+Subrecipients submit the NA after they have accepted any equipment or rolling stock. The NA
+also includes a Vehicle Inspection Checklist and allows for the Post Delivery Audit to be reported
+to the Project Coordinator. Post Delivery Audit includes: Buy America Certification (as
+applicable), Purchaser's Requirements Certification, Federal Motor Vehicle Safety Standards
+Certification, and Altoona Testing (as applicable)
+6. Security Assurance (SA)*
+The SA is made for the purpose of securing the State or Federal interest in transit vehicles
+purchased with State or Federal funds awarded by CDOT to the subrecipient. This form is taken
+to the agency's county DMV to register and title the vehicle. In order to ensure proper use of
+vehicles throughout the useful life, CDOT holds a first lien on all vehicles in the amount of the
+Federal or State share of the vehicle cost. The step is only applicable to transit vehicle
+procurements.
+Page I 28
+October 2026
+PART 15 Civil Rights Requirements
+In determining the site or location of facilities, a recipient or applicant may not make selections with the
+purpose or effect of excluding persons from, denying them the benefits of, or subjecting them to
+discrimination under any program to which this regulation applies, on the grounds of race, color, or
+national origin; or with the purpose or effect of defeating or substantially impairing the accomplishment
+of the objectives of the Act or this part." Title 49 CFR part 21, Appendix C, Section (3)(iv) provides, "The
+location of projects requiring land acquisition and the displacement of persons from their residences
+and businesses may not be determined on the basis of race, color, or national origin." For purposes of
+this requirement, "facilities" does not include bus shelters, as these are transit amenities and are
+covered in Chapter IV, nor does it include transit stations, power substations, etc., as those are
+evaluated during project development and the NEPA process. Facilities included in this provision include,
+but are not limited to, storage facilities, maintenance facilities, operations centers, etc. In order to
+comply with the regulations. The recipient must complete a Title VI equity analysis during the planning
+stage with regard to where a project is located or sited to ensure the location is selected without regard
+to race, color, or national origin. Recipients shall engage in outreach to persons potentially impacted by
+the siting of facilities. The Title VI equity analysis must compare the equity impacts of various siting
+alternatives, and the analysis must occur before the selection of the preferred site.
+PART 16 Nondiscrimination
+In addition to the criteria listed above, entities responding to this NOFA must be able to comply with
+federal requirements relating to nondiscrimination, as set forth below:
+Pursuant to U.S. DOT Standard Assurances Order 1000.12D, CDOT, in accordance with the
+provisions of Title VI of the Civil Rights Act of 1964 (78 Stat. 252, 42 U.S.C. §§ 2000d to 2000d-4)
+and the Regulations, hereby notifies all bidders that it will affirmatively ensure that any contract
+entered into pursuant to this advertisement, disadvantaged business enterprises will be afforded
+full and fair opportunity to submit bids in response to this invitation and will not be discriminated
+against on the grounds of race, color, or national origin in consideration for an award.
+Under FTA regulations, all subrecipients of DTR administered transit awards must submit required
+civil rights documents to DTR.. In particular, if awarded FTA funding, subrecipients must submit a
+Title VI Plan to CDOT that conforms to the FTA requirements in Circular FTA c 4702.1B. This
+includes a Language Assistance Plan describing how the subrecipient plans to provide language
+assistance services.
+Questions about civil rights can be directed to Jun Arcilla at jun.arcilla@state.co.us
+Page I 29
+October 2026
+PART 17 Application Selection Appeals Process
+All applicants, including those not awarded funding, will be notified of project funding awards. Once the
+agencies have accepted the awards for the selected projects, the Division of Transit and Rail will
+publicize the project list which will include, for transparency purposes, comments indicating the primary
+reason(s) an application or project was not selected for funding. If an application is denied, the grounds
+therefore will be given to the applicant. Applicants not awarded funding may reapply in the future for
+project requests that were denied.
+The Department (CDOT DTR), recognizing the potential financial impact its grant programs can have on
+organizations and individual applications, will provide applicants with the right to protest a grant denial
+or award amount decision. This right is provided in order to ensure the proper administration of the
+Division of Transit and Rail programming, encourage thorough review of applications and denials,
+promote a transparent exchange of information, and provide an opportunity to applicants to avail
+themselves of the Department. The Department fully recognizes the important implications of its grant
+funding decisions, and it is the Department's firm belief that applicants whose requests are denied or
+whose award amounts are reduced should have the opportunity for further review and consideration by
+the Department.
+For this reason, the Department hereby provides all applicants who have had an application for a grant
+denied or reduced the opportunity for further consideration and review, followed by a final agency
+decision. To exercise this opportunity, applicants must, within 30 calendar days after receipt of the
+formal grant notification:
+Send a protest letter to the Director of the Division of Transit and Rail at the following address:
+2829 W. Howard Place, Denver, CO 80204.
+State in the subject line of the letter that it is a protest of a grant decision requiring a response
+within 45 calendar days. (This ensures Department staff are aware of the immediacy of the
+letter.)
+Clearly state in the letter the application to which it applies and the grounds for protest.
+While the Department does not want to unnecessarily burden applicants with what to include in their
+protest letter, these requirements and procedures ensure the Department timely receives the protest
+and has sufficient information to meaningfully evaluate the decision. The Department shall have no
+obligation to respond to any letter which fails to conform to the above requirements.
+Upon receipt of the protest letter, the Director of the Division of Transit and Rail may contact the
+applicant to discuss the matter further. If the Director of the Division of Transit and Rail and the
+applicant are unable to resolve the issue upon contact, the Director of the Division of Transit and Rail
+will refer the protest to the Deputy Director, Planning and Strategy. The Deputy Director will consult
+with appropriate executive management on the matter and will, thereafter, issue a letter containing the
+final decision of the agency on the issue. Unless extended by agreement of the Department and the
+applicant, the Deputy Director shall issue a final agency decision no later than 45 calendar days after the
+Department's receipt of the applicant's protest letter. Applicants are encouraged to continue applying
+for any grants for which they may be eligible in the meantime.
+Page 30
+October 2026

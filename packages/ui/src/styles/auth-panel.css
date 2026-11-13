@@ -1,9 +1,9 @@
 .auth-login-card {
-  background: #fff;
-  border-radius: 20px;
+  background: var(--gw-color-surface);
+  border-radius: var(--gw-radius-pill);
   box-shadow:
-    0 25px 50px -12px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
+    0 25px 50px -12px color-mix(in srgb, var(--gw-color-text-strong) 35%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--gw-color-surface) 10%, transparent);
   padding: 44px 40px;
   width: 100%;
   border: none;
@@ -17,7 +17,7 @@
 .auth-card-title {
   font-size: 28px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--gw-color-text-strong);
   margin: 0 0 8px;
   font-family: var(--gw-font-family);
   outline: none;
@@ -25,7 +25,7 @@
 
 .auth-card-subtitle {
   font-size: 15px;
-  color: #64748b;
+  color: var(--gw-color-text-muted);
   margin: 0;
   line-height: 1.5;
 }
@@ -44,7 +44,7 @@
 
 .auth-form-description {
   font-size: 14px;
-  color: #64748b;
+  color: var(--gw-color-text-muted);
   margin: 0 0 20px;
   line-height: 1.5;
 }
@@ -53,7 +53,7 @@
   display: block;
   font-size: 14px;
   font-weight: 500;
-  color: #1e293b;
+  color: var(--gw-color-text-strong);
   margin-bottom: 8px;
 }
 
@@ -61,42 +61,14 @@
 .auth-login-card .form-control.form-input {
   width: 100%;
   height: 52px;
-  padding: 0 16px;
-  font-size: 15px;
   font-weight: 400;
-  line-height: 1.2;
-  color: #334155;
-  border: 1px solid #767676;
-  border-radius: 8px;
-  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
-  background: #f8fafc;
   box-sizing: border-box;
-  box-shadow: none !important;
-  font-family: var(--gw-font-family);
   appearance: none;
 }
 
-.auth-login-card .form-input:hover,
-.auth-login-card .form-control.form-input:hover {
-  border-color: #4b5563;
-  background: #fff;
-}
-
-/* The base rule sets `box-shadow: none !important`, so a box-shadow ring here
-   would never paint; and var(--gw-color-border-input) -> var(--gw-color-primary) is only a 1.18:1 luminance change.
-   Use a real outline (5.35:1 on the card) as the focus indicator. */
-.auth-login-card .form-input:focus,
-.auth-login-card .form-control.form-input:focus {
-  border-color: var(--gw-color-primary);
-  outline: 3px solid var(--gw-color-primary);
-  outline-offset: 2px;
-  background: #fff;
-}
-
 .auth-login-card .form-input:disabled,
-.auth-login-card .form-control.form-input:disabled {
-  color: #64748b;
-  background: #f1f5f9;
+.auth-login-card .form-control.form-input:disabled,
+.auth-login-card .form-control.form-input[readonly] {
   opacity: 1;
 }
 
@@ -113,6 +85,28 @@
 .turnstile-widget {
   display: flex;
   justify-content: center;
+}
+
+.auth-timeout-warning {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gw-spacing-sm) var(--gw-spacing-md);
+  margin-bottom: var(--gw-spacing-lg);
+}
+
+.auth-timeout-warning__text {
+  flex: 1 1 10rem;
+  margin: 0;
+}
+
+.auth-timeout-warning__button {
+  flex: none;
+}
+
+/* Its own line; the negative margin cancels the row gap while an invisible check shows nothing. */
+.auth-timeout-warning__check {
+  flex: 1 0 100%;
+  margin-top: calc(-1 * var(--gw-spacing-sm));
 }
 
 .show-password-checkbox {
@@ -139,9 +133,13 @@
   flex-shrink: 0;
 }
 
+.show-password-checkbox .form-check-input:not(:checked) {
+  border-color: var(--gw-color-border-input);
+}
+
 .show-password-checkbox .form-check-input:focus-visible {
-  outline: 3px solid var(--gw-color-primary);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--gw-color-primary) 15%, transparent);
 }
 
@@ -149,7 +147,7 @@
   display: inline-flex;
   align-items: center;
   font-size: 14px;
-  color: #475569;
+  color: var(--gw-color-text-muted);
   cursor: pointer;
   margin: 0;
   padding: 0;
@@ -171,7 +169,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: color 0.2s ease;
-  border-radius: 0;
+  border-radius: var(--gw-radius-none);
   margin-left: auto;
   white-space: nowrap;
   flex: 0 0 auto;
@@ -203,12 +201,10 @@
 .create-account-link.btn:focus,
 .create-account-link.btn-link:focus,
 .create-account-link.btn:focus-visible,
-.create-account-link.btn-link:focus-visible,
-/* .btn so this outranks Bootstrap's .btn:focus-visible { outline: 0 }, which loads later. */
-.btn.login-submit-button:focus-visible {
-  outline: 3px solid var(--gw-color-primary);
-  outline-offset: 2px;
-  border-radius: 2px;
+.create-account-link.btn-link:focus-visible {
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
+  border-radius: var(--gw-radius-check);
   box-shadow: none !important;
 }
 
@@ -221,24 +217,10 @@
 
 .login-submit-button {
   width: 100%;
-  padding: 16px 24px;
-  font-size: 16px;
-  font-weight: 600;
-  background: linear-gradient(135deg, var(--gw-color-primary) 0%, var(--gw-color-primary-hover) 100%);
-  border: none;
-  border-radius: 10px;
-  color: #fff;
-  cursor: pointer;
-  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 14px;
-  box-shadow: 0 4px 14px color-mix(in srgb, var(--gw-color-primary) 40%, transparent);
-}
-
-a.login-submit-button {
-  text-decoration: none;
 }
 
 .auth-state-site-note {
@@ -246,25 +228,9 @@ a.login-submit-button {
   padding: var(--gw-spacing-sm) var(--gw-spacing-md);
   background: var(--gw-color-primary-light);
   border-left: 3px solid var(--gw-color-primary);
-  border-radius: var(--gw-radius-sm);
+  border-radius: var(--gw-radius-control);
   color: var(--gw-color-text);
   font-size: var(--gw-font-size-sm, 14px);
-}
-
-.login-submit-button:hover {
-  background: linear-gradient(135deg, var(--gw-color-primary-hover) 0%, var(--gw-color-primary-active) 100%);
-  box-shadow: 0 6px 20px color-mix(in srgb, var(--gw-color-primary) 50%, transparent);
-  transform: translateY(-1px);
-}
-
-.login-submit-button:active {
-  transform: translateY(1px);
-}
-
-.login-submit-button:disabled {
-  background: #94a3b8;
-  cursor: not-allowed;
-  transform: none;
 }
 
 .login-form-footer {
@@ -274,7 +240,7 @@ a.login-submit-button {
   gap: 12px;
   flex-wrap: nowrap;
   padding-top: 28px;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--gw-color-border);
   text-align: left;
   width: 100%;
 }
@@ -290,7 +256,7 @@ a.login-submit-button {
 .create-account-link.btn,
 .create-account-link.btn-link {
   padding: 0;
-  min-height: auto;
+  min-height: 24px;
   font-size: 14px;
   color: var(--gw-color-primary-hover);
   text-decoration: none !important;
@@ -302,7 +268,7 @@ a.login-submit-button {
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
-  border-radius: 0;
+  border-radius: var(--gw-radius-none);
   line-height: 1.2;
   box-shadow: none !important;
   font-family: var(--gw-font-family);
@@ -316,7 +282,7 @@ a.login-submit-button {
 
 .auth-footer-prompt {
   font-size: 14px;
-  color: #64748b;
+  color: var(--gw-color-text-muted);
   line-height: 1.2;
 }
 
@@ -340,11 +306,11 @@ a.login-submit-button {
 }
 
 .password-requirement.text-success {
-  color: #047857;
+  color: var(--gw-color-success);
 }
 
 .password-requirement.text-muted {
-  color: #64748b;
+  color: var(--gw-color-text-muted);
 }
 
 .requirement-icon {
@@ -375,7 +341,7 @@ a.login-submit-button {
 @media (max-width: 480px) {
   .auth-login-card {
     padding: 28px 20px;
-    border-radius: 12px;
+    border-radius: var(--gw-radius-container);
   }
 
   .auth-card-title {
@@ -411,24 +377,13 @@ a.login-submit-button {
   .auth-login-card .form-input,
   .auth-login-card .form-control.form-input {
     height: 48px;
-    padding: 0 12px;
-    font-size: 16px;
-  }
-
-  .login-submit-button {
-    padding: 12px 20px;
-    font-size: 15px;
-  }
+}
 }
 
 @media (prefers-reduced-motion: reduce) {
   .forgot-password-link,
-  .create-account-link,
-  .login-submit-button {
+  .create-account-link {
     transition: none;
   }
 
-  .login-submit-button:active {
-    transform: none;
-  }
 }

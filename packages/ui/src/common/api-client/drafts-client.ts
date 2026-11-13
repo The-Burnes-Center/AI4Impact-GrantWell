@@ -3,6 +3,7 @@ import { AppConfig } from "../types/app";
 import type { ProjectBasicsData, QuestionnaireAnswer, RawDraftRecord } from "../types/document";
 import { apiFetch } from "../session-ended";
 import { dailyLimitError } from "./daily-limit";
+import { grantInReviewError } from "./grant-in-review";
 import type { SectionRef } from "../helpers/application-sections";
 
 /** A draft start refused because additional information or an answer is too long; the message says which. */
@@ -60,6 +61,8 @@ export interface DocumentDraft {
   questionnaire?: Record<string, string>;
   additionalInfo?: string;
   uploadedFiles?: UploadedFileMeta[];
+  /** Library documents the AI reads; null for an application saved before the library (see legacySelection). */
+  documentKeys?: string[] | null;
   createdAt?: string;
   updatedAt?: string;
   lastModified?: string;
@@ -119,6 +122,8 @@ export interface DraftJobStatus {
   completedSectionCount?: number;
   sections?: Record<string, string>;
   failedSections?: string[];
+  /** Selected documents the AI could not read for this draft, with why. */
+  skippedDocuments?: { name: string; reason: string }[];
   error?: string;
   jobType?: 'export';
   downloadUrl?: string;
@@ -177,6 +182,7 @@ export class DraftsClient {
       questionnaire: (row.questionnaire as Record<string, string>) || {},
       additionalInfo: (row.additional_info as string) ?? '',
       uploadedFiles: (row.uploaded_files as UploadedFileMeta[]) || [],
+      documentKeys: Array.isArray(row.document_keys) ? (row.document_keys as string[]) : null,
       lastModified: (row.last_modified as string) || new Date().toISOString(),
       rev: typeof row.rev === 'number' ? row.rev : undefined,
       lastWriteSource: row.last_write_source as DraftWriteSource | undefined,
@@ -281,6 +287,7 @@ export class DraftsClient {
       questionnaire: draft.questionnaire || {},
       additional_info: draft.additionalInfo,
       uploaded_files: draft.uploadedFiles,
+      document_keys: draft.documentKeys ?? undefined,
       last_modified: draft.lastModified || new Date().toISOString(),
       status: draft.status,
       expected_rev: draft.expectedRev,
@@ -341,6 +348,7 @@ export class DraftsClient {
       questionnaire: data.questionnaire ?? draft.questionnaire,
       additionalInfo: data.additionalInfo ?? draft.additionalInfo,
       uploadedFiles: data.uploadedFiles ?? draft.uploadedFiles,
+      documentKeys: Array.isArray(data.documentKeys) ? data.documentKeys : draft.documentKeys,
       status: (data.status ?? draft.status) as DraftStatus,
       reachedSteps: data.reachedSteps ?? draft.reachedSteps,
       lastModified: data.lastModified ?? draft.lastModified,
@@ -564,6 +572,8 @@ export class DraftsClient {
     questionnaireAnswers?: QuestionnaireAnswer[];
     additionalInfo?: string;
     sessionId: string;
+    /** The application's selected documents; null keeps the pre-library default (its grant's old folder). */
+    documentKeys?: string[] | null;
   }): Promise<string> {
     const auth = await Utils.authenticate();
     const response = await apiFetch(this.API + '/draft-generation', {
@@ -580,6 +590,7 @@ export class DraftsClient {
         questionnaireAnswers: params.questionnaireAnswers || [],
         additionalInfo: params.additionalInfo || '',
         sessionId: params.sessionId,
+        documentKeys: params.documentKeys ?? null,
       }),
     });
 
@@ -589,6 +600,8 @@ export class DraftsClient {
       if (limitError) throw limitError;
       const tooLong = inputTooLongError(response.status, errorData);
       if (tooLong) throw tooLong;
+      const inReview = grantInReviewError(response.status, errorData);
+      if (inReview) throw inReview;
       throw new Error(errorData.error || 'Failed to start draft generation');
     }
 
@@ -608,6 +621,7 @@ export class DraftsClient {
     sessionId: string;
     /** Rewrite only these sections; the rest of the application is left alone. */
     sectionIds?: string[];
+    documentKeys?: string[] | null;
     onProgress?: (status: string, pollCount?: number, maxPolls?: number) => void;
     onJobUpdate?: (jobStatus: DraftJobStatus) => void;
   }): Promise<{ jobId: string; sections: Record<string, string> }> {
@@ -629,6 +643,7 @@ export class DraftsClient {
         additionalInfo: params.additionalInfo || '',
         sessionId: params.sessionId,
         sectionIds: params.sectionIds,
+        documentKeys: params.documentKeys ?? null,
       }),
     });
 
@@ -648,6 +663,8 @@ export class DraftsClient {
       if (limitError) throw limitError;
       const tooLong = inputTooLongError(startResponse.status, errorMessage);
       if (tooLong) throw tooLong;
+      const inReview = grantInReviewError(startResponse.status, errorMessage);
+      if (inReview) throw inReview;
       throw new Error(errorMessage.error || 'Failed to start draft generation');
     }
 

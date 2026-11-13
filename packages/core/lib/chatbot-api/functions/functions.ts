@@ -3,6 +3,7 @@
  * These Lambda functions handle session management, S3 operations, and knowledge base synchronization.
  */
 
+import { NagSuppressions } from "cdk-nag";
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as path from "path";
@@ -27,11 +28,13 @@ import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as bedrock from "aws-cdk-lib/aws-bedrock";
-import { DynamoEventSource, SqsDlq } from "aws-cdk-lib/aws-lambda-event-sources";
+import { DynamoEventSource, SqsDlq, SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as s3n from "aws-cdk-lib/aws-s3-notifications";
+import * as events from "aws-cdk-lib/aws-events";
+import * as targets from "aws-cdk-lib/aws-events-targets";
+import * as cr from "aws-cdk-lib/custom-resources";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
-import { aws_opensearchserverless as opensearchserverless } from "aws-cdk-lib";
 import { DocumentConversionStack } from "./document-conversion-stack";
 import { NotificationsStack } from "./notifications-stack";
 import { ScraperStack } from "./scraper-stack";
@@ -88,7 +91,6 @@ interface LambdaFunctionStackProps {
   readonly userDocumentsDataSource?: bedrock.CfnDataSource;
   readonly grantsGovApiKey: string;
   readonly digestLogoWidth: number;
-  readonly openSearchCollection: opensearchserverless.CfnCollection;
   readonly userPool: cdk.aws_cognito.UserPool;
 }
 
@@ -133,12 +135,12 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly applicationExportsBucket: s3.Bucket;
   public readonly autoArchiveExpiredNofosFunction: lambda.Function;
   public readonly notificationDigestFunction: lambda.Function;
-  public readonly notificationDigestPreviewFunction: lambda.Function;
-  public readonly notificationDigestBroadcastFunction: lambda.Function;
   public readonly processingQueueEmailFunction?: lambda.Function;
   public readonly notificationUnsubscribeFunction: lambda.Function;
   public readonly notificationSesFeedbackFunction: lambda.Function;
   public readonly aiGrantSearchFunction: lambda.Function;
+  public readonly searchIndexBuilderFunction: lambda.Function;
+  public readonly searchIndexDlq: sqs.Queue;
   public readonly feedbackProxyFunction: lambda.Function;
   public readonly nofoSummaryUpdateFunction: lambda.Function;
   public readonly nofoStateOverlayFunction: lambda.Function;
@@ -153,7 +155,6 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     const { config } = props;
     const stackName = config.aws.stackName;
-    const knowledgeBaseIndexName = config.aws.knowledgeBaseIndexName;
     const SUPPORTED_STATES_ENV = supportedStatesEnv(config);
     const SINGLE_STATE_ENV: Record<string, string> = singleState(config) ? { SINGLE_STATE: singleState(config)!.code } : {};
 
@@ -164,7 +165,6 @@ export class LambdaFunctionStack extends cdk.Stack {
     const SONNET_TAG = "sonnet-5-5";
     const HAIKU_TAG = "haiku-5-5";
     const TITAN_MODEL_ID = "amazon.titan-embed-text-v2:0";
-    const RERANK_MODEL_ID = "cohere.rerank-v3-5:0";
 
     const region = cdk.Stack.of(this).region;
     const account = cdk.Stack.of(this).account;
@@ -200,8 +200,14 @@ export class LambdaFunctionStack extends cdk.Stack {
     const haikuScraperProfile = makeInferenceProfile(
       "HaikuScraperInferenceProfile", `${HAIKU_TAG}-scraper`, haikuSystemProfileArn, "nofo-scraper",
     );
+    const sonnetChatVerifyProfile = makeInferenceProfile(
+      "SonnetChatVerifyInferenceProfile", `${SONNET_TAG}-chat-verify`, sonnetSystemProfileArn, "chat",
+    );
     const titanSearchProfile = makeInferenceProfile(
       "TitanSearchInferenceProfile", "titan-grant-search", titanFoundationModelArn, "grant-search",
+    );
+    const haikuSearchProfile = makeInferenceProfile(
+      "HaikuSearchInferenceProfile", `${HAIKU_TAG}-grant-search`, haikuSystemProfileArn, "grant-search",
     );
 
     // A US system profile routes to its model in several regions, so the foundation model is granted in any region.
@@ -215,31 +221,32 @@ export class LambdaFunctionStack extends cdk.Stack {
         `arn:aws:bedrock:*::foundation-model/${systemProfileId.slice(systemProfileId.indexOf(".") + 1)}`,
       ],
     });
-    const rerankModelArn = `arn:aws:bedrock:${region}::foundation-model/${RERANK_MODEL_ID}`;
+    const sonnetChatVerify = claude("chat answer checks (Sonnet)", sonnetChatVerifyProfile, SONNET_MODEL_ID, sonnetSystemProfileArn);
     this.bedrockModels = [
       claude("chat (Sonnet)", sonnetChatProfile, SONNET_MODEL_ID, sonnetSystemProfileArn),
+      sonnetChatVerify,
       claude("NOFO analysis (Sonnet)", sonnetNofoProfile, SONNET_MODEL_ID, sonnetSystemProfileArn),
       claude("draft generation (Sonnet)", sonnetDraftProfile, SONNET_MODEL_ID, sonnetSystemProfileArn),
       claude("NOFO synthesis and questions (Haiku)", haikuNofoProfile, HAIKU_MODEL_ID, haikuSystemProfileArn),
       claude("grants.gov scraper (Haiku)", haikuScraperProfile, HAIKU_MODEL_ID, haikuSystemProfileArn),
-      // ai-grant-search embeds through this profile (its TITAN_MODEL_ID); invoking a profile also needs the model.
+      claude("grant search profiles (Haiku)", haikuSearchProfile, HAIKU_MODEL_ID, haikuSystemProfileArn),
+      // ai-grant-search and the index builder embed through this profile; invoking a profile also needs the model.
       {
         label: "grant search embeddings (Titan)",
         kind: "titan-embed",
         modelId: titanSearchProfile.attrInferenceProfileArn,
         invokeResources: [titanSearchProfile.attrInferenceProfileArn, titanFoundationModelArn],
       },
-      { label: "grant search reranking (Cohere)", kind: "rerank", modelId: rerankModelArn, invokeResources: [rerankModelArn] },
     ];
 
     // Create Python shared models Lambda Layer
     const pythonSharedLayer = new lambda.LayerVersion(scope, "PythonSharedLayer", {
       layerVersionName: `${stackName}-python-shared-layer`,
-      compatibleRuntimes: [lambda.Runtime.PYTHON_3_12],
+      compatibleRuntimes: [lambda.Runtime.PYTHON_3_13],
       code: lambda.Code.fromAsset(
         path.join(__dirname, "layers/python-shared-layer"), {
         bundling: {
-          image: lambda.Runtime.PYTHON_3_12.bundlingImage,
+          image: lambda.Runtime.PYTHON_3_13.bundlingImage,
           command: [
             'bash', '-c',
             'pip install -r requirements.txt -t python && cp -au python /asset-output',
@@ -264,7 +271,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "DraftHandlerFunction",
       {
-        runtime: lambda.Runtime.PYTHON_3_12,
+        runtime: lambda.Runtime.PYTHON_3_13,
         code: lambda.Code.fromAsset(path.join(__dirname, "draft-editor")),
         handler: "lambda_function.lambda_handler",
         layers: [pythonSharedLayer],
@@ -306,7 +313,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "DraftVersionWriterFunction",
       {
-        runtime: lambda.Runtime.PYTHON_3_12,
+        runtime: lambda.Runtime.PYTHON_3_13,
         code: lambda.Code.fromAsset(path.join(__dirname, "draft-version-writer")),
         handler: "lambda_function.lambda_handler",
         layers: [pythonSharedLayer],
@@ -321,8 +328,12 @@ export class LambdaFunctionStack extends cdk.Stack {
     props.draftVersionTable.grantReadWriteData(draftVersionWriterFunction);
     // Holds batch metadata (shard + sequence range), not the records; the stream keeps those for 24 h.
     const draftVersionWriterFailures = new sqs.Queue(scope, "DraftVersionWriterFailures", {
+      enforceSSL: true,
       retentionPeriod: cdk.Duration.days(14),
     });
+    NagSuppressions.addResourceSuppressions(draftVersionWriterFailures, [
+      { id: "AwsSolutions-SQS3", reason: "This queue is itself the stream's failure destination; nothing consumes it to fail again." },
+    ]);
     draftVersionWriterFunction.addEventSource(
       new DynamoEventSource(props.draftTable, {
         startingPosition: lambda.StartingPosition.TRIM_HORIZON,
@@ -340,7 +351,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "SessionHandlerFunction",
       {
-        runtime: lambda.Runtime.PYTHON_3_12,
+        runtime: lambda.Runtime.PYTHON_3_13,
         code: lambda.Code.fromAsset(path.join(__dirname, "session-handler")),
         handler: "lambda_function.lambda_handler",
         layers: [pythonSharedLayer],
@@ -382,23 +393,27 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "index.handler",
         environment: {
           WEBSOCKET_API_ENDPOINT: props.wsApiEndpoint.replace("wss", "https"),
-          KB_ID: props.knowledgeBase.attrKnowledgeBaseId,
           SESSION_HANDLER: this.sessionFunction.functionName,
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
           SONNET_MODEL_ID: sonnetChatProfile.attrInferenceProfileArn,
+          VERIFY_MODEL_ID: sonnetChatVerifyProfile.attrInferenceProfileArn,
           USER_POOL_ID: props.userPool.userPoolId,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
           LEGACY_STATELESS_ADMIN_IS_PLATFORM,
-          // Flip to "true" once existing NOFOs are sidecar-tagged.
-          NOFO_STATE_FILTER_ENABLED: "false",
+          ...SINGLE_STATE_ENV,
           DAILY_USAGE_TABLE_NAME: props.dailyUsageTable.tableName,
           CHAT_MESSAGES_PER_DAY: String(limits(config).chatMessagesPerDay),
+          ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
+          BUCKET: props.ffioNofosBucket.bucketName,
         },
         timeout: cdk.Duration.seconds(300),
+        memorySize: 1024,
         reservedConcurrentExecutions: limits(config).chatConcurrency,
       }
     );
     props.dailyUsageTable.grant(websocketAPIFunction, "dynamodb:UpdateItem");
+    websocketAPIFunction.addToRolePolicy(s3ReadOnlyPolicy(props.grantArtifactsBucket.bucketArn));
+    websocketAPIFunction.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
 
     // WebSocket messages lack JWT claims, so resolve state via AdminGetUser per message.
     websocketAPIFunction.addToRolePolicy(
@@ -429,17 +444,14 @@ export class LambdaFunctionStack extends cdk.Stack {
     websocketAPIFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["s3:ListBucket"],
-        resources: [props.userDocumentsBucket.bucketArn],
+        actions: ["bedrock:InvokeModel"],
+        resources: sonnetChatVerify.invokeResources,
       })
     );
 
+    // Reads the files a chat selected from the user's library (supporting-documents.mjs).
     websocketAPIFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["bedrock:Retrieve"],
-        resources: [props.knowledgeBase.attrKnowledgeBaseArn],
-      })
+      s3ReadOnlyPolicy(props.userDocumentsBucket.bucketArn)
     );
 
     websocketAPIFunction.addToRolePolicy(
@@ -452,6 +464,21 @@ export class LambdaFunctionStack extends cdk.Stack {
       })
     );
 
+    // The getChatbotResponse route hands each answer to an async copy of this function. No retries:
+    // a retried answer would stream a second time and save a duplicate turn.
+    websocketAPIFunction.configureAsyncInvoke({ retryAttempts: 0, maxEventAge: cdk.Duration.minutes(2) });
+    // In the role's default policy the grant would reference the function, which already depends on
+    // that policy, and CloudFormation rejects the loop.
+    new iam.Policy(scope, "ChatHandlerSelfInvokePolicy", {
+      roles: [websocketAPIFunction.role!],
+      statements: [
+        new iam.PolicyStatement({
+          actions: ["lambda:InvokeFunction"],
+          resources: [websocketAPIFunction.functionArn],
+        }),
+      ],
+    });
+
     this.chatFunction = websocketAPIFunction;
 
     const kbSyncAPIHandlerFunction = new lambda.Function(
@@ -459,7 +486,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       "SyncKBHandlerFunction",
       {
         functionName: `${stackName}-syncKBFunction`,
-        runtime: lambda.Runtime.PYTHON_3_12,
+        runtime: lambda.Runtime.PYTHON_3_13,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "knowledge-management/kb-sync")
         ),
@@ -565,7 +592,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       scope,
       "DeleteS3FilesHandlerFunction",
       {
-        runtime: lambda.Runtime.PYTHON_3_12,
+        runtime: lambda.Runtime.PYTHON_3_13,
         code: lambda.Code.fromAsset(
           path.join(__dirname, "knowledge-management/delete-document")
         ),
@@ -645,20 +672,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       }
     );
 
-    getS3APIHandlerFunctionForNOFOs.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          "s3:*",
-          //'s3:GetObject',     // Read objects from the bucket
-          //'s3:ListBucket'     // List the contents of the bucket
-        ],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          props.ffioNofosBucket.bucketArn + "/*",
-        ],
-      })
-    );
+    getS3APIHandlerFunctionForNOFOs.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
 
     getS3APIHandlerFunctionForNOFOs.addToRolePolicy(s3ReadOnlyPolicy(props.grantArtifactsBucket.bucketArn));
 
@@ -681,10 +695,12 @@ export class LambdaFunctionStack extends cdk.Stack {
     this.getNOFOsList = getS3APIHandlerFunctionForNOFOs;
 
     const nofoProcessingDLQ = new sqs.Queue(scope, "NOFOProcessingDLQ", {
+      enforceSSL: true,
       retentionPeriod: cdk.Duration.days(14),
     });
 
     const nofoProcessingQueue = new sqs.Queue(scope, "NOFOProcessingQueue", {
+      enforceSSL: true,
       visibilityTimeout: cdk.Duration.minutes(2),
       receiveMessageWaitTime: cdk.Duration.seconds(20),
       deadLetterQueue: {
@@ -695,11 +711,13 @@ export class LambdaFunctionStack extends cdk.Stack {
 
     // SQS DLQ for scraper downloads
     const scraperDownloadDLQ = new sqs.Queue(scope, "ScraperDownloadDLQ", {
+      enforceSSL: true,
       retentionPeriod: cdk.Duration.days(14),
     });
 
     // SQS queue for individual opportunity downloads
     const scraperDownloadQueue = new sqs.Queue(scope, "ScraperDownloadQueue", {
+      enforceSSL: true,
       visibilityTimeout: cdk.Duration.minutes(12),
       retentionPeriod: cdk.Duration.days(4),
       deadLetterQueue: {
@@ -755,6 +773,14 @@ export class LambdaFunctionStack extends cdk.Stack {
       new s3n.SqsDestination(nofoProcessingQueue),
       { prefix: "", suffix: "NOFO-File-TXT" }
     );
+    // A live grant's new version is staged here until it publishes (PENDING_PREFIX in grantwell-shared).
+    for (const suffix of ["NOFO-File-PDF", "NOFO-File-TXT"]) {
+      props.grantArtifactsBucket.addEventNotification(
+        s3.EventType.OBJECT_CREATED,
+        new s3n.SqsDestination(nofoProcessingQueue),
+        { prefix: "_pending/", suffix }
+      );
+    }
 
     // --- Reprocess Lambda ---
 
@@ -765,6 +791,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       layers: [jsSharedLayer],
       environment: {
         BUCKET: props.ffioNofosBucket.bucketName,
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
         QUEUE_URL: nofoProcessingQueue.queueUrl,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
@@ -776,6 +803,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       memorySize: 256,
     });
     nofoReprocessFunction.addToRolePolicy(s3ReadWritePolicy(props.ffioNofosBucket.bucketArn));
+    nofoReprocessFunction.addToRolePolicy(s3ListBucketPolicy(props.grantArtifactsBucket.bucketArn));
     nofoReprocessFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
     nofoReprocessFunction.addToRolePolicy(reviewTableReadWritePolicy(props.nofoProcessingReviewTable.tableArn));
     nofoReprocessFunction.addToRolePolicy(
@@ -805,6 +833,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           NOFO_STATE_OVERLAY_TABLE_NAME: props.nofoStateOverlayTable.tableName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
           LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+          ...SINGLE_STATE_ENV,
           ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
         },
         timeout: cdk.Duration.minutes(2),
@@ -812,16 +841,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
     props.analyticsTable.grantWriteData(RequirementsForNOFOs);
 
-    RequirementsForNOFOs.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["s3:*", "bedrock:*"],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          props.ffioNofosBucket.bucketArn + "/*",
-        ],
-      })
-    );
+    RequirementsForNOFOs.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
     RequirementsForNOFOs.addToRolePolicy(s3ReadOnlyPolicy(props.grantArtifactsBucket.bucketArn));
     props.nofoMetadataTable.grantReadData(RequirementsForNOFOs);
     props.nofoStateOverlayTable.grantReadData(RequirementsForNOFOs);
@@ -844,21 +864,13 @@ export class LambdaFunctionStack extends cdk.Stack {
           NOFO_STATE_OVERLAY_TABLE_NAME: props.nofoStateOverlayTable.tableName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+          ...SINGLE_STATE_ENV,
         },
         timeout: cdk.Duration.minutes(2),
       }
     );
 
-    NOFOQuestionsForNOFOs.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["s3:*", "bedrock:*"],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          props.ffioNofosBucket.bucketArn + "/*",
-        ],
-      })
-    );
+    NOFOQuestionsForNOFOs.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
     NOFOQuestionsForNOFOs.addToRolePolicy(s3ReadOnlyPolicy(props.grantArtifactsBucket.bucketArn));
     props.nofoMetadataTable.grantReadData(NOFOQuestionsForNOFOs);
     props.nofoStateOverlayTable.grantReadData(NOFOQuestionsForNOFOs);
@@ -880,23 +892,31 @@ export class LambdaFunctionStack extends cdk.Stack {
           LEGACY_STATELESS_ADMIN_IS_PLATFORM,
           ...SINGLE_STATE_ENV,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
         },
         timeout: cdk.Duration.seconds(60),
       }
     );
 
+    // Signs admins' upload URLs; it never reads or deletes.
     nofoUploadS3APIHandlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["s3:*"],
-        resources: [
-          props.ffioNofosBucket.bucketArn,
-          props.ffioNofosBucket.bucketArn + "/*",
-        ],
+        actions: ["s3:PutObject"],
+        resources: [props.ffioNofosBucket.bucketArn + "/*"],
       })
     );
 
-    props.nofoMetadataTable.grantWriteData(nofoUploadS3APIHandlerFunction);
+    // Signs the upload of a live grant's new version, which waits in _pending/.
+    nofoUploadS3APIHandlerFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:PutObject"],
+        resources: [props.grantArtifactsBucket.arnForObjects("_pending/*")],
+      })
+    );
+
+    props.nofoMetadataTable.grantReadWriteData(nofoUploadS3APIHandlerFunction);
     this.uploadNOFOS3Function = nofoUploadS3APIHandlerFunction;
 
     // Add the NOFO status update function
@@ -966,9 +986,18 @@ export class LambdaFunctionStack extends cdk.Stack {
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
         LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         ...SINGLE_STATE_ENV,
+          CITE_REQUIREMENTS_FUNCTION_NAME: `${stackName}-citeRequirementsFunction`,
         },
         timeout: cdk.Duration.seconds(30),
       }
+    );
+
+    nofoSummaryUpdateFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["lambda:InvokeFunction"],
+        resources: [`arn:aws:lambda:${region}:${account}:function:${stackName}-citeRequirementsFunction`],
+      })
     );
 
     nofoSummaryUpdateFunction.addToRolePolicy(
@@ -1221,9 +1250,9 @@ export class LambdaFunctionStack extends cdk.Stack {
     const draftGeneration = new DraftGenerationStack(scope, "DraftGenerationStack", {
       ffioNofosBucket: props.ffioNofosBucket,
       grantArtifactsBucket: props.grantArtifactsBucket,
+      userDocumentsBucket: props.userDocumentsBucket,
       draftTable: props.draftTable,
       draftGenerationJobsTable: props.draftGenerationJobsTable,
-      knowledgeBaseId: props.knowledgeBase.attrKnowledgeBaseId,
       jsSharedLayer: jsSharedLayer,
       sonnetDraftProfileArn: sonnetDraftProfile.attrInferenceProfileArn,
       supportedStatesEnv: SUPPORTED_STATES_ENV,
@@ -1247,6 +1276,9 @@ export class LambdaFunctionStack extends cdk.Stack {
       haikuScraperProfileArn: haikuScraperProfile.attrInferenceProfileArn,
       scraperDownloadQueueArn: scraperDownloadQueue.queueArn,
       scraperDownloadQueueUrl: scraperDownloadQueue.queueUrl,
+      supportedStatesEnv: SUPPORTED_STATES_ENV,
+      legacyStatelessAdminIsPlatform: LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+      singleStateEnv: SINGLE_STATE_ENV,
     });
 
     this.scraperCoordinatorFunction = scraper.scraperCoordinatorFunction;
@@ -1261,6 +1293,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       "DocumentConversionStack",
       {
         ffioNofosBucket: props.ffioNofosBucket,
+        grantArtifactsBucket: props.grantArtifactsBucket,
         analyticsTable: props.analyticsTable,
         jsSharedLayer: jsSharedLayer,
         nofoProcessingReviewTable: props.nofoProcessingReviewTable,
@@ -1329,6 +1362,7 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
 
     const sesFeedbackTopic = new sns.Topic(scope, "NotificationDigestFeedbackTopic", {
+      enforceSSL: true,
       displayName: "SES digest bounce/complaint feedback",
     });
 
@@ -1351,6 +1385,9 @@ export class LambdaFunctionStack extends cdk.Stack {
         excludePunctuation: true,
       },
     });
+    NagSuppressions.addResourceSuppressions(unsubscribeSecret, [
+      { id: "AwsSolutions-SMG4", reason: "Rotating the HMAC key would break the unsubscribe link in every email already sent." },
+    ]);
 
     // Notification digest functions and their schedules live in their own NestedStack to
     // keep the main app stack under the 500-resource CloudFormation limit. The SES identity,
@@ -1382,17 +1419,25 @@ export class LambdaFunctionStack extends cdk.Stack {
     }
 
     this.notificationDigestFunction = notifications.notificationDigestFunction;
-    this.notificationDigestPreviewFunction =
-      notifications.notificationDigestPreviewFunction;
-    this.notificationDigestBroadcastFunction =
-      notifications.notificationDigestBroadcastFunction;
     this.notificationUnsubscribeFunction =
       notifications.notificationUnsubscribeFunction;
     this.notificationSesFeedbackFunction =
       notifications.notificationSesFeedbackFunction;
     this.processingQueueEmailFunction = notifications.processingQueueEmailFunction;
 
-    // AI Grant Search Lambda (hybrid BM25 + semantic via OpenSearch Serverless)
+    // AI Grant Search Lambda (hybrid BM25 + semantic over the per-grant index in the artifacts bucket)
+    const titanSearchInvoke = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ["bedrock:InvokeModel"],
+      resources: [titanFoundationModelArn, titanSearchProfile.attrInferenceProfileArn],
+    });
+    // ListBucket makes a missing index file a 404 (index still building), not a 403.
+    const listArtifacts = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ["s3:ListBucket"],
+      resources: [props.grantArtifactsBucket.bucketArn],
+    });
+
     const aiGrantSearchFunction = new lambda.Function(
       scope,
       "AIGrantSearchFunction",
@@ -1404,72 +1449,165 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "index.handler",
         layers: [jsSharedLayer], // for recordEvent / touchLastActive
         environment: {
-          OPENSEARCH_ENDPOINT: `${props.openSearchCollection.attrId}.${stack.region}.aoss.amazonaws.com`,
-          OPENSEARCH_INDEX: knowledgeBaseIndexName,
+          SEARCH_INDEX_BUCKET: props.grantArtifactsBucket.bucketName,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           FEATURE_ROLLOUT_TABLE_NAME: props.featureRolloutTable.tableName,
           TITAN_MODEL_ID: titanSearchProfile.attrInferenceProfileArn,
           ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
           LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+          ...SINGLE_STATE_ENV,
         },
         timeout: cdk.Duration.seconds(30),
-        memorySize: 512,
+        // Holds the decoded index (about 8 MB for 2,000 grants); more memory also means more CPU for ranking.
+        memorySize: 1024,
       }
     );
     props.analyticsTable.grantWriteData(aiGrantSearchFunction);
-
+    aiGrantSearchFunction.addToRolePolicy(titanSearchInvoke);
+    aiGrantSearchFunction.addToRolePolicy(listArtifacts);
     aiGrantSearchFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["aoss:APIAccessAll"],
-        resources: [
-          `arn:aws:aoss:${stack.region}:${stack.account}:collection/${props.openSearchCollection.attrId}`,
-        ],
+        actions: ["s3:GetObject"],
+        resources: [props.grantArtifactsBucket.arnForObjects("_search/*")],
+      })
+    );
+    aiGrantSearchFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["dynamodb:GetItem", "dynamodb:Scan"],
+        resources: [props.nofoMetadataTable.tableArn, props.featureRolloutTable.tableArn],
       })
     );
 
-    aiGrantSearchFunction.addToRolePolicy(
+    // Search index builder: summary.json changes reach it through this queue, so a burst of
+    // publishes, renames or edits becomes one incremental build.
+    const searchIndexDlq = new sqs.Queue(scope, "SearchIndexDLQ", {
+      enforceSSL: true,
+      retentionPeriod: cdk.Duration.days(14),
+    });
+    const searchIndexQueue = new sqs.Queue(scope, "SearchIndexQueue", {
+      enforceSSL: true,
+      deliveryDelay: cdk.Duration.seconds(30),
+      visibilityTimeout: cdk.Duration.minutes(20),
+      retentionPeriod: cdk.Duration.days(4),
+      deadLetterQueue: { queue: searchIndexDlq, maxReceiveCount: 3 },
+    });
+
+    const searchIndexBuilderFunction = new lambda.Function(scope, "SearchIndexBuilderFunction", {
+      runtime: lambda.Runtime.NODEJS_24_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "landing-page/ai-grant-search")),
+      handler: "builder.handler",
+      environment: {
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
+        BUCKET: props.ffioNofosBucket.bucketName,
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+        TITAN_MODEL_ID: titanSearchProfile.attrInferenceProfileArn,
+        HAIKU_MODEL_ID: haikuSearchProfile.attrInferenceProfileArn,
+        QUEUE_URL: searchIndexQueue.queueUrl,
+      },
+      timeout: cdk.Duration.minutes(15),
+      memorySize: 1024,
+      retryAttempts: 1,
+      description: "Rebuilds the per-grant AI search index in the grant artifacts bucket",
+    });
+    searchIndexBuilderFunction.addToRolePolicy(titanSearchInvoke);
+    searchIndexBuilderFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         actions: ["bedrock:InvokeModel"],
         resources: [
-          `arn:aws:bedrock:${stack.region}::foundation-model/${TITAN_MODEL_ID}`,
-          titanSearchProfile.attrInferenceProfileArn,
+          haikuSearchProfile.attrInferenceProfileArn,
+          haikuSystemProfileArn,
+          `arn:aws:bedrock:*::foundation-model/${HAIKU_MODEL_ID.slice(HAIKU_MODEL_ID.indexOf(".") + 1)}`,
         ],
       })
     );
-
-    aiGrantSearchFunction.addToRolePolicy(
+    searchIndexBuilderFunction.addToRolePolicy(listArtifacts);
+    searchIndexBuilderFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ["bedrock:InvokeRerank", "bedrock:InvokeModel"],
-        resources: [
-          `arn:aws:bedrock:${stack.region}::foundation-model/${RERANK_MODEL_ID}`,
-        ],
+        actions: ["s3:GetObject"],
+        resources: [props.grantArtifactsBucket.arnForObjects("*")],
+      })
+    );
+    searchIndexBuilderFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:PutObject", "s3:DeleteObject"],
+        resources: [props.grantArtifactsBucket.arnForObjects("_search/*")],
+      })
+    );
+    // Summaries written before the artifacts bucket existed are still read from the grant bucket.
+    searchIndexBuilderFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:GetObject"],
+        resources: [props.ffioNofosBucket.arnForObjects("*/summary.json"), props.ffioNofosBucket.arnForObjects("*/raw-text.txt")],
+      })
+    );
+    searchIndexBuilderFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:ListBucket"],
+        resources: [props.ffioNofosBucket.bucketArn],
+      })
+    );
+    searchIndexBuilderFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["dynamodb:Scan"],
+        resources: [props.nofoMetadataTable.tableArn],
+      })
+    );
+    searchIndexBuilderFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["sqs:SendMessage"],
+        resources: [searchIndexQueue.queueArn],
+      })
+    );
+    searchIndexBuilderFunction.addEventSource(
+      new SqsEventSource(searchIndexQueue, {
+        batchSize: 100,
+        maxBatchingWindow: cdk.Duration.seconds(60),
+        maxConcurrency: 2,
       })
     );
 
-    aiGrantSearchFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["bedrock:Rerank"],
-        resources: ["*"],
-      })
-    );
+    // Every grant change writes or removes <grant>/summary.json: publish, admin edits, status
+    // and archive changes, rename (copy + delete), promote-copy and delete.
+    for (const eventType of [s3.EventType.OBJECT_CREATED, s3.EventType.OBJECT_REMOVED]) {
+      props.grantArtifactsBucket.addEventNotification(eventType, new s3n.SqsDestination(searchIndexQueue), { suffix: "/summary.json" });
+    }
 
-    aiGrantSearchFunction.addToRolePolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ["dynamodb:GetItem", "dynamodb:Query", "dynamodb:Scan"],
-        resources: [
-          props.nofoMetadataTable.tableArn,
-          `${props.nofoMetadataTable.tableArn}/index/*`,
-          props.featureRolloutTable.tableArn,
-        ],
-      })
-    );
+    // 06:30 UTC: clear of the 02:00 archive, 09:00 scrape and 14:00 Eastern digest runs.
+    new events.Rule(scope, "SearchIndexNightlyRule", {
+      schedule: events.Schedule.cron({ minute: "30", hour: "6" }),
+      description: "Nightly full rebuild of the AI grant search index",
+      targets: [new targets.LambdaFunction(searchIndexBuilderFunction, { event: events.RuleTargetInput.fromObject({ full: true }) })],
+    });
 
+    // The first deploy queues a build so the index exists soon after; bump the key to rebuild on deploy.
+    const initialBuild: cr.AwsSdkCall = {
+      service: "SQS",
+      action: "sendMessage",
+      parameters: { QueueUrl: searchIndexQueue.queueUrl, MessageBody: JSON.stringify({ deploy: "search-index-v1" }) },
+      physicalResourceId: cr.PhysicalResourceId.of("search-index-initial-build"),
+    };
+    const searchIndexInitialBuild = new cr.AwsCustomResource(scope, "SearchIndexInitialBuild", {
+      onCreate: initialBuild,
+      onUpdate: initialBuild,
+      policy: cr.AwsCustomResourcePolicy.fromStatements([
+        new iam.PolicyStatement({ actions: ["sqs:SendMessage"], resources: [searchIndexQueue.queueArn] }),
+      ]),
+      installLatestAwsSdk: false,
+    });
+    searchIndexInitialBuild.node.addDependency(searchIndexBuilderFunction);
+
+    this.searchIndexBuilderFunction = searchIndexBuilderFunction;
+    this.searchIndexDlq = searchIndexDlq;
     this.aiGrantSearchFunction = aiGrantSearchFunction;
 
     // --- User profile Lambda (self-service; profile-completion gate + last-activity) ---

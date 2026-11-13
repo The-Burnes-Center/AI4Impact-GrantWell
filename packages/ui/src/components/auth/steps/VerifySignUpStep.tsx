@@ -41,9 +41,9 @@ export default function VerifySignUpStep({
             placeholder="Enter 6-digit code"
             value={verificationCode}
             onChange={(event) => onVerificationCodeChange(event.target.value)}
-            disabled={loading}
+            readOnly={loading}
             required
-            className="form-input"
+            className="gw-input form-input"
             inputMode="numeric"
             autoComplete="one-time-code"
             aria-required="true"
@@ -56,13 +56,12 @@ export default function VerifySignUpStep({
           <Button
             variant="primary"
             type="submit"
-            disabled={loading}
-            className="login-submit-button"
+            aria-disabled={loading || undefined}
+            className="gw-btn gw-btn--primary login-submit-button"
           >
             {loading ? (
               <>
                 <Spinner animation="border" size="sm" aria-hidden="true" className="me-2" />
-                <span className="visually-hidden">Loading</span>
                 Verifying...
               </>
             ) : (
@@ -76,7 +75,7 @@ export default function VerifySignUpStep({
           variant="link"
           type="button"
           onClick={onResendCode}
-          disabled={loading}
+          aria-disabled={loading || undefined}
           className="create-account-link"
         >
           Resend code

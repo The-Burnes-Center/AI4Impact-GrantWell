@@ -42,8 +42,16 @@ vi.mock("@aws-sdk/client-s3", () => ({
   S3Client: class {
     async send(cmd: any) {
       if (cmd.kind === "put") s3.puts.push(cmd.input);
+      if (cmd.kind === "get") {
+        if (!cmd.input.Key.endsWith("/raw-text.txt")) throw Object.assign(new Error("NoSuchKey"), { name: "NoSuchKey" });
+        return { Body: { transformToString: async () => "Section 2. The project narrative must describe need." } };
+      }
       return {};
     }
+  },
+  GetObjectCommand: class {
+    kind = "get";
+    constructor(public input: any) {}
   },
   PutObjectCommand: class {
     kind = "put";
@@ -170,8 +178,9 @@ describe("draft generate-section on Sonnet 5.5", () => {
     assertMigratedBody(body);
     expect(body.output_config.effort).toBe("medium");
     expect(body.output_config.format.schema.required).toEqual(["content"]);
-    expect(body.messages[0].content).toContain('Write the content for the "Project Narrative" grant section');
-    expect(body.messages[0].content).not.toContain("write_section");
+    const content = JSON.stringify(body.messages[0].content);
+    expect(content).toContain('Write the content for the \\"Project Narrative\\" grant section');
+    expect(content).not.toContain("write_section");
   });
 
   it("sizes max_tokens for thinking on top of the word budget", async () => {

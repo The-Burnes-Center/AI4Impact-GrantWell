@@ -1,17 +1,18 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { fetchAuthSession, fetchMFAPreference, signOut } from "aws-amplify/auth";
 import { LuShieldCheck } from "react-icons/lu";
 import Button from "../ui/Button";
 import MfaSetupPanel from "./MfaSetupPanel";
 import MfaRecoveryNote from "./MfaRecoveryNote";
 import { useFocusTrap } from "../../hooks/use-focus-trap";
+import { useBranding } from "../../common/branding";
 import { MFA_DEADLINE_ISO } from "../../common/instance";
 import { deadlineDateText, mfaDeadlinePhase } from "../../common/mfa-deadline";
 import "../profile-gate/profile-gate.css";
 import "../../styles/totp.css";
 
 /**
- * From the deployment's MFA deadline, blocks the app until the user enrolls. Fails open like
+ * From the deployment's MFA deadline, or always when its pool requires MFA, blocks the app until the user enrolls. Fails open like
  * ProfileGate: the user pool's own MFA requirement is the real enforcement.
  */
 export default function MfaGate({ children }: { children: React.ReactNode }) {
@@ -19,7 +20,26 @@ export default function MfaGate({ children }: { children: React.ReactNode }) {
   const [blocked, setBlocked] = useState(false);
   const [email, setEmail] = useState("");
   const [expanded, setExpanded] = useState(false);
+  const [backFromSetup, setBackFromSetup] = useState(false);
+  const setUpButton = useRef<HTMLButtonElement>(null);
   const dialogRef = useFocusTrap<HTMLDivElement>({ isOpen: blocked });
+  const { appName } = useBranding();
+
+  useEffect(() => {
+    if (!blocked) return;
+    const previous = document.title;
+    document.title = `Set up two-step verification – ${appName}`;
+    return () => {
+      document.title = previous;
+    };
+  }, [blocked, appName]);
+
+  // Back removes the panel that holds focus.
+  useEffect(() => {
+    if (!backFromSetup) return;
+    setUpButton.current?.focus();
+    setBackFromSetup(false);
+  }, [backFromSetup]);
 
   useEffect(() => {
     if (phase !== "after") return;
@@ -62,34 +82,39 @@ export default function MfaGate({ children }: { children: React.ReactNode }) {
       aria-labelledby="mfa-gate-title"
       ref={dialogRef}
     >
-      <div className={`profile-gate__panel${expanded ? " profile-gate__panel--wide" : ""}`}>
-        <header className="profile-gate__header">
+      <div className={`gw-modal profile-gate__panel${expanded ? " profile-gate__panel--wide" : ""}`}>
+        <header className="gw-modal__header profile-gate__header">
           <span className="profile-gate__header-icon" aria-hidden="true">
             <LuShieldCheck size={22} />
           </span>
-          <h2 className="profile-gate__title" id="mfa-gate-title">
+          <h2 className="gw-modal__title profile-gate__title" id="mfa-gate-title">
             Set up two-step verification to continue
           </h2>
         </header>
 
-        <div className="profile-gate__body">
+        <div className="gw-modal__body profile-gate__body">
           <p className="profile-gate__lead">
-            Since {MFA_DEADLINE_ISO ? deadlineDateText(MFA_DEADLINE_ISO, true) : "the deadline"},
-            GrantWell asks for a code from an authenticator app when you sign in. Set it up to
-            keep using GrantWell. It takes about a minute.
+            {MFA_DEADLINE_ISO
+              ? `Since ${deadlineDateText(MFA_DEADLINE_ISO, true)}, GrantWell asks`
+              : "Two-step verification is required on GrantWell. GrantWell asks"}{" "}
+            for a code from an authenticator app when you sign in. Set it up to keep using
+            GrantWell. It takes about a minute.
           </p>
 
           {expanded ? (
             <MfaSetupPanel
               email={email}
               onEnrolled={() => setBlocked(false)}
-              onCancel={() => setExpanded(false)}
+              onCancel={() => {
+                setExpanded(false);
+                setBackFromSetup(true);
+              }}
               cancelLabel="Back"
             />
           ) : (
             <>
               <div className="profile-actions">
-                <Button type="button" onClick={() => setExpanded(true)}>
+                <Button ref={setUpButton} type="button" onClick={() => setExpanded(true)}>
                   Set it up
                 </Button>
                 <Button type="button" variant="ghost" onClick={onSignOut}>

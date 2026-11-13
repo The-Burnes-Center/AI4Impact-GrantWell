@@ -10,6 +10,7 @@ import {
 } from "@aws-sdk/client-bedrock-runtime";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { haikuJudge } from "./chat-verify-fakes";
 
 // reset() recreates each stub, so install() runs after it to route through the new mock.
 const bedrock = mockClient(BedrockRuntimeClient);
@@ -47,6 +48,8 @@ function model(input: any) {
     if (props.EligibilityCriteria) return reply(JSON.stringify(SUMMARY));
     if (props.questions) return reply(JSON.stringify(QUESTIONS));
     if (props.content) return reply(JSON.stringify({ content: "We serve 4,200 residents." }));
+    if (props.verdicts) return haikuJudge()(input);
+    if (props.results) return reply(JSON.stringify({ results: [] }));
   }
   return reply("2026-12-01");
 }
@@ -106,13 +109,16 @@ describe("eval harness", () => {
     expect(JSON.parse(process.env.SUPPORTED_STATES!)).toContainEqual({ code: "MA", name: "Massachusetts" });
   });
 
-  it("extract runs both handlers and records usage per stage", async () => {
+  it("extract runs the handlers and the source check, and records usage per stage", async () => {
     const r = await h.extract(h.grant);
     expect(r.error).toBeUndefined();
     expect(r.output.summary.ProjectNarrativeSections).toHaveLength(2);
     expect(r.output.questions.questions).toHaveLength(1);
     expect(r.output.applicationDeadline).toBe("2026-12-01");
-    expect(r.usage.map((u: any) => u.stage).sort()).toEqual(["extract", "synthesize", "synthesize"]);
+    const stages = r.usage.map((u: any) => u.stage);
+    expect(stages.filter((st: string) => st !== "verify").sort()).toEqual(["extract", "synthesize", "synthesize"]);
+    expect(stages).toContain("verify");
+    expect(Array.isArray(r.output.verifyFailing)).toBe(true);
     expect(r.usage[0]).toMatchObject({ input: 1000, output: 200, stop: "end_turn" });
     expect(h.costOf(r.usage)).toBeGreaterThan(0);
   });
@@ -124,38 +130,25 @@ describe("eval harness", () => {
     expect(r.usage[0].model).toBe(h.models.haiku);
   });
 
-  it("draft records retrieval, then replays it with the KB unreachable", async () => {
-    kb.on(RetrieveCommand).resolves({ retrievalResults: [passage("Need is scored at 30 points.")] } as any);
-    const recording = h.aws.retrieval(h.grant.recordingPath, "record");
-    const recorded = await h.draft(h.grant, { summary: SUMMARY, retrieval: recording });
-    recording.save();
-    expect(recorded.error).toBeUndefined();
-    expect(recorded.output.sections.map((s: any) => [s.name, s.content])).toEqual([
+  it("draft gives every section the grant's full text and never searches the KB", async () => {
+    kb.on(RetrieveCommand).rejects(new Error("drafting must not search the KB"));
+    const replay = h.aws.retrieval(h.grant.recordingPath, "replay");
+    const r = await h.draft(h.grant, { summary: SUMMARY, retrieval: replay });
+    expect(r.error).toBeUndefined();
+    expect(r.output.sections.map((s: any) => [s.name, s.content])).toEqual([
       ["Need", "We serve 4,200 residents."],
       ["Approach", "We serve 4,200 residents."],
     ]);
-    expect(new Set(recorded.usage.map((u: any) => u.stage)).size).toBe(2);
-    const draftPrompt = JSON.parse(bedrock.commandCalls(InvokeModelCommand)[0].args[0].input.body as string).messages[0].content;
-    expect(draftPrompt).toContain("Need is scored at 30 points.");
-
-    kb.reset();
-    h.aws.install();
-    kb.on(RetrieveCommand).rejects(new Error("KB must not be called on replay"));
-    const replay = h.aws.retrieval(h.grant.recordingPath, "replay");
-    const replayed = await h.draft(h.grant, { summary: SUMMARY, retrieval: replay });
-    expect(replayed.error).toBeUndefined();
-    expect(replay.stats).toEqual({ exact: 2, nearest: 0, live: 0 });
+    expect(new Set(r.usage.map((u: any) => u.stage)).size).toBe(2);
+    for (const call of bedrock.commandCalls(InvokeModelCommand)) {
+      const [grantBlock] = JSON.parse(call.args[0].input.body as string).messages[0].content;
+      expect(grantBlock.text).toContain("Applications are due December 1, 2026.");
+      expect(grantBlock.cache_control).toEqual({ type: "ephemeral" });
+    }
     expect(kb.commandCalls(RetrieveCommand)).toHaveLength(0);
   });
 
-  it("chat collects the streamed answer and its sources, and replays a new query by nearest match", async () => {
-    const toolUse = (query: string) =>
-      stream([
-        { type: "message_start", message: { usage: { input_tokens: 500 } } },
-        { type: "content_block_start", content_block: { type: "tool_use", id: "t1", name: "query_db" } },
-        { type: "content_block_delta", delta: { type: "input_json_delta", partial_json: JSON.stringify({ query }) } },
-        { type: "message_delta", delta: { stop_reason: "tool_use" }, usage: { output_tokens: 30 } },
-      ]);
+  it("chat answers from the golden grant text, never the KB, and reports the grant as the source", async () => {
     const answer = () =>
       stream([
       { type: "message_start", message: { usage: { input_tokens: 900 } } },
@@ -163,29 +156,23 @@ describe("eval harness", () => {
       { type: "content_block_delta", delta: { type: "text_delta", text: "are eligible." } },
       { type: "message_delta", delta: { stop_reason: "end_turn" }, usage: { output_tokens: 12 } },
     ]);
-    kb.on(RetrieveCommand).resolves({ retrievalResults: [passage("Eligible applicants are municipalities.")] } as any);
-    bedrock.on(InvokeModelWithResponseStreamCommand).resolvesOnce(toolUse("eligible applicants")).resolves(answer());
-    const recording = h.aws.retrieval(h.grant.recordingPath, "record");
-    const r = await h.chat(h.grant, { retrieval: recording });
-    recording.save();
+    kb.on(RetrieveCommand).rejects(new Error("chat must not search the KB"));
+    bedrock.on(InvokeModelWithResponseStreamCommand).resolves(answer());
+
+    const r = await h.chat(h.grant);
+
     expect(r.error).toBeUndefined();
     expect(r.output.answers[0]).toMatchObject({ id: "q1", answer: "Municipalities are eligible." });
-    expect(r.output.answers[0].sources[0].uri).toBe("s3://nofos/Grant A/NOFO.pdf");
-    expect(r.usage.map((u: any) => [u.input, u.output, u.stop])).toEqual([
-      [500, 30, "tool_use"],
-      [900, 12, "end_turn"],
+    expect(r.output.answers[0].sources).toEqual([{ title: "Grant document", uri: "s3://eval-artifacts/Grant A/raw-text.txt" }]);
+    const body = JSON.parse(bedrock.commandCalls(InvokeModelWithResponseStreamCommand)[0].args[0].input.body as string);
+    expect(JSON.stringify(body.messages[0].content[0])).toContain("Applications are due December 1, 2026.");
+    expect(body).not.toHaveProperty("tools");
+    expect(r.usage.map((u: any) => [u.model, u.input, u.output, u.stop])).toEqual([
+      [h.models.sonnet, 900, 12, "end_turn"],
+      [h.models.sonnet, 300, 40, "end_turn"],
     ]);
-    expect(r.usage.every((u: any) => u.firstTokenMs >= 0)).toBe(true);
-
-    kb.reset();
-    bedrock.reset();
-    h.aws.install();
-    kb.on(RetrieveCommand).rejects(new Error("KB must not be called on replay"));
-    bedrock.on(InvokeModelWithResponseStreamCommand).resolvesOnce(toolUse("who is an eligible applicant")).resolves(answer());
-    const replay = h.aws.retrieval(h.grant.recordingPath, "replay");
-    const again = await h.chat(h.grant, { retrieval: replay });
-    expect(again.output.answers[0].answer).toBe("Municipalities are eligible.");
-    expect(replay.stats.nearest).toBeGreaterThan(0);
+    expect(r.usage[0].firstTokenMs).toBeGreaterThanOrEqual(0);
+    expect(kb.commandCalls(RetrieveCommand)).toHaveLength(0);
   });
 
   it("refuses any AWS call the runner did not route", async () => {

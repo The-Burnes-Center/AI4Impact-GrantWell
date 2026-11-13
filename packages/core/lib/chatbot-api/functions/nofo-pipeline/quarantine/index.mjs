@@ -1,8 +1,11 @@
-import { DynamoDBClient, PutItemCommand, QueryCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { randomUUID } from "crypto";
 import { updateProcessingStatus, setNofoStatus, markProcessingComplete } from "../shared/status.mjs";
 import { readRawText } from "../shared/s3.mjs";
+import { liveStatusOf } from "../shared/live.mjs";
+import { keptLiveGuidance } from "../shared/unverified-guidance.mjs";
+import { isStaleRun } from "../shared/swap.mjs";
 
 const dynamoClient = new DynamoDBClient();
 
@@ -12,6 +15,7 @@ export const handler = async (event) => {
     s3Bucket,
     rawTextKey,
     documentKey,
+    documentVersionId,
     mergedSummary,
     questionsData,
     validationResult,
@@ -20,11 +24,23 @@ export const handler = async (event) => {
     errorMessage,
     source,
     adminGuidance,
+    previousStatus,
+    unpublish,
   } = event;
 
-  // Terminal state: mark the metadata record `quarantined` (honest top-level status, no longer
-  // stuck at `processing`) and set the processing_status field the Grants row keys its pill off.
-  await setNofoStatus(nofoName, "quarantined");
+  // A newer upload restarted processing; this run's review would describe a document that's gone.
+  if (await isStaleRun(documentKey, documentVersionId)) {
+    console.log(`${documentKey} was replaced after this run started; not holding it for review.`);
+    return { statusCode: 200, nofoName, quarantined: false, superseded: true };
+  }
+
+  const row = await readMetadataRow(nofoName);
+  // A live grant's failing new version waits here while its published version stays up. Only a
+  // grant with no published version, or one the live check unpublishes, is marked `quarantined`.
+  const liveStatus = unpublish === true ? null : await liveStatusOf(nofoName, row, { unknownIsLive: true });
+  const heldFrom = typeof previousStatus === "string" ? previousStatus : typeof row?.previous_status === "string" ? row.previous_status : undefined;
+  // An unreadable row leaves the status alone: a new grant is already `processing`, which is held too.
+  if (!liveStatus && (row !== undefined || unpublish === true)) await setNofoStatus(nofoName, "quarantined", { previousStatus: heldFrom });
   await updateProcessingStatus(nofoName, "quarantined");
   // Stamp completion so the Processing tab shows this as a "Needs review" outcome for a window.
   await markProcessingComplete(nofoName, "needs_review");
@@ -95,6 +111,7 @@ export const handler = async (event) => {
     qualityScore: qualityScore || 0,
     retryCount: retryCount || 0,
     s3DocumentKey: documentKey || "",
+    s3DocumentVersionId: documentVersionId || undefined,
     s3RawTextKey: rawTextKey || "",
     documentTextPreview,
     reviewed_by: null,
@@ -103,7 +120,11 @@ export const handler = async (event) => {
     corrections: null,
     source: source || "pipeline",
     errorMessage: errorMessage || null,
-    adminGuidance: adminGuidance ? JSON.stringify(adminGuidance) : null,
+    adminGuidance: adminGuidance ? JSON.stringify(liveStatus ? keptLiveGuidance(adminGuidance, nofoName, liveStatus) : adminGuidance) : null,
+    // Approving restores the status the grant had before it was held.
+    previous_status: liveStatus ? undefined : heldFrom,
+    // Set when the grant's published version stays live; rejecting then keeps it.
+    live_status: liveStatus ?? undefined,
   };
 
   await dynamoClient.send(
@@ -125,3 +146,17 @@ export const handler = async (event) => {
     quarantined: true,
   };
 };
+
+async function readMetadataRow(nofoName) {
+  const tableName = process.env.NOFO_METADATA_TABLE_NAME;
+  if (!tableName || !nofoName) return null;
+  try {
+    const result = await dynamoClient.send(
+      new GetItemCommand({ TableName: tableName, Key: marshall({ nofo_name: nofoName }) })
+    );
+    return result.Item ? unmarshall(result.Item) : null;
+  } catch (error) {
+    console.warn(`Could not read metadata for ${nofoName}:`, error.message);
+    return undefined;
+  }
+}

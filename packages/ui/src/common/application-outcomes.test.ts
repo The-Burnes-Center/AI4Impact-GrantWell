@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EMPTY_OUTCOME, parseDollars, toOutcomeInput } from "./application-outcomes";
+import { EMPTY_OUTCOME, formatRequestedAmount, parseDollars, toOutcomeInput } from "./application-outcomes";
 
 describe("toOutcomeInput", () => {
   const today = "2026-10-27";
@@ -30,5 +30,13 @@ describe("parseDollars", () => {
     expect(parseDollars("")).toBeNull();
     expect(parseDollars("-5")).toBeNull();
     expect(parseDollars("about 5k")).toBeNull();
+  });
+});
+
+describe("formatRequestedAmount", () => {
+  it("formats whole dollars like an award and leaves other text as typed", () => {
+    expect(formatRequestedAmount("250000")).toBe("$250,000");
+    expect(formatRequestedAmount("$40,000")).toBe("$40,000");
+    expect(formatRequestedAmount(" about $1.2M ")).toBe("about $1.2M");
   });
 });

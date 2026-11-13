@@ -41,6 +41,7 @@ export class Website extends Construct {
       {
         objectOwnership: s3.ObjectOwnership.OBJECT_WRITER,
         blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+        lifecycleRules: [{ expiration: cdk.Duration.days(90) }],
         removalPolicy: cdk.RemovalPolicy.DESTROY,
         autoDeleteObjects: true,
         enforceSSL: true,
@@ -102,6 +103,7 @@ export class Website extends Construct {
         origin: s3Origin,
         viewerProtocolPolicy: cf.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         cachePolicy: cf.CachePolicy.CACHING_OPTIMIZED,
+        responseHeadersPolicy: cf.ResponseHeadersPolicy.SECURITY_HEADERS,
         functionAssociations: [
           { function: spaRouting, eventType: cf.FunctionEventType.VIEWER_REQUEST },
         ],
@@ -112,6 +114,7 @@ export class Website extends Construct {
           viewerProtocolPolicy: cf.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
           allowedMethods: cf.AllowedMethods.ALLOW_ALL,
           cachePolicy: chatbotFilesCachePolicy,
+          responseHeadersPolicy: cf.ResponseHeadersPolicy.SECURITY_HEADERS,
         },
       },
       errorResponses: [

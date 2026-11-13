@@ -1,7 +1,14 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { DynamoDBClient, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
-import { marshall } from "@aws-sdk/util-dynamodb";
+import { DynamoDBClient, GetItemCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
+import {
+  artifactsBucket,
+  assertCanEditNofoOr403,
+  canSeeEveryState,
+  pendingDir,
+  stagesNewVersion,
+} from "grantwell-shared";
 
 const URL_EXPIRATION_SECONDS = 300;
 
@@ -34,10 +41,12 @@ const s3 = new S3Client({
 });
 
 const ddb = new DynamoDBClient({ region: process.env.AWS_REGION || 'us-east-1' });
+const scopeDeps = { client: ddb, GetItemCommand, marshall, unmarshall };
 
-async function recordScopeInMetadataTable(documentIdentifier, scope, stateCode) {
+// `keepScope`: an existing row's scope and state must already be the ones being written.
+async function recordScopeInMetadataTable(documentIdentifier, scope, stateCode, keepScope) {
   const tableName = process.env.NOFO_METADATA_TABLE_NAME;
-  if (!tableName || !documentIdentifier) return;
+  if (!tableName || !documentIdentifier) return { status: null };
 
   const setExprs = ["#scope = :scope", "#state = :state", "updated_at = :now"];
   const exprNames = { "#scope": "scope", "#state": "state" };
@@ -46,23 +55,42 @@ async function recordScopeInMetadataTable(documentIdentifier, scope, stateCode) 
     ":state": scope === "state" && stateCode ? { S: stateCode } : { NULL: true },
     ":now": { S: new Date().toISOString() },
   };
+  let condition;
+  if (keepScope) {
+    if (scope === "state") {
+      condition = "attribute_not_exists(nofo_name) OR (#scope = :scope AND #state = :state)";
+    } else {
+      condition =
+        "attribute_not_exists(nofo_name) OR (#scope = :scope AND (attribute_not_exists(#state) OR attribute_type(#state, :nullType)))";
+      exprValues[":nullType"] = { S: "NULL" };
+    }
+  }
 
   try {
-    await ddb.send(
+    const result = await ddb.send(
       new UpdateItemCommand({
         TableName: tableName,
         Key: marshall({ nofo_name: documentIdentifier }),
         UpdateExpression: `SET ${setExprs.join(", ")}`,
         ExpressionAttributeNames: exprNames,
         ExpressionAttributeValues: exprValues,
+        ...(condition ? { ConditionExpression: condition } : {}),
+        ReturnValues: "ALL_OLD",
       })
     );
+    return { status: result?.Attributes?.status?.S ?? null };
   } catch (err) {
+    if (err?.name === "ConditionalCheckFailedException") {
+      const denied = new Error("This grant already exists with a different grant type or state.");
+      denied.statusCode = 403;
+      throw denied;
+    }
     // Sidecar still carries scope/state, so the upload itself isn't blocked.
     console.warn(
       `Could not record scope/state to NOFOMetadataTable for ${documentIdentifier}:`,
       err.message
     );
+    return undefined;
   }
 }
 
@@ -191,6 +219,14 @@ export const handler = async (event) => {
     const baseFileName =
       lastSlash >= 0 ? fileName.substring(lastSlash + 1) : fileName;
 
+    const keepScope = !canSeeEveryState(callerScope);
+    if (keepScope) {
+      const denied = await assertCanEditNofoOr403(
+        event, scopeDeps, process.env.NOFO_METADATA_TABLE_NAME, documentIdentifier, { allowMissingRow: true }
+      );
+      if (denied) return respond(denied.statusCode, JSON.parse(denied.body));
+    }
+
     const metadataAttributes = {
       documentType: "NOFO",
       documentIdentifier,
@@ -201,24 +237,29 @@ export const handler = async (event) => {
       ...(scope === "state" ? { state: stateCode } : {}),
     };
 
-    // Sidecar before PDF — once the PDF lands, create-metadata's "skip if
-    // exists" guard preserves these fields instead of writing a partial sidecar.
-    await s3.send(
-      new PutObjectCommand({
-        Bucket: bucket,
-        Key: `${fileName}.metadata.json`,
-        Body: JSON.stringify({ metadataAttributes }),
-        ContentType: "application/json",
-      })
-    );
+    const previous = await recordScopeInMetadataTable(documentIdentifier, scope, stateCode, keepScope);
+    // A grant that may be live keeps its published files until the new version passes or is
+    // approved; publish writes the sidecar then. An unreadable row is treated as live.
+    const staged = previous === undefined || stagesNewVersion(previous.status);
 
-    await recordScopeInMetadataTable(documentIdentifier, scope, stateCode);
+    if (!staged) {
+      // Sidecar before PDF — once the PDF lands, create-metadata's "skip if
+      // exists" guard preserves these fields instead of writing a partial sidecar.
+      await s3.send(
+        new PutObjectCommand({
+          Bucket: bucket,
+          Key: `${fileName}.metadata.json`,
+          Body: JSON.stringify({ metadataAttributes }),
+          ContentType: "application/json",
+        })
+      );
+    }
 
     const signedUrl = await getSignedUrl(
       s3,
       new PutObjectCommand({
-        Bucket: bucket,
-        Key: fileName,
+        Bucket: staged ? artifactsBucket() : bucket,
+        Key: staged ? `${pendingDir(documentIdentifier)}${baseFileName}` : fileName,
         ContentType: fileType,
       }),
       { expiresIn: URL_EXPIRATION_SECONDS }

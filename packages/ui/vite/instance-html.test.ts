@@ -13,7 +13,7 @@ import {
   withBrandColors,
   withoutLandingFallback,
   type Staged,
-} from "./instance-html";
+ fontStylesheetTags } from "./instance-html";
 import { brandColorVars, TINTS_STYLE_ID } from "../src/common/brand-style";
 
 const notes = fs.readFileSync(path.join(__dirname, "..", "RELEASE_NOTES.md"), "utf8");
@@ -41,7 +41,7 @@ describe("whatsNewHtml", () => {
   const html = whatsNewHtml(index, notes, "https://grantwell.us");
 
   it("gets its own title, description, canonical and share tags, without the app's JSON-LD", () => {
-    expect(html).toContain("<title>What's new - GrantWell</title>");
+    expect(html).toContain("<title>What's new – GrantWell</title>");
     expect(html).toContain('<meta name="description" content="New features and improvements in each GrantWell release." />');
     expect(html).toContain('<link rel="canonical" href="https://grantwell.us/whats-new" />');
     expect(html).toContain('<meta property="og:url" content="https://grantwell.us/whats-new" />');
@@ -51,7 +51,7 @@ describe("whatsNewHtml", () => {
   it("pre-renders every release in place of the landing fallback and keeps it only on /whats-new", () => {
     expect(html).not.toContain("landing fallback");
     expect(html.match(/<section>/g)).toHaveLength(releases.length);
-    expect(html).toContain("<h2>GrantWell v3.3.0</h2>");
+    expect(html).toContain(`<h2>GrantWell v${releases[0].version}</h2>`);
     expect(html).toContain('if (location.pathname !== "/whats-new")');
     expect(html).not.toContain('if (location.pathname !== "/")');
     expect(html).toContain('<script type="module" src="/assets/index-abc.js"></script>');
@@ -142,6 +142,19 @@ describe("landingFallback", () => {
   });
 });
 
+describe("fontStylesheetTags", () => {
+  it("adds nothing without a stylesheet", () => {
+    expect(fontStylesheetTags(undefined)).toEqual([]);
+  });
+
+  it("preconnects and loads the stylesheet without blocking, with a noscript copy", () => {
+    const tags = fontStylesheetTags({ stylesheet: "https://use.typekit.net/abc1234.css" });
+    expect(tags[0]).toBe('<link rel="preconnect" href="https://use.typekit.net" crossorigin="" />');
+    expect(tags[1]).toBe(`<link rel="stylesheet" href="https://use.typekit.net/abc1234.css" media="print" onload="this.media='all'" />`);
+    expect(tags[2]).toBe('<noscript><link rel="stylesheet" href="https://use.typekit.net/abc1234.css" /></noscript>');
+  });
+});
+
 describe("favicon", () => {
   it("gets the MIME type of its extension", () => {
     expect(iconType("/images/brand/favicon.svg")).toBe("image/svg+xml");
@@ -160,7 +173,7 @@ describe("favicon", () => {
 describe("notFoundHtml", () => {
   it("names the deployment, uses its primary colour and has no scripts", () => {
     const html = notFoundHtml({ appName: "GrantWell <CO>", colors: { primary: "#001970" } });
-    expect(html).toContain("<title>Page not found - GrantWell &lt;CO&gt;</title>");
+    expect(html).toContain("<title>Page not found – GrantWell &lt;CO&gt;</title>");
     expect(html).toContain("Go to the GrantWell &lt;CO&gt; home page");
     expect(html).toContain("color: #001970");
     expect(html).not.toContain("<script");
@@ -179,7 +192,7 @@ describe("withBrandColors", () => {
     const style = out.match(/<html lang="en" style="([^"]*)">/)![1];
     expect(style).toBe(brandColorVars({ primary: "#001970", accent: "#245D38" }).map(([n, c]) => `${n}: ${c}`).join("; "));
     expect(style).toContain("--gw-color-primary: #001970");
-    expect(out).toMatch(new RegExp(`<style id="${TINTS_STYLE_ID}">@layer gw-core \\{ :root \\{ --gw-color-primary-deep: #[0-9a-fA-F]{6};`));
+    expect(out).toMatch(new RegExp(`<style id="${TINTS_STYLE_ID}">@layer gw-core \\{ :root \\{ --gw-color-primary-border: #[0-9a-fA-F]{6};`));
   });
 
   it("adds no tints for the default palette, whose tints are hand-tuned in tokens.css", () => {

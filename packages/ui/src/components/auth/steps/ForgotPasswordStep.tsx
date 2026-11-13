@@ -31,10 +31,10 @@ export default function ForgotPasswordStep({
             placeholder="Enter your email"
             value={email}
             onChange={(event) => onEmailChange(event.target.value)}
-            disabled={loading}
+            readOnly={loading}
             autoComplete="email"
             required
-            className="form-input"
+            className="gw-input form-input"
             aria-required="true"
             aria-invalid={emailErrorId ? true : undefined}
             aria-describedby={emailErrorId}
@@ -44,14 +44,13 @@ export default function ForgotPasswordStep({
           <Button
             variant="primary"
             type="submit"
-            disabled={loading}
-            className="login-submit-button"
+            aria-disabled={loading || undefined}
+            className="gw-btn gw-btn--primary login-submit-button"
             aria-busy={loading}
           >
             {loading ? (
               <>
                 <Spinner animation="border" size="sm" aria-hidden="true" className="me-2" />
-                <span className="visually-hidden">Loading</span>
                 Sending...
               </>
             ) : (

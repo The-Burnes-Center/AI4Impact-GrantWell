@@ -185,4 +185,29 @@ describe("grants.gov scraper coordinator", () => {
     expect(res.statusCode).toBe(403);
     expect(api).not.toHaveBeenCalled();
   });
+
+  describe("a manual run", () => {
+    const run = async (claims: Record<string, string>, singleState = "") => {
+      vi.stubEnv("SUPPORTED_STATES", JSON.stringify([{ code: "MA", name: "Massachusetts" }, { code: "NY", name: "New York" }]));
+      vi.stubEnv("SINGLE_STATE", singleState);
+      vi.resetModules();
+      const { handler: fresh } = await import("../../lib/chatbot-api/functions/nofo-scraper/coordinator/index.mjs");
+      return fresh({ requestContext: { authorizer: { jwt: { claims } } } });
+    };
+    const stateAdmin = { "custom:role": '["Admin"]', "custom:state": "MA" };
+
+    it("is refused to a state admin on a multi-state site, before calling grants.gov", async () => {
+      const api = grantsApi();
+      vi.stubGlobal("fetch", api);
+      expect((await run(stateAdmin)).statusCode).toBe(403);
+      expect(api).not.toHaveBeenCalled();
+    });
+
+    it("runs for a Developer, a platform admin, and a single-state site's admin", async () => {
+      vi.stubGlobal("fetch", grantsApi());
+      expect((await run({ "custom:role": '["Developer"]' })).statusCode).toBe(200);
+      expect((await run({ "custom:role": '["PlatformAdmin"]' })).statusCode).toBe(200);
+      expect((await run(stateAdmin, "MA")).statusCode).toBe(200);
+    });
+  });
 });

@@ -78,6 +78,9 @@ export default function PasswordRequirementsList({
                 {requirements[key] ? "✓" : "○"}
               </span>
               <span>{label}</span>
+              <span className="visually-hidden">
+                {requirements[key] ? ", met" : ", not met"}
+              </span>
             </div>
           ))}
         </small>

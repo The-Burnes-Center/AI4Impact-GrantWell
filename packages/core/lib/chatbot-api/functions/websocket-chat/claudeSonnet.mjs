@@ -14,6 +14,7 @@ import {
 const THINKING = { type: "between_tools" };
 const OUTPUT_CONFIG = { effort: "medium" };
 
+
 export default class ClaudeModel {
   constructor() {
     this.client = new BedrockRuntimeClient({
@@ -41,19 +42,29 @@ export default class ClaudeModel {
 
   /**
    * Reads a response stream into API-ready assistant content blocks, in stream order.
-   * Only text deltas of text blocks reach onText; thinking blocks are kept whole
-   * (text + signature) so the tool loop can send them back unchanged.
+   * Only text deltas of text blocks reach onText. Text blocks that follow each other are one answer split at its
+   * citations, so they join as written; text after a thinking or tool block starts after a blank line. Thinking
+   * blocks are kept whole (text + signature) so the tool loop can send them back unchanged.
    *
    * @param {AsyncIterable} stream - The Bedrock response stream.
    * @param {function(string): Promise<void>} onText - Called with each answer text delta.
-   * @returns {Promise<{content: Array, stopReason: string|undefined, stopDetails: object|undefined}>}
+   * @returns {Promise<{content: Array, citations: Array<{citation: object, from: number, at: number}>, stopReason: string|undefined, stopDetails: object|undefined}>}
+   *   `from` and `at` are where the cited text block starts and ends in the text passed to onText; `at` is before any trailing whitespace.
    */
   async readStream(stream, onText) {
     const content = [];
     const toolJson = new Map();
+    const blockStart = new Map();
+    const pending = [];
     let current = null;
+    let emitted = 0;
     let stopReason;
     let stopDetails;
+
+    const emit = async (text) => {
+      emitted += text.length;
+      await onText(text);
+    };
 
     const start = (block) => {
       current = block;
@@ -70,8 +81,17 @@ export default class ClaudeModel {
         const delta = chunk.delta;
         if (delta.type == "text_delta") {
           const block = current?.type == "text" ? current : start({ type: "text", text: "" });
+          if (delta.text && !block.text && !blockStart.has(block)) {
+            const before = content.slice(0, content.indexOf(block));
+            const lastText = before.findLastIndex((b) => b.type == "text" && b.text);
+            if (lastText != -1 && before.slice(lastText + 1).some((b) => b.type != "text")) await emit("\n\n");
+            blockStart.set(block, emitted);
+          }
           block.text = (block.text || "").concat(delta.text);
-          await onText(delta.text);
+          await emit(delta.text);
+        } else if (delta.type == "citations_delta" && current?.type == "text") {
+          (current.citations ??= []).push(delta.citation);
+          pending.push({ block: current, citation: delta.citation });
         } else if (delta.type == "thinking_delta") {
           const block = current?.type == "thinking" ? current : start({ type: "thinking", thinking: "", signature: "" });
           block.thinking = (block.thinking || "").concat(delta.thinking);
@@ -102,9 +122,16 @@ export default class ClaudeModel {
       }
     }
 
+    const citations = pending.map(({ block, citation }) => ({
+      citation,
+      from: blockStart.get(block) ?? emitted,
+      at: (blockStart.get(block) ?? emitted) + (block.text || "").trimEnd().length,
+    }));
+
     // The API rejects empty or whitespace-only text blocks when they are sent back.
     return {
       content: content.filter((b) => b.type != "text" || (b.text || "").trim()),
+      citations,
       stopReason,
       stopDetails,
     };
@@ -113,12 +140,11 @@ export default class ClaudeModel {
   /**
    * Invokes the model with a payload and returns a streamed response.
    * 
-   * @param {string} system - The system prompt.
-   * @param {Array} history - The chat history.
-   * @param {object} [toolChoice] - Anthropic tool_choice, e.g. { type: "none" }.
+   * @param {string|Array<object>} system - The system prompt, as text or content blocks.
+   * @param {Array} history - The messages.
    * @returns {ReadableStream} - The response stream.
    */
-  async getStreamedResponse(system, history, toolChoice) {
+  async getStreamedResponse(system, history) {
     const payload = {
       "anthropic_version": "bedrock-2023-05-31",
       "system": system,
@@ -126,26 +152,7 @@ export default class ClaudeModel {
       "messages": history,
       "thinking": THINKING,
       "output_config": OUTPUT_CONFIG,
-      "tools": [
-        {
-          "name": "query_db",
-          "description": "Search the active grant's documents for passages relevant to a query. It searches only the grant document for the grant this chat is about and the supporting documents the user uploaded for that grant; it does not search the web, other grants, or regulations. It returns the text of up to about 12 matching passages joined together, drops passages below a relevance threshold, and does not guarantee section or page locators. When nothing matches it returns a short notice saying so; that notice means only that this query found nothing. Use one focused query per topic, and run several searches when a question spans several requirements.",
-          "input_schema": {
-            "type": "object",
-            "properties": {
-              "query": {
-                "type": "string",
-                "description": "A focused query naming the requirement you need, in plain words or keywords, for example 'cost share waiver conditions' or 'application submission deadline'."
-              }
-            },
-            "required": [
-              "query"
-            ]
-          }
-        }
-      ],
     };
-    if (toolChoice) payload.tool_choice = toolChoice;
 
     const command = new InvokeModelWithResponseStreamCommand({ body: JSON.stringify(payload), contentType: 'application/json', modelId: this.modelId });
     const apiResponse = await this.client.send(command);

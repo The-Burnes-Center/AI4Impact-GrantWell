@@ -16,7 +16,9 @@ import { DeleteConfirmationModal } from "../common/DeleteConfirmationModal";
 import GrantPickerModal, { type PickedGrant } from "../common/GrantPickerModal";
 import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
 import TableScrollRegion from "../ui/TableScrollRegion";
+import PaginationControls from "../common/PaginationControls";
 import { v4 as uuidv4 } from "uuid";
+import { useNotifications } from "../notifications/NotificationManager";
 import "../../styles/dashboard.css";
 
 export interface SessionsProps {
@@ -42,6 +44,7 @@ export default function Sessions(props: SessionsProps) {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const pageSizeSelectId = useId();
   const navigate = useNavigate();
+  const { addNotification } = useNotifications();
 
   const { documentIdentifier } = props;
 
@@ -98,6 +101,12 @@ export default function Sessions(props: SessionsProps) {
       await getSessions();
     } catch (e) {
       console.error("Error deleting sessions:", e);
+      setShowModalDelete(false);
+      addNotification(
+        "error",
+        `Could not delete the selected chat${selectedItems.length > 1 ? "s" : ""}. Please try again.`
+      );
+      await getSessions();
     } finally {
       setIsLoading(false);
     }
@@ -150,8 +159,8 @@ export default function Sessions(props: SessionsProps) {
   }, [sortedSessions, currentPage, pageSize]);
 
   const getSortIcon = (field: "title" | "time_stamp") => {
-    if (sortField !== field) return <LuArrowUpDown size={14} />;
-    return sortDirection === "asc" ? <LuArrowUp size={14} /> : <LuArrowDown size={14} />;
+    if (sortField !== field) return <LuArrowUpDown size={14} aria-hidden="true" />;
+    return sortDirection === "asc" ? <LuArrowUp size={14} aria-hidden="true" /> : <LuArrowDown size={14} aria-hidden="true" />;
   };
 
   const formatSessionTime = (timestamp: string) => {
@@ -192,14 +201,14 @@ export default function Sessions(props: SessionsProps) {
       {/* Header section */}
       <div className="dashboard-header dashboard-header--wrap">
         <div>
-          <h1>My Chats</h1>
-          <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
+          <h1>My chats</h1>
+          <p style={{ marginTop: "4px", color: "var(--gw-color-text-secondary)", fontSize: "14px" }}>
             Manage and access your previous chats
           </p>
         </div>
         <div className="dashboard-actions">
           <button
-            className="action-button add-button"
+            className="gw-btn gw-btn--primary action-button add-button"
             onClick={() => {
               if (props.documentIdentifier) {
                 startChat(props.documentIdentifier);
@@ -208,38 +217,39 @@ export default function Sessions(props: SessionsProps) {
               }
             }}
           >
-            <LuPlus size={16} className="button-icon" />
-            <span>New Chat</span>
+            <LuPlus size={16} className="button-icon" aria-hidden="true" />
+            <span>New chat</span>
           </button>
           <button
-            className="action-button danger-button"
+            className="gw-btn gw-btn--danger action-button danger-button"
             onClick={() => setShowModalDelete(true)}
             disabled={selectedItems.length === 0}
             style={{
-              backgroundColor: selectedItems.length === 0 ? "#e5e7eb" : "#cd0d0d",
-              color: selectedItems.length === 0 ? "#9ca3af" : "white",
+              backgroundColor: selectedItems.length === 0 ? "var(--gw-color-surface-subtle)" : "var(--gw-color-danger)",
+              color: selectedItems.length === 0 ? "var(--gw-color-text-muted)" : "white",
               cursor: selectedItems.length === 0 ? "not-allowed" : "pointer",
             }}
           >
-            <LuTrash size={16} className="button-icon" />
+            <LuTrash size={16} className="button-icon" aria-hidden="true" />
             <span>Delete</span>
           </button>
           <button
-            className="action-button refresh-button"
+            className="gw-btn gw-btn--secondary action-button refresh-button"
             onClick={async () => {
+              if (isLoading) return;
               setIsLoading(true);
               await getSessions();
               setIsLoading(false);
             }}
-            disabled={isLoading}
-            aria-label="Refresh chats list"
+            aria-disabled={isLoading || undefined}
+            aria-label={isLoading ? "Refreshing chats list" : "Refresh chats list"}
             aria-busy={isLoading}
           >
             {isLoading ? (
               <span className="refresh-loading">Refreshing...</span>
             ) : (
               <>
-                <LuRefreshCw size={16} className="button-icon refresh-icon" />
+                <LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" />
                 <span>Refresh</span>
               </>
             )}
@@ -251,20 +261,23 @@ export default function Sessions(props: SessionsProps) {
       <TableScrollRegion label="Chats table" minWidth={520}>
       <div className="table-container">
         <div role="table" aria-label="Chats">
-          <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "48px 2.5fr 1fr" }}>
+          <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "104px 2.5fr 1fr" }}>
             <div role="row" style={{ display: "contents" }}>
-              <div className="header-cell" role="columnheader">
-                <input
-                  type="checkbox"
-                  checked={
-                    paginatedItems.length > 0 &&
-                    selectedItems.length === paginatedItems.length
-                  }
-                  onChange={handleSelectAll}
-                  aria-label="Select all chats"
-                  style={{ cursor: "pointer" }}
-                  disabled={isLoading || sortedSessions.length === 0}
-                />
+              <div className="header-cell" role="cell">
+                <label className="gw-select-all">
+                  <input
+                    type="checkbox"
+                    checked={
+                      paginatedItems.length > 0 &&
+                      selectedItems.length === paginatedItems.length
+                    }
+                    onChange={handleSelectAll}
+                    aria-label="Select all chats"
+                    style={{ cursor: "pointer" }}
+                    disabled={isLoading || sortedSessions.length === 0}
+                  />
+                  <span aria-hidden="true">Select all</span>
+                </label>
               </div>
               <div
                 className="header-cell"
@@ -324,7 +337,7 @@ export default function Sessions(props: SessionsProps) {
                 </div>
               ) : (
                 paginatedItems.map((item) => (
-                  <div key={item.session_id} className="table-row" role="row" style={{ gridTemplateColumns: "48px 2.5fr 1fr" }}>
+                  <div key={item.session_id} className="table-row" role="row" style={{ gridTemplateColumns: "104px 2.5fr 1fr" }}>
                     <div className="row-cell" role="cell">
                       <input
                         type="checkbox"
@@ -332,7 +345,7 @@ export default function Sessions(props: SessionsProps) {
                           (i) => i.session_id === item.session_id
                         )}
                         onChange={(e) => handleSelectItem(item, e)}
-                        aria-label={`Select ${item.title}`}
+                        aria-label={`Select ${item.title}, ${formatSessionTime(item.time_stamp)}`}
                         style={{ cursor: "pointer" }}
                       />
                     </div>
@@ -363,12 +376,13 @@ export default function Sessions(props: SessionsProps) {
                           fontSize: "inherit",
                           textDecoration: "underline",
                         }}
+                        aria-label={`${item.title}, ${formatSessionTime(item.time_stamp)}`}
                       >
                         {item.title}
                       </button>
                     </div>
                     <div className="row-cell" role="cell">
-                      <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#666" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--gw-color-text-secondary)" }}>
                         <LuCalendar size={16} aria-hidden="true" />
                         <time dateTime={item.time_stamp}>
                           {formatSessionTime(item.time_stamp)}
@@ -401,64 +415,21 @@ export default function Sessions(props: SessionsProps) {
 
       {/* Pagination */}
       {!isLoading && sortedSessions.length > 0 && (
-        <div className="pagination-container">
-          <div className="pagination-info">
-            Showing {(currentPage - 1) * pageSize + 1} to{" "}
-            {Math.min(currentPage * pageSize, sortedSessions.length)} of{" "}
-            {sortedSessions.length} chats
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <div className="pagination-controls">
-              <button
-                className={`pagination-button ${currentPage === 1 ? "disabled" : ""}`}
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage(1)}
-              >
-                First
-              </button>
-              <button
-                className={`pagination-button ${currentPage === 1 ? "disabled" : ""}`}
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage(currentPage - 1)}
-              >
-                Previous
-              </button>
-              <button
-                className={`pagination-button ${currentPage === totalPages ? "disabled" : ""}`}
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage(currentPage + 1)}
-              >
-                Next
-              </button>
-              <button
-                className={`pagination-button ${currentPage === totalPages ? "disabled" : ""}`}
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage(totalPages)}
-              >
-                Last
-              </button>
-            </div>
-            <div className="items-per-page">
-              <label htmlFor={pageSizeSelectId} style={{ marginRight: "8px" }}>
-                Show:
-              </label>
-              <select
-                id={pageSizeSelectId}
-                value={pageSize}
-                onChange={(e) => {
-                  setPageSize(Number(e.target.value));
-                  setCurrentPage(1);
-                }}
-                aria-label="Items per page"
-                className="form-input"
-              >
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={50}>50</option>
-              </select>
-            </div>
-          </div>
-        </div>
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={sortedSessions.length}
+          itemsPerPage={pageSize}
+          itemsPerPageOptions={[10, 20, 50]}
+          itemLabel="chats"
+          selectId={pageSizeSelectId}
+          live
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={(e) => {
+            setPageSize(Number(e.target.value));
+            setCurrentPage(1);
+          }}
+        />
       )}
     </div>
   );

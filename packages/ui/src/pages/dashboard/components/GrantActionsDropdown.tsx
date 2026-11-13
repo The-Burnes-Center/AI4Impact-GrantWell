@@ -139,7 +139,17 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
     } else if (e.key === "End") {
       e.preventDefault();
       items[items.length - 1]?.focus();
+    } else if (e.key === "Tab") {
+      // Close and hand focus back to the trigger, so Tab moves on from the row, not the page end.
+      if (e.shiftKey) e.preventDefault();
+      closeMenu();
     }
+  };
+
+  const handleMenuBlur = (e: React.FocusEvent<HTMLDivElement>) => {
+    const next = e.relatedTarget as Node | null;
+    if (next && (popupRef.current?.contains(next) || menuRef.current?.contains(next))) return;
+    setIsOpen(false);
   };
 
   if (!hasAnyAction) return null;
@@ -149,7 +159,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="actions-dropdown-button"
+        className="gw-btn gw-btn--secondary gw-btn--icon gw-btn--slim actions-dropdown-button"
         aria-label={`More actions for ${nofo.name}`}
         aria-expanded={isOpen}
         aria-haspopup="menu"
@@ -169,6 +179,7 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
           tabIndex={-1}
           aria-label={`Actions for ${nofo.name}`}
           onKeyDown={handleMenuKeyDown}
+          onBlur={handleMenuBlur}
         >
           {showEditActions && (
             <>
@@ -176,35 +187,39 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
                 onClick={() => { onToggleStatus(); closeMenu(); }}
                 className="dropdown-menu-item"
                 role="menuitem"
+                tabIndex={-1}
               >
                 {nofo.status === "active" ? (
-                  <><LuArchive size={16} className="menu-icon" /><span>Archive</span></>
+                  <><LuArchive size={16} className="menu-icon" aria-hidden="true" /><span>Archive</span></>
                 ) : (
-                  <><LuCheck size={16} className="menu-icon" /><span>Mark Active</span></>
+                  <><LuCheck size={16} className="menu-icon" aria-hidden="true" /><span>Mark active</span></>
                 )}
               </button>
               <button
                 onClick={() => { onEdit(); closeMenu(); }}
                 className="dropdown-menu-item"
                 role="menuitem"
+                tabIndex={-1}
               >
-                <LuPencil size={16} className="menu-icon" />
+                <LuPencil size={16} className="menu-icon" aria-hidden="true" />
                 <span>Edit</span>
               </button>
               <button
                 onClick={() => { onEditSummary(); closeMenu(); }}
                 className="dropdown-menu-item"
                 role="menuitem"
+                tabIndex={-1}
               >
-                <LuFilePen size={16} className="menu-icon" />
-                <span>Edit Requirements</span>
+                <LuFilePen size={16} className="menu-icon" aria-hidden="true" />
+                <span>Edit requirements</span>
               </button>
               <button
                 onClick={() => { onDelete(); closeMenu(); }}
                 className="dropdown-menu-item delete-item"
                 role="menuitem"
+                tabIndex={-1}
               >
-                <LuTrash size={16} className="menu-icon" />
+                <LuTrash size={16} className="menu-icon" aria-hidden="true" />
                 <span>Delete</span>
               </button>
             </>
@@ -214,9 +229,10 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
               onClick={() => { onEditCustomQuestions?.(); closeMenu(); }}
               className="dropdown-menu-item"
               role="menuitem"
-              title="Add questions applicants answer in Write Application"
+              tabIndex={-1}
+              title="Add questions applicants answer in Write application"
             >
-              <LuListChecks size={16} className="menu-icon" />
+              <LuListChecks size={16} className="menu-icon" aria-hidden="true" />
               <span>Custom questions</span>
             </button>
           )}
@@ -226,18 +242,20 @@ const GrantActionsDropdown = React.memo(function GrantActionsDropdown({
                 onClick={() => { onEditOverlay?.(); closeMenu(); }}
                 className="dropdown-menu-item"
                 role="menuitem"
+                tabIndex={-1}
                 title="Add guidance shown only to your state's users"
               >
-                <LuMessageSquarePlus size={16} className="menu-icon" />
+                <LuMessageSquarePlus size={16} className="menu-icon" aria-hidden="true" />
                 <span>State guidance</span>
               </button>
               <button
                 onClick={() => { onPromoteToCopy?.(); closeMenu(); }}
                 className="dropdown-menu-item"
                 role="menuitem"
+                tabIndex={-1}
                 title="Create your state's own editable copy of this federal grant"
               >
-                <LuCopy size={16} className="menu-icon" />
+                <LuCopy size={16} className="menu-icon" aria-hidden="true" />
                 <span>Create state copy</span>
               </button>
             </>

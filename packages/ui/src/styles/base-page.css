@@ -1,28 +1,28 @@
 /* CTA Buttons highlight animation */
 @keyframes ctaButtonsHighlight {
   0% {
-    box-shadow: 0 0 0 0 rgba(20, 85, 143, 0.4);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--gw-color-info) 40%, transparent);
     transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 20px 10px rgba(20, 85, 143, 0.3);
+    box-shadow: 0 0 20px 10px color-mix(in srgb, var(--gw-color-info) 30%, transparent);
     transform: scale(1.02);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(20, 85, 143, 0);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--gw-color-info) 0%, transparent);
     transform: scale(1);
   }
 }
 
 @keyframes ctaButtonPulse {
   0% {
-    box-shadow: 0 2px 8px rgba(20, 85, 143, 0.3);
+    box-shadow: var(--gw-shadow-low);
   }
   50% {
-    box-shadow: 0 4px 20px rgba(20, 85, 143, 0.5);
+    box-shadow: var(--gw-shadow-high);
   }
   100% {
-    box-shadow: 0 2px 8px rgba(20, 85, 143, 0.3);
+    box-shadow: var(--gw-shadow-low);
   }
 }
 
@@ -32,8 +32,8 @@
 
 .cta-buttons-container.highlight {
   animation: ctaButtonsHighlight 0.8s ease-out;
-  background: linear-gradient(135deg, rgba(20, 85, 143, 0.08) 0%, rgba(20, 85, 143, 0.02) 100%);
-  border-radius: 16px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--gw-color-info) 8%, transparent) 0%, color-mix(in srgb, var(--gw-color-info) 2%, transparent) 100%);
+  border-radius: var(--gw-radius-container);
   padding: 16px 20px;
   margin: 20px 0 8px 0;
 }
@@ -51,13 +51,13 @@
   .cta-buttons-container.highlight {
     animation: none;
     /* Keep the visual indicator but without motion */
-    background: linear-gradient(135deg, rgba(20, 85, 143, 0.12) 0%, rgba(20, 85, 143, 0.06) 100%);
-    border: 2px solid rgba(20, 85, 143, 0.3);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--gw-color-info) 12%, transparent) 0%, color-mix(in srgb, var(--gw-color-info) 6%, transparent) 100%);
+    border: 2px solid color-mix(in srgb, var(--gw-color-info) 30%, transparent);
   }
   
   .cta-buttons-container.highlight button {
     animation: none;
     /* Static visual emphasis instead of animation */
-    box-shadow: 0 4px 12px rgba(20, 85, 143, 0.4);
+    box-shadow: var(--gw-shadow-mid);
   }
 }

@@ -57,6 +57,23 @@ const CAP_EXEMPT_ROLES = ["Admin", "PlatformAdmin", "Developer"];
 
 const MAX_INPUT_CHARS = 10000;
 
+const IN_REVIEW_STATUSES = new Set(["quarantined", "processing"]);
+const GRANT_IN_REVIEW_MESSAGE = "This grant is being reviewed and will be back soon.";
+
+// As in canEditAnyNofo (grantwell-shared): a single-state site's admins may edit any grant.
+const SINGLE_STATE = String(process.env.SINGLE_STATE || "").trim().toUpperCase();
+
+/**
+ * Developers, platform admins, and a state admin for their own state's grant open held grants, as
+ * does any admin of a single-state site.
+ */
+function opensGrantInReview(callerScope, row) {
+  if (callerScope.role === "developer" || callerScope.role === "regularAdmin") return true;
+  if (callerScope.role !== "stateAdmin") return false;
+  if (SINGLE_STATE !== "" && callerScope.state === SINGLE_STATE) return true;
+  return row?.scope === "state" && Boolean(row.state) && row.state === callerScope.state;
+}
+
 /** Pinned by LOG_MARKERS.applicationCapReached. */
 const APPLICATION_CAP_MARKER = "Daily application limit reached";
 
@@ -159,6 +176,18 @@ function requestedSectionIds(raw) {
   return ids.length > 0 ? ids : undefined;
 }
 
+/**
+ * The application's selected library documents, limited to the caller's own folder. null (not
+ * an array) means the application never stored a selection, which reads its grant's old folder.
+ */
+export function ownDocumentKeys(raw, owner) {
+  if (!Array.isArray(raw)) return null;
+  return [...new Set(raw)]
+    .filter((key) => typeof key === "string" && key.startsWith(`${owner}/`)
+      && !key.split("/").some((segment) => segment === "." || segment === ".."))
+    .slice(0, 100);
+}
+
 /** Keeps only {question, answer} pairs of strings with a non-empty answer. */
 function normalizeQuestionnaireAnswers(raw) {
   if (!Array.isArray(raw)) return [];
@@ -167,7 +196,7 @@ function normalizeQuestionnaireAnswers(raw) {
     .map((a) => ({ question: typeof a.question === "string" ? a.question : "", answer: a.answer }));
 }
 
-// Returns { scope, state } from the grant's metadata row, or null when there is no row or it can't be read.
+// Returns { scope, state, status } from the grant's metadata row, or null when there is no row or it can't be read.
 async function readNofoScope(nofoName) {
   const tableName = process.env.NOFO_METADATA_TABLE_NAME;
   if (!tableName || !nofoName) return null;
@@ -183,6 +212,7 @@ async function readNofoScope(nofoName) {
     return {
       scope: typeof row.scope === "string" ? row.scope : null,
       state: typeof row.state === "string" ? row.state : null,
+      status: typeof row.status === "string" ? row.status : null,
     };
   } catch (err) {
     console.warn(`Could not read scope/state for ${nofoName}:`, err.message);
@@ -262,6 +292,10 @@ export const handler = async (event) => {
       };
     }
 
+    // Library keys start with the Cognito username, which can differ from sub.
+    const jwtClaims = event.requestContext?.authorizer?.jwt?.claims || {};
+    const documentOwner = jwtClaims['cognito:username'] || jwtClaims.username || userId;
+
     const callerScope = resolveCallerScope(event);
     const nofoScopeRow = await readNofoScope(String(documentIdentifier).replace(/\/+$/, ""));
     const effectiveScope = nofoScopeRow ? nofoScopeRow.scope || "federal" : null;
@@ -287,6 +321,15 @@ export const handler = async (event) => {
         };
       }
       throw authError;
+    }
+
+    // The applicant can still edit their application, but the AI writer waits until the review ends.
+    if (IN_REVIEW_STATUSES.has(nofoScopeRow?.status) && !opensGrantInReview(callerScope, nofoScopeRow)) {
+      return {
+        statusCode: 409,
+        headers,
+        body: JSON.stringify({ error: "GRANT_IN_REVIEW", message: GRANT_IN_REVIEW_MESSAGE }),
+      };
     }
 
     const userState = callerScope.state || "";
@@ -334,6 +377,8 @@ export const handler = async (event) => {
       additionalInfo,
       sessionId,
       userId,
+      documentOwner,
+      documentKeys: ownDocumentKeys(body.documentKeys, documentOwner),
       userState,
       nofoScope: effectiveScope,
       nofoState: effectiveState,

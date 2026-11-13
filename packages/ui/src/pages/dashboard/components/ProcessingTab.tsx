@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { LuCheck, LuLoader, LuCircleCheck, LuTriangleAlert, LuArrowRight, LuX } from "react-icons/lu";
 import { PROCESSING_STAGES, stageIndex } from "./processing-stages";
 import type { NOFO } from "../../../common/types/nofo";
@@ -37,14 +37,10 @@ const InProgressCard: React.FC<{ nofo: NOFO }> = ({ nofo }) => {
   return (
     <div className="processing-tab__card">
       <div className="processing-tab__header">
-        <p className="processing-tab__name">{nofo.name}</p>
+        <h4 className="processing-tab__name">{nofo.name}</h4>
         <span className="processing-tab__count">
           Step {stepNumber} of {TOTAL_STAGES} &middot; {percent}%
         </span>
-      </div>
-
-      <div role="status" aria-live="polite" className="visually-hidden">
-        {currentStage ? `${nofo.name}: ${currentStage.label}` : ""}
       </div>
 
       <div
@@ -101,7 +97,7 @@ const FinishedCard: React.FC<{
       className={`processing-tab__card processing-tab__card--${published ? "published" : "failed"}`}
     >
       <div className="processing-tab__header">
-        <p className="processing-tab__name">{nofo.name}</p>
+        <h4 className="processing-tab__name">{nofo.name}</h4>
         <span className="processing-tab__header-right">
           <span
             className={`processing-tab__outcome processing-tab__outcome--${published ? "published" : "failed"}`}
@@ -119,7 +115,14 @@ const FinishedCard: React.FC<{
           <button
             type="button"
             className="processing-tab__dismiss"
-            onClick={() => onDismiss(nofo.name)}
+            onClick={(e) => {
+              // The card goes away: move focus to the next card's Dismiss, else the previous, else the page.
+              const all = [...document.querySelectorAll<HTMLElement>(".processing-tab__dismiss")];
+              const i = all.indexOf(e.currentTarget);
+              const next = all[i + 1] ?? all[i - 1] ?? document.getElementById("main-content");
+              onDismiss(nofo.name);
+              requestAnimationFrame(() => next?.focus());
+            }}
             aria-label={`Dismiss ${nofo.name} from processing`}
             title="Dismiss"
           >
@@ -140,7 +143,7 @@ const FinishedCard: React.FC<{
           className="processing-tab__action processing-tab__action--primary"
           onClick={() => onViewSummary(nofo.name)}
         >
-          View Requirements <LuArrowRight size={14} aria-hidden="true" />
+          View requirements <LuArrowRight size={14} aria-hidden="true" />
         </button>
       ) : (
         <button
@@ -165,43 +168,61 @@ const ProcessingTab: React.FC<ProcessingTabProps> = ({ nofos, onViewSummary, onO
   const inProgress = nofos.filter((n) => !isFinished(n));
   const finished = nofos.filter(isFinished);
 
-  if (nofos.length === 0) {
-    return (
-      <div className="processing-tab__empty">
-        <p>No grants are processing right now.</p>
-        <p className="processing-tab__empty-hint">
-          Uploaded grants appear here with live progress until they finish and go live.
-        </p>
-      </div>
-    );
-  }
+  const [announcement, setAnnouncement] = useState("");
+  const seenStages = useRef<Map<string, string | null | undefined> | null>(null);
+  useEffect(() => {
+    const active = nofos.filter((n) => !isFinished(n));
+    const previous = seenStages.current;
+    seenStages.current = new Map(active.map((n) => [n.name, n.processingStatus]));
+    if (!previous) return;
+    const changes = active.flatMap((n) => {
+      if (previous.has(n.name) && previous.get(n.name) === n.processingStatus) return [];
+      const stage = PROCESSING_STAGES[stageIndex(n.processingStatus)];
+      return stage ? [`${n.name}: ${stage.label}`] : [];
+    });
+    if (changes.length > 0) setAnnouncement(changes.join(". "));
+  }, [nofos]);
 
   return (
-    <div className="processing-tab">
-      {inProgress.length > 0 && (
-        <>
-          <h3 className="processing-tab__group-title">In progress</h3>
-          {inProgress.map((nofo) => (
-            <InProgressCard key={nofo.name} nofo={nofo} />
-          ))}
-        </>
-      )}
+    <>
+      <div role="status" aria-live="polite" className="visually-hidden">
+        {announcement}
+      </div>
+      {nofos.length === 0 ? (
+        <div className="processing-tab__empty">
+          <p>No grants are processing right now.</p>
+          <p className="processing-tab__empty-hint">
+            Uploaded grants appear here with live progress until they finish and go live.
+          </p>
+        </div>
+      ) : (
+        <div className="processing-tab">
+          {inProgress.length > 0 && (
+            <>
+              <h3 className="processing-tab__group-title">In progress</h3>
+              {inProgress.map((nofo) => (
+                <InProgressCard key={nofo.name} nofo={nofo} />
+              ))}
+            </>
+          )}
 
-      {finished.length > 0 && (
-        <>
-          <h3 className="processing-tab__group-title">Recently finished</h3>
-          {finished.map((nofo) => (
-            <FinishedCard
-              key={nofo.name}
-              nofo={nofo}
-              onViewSummary={onViewSummary}
-              onOpenReview={onOpenReview}
-              onDismiss={onDismiss}
-            />
-          ))}
-        </>
+          {finished.length > 0 && (
+            <>
+              <h3 className="processing-tab__group-title">Recently finished</h3>
+              {finished.map((nofo) => (
+                <FinishedCard
+                  key={nofo.name}
+                  nofo={nofo}
+                  onViewSummary={onViewSummary}
+                  onOpenReview={onOpenReview}
+                  onDismiss={onDismiss}
+                />
+              ))}
+            </>
+          )}
+        </div>
       )}
-    </div>
+    </>
   );
 };
 

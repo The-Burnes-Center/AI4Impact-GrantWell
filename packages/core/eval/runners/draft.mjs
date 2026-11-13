@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { inScope, only, s3Body, withStage } from "../lib/aws.mjs";
 import { readOptional } from "../lib/golden.mjs";
 import { pool } from "../lib/pool.mjs";
@@ -20,8 +22,16 @@ export async function draft(grant, { summary, retrieval }) {
   const { handler: generateSection } = await import(new URL("generate-section/index.mjs", DRAFT).href);
 
   const content = {};
+  const rawTextPath = path.join(grant.dir, "source", "raw.txt");
   const routes = {
-    s3: only("GetObjectCommand", () => ({ Body: s3Body(JSON.stringify({ ProjectNarrativeSections: sections ?? [] })) })),
+    // generate-section reads the grant's raw-text.txt (its summary when that's missing); prepare reads summary.json.
+    s3: only("GetObjectCommand", (command) => {
+      if (command.input.Key?.endsWith("/raw-text.txt")) {
+        if (!fs.existsSync(rawTextPath)) throw Object.assign(new Error("missing"), { name: "NoSuchKey" });
+        return { Body: s3Body(fs.readFileSync(rawTextPath, "utf8")) };
+      }
+      return { Body: s3Body(JSON.stringify({ ...summary, ProjectNarrativeSections: sections ?? [] })) };
+    }),
     dynamodb: only("UpdateItemCommand", (command) => {
       const saved = command.input.ExpressionAttributeValues?.[":content"];
       const names = command.input.ExpressionAttributeNames ?? {};
@@ -46,7 +56,7 @@ export async function draft(grant, { summary, retrieval }) {
       userState: input.userState,
     });
     // Everything prepare returns except the section list, as each release's Map item selector passes it on.
-    const { sections: _items, outline: _outline, ...shared } = job;
+    const { sections: _items, outline: _outline, warmSections: _warm, remainingSections: _rest, ...shared } = job;
     const errors = {};
     await pool(job.sections, MAP_CONCURRENCY, (sectionItem) =>
       withStage(`draft:${sectionItem.id ?? sectionItem.item}`, () => generateSection({ ...shared, sectionItem })).catch((e) => {

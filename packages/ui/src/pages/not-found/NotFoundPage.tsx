@@ -6,7 +6,7 @@ export default function NotFoundPage() {
   const { appName } = useBranding();
 
   useEffect(() => {
-    document.title = `Page not found - ${appName}`;
+    document.title = `Page not found – ${appName}`;
   }, [appName]);
 
   return (

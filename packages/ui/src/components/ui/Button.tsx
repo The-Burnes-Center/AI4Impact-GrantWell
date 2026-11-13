@@ -18,82 +18,54 @@
  */
 
 import React, { ButtonHTMLAttributes, forwardRef } from "react";
-import { colors, buttonStyles } from "./styles";
 
 export type ButtonVariant = "primary" | "secondary" | "danger" | "ghost";
 export type ButtonSize = "sm" | "md" | "lg";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  /** Visual style variant */
+  /** Visual style variant. "ghost" is the lower-emphasis choice beside a primary and renders as secondary. */
   variant?: ButtonVariant;
-  /** Size of the button */
+  /** Size of the button; "sm" is the slim button for tight spaces. */
   size?: ButtonSize;
   /** Whether the button takes full width */
   fullWidth?: boolean;
-  /** Loading state - shows spinner and disables button */
+  /** Loading state - shows spinner and ignores clicks, but stays focusable */
   loading?: boolean;
   /** Children elements */
   children: React.ReactNode;
 }
 
-const hoverColors: Record<ButtonVariant, string> = {
-  primary: colors.primaryHover,
-  secondary: colors.background,
-  danger: "#b71c1c",
-  ghost: colors.primaryLight,
+const VARIANT_CLASS: Record<ButtonVariant, string> = {
+  primary: "gw-btn--primary",
+  secondary: "gw-btn--secondary",
+  danger: "gw-btn--danger",
+  ghost: "gw-btn--secondary",
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    {
-      variant = "primary",
-      size = "md",
-      fullWidth = false,
-      loading = false,
-      disabled,
-      children,
-      style,
-      onMouseEnter,
-      onMouseLeave,
-      ...props
-    },
+    { variant = "primary", size = "md", fullWidth = false, loading = false, disabled, children, style, className, onClick, ...props },
     ref
   ) => {
     const isDisabled = disabled || loading;
+    const classes = ["gw-btn", VARIANT_CLASS[variant], size === "sm" ? "gw-btn--slim" : "", className ?? ""].filter(Boolean).join(" ");
 
-    const baseStyle: React.CSSProperties = {
-      ...buttonStyles.base,
-      ...buttonStyles.sizes[size],
-      ...buttonStyles.variants[variant],
-      width: fullWidth ? "100%" : "auto",
-      opacity: isDisabled ? 0.6 : 1,
-      cursor: isDisabled ? "not-allowed" : "pointer",
-      ...style,
-    };
-
-    const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (!isDisabled) {
-        e.currentTarget.style.backgroundColor = hoverColors[variant];
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (loading) {
+        e.preventDefault();
+        return;
       }
-      onMouseEnter?.(e);
-    };
-
-    const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (!isDisabled) {
-        e.currentTarget.style.backgroundColor =
-          buttonStyles.variants[variant].backgroundColor || "";
-      }
-      onMouseLeave?.(e);
+      onClick?.(e);
     };
 
     return (
       <button
         ref={ref}
-        style={baseStyle}
-        disabled={isDisabled}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        aria-disabled={isDisabled}
+        className={classes}
+        style={fullWidth ? { width: "100%", ...style } : style}
+        disabled={disabled}
+        onClick={handleClick}
+        aria-disabled={isDisabled || undefined}
         {...props}
       >
         {loading && <LoadingDots />}

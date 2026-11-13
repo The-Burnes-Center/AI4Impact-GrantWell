@@ -6,6 +6,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useApiClient } from "../../hooks/use-api-client";
 import Card from "../../components/ui/Card";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
+import { LiveStatus } from "../../components/common/LiveStatus";
 import AutoSaveIndicator, { type SaveStatus } from "../../components/ui/AutoSaveIndicator";
 import NavigationButtons from "../../components/ui/NavigationButtons";
 import { colors, typography } from "../../components/ui/styles";
@@ -150,7 +151,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
   if (error) {
     return (
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 0", textAlign: "center" }}>
-        <p role="alert" style={{ color: colors.error, marginBottom: "16px" }}>{error}</p>
+        <p role="alert" className="gw-alert gw-alert--urgent" style={{ marginBottom: "16px", textAlign: "left" }}>{error}</p>
         <button
           onClick={() => window.location.reload()}
           style={{
@@ -158,7 +159,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
             background: colors.primary,
             color: colors.white,
             border: "none",
-            borderRadius: "4px",
+            borderRadius: "var(--gw-radius-control)",
             cursor: "pointer",
           }}
         >
@@ -173,9 +174,11 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
     return (
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 0" }}>
         <Card>
-          <p role="status" style={{ fontSize: "16px", marginBottom: "16px", textAlign: "center" }}>
-            This grant has no questions yet. You can continue to the next step.
-          </p>
+          <LiveStatus>
+            <p style={{ fontSize: "16px", marginBottom: "16px", textAlign: "center" }}>
+              This grant has no questions yet. You can continue to the next step.
+            </p>
+          </LiveStatus>
         </Card>
         <NavigationButtons
           onBack={() => onNavigate("projectBasics")}
@@ -194,6 +197,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
             status={saveStatus}
             idleText={autoSaveIdleText}
             onRetry={onRetrySave}
+            variant="onPrimary"
           />
         }
       >
@@ -203,9 +207,18 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
           later.
         </p>
 
-        <div style={{ background: colors.white, borderRadius: "8px", padding: "24px" }}>
-          {questions.map((questionItem, index) => (
-            <div key={questionItem.id} style={{ marginBottom: "24px" }}>
+        <ol
+          style={{
+            background: colors.white,
+            borderRadius: "var(--gw-radius-container)",
+            padding: "24px 24px 24px calc(24px + 1.5em)",
+            margin: 0,
+            color: colors.text,
+            fontFamily: typography.fontFamily,
+          }}
+        >
+          {questions.map((questionItem) => (
+            <li key={questionItem.id} style={{ marginBottom: "24px" }}>
               <label
                 htmlFor={`question_${questionItem.id}`}
                 style={{
@@ -217,7 +230,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
                   fontFamily: typography.fontFamily,
                 }}
               >
-                {index + 1}. {questionItem.question}
+                {questionItem.question}
                 {questionItem.source === "custom" && (
                   <span
                     style={{
@@ -231,7 +244,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
                   </span>
                 )}
               </label>
-              <textarea
+              <textarea className="gw-input"
                 id={`question_${questionItem.id}`}
                 name={`question_${questionItem.id}`}
                 value={formData[`question_${questionItem.id}`] || ""}
@@ -240,13 +253,8 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
                 aria-describedby={`question_${questionItem.id}_help`}
                 style={{
                   width: "100%",
-                  padding: "12px",
-                  border: `1px solid ${colors.inputBorder}`,
-                  borderRadius: "6px",
-                  fontSize: typography.fontSize.base,
                   minHeight: "120px",
                   resize: "vertical",
-                  fontFamily: typography.fontFamily,
                 }}
                 placeholder="Enter your answer here."
               />
@@ -261,12 +269,12 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
                   fontFamily: typography.fontFamily,
                 }}
               >
-                {questionItem.helpText || "Provide a detailed answer. You can edit this later in the Section Editor."}
+                {questionItem.helpText || "Provide a detailed answer. You can edit this later in the Section editor."}
                 {` (${characterCount(formData[`question_${questionItem.id}`] || "")})`}
               </span>
-            </div>
+            </li>
           ))}
-        </div>
+        </ol>
       </Card>
 
       <div style={{ marginTop: "24px" }}>

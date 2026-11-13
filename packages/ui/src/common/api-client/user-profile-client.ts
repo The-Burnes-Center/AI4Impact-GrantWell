@@ -2,6 +2,9 @@ import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
 import { apiFetch } from "../session-ended";
 
+/** The user-profile function cuts longer department, organization and role values (MAX_FIELD). */
+export const PROFILE_FIELD_MAX_LENGTH = 200;
+
 export interface UserProfile {
   agency: string;
   organization: string;

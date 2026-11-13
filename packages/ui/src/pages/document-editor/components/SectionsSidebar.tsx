@@ -53,34 +53,34 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
   const getStatusIcon = (section: Section, idx: number) => {
     switch (getStatus(section, idx)) {
       case "completed":
-        return <LuCircleCheckBig size={16} className="se-sidebar__check" aria-label={`${section.name}: completed`} />;
+        return <LuCircleCheckBig size={16} className="se-sidebar__check" role="img" aria-label={`${section.name}: completed`} />;
       case "failed":
-        return <LuCircleAlert size={16} style={{ color: 'var(--gw-color-danger-icon)' }} aria-label={`${section.name}: failed`} />;
+        return <LuCircleAlert size={16} style={{ color: 'var(--gw-color-danger)' }} role="img" aria-label={`${section.name}: failed`} />;
       case "generating":
         return (
           <LuLoader
             size={16}
             className="se-sidebar__spinner"
             style={{ color: 'var(--gw-color-primary)', animation: 'spin 1s linear infinite' }}
+            role="img"
             aria-label={`${section.name}: generating`}
           />
         );
       case "pending":
-        return <LuLock size={14} style={{ color: 'var(--gw-color-text-muted)' }} aria-label={`${section.name}: pending`} />;
+        return <LuLock size={14} style={{ color: 'var(--gw-color-text-muted)' }} role="img" aria-label={`${section.name}: pending`} />;
       default:
         return null;
     }
   };
 
-  // Coarse on purpose: the generator flips up to CONCURRENCY_WINDOW sections at
-  // once, so announcing each pending -> generating -> completed step would flood
-  // the queue. Empty until the section list arrives, so the text lands as a
-  // mutation on an already-mounted region.
+  // The running count, not each section's pending -> generating -> completed step: the generator flips
+  // several sections at once, and the count matches the visible "n/total generated". Empty until the
+  // section list arrives, so the text lands as a mutation on an already-mounted region.
   const overallStatus =
     sections.length === 0
       ? ""
       : generating
-        ? `Generating ${total} sections.`
+        ? `Generating sections: ${completedSectionCount} of ${total} done.`
         : completedSectionCount > 0
           ? `Section generation finished. ${completedSectionCount} of ${total} sections generated.`
           : "";
@@ -90,14 +90,17 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
       <div role="status" aria-live="polite" className="visually-hidden">
         {overallStatus}
       </div>
-      <h3 className="se-sidebar__title">
-        Sections
+      {/* The running count sits beside the heading, not in it, so the heading text stays put. */}
+      <div style={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', marginBottom: 16 }}>
+        <h2 className="se-sidebar__title" style={{ margin: 0 }}>
+          Sections
+        </h2>
         {generating && (
-          <span style={{ fontSize: '13px', fontWeight: 400, color: '#6B7280', marginLeft: 8 }}>
+          <span style={{ fontSize: '13px', fontWeight: 400, color: 'var(--gw-color-text-muted)', marginLeft: 8 }}>
             {completedSectionCount}/{total} generated
           </span>
         )}
-      </h3>
+      </div>
       <div className="se-sidebar__list">
         {sections.map((section, idx) => {
           const locked = generating && !isSectionReady(section);
@@ -107,7 +110,7 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
               key={section.id}
               onClick={() => { if (!locked) setActiveSection(idx); }}
               className={`se-sidebar__btn${activeSection === idx ? " se-sidebar__btn--active" : ""}${locked ? " se-sidebar__btn--locked" : ""}`}
-              aria-label={`Section ${idx + 1} of ${sections.length}: ${section.name}${status ? `, ${status}` : ""}${locked ? " (not yet available)" : ""}`}
+              aria-label={`${idx + 1} ${section.name}, section ${idx + 1} of ${sections.length}${status ? `, ${status}` : ""}${locked ? ", not yet available" : ""}`}
               aria-current={activeSection === idx ? "true" : undefined}
               aria-disabled={locked}
               title={locked ? "This section is still being generated" : undefined}

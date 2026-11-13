@@ -27,8 +27,26 @@ const FeedbackForm = React.memo(function FeedbackForm() {
   const [showContactWarning, setShowContactWarning] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const infoButtonRef = useRef<HTMLButtonElement>(null);
+  const successRef = useRef<HTMLDivElement>(null);
+  // The form, with its focused Send button, is replaced by the thanks: focus it so it is read out.
+  useEffect(() => {
+    if (feedbackSubmitted) successRef.current?.focus();
+  }, [feedbackSubmitted]);
   const errorId = useId();
   const warningId = useId();
+  const errorTimer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(errorTimer.current), []);
+
+  const showError = (message: string) => {
+    window.clearTimeout(errorTimer.current);
+    if (message !== feedbackError) {
+      setFeedbackError(message);
+      return;
+    }
+    // The alert only speaks when it is re-inserted, so the same message is cleared first.
+    setFeedbackError(null);
+    errorTimer.current = window.setTimeout(() => setFeedbackError(message), 100);
+  };
 
   useEffect(() => {
     if (selectedOption && textareaRef.current) {
@@ -37,6 +55,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
   }, [selectedOption]);
 
   const handleOptionChange = (option: "yes" | "no") => {
+    window.clearTimeout(errorTimer.current);
     setSelectedOption(option);
     setFeedbackText("");
     setFeedbackError(null);
@@ -56,14 +75,16 @@ const FeedbackForm = React.memo(function FeedbackForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSubmitting) return;
 
     if (!selectedOption) return;
 
     if (selectedOption === "no" && feedbackText.trim().length === 0) {
-      setFeedbackError("Please tell us how we can improve the page.");
+      showError("Please tell us how we can improve the page.");
       return;
     }
 
+    window.clearTimeout(errorTimer.current);
     setIsSubmitting(true);
     setFeedbackError(null);
 
@@ -79,9 +100,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
       });
       setFeedbackSubmitted(true);
     } catch {
-      setFeedbackError(
-        "There was a problem submitting your feedback. Please try again."
-      );
+      showError("There was a problem submitting your feedback. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -106,15 +125,8 @@ const FeedbackForm = React.memo(function FeedbackForm() {
       className="feedback-form-container ma__feedback-form"
       data-mass-feedback-form="true"
     >
-      {/* Success replaces the whole form, so the visible panel is created together
-          with its text. This region is mounted from the start and fills instead. */}
-      <div role="status" aria-live="polite" className="visually-hidden">
-        {feedbackSubmitted
-          ? "Thank you for your feedback! Your response has been submitted successfully."
-          : ""}
-      </div>
       {feedbackSubmitted ? (
-        <div className="feedback-success">
+        <div className="feedback-success" ref={successRef} tabIndex={-1}>
           <p style={{ margin: 0 }}>
             Thank you for your feedback! Your response has been submitted
             successfully.
@@ -126,7 +138,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
           style={{ margin: 0 }}
           onSubmit={handleSubmit}
         >
-          <h2 className="feedback-heading">Help Us Improve GrantWell</h2>
+          <h2 className="feedback-heading">Help us improve GrantWell</h2>
 
           <div className="feedback-divider" />
 
@@ -165,18 +177,18 @@ const FeedbackForm = React.memo(function FeedbackForm() {
               <div className="feedback-divider" />
 
               {selectedOption === "yes" ? (
-                <p className="feedback-prompt">
+                <label htmlFor="feedback-text" className="feedback-prompt">
                   If you have any suggestions for the website, please let us
                   know.
-                </p>
+                </label>
               ) : (
-                <p className="feedback-prompt">
+                <label htmlFor="feedback-text" className="feedback-prompt">
                   How can we improve the page?{" "}
                   <span className="feedback-required" aria-hidden="true">
                     *
                   </span>
                   <span className="visually-hidden">required</span>
-                </p>
+                </label>
               )}
 
               <p className="feedback-notice">
@@ -191,7 +203,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
                   <button
                     ref={infoButtonRef}
                     type="button"
-                    className="feedback-info-button"
+                    className="gw-btn gw-btn--icon gw-btn--slim feedback-info-button"
                     aria-expanded={showInfoTooltip}
                     aria-controls="feedback-info-tooltip"
                     onClick={() => setShowInfoTooltip((prev) => !prev)}
@@ -227,15 +239,10 @@ const FeedbackForm = React.memo(function FeedbackForm() {
               </div>
 
               <div className="feedback-textarea-wrapper">
-                <label htmlFor="feedback-text" className="visually-hidden">
-                  {selectedOption === "yes"
-                    ? "Suggestions for the website"
-                    : "How can we improve the page"}
-                </label>
                 <textarea
                   ref={textareaRef}
                   id="feedback-text"
-                  className="feedback-textarea"
+                  className="gw-input feedback-textarea"
                   maxLength={MAX_CHARS}
                   value={feedbackText}
                   onChange={handleTextChange}
@@ -254,7 +261,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
 
               <div role="status" aria-live="polite">
                 {showContactWarning && (
-                  <p id={warningId} className="feedback-warning">
+                  <p id={warningId} className="gw-alert gw-alert--warning feedback-warning">
                     This looks like it contains an email address or phone number. You
                     can still send your feedback &mdash; we just can&rsquo;t reply to
                     it, so please remove personal contact details if you can.
@@ -272,7 +279,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
                   aria-live="assertive"
                   className="feedback-error-container"
                 >
-                  <p className="feedback-error" id={errorId}>
+                  <p className="gw-alert gw-alert--urgent feedback-error" id={errorId}>
                     {feedbackError}
                   </p>
                 </div>
@@ -281,9 +288,9 @@ const FeedbackForm = React.memo(function FeedbackForm() {
               <button
                 type="submit"
                 className="feedback-submit"
-                disabled={isSubmitting}
+                aria-disabled={isSubmitting || undefined}
               >
-                {isSubmitting ? "Submitting..." : "Send Feedback"}
+                {isSubmitting ? "Submitting..." : "Send feedback"}
               </button>
             </div>
           )}

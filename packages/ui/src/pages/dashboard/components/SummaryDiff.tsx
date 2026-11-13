@@ -10,16 +10,19 @@ interface SummaryField {
 interface SummaryDiffProps {
   original: Record<string, unknown>;
   edited: Record<string, unknown>;
+  headingLevel?: 3 | 4;
 }
 
 const ARRAY_FIELDS = [
-  { key: "EligibilityCriteria", label: "Eligibility Criteria" },
-  { key: "RequiredDocuments", label: "Required Documents" },
-  { key: "ProjectNarrativeSections", label: "Project Narrative Sections" },
-  { key: "KeyDeadlines", label: "Key Deadlines" },
+  { key: "EligibilityCriteria", label: "Eligibility criteria" },
+  { key: "RequiredDocuments", label: "Required documents" },
+  { key: "ProjectNarrativeSections", label: "Project narrative sections" },
+  { key: "KeyDeadlines", label: "Key deadlines" },
 ] as const;
 
-const SummaryDiff: React.FC<SummaryDiffProps> = ({ original, edited }) => {
+const SummaryDiff: React.FC<SummaryDiffProps> = ({ original, edited, headingLevel = 3 }) => {
+  const Heading = `h${headingLevel}` as const;
+  const FieldHeading = `h${headingLevel + 1}` as "h4" | "h5";
   const renderScalarDiff = (label: string, fieldName: string) => {
     const orig = original[fieldName];
     const edit = edited[fieldName];
@@ -28,16 +31,24 @@ const SummaryDiff: React.FC<SummaryDiffProps> = ({ original, edited }) => {
     if (origStr === editStr) {
       return (
         <div key={fieldName} className="diff-field">
-          <div className="summary-field__label">{label}</div>
+          <FieldHeading className="summary-field__label">{label}</FieldHeading>
           <div className="diff-unchanged">{editStr || "(empty)"}</div>
         </div>
       );
     }
     return (
       <div key={fieldName} className="diff-field diff-field--changed">
-        <div className="summary-field__label">{label}</div>
-        {origStr && <div className="diff-removed">{origStr}</div>}
-        <div className="diff-added">{editStr || "(empty)"}</div>
+        <FieldHeading className="summary-field__label">{label}</FieldHeading>
+        {origStr && (
+          <div className="diff-removed">
+            <span className="visually-hidden">Removed: </span>
+            {origStr}
+          </div>
+        )}
+        <div className="diff-added">
+          <span className="visually-hidden">Added: </span>
+          {editStr || "(empty)"}
+        </div>
       </div>
     );
   };
@@ -62,7 +73,7 @@ const SummaryDiff: React.FC<SummaryDiffProps> = ({ original, edited }) => {
         key={fieldName}
         className={`diff-field ${hasChanges ? "diff-field--changed" : ""}`}
       >
-        <div className="summary-field__label">{label}</div>
+        <FieldHeading className="summary-field__label">{label}</FieldHeading>
         {removed.map((item, idx) => (
           <div key={`rem-${idx}`} className="diff-removed">
             <span aria-hidden="true">−&nbsp;</span>
@@ -91,16 +102,16 @@ const SummaryDiff: React.FC<SummaryDiffProps> = ({ original, edited }) => {
 
   return (
     <div className="review-summary-card">
-      <h3
+      <Heading
         style={{
           margin: "0 0 12px 0",
           fontSize: "14px",
           color: "var(--gw-color-heading)",
         }}
       >
-        Requirements Changes
-      </h3>
-      {renderScalarDiff("Grant Name", "GrantName")}
+        Requirements changes
+      </Heading>
+      {renderScalarDiff("Grant name", "GrantName")}
       {renderScalarDiff("Agency", "Agency")}
       {renderScalarDiff("Category", "Category")}
       {ARRAY_FIELDS.map(({ key, label }) => renderArrayDiff(label, key))}

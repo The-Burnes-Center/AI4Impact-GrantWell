@@ -145,7 +145,7 @@ import FormErrorSummary from '../components/ui/FormErrorSummary';
 | `errors` | `Record<string, string \| undefined>` | Required | Error messages by field |
 | `fieldLabels` | `Record<string, string>` | `{}` | Display labels for fields |
 | `title` | `string` | Auto-generated | Summary title |
-| `autoFocus` | `boolean` | `true` | Move focus to the summary when errors appear |
+| `focusRequest` | `number` | — | Bump on each submit to move focus to the summary; errors shown on blur never move focus |
 | `onErrorClick` | `(field: string) => void` | Focus the field | Handler for an error link |
 | `id` | `string` | Generated | Stable id, for forms that re-focus the summary themselves |
 

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { LuFileX, LuX, LuArrowUp, LuArrowDown, LuArrowUpDown, LuPin } from "react-icons/lu";
 import type { NOFO, GrantTypeId } from "../../common/types/nofo";
-import { GRANT_TYPES, nofoDisplayName } from "../../common/types/nofo";
+import { GRANT_TYPES, grantTypeTint, nofoDisplayName } from "../../common/types/nofo";
 import { Utils } from "../../common/utils";
+import PaginationControls from "../../components/common/PaginationControls";
 import TableScrollRegion from "../../components/ui/TableScrollRegion";
 import type { AISearchResult } from "../../hooks/use-ai-grant-search";
 import "../../styles/landing-page-table.css";
@@ -239,18 +240,15 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
-  // For AI results: show top 10 initially, expand on "Show More".
+  // For AI results: show top 10 initially, expand on "Show more".
   // For normal browsing: use existing pagination.
   const visibleNofos = hasRankedResults
     ? (showAllAIResults ? filteredNofos : filteredNofos.slice(0, AI_INITIAL_LIMIT))
     : filteredNofos.slice(startIndex, endIndex);
 
-  // Reset dropdown filters, sort, and "show more" state when AI search returns results
+  // New AI results rank by score; the user's filters stay, so expired grants appear only under All or Archived.
   useEffect(() => {
     if (searchResults && searchResults.length > 0) {
-      setStatusFilter("all");
-      setCategoryFilter("all");
-      setGrantTypeFilter("all");
       setShowAllAIResults(false);
       setSortColumn(null);
       setSortDirection("asc");
@@ -311,7 +309,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
     );
   }
 
-  const getGrantTypeBadgeClassName = () => "landing-grant-type-badge";
+  const getGrantTypeBadgeClassName = () => "gw-tag landing-grant-type-badge";
 
   return (
     <div className="landing-grants-table-container">
@@ -321,7 +319,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
           <label htmlFor="status-filter" className="landing-filter-label">Status</label>
           <select
             id="status-filter"
-            className="landing-filter-dropdown"
+            className="gw-input landing-filter-dropdown"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as "all" | "active" | "archived")}
           >
@@ -338,7 +336,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
           <label htmlFor="category-filter" className="landing-filter-label">Category</label>
           <select
             id="category-filter"
-            className="landing-filter-dropdown"
+            className="gw-input landing-filter-dropdown"
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
           >
@@ -358,14 +356,14 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
         </div>
 
         <div className="landing-filter-dropdown-wrapper">
-          <label htmlFor="grant-type-filter" className="landing-filter-label">Grant Type</label>
+          <label htmlFor="grant-type-filter" className="landing-filter-label">Grant type</label>
           <select
             id="grant-type-filter"
-            className="landing-filter-dropdown"
+            className="gw-input landing-filter-dropdown"
             value={grantTypeFilter}
             onChange={(e) => setGrantTypeFilter(e.target.value as GrantTypeId | "all")}
           >
-            <option value="all">All Grant Types ({nofos.filter((nofo) =>
+            <option value="all">All grant types ({nofos.filter((nofo) =>
               (statusFilter === "all" || nofo.status === statusFilter) &&
               (categoryFilter === "all" || nofo.category === categoryFilter)
             ).length})</option>
@@ -384,7 +382,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
         {hasActiveFilters && (
           <button
             type="button"
-            className="landing-clear-filters-button"
+            className="gw-btn gw-btn--secondary landing-clear-filters-button"
             onClick={clearFilters}
             aria-label="Clear filters — reset all active filters"
           >
@@ -398,10 +396,10 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
           together with its text and sweep the dismiss button's label into the
           message, so the alert below carries the announcement instead. */}
       {searchError && (
-        <div className="search-status-banner search-status-banner--error">
+        <div className="gw-alert gw-alert--urgent search-status-banner search-status-banner--error">
           <span>Search failed: {searchError}</span>
           {onClearSearch && (
-            <button className="search-clear-button" onClick={onClearSearch} aria-label="Dismiss error">
+            <button className="gw-btn gw-btn--secondary gw-btn--slim search-clear-button" onClick={onClearSearch} aria-label="Dismiss error">
               <LuX size={16} aria-hidden="true" />
             </button>
           )}
@@ -414,7 +412,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
       {/* Results summary. Announced by the results region below, not here — this
           banner is built at the same moment as its text and contains a button. */}
       {searchResults && !isSearching && !searchError && (
-        <div className="search-status-banner">
+        <div className="gw-alert gw-alert--info search-status-banner">
           <span>
             Found <strong>{filteredNofos.length}</strong> grant{filteredNofos.length !== 1 ? "s" : ""} matching
             your search{!showAllAIResults && filteredNofos.length > AI_INITIAL_LIMIT
@@ -512,8 +510,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                 className={`landing-table-row ${isArchived ? "archived" : ""}`}
                 style={{
                   cursor: isArchived ? "not-allowed" : "pointer",
-                  opacity: isArchived ? 0.7 : 1,
-                  backgroundColor: isArchived ? "#f9f9f9" : undefined,
+                  backgroundColor: isArchived ? "var(--gw-color-background)" : undefined,
                 }}
               >
                 <div className="landing-row-cell" role="cell">
@@ -522,7 +519,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                       size={14}
                       className="landing-pinned-icon"
                       role="img"
-                      aria-label="Pinned grant"
+                      aria-label="Pinned — featured by an administrator"
                       title="Pinned — featured by an administrator"
                     />
                   )}
@@ -537,40 +534,39 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                         : `Select ${title}${stateBadge ? `, maintained by ${stateBadge}` : ""}`
                     }
                   >
-                    <span className="landing-nofo-name" style={{ color: isArchived ? "#6b7280" : undefined }}>
+                    <span className="landing-nofo-name" style={{ color: isArchived ? "var(--gw-color-text-muted)" : undefined }}>
                       {title}
                     </span>
                   </button>
                   {stateBadge && (
-                    <span
-                      className="landing-state-badge"
-                      title={`Maintained by ${stateBadge}`}
-                      style={{ opacity: isArchived ? 0.6 : 1 }}
-                    >
-                      {nofo.state}
+                    <span className="gw-tag gw-tag--neutral landing-state-badge" title={`Maintained by ${stateBadge}`}>
+                      <span aria-hidden="true">{nofo.state}</span>
+                      <span className="visually-hidden">Maintained by {stateBadge}</span>
                     </span>
                   )}
                   {!isArchived && isRecentlyAdded(nofo.createdAt) && (
                     <span
-                      className="landing-new-badge"
+                      className="gw-tag gw-tag--info landing-new-badge"
                       title={`Added within the last ${NEW_GRANT_WINDOW_DAYS} days`}
                     >
                       New
+                      <span className="visually-hidden">: added within the last {NEW_GRANT_WINDOW_DAYS} days</span>
                     </span>
                   )}
                   {isArchived && (
                     <span
-                      className="landing-expired-badge"
+                      className="gw-tag gw-tag--neutral landing-expired-badge"
                       title="This grant has expired and is no longer accepting applications"
                     >
                       Expired
+                      <span className="visually-hidden">: no longer accepting applications</span>
                     </span>
                   )}
                 </div>
-                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "#6b7280" : undefined }}>
+                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "var(--gw-color-text-muted)" : undefined }}>
                   {nofo.agency || <span className="landing-no-value">N/A</span>}
                 </div>
-                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "#6b7280" : undefined }}>
+                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "var(--gw-color-text-muted)" : undefined }}>
                   {nofo.category || <span className="landing-no-value">N/A</span>}
                 </div>
                 <div className="landing-row-cell" role="cell">
@@ -578,19 +574,18 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
                     <span
                       className={getGrantTypeBadgeClassName()}
                       style={{
-                        backgroundColor: `${GRANT_TYPES[nofo.grantType].color}15`,
+                        backgroundColor: grantTypeTint(GRANT_TYPES[nofo.grantType].color, 8),
                         color: GRANT_TYPES[nofo.grantType].color,
-                        borderColor: `${GRANT_TYPES[nofo.grantType].color}40`,
-                        opacity: isArchived ? 0.6 : 1,
+                        borderColor: grantTypeTint(GRANT_TYPES[nofo.grantType].color, 25),
                       }}
                     >
                       {GRANT_TYPES[nofo.grantType].label}
                     </span>
                   ) : (
-                    <span className="landing-grant-type-badge unset" style={{ opacity: isArchived ? 0.6 : 1 }}>Unset</span>
+                    <span className="gw-tag landing-grant-type-badge unset">Unset</span>
                   )}
                 </div>
-                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "#6b7280" : undefined }}>
+                <div className="landing-row-cell" role="cell" style={{ color: isArchived ? "var(--gw-color-text-muted)" : undefined }}>
                   {nofo.isRolling ? (
                     <span className="landing-expiry-date rolling">Rolling</span>
                   ) : nofo.expirationDate ? (
@@ -612,7 +607,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
       {!awaitingAIResults && hasRankedResults && filteredNofos.length > AI_INITIAL_LIMIT && (
         <div className="landing-table-pagination" style={{ justifyContent: "center" }}>
           <button
-            className="landing-show-more-button"
+            className="gw-btn gw-btn--primary landing-show-more-button"
             onClick={() => setShowAllAIResults((prev) => !prev)}
             aria-label={showAllAIResults
               ? `Show less — top ${AI_INITIAL_LIMIT} results only`
@@ -625,59 +620,15 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
         </div>
       )}
 
-      {/* Pagination for normal browsing */}
       {!awaitingAIResults && !hasRankedResults && filteredNofos.length > 0 && totalPages > 1 && (
-        <div className="landing-table-pagination">
-          <div className="landing-pagination-info">
-            Showing {startIndex + 1}-{Math.min(endIndex, filteredNofos.length)} of {filteredNofos.length} grants
-          </div>
-          <div className="landing-pagination-controls">
-            <button
-              className="landing-pagination-button"
-              onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-              disabled={currentPage === 1}
-              aria-label="Previous page"
-            >
-              Previous
-            </button>
-            <div className="landing-pagination-pages">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                if (
-                  page === 1 ||
-                  page === totalPages ||
-                  (page >= currentPage - 1 && page <= currentPage + 1)
-                ) {
-                  return (
-                    <button
-                      key={page}
-                      className={`landing-pagination-page ${currentPage === page ? "active" : ""}`}
-                      onClick={() => setCurrentPage(page)}
-                      aria-label={`Go to page ${page}`}
-                      aria-current={currentPage === page ? "page" : undefined}
-                    >
-                      {page}
-                    </button>
-                  );
-                } else if (page === currentPage - 2 || page === currentPage + 2) {
-                  return (
-                    <span key={page} className="landing-pagination-ellipsis">
-                      ...
-                    </span>
-                  );
-                }
-                return null;
-              })}
-            </div>
-            <button
-              className="landing-pagination-button"
-              onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
-              disabled={currentPage === totalPages}
-              aria-label="Next page"
-            >
-              Next
-            </button>
-          </div>
-        </div>
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={filteredNofos.length}
+          itemsPerPage={itemsPerPage}
+          itemLabel="grants"
+          onPageChange={setCurrentPage}
+        />
       )}
     </div>
   );

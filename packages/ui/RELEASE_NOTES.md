@@ -1,28 +1,67 @@
-# GrantWell v3.3.0
+# GrantWell v3.3.5
 
-**Last Updated:** October 15, 2026
+**Last Updated:** November 11, 2026
 
-This release makes it easier to write and keep track of your applications. You can now pick a grant from a list when you start a new chat or application, look back through earlier versions of an application and restore them, and protect your account with two-step verification. Grant search returns better matches, chats and AI-written applications use a newer AI model, and Word and PDF exports keep their formatting. We have also made the wording and navigation consistent across GrantWell and made the landing page load faster. Since then, grant summaries also use the newer AI model, deadlines show on the right day, GrantWell works better on a phone, two-step verification is quicker, more new grants arrive with the right document, and administrators can search users and see which waiting grants are due soonest. This update also keeps your information safer, keeps your edits while the AI writes, and makes the AI writer use everything you give it. You can now also record how each application turned out, and GrantWell asks once a grant's deadline has passed.
+This release makes it easier to write and keep track of your applications. You can now pick a grant from a list when you start a new chat or application, look back through earlier versions of an application and restore them, and protect your account with two-step verification. Grant search returns better matches, chats and AI-written applications use a newer AI model, and Word and PDF exports keep their formatting. We have also made the wording and navigation consistent across GrantWell and made the landing page load faster. Since then, grant summaries also use the newer AI model, deadlines show on the right day, GrantWell works better on a phone, two-step verification is quicker, more new grants arrive with the right document, and administrators can search users and see which waiting grants are due soonest. This update also keeps your information safer, keeps your edits while the AI writes, and makes the AI writer use everything you give it. You can now also record how each application turned out, and GrantWell asks once a grant's deadline has passed. In this update, chats and the AI writer work from the whole grant, so answers are quicker, shorter and more complete, and chat answers and the Requirements page show the exact grant passage behind each point; My documents keeps your supporting documents in one place and lets you choose which ones the AI uses; AI search understands what you need in plain words; and GrantWell fixes the issues found in our partner accessibility review. Every requirement on the Requirements page is now checked against the grant before a grant is published. GrantWell also has a cleaner, more consistent look: buttons, forms, messages and tabs look and work the same on every page, and pages are named the same way everywhere.
 
 ## Highlights
 
+- **Answers from the whole grant**: chats and the AI writer read the entire grant, so answers are quicker, shorter and complete, each answer shows the passage it came from, requirements are checked against the grant, and AI search understands what you need in plain words
+- **My documents**: keep your supporting documents in one place and choose which ones the AI uses in each chat and application
 - **Version history for applications**: save named versions, compare them, restore earlier text, and undo an AI rewrite
 - **Two-step verification**: protect your account with a code from an authenticator app; enter the 6 digits and you're signed in
 - **Safer by design**: state grants stay with their state, AI search shows only grants you may see, and deleting an account removes its chats, applications and supporting documents
-- **Better grant search and a newer AI model** for chats, grant summaries and AI-written applications
-- **Better AI-written applications**: your edits are kept while the AI writes, it uses everything you give it including your supporting documents, and Word and PDF exports keep their formatting
-- **Correct deadlines**: a deadline late in the day no longer shows as the next day
-- **Easier to use**: pages fit a phone, long chats open quickly, navigation and wording are consistent, and the landing page is faster
+- **Better AI-written applications**: your edits are kept while the AI writes, and Word and PDF exports keep their formatting
+- **Easier to use for everyone**: fixes from our partner accessibility review, pages that fit a phone, consistent navigation and wording, buttons, forms and messages that match on every page, and deadlines that show on the right day
 - **For admins**: search users, grants in the processing queue sorted by deadline, a weekday email when grants are waiting, fewer grants that need review, and every recorded application outcome with a CSV export
 
 ## New in this release
 
+### Answers From the Whole Grant
+
+- **Chat with AI** now reads the whole grant every time you ask, instead of searching for pieces of it, so it doesn't miss tables, fine print or exceptions
+- Answers start sooner, arrive without long pauses, and go straight to the point: a sentence or two for a quick question, more only when you ask for detail
+- Numbered markers in an answer open the exact passage it came from, with the page number, from the grant or from your supporting documents
+- The **Requirements** page shows the same markers, so you can check each eligibility rule, document, section and deadline against the grant
+- The AI writer in **Write application** also works from the whole grant for every section
+- A chat appears in **My chats** once you've asked something, not every time you open one
+- A link to a chat, grant or application that no longer exists now says so, with a way back
+
+### Checked Against the Grant
+
+- Each eligibility rule, document, section and deadline on the **Requirements** page is checked against the grant before a grant is published: each date, amount and number must appear in the grant, and each item must say what the grant says
+- Chat answers are checked the same way after they reach you, so the GrantWell team can find and fix answers that don't match the grant; this never delays your answer
+- A grant with a requirement GrantWell couldn't confirm waits for an administrator to review it. While it does, its Requirements page and chat say "This grant is being reviewed and will be back soon.", and your applications for it stay open to edit, with the AI writer paused
+- When a grant you already use gets a new document, you keep seeing the version you know until the new one is checked or approved
+
+### My documents
+
+- **My documents** in the menu holds all your supporting documents: upload, download and delete them in one place
+- In a chat or an application, open **Supporting documents** and tick the documents the AI should use; nothing is ticked until you choose
+- Documents you uploaded before keep working in the chats and applications you used them in
+- GrantWell tells you before you start if a document is too large or a type the AI can't read
+
+### A Cleaner, Consistent Look
+
+- Buttons, form fields, messages, pop-up windows, labels and tabs look and work the same on every page, and the outline that shows where you are when using the keyboard is clearer
+- Page names are written the same way everywhere: **My chats**, **My applications**, **My documents**, **Write application** and **Admin dashboard**
+- When a form needs fixing, the message appears under the field and the cursor moves to it
+- Lists with more than one page all use the same page links
+- On sites with tabs along the top, your main pages are one click away, and the side menu shows only the links for the grant you're working on
+- The chat now fits under the header, so the message box is always in view
+
+### Search That Understands What You Need
+
+- Describe what you need in plain words, for example "an electric bus for our rural transit district", and AI search finds grants that fit, even when they use different words
+- Your filters stay as you set them, and expired grants only appear if you ask for them
+- Results come back as quickly as before, and grants in your state come first
+
 ### Application Outcomes
 
-- On **My Applications**, each application now has an **Outcome**: submitted, awarded (with the amount), not awarded, withdrawn, or not submitted
+- On **My applications**, each application now has an **Outcome**: submitted, awarded (with the amount), not awarded, withdrawn, or not submitted
 - Choose **Update outcome** to record or change it; GrantWell asks only for the dates or amount that outcome needs
 - Once a grant's deadline has passed, GrantWell asks after you sign in how your application went (for grants with no deadline, 90 days after you last worked on it). Answer the ones you know and leave the rest; GrantWell asks again in 60 days, and keeps asking about a submitted application until you hear back
-- Only applications you work on from now on are asked about; you can record an outcome for an older one on My Applications at any time
+- Only applications you work on from now on are asked about; you can record an outcome for an older one on My applications at any time
 - Outcomes help show what GrantWell applications achieve. If you delete your account, your outcomes stay without your name, email or application title
 
 ### Application Version History
@@ -80,10 +119,13 @@ This release makes it easier to write and keep track of your applications. You c
 
 - Grant summaries now use the newer AI model
 - Deadlines show on the right day: a deadline late in the day no longer shows as the next day
+- Times show exactly as the grant gives them; when a grant uses another US time zone, the Requirements page adds the Eastern Time in brackets, for example "5:00 PM MT (7:00 PM ET)"
+- A grant that accepts applications in several rounds now uses its final closing date as its deadline, so it no longer leaves Home after the first round closes
+- Tables in grant documents, such as due-date tables, are read row by row, so dates stay with the right application type
 - Each required narrative section is listed once, so you don't write the same thing twice
 - Links in grant summaries open only secure (https) addresses, and summaries no longer show images
 
-### Write Application
+### Write application
 
 - AI-written applications now use the newer AI model
 - Each section is written to fit the page or word limit the grant sets for it
@@ -92,12 +134,12 @@ This release makes it easier to write and keep track of your applications. You c
 - If writing your application stops partway, GrantWell now tells you instead of showing a progress bar that never finishes
 - You can move back to any step you have already reached, and GrantWell reopens your application at the step you left it
 - **Review** now lists any sections you have not opened yet, so nothing goes out unread
-- If you choose supporting documents on the **Additional Information** step and then try to leave without uploading them, GrantWell asks whether to upload them first
+- If you choose supporting documents on the **Additional information** step and then try to leave without uploading them, GrantWell asks whether to upload them first
 - The save status next to each step now reads "Changes save automatically" until your first save, then "Saved"
 - Contact names now accept accented letters and common name punctuation such as periods and commas
 - Grants that come without application questions now let you continue straight to the next step
 - While the AI is writing, your sections are read-only so nothing you type is overwritten; if you save a section during a run, your text is kept
-- The AI writer now uses your **Additional Information**, sees each question alongside your answer, and draws on your supporting documents for that grant
+- The AI writer now uses your **Additional information**, sees each question alongside your answer, and draws on your supporting documents for that grant
 - Each section is written from passages of the grant and your supporting documents that are about that section
 - Sections keep the order the grant lists them in, in the editor and in Word and PDF exports
 - A grant that lists no narrative sections now lets you add your own, instead of filling in five generic ones
@@ -123,13 +165,18 @@ This release makes it easier to write and keep track of your applications. You c
 
 ### Navigation and Wording
 
-- The side menu and top bar now use the same names in the same order: **Home**, **My Chats**, **My Applications**, **Admin Dashboard**, and **Profile**
-- When you have a grant selected, a **This Grant** group shows **Requirements**, **Chat with AI**, and **Write Application** for that grant
-- The buttons on Home are now **Requirements**, **Write Application**, and **Chat with AI**, and Home shows which grant you have selected
+- The side menu and top bar now use the same names in the same order: **Home**, **My chats**, **My applications**, **Admin dashboard**, and **Profile**
+- When you have a grant selected, a **This grant** group shows **Requirements**, **Chat with AI**, and **Write application** for that grant
+- The buttons on Home are now **Requirements**, **Write application**, and **Chat with AI**, and Home shows which grant you have selected
 - Wording is consistent everywhere: a funding opportunity is a "grant", what you write is an "application", your AI conversations are "chats", and files you upload are "supporting documents"
 - Sign-in screens now say **Sign in** and **Create account**, and the code from your authenticator app is called the **Authentication code**
 - Chats and applications are now listed by their title instead of an ID when you delete them
 - Wide tables throughout GrantWell scroll sideways on small screens
+
+### Grant Digest Email
+
+- The grant digest email has a cleaner layout: each grant is one clear link with its agency, deadline and how soon it closes
+- It reads better with a screen reader, on a phone and in Outlook, and the text is larger
 
 ### Help & Feedback
 
@@ -153,7 +200,7 @@ This release makes it easier to write and keep track of your applications. You c
 
 ### On a Phone
 
-- Requirements, My Chats and My Applications fit the screen, and their buttons no longer run off the edge
+- Requirements, My chats and My applications fit the screen, and their buttons no longer run off the edge
 - The HELP button on Requirements no longer covers the description
 
 ### Faster Pages
@@ -184,8 +231,8 @@ This release makes it easier to write and keep track of your applications. You c
 ### Grants (Admin)
 
 - A grant can no longer be published without application questions; if questions could not be created, it goes to **Needs attention**, and approving it creates the questions
-- The grant actions menu in the Admin Dashboard no longer gets cut off at the edge of the table
-- Admin Dashboard screens now use the same wording as the rest of GrantWell
+- The grant actions menu in the Admin dashboard no longer gets cut off at the edge of the table
+- Admin dashboard screens now use the same wording as the rest of GrantWell
 - On a GrantWell set up for a single state, its admins can edit, upload and review every grant there
 - A new **Other** category holds grants that Grants.gov files as "other"; it is used only when Grants.gov lists nothing more specific
 - Daily updates from Grants.gov no longer overwrite review flags, processing status or a state's ownership of a grant; Grants.gov still sets the agency, category and deadline
@@ -203,10 +250,16 @@ This release makes it easier to write and keep track of your applications. You c
 - A new grant whose document failed to download is tried again in the next daily update
 - Very long or scanned PDFs get more time to be read, and fail with a clear message if they still can't be
 - If part of a grant's text can't be read, the rest is kept and the grant waits for review with the missing part named, instead of failing outright
+- A grant waits for review when GrantWell can't confirm one of its requirements in the grant; the queue names each one and why, and **Approve** is recommended when the grant does say it
+- Grants that are already live, including archived ones, are checked the same way; any that fail go back to the queue for review
+- A new document for a live grant is checked on its own: users keep the published version until you approve the new one, and **Reject new version** keeps the published version live and deletes nothing
+- On a GrantWell set up for a single state, its admins can open any grant waiting for review; elsewhere, state admins can open their own state's grants
+- Approving a new version of an archived grant makes it active again when its deadline is still ahead
+- While a grant is in review, section guidance is hidden in **Write application**, with a note on that grant's sections
 
 ### Admin Dashboard Access (Admin)
 
-- The admin section has been removed from Home; use **Admin Dashboard** in the main menu instead
+- The admin section has been removed from Home; use **Admin dashboard** in the main menu instead
 
 ## Behind the Scenes
 
@@ -217,161 +270,3 @@ This release makes it easier to write and keep track of your applications. You c
 - Many more automated tests run before every update reaches you
 - Every GrantWell database is now backed up continuously and protected from accidental deletion
 - GrantWell limits how fast requests can arrive, so a flood of traffic can't slow it down for everyone; each deployment can adjust its limits
-
-# GrantWell v2.0.0
-
-**Last Updated:** August 19, 2026
-
-This release builds on GrantWell v1.0.0. Admins get an analytics dashboard, rebuilt grant processing, and tools scoped to their own state. Everyone can choose to get grant email digests. A one-time profile step helps us understand who uses GrantWell. The release also includes security improvements and accessibility fixes from our partner accessibility review.
-
-## Highlights
-
-- **Analytics** for admins: users, searches, popular grants, and application progress
-- **Grant email digests**, daily or weekly, matched to your state and interests
-- Rebuilt **grant processing** with live progress and a "Needs attention" review queue
-- **State admins** manage their own state's grants and can add state guidance to federal grants
-- A one-time **profile** step and a new **Profile** page with your recent activity
-- **Custom questions**: admins can add their own questions to state grants
-- **Security improvements** to access controls and email notifications
-- **Accessibility improvements** from our partner accessibility review
-
-## New in this release
-
-### Analytics Dashboard (Admin)
-
-- New **Analytics** tab in the Admin Dashboard for admins and developers
-- See registered and active users per state, the most popular searches, the most viewed and most pursued grants, how many applications were drafted, completed, and downloaded, and usage by Department
-- An **application funnel** shows how many applications are completed and how many are abandoned at each step
-- Choose the last 7, 30, or 90 days. Developers and platform admins can view all states or pick one; state admins see their own state
-- Only searches you actually submit are counted, not partial text as you type
-
-### User Profiles
-
-- The next time you sign in, you'll be asked once for your Department, organization, and role or title. Your state is shown, but an administrator assigns it
-- New **Profile** page: manage your email preferences, see your recent applications, chats, and viewed grants, and update your organization details
-
-### Grant Email Digests
-
-- Choose a daily or weekly email listing new grants and grants closing soon
-- Matched to your assigned state and the categories and keywords you choose
-- Unsubscribe in one click, or change your preferences on your Profile page
-- **Admin:** developers can preview digests and send them out
-
-## Improvements
-
-### Grant Processing (Admin)
-
-- Each grant's row shows live processing progress, including grants still being processed and grants set aside for review
-- A **"Needs attention"** queue in the Grants tab lists grants an admin should review before they are published
-- If GrantWell can only read part of a grant, it can still publish it automatically, marked for review, instead of holding it back
-- GrantWell is better at recognizing grant content and pulling out key details, and keeps working when one detail can't be worked out
-
-### State-Scoped Administration (Admin)
-
-- **State admins** can manage only their own state's grants. Every change is checked on the server
-- Add state-specific guidance to a federal grant, shown only to your state's users
-- Make a state copy of a federal grant
-
-### Custom Questions on State Grants (Admin)
-
-- Add, edit, and remove your own questions on a state grant (up to 25), each with optional help text
-- Custom questions appear in the Write Application questionnaire next to the questions GrantWell found in the grant, and are labelled as custom
-- Useful when a grant doesn't spell out what the funding agency wants applicants to address
-
-### User Management (Admin)
-
-- Admins can create and delete users, assign roles (User, Admin, Developer), and assign each user's state
-- State admins see and manage only the users in their own state
-- Clearer error messages in the User Management tab
-
-### Security
-
-- Unsubscribe links in digest emails are verified and expire
-- Sign-in tokens are no longer written to system logs, and logs are kept for a set period instead of forever
-- Tighter internal permissions for account creation
-
-### Security (Admin)
-
-- Platform-wide admin rights now come from an explicit Platform Admin role instead of being assumed
-- State admins can't move a user to another state or give anyone platform-wide admin rights
-- Every admin change to a grant is checked on the server to keep state admins within their own state
-
-### Accessibility
-
-- Keyboard navigation and focus fixes across GrantWell, including the main navigation, dialogs, and multi-step forms
-- Color contrast fixes to meet WCAG 2.1 AA
-- Better screen reader support: clearer labels, page landmarks, skip links, and announcements when a status changes
-- If a chat response takes a long time, you now see a warning instead of it failing without notice
-- The remaining issues from our partner accessibility review have been fixed
-
-# GrantWell v1.0.0
-
-**Last Updated:** May 13, 2026
-
-GrantWell is an AI grant-writing assistant that helps you find, understand, and apply for state and federal grants. This is the first stable release, built in partnership with the Burnes Center for Social Change and the Massachusetts Federal Funds and Infrastructure Office.
-
-## Highlights
-
-- AI help at every step, from finding a grant to exporting your application
-- Grants are added, summarized, and broken into requirements automatically
-- **Chat with AI**, an AI assistant grounded in the grant you choose
-- **Write Application**: section-by-section writing with progress tracking
-- **Admin Dashboard** for managing grants, users, and the details GrantWell pulls from each grant
-
-## Features
-
-### Finding Grants
-
-- Browse the grant catalog and search by keyword
-- Includes federal grants from Grants.gov
-- State grants can also be added by hand
-- Each state can add its own grants, visible only to that state's users
-- Supports grants with rolling deadlines
-- Filter by status, grant type, and category
-
-### Requirements
-
-- GrantWell reads each grant automatically and records its status, funding agency, grant type, category, and deadline
-- AI summaries of eligibility, required documents, narrative sections, and deadlines
-
-### Chat with AI
-
-- Chat with AI to help write the narrative sections of your application
-- Answers are based on the grant you selected and the supporting documents you upload
-- Your chats are saved for each grant and visible only to you
-
-> **Note:** Always review and fact-check AI-generated content before you submit.
-
-### Write Application
-
-- Write and refine your application section by section
-- Track your progress across sections
-- Export your completed application as DOCX or PDF
-
-### Admin Dashboard (Admin)
-
-- Manage grants, including status, funding agency, and rolling deadlines
-- Grants are pulled from Grants.gov automatically
-- Invite new users by sending them an access link
-- Separate permissions for admin users
-
-## Accessibility
-
-- Conforms to WCAG 2.1 Level AA, including screen reader support, keyboard navigation, and enough color contrast
-- Checked with automated accessibility testing (Axe)
-
-## Security
-
-- Secure sign-in, and you can create your own account
-- Role-based permissions, including admin roles
-- Data is encrypted in transit and at rest
-- Uploaded files are checked, and PDF is the preferred format
-
-## Known Limitations
-
-- GrantWell works, but has had limited user testing. Please report problems through the feedback form in GrantWell.
-- ZIP files can't be uploaded.
-
-## Acknowledgments
-
-GrantWell was built by the AI For Impact Team in partnership with the Massachusetts Federal Funds and Infrastructure Office.

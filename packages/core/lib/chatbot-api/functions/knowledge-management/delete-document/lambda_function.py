@@ -26,7 +26,7 @@ def lambda_handler(event, context):
         payload = json.loads(event['body'])
         key = payload.get('KEY')
 
-        if not key or not key.startswith(f"{user_id}/"):
+        if not key or not key.startswith(f"{user_id}/") or any(s in (".", "..") for s in key.split("/")):
             return _response(403, {'message': 'Unauthorized: Can only delete your own files'})
     except Exception as e:
         print(f"Error processing request: {e}")

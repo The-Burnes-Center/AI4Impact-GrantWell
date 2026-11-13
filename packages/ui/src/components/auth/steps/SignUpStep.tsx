@@ -66,10 +66,10 @@ export default function SignUpStep({
             placeholder="Enter your email"
             value={email}
             onChange={(event) => onEmailChange(event.target.value)}
-            disabled={loading}
+            readOnly={loading}
             autoComplete="email"
             required
-            className="form-input"
+            className="gw-input form-input"
             aria-required="true"
             aria-invalid={emailErrorId ? true : undefined}
             aria-describedby={emailErrorId}
@@ -85,10 +85,10 @@ export default function SignUpStep({
             placeholder="Enter password"
             value={password}
             onChange={(event) => onPasswordChange(event.target.value)}
-            disabled={loading}
+            readOnly={loading}
             autoComplete="new-password"
             required
-            className="form-input"
+            className="gw-input form-input"
             aria-required="true"
             aria-invalid={passwordErrorId ? true : undefined}
             aria-describedby={
@@ -112,10 +112,10 @@ export default function SignUpStep({
             placeholder="Re-enter password"
             value={confirmPassword}
             onChange={(event) => onConfirmPasswordChange(event.target.value)}
-            disabled={loading}
+            readOnly={loading}
             autoComplete="new-password"
             required
-            className="form-input"
+            className="gw-input form-input"
             aria-required="true"
             aria-invalid={confirmPasswordErrorId ? true : undefined}
             aria-describedby={confirmPasswordErrorId}
@@ -131,7 +131,8 @@ export default function SignUpStep({
             value={stateCode}
             onChange={(event) => onStateChange(event.target.value)}
             disabled={loading}
-            className="form-input"
+            autoComplete="address-level1"
+            className="gw-input form-input"
             aria-describedby="signup-state-help"
           >
             <option value="">Other</option>
@@ -164,20 +165,19 @@ export default function SignUpStep({
         {!handoffUrl && turnstile}
         <div className="login-form-actions">
           {handoffUrl ? (
-            <a href={handoffUrl} className="btn btn-primary login-submit-button" aria-describedby="signup-state-site-note">
+            <a href={handoffUrl} className="gw-btn gw-btn--primary btn btn-primary login-submit-button" aria-describedby="signup-state-site-note">
               Go to GrantWell {stateNameFromCode(stateSite.state)}
             </a>
           ) : (
           <Button
             variant="primary"
             type="submit"
-            disabled={loading}
-            className="login-submit-button"
+            aria-disabled={loading || undefined}
+            className="gw-btn gw-btn--primary login-submit-button"
           >
             {loading ? (
               <>
                 <Spinner animation="border" size="sm" aria-hidden="true" className="me-2" />
-                <span className="visually-hidden">Loading</span>
                 Creating account...
               </>
             ) : (

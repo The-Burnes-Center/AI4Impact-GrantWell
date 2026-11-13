@@ -7,6 +7,9 @@ export const REGION = process.env.AWS_REGION ?? "us-east-1";
 export const TEST_EMAIL_DOMAIN = "@grantwell.invalid";
 export const USER_EMAIL = process.env.E2E_USER_EMAIL ?? `e2e-dev${TEST_EMAIL_DOMAIN}`;
 
+/** Every file the suite uploads starts with this, so the login journey can sweep up leftovers. */
+export const E2E_DOCUMENT_PREFIX = "e2e-";
+
 export const BYPASS_PARAMETER = process.env.E2E_BYPASS_PARAM ?? "/grantwell-generic-dev/e2e/turnstile-bypass";
 
 const AUTH_DIR = path.join(__dirname, "..", ".auth");

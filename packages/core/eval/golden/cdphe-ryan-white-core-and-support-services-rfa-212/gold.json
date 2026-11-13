@@ -1,0 +1,225 @@
+{
+  "schemaVersion": 1,
+  "status": "prelabeled",
+  "family": "CO state",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "Application due by email with all attachments (no time zone stated)",
+      "date": "2026-11-16",
+      "time": "16:00",
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Application Due Date: November 16, 2026, by 4:00 PM"
+    },
+    {
+      "kind": "other",
+      "label": "Written inquiries by email (no questions accepted after this date and time)",
+      "date": "2026-10-22",
+      "time": "16:00",
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Please submit all inquiries as instructed above by 10/22/26."
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": null,
+    "periodMonths": null,
+    "expectedAwards": null,
+    "range": {
+      "min": 25000,
+      "max": 4000000,
+      "quote": "Approved awards are anticipated to range from $25,000 to $4,000,000 with the average award being $370,000."
+    },
+    "caps": [
+      {
+        "what": "indirect costs (HRSA limit for this grant)",
+        "value": 10,
+        "quote": "HRSA does limit indirect costs to 10% for this grant, however."
+      }
+    ],
+    "match": null,
+    "quote": "Approximately $8,000,000 to 10,000,000 is available to fund projects for the initial year."
+  },
+  "sections": [
+    {
+      "name": "Executive Summary",
+      "order": 1,
+      "limit": {"type": "pages", "value": 1},
+      "conditional": null,
+      "component": "Application Narrative",
+      "quote": "Clearly state which of the following goals: Core Services, Support Services, Critical Events, Minority Aids Initiative(MAI) or Fiscal"
+    },
+    {
+      "name": "Summary of Experience/Qualifications",
+      "order": 2,
+      "limit": {"type": "pages", "value": 5},
+      "conditional": null,
+      "component": "Application Narrative",
+      "quote": "Describe current and past experience providing all of the services for which funding is being requested."
+    },
+    {
+      "name": "Billing for Services",
+      "order": 3,
+      "limit": {"type": "pages", "value": 4},
+      "conditional": null,
+      "component": "Application Narrative",
+      "quote": "Describe your organizational history with Colorado Medicaid. What services are you certified to provide?"
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Technical content of the application",
+      "scored": true,
+      "points": 25,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Executive Summary"],
+      "quote": "1. The technical content of the application (25 Points), including"
+    },
+    {
+      "name": "Management capability (qualifications and experience)",
+      "scored": true,
+      "points": 45,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Summary of Experience/Qualifications", "Billing for Services"],
+      "quote": "2. Management capability (45 Points) (qualifications and experience)"
+    },
+    {
+      "name": "Budget",
+      "scored": true,
+      "points": 30,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "3. Budget (30 Points)"
+    },
+    {
+      "name": "Minimum score of 70 points to be considered for funding",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Applications will be scored using a 100-point scale. The process will be competitive, based on assigned scores. Applications must achieve 70 points to be considered for funding."
+    },
+    {
+      "name": "Financial Risk Assessment rating shared with reviewers",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "The financial risk rating determined from the submitted Financial Risk Assessment Questionnaire or FRMS rating (Local Public Health Agencies only) will be"
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": "1\" on all sides",
+    "font": "Times New Roman",
+    "fontSizePt": 12,
+    "lineSpacing": "double",
+    "overallPageLimit": 10,
+    "other": [
+      "Page numbers on all pages, bottom right corner",
+      "Include the original headings for each section",
+      "Label each attachment with its original label",
+      "Submit one application for all services and counties",
+      "Budget is not included in the page limit",
+      "Email the application and all attachments to the program contact; faxed applications are not accepted",
+      "Required documents in the order listed"
+    ],
+    "quote": "Application font must be Times New Roman. 3. Application font size must be 12-point. 4. Application spacing must be double-spaced with 1\" margins on all sides."
+  },
+  "eligibility": [
+    {
+      "item": "Private not-for-profit organizations and public or governmental agencies are eligible; for-profits are funded only if no not-for-profit is able or willing to provide quality HIV services",
+      "quote": "Private, not-for-profit organizations and public or governmental agencies are eligible to apply. A for-profit entity is eligible to apply for these funds but will only be funded if a not-for-profit organization is unable or unwilling to provide quality HIV related service(s)."
+    },
+    {
+      "item": "Not-for-profit applicants may not pass funds to a for-profit entity unless that condition is true and verified",
+      "quote": "Not-for-profit applicants are prohibited from serving as a conduit of these funds to a for-profit entity unless the above is true and verified."
+    },
+    {
+      "item": "Applicants delivering services potentially eligible for Medicaid must be certified Colorado Medicaid providers, with proof in the application",
+      "quote": "If this application involves the delivery of services that are potentially eligible for Medicaid funding, the applicant must be certified by Colorado Medicaid as a provider of the service(s)."
+    },
+    {
+      "item": "Funds are dollars of last resort and may not pay for items or services payable by other benefits programs or insurance",
+      "quote": "These funds must be used as dollars of last resort and appropriate documentation must be included in the client file that supports this requirement."
+    },
+    {
+      "item": "Recipients of Ryan White Part A, C, D or HOPWA must show how requested funds wrap around and do not duplicate other services",
+      "quote": "Applications from providers that receive Ryan White Part A, C, D or HOPWA must demonstrate how the funds requested will wrap around and not duplicate other services."
+    },
+    {
+      "item": "MAI applicants must have a pre-existing working relationship and security clearance with each proposed correctional institution before submission",
+      "quote": "Applicants requesting MAI funding must have a pre-existing working relationship and have undergone security clearance with each proposed correctional institution prior to the submission of the RFA."
+    },
+    {
+      "item": "Clinics and medical providers must enroll in CDPHE's third-party administrator, UMR",
+      "quote": "Clinics and medical provider applicants must enroll in CDPHE's third-party administrator, UMR."
+    },
+    {
+      "item": "Services may only go to eligible clients: HIV-positive Colorado residents with household income under 500 percent of the Federal Poverty Level",
+      "quote": "Awarded applicants must document that clients are HIV-positive, are residents of Colorado, and have household income under 500 percent of the Federal Poverty Level (FPL)."
+    },
+    {
+      "item": "On-site services must be available in each region's priority cities/towns (Boulder; Fort Collins and/or Greeley; Colorado Springs and/or Pueblo; Grand Junction and/or Durango)",
+      "quote": "On-site services must be available in the following priority cities/towns: Fort Collins and/or Greeley."
+    },
+    {
+      "item": "No reimbursement of pre-award costs",
+      "quote": "There will be no reimbursement of pre-award costs."
+    },
+    {
+      "item": "Applications must meet all criteria in the RFA",
+      "quote": "Applications must meet all criteria outlined in this RFA. Applicants that decline to meet one or more criteria, or do not demonstrate meeting all criteria, may not be considered for funding."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "Attachment A: CDPHE RFA Cover Sheet and Signature Page, signed digitally or in ink",
+      "userWrites": false,
+      "quote": "1. Attachment A: CDPHE RFA Cover Sheet and Signature Page (must be signed digitally or in ink, preferably blue ink)"
+    },
+    {
+      "item": "Attachment B: Disclosure and Documentation of Applicant Legal Organization",
+      "userWrites": false,
+      "quote": "3. Attachment B: Disclosure and Documentation of Applicant Legal Organization"
+    },
+    {
+      "item": "Attachment C: HIV Core and Support Services Work Plan",
+      "userWrites": true,
+      "quote": "4. Attachment C: HIV Core and Support Services Work Plan"
+    },
+    {
+      "item": "Attachment D: Project Budget and Narrative (budget template; must explain all expenses)",
+      "userWrites": true,
+      "quote": "5. Attachment D: Project Budget and Narrative"
+    },
+    {
+      "item": "Attachment E: Core and Support Population Description",
+      "userWrites": true,
+      "quote": "6. Attachment E: Core and Support Population Description. A completed form must be submitted with the response."
+    },
+    {
+      "item": "Attachment F: Description of Ryan White Part A, C, D and HOPWA Funding",
+      "userWrites": true,
+      "quote": "7. Attachment F: Description of Ryan White Part A, C, D and HOPWA Funding. A completed form must be submitted with the response."
+    },
+    {
+      "item": "Attachment G: Financial Risk Assessment Questionnaire (not required of local public health agencies, Colorado state agencies or state institutions of higher education)",
+      "userWrites": true,
+      "quote": "8. Attachment G: Financial Risk Assessment Questionnaire"
+    },
+    {
+      "item": "Proof of Colorado Medicaid provider certification (if services are potentially Medicaid-eligible)",
+      "userWrites": false,
+      "quote": "Proof of such certification must be provided with the application."
+    }
+  ],
+  "libraryRequired": []
+}

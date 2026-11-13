@@ -42,19 +42,25 @@ export async function updateProcessingStatus(nofoName, stage) {
   }
 }
 
-export async function setNofoStatus(nofoName, status) {
+/**
+ * `previousStatus` is kept on the row as previous_status until the grant publishes or is deleted,
+ * so a reprocess that supersedes the review still restores it.
+ */
+export async function setNofoStatus(nofoName, status, { previousStatus } = {}) {
   const tableName = process.env.NOFO_METADATA_TABLE_NAME;
   if (!tableName || !nofoName) return;
+  const keepPrevious = typeof previousStatus === "string";
   try {
     await client.send(
       new UpdateItemCommand({
         TableName: tableName,
         Key: marshall({ nofo_name: nofoName }),
-        UpdateExpression: "SET #status = :s, updated_at = :now",
+        UpdateExpression: `SET #status = :s, updated_at = :now${keepPrevious ? ", previous_status = :prev" : ""}`,
         ExpressionAttributeNames: { "#status": "status" },
         ExpressionAttributeValues: marshall({
           ":s": status,
           ":now": new Date().toISOString(),
+          ...(keepPrevious && { ":prev": previousStatus }),
         }),
       })
     );
@@ -78,7 +84,7 @@ export async function markProcessingComplete(nofoName, outcome) {
         Key: marshall({ nofo_name: nofoName }),
         UpdateExpression:
           "SET processing_completed_at = :now, processing_outcome = :outcome, updated_at = :now" +
-          " REMOVE pipeline_claim_at, pipeline_claim_execution",
+          " REMOVE pipeline_claim_at, pipeline_claim_execution, pipeline_claim_document",
         ExpressionAttributeValues: marshall({
           ":now": new Date().toISOString(),
           ":outcome": outcome,

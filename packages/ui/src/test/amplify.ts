@@ -30,6 +30,8 @@ export const auth = {
   updatePassword: vi.fn(),
   getCurrentUser: vi.fn(),
   signOut: vi.fn(),
+  signIn: vi.fn(),
+  confirmSignIn: vi.fn(),
 };
 
 export function signedInAs(claims: Claims = {}): void {

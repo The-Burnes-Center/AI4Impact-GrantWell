@@ -4,7 +4,6 @@ import Chat from "../../../components/chat/Chat";
 import { Link, useParams, useSearchParams } from "react-router";
 import { LuCircleHelp, LuUpload, LuFileText } from "react-icons/lu";
 import { useApiClient } from "../../../hooks/use-api-client";
-import { useKbSyncPoll } from "../../../hooks/use-kb-sync-poll";
 import { useFocusTrap } from "../../../hooks/use-focus-trap";
 import { useInert } from "../../../hooks/use-inert";
 import DocumentManager from "../../../components/chat/DocumentManager";
@@ -23,7 +22,6 @@ export default function Playground() {
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [uploadedFileCount, setUploadedFileCount] = useState(0);
   const helpButtonRef = React.useRef<HTMLButtonElement>(null);
-  const { status: kbSyncStatus, start: handleSyncStarted } = useKbSyncPoll(apiClient.kbSync);
   const inertContentRef = useInert<HTMLDivElement>(helpOpen);
   const titleId = useId();
   const descriptionId = useId();
@@ -100,11 +98,11 @@ export default function Playground() {
             <div className="pg-header-actions">
               {documentIdentifier && (
                 <button
-                  className="pg-upload-btn"
+                  className="gw-btn gw-btn--primary pg-upload-btn"
                   onClick={() => setUploadModalOpen(true)}
-                  aria-label={`Upload Documents — supporting documents for this grant${uploadedFileCount > 0 ? `. ${uploadedFileCount} supporting document${uploadedFileCount === 1 ? "" : "s"} uploaded.` : ""}`}
+                  aria-label={`Supporting documents — choose what the AI reads in this chat${uploadedFileCount > 0 ? `. ${uploadedFileCount} selected.` : ""}`}
                 >
-                  <LuUpload size={16} aria-hidden="true" /> Upload Documents
+                  <LuUpload size={16} aria-hidden="true" /> Supporting documents
                   {uploadedFileCount > 0 && (
                     <span className="pg-upload-badge" aria-hidden="true">
                       <LuFileText size={11} aria-hidden="true" />
@@ -115,7 +113,7 @@ export default function Playground() {
               )}
               <button
                 ref={helpButtonRef}
-                className="pg-help-btn"
+                className="gw-btn gw-btn--secondary pg-help-btn"
                 onClick={() => setHelpOpen(!helpOpen)}
                 aria-label={helpOpen ? "Close help dialog" : "Open help dialog"}
                 aria-expanded={helpOpen}
@@ -130,13 +128,13 @@ export default function Playground() {
         modalOpen={helpOpen}
         content={
           <div ref={inertContentRef} className="pg-content" aria-hidden={helpOpen}>
-            <Chat sessionId={sessionId} documentIdentifier={documentIdentifier} kbSyncStatus={kbSyncStatus} />
+            <Chat sessionId={sessionId} documentIdentifier={documentIdentifier} />
             {documentIdentifier && (
               <DocumentManager
                 isOpen={uploadModalOpen}
                 onClose={() => setUploadModalOpen(false)}
                 documentIdentifier={documentIdentifier}
-                onSyncStarted={handleSyncStarted}
+                sessionId={sessionId}
                 onFileCountChange={setUploadedFileCount}
               />
             )}
@@ -146,7 +144,7 @@ export default function Playground() {
 
       {/* Help Modal */}
       {helpOpen && (
-        <div className="pg-modal-overlay">
+        <div className="gw-modal__overlay pg-modal-overlay">
           <div
             ref={modalRef}
             tabIndex={-1}
@@ -154,16 +152,16 @@ export default function Playground() {
             aria-modal="true"
             aria-labelledby={titleId}
             aria-describedby={descriptionId}
-            className="pg-modal"
+            className="gw-modal pg-modal"
           >
             {/* Header */}
-            <div className="pg-modal-header">
-              <h2 id={titleId} className="pg-modal-title">
+            <div className="gw-modal__header pg-modal-header">
+              <h2 id={titleId} className="gw-modal__title pg-modal-title">
                 Welcome to Chat with AI
               </h2>
               <button
                 onClick={handleCloseModal}
-                className="pg-modal-close-btn"
+                className="gw-btn gw-btn--icon pg-modal-close-btn"
                 aria-label="Close help dialog"
               >
                 <span aria-hidden="true">×</span>
@@ -171,7 +169,7 @@ export default function Playground() {
             </div>
 
             {/* Content */}
-            <div id={descriptionId} className="pg-modal-body">
+            <div id={descriptionId} className="gw-modal__body pg-modal-body">
               <p className="pg-modal-intro">
                 This AI-powered assistant is your expert guide for understanding
                 a grant. Ask questions about any aspect of the grant application
@@ -208,11 +206,11 @@ export default function Playground() {
               </div>
 
               <div className="pg-info-section">
-                <h3 className="pg-info-heading">My Chats</h3>
+                <h3 className="pg-info-heading">My chats</h3>
                 <p className="pg-info-text">
                   All chats are saved and can be accessed later via the{" "}
                   <Link to="/chat/sessions" className="pg-info-link">
-                    My Chats
+                    My chats
                   </Link>{" "}
                   page.
                 </p>
@@ -236,7 +234,7 @@ export default function Playground() {
 
               <button
                 onClick={handleCloseModal}
-                className="pg-got-it-btn"
+                className="gw-btn gw-btn--primary pg-got-it-btn"
               >
                 Got it
               </button>

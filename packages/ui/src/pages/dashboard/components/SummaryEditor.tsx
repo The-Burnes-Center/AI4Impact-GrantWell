@@ -11,12 +11,17 @@ interface SummaryField {
 interface SummaryEditorProps {
   editedSummary: Record<string, unknown>;
   onSummaryChange: (updated: Record<string, unknown>) => void;
+  /** Level of the editor's own heading; section headings sit one below it. */
+  headingLevel?: 3 | 4;
 }
 
 const SummaryEditor: React.FC<SummaryEditorProps> = ({
   editedSummary,
   onSummaryChange,
+  headingLevel = 3,
 }) => {
+  const Heading = `h${headingLevel}` as const;
+  const SectionHeading = `h${headingLevel + 1}` as "h4" | "h5";
   const handleAddItem = (fieldName: string) => {
     const items = (editedSummary[fieldName] as SummaryField[] | undefined) || [];
     const newItem: SummaryField = { item: "", description: "", confidence: "medium" };
@@ -35,7 +40,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
     return (
       <div className="summary-field">
         <div className="summary-field__label" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span>{label} ({items.filter((i) => !i.removed).length})</span>
+          <SectionHeading className="summary-field__heading">{label} ({items.filter((i) => !i.removed).length})</SectionHeading>
           <button
             type="button"
             className="review-add-item-btn"
@@ -45,14 +50,23 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
               padding: "2px 8px",
               cursor: "pointer",
               border: "1px solid var(--gw-color-border)",
-              borderRadius: "4px",
-              background: "var(--gw-color-white)",
+              borderRadius: "var(--gw-radius-control)",
+              background: "var(--gw-color-surface)",
               color: "var(--gw-color-text)",
             }}
           >
-            + Add Item
+            <span aria-hidden="true">+ </span>Add item<span className="visually-hidden"> to {label}</span>
           </button>
         </div>
+        {items.length > 0 && (
+          <div className="summary-field__item summary-field__columns" aria-hidden="true">
+            <span className="summary-field__columns-spacer" />
+            <span className="summary-field__text" style={{ display: "flex", gap: "8px", flex: 1 }}>
+              <span style={{ flex: "0 0 30%" }}>Name</span>
+              <span style={{ flex: 1 }}>Description</span>
+            </span>
+          </div>
+        )}
         {items.map((item, idx) => (
           <div
             key={idx}
@@ -67,12 +81,12 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
                 updated[idx] = { ...updated[idx], removed: !updated[idx].removed };
                 onSummaryChange({ ...editedSummary, [fieldName]: updated });
               }}
-              aria-label={`${item.removed ? "Include" : "Exclude"} ${item.item}`}
+              aria-label={`Include ${item.item.trim() || `${label} item ${idx + 1}`}`}
             />
             <span className="summary-field__text" style={{ display: "flex", gap: "8px", flex: 1 }}>
               <input
                 type="text"
-                className="review-text-input"
+                className="gw-input review-text-input"
                 placeholder="Item name"
                 value={item.item}
                 onChange={(e) => handleItemEdit(fieldName, idx, "item", e.target.value)}
@@ -81,7 +95,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
               />
               <input
                 type="text"
-                className="review-text-input"
+                className="gw-input review-text-input"
                 placeholder="Description"
                 value={item.description}
                 onChange={(e) => handleItemEdit(fieldName, idx, "description", e.target.value)}
@@ -93,7 +107,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
         ))}
         {items.length === 0 && (
           <div style={{ fontSize: "12px", color: "var(--gw-color-text-secondary)", padding: "8px 0 0 28px" }}>
-            No items extracted. Click &quot;+ Add Item&quot; to add manually.
+            No items extracted. Click &quot;+ Add item&quot; to add manually.
           </div>
         )}
       </div>
@@ -102,7 +116,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
 
   return (
     <div className="review-summary-card">
-      <h3
+      <Heading
         style={{
           margin: "0 0 12px 0",
           fontSize: "14px",
@@ -110,19 +124,19 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
         }}
       >
         Extracted Requirements (Editable)
-      </h3>
+      </Heading>
 
       <div style={{ marginBottom: "12px" }}>
         <label
           htmlFor="review-grant-name"
           className="summary-field__label"
         >
-          Grant Name
+          Grant name
         </label>
         <input
           id="review-grant-name"
           type="text"
-          className="review-text-input"
+          className="gw-input review-text-input"
           value={(editedSummary.GrantName as string) || ""}
           onChange={(e) =>
             onSummaryChange({ ...editedSummary, GrantName: e.target.value })
@@ -138,7 +152,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
           <input
             id="review-agency"
             type="text"
-            className="review-text-input"
+            className="gw-input review-text-input"
             value={(editedSummary.Agency as string) || ""}
             onChange={(e) =>
               onSummaryChange({ ...editedSummary, Agency: e.target.value })
@@ -151,7 +165,7 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
           </label>
           <select
             id="review-category"
-            className="review-text-input"
+            className="gw-input review-text-input"
             value={(editedSummary.Category as string) || ""}
             onChange={(e) =>
               onSummaryChange({ ...editedSummary, Category: e.target.value })
@@ -165,10 +179,10 @@ const SummaryEditor: React.FC<SummaryEditorProps> = ({
         </div>
       </div>
 
-      {renderField("Eligibility Criteria", "EligibilityCriteria")}
-      {renderField("Required Documents", "RequiredDocuments")}
-      {renderField("Project Narrative Sections", "ProjectNarrativeSections")}
-      {renderField("Key Deadlines", "KeyDeadlines")}
+      {renderField("Eligibility criteria", "EligibilityCriteria")}
+      {renderField("Required documents", "RequiredDocuments")}
+      {renderField("Project narrative sections", "ProjectNarrativeSections")}
+      {renderField("Key deadlines", "KeyDeadlines")}
     </div>
   );
 };

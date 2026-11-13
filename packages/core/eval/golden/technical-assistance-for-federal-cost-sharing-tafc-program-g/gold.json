@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "status": "prelabeled",
+  "family": "CO state",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "Rolling; awards made at CWCB's six Board meetings a year until all program funds are obligated",
+      "date": null,
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Applications to the TAFC program will be accepted on a rolling basis, with awards made to coincide with CWCB's annual schedule of Board meetings (six times per year). Applications will be accepted until all Program funds are obligated."
+    }
+  ],
+  "award": {
+    "ceiling": null,
+    "floor": null,
+    "periodMonths": null,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [],
+    "match": {
+      "required": true,
+      "ratio": "0.25",
+      "appliesTo": "All TAFC grants; no more than half of the match (12.5 percent) may be in-kind services",
+      "quote": "A minimum of 25 percent match is required for all TAFC Grants."
+    },
+    "quote": null
+  },
+  "sections": [
+    {
+      "name": "Scope of work",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": null,
+      "quote": "All grant applications must include a scope of work, budget, and project schedule."
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Furthers Colorado Water Plan or Basin Implementation Plan goals (priority to basin roundtable-identified or collaborative watershed planning projects)",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Scope of work"],
+      "quote": "Does the project further Colorado Water Plan or current Basin Implementation Plan goals, objectives, or actions?"
+    },
+    {
+      "name": "Advances interstate, regional or watershed-scale water and natural resource management",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Scope of work"],
+      "quote": "Does the project advance interstate, regional or watershed-scale water and natural resource management efforts and solutions?"
+    },
+    {
+      "name": "Local community and diverse stakeholder support, with input from relevant government agencies",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Scope of work"],
+      "quote": "Does the project have local community and diverse stakeholder support? Have relevant federal, state and local government agencies provided input on the project?"
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Application forms are on the CWCB Loan and Grant Portal on the CWCB website"
+    ],
+    "quote": "Application forms are available on the CWCB Loan and Grant Portal on the CWCB website"
+  },
+  "eligibility": [
+    {
+      "item": "Eligible applicants: governmental entities (municipalities, districts, enterprises, counties) and private entities (mutual ditch companies, non-profit corporations, partnerships)",
+      "quote": "Governmental entities including municipalities, districts, enterprises, and counties."
+    },
+    {
+      "item": "State of Colorado agencies are generally not eligible, except in limited circumstances at program staff discretion",
+      "quote": "State of Colorado agencies are generally not eligible applicants, although program staff have discretion to allow state agencies to apply in certain limited circumstances."
+    },
+    {
+      "item": "Covered Entities (Section 37-60-126, C.R.S.) are eligible only if they have adopted an approved water conservation plan",
+      "quote": "Covered Entities as defined in Section 37-60-126, C.R.S., are eligible if the applicant has adopted an approved water conservation plan."
+    },
+    {
+      "item": "Provide at least a 25 percent match",
+      "quote": "A minimum of 25 percent match is required for all TAFC Grants."
+    },
+    {
+      "item": "No more than half (12.5 percent) of the total match may be in-kind services",
+      "quote": "no more than half (12.5 percent) of total match may be in the form of in-kind services."
+    },
+    {
+      "item": "Contact the CWCB to discuss the potential project before applying",
+      "quote": "Prior to submitting an application, interested parties must contact the CWCB to discuss potential projects."
+    },
+    {
+      "item": "Every TAFC grant must include preparing and submitting at least one federal grant application as a discrete task in its scope and budget",
+      "quote": "All TAFC grants awarded must include the preparation and submission of at least one federal grant application as a discrete task within the grant's scope and budget."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "Application form through the CWCB Loan and Grant Portal",
+      "userWrites": true,
+      "quote": "Application forms are available on the CWCB Loan and Grant Portal on the CWCB website"
+    },
+    {
+      "item": "Budget",
+      "userWrites": true,
+      "quote": "All grant applications must include a scope of work, budget, and project schedule."
+    },
+    {
+      "item": "Project schedule",
+      "userWrites": true,
+      "quote": "All grant applications must include a scope of work, budget, and project schedule."
+    },
+    {
+      "item": "At contracting: Insurance Certificate of Liability (some government entities excluded)",
+      "userWrites": false,
+      "quote": "Required contracting documents include, but are not limited to, the following: Insurance Certificate of Liability (some government entities excluded)"
+    },
+    {
+      "item": "At contracting: current W-9 form",
+      "userWrites": false,
+      "quote": "Current W-9 form"
+    },
+    {
+      "item": "At contracting: Electronic Funds Transfer authorization (preferred) or a current mailing address",
+      "userWrites": false,
+      "quote": "Electronic Funds Transfer authorization (preferred) or a current mailing address (in the event that a paper check is issued)"
+    },
+    {
+      "item": "At contracting: demonstration of an active federal Unique Entity Identifier (UEI)",
+      "userWrites": false,
+      "quote": "Demonstration of an active federal Unique Entity Identifier (UEI), so that CWCB can confirm an applicant's eligibility to receive federal funding"
+    }
+  ],
+  "libraryRequired": []
+}

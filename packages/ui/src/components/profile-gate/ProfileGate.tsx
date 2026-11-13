@@ -10,10 +10,12 @@ import {
   LuTriangleAlert,
 } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
+import { PROFILE_FIELD_MAX_LENGTH } from "../../common/api-client/user-profile-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import { useFocusTrap } from "../../hooks/use-focus-trap";
 import { SINGLE_STATE, stateNameFromCode } from "../../common/states";
 import { REGIONS } from "../../common/instance";
+import { useBranding } from "../../common/branding";
 import Button from "../ui/Button";
 import "./profile-gate.css";
 
@@ -27,6 +29,8 @@ const FIELDS: {
   key: FieldKey;
   label: string;
   placeholder: string;
+  /** WCAG 1.3.5 input purpose, where the HTML list has one (it has none for a department). */
+  autoComplete?: string;
   Icon: React.ComponentType<{ size?: number; "aria-hidden"?: boolean }>;
 }[] = [
   {
@@ -39,12 +43,14 @@ const FIELDS: {
     key: "organization",
     label: "Organization",
     placeholder: "e.g. City of Springfield",
+    autoComplete: "organization",
     Icon: LuBuilding2,
   },
   {
     key: "jobTitle",
     label: "Role / Title",
     placeholder: "e.g. Grants Manager",
+    autoComplete: "organization-title",
     Icon: LuBriefcase,
   },
 ];
@@ -83,6 +89,16 @@ export default function ProfileGate({ children }: ProfileGateProps) {
   const gating = !checking && needsProfile;
   // No onEscape: the gate is a hard block, so Escape must not dismiss it.
   const dialogRef = useFocusTrap<HTMLDivElement>({ isOpen: gating });
+  const { appName } = useBranding();
+
+  useEffect(() => {
+    if (!gating) return;
+    const previous = document.title;
+    document.title = `Complete your profile – ${appName}`;
+    return () => {
+      document.title = previous;
+    };
+  }, [gating, appName]);
 
   useEffect(() => {
     let active = true;
@@ -188,17 +204,17 @@ export default function ProfileGate({ children }: ProfileGateProps) {
           aria-labelledby="profile-gate-title"
           ref={dialogRef}
         >
-          <div className="profile-gate__panel">
-            <header className="profile-gate__header">
+          <div className="gw-modal profile-gate__panel">
+            <header className="gw-modal__header profile-gate__header">
               <span className="profile-gate__header-icon" aria-hidden="true">
                 <LuBuilding2 size={22} />
               </span>
-              <h2 className="profile-gate__title" id="profile-gate-title">
+              <h2 className="gw-modal__title profile-gate__title" id="profile-gate-title">
                 Complete your profile
               </h2>
             </header>
 
-            <div className="profile-gate__body">
+            <div className="gw-modal__body profile-gate__body">
               <p className="profile-gate__lead">
                 One-time setup. Tell us a little about where you work — this helps us
                 understand who&apos;s using GrantWell.
@@ -207,7 +223,7 @@ export default function ProfileGate({ children }: ProfileGateProps) {
               {/* The empty slot is the live region; the styled alert is inserted into it. */}
               <div role="alert">
                 {error && (
-                  <div className="profile-gate__alert">
+                  <div className="gw-alert gw-alert--urgent profile-gate__alert">
                     <LuTriangleAlert size={16} aria-hidden="true" />
                     <span>{error}</span>
                   </div>
@@ -215,7 +231,7 @@ export default function ProfileGate({ children }: ProfileGateProps) {
               </div>
 
               <form onSubmit={onSubmit} noValidate>
-                {FIELDS.map(({ key, label, placeholder, Icon }) => {
+                {FIELDS.map(({ key, label, placeholder, autoComplete, Icon }) => {
                   const showError = touched[key] && values[key].trim().length === 0;
                   const inputId = `gate-${key}`;
                   return (
@@ -240,6 +256,8 @@ export default function ProfileGate({ children }: ProfileGateProps) {
                             setTouched((prev) => ({ ...prev, [key]: true }))
                           }
                           placeholder={placeholder}
+                          autoComplete={autoComplete}
+                          maxLength={PROFILE_FIELD_MAX_LENGTH}
                           required
                           aria-invalid={showError}
                           aria-describedby={showError ? `${inputId}-err` : undefined}
@@ -329,7 +347,6 @@ export default function ProfileGate({ children }: ProfileGateProps) {
                 <Button
                   type="submit"
                   loading={saving}
-                  disabled={!allFilled}
                   fullWidth
                 >
                   <span className="profile-gate__submit-content">

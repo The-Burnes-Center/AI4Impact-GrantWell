@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useDraftsClient } from "../../hooks/use-drafts-client";
 import { useDraftSave } from "../../hooks/use-draft-save";
@@ -17,11 +17,12 @@ import ProjectBasics from "./ProjectBasics";
 import QuickQuestionnaire from "./QuickQuestionnaire";
 import SectionEditor from "./SectionsEditor";
 import ReviewApplication from "./ReviewApplication";
-import UploadDocuments, { type StepLeaveGuard } from "./UploadDocuments";
+import UploadDocuments from "./UploadDocuments";
 import WelcomeModal from "./components/WelcomeModal";
 import GrantPickerModal, { type PickedGrant } from "../../components/common/GrantPickerModal";
 import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
 import ProgressStepper from "../../components/document-editor/ProgressStepper";
+import { LiveStatus } from "../../components/common/LiveStatus";
 import { getCurrentUser } from "aws-amplify/auth";
 import type { DocumentDraft } from "../../common/api-client/drafts-client";
 import type { DocumentData } from "../../common/types/document";
@@ -42,29 +43,45 @@ const useDocumentStorage = (nofoId: string | null) => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("Loading application...");
   const [error, setError] = useState<string | null>(null);
+  const [notFound, setNotFound] = useState(false);
   const { sessionId } = useParams();
+  const [searchParams] = useSearchParams();
   const draftsClient = useDraftsClient();
+  const nofoIdRef = useRef(nofoId);
+  nofoIdRef.current = nofoId;
+  const openedStepRef = useRef(searchParams.get("step"));
 
   const loadDocument = useCallback(async () => {
-    if (!nofoId || !sessionId) return;
+    if (!sessionId) return;
     setIsLoading(true);
     setError(null);
+    setNotFound(false);
     setLoadingMessage("Loading application...");
 
     try {
       const username = (await getCurrentUser()).username;
       if (username) {
-        const draft = await draftsClient.waitForDraft({
-          sessionId,
-          userId: username,
-          onProgress: (message: string, attempt: number) => {
-            setLoadingMessage(message);
-            if (attempt === 15) setLoadingMessage("Draft generation is taking longer than expected. Please wait...");
-            if (attempt === 30) setLoadingMessage("Draft generation is still in progress. This may take up to 2 minutes...");
-          },
-        });
+        // Rows are created before the editor opens, so only a failed read is worth polling for.
+        let draft: DocumentDraft | null;
+        try {
+          draft = await draftsClient.getDraft({ sessionId, userId: username });
+        } catch {
+          draft = await draftsClient.waitForDraft({
+            sessionId,
+            userId: username,
+            onProgress: (message: string, attempt: number) => {
+              setLoadingMessage(message);
+              if (attempt === 15) setLoadingMessage("Draft generation is taking longer than expected. Please wait...");
+              if (attempt === 30) setLoadingMessage("Draft generation is still in progress. This may take up to 2 minutes...");
+            },
+          });
+        }
 
-        if (draft) {
+        const openedStep = openedStepRef.current;
+        if (!draft && openedStep && stepToIndex(openedStep) > 0) {
+          setLoadedDraft(null);
+          setNotFound(true);
+        } else if (draft) {
           // Cache wins: it holds edits whose save was still pending at exit.
           const cachedSections = readDraftCache<Record<string, string>>(sessionId, "sections");
           setDocumentData({
@@ -77,7 +94,7 @@ const useDocumentStorage = (nofoId: string | null) => {
           });
           setLoadedDraft(draft);
         } else {
-          setDocumentData({ id: sessionId, nofoId, sections: {}, lastModified: new Date().toISOString() });
+          setDocumentData({ id: sessionId, nofoId: nofoIdRef.current ?? "", sections: {}, lastModified: new Date().toISOString() });
           setLoadedDraft(null);
         }
       }
@@ -87,11 +104,11 @@ const useDocumentStorage = (nofoId: string | null) => {
     } finally {
       setIsLoading(false);
     }
-  }, [nofoId, sessionId, draftsClient]);
+  }, [sessionId, draftsClient]);
 
   useEffect(() => { loadDocument(); }, [loadDocument]);
 
-  return { documentData, setDocumentData, loadedDraft, isLoading, loadingMessage, error, setError };
+  return { documentData, setDocumentData, loadedDraft, isLoading, loadingMessage, error, setError, notFound };
 };
 
 const DocumentEditor: React.FC = () => {
@@ -101,11 +118,14 @@ const DocumentEditor: React.FC = () => {
   const [isNofoLoading, setIsNofoLoading] = useState(false);
   const [welcomeModalOpen, setWelcomeModalOpen] = useState(false);
   const [grantPickerOpen, setGrantPickerOpen] = useState(false);
+  const [startingDraft, setStartingDraft] = useState(false);
   const [activeJobId, setActiveJobId] = useState<string | undefined>(undefined);
   const [isGeneratingDraft, setIsGeneratingDraft] = useState(false);
   const navigate = useNavigate();
-  const stepLeaveGuardRef = useRef<StepLeaveGuard | null>(null);
+  const location = useLocation();
   const stepRestoredForRef = useRef<string | null>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const { sessionId } = useParams();
   const [searchParams] = useSearchParams();
 
@@ -113,7 +133,7 @@ const DocumentEditor: React.FC = () => {
   const draftsClient = useDraftsClient();
   const startDraft = useStartDraft();
 
-  const { documentData, setDocumentData, loadedDraft, isLoading, loadingMessage, error, setError } =
+  const { documentData, setDocumentData, loadedDraft, isLoading, loadingMessage, error, setError, notFound } =
     useDocumentStorage(selectedNofo);
 
   const draftSave = useDraftSave({
@@ -126,6 +146,23 @@ const DocumentEditor: React.FC = () => {
   useEffect(() => {
     if (loadedDraft !== undefined) setBaseline(loadedDraft);
   }, [loadedDraft, setBaseline]);
+
+  useEffect(() => {
+    if (!selectedNofo && loadedDraft?.documentIdentifier) setSelectedNofo(loadedDraft.documentIdentifier);
+  }, [selectedNofo, loadedDraft]);
+
+  // Covers opening Review straight from a link; navigating there saves it already.
+  const reviewStatusSavedRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (currentStep !== "reviewApplication" || !sessionId || loadedDraft?.sessionId !== sessionId) return;
+    if (Object.keys(loadedDraft.sections || {}).length === 0) return;
+    if (reviewStatusSavedRef.current === sessionId) return;
+    reviewStatusSavedRef.current = sessionId;
+    if (loadedDraft.status === "reviewing" || loadedDraft.status === "submitted") return;
+    saveFields({ status: "reviewing" }, { source: "status_change", immediate: true }).catch((err: unknown) =>
+      console.error("Could not save the review status:", err)
+    );
+  }, [currentStep, sessionId, loadedDraft, saveFields]);
 
   useEffect(() => { sweepLegacyDraftCache(); }, []);
 
@@ -207,13 +244,14 @@ const DocumentEditor: React.FC = () => {
     if (!selectedNofo) return;
     setIsNofoLoading(true);
     apiClient.landingPage
-      .getNOFOSummary(selectedNofo)
-      .then((result) => setNofoName(result?.data?.GrantName || "Write Application"))
-      .catch(() => setNofoName("Write Application"))
+      .getNOFOSummary(selectedNofo, { forApplication: true })
+      .then((result) => setNofoName(result?.data?.GrantName || "Write application"))
+      .catch(() => setNofoName("Write application"))
       .finally(() => setIsNofoLoading(false));
   }, [selectedNofo, apiClient]);
 
   const startNewDocument = useCallback(async (nofo: string) => {
+    setStartingDraft(true);
     try {
       const url = await startDraft(nofo);
       setCurrentStep("projectBasics");
@@ -221,12 +259,14 @@ const DocumentEditor: React.FC = () => {
     } catch (err) {
       console.error("Failed to start new document:", err);
       setError(ERROR_MESSAGES.START_FAILED);
+    } finally {
+      setStartingDraft(false);
+      setGrantPickerOpen(false);
     }
   }, [startDraft, navigate, setError]);
 
   const handleGrantPicked = useCallback(async (grant: PickedGrant) => {
     addToRecentlyViewed(grant);
-    setGrantPickerOpen(false);
     await startNewDocument(grant.value);
   }, [startNewDocument]);
 
@@ -256,6 +296,7 @@ const DocumentEditor: React.FC = () => {
         { status: stepToStatus(step) },
         { source: "status_change", immediate: true }
       );
+      if (step === "reviewApplication") reviewStatusSavedRef.current = sessionId ?? null;
       setCurrentStep(step);
       recordStepReached(step);
       go();
@@ -266,16 +307,8 @@ const DocumentEditor: React.FC = () => {
   }, [documentData, selectedNofo, sessionId, saveFields, navigate, setError, recordStepReached]);
 
   const navigateToStep = useCallback((step: string) => {
-    const blocked = stepLeaveGuardRef.current?.(step, () => {
-      void performStepNavigation(step);
-    });
-    if (blocked) return;
     void performStepNavigation(step);
   }, [performStepNavigation]);
-
-  const registerStepLeaveGuard = useCallback((guard: StepLeaveGuard | null) => {
-    stepLeaveGuardRef.current = guard;
-  }, []);
 
   const handleUpdateData = useCallback((data: Partial<DocumentData>) => {
     setDocumentData((prev) => (prev ? { ...prev, ...data } : prev));
@@ -294,7 +327,7 @@ const DocumentEditor: React.FC = () => {
       case "questionnaire":
         return <QuickQuestionnaire onContinue={() => navigateToStep("uploadDocuments")} selectedNofo={selectedNofo} onNavigate={navigateToStep} documentData={documentData} onUpdateData={handleUpdateData} saveStatus={draftSave.saveStatus} lastSavedAt={draftSave.lastSavedAt} onRetrySave={draftSave.retry} />;
       case "uploadDocuments":
-        return <UploadDocuments selectedNofo={selectedNofo} onNavigate={navigateToStep} onNavigateToEditor={navigateToSectionEditor} sessionId={sessionId || ""} documentData={documentData} draftSave={draftSave} onRegisterLeaveGuard={registerStepLeaveGuard} />;
+        return <UploadDocuments selectedNofo={selectedNofo} onNavigate={navigateToStep} onNavigateToEditor={navigateToSectionEditor} sessionId={sessionId || ""} documentData={documentData} draftSave={draftSave} />;
       case "sectionEditor":
         return <SectionEditor onContinue={() => navigateToStep("reviewApplication")} selectedNofo={selectedNofo} sessionId={sessionId || ""} activeJobId={activeJobId} isGenerating={isGeneratingDraft} draftSave={draftSave} />;
       case "reviewApplication":
@@ -305,28 +338,68 @@ const DocumentEditor: React.FC = () => {
   };
 
   const activeStep = stepToIndex(currentStep);
+  // Until the new draft has loaded there is no form to fill in, so the loading view stands in for it.
+  const showLoading = isLoading || startingDraft || (!!sessionId && loadedDraft === undefined);
+  const waitMessage = startingDraft ? "Starting application..." : loadingMessage;
+  const draftsPath = selectedNofo
+    ? `/document-editor/drafts?grant=${encodeURIComponent(selectedNofo)}`
+    : "/document-editor/drafts";
 
-  if (error) {
+  // WCAG 2.4.11: the header wraps on long grant names, so the stepper's offset
+  // and the page's scroll padding follow the pinned bars' real heights.
+  useEffect(() => {
+    const root = rootRef.current;
+    const header = headerRef.current;
+    if (!root || !header) return;
+    const stepper = root.querySelector<HTMLElement>(".progress-stepper-container");
+    const pinnedHeight = (el: HTMLElement | null) =>
+      el && getComputedStyle(el).position === "sticky" ? el.offsetHeight : 0;
+    const update = () => {
+      root.style.setProperty("--gw-editor-header-height", `${header.offsetHeight}px`);
+      document.documentElement.style.setProperty(
+        "--gw-editor-sticky-height",
+        `${pinnedHeight(header) + pinnedHeight(stepper)}px`
+      );
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(header);
+    if (stepper) observer.observe(stepper);
+    window.addEventListener("resize", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+      document.documentElement.style.removeProperty("--gw-editor-sticky-height");
+    };
+  }, [welcomeModalOpen, grantPickerOpen, error]);
+
+  if (notFound) {
     return (
-      <div className="checklist-error" style={{ padding: 40 }}>
-        <h2 className="checklist-error__title">Error</h2>
-        <p className="checklist-error__text">{error}</p>
-        <button className="checklist-error__btn" onClick={() => window.location.reload()}>Retry</button>
+      <div style={{ maxWidth: "560px", margin: "0 auto", padding: "48px 16px", lineHeight: 1.5 }}>
+        <h1 style={{ fontSize: "1.75rem", marginBottom: "12px" }}>Application not found</h1>
+        <p>This application doesn&apos;t exist. It may have been deleted.</p>
+        <p>
+          <Link to="/document-editor/drafts" style={{ color: "var(--gw-color-primary)", fontWeight: 600 }}>
+            Go to My applications
+          </Link>
+        </p>
       </div>
     );
   }
 
+  if (error) return <EditorError message={error} />;
+
   return (
-    <div className="document-editor-root" style={{ display: "flex", alignItems: "stretch", flex: "1 0 auto", width: "100%", margin: 0, padding: 0 }}>
+    <div ref={rootRef} className="document-editor-root" style={{ display: "flex", alignItems: "stretch", flex: "1 0 auto", width: "100%", margin: 0, padding: 0 }}>
       <UnifiedNavigation documentIdentifier={selectedNofo} currentStep={currentStep} furthestStepIndex={furthestStepIndex} onNavigate={navigateToStep} />
 
       <div className="document-content" style={{ flex: 1, display: "flex", flexDirection: "column", margin: 0, padding: 0 }}>
-        {!welcomeModalOpen && (
+        {!welcomeModalOpen && !grantPickerOpen && (
           <>
-            <div className="document-editor-header" style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", position: "sticky", top: 0, zIndex: 101, boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
+            <div ref={headerRef} className="document-editor-header" style={{ background: "var(--gw-color-surface)", borderBottom: "1px solid var(--gw-color-border)", position: "sticky", top: 0, zIndex: 101, boxShadow: "var(--gw-shadow-low)" }}>
               <div style={{ padding: 16 }}>
-                <h1 className="document-editor-nofo-title" style={{ margin: 0, fontSize: "22px", fontWeight: 600, lineHeight: 1.4, wordBreak: "break-word" }}>
-                  {isNofoLoading ? "Loading..." : nofoName || "Write Application"}
+                <h1 className="document-editor-nofo-title" style={{ margin: 0, fontSize: "22px", lineHeight: 1.4, wordBreak: "break-word" }}>
+                  {isNofoLoading ? "Loading..." : nofoName || "Write application"}
                 </h1>
               </div>
             </div>
@@ -341,23 +414,23 @@ const DocumentEditor: React.FC = () => {
                 return false;
               }}
               onStepClick={(idx) => navigateToStep(EDITOR_STEPS[idx].id)}
-              completedSteps={Array.from({ length: activeStep }, (_, i) => i)}
+              completedSteps={Array.from({ length: furthestStepIndex }, (_, i) => i)}
               showProgress
             />
 
-            <div className="document-editor-workspace" style={{ flex: 1, padding: 20 }}>
+            <div className="document-editor-workspace" style={{ flex: 1 }}>
               {/* Outlives the loading view, so both the wait and its end are announced. */}
-              <div role="status" aria-live="polite" className="visually-hidden">
-                {isLoading ? loadingMessage : documentData ? "Application ready." : ""}
-              </div>
+              <LiveStatus className="visually-hidden">
+                {isLoading || startingDraft ? waitMessage : documentData ? "Application ready." : ""}
+              </LiveStatus>
 
-              {isLoading ? (
+              {showLoading ? (
                 <div id="document-loading-region" aria-busy="true" tabIndex={-1} style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "60vh" }}>
                   <div style={{ textAlign: "center", maxWidth: 400 }}>
                     <div className="loading-spinner" style={{ margin: "0 auto 16px" }} />
-                    <p style={{ color: "#5a6169", fontSize: 16, marginBottom: 8 }}>{loadingMessage}</p>
+                    <p style={{ color: "var(--gw-color-text-secondary)", fontSize: 16, marginBottom: 8 }}>{waitMessage}</p>
                     {loadingMessage.includes("generation") && (
-                      <p style={{ color: "#6b7280", fontSize: 14, marginTop: 8 }}>This may take 30-60 seconds. Please don&apos;t close this page.</p>
+                      <p style={{ color: "var(--gw-color-text-muted)", fontSize: 14, marginTop: 8 }}>This may take 30-60 seconds. Please don&apos;t close this page.</p>
                     )}
                   </div>
                 </div>
@@ -371,7 +444,11 @@ const DocumentEditor: React.FC = () => {
 
       <WelcomeModal
         isOpen={welcomeModalOpen}
-        onClose={() => setWelcomeModalOpen(false)}
+        onClose={() => {
+          // There is no draft behind this modal yet, so closing it leaves the page.
+          if (location.key !== "default") navigate(-1);
+          else navigate(draftsPath);
+        }}
         onGetStarted={() => {
           setWelcomeModalOpen(false);
           if (selectedNofo) startNewDocument(selectedNofo);
@@ -379,7 +456,7 @@ const DocumentEditor: React.FC = () => {
         }}
         onViewDrafts={() => {
           setWelcomeModalOpen(false);
-          navigate(selectedNofo ? `/document-editor/drafts?grant=${encodeURIComponent(selectedNofo)}` : "/document-editor/drafts");
+          navigate(draftsPath);
         }}
       />
       <GrantPickerModal
@@ -391,9 +468,23 @@ const DocumentEditor: React.FC = () => {
         onSelect={handleGrantPicked}
         title="Start a new application"
         description="Choose the grant you want to apply for."
+        busy={startingDraft}
       />
     </div>
   );
 };
 
 export default DocumentEditor;
+
+/** Replaces the whole editor, so it takes focus (the control that had it is gone) and is the page's h1. */
+function EditorError({ message }: { message: string }) {
+  const title = useRef<HTMLHeadingElement>(null);
+  useEffect(() => title.current?.focus(), []);
+  return (
+    <div className="checklist-error" style={{ padding: 40 }}>
+      <h1 ref={title} tabIndex={-1} className="checklist-error__title">Error</h1>
+      <p className="checklist-error__text">{message}</p>
+      <button className="gw-btn gw-btn--primary checklist-error__btn" onClick={() => window.location.reload()}>Retry</button>
+    </div>
+  );
+}

@@ -17,14 +17,7 @@ describe("palette", () => {
       accent: "#001970",
       accentHover: "#00155F",
     });
-    expect(derivedTints("#001970")).toEqual({
-      "--gw-color-primary-deep": "#001457",
-      "--gw-color-primary-border": "#BFC6DB",
-      "--gw-color-primary-muted": "#1A2652",
-      "--gw-color-primary-alt": "#00186C",
-      "--gw-color-primary-soft": "#808CB8",
-      "--gw-color-primary-mid": "#405394",
-    });
+    expect(derivedTints("#001970")).toEqual({ "--gw-color-primary-border": "#BFC6DB" });
     expect(findContrastFailures({ primary: "#001970" })).toEqual([]);
   });
 

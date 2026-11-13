@@ -80,14 +80,14 @@ export const AccessDeniedProvider = ({
           <div className="modal-actions">
             <button
               type="button"
-              className="modal-button secondary"
+              className="gw-btn gw-btn--secondary modal-button secondary"
               onClick={hideAccessDenied}
             >
               Close
             </button>
             <button
               type="button"
-              className="modal-button primary"
+              className="gw-btn gw-btn--primary modal-button primary"
               onClick={handleCta}
             >
               {payload?.cta?.label || "Go back to home"}

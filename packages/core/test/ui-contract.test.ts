@@ -103,3 +103,12 @@ describe("UI routes", () => {
     expect(routes).toEqual([...APP_ROUTES].sort());
   });
 });
+
+describe("email logo", () => {
+  it("points the digest at the PNG the UI build writes", async () => {
+    const { EMAIL_LOGO_PNG_PATH } = await import("../lib/user-interface/image-size");
+    const plugin = fs.readFileSync(path.resolve(here, "..", "..", "ui", "vite", "email-logo.ts"), "utf8");
+    expect(plugin).toContain(`export const EMAIL_LOGO_PATH = "${EMAIL_LOGO_PNG_PATH}";`);
+    expect(fs.readFileSync(path.resolve(here, "..", "..", "ui", "vite.config.ts"), "utf8")).toContain("emailLogo(stagedInstancePath)");
+  });
+});

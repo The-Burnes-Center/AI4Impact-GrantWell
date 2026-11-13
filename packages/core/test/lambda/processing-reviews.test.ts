@@ -291,3 +291,28 @@ describe("POST /admin/processing-reviews/close-expired", () => {
     expect(ddb.calls()).toHaveLength(0);
   });
 });
+
+describe("GET /admin/processing-metrics", () => {
+  const metrics = async (handler: any, opts = {}) => handler(event("GET", "/admin/processing-metrics", opts));
+
+  it("refuses a state admin on a multi-state site before counting anything", async () => {
+    serve();
+    const res = await metrics(await load(), { state: "MA" });
+    expect(res.statusCode).toBe(403);
+    expect(ddb.calls()).toHaveLength(0);
+  });
+
+  it("counts for a Developer, a platform admin, and a single-state site's admin", async () => {
+    serve();
+    const callers: [Record<string, string>, { roles?: string[]; state?: string }][] = [
+      [{}, { roles: ["Developer"] }],
+      [{}, { roles: ["PlatformAdmin"] }],
+      [{ SINGLE_STATE: "MA" }, { state: "MA" }],
+    ];
+    for (const [env, opts] of callers) {
+      const res = await metrics(await load(env), opts);
+      expect(res.statusCode).toBe(200);
+      expect(JSON.parse(res.body)).toHaveProperty("metrics.pendingCount");
+    }
+  });
+});

@@ -94,13 +94,19 @@ def convert_legacy_session(user_id, session_id, header):
     return entries
 
 
-def add_session(session_id, user_id, chat_history, title, new_chat_entry, document_identifier):
+def add_session(session_id, user_id, chat_history, title, new_chat_entry, document_identifier, document_keys=None):
     try:
         entries = flatten_entries(new_chat_entry) if new_chat_entry else flatten_entries(chat_history)
         stale = [item['session_id'] for item in query_turns(user_id, session_id, keys_only=True)
                  if int(item['session_id'].rsplit(TURN_MARKER, 1)[1]) > len(entries)]
         delete_turn_items(user_id, stale)
         write_turns(user_id, session_id, entries, 1)
+        # A selection saved before the header was written survives it. A new chat starts with an
+        # empty one, which is what tells it apart from a pre-library chat (no document_keys at all).
+        existing = table.get_item(
+            Key={'user_id': user_id, 'session_id': session_id}, ProjectionExpression='document_keys'
+        ).get('Item') or {}
+        selection = existing['document_keys'] if 'document_keys' in existing else (document_keys or [])
         table.put_item(Item={
             'user_id': user_id,
             'session_id': session_id,
@@ -108,6 +114,7 @@ def add_session(session_id, user_id, chat_history, title, new_chat_entry, docume
             "time_stamp": str(datetime.now()),
             'document_identifier': document_identifier,
             'turn_count': len(entries),
+            'document_keys': selection,
         })
         return {
             'statusCode': 200,
@@ -261,6 +268,33 @@ def update_session(session_id, user_id, new_chat_entry, title=None, document_ide
             'error': str(general_error),
             'body': 'An unexpected error occurred while updating the session.'
         }
+
+def _json(status, body):
+    return {'statusCode': status, 'headers': {'Access-Control-Allow-Origin': '*'}, 'body': json.dumps(body)}
+
+
+def get_document_keys(session_id, user_id):
+    """The chat's selected library documents. null with exists=true is a chat from before the
+    library, which reads its grant's old folder; exists=false is a chat not saved yet (a new one)."""
+    item = table.get_item(
+        Key={'user_id': user_id, 'session_id': session_id}, ProjectionExpression='document_keys, session_id'
+    ).get('Item')
+    if not item:
+        return _json(200, {'document_keys': None, 'exists': False})
+    return _json(200, {'document_keys': item.get('document_keys'), 'exists': True})
+
+
+def set_document_keys(session_id, user_id, document_keys, owner):
+    """Store the selection, creating a bare header if the chat isn't saved yet; add_session keeps it."""
+    keys = [k for k in dict.fromkeys(document_keys)
+            if isinstance(k, str) and k.startswith(f"{owner}/") and not any(s in ('.', '..') for s in k.split('/'))]
+    table.update_item(
+        Key={'user_id': user_id, 'session_id': session_id},
+        UpdateExpression='SET document_keys = :k',
+        ExpressionAttributeValues={':k': keys},
+    )
+    return _json(200, {'document_keys': keys})
+
 
 # Turns go first so a failed delete leaves the chat listed and the user can retry.
 def delete_session(session_id, user_id):
@@ -416,11 +450,13 @@ def lambda_handler(event, context):
         request_context = event.get('requestContext') or {}
         is_apigw_invocation = bool(request_context)
         authenticated_user_id = None
+        document_owner = None
         if is_apigw_invocation:
             try:
-                authenticated_user_id = (
-                    request_context['authorizer']['jwt']['claims']['sub']
-                )
+                claims = request_context['authorizer']['jwt']['claims']
+                authenticated_user_id = claims['sub']
+                # Library keys start with the Cognito username, which can differ from sub.
+                document_owner = claims.get('cognito:username') or claims.get('username') or authenticated_user_id
             except (KeyError, TypeError):
                 return {
                     'statusCode': 401,
@@ -456,7 +492,11 @@ def lambda_handler(event, context):
 
         # Route to appropriate operation handler
         if operation == 'add_session':
-            return add_session(session_id, user_id, chat_history, title, new_chat_entry, document_identifier)
+            return add_session(session_id, user_id, chat_history, title, new_chat_entry, document_identifier, request.document_keys)
+        elif operation == 'get_document_keys':
+            return get_document_keys(session_id, user_id)
+        elif operation == 'set_document_keys':
+            return set_document_keys(session_id, user_id, request.document_keys, document_owner or user_id)
         elif operation == 'get_session':
             return get_session(session_id, user_id, request.cursor, request.limit or PAGE_TURNS)
         elif operation == 'update_session':

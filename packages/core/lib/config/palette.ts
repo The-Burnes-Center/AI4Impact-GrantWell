@@ -54,16 +54,11 @@ export function resolvePalette(colors: BrandColors): Required<BrandColors> {
   };
 }
 
-/** tokens.css's extra primary tints, derived for a non-default primary; undefined keeps tokens.css's own. */
+/** tokens.css's primary tint for tinted-panel borders, derived for a non-default primary; undefined keeps tokens.css's own. */
 export function derivedTints(primary: string): Record<string, string> | undefined {
   if (same(primary, DEFAULT_COLORS.primary)) return undefined;
   return {
-    "--gw-color-primary-deep": mix(primary, "#000000", 0.22),
     "--gw-color-primary-border": mix(primary, "#FFFFFF", 0.75),
-    "--gw-color-primary-muted": mix(primary, "#333333", 0.5),
-    "--gw-color-primary-alt": mix(primary, "#000000", 0.04),
-    "--gw-color-primary-soft": mix(primary, "#FFFFFF", 0.5),
-    "--gw-color-primary-mid": mix(primary, "#FFFFFF", 0.25),
   };
 }
 

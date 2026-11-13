@@ -1,7 +1,7 @@
 import React from "react";
 import { LuCheck, LuX, LuRefreshCw, LuUpload, LuTriangleAlert } from "react-icons/lu";
 
-type ReviewSource = "pipeline" | "dlq" | "duplicate" | "quality";
+type ReviewSource = "pipeline" | "dlq" | "duplicate" | "quality" | "verification";
 
 interface ReviewActionsProps {
   actionInProgress: string | null;
@@ -9,12 +9,17 @@ interface ReviewActionsProps {
   canApprove: boolean;
   status: string;
   source?: ReviewSource;
+  /** The admin guidance's reason, e.g. "unverified_items". */
+  reason?: string;
+  /** Every failing item is the grant's text itself, which couldn't be read. */
+  unreadableText?: boolean;
+  /** The grant's published version stays live, so rejecting drops only this new version. */
+  keepsLive?: boolean;
   onApprove: () => void;
   onReject: () => void;
   onReprocess: () => void;
   onReupload: () => void;
   onNeedsReupload: () => void;
-  rejectDisabled?: boolean;
 }
 
 /**
@@ -26,8 +31,13 @@ type RecommendedAction = "approve" | "reupload" | "reject" | "reprocess";
 
 function recommendedAction(
   source: ReviewSource | undefined,
-  canApprove: boolean
+  canApprove: boolean,
+  reason: string | undefined,
+  unreadableText: boolean
 ): RecommendedAction {
+  if (reason === "unverified_items" && unreadableText) return "reupload";
+  // Reprocessing rarely fixes an item the grant doesn't support; the admin's check does.
+  if (reason === "unverified_items" && canApprove) return "approve";
   if (source === "duplicate") return "reject";
   if (source === "quality") return "reupload";
   if (source === "dlq" || source === "pipeline") return "reprocess";
@@ -41,14 +51,21 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
   canApprove,
   status,
   source,
+  reason,
+  unreadableText = false,
+  keepsLive = false,
   onApprove,
   onReject,
   onReprocess,
   onReupload,
   onNeedsReupload,
-  rejectDisabled = false,
 }) => {
   const busy = actionInProgress !== null;
+  // aria-disabled, not disabled, while an action runs: the button pressed keeps keyboard focus.
+  // Accessible names start with the visible (busy) label so SC 2.5.3 holds while an action runs.
+  const rejectLabel = actionInProgress === "reject" ? "Rejecting..." : keepsLive ? "Reject new version" : "Reject";
+  const rejectPurpose = keepsLive ? "the published version stays live" : "reject this grant";
+  const reprocessLabel = actionInProgress === "reprocess" ? "Reprocessing..." : "Reprocess";
 
   // needs_reupload is a terminal holding state: the only meaningful moves are
   // supplying the new document or abandoning the entry.
@@ -57,28 +74,28 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
     return (
       <div className="review-expanded-row__actions">
         <button
-          className="review-btn review-btn--approve review-btn--recommended"
-          onClick={onReupload}
-          disabled={busy}
+          className="gw-btn gw-btn--primary review-btn review-btn--approve review-btn--recommended"
+          onClick={() => !busy && onReupload()}
+          aria-disabled={busy || undefined}
           aria-label={`${reuploadDocLabel} — upload the correct grant document (recommended)`}
         >
           <LuUpload size={14} aria-hidden="true" />
           {reuploadDocLabel}
         </button>
         <button
-          className="review-btn review-btn--reject"
-          onClick={onReject}
-          disabled={busy || rejectDisabled}
-          aria-label={rejectDisabled ? "Reject this grant (admin notes required)" : "Reject this grant"}
+          className="gw-btn gw-btn--danger review-btn review-btn--reject"
+          onClick={() => !busy && onReject()}
+          aria-disabled={busy || undefined}
+          aria-label={`${rejectLabel} — ${rejectPurpose}`}
         >
           <LuX size={14} aria-hidden="true" />
-          {actionInProgress === "reject" ? "Rejecting..." : "Reject"}
+          {rejectLabel}
         </button>
       </div>
     );
   }
 
-  const recommended = recommendedAction(source, canApprove);
+  const recommended = recommendedAction(source, canApprove, reason, unreadableText);
   // Recommendation is a color-only cue visually, so name it for assistive tech too.
   const rec = (action: RecommendedAction, label: string) =>
     recommended === action ? `${label} (recommended)` : label;
@@ -88,15 +105,15 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
     actionInProgress === "approve"
       ? "Publishing..."
       : hasCorrections
-        ? "Approve with Edits"
-        : "Approve As-Is";
+        ? "Approve with edits"
+        : "Approve as is";
 
   const approveBtn = canApprove ? (
     <button
       key="approve"
-      className={`review-btn review-btn--approve ${recommended === "approve" ? "review-btn--recommended" : ""}`}
-      onClick={onApprove}
-      disabled={busy}
+      className={`gw-btn ${recommended && recommended !== "approve" ? "gw-btn--secondary" : "gw-btn--primary"} review-btn review-btn--approve ${recommended === "approve" ? "review-btn--recommended" : ""}`}
+      onClick={() => !busy && onApprove()}
+      aria-disabled={busy || undefined}
       aria-label={rec("approve", `${approveLabel} — publish this grant`)}
     >
       <LuCheck size={14} aria-hidden="true" />
@@ -104,14 +121,14 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
     </button>
   ) : null;
 
-  const reuploadLabel = actionInProgress === "reupload" ? "Uploading..." : "Re-upload Grant Document";
+  const reuploadLabel = actionInProgress === "reupload" ? "Uploading..." : "Re-upload grant document";
 
   const reuploadBtn = (
     <button
       key="reupload"
-      className={`review-btn ${recommended === "reupload" ? "review-btn--approve review-btn--recommended" : "review-btn--secondary"}`}
-      onClick={onReupload}
-      disabled={busy}
+      className={`gw-btn ${recommended === "reupload" ? "gw-btn--primary" : "gw-btn--secondary"} review-btn ${recommended === "reupload" ? "review-btn--approve review-btn--recommended" : "review-btn--secondary"}`}
+      onClick={() => !busy && onReupload()}
+      aria-disabled={busy || undefined}
       aria-label={rec("reupload", `${reuploadLabel} — upload a replacement grant document`)}
     >
       <LuUpload size={14} aria-hidden="true" />
@@ -122,30 +139,30 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
   const reprocessBtn = (
     <button
       key="reprocess"
-      className={`review-btn ${recommended === "reprocess" ? "review-btn--approve review-btn--recommended" : "review-btn--reprocess"}`}
-      onClick={onReprocess}
-      disabled={busy}
-      aria-label={rec("reprocess", "Reprocess this grant through the pipeline")}
+      className={`gw-btn ${recommended === "reprocess" ? "gw-btn--primary" : "gw-btn--secondary"} review-btn ${recommended === "reprocess" ? "review-btn--approve review-btn--recommended" : "review-btn--reprocess"}`}
+      onClick={() => !busy && onReprocess()}
+      aria-disabled={busy || undefined}
+      aria-label={rec("reprocess", `${reprocessLabel} — reprocess this grant through the pipeline`)}
     >
       <LuRefreshCw
         size={14}
         className={actionInProgress === "reprocess" ? "refresh-icon" : ""}
         aria-hidden="true"
       />
-      {actionInProgress === "reprocess" ? "Reprocessing..." : "Reprocess"}
+      {reprocessLabel}
     </button>
   );
 
   const rejectBtn = (
     <button
       key="reject"
-      className={`review-btn ${recommended === "reject" ? "review-btn--reject review-btn--recommended" : "review-btn--reject"}`}
-      onClick={onReject}
-      disabled={busy || rejectDisabled}
-      aria-label={rejectDisabled ? "Reject this grant (admin notes required)" : rec("reject", "Reject this grant")}
+      className={`gw-btn gw-btn--danger review-btn ${recommended === "reject" ? "review-btn--reject review-btn--recommended" : "review-btn--reject"}`}
+      onClick={() => !busy && onReject()}
+      aria-disabled={busy || undefined}
+      aria-label={rec("reject", `${rejectLabel} — ${rejectPurpose}`)}
     >
       <LuX size={14} aria-hidden="true" />
-      {actionInProgress === "reject" ? "Rejecting..." : "Reject"}
+      {rejectLabel}
     </button>
   );
 
@@ -154,9 +171,9 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
   const needsReuploadBtn = (
     <button
       key="needs_reupload"
-      className="review-btn review-btn--needs-reupload"
-      onClick={onNeedsReupload}
-      disabled={busy}
+      className="gw-btn gw-btn--secondary review-btn review-btn--needs-reupload"
+      onClick={() => !busy && onNeedsReupload()}
+      aria-disabled={busy || undefined}
       aria-label={`${needsReuploadLabel} — mark this grant as needing a new document upload`}
     >
       <LuTriangleAlert size={14} aria-hidden="true" />

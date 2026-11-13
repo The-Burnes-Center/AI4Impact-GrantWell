@@ -1,5 +1,5 @@
 /**
- * Nested stack holding the NOFO processing pipeline: the six Step Functions task Lambdas,
+ * Nested stack holding the NOFO processing pipeline: the seven Step Functions task Lambdas,
  * the state machine itself, the SQS dispatcher, the DLQ drain job and the admin review API
  * Lambda. Split out of the main app stack to stay under the 500-resource CloudFormation
  * limit.
@@ -69,6 +69,14 @@ export interface NofoPipelineStackProps extends cdk.NestedStackProps {
   readonly stackName: string;
 }
 
+function swapPolicy(grantBucketArn: string, artifactsBucketArn: string): iam.PolicyStatement {
+  return new iam.PolicyStatement({
+    effect: iam.Effect.ALLOW,
+    actions: ["s3:GetObjectVersion", "s3:DeleteObject"],
+    resources: [`${grantBucketArn}/*`, `${artifactsBucketArn}/*`],
+  });
+}
+
 export class NofoPipelineStack extends cdk.NestedStack {
   public readonly nofoProcessingStateMachine: sfn.StateMachine;
   public readonly nofoAdminFunction: lambda.Function;
@@ -100,6 +108,14 @@ export class NofoPipelineStack extends cdk.NestedStack {
     });
     extractTextFunction.addToRolePolicy(s3ReadWritePolicy(props.ffioNofosBucket.bucketArn));
     extractTextFunction.addToRolePolicy(s3ReadWritePolicy(artifactsBucketArn));
+    // Reads the exact staged version its run was started for (Textract reads with these permissions).
+    extractTextFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:GetObjectVersion"],
+        resources: [props.grantArtifactsBucket.arnForObjects("_pending/*")],
+      })
+    );
     extractTextFunction.addToRolePolicy(textractPolicy());
     extractTextFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
 
@@ -151,6 +167,86 @@ export class NofoPipelineStack extends cdk.NestedStack {
     });
     validateFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
 
+    const verifySummaryFunction = new lambda.Function(this, "VerifySummaryFunction", {
+      runtime: lambda.Runtime.NODEJS_24_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
+      handler: "verify-summary/index.handler",
+      layers: [props.jsSharedLayer],
+      environment: {
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
+        BUCKET: props.ffioNofosBucket.bucketName,
+        HAIKU_MODEL_ID: props.haikuNofoProfileArn,
+        SONNET_MODEL_ID: props.sonnetNofoProfileArn,
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+      },
+      timeout: cdk.Duration.minutes(15),
+      memorySize: 1024,
+      description: "Checks every requirement item against the grant before it can publish",
+    });
+    verifySummaryFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
+    verifySummaryFunction.addToRolePolicy(s3ReadOnlyPolicy(artifactsBucketArn));
+    verifySummaryFunction.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
+    verifySummaryFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:PutObject"],
+        resources: [props.grantArtifactsBucket.arnForObjects("*/requirements-citations.json")],
+      })
+    );
+    verifySummaryFunction.addToRolePolicy(bedrockInvokePolicy());
+
+    // Publish and the parent's summary editor invoke it by this name, so no stack references it.
+    const citeRequirementsName = `${props.stackName}-citeRequirementsFunction`;
+    const citeRequirementsArn = `arn:aws:lambda:${cdk.Stack.of(this).region}:${cdk.Stack.of(this).account}:function:${citeRequirementsName}`;
+    const citeRequirementsFunction = new lambda.Function(this, "CiteRequirementsFunction", {
+      functionName: citeRequirementsName,
+      runtime: lambda.Runtime.NODEJS_24_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
+      handler: "cite-requirements/index.handler",
+      layers: [props.jsSharedLayer],
+      environment: {
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
+        BUCKET: props.ffioNofosBucket.bucketName,
+        HAIKU_MODEL_ID: props.haikuNofoProfileArn,
+        // The live check ({verifyLive}) runs the same Sonnet meaning check as VerifySummary.
+        SONNET_MODEL_ID: props.sonnetNofoProfileArn,
+        NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+      },
+      timeout: cdk.Duration.minutes(15),
+      memorySize: 1024,
+      description: "Cites the grant passage behind each requirement on the Requirements page",
+    });
+    citeRequirementsFunction.configureAsyncInvoke({ retryAttempts: 1, maxEventAge: cdk.Duration.hours(1) });
+    citeRequirementsFunction.addToRolePolicy(s3ReadOnlyPolicy(artifactsBucketArn));
+    citeRequirementsFunction.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
+    citeRequirementsFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:PutObject"],
+        resources: [
+          props.grantArtifactsBucket.arnForObjects("*/requirements-citations.json"),
+          props.grantArtifactsBucket.arnForObjects("_verification/*"),
+        ],
+      })
+    );
+    citeRequirementsFunction.addToRolePolicy(bedrockInvokePolicy());
+    citeRequirementsFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["dynamodb:GetItem", "dynamodb:Query"],
+        resources: [props.nofoMetadataTable.tableArn, `${props.nofoMetadataTable.tableArn}/index/*`],
+      })
+    );
+    citeRequirementsFunction.addToRolePolicy(
+      new iam.PolicyStatement({ effect: iam.Effect.ALLOW, actions: ["lambda:InvokeFunction"], resources: [citeRequirementsArn] })
+    );
+    // 07:00 UTC, after the 06:30 search index rebuild. Also catches grants whose async call failed.
+    new events.Rule(this, "CiteRequirementsNightlyRule", {
+      schedule: events.Schedule.cron({ minute: "0", hour: "7" }),
+      description: "Cites requirements for grants whose citations are missing or stale",
+      targets: [new targets.LambdaFunction(citeRequirementsFunction, { event: events.RuleTargetInput.fromObject({ reconcile: true }) })],
+    });
+
     const publishFunction = new lambda.Function(this, "PublishFunction", {
       runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
@@ -161,12 +257,18 @@ export class NofoPipelineStack extends cdk.NestedStack {
         ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         SYNC_KB_FUNCTION_NAME: `${props.stackName}-syncKBFunction`,
+        CITE_REQUIREMENTS_FUNCTION_NAME: citeRequirementsName,
       },
       timeout: cdk.Duration.minutes(2),
       memorySize: 256,
     });
+    publishFunction.addToRolePolicy(
+      new iam.PolicyStatement({ effect: iam.Effect.ALLOW, actions: ["lambda:InvokeFunction"], resources: [citeRequirementsArn] })
+    );
     publishFunction.addToRolePolicy(s3ReadWritePolicy(props.ffioNofosBucket.bucketArn));
     publishFunction.addToRolePolicy(s3ReadWritePolicy(artifactsBucketArn));
+    // Swapping a staged version in, or putting the published one back (shared/swap.mjs).
+    publishFunction.addToRolePolicy(swapPolicy(props.ffioNofosBucket.bucketArn, artifactsBucketArn));
     publishFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
     publishFunction.addToRolePolicy(
       new iam.PolicyStatement({
@@ -183,6 +285,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
       layers: [props.jsSharedLayer],
       environment: {
         ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
+        BUCKET: props.ffioNofosBucket.bucketName,
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
       },
@@ -194,6 +297,12 @@ export class NofoPipelineStack extends cdk.NestedStack {
     quarantineFunction.addToRolePolicy(reviewTableReadWritePolicy(props.nofoProcessingReviewTable.tableArn));
     quarantineFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
 
+    // The live-grant check unpublishes through the same Quarantine Lambda a new failing grant goes to.
+    citeRequirementsFunction.addEnvironment("QUARANTINE_FUNCTION_NAME", quarantineFunction.functionName);
+    citeRequirementsFunction.addToRolePolicy(
+      new iam.PolicyStatement({ effect: iam.Effect.ALLOW, actions: ["lambda:InvokeFunction"], resources: [quarantineFunction.functionArn] })
+    );
+
     // --- Step Functions State Machine ---
 
     const nofoProcessing = new NofoProcessingStateMachine(
@@ -203,6 +312,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
         extractTextFunction,
         extractAndAnalyzeFunction,
         synthesizeFunction,
+        verifySummaryFunction,
         validateFunction,
         publishFunction,
         quarantineFunction,
@@ -217,19 +327,33 @@ export class NofoPipelineStack extends cdk.NestedStack {
       runtime: lambda.Runtime.NODEJS_24_X,
       code: lambda.Code.fromAsset(path.join(__dirname, "nofo-pipeline")),
       handler: "dispatcher/index.handler",
+      layers: [props.jsSharedLayer],
       environment: {
         STATE_MACHINE_ARN: nofoProcessing.stateMachine.stateMachineArn,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
+        BUCKET: props.ffioNofosBucket.bucketName,
       },
       // The dispatcher only enqueues work now — it no longer waits for the state machine, which
-      // may run up to 30 min (longer than any Lambda can live).
+      // may run up to 45 min (longer than any Lambda can live).
       timeout: cdk.Duration.minutes(1),
       memorySize: 256,
     });
 
     dispatcherFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
     dispatcherFunction.addToRolePolicy(reviewTableReadWritePolicy(props.nofoProcessingReviewTable.tableArn));
+    // Reads whether the grant already has a published summary.json, which keeps it live.
+    dispatcherFunction.addToRolePolicy(s3ReadOnlyPolicy(artifactsBucketArn));
+    dispatcherFunction.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
+    // Copies a live grant's document into _pending/ for its new version's run, and clears an earlier run's files there.
+    dispatcherFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:PutObject", "s3:DeleteObject"],
+        resources: [props.grantArtifactsBucket.arnForObjects("_pending/*")],
+      })
+    );
     nofoProcessing.stateMachine.grantStartExecution(dispatcherFunction);
     dispatcherFunction.addToRolePolicy(
       new iam.PolicyStatement({
@@ -267,12 +391,16 @@ export class NofoPipelineStack extends cdk.NestedStack {
         SCRAPER_DLQ_URL: props.scraperDownloadDlqUrl,
         REVIEW_TABLE_NAME: props.nofoProcessingReviewTable.tableName,
         NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
+        BUCKET: props.ffioNofosBucket.bucketName,
       },
       timeout: cdk.Duration.minutes(5),
       memorySize: 256,
     });
     dlqProcessorFunction.addToRolePolicy(reviewTableReadWritePolicy(props.nofoProcessingReviewTable.tableArn));
     dlqProcessorFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
+    dlqProcessorFunction.addToRolePolicy(s3ReadOnlyPolicy(artifactsBucketArn));
+    dlqProcessorFunction.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
     dlqProcessorFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
@@ -330,6 +458,7 @@ export class NofoPipelineStack extends cdk.NestedStack {
     );
     nofoAdminFunction.addToRolePolicy(s3ListBucketPolicy(artifactsBucketArn));
     nofoAdminFunction.addToRolePolicy(s3ObjectReadWriteDeletePolicy(artifactsBucketArn));
+    nofoAdminFunction.addToRolePolicy(swapPolicy(props.ffioNofosBucket.bucketArn, artifactsBucketArn));
     nofoAdminFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,

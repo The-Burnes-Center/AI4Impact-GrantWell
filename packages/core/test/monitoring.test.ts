@@ -28,6 +28,8 @@ const COMMON_ALARMS: [string, string, number][] = [
   ["chat cannot search NOFOs", "medium", 3],
   ["chat answers failing", "medium", 3],
   ["grant search returning nothing", "medium", 3],
+  ["AI search index not updating", "medium", 2],
+  ["AI search index updates dropped", "medium", 1],
   ["uploaded documents not indexed", "medium", 1],
   ["document index sync failing", "medium", 3],
   ["draft history not being saved", "medium", 1],
@@ -60,6 +62,9 @@ const PROD_ONLY_ALARMS: [string, string, number][] = [
   ["SES bounce rate heading for a sending pause", "medium", 0.05],
   ["processing-queue email failing", "low", 1],
   ["daily grants.gov scrape has stopped", "medium", 1],
+];
+// Dev has the brief too, so testers' flagged chat answers reach Slack during QA.
+const BRIEF_ALARMS: [string, string, number][] = [
   ["the daily health brief has stopped running", "low", 1],
   ["the daily health brief is failing", "medium", 1],
 ];
@@ -105,7 +110,7 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
       if (!found) throw new Error(`No alarm "${suffix}"`);
       return found;
     };
-    const expected = env === "prod" ? [...COMMON_ALARMS, ...PROD_ONLY_ALARMS] : COMMON_ALARMS;
+    const expected = env === "prod" ? [...COMMON_ALARMS, ...PROD_ONLY_ALARMS, ...BRIEF_ALARMS] : [...COMMON_ALARMS, ...BRIEF_ALARMS];
 
     it("has exactly the expected alarms", () => {
       expect(alarms.map((a) => a.AlarmName).sort()).toEqual(expected.map(([n]) => `${prefix} ${n}`).sort());
@@ -180,17 +185,11 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
       }
     });
 
-    it("builds the daily brief only where configured", () => {
+    it("builds the daily brief in both stages", () => {
       const parameters = ofType("AWS::SSM::Parameter").map(([, r]) => r.Properties.Name);
       const rules = ofType("AWS::Events::Rule").map(([, r]) => r.Properties.ScheduleExpression).sort();
-      const always = ["cron(30 12 * * ? *)", "rate(15 minutes)"];
-      if (env === "prod") {
-        expect(parameters).toEqual([`/${prefix}/daily-brief/components`]);
-        expect(rules).toEqual(["cron(0 13 * * ? *)", ...always].sort());
-      } else {
-        expect(parameters).toEqual([]);
-        expect(rules).toEqual(always);
-      }
+      expect(parameters).toEqual([`/${prefix}/daily-brief/components`]);
+      expect(rules).toEqual(["cron(0 13 * * ? *)", "cron(30 12 * * ? *)", "rate(15 minutes)"].sort());
     });
 
     const fnNamed = (name: string) => {
@@ -204,6 +203,17 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
       return policy![1].Properties.PolicyDocument.Statement as any[];
     };
 
+    it("lets CloudWatch alarms publish to both SSL-only topics", () => {
+      const policies = ofType("AWS::SNS::TopicPolicy").map(([, r]) => r.Properties);
+      for (const topic of ["AlarmTopic", "AlertTopic"]) {
+        const policy = policies.find((p) => JSON.stringify(p.Topics).includes(topic))!;
+        const statements = policy.PolicyDocument.Statement;
+        expect(statements.some((st: any) => st.Effect === "Deny" && st.Condition?.Bool?.["aws:SecureTransport"] === "false"), topic).toBe(true);
+        const allow = statements.find((st: any) => st.Effect === "Allow" && st.Principal?.Service === "cloudwatch.amazonaws.com");
+        expect(allow?.Action, topic).toBe("sns:Publish");
+      }
+    });
+
     it("scans every Lambda log group under the stack name, publishing only to its own namespace", () => {
       const [id, scan] = fnNamed(`${prefix}-init-error-scan`);
       expect(scan.Properties.Runtime).toBe("nodejs24.x");
@@ -211,9 +221,11 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
         LOG_GROUP_PREFIX: `/aws/lambda/${ENVS[env].STACK_NAME}-`,
         METRIC_NAMESPACE: prefix,
         METRIC_NAME: "LambdaInitErrors",
+        RETENTION_DAYS: "90",
       });
       const statements = policyOf(id);
-      const startQuery = statements.find((s) => s.Action === "logs:StartQuery");
+      const startQuery = statements.find((s) => [].concat(s.Action).includes("logs:StartQuery"));
+      expect([...startQuery.Action].sort()).toEqual(["logs:PutRetentionPolicy", "logs:StartQuery"]);
       expect(JSON.stringify(startQuery.Resource)).toContain(`:log-group:/aws/lambda/${ENVS[env].STACK_NAME}-*`);
       const put = statements.find((s) => s.Action === "cloudwatch:PutMetricData");
       expect(put.Condition).toEqual({ StringEquals: { "cloudwatch:namespace": prefix } });
@@ -221,17 +233,28 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
       expect([alarm.Namespace, alarm.MetricName, alarm.Statistic]).toEqual([prefix, "LambdaInitErrors", "Sum"]);
     });
 
+    it.runIf(env === "prod")("lets the daily brief query only the chat's log group", () => {
+      const [id, brief] = ofType("AWS::Lambda::Function").find(([fnId]) => fnId.startsWith("DailyBriefFunction"))!;
+      const chatLogGroup = JSON.stringify(brief.Properties.Environment.Variables.CHAT_LOG_GROUP);
+      expect(chatLogGroup).toMatch(/\/aws\/lambda\/.*ChatHandlerFunction/);
+      const statements = policyOf(id);
+      const startQuery = statements.find((s) => s.Action === "logs:StartQuery");
+      expect(startQuery.Resource).toHaveLength(2);
+      for (const arn of startQuery.Resource) expect(JSON.stringify(arn)).toMatch(/:log-group:\/aws\/lambda\/.*ChatHandlerFunction/);
+      expect(statements.find((s) => [].concat(s.Action).includes("logs:GetQueryResults")).Resource).toBe("*");
+    });
+
     it("gives the model canary every Bedrock model and only InvokeModel on them", () => {
       const [id, canary] = fnNamed(`${prefix}-model-canary`);
       expect(canary.Properties.Runtime).toBe("nodejs24.x");
       const models = JSON.stringify(canary.Properties.Environment.Variables.MODELS);
-      for (const profile of ["SonnetChat", "SonnetNofo", "SonnetDraft", "HaikuNofo", "HaikuScraper", "TitanSearch"]) {
+      for (const profile of ["SonnetChat", "SonnetNofo", "SonnetDraft", "HaikuNofo", "HaikuScraper", "HaikuSearch", "TitanSearch"]) {
         expect(models, profile).toMatch(new RegExp(`ChatbotAPI${profile}InferenceProfile[0-9A-F]{8}InferenceProfileArn`));
       }
       expect(models).not.toContain("amazon.titan-embed-text-v2:0");
-      expect(models).toContain("cohere.rerank-v3-5:0");
+      expect(models).not.toContain("rerank");
       const actions = policyOf(id).map((s) => s.Action).sort();
-      expect(actions).toEqual(["bedrock:InvokeModel", "bedrock:Rerank"]);
+      expect(actions).toEqual(["bedrock:InvokeModel"]);
       expect(policyOf(id).find((s) => s.Action === "bedrock:InvokeModel").Resource).not.toContain("*");
     });
 

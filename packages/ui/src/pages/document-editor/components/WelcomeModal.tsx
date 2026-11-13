@@ -2,10 +2,10 @@ import React from "react";
 import { Modal } from "../../../components/common/Modal";
 
 const WELCOME_STEPS = [
-  { num: 1, title: "Project Basics", text: "Enter your project name, organization, requested amount, location, and contact details." },
+  { num: 1, title: "Project basics", text: "Enter your project name, organization, requested amount, location, and contact details." },
   { num: 2, title: "Questionnaire", text: "Answer a few questions about your project, tailored to the grant you're applying for." },
-  { num: 3, title: "Additional Information", text: "Upload supporting documents and share any extra context that will help the AI write a stronger first draft." },
-  { num: 4, title: "Section Editor", text: "Review and refine each AI-generated section. You can rewrite sections or edit them directly." },
+  { num: 3, title: "Additional information", text: "Upload supporting documents and share any extra context that will help the AI write a stronger first draft." },
+  { num: 4, title: "Section editor", text: "Review and refine each AI-generated section. You can rewrite sections or edit them directly." },
   { num: 5, title: "Review", text: "Check that every section is complete, then export your application as PDF or Word." },
 ];
 
@@ -28,10 +28,10 @@ const WelcomeModal = React.memo(function WelcomeModal({
     onClose={onClose}
     title="Welcome to GrantWell"
     maxWidth="900px"
-    hideCloseButton
+    titleLevel="h1"
   >
     <div className="welcome-modal-intro">
-      <h3 className="welcome-modal-subtitle">Write Application</h3>
+      <p className="welcome-modal-subtitle">Write application</p>
       <p className="welcome-modal-desc">
         GrantWell uses AI to help you write your grant application. We&#39;ll guide you through
         these five steps, and your progress is saved as you go.
@@ -43,7 +43,7 @@ const WelcomeModal = React.memo(function WelcomeModal({
         <li key={step.num} className="welcome-modal-step">
           <div className="welcome-modal-step__number" aria-hidden="true">{step.num}</div>
           <div>
-            <h3 className="welcome-modal-step__title">{step.title}</h3>
+            <h2 className="welcome-modal-step__title">{step.title}</h2>
             <p className="welcome-modal-step__text">{step.text}</p>
           </div>
         </li>
@@ -51,11 +51,11 @@ const WelcomeModal = React.memo(function WelcomeModal({
     </ol>
 
     <div className="welcome-modal-actions">
-      <button className="welcome-modal-btn welcome-modal-btn--primary" onClick={onGetStarted}>
-        Get Started
+      <button className="gw-btn gw-btn--primary welcome-modal-btn welcome-modal-btn--primary" onClick={onGetStarted}>
+        Get started
       </button>
-      <button className="welcome-modal-btn welcome-modal-btn--secondary" onClick={onViewDrafts}>
-        View My Applications
+      <button className="gw-btn gw-btn--secondary welcome-modal-btn welcome-modal-btn--secondary" onClick={onViewDrafts}>
+        View My applications
       </button>
     </div>
   </Modal>

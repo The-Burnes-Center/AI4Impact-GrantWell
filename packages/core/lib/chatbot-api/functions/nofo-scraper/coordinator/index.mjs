@@ -18,7 +18,7 @@ import {
   sleep,
   RATE_LIMIT_DELAY,
 } from '../shared/utils.mjs';
-import { requireAdmin } from 'grantwell-shared';
+import { canEditAnyNofo, jsonResponse, requireAdmin, resolveCallerScope } from 'grantwell-shared';
 
 const API_KEY = process.env.GRANTS_GOV_API_KEY;
 const METADATA_TABLE = process.env.NOFO_METADATA_TABLE_NAME;
@@ -147,6 +147,9 @@ export const handler = async (event) => {
   // EventBridge invocations pass through unchanged.
   const forbidden = requireAdmin(event);
   if (forbidden) return forbidden;
+  if (event?.requestContext && !canEditAnyNofo(resolveCallerScope(event))) {
+    return jsonResponse(403, { error: "Forbidden: only a developer or platform admin can run the scraper" });
+  }
 
   if (!API_KEY) throw new Error('GRANTS_GOV_API_KEY not set');
   if (!METADATA_TABLE) throw new Error('NOFO_METADATA_TABLE_NAME not set');

@@ -14,6 +14,7 @@ import {
   selectorClasses,
   checkChromeTokens,
   checkChromeVersion,
+  retiredTokens,
   checkDeployWorkflow,
   checkPlaceholders,
   checkScripts,
@@ -101,6 +102,21 @@ describe("chrome theme tokens", () => {
   it("fails a token GrantWell doesn't have", () => {
     edit(path.join(chrome, "theme.css"), "--gw-color-primary-hover", "--gw-color-primary-hovered");
     expect(failures(checkChromeTokens(chrome, uiApp))).toEqual([expect.stringContaining("theme.css uses --gw-color-primary-hovered")]);
+  });
+
+  it("warns about a retired token and names its replacement", () => {
+    edit(path.join(chrome, "theme.css"), "--gw-color-primary-hover", "--gw-color-text-control");
+    const findings = checkChromeTokens(chrome, uiApp);
+    expect(failures(findings)).toEqual([]);
+    expect(findings.map((f) => f.message)).toEqual([expect.stringContaining("--gw-color-text-control (now --gw-color-text)")]);
+  });
+
+  it("reads every retired alias out of tokens.css", () => {
+    const retired = retiredTokens(uiApp);
+    expect(retired.get("--gw-radius-md")).toBe("--gw-radius-control");
+    expect(retired.get("--gw-shadow-xl")).toBe("--gw-shadow-high");
+    expect(retired.has("--gw-color-primary")).toBe(false);
+    expect(retired.size).toBeGreaterThan(40);
   });
 });
 

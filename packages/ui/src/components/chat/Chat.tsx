@@ -1,16 +1,19 @@
-import React, { useContext, useEffect, useLayoutEffect, useState, useRef } from "react";
+import React, { useCallback, useContext, useEffect, useLayoutEffect, useState, useRef } from "react";
 import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
 import { getCurrentUser } from "aws-amplify/auth";
 import { v4 as uuidv4 } from "uuid";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
+import type { ChatSession } from "../../common/api-client/sessions-client";
+import { Link } from "react-router";
 import ChatMessage from "./ChatMessage";
 import ChatInputPanel from "./ChatInputPanel";
 import { useBranding } from "../../common/branding";
 import { useNotifications } from "../notifications/NotificationManager";
-import { LuCircleHelp, LuChevronDown, LuLoader } from "react-icons/lu";
+import { LuCircleHelp, LuChevronDown } from "react-icons/lu";
 import { parseChatHistory } from "./utils";
-import { KB_SYNC_UNKNOWN_MESSAGE, type KbSyncStatus } from "../../hooks/use-kb-sync-poll";
+import { GrantInReviewError } from "../../common/api-client/grant-in-review";
+import chatStyles from "../../styles/chat.module.scss";
 
 // Styles for components
 const styles: Record<string, React.CSSProperties> = {
@@ -20,7 +23,7 @@ const styles: Record<string, React.CSSProperties> = {
     height: "100%",
     position: "relative",
     overflow: "hidden",
-    backgroundColor: "#fbfbfd",
+    backgroundColor: "var(--gw-color-background)",
     minHeight: 0,
     flex: 1,
   },
@@ -30,7 +33,7 @@ const styles: Record<string, React.CSSProperties> = {
     overflowX: "hidden",
     padding: "20px",
     paddingBottom: "20px",
-    backgroundColor: "#fbfbfd",
+    backgroundColor: "var(--gw-color-background)",
     minHeight: 0,
     scrollBehavior: "smooth",
   },
@@ -40,53 +43,53 @@ const styles: Record<string, React.CSSProperties> = {
     gap: "16px",
   },
   infoAlert: {
-    backgroundColor: "#f0f4f8",
-    border: "1px solid #d0e0f0",
-    borderRadius: "6px",
+    backgroundColor: "var(--gw-color-surface-subtle)",
+    border: "1px solid var(--gw-color-info-border)",
+    borderRadius: "var(--gw-radius-control)",
     padding: "12px 16px",
     marginBottom: "16px",
     display: "flex",
     alignItems: "flex-start",
-    color: "#2c5282",
+    color: "var(--gw-color-info)",
     fontSize: "14px",
   },
   infoIcon: {
     marginRight: "10px",
     marginTop: "2px",
     flexShrink: 0,
-    color: "#3182ce",
+    color: "var(--gw-color-info)",
   },
   loadingContainer: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     padding: "30px 0",
-    color: "#5a6876",
+    color: "var(--gw-color-text-muted)",
   },
   spinner: {
     display: "inline-block",
     width: "20px",
     height: "20px",
-    border: "3px solid rgba(0, 0, 0, 0.1)",
+    border: "3px solid color-mix(in srgb, var(--gw-color-text-strong) 10%, transparent)",
     borderRadius: "50%",
-    borderTopColor: "#3182ce",
+    borderTopColor: "var(--gw-color-info)",
     animation: "spin 1s linear infinite",
     marginRight: "8px",
   },
   welcomeText: {
     textAlign: "center",
-    color: "#5a6876",
+    color: "var(--gw-color-text-muted)",
     fontStyle: "italic",
     padding: "20px",
   },
   inputContainer: {
     border: "none",
-    backgroundColor: "#f8fafc",
+    backgroundColor: "var(--gw-color-background)",
     padding: "20px",
     width: "100%",
     maxWidth: "100%",
     zIndex: 100,
-    boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.1)",
+    boxShadow: "var(--gw-shadow-high)",
     borderTop: "3px solid var(--gw-color-primary)",
     flexShrink: 0,
     display: "flex",
@@ -108,7 +111,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     justifyContent: "center",
     cursor: "pointer",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+    boxShadow: "var(--gw-shadow-mid)",
     zIndex: 60, // Increased z-index to ensure it's above the input container
     transition: "all 0.2s ease",
     opacity: 0,
@@ -120,14 +123,32 @@ const styles: Record<string, React.CSSProperties> = {
     opacity: 1,
     pointerEvents: "auto",
   },
+  unavailable: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    gap: "12px",
+    maxWidth: "560px",
+    margin: "24px auto",
+    padding: "16px 20px",
+    border: "1px solid var(--gw-color-border)",
+    borderRadius: "var(--gw-radius-container)",
+    backgroundColor: "var(--gw-color-surface)",
+    color: "var(--gw-color-text)",
+    fontSize: "15px",
+  },
+  unavailableLink: {
+    color: "var(--gw-color-primary)",
+    fontWeight: 600,
+  },
   earlierRow: {
     display: "flex",
     justifyContent: "center",
   },
   earlierButton: {
     backgroundColor: "white",
-    border: "1px solid var(--gw-color-border, #cbd5e0)",
-    borderRadius: "6px",
+    border: "1px solid var(--gw-color-border, #e2e8f0)",
+    borderRadius: "var(--gw-radius-control)",
     padding: "8px 16px",
     color: "var(--gw-color-primary)",
     fontSize: "14px",
@@ -142,7 +163,6 @@ const EARLIER_SCROLL_THRESHOLD_PX = 200;
 export default function Chat(props: {
   sessionId?: string;
   documentIdentifier?: string;
-  kbSyncStatus?: KbSyncStatus;
 }) {
   const appContext = useContext(AppContext);
   const branding = useBranding();
@@ -172,10 +192,31 @@ export default function Chat(props: {
   const scrollRestoreRef = useRef<{ height: number; top: number; focusTranscript: boolean } | null>(null);
   const loadOlderRef = useRef<() => Promise<void>>(async () => {});
 
+  const pendingSessionRef = useRef<ChatSession | null>(null);
+  const savingSessionRef = useRef<Promise<void> | null>(null);
+  const [unavailable, setUnavailable] = useState(false);
+  const [inReviewMessage, setInReviewMessage] = useState<string | null>(null);
+
+  const ensureSession = useCallback((): Promise<void> => {
+    const pending = pendingSessionRef.current;
+    if (pending && appContext) {
+      pendingSessionRef.current = null;
+      savingSessionRef.current = new ApiClient(appContext).sessions
+        .createSession(pending)
+        .then((): void => undefined)
+        .catch((error: unknown): void => console.warn("Failed to save initial greeting:", error));
+    }
+    return savingSessionRef.current ?? Promise.resolve();
+  }, [appContext]);
+
   /** Loads session history */
   useEffect(() => {
     if (!appContext) return;
     sessionIdRef.current = props.sessionId;
+    pendingSessionRef.current = null;
+    savingSessionRef.current = null;
+    setUnavailable(false);
+    setInReviewMessage(null);
     setMessageHistory([]);
     setOlderMessages([]);
     setOlderCursor(null);
@@ -191,6 +232,12 @@ export default function Chat(props: {
 
       setSession({ id: props.sessionId, loading: true });
 
+      const sessionId = props.sessionId;
+      const showUnavailable = () => {
+        setUnavailable(true);
+        setSession({ id: sessionId, loading: false });
+        setRunning(false);
+      };
       const apiClient = new ApiClient(appContext);
       try {
         const username = await getCurrentUser().then(
@@ -226,11 +273,29 @@ export default function Chat(props: {
             }
           }, 100);
         } else {
-          // Session doesn't exist or has no history - create initial greeting
-          const summaryResult = await apiClient.landingPage.getNOFOSummary(
-            props.documentIdentifier
-          );
-          const grantName = summaryResult.data.GrantName;
+          if (!props.documentIdentifier) {
+            showUnavailable();
+            return;
+          }
+          let grantName: string;
+          try {
+            const summaryResult = await apiClient.landingPage.getNOFOSummary(
+              props.documentIdentifier
+            );
+            grantName = summaryResult.data.GrantName;
+          } catch (error) {
+            if (error instanceof GrantInReviewError) {
+              setInReviewMessage(error.message);
+              showUnavailable();
+              return;
+            }
+            const status = (error as { status?: number }).status;
+            if (status === 403 || status === 404) {
+              showUnavailable();
+              return;
+            }
+            throw error;
+          }
 
           const initialMessage = {
             type: ChatBotMessageType.AI,
@@ -238,27 +303,21 @@ export default function Chat(props: {
             metadata: {},
           };
           setMessageHistory([initialMessage]);
-          
-          // Save the initial greeting to DynamoDB so it persists on refresh
-          try {
-            await apiClient.sessions.createSession({
-              sessionId: props.sessionId,
-              userId: username,
-              title: `Chat about ${grantName}`,
-              documentIdentifier: props.documentIdentifier || "",
-              chatHistory: [{ user: "", chatbot: initialMessage.content, metadata: "" }],
-            });
-          } catch (error) {
-            console.warn("Failed to save initial greeting:", error);
-            // Don't show error to user, just log it - the message is still displayed
-          }
+          // Saved with the first message, so opening a chat and leaving adds nothing to My chats.
+          pendingSessionRef.current = {
+            sessionId: props.sessionId,
+            userId: username,
+            title: `Chat about ${grantName}`,
+            documentIdentifier: props.documentIdentifier,
+            chatHistory: [{ user: "", chatbot: initialMessage.content, metadata: "" }],
+          };
         }
         setSession({ id: props.sessionId, loading: false });
         setRunning(false);
       } catch (error) {
-        console.log(error);
-        addNotification("error", error instanceof Error ? error.message : String(error));
-        addNotification("info", "Please refresh the page");
+        console.warn("Could not load the chat:", error);
+        setSession({ id: props.sessionId, loading: false });
+        addNotification("error", "We couldn't load this chat. Refresh the page to try again.");
       }
     })();
   }, [appContext, props.sessionId, props.documentIdentifier]);
@@ -406,6 +465,10 @@ export default function Chat(props: {
     }
   };
 
+  let replyCount = 0;
+  const replyNumber = (message: ChatBotHistoryItem) =>
+    message.type === ChatBotMessageType.AI ? ++replyCount : undefined;
+
   return (
     <section aria-label="GrantWell assistant chat" style={styles.chatContainer}>
       {/* Not role="log": every streamed chunk rewrites the last turn, so a live
@@ -417,12 +480,13 @@ export default function Chat(props: {
         aria-label="Chat transcript"
         // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- scrollable region needs keyboard access (WCAG 2.1.1)
         tabIndex={0}
+        className={chatStyles.transcript}
         style={styles.messageArea}
       >
         <ul style={{ ...styles.messageList, listStyle: "none", padding: 0, margin: 0 }}>
-          {messageHistory.length === 0 && !session?.loading && (
+          {messageHistory.length === 0 && !session?.loading && !unavailable && (
             <li style={styles.infoAlert}>
-              <LuCircleHelp size={20} style={styles.infoIcon} />
+              <LuCircleHelp size={20} style={styles.infoIcon} aria-hidden="true" />
               <span>
                 AI Models can make mistakes. Be mindful in validating important
                 information.
@@ -446,17 +510,17 @@ export default function Chat(props: {
 
           {olderMessages.map((message, idx) => (
             <li key={`older-${olderMessages.length - idx}`}>
-              <ChatMessage message={message} documentIdentifier={props.documentIdentifier} />
+              <ChatMessage message={message} documentIdentifier={props.documentIdentifier} replyNumber={replyNumber(message)} />
             </li>
           ))}
 
           {messageHistory.map((message, idx) => (
             <li key={idx}>
-              <ChatMessage message={message} documentIdentifier={props.documentIdentifier} />
+              <ChatMessage message={message} documentIdentifier={props.documentIdentifier} replyNumber={replyNumber(message)} />
             </li>
           ))}
 
-          {messageHistory.length === 0 && !session?.loading && (
+          {messageHistory.length === 0 && !session?.loading && !unavailable && (
             <li style={styles.welcomeText}>{branding.appName}</li>
           )}
 
@@ -466,13 +530,37 @@ export default function Chat(props: {
               <span>Loading chat</span>
             </li>
           )}
+
+          {unavailable && inReviewMessage && (
+            <li style={styles.unavailable}>
+              <p style={{ margin: 0 }}>{inReviewMessage}</p>
+              <Link to="/home" style={styles.unavailableLink}>
+                Go to home
+              </Link>
+            </li>
+          )}
+          {unavailable && !inReviewMessage && (
+            <li style={styles.unavailable}>
+              <p style={{ margin: 0 }}>
+                This chat isn&apos;t available. It may have been deleted, or the link is wrong.
+              </p>
+              <Link to="/chat/sessions" style={styles.unavailableLink}>
+                Go to My chats
+              </Link>
+            </li>
+          )}
         </ul>
       </div>
 
       {/* Scroll to bottom button */}
       {showScrollToBottom && (
         <button
-          onClick={scrollToBottom}
+          onClick={(e) => {
+            const fromKeyboard = document.activeElement === e.currentTarget;
+            scrollToBottom();
+            // The button goes away once the bottom is in view; carry on in the message box.
+            if (fromKeyboard) document.getElementById("chat-input")?.focus({ preventScroll: true });
+          }}
           aria-label="Scroll to bottom"
           style={{
             ...styles.scrollToBottomButton,
@@ -481,21 +569,23 @@ export default function Chat(props: {
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = "var(--gw-color-primary-hover)";
             e.currentTarget.style.transform = "scale(1.05)";
-            e.currentTarget.style.boxShadow = "0 6px 16px rgba(0, 0, 0, 0.25)";
+            e.currentTarget.style.boxShadow = "var(--gw-shadow-mid)";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.backgroundColor = "var(--gw-color-primary)";
             e.currentTarget.style.transform = "scale(1)";
-            e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)";
+            e.currentTarget.style.boxShadow = "var(--gw-shadow-mid)";
           }}
         >
-          <LuChevronDown size={20} />
+          <LuChevronDown size={20} aria-hidden="true" />
         </button>
       )}
 
       <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
         {session?.loading
           ? "Loading chat"
+          : unavailable
+          ? inReviewMessage ?? "This chat isn't available."
           : running
           ? "Assistant is replying"
           : replyStatus}
@@ -505,59 +595,20 @@ export default function Chat(props: {
         {earlierStatus}
       </div>
 
-      <div role="status" aria-live="polite" className="visually-hidden">
-        {props.kbSyncStatus === "indexing"
-          ? "Indexing your supporting documents. You can keep chatting."
-          : props.kbSyncStatus === "unknown"
-          ? KB_SYNC_UNKNOWN_MESSAGE
-          : ""}
-      </div>
-
-      {/* KB indexing banner */}
-      {(props.kbSyncStatus === "indexing" || props.kbSyncStatus === "unknown") && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            padding: "10px 20px",
-            backgroundColor: "var(--gw-color-primary-light, #DFECE0)",
-            borderTop: "1px solid var(--gw-color-border, #e2e8f0)",
-            color: "var(--gw-color-primary, #23776C)",
-            fontSize: "13px",
-            fontWeight: 500,
-            flexShrink: 0,
-          }}
-        >
-          {props.kbSyncStatus === "indexing" ? (
-            <>
-              <LuLoader
-                size={14}
-                aria-hidden="true"
-                style={{ animation: "spin 1s linear infinite" }}
-              />
-              Your supporting documents are being indexed. Newly added documents will
-              appear in results once indexing completes — you can keep chatting in the
-              meantime.
-            </>
-          ) : (
-            KB_SYNC_UNKNOWN_MESSAGE
-          )}
+      {!unavailable && (
+        <div style={styles.inputContainer}>
+          <ChatInputPanel
+            session={session}
+            running={running}
+            setRunning={setRunning}
+            messageHistory={messageHistory}
+            setMessageHistory={(history) => setMessageHistory(history)}
+            documentIdentifier={props.documentIdentifier}
+            messageAreaRef={messageAreaRef}
+            ensureSession={ensureSession}
+          />
         </div>
       )}
-
-      {/* Chat input area */}
-      <div style={styles.inputContainer}>
-        <ChatInputPanel
-          session={session}
-          running={running}
-          setRunning={setRunning}
-          messageHistory={messageHistory}
-          setMessageHistory={(history) => setMessageHistory(history)}
-          documentIdentifier={props.documentIdentifier}
-          messageAreaRef={messageAreaRef}
-        />
-      </div>
     </section>
   );
 }

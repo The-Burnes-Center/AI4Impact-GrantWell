@@ -1,0 +1,306 @@
+{
+  "schemaVersion": 1,
+  "status": "prelabeled",
+  "family": "CO state",
+  "deadlines": [
+    {
+      "kind": "application",
+      "label": "FY27 first round, emailed by 5:00 PM MT",
+      "date": "2026-11-27",
+      "time": "17:00",
+      "tzAsWritten": "MT",
+      "fromBrokenTable": false,
+      "quote": "FY27 First Round Application Deadline November 27, 2026 5:00 PM"
+    },
+    {
+      "kind": "application",
+      "label": "FY27 second round, emailed by 5:00 PM MT (tentative, contingent on funding)",
+      "date": "2027-05-28",
+      "time": "17:00",
+      "tzAsWritten": "MT",
+      "fromBrokenTable": false,
+      "quote": "FY27 Second Round Application Deadline May 28, 2027 5:00 PM"
+    }
+  ],
+  "award": {
+    "ceiling": 249999,
+    "floor": 10000,
+    "periodMonths": null,
+    "expectedAwards": null,
+    "range": null,
+    "caps": [
+      {
+        "what": "maximum award to a single local government",
+        "value": 125000,
+        "quote": "Single local government $10,000 $125,000"
+      },
+      {
+        "what": "amount any one partner may receive under a partnership award",
+        "value": 125000,
+        "quote": "$249,999, with no partner Partnership $20,000 receiving more than $125,000"
+      }
+    ],
+    "match": {
+      "required": false,
+      "ratio": null,
+      "appliesTo": null,
+      "quote": "Applicants are not required to provide matching funds for this program."
+    },
+    "quote": "Single local government $10,000 $125,000 $249,999, with no partner Partnership $20,000 receiving more than $125,000"
+  },
+  "sections": [
+    {
+      "name": "Description and Timeline of Proposed Project",
+      "order": 1,
+      "limit": null,
+      "conditional": null,
+      "component": "Application Materials",
+      "quote": "Provide a description of the proposed project which includes, at a minimum: A description of the energy codes that pertain to the proposal"
+    },
+    {
+      "name": "Description of Need",
+      "order": 2,
+      "limit": null,
+      "conditional": null,
+      "component": "Application Materials",
+      "quote": "Provide a description of the need for funding from the Colorado Energy Office (CEO) to achieve the proposed energy code adoption, implementation, and/or enforcement"
+    },
+    {
+      "name": "Description of Project Team and Qualifications",
+      "order": 3,
+      "limit": null,
+      "conditional": null,
+      "component": "Application Materials",
+      "quote": "Identify each member of the team that will work on the proposed project, including descriptions of previous experience and qualifications of each team member."
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Applicant Information",
+      "scored": true,
+      "points": 10,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Applicant Information - 10 points"
+    },
+    {
+      "name": "Description and Timeline of Proposed Project",
+      "scored": true,
+      "points": 50,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Description and Timeline of Proposed Project"],
+      "quote": "Description and Timeline of Proposed Project - 50 points"
+    },
+    {
+      "name": "Description of Need",
+      "scored": true,
+      "points": 30,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Description of Need"],
+      "quote": "Description of Need - 30 points"
+    },
+    {
+      "name": "Description of Project Team and Qualifications",
+      "scored": true,
+      "points": 10,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Description of Project Team and Qualifications"],
+      "quote": "Description of Project Team and Qualifications - 10 points"
+    },
+    {
+      "name": "Attachments (proposed budget, letters of commitment, attestation form)",
+      "scored": true,
+      "points": 20,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Attachments - 20 points"
+    },
+    {
+      "name": "Demonstrated intent to vote on/adopt and enforce a code meeting state requirements",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Description and Timeline of Proposed Project"],
+      "quote": "Demonstrated intent of the local government(s) to vote on and/or adopt and enforce an energy code that, at a minimum, meets the State of Colorado's requirements"
+    },
+    {
+      "name": "Need for funding, prioritized criteria and prior awards",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Description of Need"],
+      "quote": "Need for funding to achieve the desired energy code update or to implement an updated energy code, whether or not the applicant meets prioritized criteria outlined in Section II.3"
+    },
+    {
+      "name": "Technical qualifications or engagement with a technical consultant",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Description of Project Team and Qualifications"],
+      "quote": "Applicant's technical qualifications to carry out the project, or applicant's engagement with a technical consultant or other subject matter expert to assist with carrying out the project."
+    },
+    {
+      "name": "Capability to achieve full enforcement of and compliance with the adopted code",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Description and Timeline of Proposed Project"],
+      "quote": "Demonstrated capability, or demonstrated intent to develop capability, to achieve full enforcement of and compliance with the adopted energy code(s)."
+    },
+    {
+      "name": "Energy and/or emissions reduction potential",
+      "scored": true,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": ["Description and Timeline of Proposed Project"],
+      "quote": "Energy and/or emissions reduction potential of the applicant's proposed project."
+    },
+    {
+      "name": "Priority: disproportionately impacted (underserved) communities",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Jurisdictions that include disproportionately impacted communities, as defined by the State of Colorado, including federal Justice40 communities, will be prioritized in this grant program."
+    },
+    {
+      "name": "Priority: partnerships of local governments",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Applicants who partner with other local governments to collaborate on energy code adoption, implementation, and enforcement will also be prioritized in this grant program."
+    },
+    {
+      "name": "Priority: applicants not previously awarded under this program",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "Priority will be given to applicants that have not previously received an award through this program."
+    },
+    {
+      "name": "Tie-breaker: compliance with housing and land use laws (EOs D 2025 005 and D 2025 011)",
+      "scored": false,
+      "points": null,
+      "weightPct": null,
+      "scale": null,
+      "sections": [],
+      "quote": "CEO will then consider applicants' compliance status with the laws referenced in the EOs as a tie-breaking factor"
+    }
+  ],
+  "format": {
+    "pageSize": null,
+    "margins": null,
+    "font": null,
+    "fontSizePt": null,
+    "lineSpacing": null,
+    "overallPageLimit": null,
+    "other": [
+      "Application materials must be PDF files, except the proposed budget, which may be a Microsoft Excel file",
+      "Attachments submitted as separate documents from the application",
+      "Email the application to the Energy Code Program Manager by 5:00 PM MT with the subject line \"[Local Government/Partnership Name] Energy Code Adoption Grant Application Submission\"",
+      "Respond to all sections of Application Materials or risk disqualification from the round"
+    ],
+    "quote": "Application materials must be submitted as PDF files, with the exception of the proposed budget, which may be submitted as a Microsoft Excel file."
+  },
+  "eligibility": [
+    {
+      "item": "Eligible applicants: local governments (one or more departments or agencies), partnerships of two or more local governments, and councils of governments or nonprofits applying on behalf of a local government or partnership if they manage the project or pass all award funding through",
+      "quote": "Local governments, including: One or more departments or agencies of a local government Two or more local governments applying as a partnership Councils of governments or non-profit organizations applying on behalf of a local government or partnership if they either:"
+    },
+    {
+      "item": "Past applicants may reapply if eligible and the work was not performed under a previous award",
+      "quote": "Entities that have applied for the Energy Code Adoption and Enforcement Grant Program in the past can reapply for this program as long as they meet eligibility requirements and the work was not performed as part of a previous award."
+    },
+    {
+      "item": "Proposals must show the local government's intent to vote on and/or adopt and enforce, at a minimum, the state energy code",
+      "quote": "Proposals must demonstrate the intent of the local government to vote on and/or adopt as well as enforce, at a minimum, the energy code established by the State of Colorado"
+    },
+    {
+      "item": "Adoption proposals submitted after January 1, 2026 must pertain to the Model Low Energy and Carbon Code or an equivalent or more restrictive code",
+      "quote": "Applications submitted after January 1, 2026 proposing adoption of an energy code must pertain to the Model Low Energy and Carbon Code, or an equivalent or more restrictive code."
+    },
+    {
+      "item": "Enforcement-only proposals submitted after January 1, 2026 must pertain to the 2021 IECC, 2024 IECC, Model Electric Ready and Solar Ready Code, or Model Low Energy and Carbon Code, adopted in accordance with state law",
+      "quote": "Applications proposing enforcement only of a previously-adopted energy code submitted after January 1, 2026 must pertain to the 2021 IECC, 2024 IECC, Model Electric Ready and Solar Ready Code, or Model Low Energy and Carbon Code"
+    },
+    {
+      "item": "Applicants proposing to adopt an equivalent or more restrictive code must commit to voting on and/or adopting it",
+      "quote": "any applicant proposing to use funding to adopt a code that is equivalent or more restrictive than the state's minimum energy code shall commit to voting on and/or adopting the proposed code."
+    },
+    {
+      "item": "The local government must demonstrate it will not weaken the minimum codes with amendments developed during the project",
+      "quote": "it is the responsibility of the local government to demonstrate they will not weaken the minimum codes with amendments developed during the grant project."
+    },
+    {
+      "item": "Cost analysis proposals must include a budget and timeline for the governing body to vote on adoption regardless of the analysis results",
+      "quote": "These proposals must include a budget and timeline for the local governing body to vote on the adoption of the relevant energy code, regardless of the results of the analysis."
+    },
+    {
+      "item": "Disallowed: expenses to adopt a code weaker than the Model Low Energy and Carbon Code",
+      "quote": "Any expense incurred to adopt a code weaker than the Colorado Model Low Energy and Carbon Code"
+    },
+    {
+      "item": "Disallowed: expenses to develop, adopt or implement amendments that weaken the Model Low Energy and Carbon Code",
+      "quote": "Any expense incurred to develop, adopt, or implement amendments to the Model Low Energy and Carbon Code that would weaken the requirements of the code."
+    },
+    {
+      "item": "Disallowed: expenses to enforce a code older than the 2021 IECC or requirements below the minimum standards",
+      "quote": "Any expense incurred to enforce or require compliance with a code older than the 2021 IECC"
+    },
+    {
+      "item": "Scholarship-funded equipment must have a fair market value under $5,000",
+      "quote": "Equipment must have a fair market value of less than $5,000."
+    },
+    {
+      "item": "No expenses may be incurred for work outside the performance period",
+      "quote": "No materials, grantee expenses, or contractor expenses, may be incurred for any work completed outside of the performance period."
+    },
+    {
+      "item": "Applicants must respond to all sections of Application Materials or may be disqualified from the round",
+      "quote": "failure to do so may disqualify them from the round in which they are applying."
+    }
+  ],
+  "requiredDocuments": [
+    {
+      "item": "Applicant Information (lead and any partner applicants: contacts, jurisdiction population and source, currently adopted energy code, total funding requested)",
+      "userWrites": true,
+      "quote": "Applicant's Currently Adopted Energy Code (including any stretch codes):"
+    },
+    {
+      "item": "Proposed budget by project phase with justification and category for each expenditure (PDF or Excel)",
+      "userWrites": true,
+      "quote": "Provide a budget proposal (see sample budget here) that outlines the proposed expenditures during each phase of the project."
+    },
+    {
+      "item": "Cost estimates or bids from multiple sources (if contracting a specific technical consultant or expert)",
+      "userWrites": false,
+      "quote": "Applicants proposing to contract with a specific technical consultant or other subject matter expert must submit cost estimates/bids from multiple sources"
+    },
+    {
+      "item": "Letter of commitment signed by the applying jurisdiction (one from each partner for partnerships); an ordinance or resolution may be submitted instead",
+      "userWrites": true,
+      "quote": "Submit a letter of commitment signed by the applying jurisdiction that outlines its intent to 1) vote on and/or adopt or 2) enforce an energy code equivalent to or stronger than Colorado's minimum energy code."
+    },
+    {
+      "item": "Attestation form",
+      "userWrites": false,
+      "quote": "Submit an attestation form (see example form here) which states that the applicant is aware of all requirements of this program"
+    }
+  ],
+  "libraryRequired": []
+}

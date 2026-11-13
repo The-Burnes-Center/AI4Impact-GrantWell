@@ -4,6 +4,7 @@
  * and configures DynamoDB tables and S3 buckets for storing chat history and NOFO data.
  */
 
+import { NagSuppressions } from "cdk-nag";
 import * as cdk from "aws-cdk-lib";
 import { AuthorizationStack } from "../authorization";
 import { WebsocketBackendAPI } from "./gateway/websocket-api";
@@ -27,7 +28,7 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as logs from "aws-cdk-lib/aws-logs";
 import * as path from "path";
-import { InstanceConfig, limits, regions, singleState, supportedStatesEnv } from "../config/instance-config";
+import { InstanceConfig, allowedOrigins, limits, regions, singleState, supportedStatesEnv } from "../config/instance-config";
 
 // See the matching constant in functions/functions.ts: while "true", a legacy stateless Admin
 // still resolves to platform-wide. Flip both to "false" only after migrating every pool.
@@ -52,7 +53,8 @@ export class ChatBotApi extends Construct {
 
     const SUPPORTED_STATES_ENV = supportedStatesEnv(props.config);
     const tables = new TableStack(this, "TableStack");
-    const buckets = new S3BucketStack(this, "BucketStack");
+    const origins = allowedOrigins(props.config);
+    const buckets = new S3BucketStack(this, "BucketStack", { allowedOrigins: origins });
     const openSearch = new OpenSearchStack(this, "OpenSearchStack", { config: props.config });
     const knowledgeBase = new KnowledgeBaseStack(this, "KnowledgeBaseStack", {
       config: props.config,
@@ -62,7 +64,7 @@ export class ChatBotApi extends Construct {
     });
 
     const instanceLimits = limits(props.config);
-    const restBackend = new RestBackendAPI(this, "RestBackend", { throttle: instanceLimits.httpApiThrottle });
+    const restBackend = new RestBackendAPI(this, "RestBackend", { throttle: instanceLimits.httpApiThrottle, allowedOrigins: origins });
     this.httpAPI = restBackend;
     const websocketBackend = new WebsocketBackendAPI(
       this,
@@ -96,7 +98,6 @@ export class ChatBotApi extends Construct {
       userDocumentsBucket: buckets.userDocumentsBucket,
       grantsGovApiKey: props.grantsGovApiKey,
       digestLogoWidth: props.digestLogoWidth,
-      openSearchCollection: openSearch.openSearchCollection,
       userPool: props.authentication.userPool,
     });
     this.lambdaFunctions = lambdaFunctions;
@@ -109,7 +110,7 @@ export class ChatBotApi extends Construct {
       }
     );
 
-    websocketBackend.wsAPI.addRoute("getChatbotResponse", {
+    const chatRoute = websocketBackend.wsAPI.addRoute("getChatbotResponse", {
       integration: new WebSocketLambdaIntegration(
         "chatbotResponseIntegration",
         lambdaFunctions.chatFunction
@@ -123,18 +124,22 @@ export class ChatBotApi extends Construct {
       ),
       authorizer: wsAuthorizer,
     });
-    websocketBackend.wsAPI.addRoute("$default", {
+    const defaultRoute = websocketBackend.wsAPI.addRoute("$default", {
       integration: new WebSocketLambdaIntegration(
         "chatbotConnectionIntegration",
         lambdaFunctions.chatFunction
       ),
     });
-    websocketBackend.wsAPI.addRoute("$disconnect", {
+    const disconnectRoute = websocketBackend.wsAPI.addRoute("$disconnect", {
       integration: new WebSocketLambdaIntegration(
         "chatbotDisconnectionIntegration",
         lambdaFunctions.chatFunction
       ),
     });
+
+    NagSuppressions.addResourceSuppressions([chatRoute, defaultRoute, disconnectRoute], [
+      { id: "AwsSolutions-APIG4", reason: "API Gateway authorizes a WebSocket connection on $connect only; later routes run on that authorized connection." },
+    ]);
 
     websocketBackend.wsAPI.grantManageConnections(lambdaFunctions.chatFunction);
 
@@ -390,6 +395,7 @@ export class ChatBotApi extends Construct {
         NOFO_METADATA_TABLE_NAME: tables.nofoMetadataTable.tableName,
         SUPPORTED_STATES: SUPPORTED_STATES_ENV,
       LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+        ...(singleState(props.config) && { SINGLE_STATE: singleState(props.config)!.code }),
         DAILY_USAGE_TABLE_NAME: tables.dailyUsageTable.tableName,
         APPLICATIONS_PER_DAY: String(instanceLimits.applicationsPerDay),
       },
@@ -676,42 +682,18 @@ export class ChatBotApi extends Construct {
       });
     }
 
-    // Developer-only: render the real digest template against real data (the caller's prefs and the
-    // live active NOFO pool); POST can also send the rendered digest to the caller as a test.
-    // The function is defined in LambdaFunctionStack so it shares that stack's
-    // js-shared layer (avoids a cross-stack layer reference).
-    const notificationDigestPreviewIntegration = new HttpLambdaIntegration(
-      "NotificationDigestPreviewIntegration",
-      lambdaFunctions.notificationDigestPreviewFunction
-    );
-    restBackend.restAPI.addRoutes({
-      path: "/notification-digest/preview",
-      methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST],
-      integration: notificationDigestPreviewIntegration,
-      authorizer: httpAuthorizer,
-    });
-
-    // Developer-only: fire the real digest on demand (scope=me → caller, scope=all → everyone).
-    const notificationDigestBroadcastIntegration = new HttpLambdaIntegration(
-      "NotificationDigestBroadcastIntegration",
-      lambdaFunctions.notificationDigestBroadcastFunction
-    );
-    restBackend.restAPI.addRoutes({
-      path: "/notification-digest/broadcast",
-      methods: [apigwv2.HttpMethod.POST],
-      integration: notificationDigestBroadcastIntegration,
-      authorizer: httpAuthorizer,
-    });
-
     const notificationUnsubscribeIntegration = new HttpLambdaIntegration(
       "NotificationUnsubscribeIntegration",
       lambdaFunctions.notificationUnsubscribeFunction
     );
-    restBackend.restAPI.addRoutes({
+    const unsubscribeRoutes = restBackend.restAPI.addRoutes({
       path: "/unsubscribe",
       methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST],
       integration: notificationUnsubscribeIntegration,
     });
+    NagSuppressions.addResourceSuppressions(unsubscribeRoutes, [
+      { id: "AwsSolutions-APIG4", reason: "One-click unsubscribe from an email must work signed out; the handler verifies an HMAC token in the link." },
+    ]);
 
     // Still the raw execute-api host, which doesn't match the From domain. Branding it needs a
     // `/unsubscribe*` behavior on the app's CloudFront distribution, but that is built by

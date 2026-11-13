@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -18,6 +18,7 @@ import type {
   RankedItem,
 } from "../../../common/api-client/analytics-client";
 import { SINGLE_STATE, SUPPORTED_STATES, stateNameFromCode } from "../../../common/states";
+import { DEFAULT_COLORS, contrastRatio, mix } from "../../../common/palette";
 import OutcomesSection from "./OutcomesSection";
 import "../../../styles/analytics.css";
 
@@ -33,28 +34,35 @@ interface AnalyticsTabProps {
   userState: string;
 }
 
-// Recharts needs literal colors, so the branded tokens are read at render. Two-series charts pair the
-// primary with the highlight (distinct hues on the default palette: CVD ΔE 37.7), backed by direct
-// value labels + a table equivalent for the low-contrast highlight.
-const cssVar = (name: string, fallback: string) =>
-  getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+// Recharts needs literal colors, so the branded tokens are read at render. Fills are primary, primary-active
+// or a mix of the two; the palette rules hold both at 4.5:1 on white and a mix is never lighter than its ends.
+const HEX = /^#[0-9a-f]{6}$/i;
+const cssVar = (name: string, fallback: string) => {
+  const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return HEX.test(value) ? value : fallback;
+};
+
+const WHITE = "#FFFFFF"; // color-lint-allow
+const FUNNEL_STEPS = 7;
+
+/** Darkens a palette that skipped the brand contrast check until it holds 3:1 on white. */
+function onWhite(color: string): string {
+  let shade = color;
+  for (let weight = 0.1; contrastRatio(shade, WHITE) < 3 && weight <= 1; weight += 0.1) {
+    shade = mix(color, "#000000", weight); // color-lint-allow
+  }
+  return shade;
+}
 
 function chartColors() {
-  const primary = cssVar("--gw-color-primary", "#23776C");
+  const primary = onWhite(cssVar("--gw-color-primary", DEFAULT_COLORS.primary));
+  const primaryActive = onWhite(cssVar("--gw-color-primary-active", DEFAULT_COLORS.primaryActive));
   return {
-    registered: primary,
-    active: cssVar("--gw-color-highlight", "#F6C51B"),
+    registered: primaryActive,
+    active: primary,
     single: primary,
-    // Sequential ramp for the ordered funnel, light → dark.
-    funnel: [
-      cssVar("--gw-color-primary-soft", "#8CC0B7"),
-      cssVar("--gw-color-primary-mid", "#5BA294"),
-      cssVar("--gw-color-accent", "#388557"),
-      primary,
-      cssVar("--gw-color-primary-deep", "#1B5D54"),
-      cssVar("--gw-color-primary-hover", "#195C53"),
-      cssVar("--gw-color-primary-active", "#244140"),
-    ],
+    // Sequential ramp for the ordered funnel, primary → primary-active.
+    funnel: Array.from({ length: FUNNEL_STEPS }, (_, i) => mix(primary, primaryActive, i / (FUNNEL_STEPS - 1))),
   };
 }
 const AXIS_INK = "#52514e";
@@ -63,11 +71,11 @@ const GRID = "#e1e0d9";
 const WINDOWS: AnalyticsWindow[] = [7, 30, 90];
 
 const STAGE_LABELS: Record<string, string> = {
-  project_basics: "Project Basics",
+  project_basics: "Project basics",
   questionnaire: "Questionnaire",
-  uploading_documents: "Additional Information",
+  uploading_documents: "Additional information",
   generating_draft: "Generating draft",
-  editing_sections: "Section Editor",
+  editing_sections: "Section editor",
   reviewing: "Review",
   submitted: "Submitted",
 };
@@ -86,6 +94,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
   );
   const [loading, setLoading] = useState(true);
   const colors = useMemo(chartColors, []);
+  const hatchId = `analytics-hatch-${useId().replace(/:/g, "")}`;
 
   const fetchAnalytics = useCallback(
     async (w: AnalyticsWindow, state: string) => {
@@ -119,13 +128,13 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
         </p>
         <div className="analytics__controls">
           {!isStateAdmin && !SINGLE_STATE && (
-            <div className="analytics__state">
-              <label className="visually-hidden" htmlFor="analytics-state">
+            <div className="gw-field analytics__state">
+              <label className="gw-field__label" htmlFor="analytics-state">
                 Filter by state
               </label>
               <select
                 id="analytics-state"
-                className="analytics__state-select"
+                className="gw-input analytics__state-select"
                 value={stateFilter}
                 onChange={(e) => setStateFilter(e.target.value)}
               >
@@ -139,7 +148,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
             </div>
           )}
           <div
-            className="analytics__window"
+            className="gw-toggle analytics__window"
             role="group"
             aria-label="Time window"
           >
@@ -147,7 +156,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
               <button
                 key={w}
                 type="button"
-                className={`analytics__window-btn ${
+                className={`gw-toggle__option analytics__window-btn ${
                   windowDays === w ? "analytics__window-btn--active" : ""
                 }`}
                 aria-pressed={windowDays === w}
@@ -189,6 +198,16 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
             subtitle={`Registered and active (active = signed in within ${data.window} days)`}
             empty={data.usersByState.length === 0}
           >
+            <svg width="0" height="0" aria-hidden="true" focusable="false" style={{ position: "absolute" }}>
+              <defs>
+                <pattern id={hatchId} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                  <rect width="6" height="6" fill={colors.active} />
+                  <line x1="0" y1="0" x2="0" y2="6" stroke={WHITE} strokeWidth="2" />
+                </pattern>
+              </defs>
+            </svg>
+            {/* Screen readers get the table below instead of the drawing. */}
+            <div aria-hidden="true">
             <ResponsiveContainer width="100%" height={280}>
               <BarChart
                 accessibilityLayer={false}
@@ -207,11 +226,12 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
                 <Bar dataKey="Registered" fill={colors.registered} radius={[4, 4, 0, 0]} maxBarSize={44}>
                   <LabelList dataKey="Registered" position="top" style={{ fill: AXIS_INK, fontSize: 11 }} />
                 </Bar>
-                <Bar dataKey="Active" fill={colors.active} radius={[4, 4, 0, 0]} maxBarSize={44}>
+                <Bar dataKey="Active" fill={`url(#${hatchId})`} stroke={colors.active} radius={[4, 4, 0, 0]} maxBarSize={44}>
                   <LabelList dataKey="Active" position="top" style={{ fill: AXIS_INK, fontSize: 11 }} />
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
+            </div>
             <VisuallyHiddenTable
               caption="Users by state"
               columns={["State", "Registered", "Active"]}
@@ -233,6 +253,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
             }
             empty={data.draftFunnel.total === 0}
           >
+            <div aria-hidden="true">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart
                 accessibilityLayer={false}
@@ -241,14 +262,15 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
                   name: STAGE_LABELS[s.stage] || s.stage,
                   count: s.count,
                 }))}
-                margin={{ top: 8, right: 40, bottom: 4, left: 40 }}
+                margin={{ top: 8, right: 40, bottom: 4, left: 16 }}
               >
                 <CartesianGrid stroke={GRID} horizontal={false} />
                 <XAxis type="number" allowDecimals={false} tick={{ fill: AXIS_INK, fontSize: 12 }} />
+                {/* Wide enough that no stage name wraps: recharts splits a wrapped label into tspans with no space between. */}
                 <YAxis
                   type="category"
                   dataKey="name"
-                  width={120}
+                  width={150}
                   tick={{ fill: AXIS_INK, fontSize: 12 }}
                 />
                 <Tooltip cursor={{ fill: "rgba(11,11,11,0.04)" }} />
@@ -260,6 +282,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
+            </div>
             <VisuallyHiddenTable
               caption="Grant application funnel"
               columns={["Stage", "Applications"]}
@@ -301,7 +324,7 @@ const StatTile: React.FC<{ label: string; value: number }> = ({
   label,
   value,
 }) => (
-  <div className="metric-card" aria-label={`${label}: ${value}`}>
+  <div className="metric-card">
     <div className="metric-card__value">{value.toLocaleString()}</div>
     <div className="metric-card__label">{label}</div>
   </div>

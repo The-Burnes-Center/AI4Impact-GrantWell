@@ -24,8 +24,8 @@
       "conflict": true
     },
     {
-      "kind": "other",
-      "label": "Announcement closes (open continuously until 18 September 2027)",
+      "kind": "application",
+      "label": "Announcement open continuously until 5:00 p.m. ET, 18 September 2027, the last date any application is accepted",
       "date": "2027-09-18",
       "time": "17:00",
       "tzAsWritten": "ET",

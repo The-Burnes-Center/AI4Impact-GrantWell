@@ -21,7 +21,7 @@
  *   errors={formErrors}
  *   title="Please fix the following issues:"
  *   fieldLabels={{
- *     orgName: "Organization Name",
+ *     orgName: "Organization name",
  *     einNumber: "EIN Number"
  *   }}
  * />
@@ -37,8 +37,11 @@ export interface FormErrorSummaryProps {
   title?: string;
   /** Mapping of field names to display labels */
   fieldLabels?: Record<string, string>;
-  /** Whether to auto-focus the summary when errors appear */
-  autoFocus?: boolean;
+  /**
+   * Bump on each submit to move focus to the summary. Errors that appear on blur or while typing
+   * never move focus (WCAG 2.4.3, 3.2.1).
+   */
+  focusRequest?: number;
   /** Callback when clicking an error link */
   onErrorClick?: (fieldName: string) => void;
   /** Override the generated id (e.g. when a form needs a stable focus target) */
@@ -49,11 +52,12 @@ const FormErrorSummary: React.FC<FormErrorSummaryProps> = ({
   errors,
   title,
   fieldLabels = {},
-  autoFocus = true,
+  focusRequest,
   onErrorClick,
   id,
 }) => {
   const summaryRef = useRef<HTMLDivElement>(null);
+  const handledFocusRequest = useRef(focusRequest);
   const generatedId = useId();
   const summaryId = id ?? generatedId;
   
@@ -61,12 +65,11 @@ const FormErrorSummary: React.FC<FormErrorSummaryProps> = ({
   const activeErrors = Object.entries(errors).filter(([_, message]) => Boolean(message));
   const errorCount = activeErrors.length;
 
-  // Auto-focus when errors appear
   useEffect(() => {
-    if (autoFocus && errorCount > 0 && summaryRef.current) {
-      summaryRef.current.focus();
-    }
-  }, [autoFocus, errorCount]);
+    if (focusRequest === handledFocusRequest.current) return;
+    handledFocusRequest.current = focusRequest;
+    if (errorCount > 0) summaryRef.current?.focus();
+  }, [focusRequest, errorCount]);
 
   if (errorCount === 0) {
     return null;
@@ -145,7 +148,8 @@ const FormErrorSummary: React.FC<FormErrorSummaryProps> = ({
       tabIndex={-1}
       style={containerStyle}
     >
-      <h2 style={titleStyle}>{title || defaultTitle}</h2>
+      {/* Rendered inside a card whose title is the h2. */}
+      <h3 style={titleStyle}>{title || defaultTitle}</h3>
       <ul style={listStyle}>
         {activeErrors.map(([fieldName, message]) => (
           <li key={fieldName} style={listItemStyle}>

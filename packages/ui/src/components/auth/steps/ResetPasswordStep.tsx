@@ -45,9 +45,9 @@ export default function ResetPasswordStep({
             placeholder="Enter 6-digit code"
             value={verificationCode}
             onChange={(event) => onVerificationCodeChange(event.target.value)}
-            disabled={loading}
+            readOnly={loading}
             required
-            className="form-input"
+            className="gw-input form-input"
             inputMode="numeric"
             autoComplete="one-time-code"
             aria-required="true"
@@ -65,10 +65,10 @@ export default function ResetPasswordStep({
             placeholder="Enter new password"
             value={newPassword}
             onChange={(event) => onNewPasswordChange(event.target.value)}
-            disabled={loading}
+            readOnly={loading}
             autoComplete="new-password"
             required
-            className="form-input"
+            className="gw-input form-input"
             aria-required="true"
             aria-invalid={newPasswordErrorId ? true : undefined}
             aria-describedby={
@@ -96,14 +96,13 @@ export default function ResetPasswordStep({
           <Button
             variant="primary"
             type="submit"
-            disabled={loading}
-            className="login-submit-button"
+            aria-disabled={loading || undefined}
+            className="gw-btn gw-btn--primary login-submit-button"
             aria-busy={loading}
           >
             {loading ? (
               <>
                 <Spinner animation="border" size="sm" aria-hidden="true" className="me-2" />
-                <span className="visually-hidden">Loading</span>
                 Resetting...
               </>
             ) : (

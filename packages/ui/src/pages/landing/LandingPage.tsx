@@ -9,6 +9,7 @@ import {
 import {
   LandingNavbar,
   OmniHeader,
+  SkipLink,
 } from "./chrome";
 import { BrandLogo } from "../../components/common/BrandLogo";
 import { PublicSiteHeader, SiteBanner, SiteFooter } from "../../components/common/ChromeSlots";
@@ -44,14 +45,19 @@ export default function LandingPage() {
 
   return (
     <div className="marketing">
+      <SkipLink />
       <SiteBanner />
       <PublicSiteHeader />
       <OmniHeader />
 
+      <div className="marketing__hero-frame">
+      {!HAS_CHROME_HEADER && <LandingNavbar className="marketing__nav--over-hero" />}
       <main id="main-content" tabIndex={-1}>
-      <section className="marketing__hero" aria-labelledby="hero-title">
+      <section
+        className={"marketing__hero" + (HAS_CHROME_HEADER ? "" : " marketing__hero--under-nav")}
+        aria-labelledby="hero-title"
+      >
         <div className="marketing__hero-bg" aria-hidden="true" />
-        {!HAS_CHROME_HEADER && <LandingNavbar />}
         <div className="marketing__hero-row">
           <div className="marketing__hero-content">
             <h1 className="marketing__hero-title" id="hero-title">
@@ -67,18 +73,18 @@ export default function LandingPage() {
             <div className="marketing__hero-actions">
               <button
                 type="button"
-                className="mk-btn mk-btn--primary"
+                className="gw-btn gw-btn--primary mk-btn mk-btn--primary"
                 onClick={goToLogin}
               >
-                <span>Get Started</span>
+                <span>Get started</span>
                 <ArrowRight className="mk-btn__arrow mk-btn__arrow--lg" />
               </button>
               <button
                 type="button"
-                className="mk-btn mk-btn--outline"
+                className="gw-btn gw-btn--secondary mk-btn mk-btn--outline"
                 onClick={scrollToFeatures}
               >
-                <span>Learn More</span>
+                <span>Learn more</span>
                 <ArrowRight className="mk-btn__arrow mk-btn__arrow--lg" />
               </button>
             </div>
@@ -136,16 +142,17 @@ export default function LandingPage() {
           </p>
           <button
             type="button"
-            className="mk-btn mk-btn--light"
+            className="gw-btn gw-btn--inverse mk-btn mk-btn--light"
             onClick={goToLogin}
           >
-            <span>Get Started</span>
+            <span>Get started</span>
             <ArrowRight className="mk-btn__arrow mk-btn__arrow--lg" />
           </button>
         </div>
         <div className="marketing__band-spacer" aria-hidden="true" />
       </section>
       </main>
+      </div>
 
       <SiteFooter signedIn={false} />
 

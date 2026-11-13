@@ -3,6 +3,7 @@ import * as path from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
 import { ENVS, appDir, outDir } from "../scripts/synth-ci.mjs";
 import { validateInstanceConfig, type InstanceConfig } from "../lib/config/instance-config";
+import { stagedInstance } from "./variant-synth";
 
 type Resource = { Type: string; Properties?: any };
 
@@ -34,6 +35,14 @@ describe("auth.mfaDeadline", () => {
     expect(() => validateInstanceConfig(withDeadline("2026-11-02T00:00:00Z"))).not.toThrow();
     expect(() => validateInstanceConfig(withDeadline("2026-11-02T00:00:00"))).toThrow(/mfaDeadline/);
     expect(() => validateInstanceConfig(withDeadline("November 2"))).toThrow(/mfaDeadline/);
+  });
+});
+
+describe("auth.mfaRequired", () => {
+  it("is staged for the UI only where the pool requires MFA", () => {
+    expect(stagedInstance(outDir("prod")).mfaRequired).toBe(true);
+    expect(configFor("dev").auth.mfaRequired).toBe(false);
+    expect(stagedInstance(outDir("dev"))).not.toHaveProperty("mfaRequired");
   });
 });
 

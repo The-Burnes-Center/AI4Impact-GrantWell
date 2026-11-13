@@ -10,6 +10,10 @@ interface ModalProps {
   children: React.ReactNode;
   maxWidth?: string;
   hideCloseButton?: boolean;
+  /** "h1" when the dialog stands in for a page that has no h1 of its own while it is open. */
+  titleLevel?: "h1" | "h2";
+  /** Takes the initial focus instead of the first focusable element (the close button). */
+  initialFocusRef?: React.RefObject<HTMLElement | null>;
 }
 
 /**
@@ -21,32 +25,17 @@ interface ModalProps {
  * - Consistent styling matching Dashboard
  */
 export const Modal = React.memo<ModalProps>(
-  ({ isOpen, onClose, title, children, maxWidth = "500px", hideCloseButton = false }) => {
-    const modalRef = useFocusTrap<HTMLDivElement>({ isOpen, onEscape: onClose });
+  ({ isOpen, onClose, title, children, maxWidth = "500px", hideCloseButton = false, titleLevel = "h2", initialFocusRef }) => {
+    const Title = titleLevel;
+    const modalRef = useFocusTrap<HTMLDivElement>({ isOpen, onEscape: onClose, initialFocus: initialFocusRef });
     const titleId = useId();
 
     if (!isOpen) return null;
 
     return (
       <div
-        className="modal-overlay"
+        className="gw-modal__overlay modal-overlay"
         role="presentation"
-        style={{
-          position: "fixed",
-          // Full-viewport: an offset would leave the top bar clickable behind an aria-modal dialog.
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.6)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 1000,
-          backdropFilter: "blur(3px)",
-          padding: "20px",
-          boxSizing: "border-box",
-        }}
         onClick={
           hideCloseButton
             ? undefined
@@ -57,68 +46,28 @@ export const Modal = React.memo<ModalProps>(
       >
         <div
           ref={modalRef}
-          className="modal-content"
+          className="gw-modal modal-content"
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
-          style={{
-            backgroundColor: "white",
-            borderRadius: "12px",
-            width: "100%",
-            maxWidth: maxWidth,
-            maxHeight: "85vh",
-            boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
-            position: "relative",
-            display: "flex",
-            flexDirection: "column",
-            overflow: "hidden",
-          }}
+          style={{ maxWidth }}
         >
-          <div
-            className="modal-header"
-            style={{
-              padding: "20px 25px",
-              borderBottom: "1px solid #e0e0e0",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              backgroundColor: "#f9fafc",
-              borderTopLeftRadius: "12px",
-              borderTopRightRadius: "12px",
-              flexShrink: 0,
-            }}
-          >
-            <h2
-              id={titleId}
-              style={{
-                margin: 0,
-                color: "var(--gw-color-primary)",
-                fontSize: "20px",
-                fontWeight: 600,
-              }}
-            >
+          <div className="gw-modal__header modal-header">
+            <Title id={titleId} className="gw-modal__title">
               {title}
-            </h2>
+            </Title>
             {!hideCloseButton && (
               <button
-                className="modal-close-button"
+                type="button"
+                className="gw-btn gw-btn--icon modal-close-button"
                 onClick={onClose}
                 aria-label="Close modal"
               >
-                <LuX size={20} />
+                <LuX size={20} aria-hidden="true" />
               </button>
             )}
           </div>
-          <div
-            className="modal-body"
-            style={{
-              padding: "25px",
-              overflowY: "auto",
-              backgroundColor: "white",
-            }}
-          >
-            {children}
-          </div>
+          <div className="gw-modal__body modal-body">{children}</div>
         </div>
       </div>
     );

@@ -7,9 +7,11 @@ import { statusToStep } from "../../common/helpers/document-editor-utils";
 import DocEditorSessions from "../../components/document-editor/DocEditorSessions";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import Breadcrumbs from "../../components/common/Breadcrumbs";
+import { useNotifications } from "../../components/notifications/NotificationManager";
 import "../../styles/dashboard.css";
 
 export default function DocEditorSessionsPage() {
+  const { addNotification } = useNotifications();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const params = useParams();
@@ -67,6 +69,7 @@ export default function DocEditorSessionsPage() {
         
         if (!selectedDraft || !selectedDraft.documentIdentifier) {
           console.error("Could not find draft or its NOFO identifier");
+          addNotification("error", "That application could not be opened. Refresh the list and try again.");
           return;
         }
         
@@ -78,12 +81,13 @@ export default function DocEditorSessionsPage() {
       }
     } catch (e) {
       console.error("Error fetching draft:", e);
+      addNotification("error", "That application could not be opened. Refresh the list and try again.");
     }
   };
 
   const breadcrumbItems = [
-    { label: "Home", onClick: () => navigate("/") },
-    { label: "My Applications" },
+    { label: "Home", href: "/home" },
+    { label: "My applications" },
   ];
 
   return (

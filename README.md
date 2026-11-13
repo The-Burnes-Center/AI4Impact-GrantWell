@@ -118,10 +118,10 @@ States upgrade with `scripts/upgrade.sh <version>` in their own repo (see `templ
 ## Grant Writing Flow
 
 1. **Grant Selection** → Browse and select from available NOFOs
-2. **Project Basics** → Enter basic project information
+2. **Project basics** → Enter basic project information
 3. **Questionnaire** → Complete project-specific questions
 4. **Document Upload** → Submit supporting documentation
-5. **Section Editor** → Draft and refine narrative sections
+5. **Section editor** → Draft and refine narrative sections
 6. **Review** → Final review and export of completed application
 
 ## Security & Privacy

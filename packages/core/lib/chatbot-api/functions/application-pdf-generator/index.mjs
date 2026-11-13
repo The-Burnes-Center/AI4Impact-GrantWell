@@ -151,7 +151,7 @@ function generateHtmlFromDraft(draftData) {
     sectionsHtml += `
         <section id="section-${idx}" class="section">
             <h2>${idx}. ${escapeHtml(sectionName)}</h2>
-            <div class="content">${sanitizeContentHtml(markdownToContentHtml(content))}</div>
+            <div class="content">${sanitizeContentHtml(markdownToContentHtml(content), { links: true })}</div>
         </section>
         `;
     idx++;
@@ -327,6 +327,21 @@ function escapeHtml(text) {
   return text.replace(/[&<>"']/g, m => map[m]);
 }
 
+const UNSAFE_CHROMIUM_ARGS = new Set(['--disable-web-security', '--allow-running-insecure-content']);
+const LOCAL_URL_RE = /^(data|about|blob):/i;
+
+/** JavaScript off and no network: only inline content renders. */
+async function openOfflinePage(browser) {
+  const page = await browser.newPage();
+  await page.setJavaScriptEnabled(false);
+  await page.setRequestInterception(true);
+  page.on('request', (request) => {
+    if (LOCAL_URL_RE.test(request.url())) request.continue();
+    else request.abort('blockedbyclient');
+  });
+  return page;
+}
+
 /**
  * Generate PDF buffer from HTML content using Puppeteer/Chromium
  */
@@ -336,15 +351,15 @@ async function generatePdfBuffer(html) {
     console.log('Launching browser for PDF generation');
     
     browser = await puppeteer.launch({
-      args: chromium.args,
+      // --no-sandbox stays: Lambda has no user namespaces or setuid helper for Chromium's sandbox.
+      args: chromium.args.filter((arg) => !UNSAFE_CHROMIUM_ARGS.has(arg)),
       defaultViewport: { width: 1920, height: 1080, deviceScaleFactor: 1, isMobile: false, hasTouch: false, isLandscape: true },
       executablePath: await chromium.executablePath(),
       headless: 'shell',
-      ignoreHTTPSErrors: true,
     });
 
     console.log('Browser launched');
-    const page = await browser.newPage();
+    const page = await openOfflinePage(browser);
     
     // Set content and wait for it to load
     await page.setContent(html, {

@@ -2,7 +2,7 @@ import { EXTRACTION_PROMPT } from "./prompts.mjs";
 import { updateProcessingStatus } from "../shared/status.mjs";
 import { readRawText } from "../shared/s3.mjs";
 import { invokeStructuredOutput, isRetryableError } from "../shared/bedrock.mjs";
-import { validateMergedSummary, countItems } from "../shared/json.mjs";
+import { validateMergedSummary, countItems, isPlaceholderText } from "../shared/json.mjs";
 import { EXTRACTION_SCHEMA } from "../shared/schemas.mjs";
 
 const SONNET_MODEL = process.env.SONNET_MODEL_ID;
@@ -14,6 +14,8 @@ const MAX_CHUNK_ATTEMPTS = 3;
 const CHUNK_RETRY_BASE_MS = 5000;
 // One attempt can run a full Bedrock request timeout; don't start one the Lambda can't finish.
 const MIN_REMAINING_MS_FOR_RETRY = 5 * 60 * 1000;
+const SPARSE_MIN_CHARS = 20000;
+const SPARSE_MAX_ITEMS = 3;
 
 export const handler = async (event, context) => {
   const { s3Bucket, rawTextKey, nofoName } = event;
@@ -46,7 +48,7 @@ export const handler = async (event, context) => {
   }
 
   const succeeded = outcomes.filter((outcome) => !outcome.error).map((outcome) => outcome.summary);
-  const mergedSummary = chunks.length === 1 ? succeeded[0] : mergeChunkResults(succeeded);
+  const mergedSummary = withoutPlaceholders(mergeChunkResults(succeeded));
 
   console.log(
     `Extracted from ${nofoName}: ${countItems(mergedSummary)} items, ` +
@@ -64,7 +66,13 @@ export const handler = async (event, context) => {
 async function extractChunkWithRetry(chunk, i, total, nofoName, context) {
   for (let attempt = 1; ; attempt++) {
     try {
-      return { summary: await extractFromText(chunk, nofoName) };
+      const summary = await extractFromText(chunk, nofoName);
+      // A rare reply lists one or two items for a whole grant; one more try usually fixes it.
+      if (attempt === 1 && chunk.length >= SPARSE_MIN_CHARS && countItems(summary) < SPARSE_MAX_ITEMS) {
+        console.warn(`Chunk ${i + 1}/${total} of ${nofoName} gave only ${countItems(summary)} item(s), retrying once`);
+        continue;
+      }
+      return { summary };
     } catch (error) {
       const delay = CHUNK_RETRY_BASE_MS * 2 ** (attempt - 1) + Math.random() * 1000;
       const remaining = context?.getRemainingTimeInMillis?.() ?? Infinity;
@@ -162,25 +170,41 @@ function splitIntoChunks(text, chunkSize, overlap) {
   return chunks;
 }
 
-function mergeChunkResults(results) {
-  const categories = [
-    "EligibilityCriteria",
-    "RequiredDocuments",
-    "ProjectNarrativeSections",
-    "KeyDeadlines",
-  ];
+const CATEGORIES = ["EligibilityCriteria", "RequiredDocuments", "ProjectNarrativeSections", "KeyDeadlines"];
 
-  const merged = {};
+// A chunk sees only part of the grant and may say so ("not given in the provided text").
+const CHUNK_BLIND = /\b(?:provided|visible|supplied) (?:text|excerpt|portion)\b|\b(?:in|from) this (?:text|excerpt)\b|\bthe excerpt\b|\bnot (?:included|given|stated|shown|provided) here\b/i;
 
-  for (const cat of categories) {
-    const allItems = results.flatMap((r) => r[cat] || []);
-    merged[cat] = deduplicateItems(allItems);
+function withoutChunkBlindSentences(item) {
+  if (!item?.description || !CHUNK_BLIND.test(item.description)) return item;
+  const kept = item.description.split(/(?<=[.!?])\s+/).filter((s) => !CHUNK_BLIND.test(s)).join(" ").trim();
+  return kept ? { ...item, description: kept } : null;
+}
+
+export function withoutPlaceholders(summary) {
+  const out = { ...summary };
+  for (const cat of CATEGORIES) {
+    if (Array.isArray(out[cat])) {
+      out[cat] = out[cat]
+        .map(withoutChunkBlindSentences)
+        .filter((i) => i && !isPlaceholderText(i.item) && !isPlaceholderText(i.description));
+    }
   }
+  return out;
+}
 
+export function mergeChunkResults(results) {
+  const merged = {};
+  for (const cat of CATEGORIES) {
+    merged[cat] = deduplicateItems(results.flatMap((r) => r[cat] || []), cat === "ProjectNarrativeSections");
+  }
+  // Prose the applicant writes is a section; the same name under documents repeats it.
+  const sections = new Set(merged.ProjectNarrativeSections.map((s) => normalizeItemName(s.item)));
+  merged.RequiredDocuments = merged.RequiredDocuments.filter((d) => !sections.has(normalizeItemName(d.item)));
   return merged;
 }
 
-function deduplicateItems(items) {
+function deduplicateItems(items, joinDescriptions = false) {
   const seen = new Map();
 
   for (const item of items) {
@@ -193,15 +217,34 @@ function deduplicateItems(items) {
       continue;
     }
 
-    if ((item.description?.length || 0) > (existing.description?.length || 0)) {
-      seen.set(key, item);
-    }
+    const [longer, shorter] = (item.description?.length || 0) > (existing.description?.length || 0) ? [item, existing] : [existing, item];
+    // One chunk may hold a section's instructions and another its review criteria.
+    const adds = joinDescriptions && shorter.description && !restates(longer.description ?? "", shorter.description);
+    seen.set(key, adds ? { ...longer, description: `${longer.description} ${shorter.description}` } : longer);
   }
 
   return Array.from(seen.values());
 }
 
-function normalizeItemName(name) {
+const wordsOf = (text) => text.toLowerCase().match(/[a-z0-9]+/g) ?? [];
+
+function restates(longer, shorter) {
+  const have = new Set(wordsOf(longer));
+  const words = wordsOf(shorter);
+  return words.filter((w) => have.has(w)).length >= 0.8 * words.length;
+}
+
+// Chunks name one item differently ("Attachment 5: Statement of Work", "Statement of Work
+// (Attachment 5)", "Data Management and Sharing (DMS) Plan"): compare word sets, without an
+// acronym of the name's own words. A scope in parentheses ("(Senegal)", "(SEED)") is kept.
+export function normalizeItemName(name) {
   if (!name) return "";
-  return name.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const initials = wordsOf(name.replace(/\([^)]*\)/g, " ")).map((w) => w[0]).join("");
+  const isAcronym = (acr) => {
+    let at = 0;
+    for (const ch of initials) if (ch === acr[at]) at++;
+    return at === acr.length;
+  };
+  const bare = name.replace(/\(\s*([A-Z]{2,8})\s*\)/g, (m, acr) => (isAcronym(acr.toLowerCase()) ? " " : m));
+  return [...new Set(wordsOf(bare))].sort().join(" ");
 }

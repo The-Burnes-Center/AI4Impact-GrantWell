@@ -51,12 +51,7 @@
         "accentHover": "#00155F"
       },
       "tints": {
-        "--gw-color-primary-deep": "#001457",
-        "--gw-color-primary-border": "#BFC6DB",
-        "--gw-color-primary-muted": "#1A2652",
-        "--gw-color-primary-alt": "#00186C",
-        "--gw-color-primary-soft": "#808CB8",
-        "--gw-color-primary-mid": "#405394"
+        "--gw-color-primary-border": "#BFC6DB"
       },
       "failures": []
     },
@@ -79,12 +74,7 @@
         "accentHover": "#1B4A2C"
       },
       "tints": {
-        "--gw-color-primary-deep": "#001457",
-        "--gw-color-primary-border": "#BFC6DB",
-        "--gw-color-primary-muted": "#1A2652",
-        "--gw-color-primary-alt": "#00186C",
-        "--gw-color-primary-soft": "#808CB8",
-        "--gw-color-primary-mid": "#405394"
+        "--gw-color-primary-border": "#BFC6DB"
       },
       "failures": []
     },
@@ -107,12 +97,7 @@
         "accentHover": "#32784E"
       },
       "tints": {
-        "--gw-color-primary-deep": "#104270",
-        "--gw-color-primary-border": "#C4D5E3",
-        "--gw-color-primary-muted": "#244461",
-        "--gw-color-primary-alt": "#135289",
-        "--gw-color-primary-soft": "#8AAAC7",
-        "--gw-color-primary-mid": "#4F80AB"
+        "--gw-color-primary-border": "#C4D5E3"
       },
       "failures": []
     },
@@ -130,12 +115,7 @@
         "accentHover": "#419544"
       },
       "tints": {
-        "--gw-color-primary-deep": "#3B893E",
-        "--gw-color-primary-border": "#D2EBD3",
-        "--gw-color-primary-muted": "#407142",
-        "--gw-color-primary-alt": "#49A84D",
-        "--gw-color-primary-soft": "#A6D7A8",
-        "--gw-color-primary-mid": "#79C37C"
+        "--gw-color-primary-border": "#D2EBD3"
       },
       "failures": [
         {

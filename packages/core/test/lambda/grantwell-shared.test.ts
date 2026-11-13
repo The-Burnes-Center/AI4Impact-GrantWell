@@ -111,12 +111,21 @@ describe("assertCanEditNofoOr403", () => {
     expect(JSON.parse(res.body).message).toMatch(/Cannot verify NOFO scope/);
   });
 
-  it("lets the create path through on an unknown scope only when asked", async () => {
+  it("lets the create path through on a missing row only when asked", async () => {
     ddb.on(GetItemCommand).resolves({});
     expect((await shared.assertCanEditNofoOr403(stateAdmin, deps(), "nofos", "New"))?.statusCode).toBe(403);
     await expect(
-      shared.assertCanEditNofoOr403(stateAdmin, deps(), "nofos", "New", { allowUnknownScope: true })
+      shared.assertCanEditNofoOr403(stateAdmin, deps(), "nofos", "New", { allowMissingRow: true })
     ).resolves.toBeNull();
+  });
+
+  it("still denies a state admin an existing row with no scope, or an unreadable one, on the create path", async () => {
+    ddb.on(GetItemCommand).resolves({ Item: marshall({ nofo_name: "Old" }) });
+    const opts = { allowMissingRow: true };
+    expect((await shared.assertCanEditNofoOr403(stateAdmin, deps(), "nofos", "Old", opts))?.statusCode).toBe(403);
+    ddb.on(GetItemCommand).rejects(new Error("throttled"));
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    expect((await shared.assertCanEditNofoOr403(stateAdmin, deps(), "nofos", "Old", opts))?.statusCode).toBe(403);
   });
 });
 
@@ -202,5 +211,84 @@ describe("sanitizeContentHtml", () => {
 
   it("returns an empty string for null input", () => {
     expect(shared.sanitizeContentHtml(null)).toBe("");
+  });
+});
+
+describe("markdownToContentHtml", () => {
+  it("nests the editor's ### and #### headings under the section's h2, and keeps older levels at h3", () => {
+    expect(shared.markdownToContentHtml("### Goal\n\nText.\n\n#### Measures")).toBe(
+      "<h3>Goal</h3><p>Text.</p><h4>Measures</h4>"
+    );
+    expect(shared.markdownToContentHtml("# Top\n\n## Second")).toBe("<h3>Top</h3><h3>Second</h3>");
+  });
+
+  it("converts the editor's lists, links and tables", () => {
+    const html = shared.markdownToContentHtml(
+      [
+        "- one",
+        "- two with [plan](https://example.org/plan)",
+        "",
+        "1. first",
+        "2. second",
+        "",
+        "| Item  | Cost      |",
+        "| ----- | --------- |",
+        "| Boats | **$4,000** |",
+      ].join("\n")
+    );
+    expect(html).toBe(
+      '<ul><li>one</li><li>two with <a href="https://example.org/plan">plan</a></li></ul>' +
+        "<ol><li>first</li><li>second</li></ol>" +
+        "<table><thead><tr><th>Item</th><th>Cost</th></tr></thead>" +
+        "<tbody><tr><td>Boats</td><td><strong>$4,000</strong></td></tr></tbody></table>"
+    );
+  });
+});
+
+describe("markdownToContentHtml exports", () => {
+  it("makes http(s) and mailto links real links and leaves other targets as their text", () => {
+    expect(
+      shared.markdownToContentHtml(
+        "See [the plan](https://example.org/a_b_c?x=1&y=2), [mail](mailto:a@b.org), [bad](javascript:x) and [rel](/local)."
+      )
+    ).toBe(
+      '<p>See <a href="https://example.org/a_b_c?x=1&amp;y=2">the plan</a>, <a href="mailto:a@b.org">mail</a>, bad and rel.</p>'
+    );
+    expect(shared.markdownToContentHtml("[**Bold** link](https://example.org)")).toBe(
+      '<p><a href="https://example.org"><strong>Bold</strong> link</a></p>'
+    );
+  });
+
+  it("keeps nested lists nested, whatever their kind and indent", () => {
+    expect(
+      shared.markdownToContentHtml(
+        ["- one", "  - inner a", "  - inner b", "    1. deep", "- two", "", "1. first", "   - sub", "2. second"].join("\n")
+      )
+    ).toBe(
+      "<ul><li>one<ul><li>inner a</li><li>inner b<ol><li>deep</li></ol></li></ul></li><li>two</li></ul>" +
+        "<ol><li>first<ul><li>sub</li></ul></li><li>second</li></ol>"
+    );
+  });
+
+  it("keeps a continuation line in its item and still ends the list at a blank line", () => {
+    expect(shared.markdownToContentHtml("- item\n  more text\n\nAfter")).toBe("<ul><li>item more text</li></ul><p>After</p>");
+  });
+
+  it("does not split a table cell at an escaped pipe", () => {
+    expect(shared.markdownToContentHtml("| A | B |\n| --- | --- |\n| x \\| y | z \\| |")).toBe(
+      "<table><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>x | y</td><td>z |</td></tr></tbody></table>"
+    );
+  });
+});
+
+describe("sanitizeContentHtml links", () => {
+  it("keeps <a> only for the exporters, with only an http(s) or mailto href", () => {
+    const html =
+      '<a href="https://example.org/?a=1&amp;b=2" target="_blank" onclick="x()">ok</a>' +
+      "<a href='mailto:a@b.org'>mail</a><a href=\"javascript:alert(1)\">js</a><a href=\" jav&#x61;script:x\">enc</a><a>bare</a>";
+    expect(shared.sanitizeContentHtml(html, { links: true })).toBe(
+      '<a href="https://example.org/?a=1&amp;b=2">ok</a><a href="mailto:a@b.org">mail</a><a>js</a><a>enc</a><a>bare</a>'
+    );
+    expect(shared.sanitizeContentHtml(html)).toBe("okmailjsencbare");
   });
 });

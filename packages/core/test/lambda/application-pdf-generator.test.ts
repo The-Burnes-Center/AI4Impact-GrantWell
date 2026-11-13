@@ -3,15 +3,35 @@ import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
-const setContent = vi.hoisted(() => vi.fn(async (_html: string) => {}));
+const browser = vi.hoisted(() => ({
+  setContent: vi.fn(async (_html: string) => {}),
+  launch: vi.fn(),
+  page: {} as Record<string, any>,
+}));
+const setContent = browser.setContent;
 
-vi.mock("@sparticuz/chromium", () => ({ default: { args: [], executablePath: async () => "/chromium" } }));
+vi.mock("@sparticuz/chromium", () => ({
+  default: {
+    args: ["--no-sandbox", "--disable-web-security", "--allow-running-insecure-content", "--single-process"],
+    executablePath: async () => "/chromium",
+  },
+}));
 vi.mock("puppeteer-core", () => ({
   default: {
-    launch: async () => ({
-      newPage: async () => ({ setContent, evaluate: async () => {}, pdf: async () => new Uint8Array([37, 80, 68, 70]) }),
-      close: async () => {},
-    }),
+    launch: async (options: unknown) => {
+      browser.launch(options);
+      const listeners: Record<string, (r: unknown) => void> = {};
+      browser.page = {
+        setContent: browser.setContent,
+        setJavaScriptEnabled: vi.fn(async () => {}),
+        setRequestInterception: vi.fn(async () => {}),
+        on: (event: string, fn: (r: unknown) => void) => (listeners[event] = fn),
+        listeners,
+        evaluate: async () => {},
+        pdf: async () => new Uint8Array([37, 80, 68, 70]),
+      };
+      return { newPage: async () => browser.page, close: async () => {} };
+    },
   },
 }));
 
@@ -35,6 +55,7 @@ beforeEach(() => {
   ddb.on(PutItemCommand).resolves({});
   lambda.on(InvokeCommand).resolves({});
   setContent.mockClear();
+  browser.launch.mockClear();
   vi.spyOn(console, "log").mockImplementation(() => {});
   vi.spyOn(console, "error").mockImplementation(() => {});
 });
@@ -111,9 +132,41 @@ describe("application pdf generator cover", () => {
     expect(html).not.toContain("custom-annex");
   });
 
+  it("renders with JavaScript off, no network and Chromium's web security on", async () => {
+    await exportPdf({ draftData });
+    const options = browser.launch.mock.calls[0][0];
+    expect(options.args).toEqual(["--no-sandbox", "--single-process"]);
+    expect(options).not.toHaveProperty("ignoreHTTPSErrors");
+    expect(browser.page.setJavaScriptEnabled).toHaveBeenCalledWith(false);
+    expect(browser.page.setRequestInterception).toHaveBeenCalledWith(true);
+    const outcome = (url: string) => {
+      const request = { url: () => url, continue: vi.fn(), abort: vi.fn() };
+      browser.page.listeners.request(request);
+      return request.continue.mock.calls.length ? "continue" : "abort";
+    };
+    expect(outcome("data:image/png;base64,AAAA")).toBe("continue");
+    expect(outcome("about:blank")).toBe("continue");
+    expect(outcome("https://fonts.example.com/a.woff2")).toBe("abort");
+    expect(outcome("file:///etc/passwd")).toBe("abort");
+  });
+
   it("still rejects a request without draftData", async () => {
     const res = await handler({ body: JSON.stringify({}) });
     expect(res.statusCode).toBe(400);
     expect(JSON.parse(res.body).error).toBe("draftData is required");
+  });
+});
+
+describe("application pdf generator section bodies", () => {
+  it("renders the editor's headings, real links and nested lists", async () => {
+    const html = await exportPdf({
+      draftData: {
+        ...draftData,
+        sections: { Summary: "### Goal\n\nSee the [plan](https://example.org/plan).\n\n- one\n  - inner" },
+      },
+    });
+    expect(html).toContain("<h3>Goal</h3>");
+    expect(html).toContain('See the <a href="https://example.org/plan">plan</a>.');
+    expect(html).toContain("<ul><li>one<ul><li>inner</li></ul></li></ul>");
   });
 });

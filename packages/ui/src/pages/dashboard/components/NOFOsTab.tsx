@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useId, useRef } from "react";
 import {
   LuPin, LuPinOff, LuFileX, LuUpload, LuInfo, LuFile, LuLoader, LuTriangleAlert, LuPlus, LuTrash,
 } from "react-icons/lu";
@@ -12,8 +12,9 @@ import { PROCESSING_LABELS } from "./processing-stages";
 import TableScrollRegion from "../../../components/ui/TableScrollRegion";
 import { Utils } from "../../../common/utils";
 import type { NOFO, GrantTypeId, CustomQuestion, ReviewFlag } from "../../../common/types/nofo";
-import { GRANT_TYPES, GRANT_CATEGORIES } from "../../../common/types/nofo";
+import { GRANT_TYPES, grantTypeTint, GRANT_CATEGORIES } from "../../../common/types/nofo";
 import { SINGLE_STATE, SUPPORTED_STATES } from "../../../common/states";
+import { sectionLabel } from "./section-labels";
 
 // A single-state deployment's state grants always belong to its state.
 const DEFAULT_UPLOAD_STATE = SINGLE_STATE?.code ?? "";
@@ -24,7 +25,7 @@ function getErrorMessage(error: unknown, fallback: string) {
 
 function reviewFlagTitle(flag: ReviewFlag) {
   const parts = [
-    flag.missingCategories.length > 0 ? `Missing: ${flag.missingCategories.join(", ")}` : "",
+    flag.missingCategories.length > 0 ? `Missing: ${flag.missingCategories.map(sectionLabel).join(", ")}` : "",
     flag.missingParts ?? "",
   ].filter(Boolean);
   return parts.length > 0 ? parts.join(". ") : undefined;
@@ -94,6 +95,23 @@ const NOFOsTab = React.memo(function NOFOsTab({
 
   const [promoteModalOpen, setPromoteModalOpen] = useState(false);
   const [promoting, setPromoting] = useState(false);
+  const reviewFlagIdPrefix = useId();
+
+  const tableRef = useRef<HTMLDivElement>(null);
+  // Pin re-sorts, archive/delete remove the row: keep focus on the control or fall back to the table.
+  const focusBeforeUpdate = useRef<Element | null>(null);
+  const updateNofosKeepingFocus = useCallback((updater: (nofos: NOFO[]) => NOFO[]) => {
+    focusBeforeUpdate.current = document.activeElement;
+    updateNofos(updater);
+  }, [updateNofos]);
+
+  useEffect(() => {
+    const previous = focusBeforeUpdate.current;
+    if (!previous) return;
+    focusBeforeUpdate.current = null;
+    if (document.activeElement && document.activeElement !== document.body) return;
+    (previous instanceof HTMLElement && previous.isConnected ? previous : tableRef.current)?.focus();
+  }, [nofos]);
 
   const handleEditSummary = useCallback(async (nofo: NOFO) => {
     setSelectedNofo(nofo);
@@ -243,7 +261,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
     event?.stopPropagation();
     try {
       await apiClient.landingPage.updateNOFOStatus(nofo.name, undefined, true);
-      updateNofos((allNofos) =>
+      updateNofosKeepingFocus((allNofos) =>
         allNofos.map((item) => item.id === nofo.id ? { ...item, isPinned: true } : item)
       );
       addNotification("success", `Grant "${nofo.name}" pinned successfully`);
@@ -256,7 +274,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
     event?.stopPropagation();
     try {
       await apiClient.landingPage.updateNOFOStatus(nofo.name, undefined, false);
-      updateNofos((allNofos) =>
+      updateNofosKeepingFocus((allNofos) =>
         allNofos.map((item) => item.id === nofo.id ? { ...item, isPinned: false } : item)
       );
       addNotification("info", `Grant "${nofo.name}" unpinned`);
@@ -335,7 +353,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
     const newStatus = nofo.status === "active" ? "archived" : "active";
     try {
       await apiClient.landingPage.updateNOFOStatus(nofo.name, newStatus);
-      updateNofos((allNofos) =>
+      updateNofosKeepingFocus((allNofos) =>
         allNofos.map((item) => item.id === nofo.id ? { ...item, status: newStatus } : item)
       );
       addNotification("success", `Grant status changed to ${newStatus}`);
@@ -348,7 +366,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
     if (!selectedNofo) return;
     try {
       await apiClient.landingPage.deleteNOFO(selectedNofo.name);
-      updateNofos((allNofos) => allNofos.filter((nofo) => nofo.id !== selectedNofo.id));
+      updateNofosKeepingFocus((allNofos) => allNofos.filter((nofo) => nofo.id !== selectedNofo.id));
       addNotification("success", `Grant "${selectedNofo.name}" deleted successfully`);
       setDeleteModalOpen(false);
       setSelectedNofo(null);
@@ -368,7 +386,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
   const uploadNOFO = async () => {
     if (!selectedFile) { addNotification("error", "Please select a file first"); return; }
     if (!customGrantName.trim()) { addNotification("error", "Grant name cannot be empty"); return; }
-    if (!uploadGrantType) { addNotification("error", "Grant Type is required"); return; }
+    if (!uploadGrantType) { addNotification("error", "Grant type is required"); return; }
     if (uploadGrantType === "state" && !uploadState) {
       addNotification("error", "State is required for state grants");
       return;
@@ -436,7 +454,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
   return (
     <div className="tab-content">
       <TableScrollRegion label="Grants table" minWidth={640}>
-      <div className="table-container" role="table" aria-label="Grants">
+      <div className="table-container" role="table" aria-label="Grants" ref={tableRef} tabIndex={-1}>
         <div className="table-header" role="rowgroup">
           <div role="row" style={{ display: "contents" }}>
             <div className="header-cell" role="columnheader">Name</div>
@@ -445,19 +463,21 @@ const NOFOsTab = React.memo(function NOFOsTab({
             <div className="header-cell" role="columnheader">Actions</div>
           </div>
         </div>
-        <div className="table-body" role={nofos.length === 0 ? undefined : "rowgroup"}>
+        <div className="table-body" role="rowgroup">
           {nofos.length === 0 && (
-            <div className="no-data">
-              <LuFileX size={24} className="no-data-icon" />
-              <p>No grants found</p>
+            <div role="row">
+              <div className="no-data" role="cell" aria-colspan={4}>
+                <LuFileX size={24} className="no-data-icon" aria-hidden="true" />
+                <p>No grants found</p>
+              </div>
             </div>
           )}
           {nofos.map((nofo) => (
             <div key={nofo.id} className="table-row" role="row">
-              <div className="row-cell" role="cell">
+              <div className="row-cell" role="rowheader">
                 <span className="nofo-name">{nofo.name}</span>
                 {nofo.isPinned && (
-                  <span className="pinned-badge" aria-label="Pinned"><LuPin size={14} aria-hidden="true" /><span>Pinned</span></span>
+                  <span className="gw-tag gw-tag--info pinned-badge"><LuPin size={14} aria-hidden="true" /><span>Pinned</span></span>
                 )}
                 {nofo.processingStatus === "quarantined" ? (
                   <button
@@ -474,31 +494,39 @@ const NOFOsTab = React.memo(function NOFOsTab({
                     {PROCESSING_LABELS[nofo.processingStatus] || "Processing"}
                   </span>
                 ) : nofo.reviewFlag ? (
-                  <button
-                    type="button"
-                    className="grant-review-link grant-review-link--suggested"
-                    onClick={() => handleEditSummary(nofo)}
-                    title={reviewFlagTitle(nofo.reviewFlag)}
-                  >
-                    <LuInfo size={12} aria-hidden="true" />
-                    Review suggested
-                  </button>
+                  <>
+                    <button
+                      type="button"
+                      className="grant-review-link grant-review-link--suggested"
+                      onClick={() => handleEditSummary(nofo)}
+                      aria-describedby={reviewFlagTitle(nofo.reviewFlag) ? `${reviewFlagIdPrefix}-${nofo.id}` : undefined}
+                    >
+                      <LuInfo size={12} aria-hidden="true" />
+                      Review suggested
+                    </button>
+                    {/* Shown, not a hover tooltip, so keyboard and touch users see why too. */}
+                    {reviewFlagTitle(nofo.reviewFlag) && (
+                      <span id={`${reviewFlagIdPrefix}-${nofo.id}`} className="grant-review-reason">
+                        {reviewFlagTitle(nofo.reviewFlag)}
+                      </span>
+                    )}
+                  </>
                 ) : null}
               </div>
               <div className="row-cell" role="cell">
                 {nofo.grantType && GRANT_TYPES[nofo.grantType] ? (
                   <span
-                    className="grant-type-badge"
+                    className="gw-tag grant-type-badge"
                     style={{
-                      backgroundColor: `${GRANT_TYPES[nofo.grantType].color}15`,
+                      backgroundColor: grantTypeTint(GRANT_TYPES[nofo.grantType].color, 8),
                       color: GRANT_TYPES[nofo.grantType].color,
-                      borderColor: `${GRANT_TYPES[nofo.grantType].color}99`,
+                      borderColor: grantTypeTint(GRANT_TYPES[nofo.grantType].color, 60),
                     }}
                   >
                     {GRANT_TYPES[nofo.grantType].label}
                   </span>
                 ) : (
-                  <span className="grant-type-badge unset">Unset</span>
+                  <span className="gw-tag grant-type-badge unset">Unset</span>
                 )}
               </div>
               <div className="row-cell" role="cell">
@@ -530,11 +558,11 @@ const NOFOsTab = React.memo(function NOFOsTab({
                   return (
                     <>
                       {!editDisabled && (nofo.isPinned ? (
-                        <button className="action-button unpin" onClick={(e) => handleUnpinGrant(nofo, e)} aria-label={`Unpin grant ${nofo.name}`} title="Unpin grant">
+                        <button className="gw-btn gw-btn--icon action-button unpin" onClick={(e) => handleUnpinGrant(nofo, e)} aria-label={`Unpin grant ${nofo.name}`} title="Unpin grant">
                           <LuPinOff size={18} aria-hidden="true" />
                         </button>
                       ) : (
-                        <button className="action-button pin" onClick={(e) => handlePinGrant(nofo, e)} aria-label={`Pin grant ${nofo.name}`} title="Pin grant">
+                        <button className="gw-btn gw-btn--icon action-button pin" onClick={(e) => handlePinGrant(nofo, e)} aria-label={`Pin grant ${nofo.name}`} title="Pin grant">
                           <LuPin size={18} aria-hidden="true" />
                         </button>
                       ))}
@@ -562,21 +590,21 @@ const NOFOsTab = React.memo(function NOFOsTab({
       </TableScrollRegion>
 
       {/* Edit NOFO Modal */}
-      <Modal isOpen={editModalOpen} onClose={() => setEditModalOpen(false)} title="Edit Grant">
+      <Modal isOpen={editModalOpen} onClose={() => setEditModalOpen(false)} title="Edit grant">
         <div className="modal-form">
           <div className="form-group">
-            <label htmlFor="nofo-name">Grant Name</label>
-            <input type="text" id="nofo-name" value={editedNofoName} onChange={(e) => setEditedNofoName(e.target.value)} className="form-input" placeholder="Enter grant name" />
+            <label htmlFor="nofo-name">Grant name</label>
+            <input type="text" id="nofo-name" value={editedNofoName} onChange={(e) => setEditedNofoName(e.target.value)} className="gw-input form-input" placeholder="Enter grant name" />
           </div>
           <div className="form-group">
             <label htmlFor="nofo-status">Status</label>
             <div className="select-wrapper">
-              <select id="nofo-status" value={editedNofoStatus} onChange={(e) => setEditedNofoStatus(e.target.value as "active" | "archived")} className="form-input">
+              <select id="nofo-status" aria-describedby="nofo-status-help" value={editedNofoStatus} onChange={(e) => setEditedNofoStatus(e.target.value as "active" | "archived")} className="gw-input form-input">
                 <option value="active">Active</option>
                 <option value="archived">Archived</option>
               </select>
             </div>
-            <div className="field-note">Active grants are visible to users. Archived grants are hidden.</div>
+            <div id="nofo-status-help" className="gw-field__help field-note">Active grants are visible to users. Archived grants are hidden.</div>
           </div>
           <div className="form-group">
             <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
@@ -591,13 +619,13 @@ const NOFOsTab = React.memo(function NOFOsTab({
           </div>
           <div className="form-group">
             <label htmlFor="nofo-expiration-date">Deadline</label>
-            <input type="date" id="nofo-expiration-date" value={editedNofoExpirationDate} onChange={(e) => setEditedNofoExpirationDate(e.target.value)} className="form-input" disabled={editedNofoIsRolling} />
-            <div className="field-note">Leave empty if no expiration date. Grants will be auto-archived after this date.</div>
+            <input type="date" id="nofo-expiration-date" aria-describedby="nofo-expiration-date-help" value={editedNofoExpirationDate} onChange={(e) => setEditedNofoExpirationDate(e.target.value)} className="gw-input form-input" disabled={editedNofoIsRolling} />
+            <div id="nofo-expiration-date-help" className="gw-field__help field-note">Leave empty if no expiration date. Grants will be auto-archived after this date.</div>
           </div>
           <div className="form-group">
-            <label htmlFor="nofo-grant-type">Grant Type</label>
+            <label htmlFor="nofo-grant-type">Grant type</label>
             <div className="select-wrapper">
-              <select id="nofo-grant-type" value={editedNofoGrantType} onChange={(e) => setEditedNofoGrantType(e.target.value as GrantTypeId | "")} className="form-input">
+              <select id="nofo-grant-type" aria-describedby="nofo-grant-type-help" value={editedNofoGrantType} onChange={(e) => setEditedNofoGrantType(e.target.value as GrantTypeId | "")} className="gw-input form-input">
                 <option value="">Select type...</option>
                 <option value="federal">Federal</option>
                 <option value="state">State</option>
@@ -605,16 +633,16 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 <option value="philanthropic">Philanthropic</option>
               </select>
             </div>
-            <div className="field-note">Federal, State, Quasi-governmental, or Philanthropic.</div>
+            <div id="nofo-grant-type-help" className="gw-field__help field-note">Federal, State, Quasi-governmental, or Philanthropic.</div>
           </div>
           <div className="modal-actions">
-            <button className="modal-button secondary" onClick={() => setEditModalOpen(false)}>Cancel</button>
-            <button className="modal-button primary" onClick={confirmEditNofo} disabled={!isChanged()}>Save Changes</button>
+            <button className="gw-btn gw-btn--secondary modal-button secondary" onClick={() => setEditModalOpen(false)}>Cancel</button>
+            <button className="gw-btn gw-btn--primary modal-button primary" onClick={confirmEditNofo} disabled={!isChanged()}>Save changes</button>
           </div>
         </div>
       </Modal>
 
-      <DeleteConfirmationModal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} onConfirm={confirmDeleteNofo} title="Delete Grant" itemName={selectedNofo?.name} itemLabel="grant" />
+      <DeleteConfirmationModal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} onConfirm={confirmDeleteNofo} title="Delete grant" itemName={selectedNofo?.name} itemLabel="grant" />
 
       <ConfirmationModal
         isOpen={promoteModalOpen}
@@ -631,10 +659,10 @@ const NOFOsTab = React.memo(function NOFOsTab({
       <Modal
         isOpen={summaryModalOpen}
         onClose={closeSummaryModal}
-        title={`Edit Requirements — ${selectedNofo?.name || ""}`}
+        title={`Edit requirements — ${selectedNofo?.name || ""}`}
         maxWidth="800px"
       >
-        <div className="modal-form" style={{ maxHeight: "70vh", overflowY: "auto" }}>
+        <div className="modal-form">
           <div role="status" aria-live="polite" className="visually-hidden">
             {summaryLoading ? "Loading grant requirements" : ""}
           </div>
@@ -653,15 +681,15 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 onSummaryChange={handleSummaryChange}
               />
               <div className="modal-actions" style={{ marginTop: "16px" }}>
-                <button className="modal-button secondary" onClick={closeSummaryModal}>
+                <button className="gw-btn gw-btn--secondary modal-button secondary" onClick={closeSummaryModal}>
                   Cancel
                 </button>
                 <button
-                  className="modal-button primary"
-                  onClick={confirmSaveSummary}
-                  disabled={!isSummaryChanged() || summarySaving}
+                  className="gw-btn gw-btn--primary modal-button primary"
+                  onClick={() => isSummaryChanged() && !summarySaving && confirmSaveSummary()}
+                  aria-disabled={!isSummaryChanged() || summarySaving || undefined}
                 >
-                  {summarySaving ? "Saving..." : "Save Changes"}
+                  {summarySaving ? "Saving..." : "Save changes"}
                 </button>
               </div>
             </>
@@ -690,20 +718,21 @@ const NOFOsTab = React.memo(function NOFOsTab({
               <p className="modal-description" style={{ marginBottom: "16px" }}>
                 Add guidance for this federal grant shown only to your state's users. The federal grant itself is unchanged. Leave empty to remove.
               </p>
-              <textarea
+              <label htmlFor="state-guidance-note" className="gw-field__label">State guidance note</label>
+              <textarea className="gw-input"
+                id="state-guidance-note"
                 value={overlayNote}
                 onChange={(e) => setOverlayNote(e.target.value)}
                 rows={8}
                 style={{ width: "100%" }}
                 placeholder="e.g. Applicants from our state should also submit Form X and contact our office before applying."
-                aria-label="State guidance note"
               />
               <div className="modal-actions" style={{ marginTop: "16px" }}>
-                <button className="modal-button secondary" onClick={() => { setOverlayModalOpen(false); setSelectedNofo(null); setOverlayNote(""); }}>
+                <button className="gw-btn gw-btn--secondary modal-button secondary" onClick={() => { setOverlayModalOpen(false); setSelectedNofo(null); setOverlayNote(""); }}>
                   Cancel
                 </button>
-                <button className="modal-button primary" onClick={confirmSaveOverlay} disabled={overlaySaving}>
-                  {overlaySaving ? "Saving..." : "Save Guidance"}
+                <button className="gw-btn gw-btn--primary modal-button primary" onClick={() => !overlaySaving && confirmSaveOverlay()} aria-disabled={overlaySaving || undefined}>
+                  {overlaySaving ? "Saving..." : "Save guidance"}
                 </button>
               </div>
             </>
@@ -730,7 +759,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
           ) : (
             <>
               <p className="modal-description" style={{ marginBottom: "16px" }}>
-                Add questions applicants answer in Write Application, alongside any questions from the grant document. Useful when the grant doesn&apos;t spell out what your state wants to ask.
+                Add questions applicants answer in Write application, alongside any questions from the grant document. Useful when the grant doesn&apos;t spell out what your state wants to ask.
               </p>
               {customQuestions.length === 0 ? (
                 <p style={{ color: "var(--gw-color-text-secondary)", marginBottom: "16px" }}>
@@ -738,7 +767,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 </p>
               ) : (
                 customQuestions.map((q, index) => (
-                  <div key={q.id ?? index} style={{ marginBottom: "16px", padding: "12px", border: "1px solid var(--gw-color-border)", borderRadius: "8px" }}>
+                  <div key={q.id ?? index} style={{ marginBottom: "16px", padding: "12px", border: "1px solid var(--gw-color-border)", borderRadius: "var(--gw-radius-container)" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
                       <span style={{ fontWeight: 500 }}>Question {index + 1}</span>
                       <button
@@ -750,7 +779,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
                         <LuTrash size={16} aria-hidden="true" />
                       </button>
                     </div>
-                    <textarea
+                    <textarea className="gw-input"
                       value={q.question}
                       onChange={(e) => setCustomQuestions((prev) => prev.map((item, i) => i === index ? { ...item, question: e.target.value } : item))}
                       rows={2}
@@ -759,7 +788,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
                       placeholder="e.g. Describe how this project serves residents in our state."
                       aria-label={`Question ${index + 1} text`}
                     />
-                    <input
+                    <input className="gw-input"
                       type="text"
                       value={q.helpText ?? ""}
                       onChange={(e) => setCustomQuestions((prev) => prev.map((item, i) => i === index ? { ...item, helpText: e.target.value } : item))}
@@ -773,19 +802,19 @@ const NOFOsTab = React.memo(function NOFOsTab({
               )}
               <button
                 type="button"
-                className="modal-button secondary"
-                onClick={() => setCustomQuestions((prev) => [...prev, { question: "" }])}
-                disabled={customQuestions.length >= 25}
+                className="gw-btn gw-btn--secondary modal-button secondary"
+                onClick={() => customQuestions.length < 25 && setCustomQuestions((prev) => [...prev, { question: "" }])}
+                aria-disabled={customQuestions.length >= 25 || undefined}
                 style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
               >
                 <LuPlus size={16} aria-hidden="true" /> Add question
               </button>
               <div className="modal-actions" style={{ marginTop: "16px" }}>
-                <button className="modal-button secondary" onClick={() => { setCustomQuestionsModalOpen(false); setSelectedNofo(null); setCustomQuestions([]); }}>
+                <button className="gw-btn gw-btn--secondary modal-button secondary" onClick={() => { setCustomQuestionsModalOpen(false); setSelectedNofo(null); setCustomQuestions([]); }}>
                   Cancel
                 </button>
-                <button className="modal-button primary" onClick={confirmSaveCustomQuestions} disabled={customQuestionsSaving}>
-                  {customQuestionsSaving ? "Saving..." : "Save Questions"}
+                <button className="gw-btn gw-btn--primary modal-button primary" onClick={() => !customQuestionsSaving && confirmSaveCustomQuestions()} aria-disabled={customQuestionsSaving || undefined}>
+                  {customQuestionsSaving ? "Saving..." : "Save questions"}
                 </button>
               </div>
             </>
@@ -797,43 +826,43 @@ const NOFOsTab = React.memo(function NOFOsTab({
       <Modal
         isOpen={uploadNofoModalOpen}
         onClose={() => { setUploadNofoModalOpen(false); setSelectedFile(null); setCustomGrantName(""); setUploadGrantType(""); setUploadState(DEFAULT_UPLOAD_STATE); setUploadCategory(""); setUploadAgency(""); }}
-        title="Add Grant"
+        title="Add grant"
       >
         <div className="modal-form">
           <p className="modal-description">Upload a grant document in PDF, TXT, or DOCX format.</p>
           <div className="info-box">
-            <LuInfo size={18} className="info-icon" />
+            <LuInfo size={18} className="info-icon" aria-hidden="true" />
             <span>After you upload, the grant appears in the list above and processes automatically (about 5&ndash;7 minutes). You can watch each stage on its row &mdash; most grants publish on their own, and only ones that need a closer look are flagged for review.</span>
           </div>
           <div className="form-group">
-            <label htmlFor="file-upload">Select File</label>
+            <label htmlFor="file-upload">Select file</label>
             <div className="file-upload-container">
               <input id="file-upload" type="file" accept=".pdf,.txt,.docx" onChange={handleFileSelect} className="file-input" />
-              <div className="file-upload-button"><LuUpload size={16} className="button-icon" /><span>Select File</span></div>
+              <div className="gw-btn gw-btn--secondary file-upload-button"><LuUpload size={16} className="button-icon" aria-hidden="true" /><span>Select file</span></div>
             </div>
             {selectedFile && (
-              <div className="selected-file"><LuFile size={16} className="file-icon" /><span>{selectedFile.name}</span></div>
+              <div className="selected-file"><LuFile size={16} className="file-icon" aria-hidden="true" /><span>{selectedFile.name}</span></div>
             )}
           </div>
           {selectedFile && (
             <>
               <div className="form-group">
-                <label htmlFor="custom-grant-name">Grant Name</label>
-                <input type="text" id="custom-grant-name" value={customGrantName} onChange={(e) => setCustomGrantName(e.target.value)} className="form-input" placeholder="Enter grant name" />
-                <div className="field-note">This name will be used to identify the grant in the system.</div>
+                <label htmlFor="custom-grant-name">Grant name</label>
+                <input type="text" id="custom-grant-name" aria-describedby="custom-grant-name-help" value={customGrantName} onChange={(e) => setCustomGrantName(e.target.value)} className="gw-input form-input" placeholder="Enter grant name" />
+                <div id="custom-grant-name-help" className="gw-field__help field-note">This name will be used to identify the grant in the system.</div>
               </div>
               <div className="form-group">
-                <label htmlFor="upload-grant-type">Grant Type *</label>
+                <label htmlFor="upload-grant-type">Grant type<span className="gw-field__required" aria-hidden="true">*</span></label>
                 <div className="select-wrapper">
                   <select
-                    id="upload-grant-type"
+                    id="upload-grant-type" aria-describedby="upload-grant-type-help"
                     value={uploadGrantType}
                     onChange={(e) => {
                       const next = e.target.value as GrantTypeId | "";
                       setUploadGrantType(next);
                       if (next !== "state") setUploadState(DEFAULT_UPLOAD_STATE);
                     }}
-                    className="form-input"
+                    className="gw-input form-input"
                     required
                   >
                     <option value="">Select type...</option>
@@ -843,17 +872,17 @@ const NOFOsTab = React.memo(function NOFOsTab({
                     <option value="philanthropic">Philanthropic</option>
                   </select>
                 </div>
-                <div className="field-note">Required. Determines who this grant is visible to.</div>
+                <div id="upload-grant-type-help" className="gw-field__help field-note">Required. Determines who this grant is visible to.</div>
               </div>
               {uploadGrantType === "state" && !SINGLE_STATE && (
                 <div className="form-group">
-                  <label htmlFor="upload-state">State *</label>
+                  <label htmlFor="upload-state">State<span className="gw-field__required" aria-hidden="true">*</span></label>
                   <div className="select-wrapper">
                     <select
-                      id="upload-state"
+                      id="upload-state" aria-describedby="upload-state-help"
                       value={uploadState}
                       onChange={(e) => setUploadState(e.target.value)}
-                      className="form-input"
+                      className="gw-input form-input"
                       required
                     >
                       <option value="">Select state...</option>
@@ -862,32 +891,32 @@ const NOFOsTab = React.memo(function NOFOsTab({
                       ))}
                     </select>
                   </div>
-                  <div className="field-note">Required for state grants. Users from this state will see it in Chat with AI and Write Application.</div>
+                  <div id="upload-state-help" className="gw-field__help field-note">Required for state grants. Users from this state will see it in Chat with AI and Write application.</div>
                 </div>
               )}
               <div className="form-group">
-                <label htmlFor="upload-category">Category *</label>
+                <label htmlFor="upload-category">Category<span className="gw-field__required" aria-hidden="true">*</span></label>
                 <div className="select-wrapper">
-                  <select id="upload-category" value={uploadCategory} onChange={(e) => setUploadCategory(e.target.value)} className="form-input" required>
+                  <select id="upload-category" aria-describedby="upload-category-help" value={uploadCategory} onChange={(e) => setUploadCategory(e.target.value)} className="gw-input form-input" required>
                     <option value="">Select category...</option>
                     {GRANT_CATEGORIES.map((category) => (
                       <option key={category} value={category}>{category}</option>
                     ))}
                   </select>
                 </div>
-                <div className="field-note">Required. Select the funding category for this grant.</div>
+                <div id="upload-category-help" className="gw-field__help field-note">Required. Select the funding category for this grant.</div>
               </div>
               <div className="form-group">
                 <label htmlFor="upload-agency">Agency</label>
-                <input type="text" id="upload-agency" value={uploadAgency} onChange={(e) => setUploadAgency(e.target.value)} className="form-input" placeholder="e.g. Department of Health and Human Services" />
-                <div className="field-note">Optional. The government agency issuing this grant.</div>
+                <input type="text" id="upload-agency" aria-describedby="upload-agency-help" value={uploadAgency} onChange={(e) => setUploadAgency(e.target.value)} className="gw-input form-input" placeholder="e.g. Department of Health and Human Services" />
+                <div id="upload-agency-help" className="gw-field__help field-note">Optional. The government agency issuing this grant.</div>
               </div>
             </>
           )}
           <div className="modal-actions">
-            <button className="modal-button secondary" onClick={() => { setUploadNofoModalOpen(false); setSelectedFile(null); setCustomGrantName(""); setUploadGrantType(""); setUploadState(DEFAULT_UPLOAD_STATE); setUploadCategory(""); setUploadAgency(""); }}>Cancel</button>
+            <button className="gw-btn gw-btn--secondary modal-button secondary" onClick={() => { setUploadNofoModalOpen(false); setSelectedFile(null); setCustomGrantName(""); setUploadGrantType(""); setUploadState(DEFAULT_UPLOAD_STATE); setUploadCategory(""); setUploadAgency(""); }}>Cancel</button>
             <button
-              className="modal-button primary"
+              className="gw-btn gw-btn--primary modal-button primary"
               onClick={uploadNOFO}
               disabled={
                 !selectedFile ||
@@ -897,7 +926,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 !uploadCategory
               }
             >
-              <LuUpload size={16} className="button-icon" /><span>Upload Grant</span>
+              <LuUpload size={16} className="button-icon" aria-hidden="true" /><span>Upload grant</span>
             </button>
           </div>
         </div>

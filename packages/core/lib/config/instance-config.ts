@@ -47,6 +47,14 @@ export interface Branding {
   shortName?: string;
   home?: HomeCopy;
   footer: {
+    /**
+     * "full": the light footer with Return to top, a brand column (logo + home tagline), `columns`,
+     * Partners (madeBy + partners) and Contact us (supportEmail + postalAddress), then the copyright
+     * and `links`. "brand" (default): GrantWell's own footer.
+     */
+    layout?: "brand" | "full";
+    /** Link columns of the full footer, between the brand column and Partners. */
+    columns?: { heading: string; links: Link[] }[];
     /** Also the digest email header image; falls back to `logo`. */
     wordmark?: string;
     madeBy?: LogoLink;
@@ -62,6 +70,16 @@ export interface Branding {
    * the logo beside the app logo, unless sealBesideLogo is false.
    */
   govHeader?: { logo: string; label: string; href: string; sealBesideLogo?: boolean };
+  /**
+   * Signed-in navigation. "tabs" puts the main pages in header tabs and shows the side menu only on a
+   * grant's own pages; "sidebar" (default) keeps the side menu on every page. Ignored with a chrome Header.
+   */
+  navigation?: { layout?: "sidebar" | "tabs" };
+  /**
+   * Fonts beyond GrantWell's own. stylesheet: an https CSS URL (e.g. an Adobe Fonts kit) loaded without
+   * holding up the first paint; the theme's font stacks name its families with fallbacks after them.
+   */
+  fonts?: { stylesheet: string };
   analyticsId?: string;
   seo?: {
     /** Home page <title>, at most 60 characters. Defaults to appName. */
@@ -188,6 +206,11 @@ export const DEFAULT_LIMITS: Limits = {
   websocketThrottle: { rateLimit: 50, burstLimit: 100 },
 };
 
+/** Browser origins allowed to call the API and the buckets: the site itself, plus the Vite dev server on dev. */
+export function allowedOrigins(config: InstanceConfig): string[] {
+  return config.stage === "dev" ? [config.siteUrl, "http://localhost:5173", "http://localhost:3000"] : [config.siteUrl];
+}
+
 export function limits(config: InstanceConfig): Limits {
   return { ...DEFAULT_LIMITS, ...config.limits };
 }
@@ -240,6 +263,16 @@ function brandingProblems(branding: Branding): string[] {
   }
   if (branding.shortName !== undefined && (!isText(branding.shortName) || branding.shortName.length > 12)) {
     problems.push("branding.shortName must be 1-12 characters");
+  }
+  const layout = branding.navigation?.layout;
+  if (layout !== undefined && layout !== "sidebar" && layout !== "tabs") problems.push('branding.navigation.layout must be "sidebar" or "tabs"');
+  const footerLayout = branding.footer.layout;
+  if (footerLayout !== undefined && footerLayout !== "brand" && footerLayout !== "full") problems.push('branding.footer.layout must be "brand" or "full"');
+  if (branding.footer.columns?.some((c) => !c || !isText(c.heading) || !Array.isArray(c.links) || c.links.length === 0 || badLinks(c.links))) {
+    problems.push("branding.footer.columns need a heading and links with a label and an https://, mailto: or / href");
+  }
+  if (branding.fonts !== undefined && !/^https:\/\/[^\s"'<>]+$/.test(branding.fonts?.stylesheet ?? "")) {
+    problems.push("branding.fonts.stylesheet must be an https:// URL");
   }
   return problems;
 }

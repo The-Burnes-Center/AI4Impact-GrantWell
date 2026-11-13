@@ -4,6 +4,8 @@ import ModelMarkdown from "../common/ModelMarkdown";
 import TableScrollRegion from "../ui/TableScrollRegion";
 import styles from "../../styles/chat.module.scss";
 import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
+import { citationSup } from "./citation-sup";
+import { citationsOf, remarkCitationMarkers } from "./citations";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 
@@ -23,6 +25,7 @@ import "../../styles/app.scss";
 export interface ChatMessageProps {
   message: ChatBotHistoryItem;
   documentIdentifier?: string;
+  replyNumber?: number;
 }
 
 function ChatMessage(props: ChatMessageProps) {
@@ -31,13 +34,16 @@ function ChatMessage(props: ChatMessageProps) {
   const [sourcesExpanded, setSourcesExpanded] = useState<boolean>(false);
   const sourceListId = React.useId();
   const appContext = useContext(AppContext);
+  const citations = React.useMemo(() => citationsOf(props.message?.metadata), [props.message?.metadata]);
+  const citationPlugins = React.useMemo(() => (citations.length ? [remarkCitationMarkers(citations)] : []), [citations]);
+  const citationSupRenderer = React.useMemo(() => citationSup(citations), [citations]);
 
 
 
   // Styles for the components
   const containerStyle: React.CSSProperties = {
     padding: "4px 16px",
-    borderRadius: "8px",
+    borderRadius: "var(--gw-radius-container)",
     backgroundColor: "transparent",
     marginBottom: "4px",
     position: "relative",
@@ -84,21 +90,6 @@ function ChatMessage(props: ChatMessageProps) {
     position: "relative",
   };
 
-  const copyButtonStyle: React.CSSProperties = {
-    backgroundColor: "transparent",
-    border: "none",
-    cursor: "pointer",
-    padding: "6px",
-    minWidth: "32px",
-    minHeight: "32px",
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "#6b7280",
-    borderRadius: "4px",
-    transition: "all 0.2s ease",
-  };
-
   const messageBubbleStyle = {
     padding: "12px 16px",
     borderRadius:
@@ -106,14 +97,14 @@ function ChatMessage(props: ChatMessageProps) {
         ? "18px 18px 4px 18px"
         : "18px 18px 18px 4px",
     backgroundColor:
-      props.message?.type === ChatBotMessageType.Human ? "var(--gw-color-primary)" : "var(--gw-color-message-bg)",
+      props.message?.type === ChatBotMessageType.Human ? "var(--gw-color-primary)" : "var(--gw-color-surface-subtle)",
     color:
-      props.message?.type === ChatBotMessageType.Human ? "white" : "#2d3748",
+      props.message?.type === ChatBotMessageType.Human ? "white" : "var(--gw-color-text)",
     wordWrap: "break-word" as const,
     boxShadow:
       props.message?.type === ChatBotMessageType.Human
-        ? "0 1px 3px rgba(0, 0, 0, 0.1)"
-        : "0 2px 4px rgba(0, 0, 0, 0.15)",
+        ? "0 1px 3px color-mix(in srgb, var(--gw-color-text-strong) 10%, transparent)"
+        : "0 2px 4px color-mix(in srgb, var(--gw-color-text-strong) 15%, transparent)",
     position: "relative" as const,
   };
 
@@ -125,16 +116,6 @@ function ChatMessage(props: ChatMessageProps) {
       props.message?.type === ChatBotMessageType.AI ? "1.6" : "inherit",
     fontSize:
       props.message?.type === ChatBotMessageType.AI ? "15px" : "inherit",
-  };
-
-  const spinnerStyle = {
-    display: "inline-block",
-    width: "20px",
-    height: "20px",
-    border: "3px solid rgba(0, 0, 0, 0.1)",
-    borderRadius: "50%",
-    borderTopColor: "var(--gw-color-primary)",
-    animation: "spin 1s linear infinite",
   };
 
   // Keyframes for spinner animation
@@ -242,29 +223,38 @@ function ChatMessage(props: ChatMessageProps) {
               <div style={aiContainerStyle}>
                 <div style={messageWrapperStyle}>
                   <div style={messageBubbleStyle}>
-                    <span className="sr-only">Assistant replied: </span>
+                    <span className="sr-only">
+                      {content.length === 0 ? "Assistant is typing" : "Assistant replied: "}
+                    </span>
                     <div style={messageContentStyle}>
-                      {content?.length === 0 ? (
-                        <div style={spinnerStyle}></div>
+                      {content.length === 0 ? (
+                        <span className={styles.typingDots} aria-hidden="true">
+                          <span />
+                          <span />
+                          <span />
+                        </span>
                       ) : null}
 
                       <ModelMarkdown
+                        className={styles.answerMarkdown}
+                        remarkPlugins={citationPlugins}
                         components={{
+                          sup: citationSupRenderer,
                           h1(props) {
                             const { children, ...rest } = props;
-                            return <h3 {...rest}>{children}</h3>;
+                            return <h2 {...rest}>{children}</h2>;
                           },
                           h2(props) {
                             const { children, ...rest } = props;
-                            return <h4 {...rest}>{children}</h4>;
+                            return <h3 {...rest}>{children}</h3>;
                           },
                           h3(props) {
                             const { children, ...rest } = props;
-                            return <h5 {...rest}>{children}</h5>;
+                            return <h4 {...rest}>{children}</h4>;
                           },
                           h4(props) {
                             const { children, ...rest } = props;
-                            return <h6 {...rest}>{children}</h6>;
+                            return <h5 {...rest}>{children}</h5>;
                           },
                           h5(props) {
                             const { children, ...rest } = props;
@@ -322,7 +312,7 @@ function ChatMessage(props: ChatMessageProps) {
                           marginTop: "8px",
                           fontSize: "12px",
                           fontStyle: "italic",
-                          color: "#565d6b",
+                          color: "var(--gw-color-text-secondary)",
                         }}
                       >
                         <FaRegStopCircle size={12} aria-hidden="true" />
@@ -334,7 +324,7 @@ function ChatMessage(props: ChatMessageProps) {
                     {showSources && (
                       <div
                         style={{
-                          borderTop: "1px solid #e0e0e0",
+                          borderTop: "1px solid var(--gw-color-border)",
                           marginTop: "12px",
                           paddingTop: "8px",
                         }}
@@ -343,6 +333,11 @@ function ChatMessage(props: ChatMessageProps) {
                           onClick={() => setSourcesExpanded(!sourcesExpanded)}
                           aria-expanded={sourcesExpanded}
                           aria-controls={sourcesExpanded ? sourceListId : undefined}
+                          aria-label={
+                            props.replyNumber
+                              ? `Sources (${totalSourceCount}) for reply ${props.replyNumber}`
+                              : undefined
+                          }
                           style={{
                             display: "flex",
                             alignItems: "center",
@@ -353,7 +348,7 @@ function ChatMessage(props: ChatMessageProps) {
                             padding: "4px 0",
                             fontSize: "13px",
                             fontWeight: 600,
-                            color: "#374151",
+                            color: "var(--gw-color-text)",
                             width: "100%",
                             textAlign: "left",
                             minHeight: "32px",
@@ -377,16 +372,16 @@ function ChatMessage(props: ChatMessageProps) {
                             }}
                           >
                             {grantSources.length > 0 && (
-                              <div role="group" aria-label={grantName || "Grant Document"}>
+                              <div role="group" aria-label={grantName || "Grant"}>
                                 <div aria-hidden="true" style={{
                                   fontSize: "11px",
                                   fontWeight: 600,
-                                  color: "#6b7280",
+                                  color: "var(--gw-color-text-secondary, #5a5a5a)",
                                   textTransform: "uppercase",
                                   letterSpacing: "0.5px",
                                   marginBottom: "4px",
                                 }}>
-                                  {grantName || "Grant Document"}
+                                  {grantName || "Grant"}
                                 </div>
                                 <div role="list">
                                 {grantSources.map((source, idx) => (
@@ -398,11 +393,11 @@ function ChatMessage(props: ChatMessageProps) {
                                       alignItems: "center",
                                       gap: "6px",
                                       fontSize: "13px",
-                                      color: "#374151",
+                                      color: "var(--gw-color-text)",
                                       padding: "3px 0",
                                     }}
                                   >
-                                    <FaFileAlt size={11} aria-hidden="true" style={{ flexShrink: 0, color: "#6b7280" }} />
+                                    <FaFileAlt size={11} aria-hidden="true" style={{ flexShrink: 0, color: "var(--gw-color-text-muted)" }} />
                                     <span style={{ wordBreak: "break-word" }}>
                                       {cleanSourceTitle(source.title)}
                                     </span>
@@ -413,16 +408,16 @@ function ChatMessage(props: ChatMessageProps) {
                             )}
 
                             {uploadedFiles.length > 0 && (
-                              <div role="group" aria-label="Your Supporting Documents" style={{ marginTop: grantSources.length > 0 ? "6px" : "0" }}>
+                              <div role="group" aria-label="Your supporting documents" style={{ marginTop: grantSources.length > 0 ? "6px" : "0" }}>
                                 <div aria-hidden="true" style={{
                                   fontSize: "11px",
                                   fontWeight: 600,
-                                  color: "#6b7280",
+                                  color: "var(--gw-color-text-secondary, #5a5a5a)",
                                   textTransform: "uppercase",
                                   letterSpacing: "0.5px",
                                   marginBottom: "4px",
                                 }}>
-                                  Your Supporting Documents
+                                  Your supporting documents
                                 </div>
                                 <div role="list">
                                 {uploadedFiles.map((file, idx) => (
@@ -434,7 +429,7 @@ function ChatMessage(props: ChatMessageProps) {
                                       alignItems: "center",
                                       gap: "6px",
                                       fontSize: "13px",
-                                      color: "#374151",
+                                      color: "var(--gw-color-text)",
                                       padding: "3px 0",
                                     }}
                                   >
@@ -459,40 +454,17 @@ function ChatMessage(props: ChatMessageProps) {
               {props.message.content.length > 0 && (
                 <div style={copyButtonContainerStyle}>
                   <button
-                    style={copyButtonStyle}
+                    type="button"
+                    className="gw-btn gw-btn--icon gw-btn--slim"
                     onClick={handleCopy}
-                    onMouseEnter={(e) => {
-                      if (!copied) {
-                        e.currentTarget.style.backgroundColor = "#f3f4f6";
-                        e.currentTarget.style.color = "var(--gw-color-primary)";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!copied) {
-                        e.currentTarget.style.backgroundColor = "transparent";
-                        e.currentTarget.style.color = "#6b7280";
-                      }
-                    }}
-                    onFocus={(e) => {
-                      if (!copied) {
-                        e.currentTarget.style.backgroundColor = "#f3f4f6";
-                        e.currentTarget.style.color = "var(--gw-color-primary)";
-                      }
-                      e.currentTarget.style.outline = "2px solid var(--gw-color-primary)";
-                      e.currentTarget.style.outlineOffset = "2px";
-                    }}
-                    onBlur={(e) => {
-                      if (!copied) {
-                        e.currentTarget.style.backgroundColor = "transparent";
-                        e.currentTarget.style.color = "#6b7280";
-                      }
-                      e.currentTarget.style.outline = "none";
-                      e.currentTarget.style.outlineOffset = "0";
-                    }}
-                    aria-label={copied ? "Copied to clipboard" : "Copy message to clipboard"}
+                    aria-label={
+                      copied
+                        ? "Copied to clipboard"
+                        : `Copy ${props.replyNumber ? `reply ${props.replyNumber}` : "message"} to clipboard`
+                    }
                   >
                     {copied ? (
-                      <FaCheck size={14} aria-hidden="true" style={{ color: "#059669" }} />
+                      <FaCheck size={14} aria-hidden="true" style={{ color: "var(--gw-color-success)" }} />
                     ) : (
                       <FaCopy size={14} aria-hidden="true" />
                     )}

@@ -13,6 +13,7 @@ const { BARS, verdict } = await import("./score/bars.mjs");
 const { judge: makeJudge } = await import("./score/judge.mjs");
 const { scoreExtract, scoreQuestions } = await import("./score/extract.mjs");
 const { scoreChat, scoreDraft } = await import("./score/chat-draft.mjs");
+const { summaryClaims } = await import("./score/claims.mjs");
 
 const EVAL_DIR = path.dirname(new URL(import.meta.url).pathname);
 const { values, positionals } = parseArgs({
@@ -32,6 +33,8 @@ const run = JSON.parse(fs.readFileSync(path.join(runDir, "run.json"), "utf8"));
 const models = configure();
 install();
 const judge = makeJudge(models);
+// The chat answered with the run's US Eastern date; the claim judge needs the same one.
+judge.today = new Date(run.startedAt ?? Date.now()).toLocaleDateString("en-US", { timeZone: "America/New_York", year: "numeric", month: "long", day: "numeric" });
 const grants = new Map(loadGrants(values.golden).map((g) => [g.slug, g]));
 
 async function scoreOne(row) {
@@ -44,7 +47,15 @@ async function scoreOne(row) {
       if (run.runner === "extract") {
         const e = await scoreExtract(gold, row.output, judge);
         const q = await scoreQuestions(gold, row.output.questions, judge);
-        return { counts: { ...e.counts, ...q.counts, "cost.perGrant": [row.costUsd, 1] }, notes: [...(e.notes ?? []), ...(q.error ? [q.error] : [])], audit: e.audit, error: e.error };
+        const c = await summaryClaims(grant, row.output, judge);
+        return {
+          counts: { ...e.counts, ...q.counts, ...c.counts, "cost.perGrant": [row.costUsd, 1] },
+          notes: [...(e.notes ?? []), ...(q.error ? [q.error] : [])],
+          audit: e.audit,
+          unsupportedItems: c.unsupported,
+          ...(c.held && { heldFor: c.held }),
+          error: e.error,
+        };
       }
       if (run.runner === "questions") return scoreQuestions(gold, row.output, judge);
       if (run.runner === "draft") return scoreDraft(gold, grant, row.output, judge);

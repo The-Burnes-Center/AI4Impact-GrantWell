@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useCallback, useId, useMemo, useRef } from "react";
+import React, { useState, useEffect, useCallback, useId, useLayoutEffect, useMemo, useRef } from "react";
+import { SINGLE_STATE } from "../../common/states";
 import { useNavigate, useLocation, Navigate } from "react-router";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import { useNotifications } from "../../components/notifications/NotificationManager";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import NOFOsTab from "./components/NOFOsTab";
-import PaginationControls from "./components/PaginationControls";
+import PaginationControls from "../../components/common/PaginationControls";
 import FeatureRolloutsTab from "./components/FeatureRolloutsTab";
 import UserManagementTab from "./components/UserManagementTab";
 import ProcessingReviewTab from "./components/ProcessingReviewTab";
 import ProcessingTab from "./components/ProcessingTab";
-import DigestPreviewTab from "./components/DigestPreviewTab";
 import AnalyticsTab from "./components/AnalyticsTab";
 import {
   LuSearch, LuFilter, LuUpload, LuCheck, LuX,
@@ -20,7 +20,7 @@ import { Modal } from "../../components/common/Modal";
 import Breadcrumbs from "../../components/common/Breadcrumbs";
 import { GRANT_TYPES, type NOFO, type GrantTypeId } from "../../common/types/nofo";
 import type { RawNOFOData } from "../../common/types/document";
-import { EMAIL_DIGEST } from "../../common/instance";
+import { LiveStatus } from "../../components/common/LiveStatus";
 import "../../styles/dashboard.css";
 
 const STATUS_FILTERS = ["all", "active", "archived"] as const;
@@ -28,7 +28,7 @@ const GRANT_TYPE_FILTERS = ["all", "federal", "state", "quasi", "philanthropic"]
 const FILTER_ITEM_COUNT = STATUS_FILTERS.length + GRANT_TYPE_FILTERS.length;
 
 const Dashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"grants" | "analytics" | "feature-rollouts" | "user-management" | "digest-preview">("grants");
+  const [activeTab, setActiveTab] = useState<"grants" | "analytics" | "feature-rollouts" | "user-management">("grants");
    const [grantsSegment, setGrantsSegment] = useState<"all" | "processing" | "attention">("all");
   const [reviewFocus, setReviewFocus] = useState<string | null>(null);
   // Names of finished grants the admin has dismissed from the Processing tab (client-side, resets on reload).
@@ -51,6 +51,7 @@ const Dashboard: React.FC = () => {
   const [autoRefreshPaused, setAutoRefreshPaused] = useState(false);
   const [addedGrantName, setAddedGrantName] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [manualRefresh, setManualRefresh] = useState(false);
 
   const [uploadNofoModalOpen, setUploadNofoModalOpen] = useState(false);
   const [isScraping, setIsScraping] = useState(false);
@@ -65,12 +66,25 @@ const Dashboard: React.FC = () => {
   const analyticsTabRef = useRef<HTMLButtonElement>(null);
   const rolloutsTabRef = useRef<HTMLButtonElement>(null);
   const userManagementTabRef = useRef<HTMLButtonElement>(null);
-  const digestPreviewTabRef = useRef<HTMLButtonElement>(null);
+  const tabRefs = {
+    grants: grantsTabRef,
+    analytics: analyticsTabRef,
+    "feature-rollouts": rolloutsTabRef,
+    "user-management": userManagementTabRef,
+  };
+  const processingSegmentRef = useRef<HTMLButtonElement>(null);
+  const attentionSegmentRef = useRef<HTMLButtonElement>(null);
+  const [resultsAnnouncement, setResultsAnnouncement] = useState("");
+  const refreshButtonRef = useRef<HTMLButtonElement>(null);
+  // Which poll-driven control holds focus, kept when it is removed so focus can be put back.
+  const focusInPollControl = useRef<"pause" | "banner" | null>(null);
 
   const navigate = useNavigate();
   const location = useLocation();
   const apiClient = useApiClient();
   const { isAdmin, isDeveloper, isStateAdmin, userState, username, loading: roleLoading } = useAdminCheck();
+  // Same rule as the server's canEditAnyNofo: a state admin may scrape only on their single-state site.
+  const canScrape = !isStateAdmin || Boolean(SINGLE_STATE && userState === SINGLE_STATE.code);
   const canManageUsers = isAdmin;
   const { addNotification } = useNotifications();
 
@@ -121,11 +135,11 @@ const Dashboard: React.FC = () => {
       }
 
       if (showRefreshNotification) {
-        addNotification("success", "Admin Dashboard refreshed successfully");
+        addNotification("success", "Admin dashboard refreshed successfully");
       }
     } catch {
       if (showRefreshNotification) {
-        addNotification("error", "Failed to refresh Admin Dashboard data");
+        addNotification("error", "Failed to refresh Admin dashboard data");
       }
     } finally {
       if (!background) setIsRefreshing(false);
@@ -163,13 +177,19 @@ const Dashboard: React.FC = () => {
     }
   }, [isAdmin, roleLoading]);
 
-  const handleRefresh = useCallback(() => fetchNofos(true), [fetchNofos]);
+  const handleRefresh = useCallback(() => {
+    if (isRefreshing) return;
+    setManualRefresh(true);
+    void fetchNofos(true).finally(() => setManualRefresh(false));
+  }, [fetchNofos, isRefreshing]);
 
   // Deep-link a quarantined grant's row into the review queue (stable identity so
   // it doesn't defeat NOFOsTab's memo).
   const handleOpenReview = useCallback((nofoName: string) => {
     setReviewFocus(nofoName);
     setGrantsSegment("attention");
+    // The link pressed was in the view that just closed; land on the view switch, now on Needs attention.
+    requestAnimationFrame(() => attentionSegmentRef.current?.focus());
   }, []);
 
   const handleTabKeyDown = useCallback(
@@ -184,9 +204,6 @@ const Dashboard: React.FC = () => {
           : []),
         ...(canManageUsers
           ? [{ key: "user-management" as const, ref: userManagementTabRef }]
-          : []),
-        ...(isDeveloper && EMAIL_DIGEST
-          ? [{ key: "digest-preview" as const, ref: digestPreviewTabRef }]
           : []),
       ];
       const currentIndex = tabs.findIndex((tab) => tab.key === activeTab);
@@ -308,7 +325,6 @@ const Dashboard: React.FC = () => {
     // The green success banner already announces this; a toast here would double the same message.
     setAddedGrantName(grantName);
     setShowGrantBanner(true);
-    setTimeout(() => setShowGrantBanner(false), 5000);
     fetchNofos();
   }, [fetchNofos]);
 
@@ -320,9 +336,10 @@ const Dashboard: React.FC = () => {
   }, [statusFilter, grantTypeFilter]);
 
   const filteredNofos = useMemo(() => {
-    // In-flight grants live in the "Processing" segment, not the browse list.
+    // In-flight new grants live in the "Processing" segment, not the browse list; a live grant
+    // being reprocessed stays listed.
     let filtered = nofos.filter((nofo) =>
-      !nofo.processingStatus &&
+      (!nofo.processingStatus || nofo.status === "active" || nofo.status === "archived") &&
       nofo.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
     if (statusFilter !== "all") {
@@ -379,6 +396,36 @@ const Dashboard: React.FC = () => {
     prevProcessingCount.current = processingCount;
   }, [processingCount]);
 
+  const processingBannerShown =
+    activeTab === "grants" && grantsSegment === "all" && isAdmin && !processingBannerDismissed &&
+    (processingCount > 0 || finishedCount > 0);
+
+  const trackPollControlFocus = useCallback((key: "pause" | "banner") => ({
+    onFocus: () => { focusInPollControl.current = key; },
+    onBlur: (event: React.FocusEvent<HTMLElement>) => {
+      const control = event.currentTarget;
+      if (event.relatedTarget) {
+        focusInPollControl.current = null;
+        return;
+      }
+      setTimeout(() => {
+        const movedOff = control.isConnected && document.activeElement !== control;
+        if (focusInPollControl.current === key && movedOff) focusInPollControl.current = null;
+      }, 0);
+    },
+  }), []);
+
+  useLayoutEffect(() => {
+    const lost = focusInPollControl.current;
+    if ((lost === "pause" && !hasProcessingNofos) || (lost === "banner" && !processingBannerShown)) {
+      focusInPollControl.current = null;
+      const active = document.activeElement;
+      if (active && active !== document.body && active.isConnected) return;
+      if (lost === "pause") refreshButtonRef.current?.focus();
+      else document.getElementById("grant-search")?.focus();
+    }
+  }, [hasProcessingNofos, processingBannerShown]);
+
   const paginatedData = useMemo(() => {
     const totalPages = Math.ceil(filteredNofos.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -390,6 +437,22 @@ const Dashboard: React.FC = () => {
   }, [filteredNofos, currentPage, itemsPerPage]);
 
   useEffect(() => { setCurrentPage(1); }, [statusFilter, grantTypeFilter, searchQuery]);
+
+  // Announce the match count once typing or filtering settles, not on first render or on polls.
+  const filteredCount = useRef(0);
+  filteredCount.current = filteredNofos.length;
+  const filtersTouched = useRef(false);
+  useEffect(() => {
+    if (!filtersTouched.current) {
+      filtersTouched.current = true;
+      return;
+    }
+    const timer = setTimeout(() => {
+      const n = filteredCount.current;
+      setResultsAnnouncement(`${n} grant${n === 1 ? "" : "s"} found`);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [statusFilter, grantTypeFilter, searchQuery]);
 
   useEffect(() => {
     if (currentPage > paginatedData.totalPages && paginatedData.totalPages > 0) {
@@ -417,7 +480,7 @@ const Dashboard: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [filterMenuOpen]);
 
-  if (loading || roleLoading) return <div className="loading" role="status">Loading Admin Dashboard...</div>;
+  if (loading || roleLoading) return <div className="loading" role="status">Loading Admin dashboard...</div>;
   if (!isAdmin) return <Navigate to="/home" replace />;
 
   const filterCount = getActiveFilterCount();
@@ -428,24 +491,25 @@ const Dashboard: React.FC = () => {
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <Breadcrumbs
           items={[
-            { label: "Home", onClick: () => navigate("/") },
-            { label: "Admin Dashboard" },
+            { label: "Home", href: "/home" },
+            { label: "Admin dashboard" },
           ]}
         />
 
         <div className="dashboard-main-content">
           <div className="dashboard-header">
             <div>
-              <h1>Admin Dashboard</h1>
-              <p style={{ marginTop: "4px", color: "#666", fontSize: "14px" }}>
+              <h1>Admin dashboard</h1>
+              <p style={{ marginTop: "4px", color: "var(--gw-color-text-secondary)", fontSize: "14px" }}>
                 Manage grants, users, and processing across your instance
               </p>
             </div>
             <div className="dashboard-actions">
               <button
-                className="action-button refresh-button"
+                ref={refreshButtonRef}
+                className="gw-btn gw-btn--secondary action-button refresh-button"
                 onClick={handleRefresh}
-                disabled={isRefreshing}
+                aria-disabled={isRefreshing}
                 aria-busy={isRefreshing}
               >
                 {isRefreshing ? (
@@ -453,13 +517,13 @@ const Dashboard: React.FC = () => {
                 ) : (
                   <><LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" /><span>Refresh</span></>
                 )}
-                <span className="visually-hidden"> Admin Dashboard</span>
+                <span className="visually-hidden"> Admin dashboard</span>
               </button>
               {hasProcessingNofos && (
                 <button
-                  className="action-button refresh-button"
+                  className="gw-btn gw-btn--secondary action-button refresh-button"
                   onClick={() => setAutoRefreshPaused((prev) => !prev)}
-                  aria-pressed={autoRefreshPaused}
+                  {...trackPollControlFocus("pause")}
                 >
                   {autoRefreshPaused ? "Resume auto-refresh" : "Pause auto-refresh"}
                 </button>
@@ -467,21 +531,29 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
+          <LiveStatus className="visually-hidden">{manualRefresh ? "Refreshing Admin dashboard" : null}</LiveStatus>
           <div role="status" aria-live="polite" className="visually-hidden">
             {showGrantBanner ? `Success! Grant "${addedGrantName}" has been added` : ""}
           </div>
           {showGrantBanner && (
-            <div className="success-banner">
+            <div className="gw-alert gw-alert--success success-banner">
               <div className="success-banner-content"><LuCheck size={20} className="success-icon" aria-hidden="true" /><span>Success! Grant &quot;{addedGrantName}&quot; has been added</span></div>
-              <button onClick={() => setShowGrantBanner(false)} className="banner-close-button" aria-label="Close notification"><LuX size={18} aria-hidden="true" /></button>
+              <button
+                onClick={() => {
+                  setShowGrantBanner(false);
+                  tabRefs[activeTab].current?.focus();
+                }}
+                className="gw-btn gw-btn--icon gw-btn--slim banner-close-button"
+                aria-label="Close notification"
+              ><LuX size={18} aria-hidden="true" /></button>
             </div>
           )}
 
-          <div className="tab-controls" role="tablist" aria-label="Admin Dashboard sections">
+          <div className="gw-tabs tab-controls" role="tablist" aria-label="Admin dashboard sections">
             <button
               id="dashboard-tab-grants"
               ref={grantsTabRef}
-              className={`tab-button ${activeTab === "grants" ? "active" : ""}`}
+              className={`gw-tab tab-button ${activeTab === "grants" ? "active" : ""}`}
               onClick={() => setActiveTab("grants")}
               onKeyDown={handleTabKeyDown}
               role="tab"
@@ -495,7 +567,7 @@ const Dashboard: React.FC = () => {
               <button
                 id="dashboard-tab-analytics"
                 ref={analyticsTabRef}
-                className={`tab-button ${activeTab === "analytics" ? "active" : ""}`}
+                className={`gw-tab tab-button ${activeTab === "analytics" ? "active" : ""}`}
                 onClick={() => setActiveTab("analytics")}
                 onKeyDown={handleTabKeyDown}
                 role="tab"
@@ -510,7 +582,7 @@ const Dashboard: React.FC = () => {
               <button
                 id="dashboard-tab-rollouts"
                 ref={rolloutsTabRef}
-                className={`tab-button ${activeTab === "feature-rollouts" ? "active" : ""}`}
+                className={`gw-tab tab-button ${activeTab === "feature-rollouts" ? "active" : ""}`}
                 onClick={() => setActiveTab("feature-rollouts")}
                 onKeyDown={handleTabKeyDown}
                 role="tab"
@@ -518,14 +590,14 @@ const Dashboard: React.FC = () => {
                 aria-controls={activeTab === "feature-rollouts" ? "dashboard-panel-rollouts" : undefined}
                 tabIndex={activeTab === "feature-rollouts" ? 0 : -1}
               >
-                Feature Rollouts
+                Feature rollouts
               </button>
             )}
             {canManageUsers && (
               <button
                 id="dashboard-tab-user-management"
                 ref={userManagementTabRef}
-                className={`tab-button ${activeTab === "user-management" ? "active" : ""}`}
+                className={`gw-tab tab-button ${activeTab === "user-management" ? "active" : ""}`}
                 onClick={() => setActiveTab("user-management")}
                 onKeyDown={handleTabKeyDown}
                 role="tab"
@@ -533,22 +605,7 @@ const Dashboard: React.FC = () => {
                 aria-controls={activeTab === "user-management" ? "dashboard-panel-user-management" : undefined}
                 tabIndex={activeTab === "user-management" ? 0 : -1}
               >
-                User Management
-              </button>
-            )}
-            {isDeveloper && EMAIL_DIGEST && (
-              <button
-                id="dashboard-tab-digest-preview"
-                ref={digestPreviewTabRef}
-                className={`tab-button ${activeTab === "digest-preview" ? "active" : ""}`}
-                onClick={() => setActiveTab("digest-preview")}
-                onKeyDown={handleTabKeyDown}
-                role="tab"
-                aria-selected={activeTab === "digest-preview"}
-                aria-controls={activeTab === "digest-preview" ? "dashboard-panel-digest-preview" : undefined}
-                tabIndex={activeTab === "digest-preview" ? 0 : -1}
-              >
-                Digest Preview
+                User management
               </button>
             )}
           </div>
@@ -562,46 +619,53 @@ const Dashboard: React.FC = () => {
                 tabIndex={0}
               >
                 {isAdmin && (
-                  <div className="grants-segment" role="group" aria-label="Grant view">
+                  <div className="gw-toggle grants-segment" role="group" aria-label="Grant view">
                     <button
-                      className={`grants-segment__btn ${grantsSegment === "all" ? "grants-segment__btn--active" : ""}`}
+                      className={`gw-toggle__option grants-segment__btn ${grantsSegment === "all" ? "grants-segment__btn--active" : ""}`}
                       onClick={() => { setGrantsSegment("all"); setReviewFocus(null); }}
                       aria-pressed={grantsSegment === "all"}
                     >
                       All grants
                     </button>
                     <button
-                      className={`grants-segment__btn ${grantsSegment === "processing" ? "grants-segment__btn--active" : ""}`}
+                      ref={processingSegmentRef}
+                      className={`gw-toggle__option grants-segment__btn ${grantsSegment === "processing" ? "grants-segment__btn--active" : ""}`}
                       onClick={() => { setGrantsSegment("processing"); setReviewFocus(null); }}
                       aria-pressed={grantsSegment === "processing"}
                     >
                       Processing
                       {processingCount > 0 && (
-                        <span
-                          className="grants-segment__badge"
-                          aria-label={`${processingCount} grants processing`}
-                        >
-                          <span aria-hidden="true">{processingCount > 99 ? "99+" : processingCount}</span>
+                        <span className="grants-segment__badge">
+                          <span className="visually-hidden">, </span>
+                          {processingCount > 99 ? "99+" : processingCount}
+                          <span className="visually-hidden"> {processingCount === 1 ? "grant" : "grants"}</span>
                         </span>
                       )}
                     </button>
                     <button
-                      className={`grants-segment__btn ${grantsSegment === "attention" ? "grants-segment__btn--active" : ""}`}
+                      ref={attentionSegmentRef}
+                      className={`gw-toggle__option grants-segment__btn ${grantsSegment === "attention" ? "grants-segment__btn--active" : ""}`}
                       onClick={() => setGrantsSegment("attention")}
                       aria-pressed={grantsSegment === "attention"}
                     >
                       Needs attention
                       {pendingReviewCount > 0 && (
-                        <span
-                          className={`grants-segment__badge ${pendingReviewCount >= 25 ? "grants-segment__badge--high" : ""}`}
-                          aria-label={`${pendingReviewCount} items need review`}
-                        >
-                          <span aria-hidden="true">{pendingReviewCount > 99 ? "99+" : pendingReviewCount}</span>
+                        <span className={`grants-segment__badge ${pendingReviewCount >= 25 ? "grants-segment__badge--high" : ""}`}>
+                          <span className="visually-hidden">, </span>
+                          {pendingReviewCount > 99 ? "99+" : pendingReviewCount}
+                          <span className="visually-hidden"> {pendingReviewCount === 1 ? "item" : "items"}</span>
                         </span>
                       )}
                     </button>
                   </div>
                 )}
+
+                <h2 className="visually-hidden">
+                  {grantsSegment === "attention" ? "Needs attention" : grantsSegment === "processing" ? "Processing" : "All grants"}
+                </h2>
+                <div role="status" className="visually-hidden">
+                  {grantsSegment === "all" ? resultsAnnouncement : ""}
+                </div>
 
                 {isAdmin && grantsSegment === "attention" ? (
                   <ProcessingReviewTab
@@ -620,9 +684,18 @@ const Dashboard: React.FC = () => {
                   />
                 ) : (
                 <>
-                {isAdmin && !processingBannerDismissed && (processingCount > 0 || finishedCount > 0) && (
-                  <div className="processing-banner">
-                    <div className="processing-banner__message" role="status" aria-atomic="true">
+                {/* Always in the page, so a banner that appears with its text is still announced. */}
+                <LiveStatus className="visually-hidden">
+                  {isAdmin && !processingBannerDismissed && (processingCount > 0 || finishedCount > 0)
+                    ? [
+                        processingCount > 0 && `${processingCount} grant${processingCount === 1 ? "" : "s"} processing`,
+                        finishedCount > 0 && `${finishedCount} recently finished`,
+                      ].filter(Boolean).join(", ")
+                    : null}
+                </LiveStatus>
+                {processingBannerShown && (
+                  <div className="gw-alert gw-alert--info processing-banner">
+                    <div className="processing-banner__message">
                       {processingCount > 0 ? (
                         <LuLoader size={16} className="processing-banner__spin" aria-hidden="true" />
                       ) : (
@@ -637,14 +710,22 @@ const Dashboard: React.FC = () => {
                     <button
                       type="button"
                       className="processing-banner__view"
-                      onClick={() => setGrantsSegment("processing")}
+                      {...trackPollControlFocus("banner")}
+                      onClick={() => {
+                        setGrantsSegment("processing");
+                        processingSegmentRef.current?.focus();
+                      }}
                     >
                       View <LuArrowRight size={13} aria-hidden="true" />
                     </button>
                     <button
                       type="button"
                       className="processing-banner__dismiss"
-                      onClick={() => setProcessingBannerDismissed(true)}
+                      {...trackPollControlFocus("banner")}
+                      onClick={() => {
+                        setProcessingBannerDismissed(true);
+                        document.getElementById("grant-search")?.focus();
+                      }}
                       aria-label="Dismiss processing notice"
                     >
                       <LuX size={14} aria-hidden="true" />
@@ -654,22 +735,22 @@ const Dashboard: React.FC = () => {
                 <div className="search-actions-container">
                   <div className="search-filter-container">
                     <div className="search-input-wrapper">
-                      <LuSearch className="search-icon" size={18} />
+                      <LuSearch className="search-icon" size={18} aria-hidden="true" />
                       <label htmlFor="grant-search" className="visually-hidden">Search grants</label>
-                      <input id="grant-search" type="text" className="search-input" placeholder="Search grants..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                      <input id="grant-search" type="text" className="gw-input search-input" placeholder="Search grants..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                     </div>
 
-                    <div className="filter-container" onBlur={handleFilterFocusOut}>
-                      <button ref={filterButtonRef} className={`filter-button ${filterCount > 0 ? "active" : ""}`}
-                        onClick={toggleFilterMenu} onKeyDown={handleFilterMenuKeyDown} onBlur={handleFilterFocusOut} aria-label="Filter grants" aria-expanded={filterMenuOpen} aria-haspopup="menu">
-                        <LuFilter size={18} />
-                        {filterCount > 0 && <span className="filter-badge" aria-label={`${filterCount} filter(s) active`}>{filterCount}</span>}
+                    <div className="filter-container">
+                      <button ref={filterButtonRef} className={`gw-btn gw-btn--icon filter-button ${filterCount > 0 ? "active" : ""}`}
+                        onClick={toggleFilterMenu} onKeyDown={handleFilterMenuKeyDown} onBlur={handleFilterFocusOut} aria-label={filterCount > 0 ? `Filter grants, ${filterCount} active` : "Filter grants"} aria-expanded={filterMenuOpen} aria-haspopup="menu">
+                        <LuFilter size={18} aria-hidden="true" />
+                        {filterCount > 0 && <span className="filter-badge" aria-hidden="true">{filterCount}</span>}
                       </button>
 
                       {filterMenuOpen && (
                         <div ref={filterMenuRef} className="filter-menu" role="menu" tabIndex={-1} onKeyDown={handleFilterMenuKeyDown} onBlur={handleFilterFocusOut}>
                           <div className="filter-menu-group" role="group" aria-labelledby={statusGroupId}>
-                            <div className="filter-menu-header" id={statusGroupId}>Filter by Status</div>
+                            <div className="filter-menu-header" id={statusGroupId}>Filter by status</div>
                             {STATUS_FILTERS.map((status, index) => (
                               <button key={status} onClick={() => setStatusFilter(status)}
                                 ref={(el) => { filterItemRefs.current[index] = el; }}
@@ -678,15 +759,15 @@ const Dashboard: React.FC = () => {
                                 role="menuitemradio" aria-checked={statusFilter === status}
                                 tabIndex={focusedFilterIndex === index ? 0 : -1}>
                                 <div className="filter-option-content">
-                                  <span className="filter-option-check">{statusFilter === status ? "✓" : ""}</span>
-                                  {status === "all" ? "All Status" : status.charAt(0).toUpperCase() + status.slice(1)}
+                                  <span className="filter-option-check" aria-hidden="true">{statusFilter === status ? "✓" : ""}</span>
+                                  {status === "all" ? "All statuses" : status.charAt(0).toUpperCase() + status.slice(1)}
                                 </div>
                               </button>
                             ))}
                           </div>
                           <div className="filter-menu-divider" />
                           <div className="filter-menu-group" role="group" aria-labelledby={grantTypeGroupId}>
-                            <div className="filter-menu-header" id={grantTypeGroupId}>Filter by Grant Type</div>
+                            <div className="filter-menu-header" id={grantTypeGroupId}>Filter by grant type</div>
                             {GRANT_TYPE_FILTERS.map((type, typeIndex) => {
                               const index = STATUS_FILTERS.length + typeIndex;
                               return (
@@ -697,8 +778,8 @@ const Dashboard: React.FC = () => {
                                   role="menuitemradio" aria-checked={grantTypeFilter === type}
                                   tabIndex={focusedFilterIndex === index ? 0 : -1}>
                                   <div className="filter-option-content">
-                                    <span className="filter-option-check">{grantTypeFilter === type ? "✓" : ""}</span>
-                                    {type === "all" ? "All Types" : GRANT_TYPES[type].label}
+                                    <span className="filter-option-check" aria-hidden="true">{grantTypeFilter === type ? "✓" : ""}</span>
+                                    {type === "all" ? "All types" : GRANT_TYPES[type].label}
                                   </div>
                                 </button>
                               );
@@ -710,25 +791,27 @@ const Dashboard: React.FC = () => {
                   </div>
 
                   <div className="action-buttons">
-                    <button className="action-button add-button" onClick={() => setUploadNofoModalOpen(true)}>
-                      <LuUpload size={16} className="button-icon" /><span>Add Grant</span>
+                    <button className="gw-btn gw-btn--primary action-button add-button" onClick={() => setUploadNofoModalOpen(true)}>
+                      <LuUpload size={16} className="button-icon" aria-hidden="true" /><span>Add grant</span>
                     </button>
-                    <button className="action-button scraper-button" onClick={() => setScrapeConfirmModalOpen(true)} disabled={isScraping} aria-label="Auto-scrape grants from grants.gov" aria-busy={isScraping}>
-                      <LuDownload size={16} className="button-icon" aria-hidden="true" /><span>{isScraping ? "Scraping..." : "Auto-Scrape Grants"}</span>
-                    </button>
+                    {canScrape && (
+                      <button className="gw-btn gw-btn--secondary action-button scraper-button" onClick={() => !isScraping && setScrapeConfirmModalOpen(true)} aria-disabled={isScraping} aria-busy={isScraping}>
+                        <LuDownload size={16} className="button-icon" aria-hidden="true" /><span>{isScraping ? "Scraping..." : "Auto-scrape grants"}</span><span className="visually-hidden"> from grants.gov</span>
+                      </button>
+                    )}
                   </div>
                 </div>
 
-                <Modal isOpen={scrapeConfirmModalOpen} onClose={() => setScrapeConfirmModalOpen(false)} title="Confirm Auto-Scrape">
+                <Modal isOpen={scrapeConfirmModalOpen} onClose={() => setScrapeConfirmModalOpen(false)} title="Confirm auto-scrape">
                   <div className="modal-form">
                     <div className="delete-confirmation">
-                      <LuInfo size={32} className="warning-icon dashboard-info-icon" />
+                      <LuInfo size={32} className="warning-icon dashboard-info-icon" aria-hidden="true" />
                       <p>Are you sure you want to scrape grants now?</p>
                     </div>
                     <p className="warning-text">This will search for new grants on grants.gov and add them to the system. This process may take a few minutes.</p>
                     <div className="modal-actions">
-                      <button className="modal-button secondary" onClick={() => setScrapeConfirmModalOpen(false)}>Cancel</button>
-                      <button className="modal-button primary" onClick={confirmAutomatedScraper}>Yes, Scrape Now</button>
+                      <button className="gw-btn gw-btn--secondary modal-button secondary" onClick={() => setScrapeConfirmModalOpen(false)}>Cancel</button>
+                      <button className="gw-btn gw-btn--primary modal-button primary" onClick={confirmAutomatedScraper}>Yes, scrape now</button>
                     </div>
                   </div>
                 </Modal>
@@ -765,6 +848,7 @@ const Dashboard: React.FC = () => {
                 aria-labelledby="dashboard-tab-analytics"
                 tabIndex={0}
               >
+                <h2 className="visually-hidden">Analytics</h2>
                 <AnalyticsTab
                   apiClient={apiClient}
                   addNotification={addNotification}
@@ -800,16 +884,7 @@ const Dashboard: React.FC = () => {
                   currentUsername={username}
                 />
               </div>
-            ) : (
-              <div
-                id="dashboard-panel-digest-preview"
-                role="tabpanel"
-                aria-labelledby="dashboard-tab-digest-preview"
-                tabIndex={0}
-              >
-                <DigestPreviewTab apiClient={apiClient} addNotification={addNotification} />
-              </div>
-            )}
+            ) : null}
           </div>
         </div>
 

@@ -47,6 +47,10 @@ export interface ScraperStackProps extends cdk.NestedStackProps {
    */
   readonly scraperDownloadQueueArn: string;
   readonly scraperDownloadQueueUrl: string;
+  /** The coordinator's manual run checks the caller's role and state. */
+  readonly supportedStatesEnv: string;
+  readonly legacyStatelessAdminIsPlatform: string;
+  readonly singleStateEnv: Record<string, string>;
 }
 
 export class ScraperStack extends cdk.NestedStack {
@@ -74,6 +78,9 @@ export class ScraperStack extends cdk.NestedStack {
           GRANTS_GOV_API_KEY: props.grantsGovApiKey,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           SCRAPER_DOWNLOAD_QUEUE_URL: props.scraperDownloadQueueUrl,
+          SUPPORTED_STATES: props.supportedStatesEnv,
+          LEGACY_STATELESS_ADMIN_IS_PLATFORM: props.legacyStatelessAdminIsPlatform,
+          ...props.singleStateEnv,
         },
         timeout: cdk.Duration.minutes(15),
         memorySize: 256,
@@ -103,6 +110,7 @@ export class ScraperStack extends cdk.NestedStack {
         handler: "opportunity-processor/index.handler",
         environment: {
           BUCKET: props.ffioNofosBucket.bucketName,
+          ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
           GRANTS_GOV_API_KEY: props.grantsGovApiKey,
           NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
           HAIKU_MODEL_ID: props.haikuScraperProfileArn,
@@ -113,6 +121,14 @@ export class ScraperStack extends cdk.NestedStack {
     );
 
     opportunityProcessorFunction.addToRolePolicy(s3ReadWritePolicy(props.ffioNofosBucket.bucketArn));
+    // An update of a live grant waits in _pending/ until its new version publishes.
+    opportunityProcessorFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:PutObject"],
+        resources: [props.grantArtifactsBucket.arnForObjects("_pending/*")],
+      })
+    );
     opportunityProcessorFunction.addToRolePolicy(bedrockInvokePolicy());
     opportunityProcessorFunction.addToRolePolicy(metadataTableReadWritePolicy(props.nofoMetadataTable.tableArn));
 

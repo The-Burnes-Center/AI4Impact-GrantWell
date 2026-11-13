@@ -1,11 +1,13 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { LuKeyRound, LuTrash, LuUserPlus } from "react-icons/lu";
 import type { ApiClient } from "../../../common/api-client/api-client";
 import type { ManagedUser, UserRolePreset } from "../../../common/types/user-management";
 import { SUPPORTED_STATES } from "../../../common/types/user-management";
 import { MFA_ENABLED, REGIONS, SINGLE_STATE } from "../../../common/instance";
+import { LiveStatus } from "../../../components/common/LiveStatus";
 import { Modal } from "../../../components/common/Modal";
-import PaginationControls from "./PaginationControls";
+import PaginationControls from "../../../components/common/PaginationControls";
+import TableScrollRegion from "../../../components/ui/TableScrollRegion";
 import RowActionsMenu, { type RowAction } from "./RowActionsMenu";
 
 interface UserManagementTabProps {
@@ -31,7 +33,7 @@ const allRoleOptions: RoleOption[] = ([
 
 const ROLE_DEFINITIONS: Record<UserRolePreset, string> = {
   user: "Browse grants, view requirements, and draft applications. No admin access.",
-  admin: "Everything a User can do, plus the Admin Dashboard: manage grants, review processing, and manage user roles (User or Admin only). Scoped to their assigned state.",
+  admin: "Everything a User can do, plus the Admin dashboard: manage grants, review processing, and manage user roles (User or Admin only). Scoped to their assigned state.",
   platformadmin: "An Admin with no state restriction: manages grants and users across every state. Cannot be scoped to a state.",
   developer: "Everything a Platform Admin can do, plus manage feature rollouts and assign any role, including Developer.",
 };
@@ -66,6 +68,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   const [draftRoles, setDraftRoles] = useState<Record<string, UserRolePreset>>({});
   const [draftStates, setDraftStates] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
+  const [loaded, setLoaded] = useState(false);
   const [savingUsername, setSavingUsername] = useState<string | null>(null);
   const [rowErrors, setRowErrors] = useState<Record<string, string>>({});
   const [pageSize, setPageSize] = useState(25);
@@ -77,6 +80,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
 
   const [addUserModalOpen, setAddUserModalOpen] = useState(false);
   const [addEmail, setAddEmail] = useState("");
+  const [addEmailAttempted, setAddEmailAttempted] = useState(false);
   const [addState, setAddState] = useState("");
   const [isCreating, setIsCreating] = useState(false);
 
@@ -84,6 +88,13 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   const [isDeleting, setIsDeleting] = useState(false);
   const [mfaResetTarget, setMfaResetTarget] = useState<ManagedUser | null>(null);
   const [isResettingMfa, setIsResettingMfa] = useState(false);
+
+  const tableRef = useRef<HTMLTableElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const addEmailRef = useRef<HTMLInputElement>(null);
+  // Set when a reload may remove the row that has focus; checked once the new rows render.
+  const refocusAfterReload = useRef(false);
+  const savedUsername = useRef<string | null>(null);
 
   const loadUsers = useCallback(async (
     page: number,
@@ -127,8 +138,24 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
       );
     } finally {
       setLoading(false);
+      setLoaded(true);
     }
   }, [apiClient, addNotification]);
+
+  useEffect(() => {
+    if (!refocusAfterReload.current || loading) return;
+    refocusAfterReload.current = false;
+    if (!document.activeElement || document.activeElement === document.body) tableRef.current?.focus();
+  }, [users, loading]);
+
+  useEffect(() => {
+    const username = savedUsername.current;
+    if (!username || savingUsername) return;
+    savedUsername.current = null;
+    if (!document.activeElement || document.activeElement === document.body) {
+      document.getElementById(`role-select-${username}`)?.focus();
+    }
+  }, [savingUsername]);
 
   useEffect(() => {
     void loadUsers(1, pageSize, [null], activeSearchQuery);
@@ -147,12 +174,14 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
 
   const handleSearchSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (loading) return;
     startSearch(searchQuery.trim());
-  }, [searchQuery, startSearch]);
+  }, [loading, searchQuery, startSearch]);
 
   const handleClearSearch = useCallback(() => {
     setSearchQuery("");
     startSearch("");
+    searchInputRef.current?.focus();
   }, [startSearch]);
 
   const hasActiveSearch = activeSearchQuery.length > 0;
@@ -220,6 +249,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               : item
           )
         );
+        savedUsername.current = user.username;
         addNotification("success", `Updated ${user.email}`);
       } catch (error) {
         console.error("Error updating user:", error);
@@ -268,6 +298,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
       await apiClient.userManagement.deleteUser(deleteTarget.username);
       addNotification("success", `Deleted ${deleteTarget.email}`);
       setDeleteTarget(null);
+      refocusAfterReload.current = true;
       reloadCurrentPage();
     } catch (error) {
       addNotification("error", error instanceof Error ? error.message : "Failed to delete user");
@@ -296,15 +327,20 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
     }
   }, [mfaResetTarget, apiClient, addNotification]);
 
-  if (loading) {
+  if (!loaded) {
     return (
-      <div className="feature-rollouts-panel" aria-busy="true">
-        <span role="status">Loading users...</span>
-      </div>
+      <>
+        <div className="feature-rollouts-panel" aria-busy="true">
+          <span aria-hidden="true">Loading users...</span>
+        </div>
+        <LiveStatus className="visually-hidden">Loading users...</LiveStatus>
+      </>
     );
   }
 
   const addEmailValid = addEmail.trim().length > 0 && EMAIL_PATTERN.test(addEmail);
+  const addEmailInvalid = (addEmailAttempted || addEmail.length > 0) && !addEmailValid;
+  const savingEmail = savingUsername ? users.find((user) => user.username === savingUsername)?.email : undefined;
 
   return (
     <div className="user-management-panel">
@@ -312,9 +348,9 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
         <div className="feature-rollouts-card__header">
           <div>
             <span className="feature-rollouts-eyebrow">
-              {isStateAdmin ? "State Administration" : "Developer Controls"}
+              {isStateAdmin ? "State administration" : "Developer controls"}
             </span>
-            <h2>User Management</h2>
+            <h2>User management</h2>
             <p>
               {isStateAdmin
                 ? `Manage users in ${userState}. You can add users, change roles between User and Admin, and remove users — all scoped to ${userState}.`
@@ -335,10 +371,13 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           </div>
           <button
             type="button"
-            className="feature-rollouts-primary-button"
-            onClick={() => setAddUserModalOpen(true)}
+            className="gw-btn gw-btn--primary feature-rollouts-primary-button"
+            onClick={() => {
+              setAddEmailAttempted(false);
+              setAddUserModalOpen(true);
+            }}
           >
-            <LuUserPlus size={16} aria-hidden="true" /> Add User
+            <LuUserPlus size={16} aria-hidden="true" /> Add user
           </button>
         </div>
 
@@ -348,21 +387,22 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               Search users
             </label>
             <input
+              ref={searchInputRef}
               id="user-management-search"
               type="search"
-              className="feature-rollouts-search-input"
+              className="gw-input feature-rollouts-search-input"
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
               placeholder="Search by email or username"
             />
           </div>
           <div className="feature-rollouts-search-actions">
-            <button type="submit" className="feature-rollouts-primary-button" disabled={loading}>
+            <button type="submit" className="gw-btn gw-btn--primary feature-rollouts-primary-button" aria-disabled={loading}>
               Search
             </button>
             <button
               type="button"
-              className="feature-rollouts-secondary-button"
+              className="gw-btn gw-btn--secondary feature-rollouts-secondary-button"
               onClick={handleClearSearch}
               disabled={!hasActiveSearch && !searchQuery.trim()}
             >
@@ -371,14 +411,15 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           </div>
         </form>
 
+        <LiveStatus className="visually-hidden">{savingEmail ? `Saving changes for ${savingEmail}` : null}</LiveStatus>
         <p className="feature-rollouts-results-status" role="status" aria-live="polite">
           {hasActiveSearch && !loading
             ? `${users.length === 0 ? "No" : users.length} user${users.length === 1 ? "" : "s"} found for "${activeSearchQuery}".`
             : ""}
         </p>
 
-        <div className="user-management-table-wrapper">
-          <table className="user-management-table">
+        <TableScrollRegion label="Users table" className="user-management-table-wrapper">
+          <table className="user-management-table" ref={tableRef} tabIndex={-1} aria-label="Users" aria-busy={loading}>
             <thead>
               <tr>
                 <th scope="col">User</th>
@@ -408,14 +449,14 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
 
                 return (
                   <tr key={user.username}>
-                    <td>
+                    <th scope="row">
                       <div className="user-management-user-cell">
                         <span className="user-management-user-email">{user.email}</span>
                         <span className="user-management-user-username">{user.username}</span>
                       </div>
-                    </td>
+                    </th>
                     <td>
-                      <span className={`user-management-status-pill ${user.enabled ? "is-enabled" : "is-disabled"}`}>
+                      <span className={`gw-tag user-management-status-pill ${user.enabled ? "is-enabled" : "is-disabled"}`}>
                         {user.enabled ? user.status : "DISABLED"}
                       </span>
                     </td>
@@ -425,7 +466,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                       </label>
                       <select
                         id={`role-select-${user.username}`}
-                        className="user-management-role-select"
+                        className="gw-input user-management-role-select"
                         value={draftRole}
                         onChange={(event) =>
                           setDraftRoles((current) => ({
@@ -453,7 +494,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                       </label>
                       <select
                         id={`state-select-${user.username}`}
-                        className="user-management-role-select"
+                        className="gw-input user-management-role-select"
                         value={draftState}
                         onChange={(event) =>
                           setDraftStates((current) => ({
@@ -478,12 +519,12 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                         {(hasChanges || isSaving) && (
                           <button
                             type="button"
-                            className="feature-rollouts-primary-button"
-                            onClick={() => void handleSave(user)}
-                            disabled={isSaving}
-                            aria-label={`Save changes for ${user.email}`}
+                            className="gw-btn gw-btn--primary feature-rollouts-primary-button"
+                            onClick={() => !isSaving && void handleSave(user)}
+                            aria-disabled={isSaving}
                           >
                             {isSaving ? "Saving..." : "Save"}
+                            <span className="visually-hidden"> changes for {user.email}</span>
                           </button>
                         )}
                         {!isSelf && (
@@ -494,13 +535,13 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                               ...(MFA_ENABLED
                                 ? [{
                                     label: "Reset two-step verification",
-                                    icon: <LuKeyRound size={16} />,
+                                    icon: <LuKeyRound size={16} aria-hidden="true" />,
                                     onSelect: () => setMfaResetTarget(user),
                                   } satisfies RowAction]
                                 : []),
                               {
                                 label: "Delete",
-                                icon: <LuTrash size={16} />,
+                                icon: <LuTrash size={16} aria-hidden="true" />,
                                 onSelect: () => setDeleteTarget(user),
                                 danger: true,
                               },
@@ -519,7 +560,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               })}
             </tbody>
           </table>
-        </div>
+        </TableScrollRegion>
         {!hasActiveSearch && (
           <PaginationControls
             mode="token"
@@ -532,34 +573,42 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
             itemsPerPageOptions={[25, 50, 60]}
             itemLabel="users"
             selectId="user-management-page-size"
+            live
           />
         )}
       </div>
 
-      <Modal isOpen={addUserModalOpen} onClose={() => setAddUserModalOpen(false)} title="Add New User">
+      <Modal isOpen={addUserModalOpen} onClose={() => setAddUserModalOpen(false)} title="Add new user">
         <div className="modal-form">
           <p className="modal-description">
             Enter the email address of the user to add. They will receive an email with instructions to set up their account.
           </p>
           <div className="form-group">
-            <label htmlFor="add-user-email">Email Address</label>
+            <label htmlFor="add-user-email">Email address</label>
             <input
+              ref={addEmailRef}
               type="email"
               id="add-user-email"
               value={addEmail}
               onChange={(e) => setAddEmail(e.target.value)}
-              className="form-input"
+              className="gw-input form-input"
               placeholder="user@example.com"
               autoComplete="email"
-              aria-invalid={addEmail.length > 0 && !EMAIL_PATTERN.test(addEmail)}
+              aria-invalid={addEmailInvalid}
+              aria-describedby={addEmailInvalid ? "add-user-email-error" : undefined}
             />
+            {addEmailInvalid && (
+              <p id="add-user-email-error" className="gw-field__message user-management-field-error">
+                Enter an email address in the format user@example.com.
+              </p>
+            )}
           </div>
           {!SINGLE_STATE && (
           <div className="form-group">
             <label htmlFor="add-user-state">{isStateAdmin ? "State" : "State (optional)"}</label>
             <select
               id="add-user-state"
-              className="form-input"
+              className="gw-input form-input"
               value={isStateAdmin ? userState : addState}
               onChange={(e) => setAddState(e.target.value)}
               disabled={isStateAdmin}
@@ -580,20 +629,31 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           )}
           <div className="modal-actions">
             <button
-              className="modal-button secondary"
-              onClick={() => setAddUserModalOpen(false)}
-              disabled={isCreating}
+              className="gw-btn gw-btn--secondary modal-button secondary"
+              onClick={() => {
+                if (!isCreating) setAddUserModalOpen(false);
+              }}
+              aria-disabled={isCreating || undefined}
             >
               Cancel
             </button>
             <button
-              className="modal-button primary"
-              onClick={() => void handleCreateUser()}
-              disabled={isCreating || !addEmailValid}
+              className="gw-btn gw-btn--primary modal-button primary"
+              onClick={() => {
+                if (isCreating) return;
+                if (!addEmailValid) {
+                  setAddEmailAttempted(true);
+                  addEmailRef.current?.focus();
+                  return;
+                }
+                void handleCreateUser();
+              }}
+              aria-disabled={isCreating || undefined}
             >
-              {isCreating ? "Adding..." : "Add User"}
+              {isCreating ? "Adding..." : "Add user"}
             </button>
           </div>
+          <LiveStatus className="visually-hidden">{isCreating ? "Adding user" : null}</LiveStatus>
         </div>
       </Modal>
 
@@ -604,7 +664,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
             setDeleteTarget(null);
           }
         }}
-        title="Delete User"
+        title="Delete user"
       >
         <div className="modal-form">
           <p className="modal-description">
@@ -612,18 +672,22 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           </p>
           <div className="modal-actions">
             <button
-              className="modal-button secondary"
-              onClick={() => setDeleteTarget(null)}
-              disabled={isDeleting}
+              className="gw-btn gw-btn--secondary modal-button secondary"
+              onClick={() => {
+                if (!isDeleting) setDeleteTarget(null);
+              }}
+              aria-disabled={isDeleting || undefined}
             >
               Cancel
             </button>
             <button
-              className="modal-button danger"
-              onClick={() => void handleDeleteUser()}
-              disabled={isDeleting}
+              className="gw-btn gw-btn--danger modal-button danger"
+              onClick={() => {
+                if (!isDeleting) void handleDeleteUser();
+              }}
+              aria-disabled={isDeleting || undefined}
             >
-              {isDeleting ? "Deleting..." : "Delete User"}
+              {isDeleting ? "Deleting..." : "Delete user"}
             </button>
           </div>
         </div>
@@ -645,16 +709,20 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           </p>
           <div className="modal-actions">
             <button
-              className="modal-button secondary"
-              onClick={() => setMfaResetTarget(null)}
-              disabled={isResettingMfa}
+              className="gw-btn gw-btn--secondary modal-button secondary"
+              onClick={() => {
+                if (!isResettingMfa) setMfaResetTarget(null);
+              }}
+              aria-disabled={isResettingMfa || undefined}
             >
               Cancel
             </button>
             <button
-              className="modal-button danger"
-              onClick={() => void handleMfaReset()}
-              disabled={isResettingMfa}
+              className="gw-btn gw-btn--danger modal-button danger"
+              onClick={() => {
+                if (!isResettingMfa) void handleMfaReset();
+              }}
+              aria-disabled={isResettingMfa || undefined}
             >
               {isResettingMfa ? "Resetting..." : "Reset"}
             </button>

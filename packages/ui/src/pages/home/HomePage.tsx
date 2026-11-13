@@ -58,9 +58,6 @@ export default function HomePage() {
   const searchPlaceholder = canUseAIGrantSearch
     ? "Search by keyword, category, or describe what you need..."
     : "Search by grant name, agency, or category...";
-  const searchAriaLabel = canUseAIGrantSearch
-    ? "Search grants by name, agency, category, or described need"
-    : "Search grants by name, agency, or category";
 
   const handleSearch = useCallback(
     (query: string, committed = false) => {
@@ -112,8 +109,9 @@ export default function HomePage() {
         const folders = result.folders || [];
 
         if (result.nofoData) {
+          // A live grant stays listed while a new version of it is processed.
           const readyNofos = result.nofoData.filter(
-            (nofo: RawNOFOData) => !nofo.processing_status
+            (nofo: RawNOFOData) => nofo.status === "active" || nofo.status === "archived"
           );
 
           const sortedNofos = [...readyNofos].sort(
@@ -184,8 +182,6 @@ export default function HomePage() {
       setRedirectMessage(message);
       searchParams.delete("message");
       setSearchParams(searchParams, { replace: true });
-      const timer = setTimeout(() => setRedirectMessage(null), 5000);
-      return () => clearTimeout(timer);
     }
   }, [searchParams, setSearchParams]);
 
@@ -198,7 +194,7 @@ export default function HomePage() {
     ) {
       setHighlightCTAButtons(true);
       setSrAnnouncement(
-        `${selectedDocument.label} selected. Choose an action: Requirements, Write Application, or Chat with AI.`
+        `${selectedDocument.label} selected. Choose an action: Requirements, Write application, or Chat with AI.`
       );
       const focusTimer = setTimeout(() => firstCTAButtonRef.current?.focus(), 300);
       const highlightTimer = setTimeout(() => setHighlightCTAButtons(false), 2000);
@@ -263,13 +259,12 @@ export default function HomePage() {
         </div>
 
         {/* Redirect message */}
-        {redirectMessage && (
-          <div className="redirect-banner">
-            {/* The message is informational, and the close button sits outside the
-                region so its label is not read as part of the announcement. */}
-            <div style={{ flex: 1 }} role="status" aria-live="polite">
-              <p className="redirect-banner__text">{redirectMessage}</p>
-            </div>
+        {/* Pre-mounted so the message is announced; the close button stays outside the region. */}
+        <div className={redirectMessage ? "redirect-banner" : undefined}>
+          <div style={{ flex: 1 }} role="status" aria-live="polite">
+            {redirectMessage && <p className="redirect-banner__text">{redirectMessage}</p>}
+          </div>
+          {redirectMessage && (
             <button
               onClick={() => setRedirectMessage(null)}
               className="redirect-banner__close"
@@ -277,12 +272,12 @@ export default function HomePage() {
             >
               &times;
             </button>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Error state */}
         {error && (
-          <div className="redirect-banner" role="alert" aria-live="assertive">
+          <div className="gw-alert gw-alert--info redirect-banner" role="alert" aria-live="assertive">
             <div style={{ flex: 1 }}>
               <p className="redirect-banner__text">{error}</p>
             </div>
@@ -304,7 +299,7 @@ export default function HomePage() {
             Click a grant&apos;s name to select it, then select{" "}
             <strong className="how-it-works__action-label">Requirements</strong>{" "}
             to see the grant&apos;s eligibility and requirements,{" "}
-            <strong className="how-it-works__action-label">Write Application</strong>{" "}
+            <strong className="how-it-works__action-label">Write application</strong>{" "}
             to start your application, or{" "}
             <strong className="how-it-works__action-label">Chat with AI</strong>{" "}
             to ask questions about the grant.
@@ -313,7 +308,7 @@ export default function HomePage() {
             Screen-reader note: Use the search bar below to filter grants by name, agency, or category.
             {featureCopyResolved && canUseAIGrantSearch
               ? " AI search is enabled for your account, so descriptive searches will return ranked matches."
-              : ""}
+              : ""}{" "}
             The table shows filtered results. Use the dropdown filters to narrow by status,
             category, or grant type. Each grant name is a button. Activate it to select that grant,
             then action buttons will appear.
@@ -332,7 +327,6 @@ export default function HomePage() {
           onClearSearch={handleClearSearch}
           onSearchPendingChange={canUseAIGrantSearch ? setIsSearchPending : undefined}
           searchPlaceholder={searchPlaceholder}
-          searchAriaLabel={searchAriaLabel}
         />
 
         {/* Screen reader announcement */}
@@ -346,20 +340,21 @@ export default function HomePage() {
               Selected:{" "}
               <strong className="cta-selected__name">{selectedDocument.label}</strong>
             </p>
-            <nav
+            <div
+              role="group"
               aria-label={`Actions for ${selectedDocument.label}`}
               className={`cta-buttons-container cta-nav${highlightCTAButtons ? " highlight cta-nav--highlighted" : ""}`}
             >
-              <button ref={firstCTAButtonRef} className="cta-btn" onClick={handleViewRequirements}>
+              <button ref={firstCTAButtonRef} className="gw-btn gw-btn--primary cta-btn" onClick={handleViewRequirements}>
                 Requirements
               </button>
-              <button className="cta-btn" onClick={handleWriteNarrative}>
-                Write Application
+              <button className="gw-btn gw-btn--primary cta-btn" onClick={handleWriteNarrative}>
+                Write application
               </button>
-              <button className="cta-btn" onClick={handleGetHelp}>
+              <button className="gw-btn gw-btn--primary cta-btn" onClick={handleGetHelp}>
                 Chat with AI
               </button>
-            </nav>
+            </div>
           </div>
         )}
 
@@ -367,7 +362,7 @@ export default function HomePage() {
         <ContentBox>
           <section aria-labelledby="grants-table-heading" className="grants-table-section">
             <h2 id="grants-table-heading" className="visually-hidden">
-              Grants Table with Filters
+              Grants table with filters
             </h2>
             <GrantsTable
               nofos={tableNofos}

@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router";
+import { NavLink, useLocation, useNavigate } from "react-router";
 import { LuMenu } from "react-icons/lu";
 import { AiForImpactWordmark } from "./featureIllustrations";
 import { useBranding } from "../../common/branding";
@@ -58,25 +58,9 @@ export function OmniHeader({ position = "top" }: { position?: "top" | "bottom" }
   );
 }
 
-export function LandingNavbar() {
-  const handleSkipNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const mainContent = document.getElementById("main-content");
-    if (mainContent) {
-      mainContent.focus();
-      mainContent.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
-
+export function LandingNavbar({ className }: { className?: string }) {
   return (
-    <nav className="marketing__nav" aria-label="Primary">
-      <a
-        href="#main-content"
-        onClick={handleSkipNavClick}
-        className="marketing__skip-nav"
-      >
-        Skip to main content
-      </a>
+    <nav className={className ? `marketing__nav ${className}` : "marketing__nav"} aria-label="Primary">
       <div className="marketing__nav-links">
         <NavLink
           to="/"
@@ -102,7 +86,7 @@ export function LandingNavbar() {
   );
 }
 
-/** First focusable element on pages without the marketing navbar. */
+/** The first focusable element on every page. */
 export function SkipLink() {
   const handleSkipNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -126,6 +110,7 @@ export function SkipLink() {
 
 export function AppNavbar() {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const branding = useBranding();
   const { showMenuButton, isDrawerOpen, toggleDrawer } =
     useNavigationMenuButton();
@@ -159,6 +144,7 @@ export function AppNavbar() {
           href="/home"
           onClick={handleLogoClick}
           className="marketing__nav-brand"
+          aria-current={pathname === "/home" ? "page" : undefined}
         >
           <GovSeal />
           <BrandLogo
@@ -173,7 +159,7 @@ export function AppNavbar() {
 }
 
 export function LandingFooter() {
-  const { footer, logo } = useBranding();
+  const { footer, logo, appName } = useBranding();
   const { madeBy, partners, links = [], copyright, disclaimer } = footer;
 
   return (
@@ -182,7 +168,7 @@ export function LandingFooter() {
         <BrandLogo
           className="marketing__footer-wordmark"
           src={footer.wordmark ?? logo}
-          alt=""
+          alt={appName}
         />
         {madeBy && (
           <div className="marketing__footer-madeby">
@@ -192,7 +178,7 @@ export function LandingFooter() {
                 <img
                   className="marketing__footer-heart"
                   src={madeBy.logo}
-                  alt=""
+                  alt="love"
                 />
               )}
               <span>by</span>
@@ -202,7 +188,7 @@ export function LandingFooter() {
               href={madeBy.href}
               target="_blank"
               rel="noreferrer"
-              aria-label={madeBy.label || "AI for Impact"}
+              aria-label={`${madeBy.label || "AI for Impact"} (opens in new tab)`}
             >
               <AiForImpactWordmark />
             </a>

@@ -133,6 +133,40 @@ async function signInFresh(
 
 const PENDING_STATE_KEY = "grantwell.pendingSignupState";
 
+/** Cognito ends a sign-in left at a challenge step after the app client's authSessionValidity (core: 15 minutes). */
+const CODE_STEP_LIMIT_MS = 15 * 60_000;
+/** WCAG 2.2.1: warn with time to spare, and let the user extend as often as they need. */
+const CODE_STEP_WARNING_MS = 2 * 60_000;
+const CODE_STEP_FINAL_MS = 30_000;
+const TIMED_VIEWS: AuthView[] = ["mfa-challenge", "mfa-setup", "new-password-required"];
+const TIMED_OUT_MESSAGE = "Your sign-in timed out. Sign in again to continue.";
+
+function clockText(ms: number) {
+  const seconds = Math.max(0, Math.ceil(ms / 1000));
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+}
+
+function spokenTime(ms: number) {
+  if (ms >= 60_000) {
+    const minutes = Math.round(ms / 60_000);
+    return `${minutes} minute${minutes === 1 ? "" : "s"}`;
+  }
+  const seconds = Math.max(1, Math.ceil(ms / 1000));
+  return `${seconds} second${seconds === 1 ? "" : "s"}`;
+}
+
+function extendedMessage(view: AuthView) {
+  const minutes = CODE_STEP_LIMIT_MS / 60_000;
+  switch (view) {
+    case "mfa-setup":
+      return `Sign-in extended. You have ${minutes} minutes. A new QR code and setup key are shown: scan the new code, then enter the code your app shows.`;
+    case "new-password-required":
+      return `Sign-in extended. You have ${minutes} minutes to set your password.`;
+    default:
+      return `Sign-in extended. You have ${minutes} minutes to enter your code.`;
+  }
+}
+
 function writePendingSignupState(email: string, state: string) {
   try {
     if (!state) {
@@ -182,6 +216,10 @@ export default function AuthPanel({
   const [signupState, setSignupState] = useState(SINGLE_STATE?.code ?? "");
   const [turnstileToken, setTurnstileToken] = useState("");
   const [turnstileResetKey, setTurnstileResetKey] = useState(0);
+  const [stepDeadline, setStepDeadline] = useState<number | null>(null);
+  const [now, setNow] = useState(() => Date.now());
+  const [timeAnnouncement, setTimeAnnouncement] = useState("");
+  const [extendedNote, setExtendedNote] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [errorFields, setErrorFields] = useState<AuthErrorField[]>([]);
@@ -194,9 +232,56 @@ export default function AuthPanel({
 
   const errorId = useId();
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const pendingFocus = useRef<(() => void) | null>(null);
   const Heading = headingLevel === 2 ? "h2" : "h1";
 
   const normalizedEmail = useMemo(() => normalizeEmail(email), [email]);
+  const inTimedStep = TIMED_VIEWS.includes(view);
+
+  // Each challenge response starts a new Cognito session, so every timed view gets the full limit.
+  useEffect(() => {
+    setExtendedNote("");
+    setStepDeadline(inTimedStep ? Date.now() + CODE_STEP_LIMIT_MS : null);
+  }, [view, inTimedStep]);
+
+  useEffect(() => {
+    setTimeAnnouncement("");
+    if (stepDeadline === null) return;
+    let phase: "warn" | "final" | null = null;
+    let interval: number | undefined;
+    const tick = () => {
+      const time = Date.now();
+      setNow(time);
+      const left = stepDeadline - time;
+      const next = left <= CODE_STEP_FINAL_MS ? "final" : "warn";
+      if (next === phase || left <= 0) return;
+      phase = next;
+      setTimeAnnouncement(
+        next === "warn"
+          ? `For your security, this sign-in times out in ${spokenTime(left)}. Select Keep signing in to continue.`
+          : `This sign-in times out in ${spokenTime(left)}. Select Keep signing in to continue.`,
+      );
+    };
+    const timeout = window.setTimeout(() => {
+      tick();
+      interval = window.setInterval(tick, 1000);
+    }, Math.max(0, stepDeadline - CODE_STEP_WARNING_MS - Date.now()));
+    return () => {
+      window.clearTimeout(timeout);
+      window.clearInterval(interval);
+    };
+  }, [stepDeadline]);
+
+  const timeLeft = stepDeadline === null ? null : stepDeadline - now;
+  const showTimeWarning = inTimedStep && timeLeft !== null && timeLeft <= CODE_STEP_WARNING_MS;
+  const timedOut = showTimeWarning && timeLeft <= 0;
+
+  useEffect(() => {
+    const focus = pendingFocus.current;
+    pendingFocus.current = null;
+    focus?.();
+  });
 
   // Every Turnstile token is single-use, so a widget that produced one must be reset before the
   // same form can be submitted again.
@@ -272,12 +357,27 @@ export default function AuthPanel({
     }
   }, [view]);
 
+  useEffect(() => {
+    document.title = `${cardCopy.title} – ${branding.appName}`;
+  }, [cardCopy.title, branding.appName]);
+
+  const errorTimer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(errorTimer.current), []);
+
   const setStepError = (message: string, fields: AuthErrorField[] = []) => {
-    setError(message);
+    window.clearTimeout(errorTimer.current);
     setErrorFields(fields);
+    if (message !== error) {
+      setError(message);
+      return;
+    }
+    // The live region only speaks when its text changes, so the same message is cleared first.
+    setError(null);
+    errorTimer.current = window.setTimeout(() => setError(message), 100);
   };
 
   const clearError = () => {
+    window.clearTimeout(errorTimer.current);
     setError(null);
     setErrorFields([]);
   };
@@ -288,6 +388,7 @@ export default function AuthPanel({
   const clearMessages = () => {
     clearError();
     setSuccess(null);
+    setExtendedNote("");
   };
 
   const resetTransientState = () => {
@@ -314,31 +415,81 @@ export default function AuthPanel({
     setView("sign-up");
   };
 
-  const applySignInStep = (nextStep: SignInOutput["nextStep"]) => {
+  useEffect(() => {
+    if (timedOut && !loading) switchToSignIn(TIMED_OUT_MESSAGE);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timedOut, loading]);
+
+  const focusAfterExtension = (extendedView: AuthView) => {
+    if (extendedView === "mfa-challenge") {
+      const boxes = Array.from(
+        contentRef.current?.querySelectorAll<HTMLInputElement>(".otp-input__box") ?? [],
+      );
+      (boxes.find((box) => !box.value) ?? boxes[boxes.length - 1])?.focus();
+    } else if (extendedView === "new-password-required") {
+      document.getElementById("new-password-input")?.focus();
+    } else {
+      titleRef.current?.focus();
+    }
+  };
+
+  // Cognito can't lengthen a sign-in in progress, so start a fresh one with the password in hand.
+  // A typed code or new password is kept; first-time setup gets a new secret, so its code is cleared.
+  const keepSigningIn = async () => {
+    if (loading) return;
+    const checkError = getTurnstileValidationError(turnstileToken);
+    if (checkError) {
+      setStepError(checkError);
+      return;
+    }
+    setLoading(true);
+    clearMessages();
+    try {
+      const { nextStep } = await signInFresh(normalizedEmail, password, turnstileClientMetadata(turnstileToken));
+      consumeTurnstileToken();
+      const nextView = applySignInStep(nextStep, true);
+      if (nextView === view) {
+        setStepDeadline(Date.now() + CODE_STEP_LIMIT_MS);
+        setExtendedNote(extendedMessage(view));
+        pendingFocus.current = () => focusAfterExtension(view);
+      }
+    } catch {
+      consumeTurnstileToken();
+      switchToSignIn(TIMED_OUT_MESSAGE);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const applySignInStep = (
+    nextStep: SignInOutput["nextStep"],
+    extending = false,
+  ): AuthView | null => {
     switch (nextStep.signInStep) {
       case "DONE":
+        setStepDeadline(null);
         onAuthenticated();
-        return;
+        return null;
       case "CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED":
         setNewPasswordPending(true);
-        setNewPassword("");
+        if (!(extending && view === "new-password-required")) setNewPassword("");
         setView("new-password-required");
-        return;
+        return "new-password-required";
       case "CONFIRM_SIGN_UP":
         setVerificationCode("");
         setView("verify-sign-up");
         setStepError(
           "Your account is not verified yet. Enter your verification code to continue.",
         );
-        return;
+        return "verify-sign-up";
       case "RESET_PASSWORD":
         setView("forgot-password");
         setStepError("You need to reset your password before signing in.");
-        return;
+        return "forgot-password";
       case "CONFIRM_SIGN_IN_WITH_TOTP_CODE":
-        setVerificationCode("");
+        if (!(extending && view === "mfa-challenge")) setVerificationCode("");
         setView("mfa-challenge");
-        return;
+        return "mfa-challenge";
       case "CONTINUE_SIGN_IN_WITH_TOTP_SETUP":
         setVerificationCode("");
         setTotpSetup({
@@ -348,9 +499,10 @@ export default function AuthPanel({
           secret: nextStep.totpSetupDetails.sharedSecret,
         });
         setView("mfa-setup");
-        return;
+        return "mfa-setup";
       default:
         setStepError(getUnsupportedChallengeMessage(nextStep.signInStep));
+        return null;
     }
   };
 
@@ -358,13 +510,13 @@ export default function AuthPanel({
     event.preventDefault();
     if (loading) return;
 
-    const validationError =
-      getSignInValidationError(email, password) ??
-      getTurnstileValidationError(turnstileToken);
+    const fieldError = getSignInValidationError(email, password);
+    const validationError = fieldError ?? getTurnstileValidationError(turnstileToken);
     if (validationError) {
-      setStepError(validationError, [
-        getEmailValidationError(email) ? "email" : "password",
-      ]);
+      setStepError(
+        validationError,
+        fieldError ? [getEmailValidationError(email) ? "email" : "password"] : [],
+      );
       setSuccess(null);
       return;
     }
@@ -471,11 +623,10 @@ export default function AuthPanel({
     event.preventDefault();
     if (loading) return;
 
-    const validationError =
-      getSignUpValidationError(email, password, confirmPassword) ??
-      getTurnstileValidationError(turnstileToken);
+    const fieldError = getSignUpValidationError(email, password, confirmPassword);
+    const validationError = fieldError ?? getTurnstileValidationError(turnstileToken);
     if (validationError) {
-      setStepError(validationError, signUpValidationFields(email, password));
+      setStepError(validationError, fieldError ? signUpValidationFields(email, password) : []);
       setSuccess(null);
       return;
     }
@@ -517,13 +668,13 @@ export default function AuthPanel({
 
     // The token here is for the auto sign-in below, not for confirmSignUp itself — so it is only
     // required when a password is still in hand to sign in with.
+    const fieldError = getVerifySignUpValidationError(email, verificationCode);
     const validationError =
-      getVerifySignUpValidationError(email, verificationCode) ??
-      (password ? getTurnstileValidationError(turnstileToken) : null);
+      fieldError ?? (password ? getTurnstileValidationError(turnstileToken) : null);
     if (validationError) {
       setStepError(
         validationError,
-        getEmailValidationError(email) ? [] : ["verificationCode"],
+        fieldError && !getEmailValidationError(email) ? ["verificationCode"] : [],
       );
       setSuccess(null);
       return;
@@ -673,6 +824,8 @@ export default function AuthPanel({
     try {
       const { nextStep } = await confirmSignIn({ challengeResponse: newPassword });
       setNewPasswordPending(false);
+      // Keep signing in on the next step re-signs in, and the temporary password no longer works.
+      setPassword(newPassword);
       applySignInStep(nextStep);
     } catch (authError) {
       setStepError(
@@ -684,12 +837,13 @@ export default function AuthPanel({
     }
   };
 
-  const turnstileSlot = (action: string) =>
+  const turnstileSlot = (action: string, className?: string) =>
     TURNSTILE_SITE_KEY ? (
       <TurnstileWidget
         action={action}
         onToken={setTurnstileToken}
         resetKey={turnstileResetKey}
+        className={className}
       />
     ) : null;
 
@@ -835,12 +989,12 @@ export default function AuthPanel({
         alt={branding.appName}
       />
       {showTabs && (
-        <div className="auth-tabs" role="group" aria-label="Authentication mode">
+        <div className="gw-toggle auth-tabs" role="group" aria-label="Authentication mode">
           <button
             type="button"
             aria-pressed={view === "sign-in"}
             className={
-              "auth-tab" + (view === "sign-in" ? " auth-tab--active" : "")
+              "gw-toggle__option auth-tab" + (view === "sign-in" ? " auth-tab--active" : "")
             }
             onClick={() => switchToSignIn()}
           >
@@ -850,7 +1004,7 @@ export default function AuthPanel({
             type="button"
             aria-pressed={view === "sign-up"}
             className={
-              "auth-tab" + (view === "sign-up" ? " auth-tab--active" : "")
+              "gw-toggle__option auth-tab" + (view === "sign-up" ? " auth-tab--active" : "")
             }
             onClick={switchToSignUp}
           >
@@ -869,14 +1023,22 @@ export default function AuthPanel({
         </Heading>
         <p className="auth-card-subtitle">{cardCopy.subtitle}</p>
       </div>
-      <div className="auth-card-content">
+      <div className="auth-card-content" ref={contentRef}>
         {/* Always mounted and text-only: a region created together with its text is
             not announced, and keeping the dismiss buttons out of it stops "Close
-            alert" being read as part of the message. The Alerts below need
+            alert" being read as part of the message. "Please wait…" announces the busy
+            state, which otherwise only changes the button's own text. The Alerts below need
             transition={false} for role={undefined} to reach the div — otherwise
-            react-bootstrap's hardcoded role="alert" announces the same text again. */}
+            react-bootstrap's hardcoded role="alert" announces the same text again. The
+            signed-out notice stays out: it is there from the first render, so the region
+            never spoke it, and it would mask "Please wait…". */}
         <div aria-live="polite" aria-atomic="true" className="visually-hidden">
-          {error || success || notice || ""}
+          {error || success || extendedNote || (loading ? "Please wait…" : "")}
+        </div>
+        {/* The visible countdown changes every second, so it stays out of any live region;
+            this one speaks only when the warning appears and at 30 seconds. */}
+        <div role="alert" aria-atomic="true" className="visually-hidden">
+          {showTimeWarning ? timeAnnouncement : ""}
         </div>
         {notice ? (
           <Alert
@@ -917,6 +1079,23 @@ export default function AuthPanel({
             {success}
           </Alert>
         ) : null}
+        {showTimeWarning && (
+          <div className="gw-alert gw-alert--warning auth-timeout-warning">
+            <p className="auth-timeout-warning__text">
+              For your security, this sign-in times out in {clockText(timeLeft)}.
+              {view === "mfa-setup" ? " If you keep signing in, scan the new QR code that appears." : ""}
+            </p>
+            <button
+              type="button"
+              className="gw-btn gw-btn--secondary gw-btn--slim auth-timeout-warning__button"
+              onClick={() => void keepSigningIn()}
+              aria-disabled={loading || undefined}
+            >
+              Keep signing in
+            </button>
+            {turnstileSlot("sign-in", "auth-timeout-warning__check")}
+          </div>
+        )}
         {renderStep()}
       </div>
     </div>

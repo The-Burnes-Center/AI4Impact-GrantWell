@@ -49,13 +49,12 @@ export default function MfaSetupStep({
           <Button
             variant="primary"
             type="submit"
-            disabled={loading}
-            className="login-submit-button"
+            aria-disabled={loading || undefined}
+            className="gw-btn gw-btn--primary login-submit-button"
           >
             {loading ? (
               <>
                 <Spinner animation="border" size="sm" aria-hidden="true" className="me-2" />
-                <span className="visually-hidden">Loading</span>
                 Verifying...
               </>
             ) : (

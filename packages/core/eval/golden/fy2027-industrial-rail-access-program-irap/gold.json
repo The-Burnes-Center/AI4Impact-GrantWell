@@ -5,7 +5,16 @@
   "deadlines": [
     {
       "kind": "application",
-      "label": "Rolling applications; FY2027 quarterly application period close date (applications received after a close date are reviewed in the next period)",
+      "label": "Rolling: applications accepted throughout the year, reviewed quarterly",
+      "date": null,
+      "time": null,
+      "tzAsWritten": null,
+      "fromBrokenTable": false,
+      "quote": "Application Timeframe - Applications will be accepted on a rolling basis throughout the year."
+    },
+    {
+      "kind": "other",
+      "label": "FY2027 quarterly application period close date (applications received after a close date are reviewed in the next period)",
       "date": "2026-06-30",
       "time": null,
       "tzAsWritten": null,
@@ -13,7 +22,7 @@
       "quote": "For Fiscal Year 2027, application period close dates are: June 30, 2026"
     },
     {
-      "kind": "application",
+      "kind": "other",
       "label": "FY2027 quarterly application period close date",
       "date": "2026-09-30",
       "time": null,
@@ -22,7 +31,7 @@
       "quote": "application period close dates are: June 30, 2026 September 30, 2026"
     },
     {
-      "kind": "application",
+      "kind": "other",
       "label": "FY2027 quarterly application period close date",
       "date": "2026-12-31",
       "time": null,
@@ -31,7 +40,7 @@
       "quote": "September 30, 2026 December 31, 2026 March 31, 2027"
     },
     {
-      "kind": "application",
+      "kind": "other",
       "label": "FY2027 quarterly application period close date",
       "date": "2027-03-31",
       "time": null,
@@ -258,6 +267,10 @@
     {
       "item": "Reimbursable work may not start, and costs incurred before the grant agreement start date are not reimbursable",
       "quote": "Project expenses incurred prior to the MassDOT grant agreement start date can NOT be reimbursed with IRAP funds."
+    },
+    {
+      "item": "Grantee must provide the non-IRAP share (MassDOT reimburses at most 80% of eligible costs) and show evidence of it before notice to proceed",
+      "quote": "The grantee will be required to provide evidence of the non-IRAP funding share before a notice to proceed is issued by MassDOT."
     }
   ],
   "requiredDocuments": [

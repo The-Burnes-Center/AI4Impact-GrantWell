@@ -58,11 +58,38 @@ export function knownTokens(uiAppDir: string): Set<string> {
   return new Set(files.flatMap((f) => fs.readFileSync(f, "utf8").match(TOKEN) ?? []));
 }
 
+/**
+ * Retired token names (old name → what to use), from tokens.css's "Retired" alias blocks. Components no
+ * longer read them, so a theme that sets one changes nothing until it moves to the new name.
+ */
+export function retiredTokens(uiAppDir: string): Map<string, string> {
+  const retired = new Map<string, string>();
+  let inBlock = false;
+  for (const line of fs.readFileSync(path.join(uiAppDir, "src", "styles", "tokens.css"), "utf8").split("\n")) {
+    if (/Retired/.test(line)) inBlock = true;
+    else if (inBlock && line.trim() === "" && retired.size) inBlock = false;
+    const alias = inBlock && line.match(/^\s*(--gw-[\w-]+)\s*:\s*var\((--gw-[\w-]+)\)\s*;/);
+    if (alias) retired.set(alias[1], alias[2]);
+  }
+  return retired;
+}
+
 export function checkChromeTokens(chromeDir: string, uiAppDir: string): Finding[] {
   const known = knownTokens(uiAppDir);
+  const retired = retiredTokens(uiAppDir);
   const findings: Finding[] = [];
   for (const file of walk(chromeDir).filter((f) => /\.(css|scss|ts|tsx)$/.test(f))) {
-    const unknown = [...new Set(fs.readFileSync(file, "utf8").match(TOKEN) ?? [])].filter((t) => !known.has(t)).sort();
+    const used = [...new Set(fs.readFileSync(file, "utf8").match(TOKEN) ?? [])];
+    const old = used.filter((t) => retired.has(t)).sort();
+    if (old.length) {
+      findings.push(
+        warn(
+          `chrome/${path.relative(chromeDir, file)} uses ${old.map((t) => `${t} (now ${retired.get(t)})`).join(", ")}: ` +
+            `retired names that GrantWell no longer reads and will remove in the next major release. Switch to the new names.`
+        )
+      );
+    }
+    const unknown = used.filter((t) => !known.has(t)).sort();
     if (unknown.length) {
       findings.push(
         fail(

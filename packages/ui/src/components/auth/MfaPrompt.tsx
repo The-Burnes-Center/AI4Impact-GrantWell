@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { fetchAuthSession, fetchMFAPreference } from "aws-amplify/auth";
 import Button from "../ui/Button";
 import Modal from "../common/Modal";
@@ -20,7 +20,7 @@ import "../../styles/totp.css";
  * MFA is OPTIONAL in Cognito, so nothing here blocks access — every way of closing the
  * dialog snoozes the prompt for 30 days. Enrolment stays available from the profile page
  * either way. On a deployment with an MFA deadline the prompt names the date and returns at
- * every sign-in instead; from the deadline MfaGate takes over.
+ * every sign-in instead; from the deadline, or on a pool that requires MFA, MfaGate takes over.
  */
 /** onDone fires once: when the prompt decides not to show, or when it is closed. */
 export default function MfaPrompt({ onDone }: { onDone?: () => void }) {
@@ -32,6 +32,20 @@ export default function MfaPrompt({ onDone }: { onDone?: () => void }) {
   const [authTime, setAuthTime] = useState(0);
   const [phase] = useState(() => mfaDeadlinePhase());
   const onDoneRef = useRef(onDone);
+  // The dialog stays open while its content changes, so move focus off the button that just went away.
+  const doneButton = useRef<HTMLButtonElement>(null);
+  const setUpButton = useRef<HTMLButtonElement>(null);
+  const [backFromSetup, setBackFromSetup] = useState(false);
+  const doneTitleId = useId();
+  const doneBodyId = useId();
+  useEffect(() => {
+    if (done) doneButton.current?.focus();
+  }, [done]);
+  useEffect(() => {
+    if (!backFromSetup) return;
+    setUpButton.current?.focus();
+    setBackFromSetup(false);
+  }, [backFromSetup]);
   onDoneRef.current = onDone;
 
   useEffect(() => {
@@ -93,12 +107,21 @@ export default function MfaPrompt({ onDone }: { onDone?: () => void }) {
         title="Two-step verification is on"
         maxWidth="480px"
       >
-        <p className="mfa-prompt-body">
+        {/* The dialog's name isn't re-read when focus moves inside it, so Done carries the new title and text. */}
+        <span id={doneTitleId} hidden>
+          Two-step verification is on.
+        </span>
+        <p className="mfa-prompt-body" id={doneBodyId}>
           You will be asked for a code from your authenticator app the next time you sign
           in.
         </p>
         <div className="profile-actions">
-          <Button type="button" onClick={close}>
+          <Button
+            ref={doneButton}
+            type="button"
+            onClick={close}
+            aria-describedby={`${doneTitleId} ${doneBodyId}`}
+          >
             Done
           </Button>
         </div>
@@ -134,12 +157,15 @@ export default function MfaPrompt({ onDone }: { onDone?: () => void }) {
         <MfaSetupPanel
           email={email}
           onEnrolled={() => setDone(true)}
-          onCancel={() => setExpanded(false)}
+          onCancel={() => {
+            setExpanded(false);
+            setBackFromSetup(true);
+          }}
           cancelLabel="Back"
         />
       ) : (
         <div className="profile-actions">
-          <Button type="button" onClick={() => setExpanded(true)}>
+          <Button ref={setUpButton} type="button" onClick={() => setExpanded(true)}>
             Set it up
           </Button>
           <Button type="button" variant="ghost" onClick={dismiss}>

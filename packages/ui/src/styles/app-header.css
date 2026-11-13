@@ -1,0 +1,89 @@
+/* Signed-in header for the "tabs" navigation layout, and the light side menu that goes with it. */
+
+.gw-app-header {
+  position: relative;
+  z-index: var(--gw-z-sticky, 200);
+  background: var(--gw-color-surface);
+  box-shadow: var(--gw-shadow-low);
+}
+
+.gw-app-header__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gw-spacing-lg);
+  min-height: 72px;
+  padding: var(--gw-spacing-md) var(--gw-spacing-2xl);
+  border-bottom: 1px solid var(--gw-color-border);
+}
+
+.gw-app-header__lead { display: flex; align-items: center; gap: var(--gw-spacing-sm); min-width: 0; }
+
+.gw-app-header__brand { display: inline-flex; align-items: center; gap: var(--gw-spacing-md); min-width: 0; text-decoration: none; }
+.gw-app-header__brand .gov-seal { height: 36px; width: auto; }
+.gw-app-header__wordmark { display: block; height: 36px; width: auto; aspect-ratio: 500 / 99; max-width: 100%; object-fit: contain; }
+
+.gw-app-header__account { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gw-spacing-sm) var(--gw-spacing-2xl); }
+
+/* Text links in the primary colour, as in the kit header's account area. */
+.gw-app-header__link {
+  padding: var(--gw-spacing-xs) 0;
+  border: 0;
+  background: none;
+  color: var(--gw-color-primary);
+  font: inherit;
+  font-size: var(--gw-font-size-base);
+  font-weight: var(--gw-font-weight-semibold);
+  text-decoration: none;
+  cursor: pointer;
+}
+.gw-app-header__link:hover,
+.gw-app-header__link[aria-current="page"] { text-decoration: underline; text-underline-offset: 4px; }
+
+.gw-app-header__tabs { padding: 0 var(--gw-spacing-2xl); }
+
+@media (max-width: 960px) {
+  .gw-app-header__bar { min-height: 60px; padding: var(--gw-spacing-sm) var(--gw-spacing-lg); }
+  .gw-app-header__wordmark, .gw-app-header__brand .gov-seal { height: 28px; }
+}
+
+/* Short pages: the page's grey runs down to the footer instead of stopping under the content. */
+.gw-shell--tabs .marketing__app-main { background: var(--gw-color-background); }
+
+/* Side menu: light panel, primary links, the current one tinted with a left bar. */
+.gw-sidenav .gw-sidenav__group {
+  margin: 0;
+  padding: var(--gw-spacing-lg) var(--gw-spacing-lg) var(--gw-spacing-xs);
+  color: var(--gw-color-text-secondary);
+  font-size: var(--gw-font-size-xs);
+  font-weight: var(--gw-font-weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.gw-sidenav .gw-sidenav__item {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: var(--gw-spacing-md);
+  width: 100%;
+  min-height: 44px;
+  padding: var(--gw-spacing-sm) var(--gw-spacing-lg);
+  border: 0;
+  border-left: 4px solid transparent;
+  border-radius: 0;
+  background: none;
+  color: var(--gw-color-primary);
+  font: inherit;
+  font-size: var(--gw-font-size-base);
+  text-align: left;
+  cursor: pointer;
+}
+.gw-sidenav .gw-sidenav__item svg { flex-shrink: 0; }
+.gw-sidenav .gw-sidenav__item:hover { background: var(--gw-color-primary-light); color: var(--gw-color-primary-hover); }
+.gw-sidenav .gw-sidenav__item[aria-current] {
+  border-left-color: var(--gw-color-primary);
+  background: var(--gw-color-primary-light);
+  color: var(--gw-color-text-strong);
+  font-weight: var(--gw-font-weight-semibold);
+}
+.gw-sidenav .gw-sidenav__item:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(-1 * var(--gw-focus-width)); }

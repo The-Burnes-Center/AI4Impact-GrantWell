@@ -3,6 +3,7 @@ AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2	AWS::IAM::Role
 AccountSetupFailedAlarm455CA6C0	AWS::CloudWatch::Alarm
 AccountSetupFailedFilter1D27692A	AWS::Logs::MetricFilter
 AlarmTopicD01E77F9	AWS::SNS::Topic
+AlarmTopicPolicy309DB5F8	AWS::SNS::TopicPolicy
 AlertDeliveryFailingAlarmDE3E2790	AWS::CloudWatch::Alarm
 AlertFormatterFailingAlarmFB4D5749	AWS::CloudWatch::Alarm
 AlertFormatterFunction7EC382A0	AWS::Lambda::Function
@@ -12,6 +13,7 @@ AlertFormatterFunctionServiceRole5AB0D485	AWS::IAM::Role
 AlertFormatterFunctionServiceRoleDefaultPolicy82F9A0C9	AWS::IAM::Policy
 AlertFormatterLogGroup1BA0855B	AWS::Logs::LogGroup
 AlertTopic2720D535	AWS::SNS::Topic
+AlertTopicPolicy3376BC02	AWS::SNS::TopicPolicy
 ApiServerErrorAlarm0098B6E3	AWS::CloudWatch::Alarm
 ApplicationCapReachedFilter96724097	AWS::Logs::MetricFilter
 AuthEmailNotDeliveredAlarmB0B2B392	AWS::CloudWatch::Alarm
@@ -23,6 +25,7 @@ ChatCapReachedFilterCDFC7D3C	AWS::Logs::MetricFilter
 ChatErrorsAlarm173D708E	AWS::CloudWatch::Alarm
 ChatRetrievalFailingAlarm48AB668A	AWS::CloudWatch::Alarm
 ChatThrottlesAlarmE66FA00D	AWS::CloudWatch::Alarm
+ChatVerifiedFilter38593008	AWS::Logs::MetricFilter
 CreateMetadataFailedFilter2C34B016	AWS::Logs::MetricFilter
 CreateMetadataFailedLogGroupExists9855E594	Custom::AWS
 CreateMetadataFailedLogGroupExistsCustomResourcePolicyB180CB19	AWS::IAM::Policy
@@ -96,6 +99,11 @@ ScraperFatalFilter5B5C9263	AWS::Logs::MetricFilter
 ScraperFatalLogGroupExistsCustomResourcePolicyB6FF8DC3	AWS::IAM::Policy
 ScraperFatalLogGroupExistsFD6C87BB	Custom::AWS
 ScraperStoppedAlarmFA8847E2	AWS::CloudWatch::Alarm
+SearchIndexBuildFailedFilterA04C6C9D	AWS::Logs::MetricFilter
+SearchIndexBuildFailedLogGroupExists30ACE0EC	Custom::AWS
+SearchIndexBuildFailedLogGroupExistsCustomResourcePolicyB478359F	AWS::IAM::Policy
+SearchIndexBuildFailingAlarm46BDEEBA	AWS::CloudWatch::Alarm
+SearchIndexUpdatesLostAlarm45879B55	AWS::CloudWatch::Alarm
 SesBounceRateAlarm40102DD9	AWS::CloudWatch::Alarm
 SignInTriggerSlowAlarm997099F6	AWS::CloudWatch::Alarm
 SignUpRejectionsAlarm650572F6	AWS::CloudWatch::Alarm
