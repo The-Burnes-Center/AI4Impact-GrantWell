@@ -4,8 +4,9 @@ import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import PageHeader from "../../components/common/PageHeader";
 import ConfirmationModal from "../../components/common/ConfirmationModal";
 import LibraryUpload from "../../components/documents/LibraryUpload";
+import EditDocumentTypeDialog from "../../components/documents/EditDocumentTypeDialog";
 import { useDocumentLibrary } from "../../hooks/use-document-library";
-import { LIBRARY_FOLDER, formatFileSize, type LibraryDocument } from "../../common/helpers/user-documents";
+import { LIBRARY_FOLDER, documentTypeLabel, formatFileSize, type LibraryDocument } from "../../common/helpers/user-documents";
 import "../../styles/dashboard.css";
 import "../../styles/document-manager.css";
 
@@ -15,6 +16,7 @@ const formatDate = (value: string) =>
 export default function DocumentsPage() {
   const library = useDocumentLibrary();
   const [toDelete, setToDelete] = useState<LibraryDocument | null>(null);
+  const [editing, setEditing] = useState<LibraryDocument | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [status, setStatus] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -81,10 +83,18 @@ export default function DocumentsPage() {
                   <div className="dm-file-details">
                     <p className="dm-file-name">{doc.name}</p>
                     <p className="dm-file-size">
-                      {formatFileSize(doc.size)} · Uploaded {formatDate(doc.lastModified)}
+                      {documentTypeLabel(doc)} · {formatFileSize(doc.size)} · Uploaded {formatDate(doc.lastModified)}
                       {doc.folder && doc.folder !== LIBRARY_FOLDER ? ` · for ${doc.folder}` : ""}
                     </p>
                   </div>
+                  <button
+                    type="button"
+                    className="gw-btn gw-btn--secondary gw-btn--slim dm-target dm-edit-type-btn"
+                    onClick={() => setEditing(doc)}
+                    aria-label={`${doc.type ? "Change type" : "Set type"} of ${doc.name}`}
+                  >
+                    {doc.type ? "Change type" : "Set type"}
+                  </button>
                   <button
                     type="button"
                     className="gw-btn gw-btn--icon dm-download-btn"
@@ -118,6 +128,16 @@ export default function DocumentsPage() {
         confirmLabel="Delete"
         variant="danger"
         confirming={deleting}
+      />
+
+      <EditDocumentTypeDialog
+        doc={editing}
+        onClose={() => setEditing(null)}
+        onSave={async (doc, documentType) => {
+          await library.setType(doc.key, documentType);
+          setStatus(`Type of ${doc.name} saved.`);
+          setEditing(null);
+        }}
       />
     </div>
   );

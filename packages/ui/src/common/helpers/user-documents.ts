@@ -14,9 +14,116 @@ export interface LibraryDocument {
   folder: string;
   size: number;
   lastModified: string;
+  /** null for files uploaded before types existed. */
+  type?: DocumentType | null;
+  /** Only for type "other". */
+  description?: string;
 }
 
 export const LIBRARY_FOLDER = "documents";
+
+/** Mirrors DOCUMENT_TYPES in the core's document-relevance.mjs. */
+export const DOCUMENT_TYPES = [
+  { value: "budget", label: "Budget" },
+  { value: "organization-profile", label: "Organization profile" },
+  { value: "letter-of-support", label: "Letter of support" },
+  { value: "past-application", label: "Past application" },
+  { value: "data-or-needs", label: "Data or needs assessment" },
+  { value: "other", label: "Other" },
+] as const;
+
+export type DocumentType = (typeof DOCUMENT_TYPES)[number]["value"];
+
+export const MAX_TYPE_DESCRIPTION_CHARS = 200;
+
+export interface DocumentTypeChoice {
+  type: DocumentType | "";
+  description: string;
+}
+
+/** "Budget", "Other: board minutes", or "Type not set". */
+export function documentTypeLabel(doc: { type?: string | null; description?: string }): string {
+  const found = DOCUMENT_TYPES.find((t) => t.value === doc.type);
+  if (!found) return "Type not set";
+  return found.value === "other" && doc.description ? `Other: ${doc.description}` : found.label;
+}
+
+/** What's wrong with a type choice, field by field; empty when it can be saved. */
+export function documentTypeErrors(choice: DocumentTypeChoice): { type?: string; description?: string } {
+  if (!choice.type) return { type: "Choose a document type." };
+  if (choice.type !== "other") return {};
+  const text = choice.description.trim();
+  if (!text) return { description: "Describe the document in a few words." };
+  if (text.length > MAX_TYPE_DESCRIPTION_CHARS) return { description: `Keep the description to ${MAX_TYPE_DESCRIPTION_CHARS} characters.` };
+  return {};
+}
+
+/** One document's standing for one grant, as POST /user-documents/relevance reports it. */
+export type RelevanceStatus =
+  | "related"
+  | "approved"
+  | "unrelated"
+  | "review-pending"
+  | "rejected"
+  | "check-failed"
+  | "not-checked"
+  | "unsupported";
+
+export interface DocumentRelevance {
+  key: string;
+  status: RelevanceStatus;
+  /** Whether the AI uses the document for this grant. */
+  usable: boolean;
+  /** The check's one-line reason. */
+  reason?: string;
+  checkedAt?: string;
+  review?: {
+    status: "pending" | "approved" | "rejected";
+    note?: string;
+    requestedAt: string;
+    adminNote?: string;
+    decidedAt?: string;
+  };
+}
+
+export const MAX_REVIEW_NOTE_CHARS = 500;
+
+export interface RelevanceMessage {
+  tone: "success" | "warning" | "info";
+  title: string;
+  detail?: string;
+  /** What the user can do next. */
+  actions?: ("retry" | "request-review")[];
+}
+
+/** What to tell the user about a document's standing for the grant; null when there's nothing to say. */
+export function relevanceMessage(r: DocumentRelevance | undefined): RelevanceMessage | null {
+  switch (r?.status) {
+    case "approved":
+      return { tone: "success", title: "Approved by an admin for this grant" };
+    case "unrelated":
+      return {
+        tone: "warning",
+        title: "Not used: doesn't look related to this grant",
+        detail: r.reason,
+        actions: ["request-review"],
+      };
+    case "review-pending":
+      return { tone: "info", title: "Not used yet: an admin is reviewing your request", detail: r.reason };
+    case "rejected":
+      return {
+        tone: "warning",
+        title: "Not used: an admin agreed it doesn't relate to this grant",
+        detail: r.review?.adminNote ? `Admin's note: ${r.review.adminNote}` : undefined,
+      };
+    case "check-failed":
+      return { tone: "warning", title: "Couldn't check this document yet, try again", actions: ["retry", "request-review"] };
+    case "not-checked":
+      return { tone: "warning", title: "Couldn't check this document yet, try again", actions: ["retry"] };
+    default:
+      return null;
+  }
+}
 
 export const libraryKey = (userId: string, fileName: string) => `${userId}/${LIBRARY_FOLDER}/${fileName}`;
 
@@ -91,6 +198,8 @@ export const SKIP_REASON_TEXT: Record<string, string> = {
   "too-large": "Too large for the AI to read",
   "over-budget": "Skipped: the other selected files use up what the AI can read at once",
   unreadable: "The AI couldn't open this file",
+  "not-related": "Not used: doesn't look related to this grant",
+  "not-checked": "Couldn't check this document yet, try again",
 };
 
 /**
