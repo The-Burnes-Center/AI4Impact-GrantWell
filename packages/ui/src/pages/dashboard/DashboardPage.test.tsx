@@ -25,6 +25,7 @@ vi.mock("./components/ProcessingReviewTab", () => stub("Review"));
 vi.mock("./components/AnalyticsTab", () => stub("Analytics"));
 vi.mock("./components/FeatureRolloutsTab", () => stub("Feature rollouts"));
 vi.mock("./components/UserManagementTab", () => stub("User management"));
+vi.mock("./components/DocumentReviewsTab", () => stub("Document reviews"));
 
 const metrics = {
   totalProcessed: 0, successRate: 0, pendingCount: 0, failedCount: 0, approvedCount: 0,
@@ -55,10 +56,10 @@ const tabNames = async () => {
 };
 
 describe("Admin dashboard tabs", () => {
-  it("gives a state admin Grants, Analytics and User Management", async () => {
+  it("gives a state admin Grants, Analytics, User Management and Document reviews", async () => {
     signedInAs({ "custom:role": '["Admin"]', "custom:state": "MA" });
     renderDashboard();
-    expect(await tabNames()).toEqual(["Grants", "Analytics", "User management"]);
+    expect(await tabNames()).toEqual(["Grants", "Analytics", "User management", "Document reviews"]);
   });
 
   it("shows Auto-scrape grants to a developer but not to a state admin on a multi-state site", async () => {
@@ -76,7 +77,7 @@ describe("Admin dashboard tabs", () => {
   it("adds Feature Rollouts for a developer, and no Digest preview tab", async () => {
     signedInAs({ "custom:role": '["Developer"]' });
     renderDashboard();
-    expect(await tabNames()).toEqual(["Grants", "Analytics", "Feature rollouts", "User management"]);
+    expect(await tabNames()).toEqual(["Grants", "Analytics", "Feature rollouts", "User management", "Document reviews"]);
   });
 
   it("sends a non-admin to /home", async () => {
@@ -100,14 +101,19 @@ describe("Admin dashboard tabs", () => {
     expect(screen.getByText("Analytics panel")).toBeInTheDocument();
 
     await user.keyboard("{End}");
-    expect(tab("User management")).toHaveFocus();
-    expect(screen.getByText("User management panel")).toBeInTheDocument();
+    expect(tab("Document reviews")).toHaveFocus();
+    expect(screen.getByText("Document reviews panel")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Document reviews" })).toBeInTheDocument();
 
     await user.keyboard("{ArrowRight}");
     expect(tab("Grants")).toHaveFocus();
 
     await user.keyboard("{ArrowLeft}");
+    expect(tab("Document reviews")).toHaveFocus();
+
+    await user.keyboard("{ArrowLeft}");
     expect(tab("User management")).toHaveFocus();
+    expect(screen.getByText("User management panel")).toBeInTheDocument();
     expect(tab("Grants")).toHaveAttribute("tabindex", "-1");
   });
 });

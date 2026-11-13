@@ -1,13 +1,14 @@
 /**
  * Removes what a user stored, ahead of deleting their account: chats, applications and their
  * version history, supporting documents (every version and delete marker under the user's folder,
- * knowledge-base sidecars included), the profile row, notification preferences, and the typed query
+ * knowledge-base sidecars included, and their type and relevance rows), the profile row, notification preferences, and the typed query
  * on each search event. Usage events themselves stay so the dashboard's counts don't change, and
  * application outcomes stay de-identified so the outcome totals don't either.
  * Each step re-reads what is left, so a retry after a partial failure finishes the job.
  *
  * Env: CHAT_HISTORY_TABLE_NAME, DRAFT_TABLE_NAME, DRAFT_VERSION_TABLE_NAME, ANALYTICS_TABLE_NAME,
- * USER_NOTIFICATION_PREFS_TABLE_NAME, USER_DOCUMENTS_BUCKET, SYNC_KB_FUNCTION_NAME, OUTCOME_TABLE_NAME
+ * USER_NOTIFICATION_PREFS_TABLE_NAME, USER_DOCUMENTS_BUCKET, SYNC_KB_FUNCTION_NAME, OUTCOME_TABLE_NAME,
+ * USER_DOCUMENT_TABLE_NAME (optional)
  */
 
 import {
@@ -45,6 +46,7 @@ function config() {
     outcomes: process.env.OUTCOME_TABLE_NAME,
   };
   const missing = Object.entries(env).filter(([, value]) => !value);
+  env.documentRecords = process.env.USER_DOCUMENT_TABLE_NAME;
   if (missing.length) {
     const error = new Error("User data cleanup is not configured");
     error.statusCode = 500;
@@ -211,6 +213,17 @@ async function deleteDocuments(env, username) {
     }
     for (const { Key } of objects) {
       if (!Key.endsWith(".metadata.json")) documents.add(Key);
+    }
+  }
+
+  if (env.documentRecords) {
+    for await (const items of queryPages({
+      TableName: env.documentRecords,
+      KeyConditionExpression: "user_id = :u",
+      ExpressionAttributeValues: marshall({ ":u": username }),
+      ProjectionExpression: "user_id, sk",
+    })) {
+      await batchDelete(env.documentRecords, items.map(({ user_id, sk }) => ({ user_id, sk })));
     }
   }
 

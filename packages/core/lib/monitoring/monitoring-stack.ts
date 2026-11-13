@@ -61,6 +61,7 @@ export const LOG_MARKERS = {
   queueEmailSendFailed: ["Processing queue email send failed"],
   chatCapReached: ["Daily chat message limit reached"],
   applicationCapReached: ["Daily application limit reached"],
+  docRelevance: ["DOC_RELEVANCE"],
 } as const;
 
 /** Cognito's fixed, non-adjustable budget for a synchronous trigger. */
@@ -83,6 +84,8 @@ export interface MonitoringStackProps extends cdk.NestedStackProps {
   readonly searchIndexBuilderFunction: lambda.IFunction;
   readonly searchIndexDlq: sqs.IQueue;
   readonly applicationPdfGeneratorFunction: lambda.IFunction;
+  /** Most document relevance checks run here, when a document is ticked. */
+  readonly documentSafeguardsFunction: lambda.IFunction;
   readonly nofoPipeline: {
     readonly stateMachine: sfn.IStateMachine;
     readonly extractText: lambda.IFunction;
@@ -173,6 +176,7 @@ export class MonitoringStack extends cdk.NestedStack {
     this.addChatAndSearchAlarms(props);
     this.addDailyCapMetrics(props);
     this.markerMetric("ChatVerified", props.chatFunction, LOG_MARKERS.chatVerified, cdk.Duration.hours(1));
+    this.markerMetric("DocRelevanceChecked", props.documentSafeguardsFunction, LOG_MARKERS.docRelevance, cdk.Duration.hours(1));
     this.addDocumentAlarms(props);
     this.addNofoPipelineAlarms(props);
     this.addDraftAlarms(props);

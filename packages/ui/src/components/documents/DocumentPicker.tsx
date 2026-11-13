@@ -2,11 +2,15 @@ import { useId, useMemo } from "react";
 import { Link } from "react-router";
 import { LuFileText } from "react-icons/lu";
 import LibraryUpload from "./LibraryUpload";
+import DocumentRelevanceStatus, { RelevanceLiveRegion } from "./DocumentRelevanceStatus";
 import { LiveStatus } from "../common/LiveStatus";
 import type { DocumentLibrary } from "../../hooks/use-document-library";
+import { useDocumentRelevance } from "../../hooks/use-document-relevance";
 import {
   LIBRARY_FOLDER,
+  documentTypeLabel,
   formatFileSize,
+  relevanceMessage,
   readingNotes,
   unreadableType,
 } from "../../common/helpers/user-documents";
@@ -24,9 +28,9 @@ interface DocumentPickerProps {
   variant?: "rows" | "list";
   /** Keeps the legend for screen readers only, where a heading or tab already names the group. */
   legendHidden?: boolean;
+  /** The grant the selection is for; given, each ticked document shows whether it relates to it. */
+  documentIdentifier?: string | null;
 }
-
-const typeOf = (name: string) => (name.includes(".") ? name.split(".").pop()!.toUpperCase() : "File");
 
 /** Library documents with a checkbox each, plus an upload that adds to the library and ticks the file. */
 export default function DocumentPicker({
@@ -37,6 +41,7 @@ export default function DocumentPicker({
   description,
   variant = "rows",
   legendHidden = false,
+  documentIdentifier,
 }: DocumentPickerProps) {
   const descriptionId = useId();
   const chosen = useMemo(() => new Set(selected ?? []), [selected]);
@@ -44,6 +49,8 @@ export default function DocumentPicker({
     () => [...library.documents].sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime()),
     [library.documents]
   );
+  const names = useMemo(() => Object.fromEntries(docs.map((d) => [d.key, d.name])), [docs]);
+  const relevance = useDocumentRelevance(documentIdentifier, documentIdentifier ? selected : null, names);
   const notes = useMemo(() => readingNotes(docs.filter((d) => chosen.has(d.key))), [docs, chosen]);
   const skippedCount = Object.keys(notes).length;
 
@@ -78,8 +85,12 @@ export default function DocumentPicker({
           <p className="dm-empty-state">You have no documents yet. Upload one to use it here.</p>
         ) : variant === "list" ? (
           <ul className="dm-list">
-            {docs.map((doc) => {
+            {docs.map((doc, index) => {
               const note = chosen.has(doc.key) ? notes[doc.key] : unreadableType(doc);
+              const rowId = `${descriptionId}-l${index}`;
+              const showRelevance = Boolean(documentIdentifier) && chosen.has(doc.key) && !note;
+              const relevanceShown =
+                showRelevance && (relevance.checking.has(doc.key) || relevanceMessage(relevance.statuses[doc.key]) !== null);
               return (
                 <li key={doc.key} className="dm-list__item">
                   <label className="dm-list__row">
@@ -88,16 +99,29 @@ export default function DocumentPicker({
                       className="dm-checkbox"
                       checked={chosen.has(doc.key)}
                       onChange={() => toggle(doc.key)}
+                      aria-describedby={relevanceShown ? `${rowId}-relevance` : undefined}
                     />
                     <span className="dm-list__text">
                       <span className="dm-list__name">{doc.name}</span>
                       <span className="dm-list__meta">
-                        {typeOf(doc.name)} · {formatFileSize(doc.size)}
+                        {documentTypeLabel(doc)} · {formatFileSize(doc.size)}
                         {doc.folder && doc.folder !== LIBRARY_FOLDER ? ` · uploaded for ${doc.folder}` : ""}
                       </span>
                       {note && <span className="dm-note dm-list__note">{note}</span>}
                     </span>
                   </label>
+                  {showRelevance && (
+                    <div className="dm-list__relevance">
+                      <DocumentRelevanceStatus
+                        id={`${rowId}-relevance`}
+                        fileName={doc.name}
+                        relevance={relevance.statuses[doc.key]}
+                        checking={relevance.checking.has(doc.key)}
+                        onRetry={() => void relevance.retry(doc.key)}
+                        onRequestReview={(text) => relevance.requestReview(doc.key, text)}
+                      />
+                    </div>
+                  )}
                 </li>
               );
             })}
@@ -106,6 +130,9 @@ export default function DocumentPicker({
           docs.map((doc, index) => {
             const note = chosen.has(doc.key) ? notes[doc.key] : unreadableType(doc);
             const noteId = `${descriptionId}-${index}`;
+            const showRelevance = Boolean(documentIdentifier) && chosen.has(doc.key) && !note;
+            const relevanceShown =
+              showRelevance && (relevance.checking.has(doc.key) || relevanceMessage(relevance.statuses[doc.key]) !== null);
             return (
               <div key={doc.key} className="dm-picker-row">
                 <input
@@ -114,27 +141,40 @@ export default function DocumentPicker({
                   id={`pick-${noteId}`}
                   checked={chosen.has(doc.key)}
                   onChange={() => toggle(doc.key)}
-                  aria-describedby={`${noteId}-meta${note ? ` ${noteId}-note` : ""}`}
+                  aria-describedby={`${noteId}-meta${note ? ` ${noteId}-note` : ""}${relevanceShown ? ` ${noteId}-relevance` : ""}`}
                 />
                 <LuFileText size={20} className="dm-file-icon" aria-hidden="true" />
-                <label htmlFor={`pick-${noteId}`}>
-                  <span className="dm-file-name">{doc.name}</span>
-                  <span id={`${noteId}-meta`} className="dm-file-size" style={{ display: "block" }}>
-                    {formatFileSize(doc.size)}
-                    {doc.folder && doc.folder !== LIBRARY_FOLDER ? ` · uploaded for ${doc.folder}` : ""}
-                  </span>
-                  {note && (
-                    <span id={`${noteId}-note`} className="dm-note" style={{ display: "block" }}>
-                      {note}
+                <div className="dm-picker-row__main">
+                  <label htmlFor={`pick-${noteId}`}>
+                    <span className="dm-file-name">{doc.name}</span>
+                    <span id={`${noteId}-meta`} className="dm-file-size" style={{ display: "block" }}>
+                      {documentTypeLabel(doc)} · {formatFileSize(doc.size)}
+                      {doc.folder && doc.folder !== LIBRARY_FOLDER ? ` · uploaded for ${doc.folder}` : ""}
                     </span>
+                    {note && (
+                      <span id={`${noteId}-note`} className="dm-note" style={{ display: "block" }}>
+                        {note}
+                      </span>
+                    )}
+                  </label>
+                  {showRelevance && (
+                    <DocumentRelevanceStatus
+                      id={`${noteId}-relevance`}
+                      fileName={doc.name}
+                      relevance={relevance.statuses[doc.key]}
+                      checking={relevance.checking.has(doc.key)}
+                      onRetry={() => void relevance.retry(doc.key)}
+                      onRequestReview={(text) => relevance.requestReview(doc.key, text)}
+                    />
                   )}
-                </label>
+                </div>
               </div>
             );
           })
         )}
       </fieldset>
 
+      {documentIdentifier && <RelevanceLiveRegion announcement={relevance.announcement} />}
       <div role="status" aria-live="polite" className="sr-only">
         {skippedCount > 0
           ? `${skippedCount} selected document${skippedCount === 1 ? "" : "s"} can't be read by the AI.`

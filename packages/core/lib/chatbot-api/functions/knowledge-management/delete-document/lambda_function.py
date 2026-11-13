@@ -1,18 +1,46 @@
 """
-Deletes a document and its metadata from S3, then triggers KB sync.
+Deletes a document and its metadata from S3, then its type and relevance rows (keyed as in
+document-relevance.mjs), then triggers KB sync.
 
-Env: USER_DOCUMENTS_BUCKET, SYNC_KB_FUNCTION_NAME
+Env: USER_DOCUMENTS_BUCKET, SYNC_KB_FUNCTION_NAME, USER_DOCUMENT_TABLE_NAME
 """
 
+import hashlib
 import json
 import boto3
 import os
+from boto3.dynamodb.conditions import Key
 
 s3 = boto3.resource('s3')
 lambda_client = boto3.client('lambda')
+dynamodb = boto3.resource('dynamodb')
 
 BUCKET = os.environ.get('USER_DOCUMENTS_BUCKET')
 SYNC_FUNCTION = os.environ.get('SYNC_KB_FUNCTION_NAME')
+DOCUMENT_TABLE = os.environ.get('USER_DOCUMENT_TABLE_NAME')
+
+
+def _hash_part(value):
+    return hashlib.sha256(value.encode('utf-8')).hexdigest()[:32]
+
+
+def delete_document_rows(user_id, key):
+    """The document's type row and every grant's relevance row and review request for it."""
+    table = dynamodb.Table(DOCUMENT_TABLE)
+    keys = [{'user_id': user_id, 'sk': f"DOC#{_hash_part(key)}"}]
+    query = {
+        'KeyConditionExpression': Key('user_id').eq(user_id) & Key('sk').begins_with(f"REL#{_hash_part(key)}#"),
+        'ProjectionExpression': 'user_id, sk',
+    }
+    while True:
+        page = table.query(**query)
+        keys.extend(page.get('Items', []))
+        if 'LastEvaluatedKey' not in page:
+            break
+        query['ExclusiveStartKey'] = page['LastEvaluatedKey']
+    with table.batch_writer() as batch:
+        for row in keys:
+            batch.delete_item(Key={'user_id': row['user_id'], 'sk': row['sk']})
 
 
 def lambda_handler(event, context):
@@ -42,6 +70,12 @@ def lambda_handler(event, context):
             print(f"Deleted metadata: {metadata_key}")
         except Exception:
             pass
+
+        if DOCUMENT_TABLE:
+            try:
+                delete_document_rows(user_id, key)
+            except Exception as rows_err:
+                print(f"Could not delete the document's type and relevance rows: {type(rows_err).__name__}")
 
         if SYNC_FUNCTION:
             try:

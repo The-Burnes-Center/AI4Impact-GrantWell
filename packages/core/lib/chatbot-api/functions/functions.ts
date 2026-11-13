@@ -83,6 +83,7 @@ interface LambdaFunctionStackProps {
   readonly analyticsTable: Table;
   readonly dailyUsageTable: Table;
   readonly applicationOutcomeTable: Table;
+  readonly userDocumentTable: Table;
   readonly ffioNofosBucket: s3.Bucket;
   readonly grantArtifactsBucket: s3.Bucket;
   readonly userDocumentsBucket: s3.Bucket;
@@ -148,6 +149,7 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly userProfileFunction: lambda.Function;
   public readonly analyticsFunction: lambda.Function;
   public readonly applicationOutcomesFunction: lambda.Function;
+  public readonly documentSafeguardsFunction: lambda.Function;
   public readonly bedrockModels: BedrockModelUse[];
 
   constructor(scope: Construct, id: string, props: LambdaFunctionStackProps) {
@@ -222,12 +224,18 @@ export class LambdaFunctionStack extends cdk.Stack {
       ],
     });
     const sonnetChatVerify = claude("chat answer checks (Sonnet)", sonnetChatVerifyProfile, SONNET_MODEL_ID, sonnetSystemProfileArn);
+    // The document relevance check shares the NOFO pipeline's Haiku profile (and its cost tag).
+    const haikuNofo = claude("NOFO synthesis and questions (Haiku)", haikuNofoProfile, HAIKU_MODEL_ID, haikuSystemProfileArn);
+    const DOC_CHECK_ENV = {
+      USER_DOCUMENT_TABLE_NAME: props.userDocumentTable.tableName,
+      DOC_CHECK_MODEL_ID: haikuNofo.modelId,
+    };
     this.bedrockModels = [
       claude("chat (Sonnet)", sonnetChatProfile, SONNET_MODEL_ID, sonnetSystemProfileArn),
       sonnetChatVerify,
       claude("NOFO analysis (Sonnet)", sonnetNofoProfile, SONNET_MODEL_ID, sonnetSystemProfileArn),
       claude("draft generation (Sonnet)", sonnetDraftProfile, SONNET_MODEL_ID, sonnetSystemProfileArn),
-      claude("NOFO synthesis and questions (Haiku)", haikuNofoProfile, HAIKU_MODEL_ID, haikuSystemProfileArn),
+      haikuNofo,
       claude("grants.gov scraper (Haiku)", haikuScraperProfile, HAIKU_MODEL_ID, haikuSystemProfileArn),
       claude("grant search profiles (Haiku)", haikuSearchProfile, HAIKU_MODEL_ID, haikuSystemProfileArn),
       // ai-grant-search and the index builder embed through this profile; invoking a profile also needs the model.
@@ -406,6 +414,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           CHAT_MESSAGES_PER_DAY: String(limits(config).chatMessagesPerDay),
           ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
           BUCKET: props.ffioNofosBucket.bucketName,
+          ...DOC_CHECK_ENV,
         },
         timeout: cdk.Duration.seconds(300),
         memorySize: 1024,
@@ -413,6 +422,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       }
     );
     props.dailyUsageTable.grant(websocketAPIFunction, "dynamodb:UpdateItem");
+    props.userDocumentTable.grant(websocketAPIFunction, "dynamodb:BatchGetItem", "dynamodb:GetItem", "dynamodb:PutItem");
     websocketAPIFunction.addToRolePolicy(s3ReadOnlyPolicy(props.grantArtifactsBucket.bucketArn));
     websocketAPIFunction.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
 
@@ -602,10 +612,12 @@ export class LambdaFunctionStack extends cdk.Stack {
         environment: {
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
           SYNC_KB_FUNCTION_NAME: `${stackName}-syncKBFunction`,
+          USER_DOCUMENT_TABLE_NAME: props.userDocumentTable.tableName,
         },
         timeout: cdk.Duration.seconds(30),
       }
     );
+    props.userDocumentTable.grant(deleteS3APIHandlerFunction, "dynamodb:Query", "dynamodb:BatchWriteItem", "dynamodb:DeleteItem");
 
     deleteS3APIHandlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
@@ -635,10 +647,12 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "list-documents/index.handler",
         environment: {
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
+          USER_DOCUMENT_TABLE_NAME: props.userDocumentTable.tableName,
         },
         timeout: cdk.Duration.seconds(30),
       }
     );
+    props.userDocumentTable.grant(getS3APIHandlerFunction, "dynamodb:Query");
 
     getS3APIHandlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
@@ -1201,10 +1215,12 @@ export class LambdaFunctionStack extends cdk.Stack {
         handler: "generate-upload-url/index.handler",
         environment: {
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
+          USER_DOCUMENT_TABLE_NAME: props.userDocumentTable.tableName,
         },
         timeout: cdk.Duration.seconds(30),
       }
     );
+    props.userDocumentTable.grant(uploadS3APIHandlerFunction, "dynamodb:PutItem");
 
     uploadS3APIHandlerFunction.addToRolePolicy(
       new iam.PolicyStatement({
@@ -1260,6 +1276,33 @@ export class LambdaFunctionStack extends cdk.Stack {
     );
     this.downloadS3Function = downloadS3APIHandlerFunction;
 
+    // Document types, the per-grant relevance check and the admins' review queue (document-safeguards/).
+    const documentSafeguardsFunction = new lambda.Function(scope, "DocumentSafeguardsFunction", {
+      runtime: lambda.Runtime.NODEJS_24_X,
+      code: lambda.Code.fromAsset(path.join(__dirname, "knowledge-management")),
+      handler: "document-safeguards/index.handler",
+      layers: [jsSharedLayer],
+      environment: {
+        USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
+        ARTIFACTS_BUCKET: props.grantArtifactsBucket.bucketName,
+        BUCKET: props.ffioNofosBucket.bucketName,
+        SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+        LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+        ...DOC_CHECK_ENV,
+      },
+      // HTTP API integrations time out at 30 s; each check gives up at 20 s.
+      timeout: cdk.Duration.seconds(29),
+      memorySize: 1024,
+    });
+    props.userDocumentTable.grantReadWriteData(documentSafeguardsFunction);
+    documentSafeguardsFunction.addToRolePolicy(s3ReadOnlyPolicy(props.userDocumentsBucket.bucketArn));
+    documentSafeguardsFunction.addToRolePolicy(s3ReadOnlyPolicy(props.grantArtifactsBucket.bucketArn));
+    documentSafeguardsFunction.addToRolePolicy(s3ReadOnlyPolicy(props.ffioNofosBucket.bucketArn));
+    documentSafeguardsFunction.addToRolePolicy(
+      new iam.PolicyStatement({ actions: ["bedrock:InvokeModel"], resources: haikuNofo.invokeResources })
+    );
+    this.documentSafeguardsFunction = documentSafeguardsFunction;
+
     // Draft generation pipeline Lambdas and their Step Functions state machine live in
     // their own NestedStack to keep the main app stack under the 500-resource
     // CloudFormation limit. The NOFO bucket, the draft and job tables, the knowledge base
@@ -1272,6 +1315,8 @@ export class LambdaFunctionStack extends cdk.Stack {
       draftGenerationJobsTable: props.draftGenerationJobsTable,
       jsSharedLayer: jsSharedLayer,
       sonnetDraftProfileArn: sonnetDraftProfile.attrInferenceProfileArn,
+      userDocumentTable: props.userDocumentTable,
+      haikuDocCheckProfileArn: haikuNofo.modelId,
       supportedStatesEnv: SUPPORTED_STATES_ENV,
       legacyStatelessAdminIsPlatform: LEGACY_STATELESS_ADMIN_IS_PLATFORM,
     });

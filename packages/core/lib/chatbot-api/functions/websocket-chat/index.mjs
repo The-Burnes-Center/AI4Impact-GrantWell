@@ -12,7 +12,9 @@ import { DynamoDBClient, GetItemCommand, UpdateItemCommand } from "@aws-sdk/clie
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import ClaudeModel from "./claudeSonnet.mjs";
 import { buildChatRequest, getPromptText } from "./prompt.mjs";
-import { loadSupportingDocuments, pdfContentBlocks, SKIP_REASONS } from "./supporting-documents.mjs";
+import { BedrockRuntimeClient } from "@aws-sdk/client-bedrock-runtime";
+import { grantFolderName, loadSupportingDocuments, pdfContentBlocks, SKIP_REASONS } from "./supporting-documents.mjs";
+import { relevanceGate } from "./document-relevance.mjs";
 import { numberCitations, usablePageMap } from "./citations.mjs";
 import { sourceKeys } from "./fact-check.mjs";
 import { CHECK_MARKER, verifyAnswer } from "./verify.mjs";
@@ -304,6 +306,28 @@ async function loadGrantSource(nofoName) {
   return null;
 }
 
+// A first-time check runs before the answer starts, so it gets less time here than elsewhere.
+const DOCUMENT_CHECK_TIMEOUT_MS = 10000;
+let bedrockClient;
+
+/** Only documents that relate to this grant (or an admin approved) are read; undefined where not deployed. */
+function documentGate(userId, documentIdentifier) {
+  if (!process.env.USER_DOCUMENT_TABLE_NAME) return undefined;
+  bedrockClient ??= new BedrockRuntimeClient({ region: process.env.AWS_REGION || "us-east-1" });
+  const deps = {
+    ddb: dynamoClient,
+    s3: s3Client,
+    bedrock: bedrockClient,
+    table: process.env.USER_DOCUMENT_TABLE_NAME,
+    bucket: process.env.USER_DOCUMENTS_BUCKET,
+    artifactBuckets: [process.env.ARTIFACTS_BUCKET, process.env.BUCKET],
+    modelId: process.env.DOC_CHECK_MODEL_ID,
+    timeoutMs: DOCUMENT_CHECK_TIMEOUT_MS,
+    source: "chat",
+  };
+  return relevanceGate(deps, { userId, grant: grantFolderName(documentIdentifier) });
+}
+
 /**
  * Claude content blocks for the user's supporting documents, placed after the grant by
  * buildChatRequest. With `citations` each file is its own citable document block and `documents`
@@ -320,6 +344,7 @@ async function loadApplicantDocuments(userId, documentIdentifier, documentKeys, 
       userId,
       documentKeys: documentKeys ?? null,
       documentIdentifier,
+      gate: documentGate(userId, documentIdentifier),
     });
     const name = (n) => String(n ?? "").replace(/["<>]/g, "");
     const included = [...docs.pdfs, ...docs.texts].map((d) => d.fileName);

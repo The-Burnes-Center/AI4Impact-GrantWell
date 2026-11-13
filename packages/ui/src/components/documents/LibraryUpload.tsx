@@ -1,8 +1,17 @@
 import React, { useId, useRef, useState } from "react";
 import { LuUpload, LuFileText } from "react-icons/lu";
 import { Modal } from "../common/Modal";
+import DocumentTypeFields from "./DocumentTypeFields";
 import type { DocumentLibrary } from "../../hooks/use-document-library";
-import { UPLOAD_EXTENSIONS } from "../../common/helpers/user-documents";
+import type { DocumentTypeInput } from "../../common/api-client/user-documents-client";
+import {
+  UPLOAD_EXTENSIONS,
+  documentTypeErrors,
+  type DocumentType,
+  type DocumentTypeChoice,
+} from "../../common/helpers/user-documents";
+
+type TypeErrors = ReturnType<typeof documentTypeErrors>;
 import "../../styles/document-manager.css";
 
 interface LibraryUploadProps {
@@ -23,13 +32,39 @@ export default function LibraryUpload({ library, onUploaded, variant = "dropzone
   const [problems, setProblems] = useState<string[]>([]);
   const [announcement, setAnnouncement] = useState("");
   const [pending, setPending] = useState<{ files: File[]; duplicates: File[] } | null>(null);
+  const [typing, setTyping] = useState<{ files: File[]; choices: DocumentTypeChoice[]; errors: TypeErrors[] } | null>(null);
   const instructionsId = useId();
+  const formId = useId();
 
-  const send = async (files: File[]) => {
+  const askTypes = (files: File[]) => {
     setPending(null);
     if (files.length === 0) return;
+    setTyping({ files, choices: files.map(() => ({ type: "", description: "" })), errors: files.map(() => ({})) });
+  };
+
+  const confirmTypes = () => {
+    if (!typing) return;
+    const errors = typing.choices.map(documentTypeErrors);
+    const firstBad = errors.findIndex((e) => e.type || e.description);
+    if (firstBad >= 0) {
+      setTyping({ ...typing, errors });
+      const field = errors[firstBad].type ? "type" : "description";
+      requestAnimationFrame(() => document.getElementById(`${formId}-${firstBad}-${field}`)?.focus());
+      return;
+    }
+    const types = new Map<File, DocumentTypeInput>(
+      typing.files.map((file, i) => {
+        const { type, description } = typing.choices[i];
+        return [file, type === "other" ? { type, description: description.trim() } : { type: type as DocumentType }];
+      })
+    );
+    setTyping(null);
+    void send(typing.files, types);
+  };
+
+  const send = async (files: File[], types: Map<File, DocumentTypeInput>) => {
     setAnnouncement(`Uploading ${files.length} document${files.length === 1 ? "" : "s"}`);
-    const { uploaded, failed } = await library.upload(files);
+    const { uploaded, failed } = await library.upload(files, types);
     if (failed.length > 0) setProblems((prev) => [...prev, ...failed.map((name) => `${name} couldn't be uploaded. Please try again.`)]);
     setAnnouncement(
       `${uploaded.length} document${uploaded.length === 1 ? "" : "s"} uploaded${failed.length ? `, ${failed.length} failed` : ""}.`
@@ -44,7 +79,7 @@ export default function LibraryUpload({ library, onUploaded, variant = "dropzone
       setPending({ files: plan.accepted, duplicates: plan.duplicates });
       return;
     }
-    void send(plan.accepted);
+    askTypes(plan.accepted);
   };
 
   const onInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -150,15 +185,56 @@ export default function LibraryUpload({ library, onUploaded, variant = "dropzone
             className="gw-btn gw-btn--secondary dm-confirm-cancel-btn"
             onClick={() => {
               const dupes = new Set(pending?.duplicates.map((f) => f.name));
-              void send((pending?.files ?? []).filter((f) => !dupes.has(f.name)));
+              askTypes((pending?.files ?? []).filter((f) => !dupes.has(f.name)));
             }}
           >
             Skip duplicates
           </button>
-          <button type="button" className="gw-btn gw-btn--primary dm-confirm-replace-btn" onClick={() => void send(pending?.files ?? [])}>
+          <button type="button" className="gw-btn gw-btn--primary dm-confirm-replace-btn" onClick={() => askTypes(pending?.files ?? [])}>
             Replace
           </button>
         </div>
+      </Modal>
+
+      <Modal
+        isOpen={typing !== null}
+        onClose={() => setTyping(null)}
+        title={typing?.files.length === 1 ? "What kind of document is this?" : "What kind of documents are these?"}
+        describedBy={`${formId}-intro`}
+        maxWidth="560px"
+      >
+        <form
+          noValidate
+          onSubmit={(e) => {
+            e.preventDefault();
+            confirmTypes();
+          }}
+        >
+          <p id={`${formId}-intro`} className="dm-confirm-message">
+            The type helps the AI use {typing?.files.length === 1 ? "it" : "each one"} well. You can change it later in My documents.
+          </p>
+          {typing?.files.map((file, i) => (
+            <fieldset key={`${file.name}-${i}`} className="dm-type-fieldset">
+              <legend className="dm-type-legend">{file.name}</legend>
+              <DocumentTypeFields
+                idPrefix={`${formId}-${i}`}
+                value={typing.choices[i]}
+                errors={typing.errors[i]}
+                onChange={(choice) =>
+                  setTyping((prev) => (prev ? { ...prev, choices: prev.choices.map((c, j) => (j === i ? choice : c)) } : prev))
+                }
+              />
+            </fieldset>
+          ))}
+          <div className="dm-confirm-actions">
+            <button type="button" className="gw-btn gw-btn--secondary dm-target" onClick={() => setTyping(null)}>
+              Cancel
+            </button>
+            <button type="submit" className="gw-btn gw-btn--primary dm-target">
+              Upload
+            </button>
+          </div>
+        </form>
       </Modal>
     </div>
   );

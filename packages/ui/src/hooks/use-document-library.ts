@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { getCurrentUser } from "aws-amplify/auth";
 import { useApiClient } from "./use-api-client";
 import { FileUploader } from "../common/file-uploader";
+import type { DocumentTypeInput } from "../common/api-client/user-documents-client";
 import {
   LIBRARY_FOLDER,
   MIME_TYPES,
@@ -86,7 +87,7 @@ export function useDocumentLibrary() {
   }, []);
 
   const upload = useCallback(
-    async (files: File[]): Promise<UploadResult> => {
+    async (files: File[], types: Map<File, DocumentTypeInput>): Promise<UploadResult> => {
       const result: UploadResult = { uploaded: [], failed: [] };
       if (!userId || files.length === 0) return result;
       setUploading(true);
@@ -98,7 +99,7 @@ export function useDocumentLibrary() {
         const key = libraryKey(userId, file.name);
         const type = MIME_TYPES[file.name.split(".").pop()?.toLowerCase() ?? ""] || "application/octet-stream";
         try {
-          const url = await apiClient.userDocuments.getUploadURL(key, type, file.size);
+          const url = await apiClient.userDocuments.getUploadURL(key, type, file.size, types.get(file));
           await uploader.upload(file, url, type, (sent) => setProgress(Math.round(((done + sent) / total) * 100)));
           result.uploaded.push(key);
         } catch (error) {
@@ -123,6 +124,16 @@ export function useDocumentLibrary() {
     [apiClient]
   );
 
+  const setType = useCallback(
+    async (key: string, documentType: DocumentTypeInput) => {
+      await apiClient.userDocuments.setDocumentType(key, documentType);
+      setDocuments((prev) =>
+        prev.map((d) => (d.key === key ? { ...d, type: documentType.type, description: documentType.description } : d))
+      );
+    },
+    [apiClient]
+  );
+
   const download = useCallback(
     async (doc: LibraryDocument) => {
       const url = await apiClient.userDocuments.getDownloadURL(doc.key);
@@ -136,7 +147,7 @@ export function useDocumentLibrary() {
     [apiClient]
   );
 
-  return { userId, documents, loading, loadError, refresh, planUpload, upload, uploading, progress, remove, download };
+  return { userId, documents, loading, loadError, refresh, planUpload, upload, uploading, progress, remove, setType, download };
 }
 
 export type DocumentLibrary = ReturnType<typeof useDocumentLibrary>;

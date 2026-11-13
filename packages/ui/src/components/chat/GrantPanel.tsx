@@ -193,6 +193,7 @@ export default function GrantPanel({
           legendHidden
           variant="list"
           description="The AI reads only the documents you tick."
+          documentIdentifier={grant}
         />
         {saveError && <p className="dm-error" role="alert">{saveError}</p>}
       </div>
