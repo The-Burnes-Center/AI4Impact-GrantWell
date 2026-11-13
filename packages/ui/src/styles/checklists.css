@@ -322,48 +322,6 @@
 }
 
 /* Help modal */
-.help-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10000;
-}
-
-.help-modal {
-  width: 650px;
-  max-width: calc(100vw - 32px);
-  max-height: 90vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  outline: none;
-}
-
-.help-modal__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.help-modal__title {
-  margin: 0;
-}
-
-.help-modal__close {
-  font-size: 24px;
-  line-height: 1;
-}
-
-.help-modal__body {
-  overflow-y: auto;
-  flex: 1;
-}
-
 .help-modal__text {
   margin-bottom: 20px;
   line-height: 1.6;
@@ -415,10 +373,3 @@
   user-select: none;
 }
 
-.help-modal__confirm-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-}

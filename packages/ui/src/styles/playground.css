@@ -75,53 +75,7 @@
   min-height: 0;
 }
 
-/* ── Modal overlay ── */
-.pg-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-}
-
-.pg-modal {
-  width: 650px;
-  max-width: calc(100vw - 32px);
-  max-height: 90vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  outline: none;
-}
-
-/* ── Modal header ── */
-.pg-modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.pg-modal-title {
-  margin: 0;
-}
-
-.pg-modal-close-btn {
-  min-width: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* ── Modal body ── */
-.pg-modal-body {
-  overflow-y: auto;
-  flex: 1;
-}
-
+/* ── Help modal ── */
 .pg-modal-intro {
   margin-bottom: 20px;
   line-height: 1.6;
@@ -211,14 +165,6 @@
   color: var(--gw-color-text-secondary);
   cursor: pointer;
   user-select: none;
-}
-
-.pg-got-it-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
 }
 
 /* ── Mobile responsive ── */
