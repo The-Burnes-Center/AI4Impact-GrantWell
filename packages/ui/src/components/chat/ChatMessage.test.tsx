@@ -43,7 +43,7 @@ describe("ChatMessage waiting", () => {
 });
 
 describe("ChatMessage reply", () => {
-  it("names its copy and sources buttons after the reply number and starts headings at h2", () => {
+  const reply = () =>
     renderApp(
       <ChatMessage
         replyNumber={3}
@@ -55,10 +55,32 @@ describe("ChatMessage reply", () => {
       />
     );
 
-    expect(screen.getByRole("button", { name: "Copy reply 3 to clipboard" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Sources (1) for reply 3" })).toHaveTextContent("Sources (1)");
+  it("is an article named after its number, with headings from h2 and no sources list (the panel has them)", () => {
+    reply();
+    expect(screen.getByRole("article", { name: "Answer 3" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { level: 2, name: "Summary" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { level: 3, name: "Budget" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Sources/ })).toBeNull();
+  });
+
+  it("copies the answer, says so, and shows its name as a tooltip that Escape dismisses", async () => {
+    const { user } = reply();
+    const copy = screen.getByRole("button", { name: "Copy answer 3" });
+
+    await user.hover(copy);
+    expect(screen.getByText("Copy answer 3", { selector: ".gw-tip__bubble" })).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    expect(document.querySelector(".gw-tip__bubble")).toBeNull();
+
+    await user.click(copy);
+    expect(await navigator.clipboard.readText()).toBe("# Summary\n\n## Budget\n\nText");
+    expect(screen.getByRole("status")).toHaveTextContent("Copied");
+  });
+
+  it("shows the user's own turn as text", () => {
+    renderApp(<ChatMessage message={{ type: ChatBotMessageType.Human, content: "When is it due?", metadata: {} }} />);
+    expect(screen.getByText("When is it due?")).toBeInTheDocument();
+    expect(screen.queryByRole("article")).toBeNull();
   });
 });
 

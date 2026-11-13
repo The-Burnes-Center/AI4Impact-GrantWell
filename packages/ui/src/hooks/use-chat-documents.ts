@@ -1,29 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import Modal from "../common/Modal";
-import { useApiClient } from "../../hooks/use-api-client";
-import { useDocumentLibrary } from "../../hooks/use-document-library";
-import { legacySelection } from "../../common/helpers/user-documents";
-import DocumentPicker from "../documents/DocumentPicker";
-import "../../styles/document-manager.css";
-
-interface DocumentManagerProps {
-  isOpen: boolean;
-  onClose: () => void;
-  documentIdentifier: string | null;
-  sessionId?: string;
-  onFileCountChange?: (count: number) => void;
-}
+import { useApiClient } from "./use-api-client";
+import { useDocumentLibrary } from "./use-document-library";
+import { legacySelection } from "../common/helpers/user-documents";
 
 type Stored = { keys: string[] | null; exists: boolean };
 
-/** Picks which library documents this chat's AI reads. */
-export default function DocumentManager({
-  isOpen,
-  onClose,
-  documentIdentifier,
-  sessionId,
-  onFileCountChange,
-}: DocumentManagerProps) {
+/** The user's library and which of its documents this chat's AI reads; ticking saves the full list. */
+export function useChatDocuments(sessionId: string | undefined, documentIdentifier: string | null) {
   const apiClient = useApiClient();
   const library = useDocumentLibrary();
   const [stored, setStored] = useState<Stored | null>(null);
@@ -54,10 +37,6 @@ export default function DocumentManager({
     return keys.filter((k) => present.has(k));
   }, [stored, library.loading, library.documents, library.userId, documentIdentifier]);
 
-  useEffect(() => {
-    if (selected) onFileCountChange?.(selected.length);
-  }, [selected, onFileCountChange]);
-
   const change = async (keys: string[]) => {
     if (!sessionId) return;
     const previous = stored;
@@ -72,27 +51,7 @@ export default function DocumentManager({
     }
   };
 
-  return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Supporting documents"
-      maxWidth="700px"
-      closeLabel="Close supporting documents"
-      footer={
-        <button type="button" className="gw-btn gw-btn--secondary" onClick={onClose}>
-          Close
-        </button>
-      }
-    >
-      <DocumentPicker
-        library={library}
-        selected={selected}
-        onChange={(keys) => void change(keys)}
-        legend="Use in this chat"
-        description="The AI reads the documents you tick when it answers in this chat. New uploads go to My documents, where every chat and application can use them."
-      />
-      {saveError && <p className="dm-error" role="alert">{saveError}</p>}
-    </Modal>
-  );
+  return { library, selected, change, saveError };
 }
+
+export type ChatDocuments = ReturnType<typeof useChatDocuments>;

@@ -19,6 +19,8 @@ interface ModalProps {
   closeLabel?: string;
   /** Actions pinned below the body: the header and footer stay in view and only the body scrolls. */
   footer?: React.ReactNode;
+  /** "sheet": full width from the bottom edge, for phones. */
+  variant?: "dialog" | "sheet";
 }
 
 /**
@@ -42,6 +44,7 @@ export const Modal = React.memo<ModalProps>(
     describedBy,
     closeLabel = "Close modal",
     footer,
+    variant = "dialog",
   }) => {
     const Title = titleLevel;
     const modalRef = useFocusTrap<HTMLDivElement>({ isOpen, onEscape: onClose, initialFocus: initialFocusRef });
@@ -51,7 +54,7 @@ export const Modal = React.memo<ModalProps>(
 
     return (
       <div
-        className={`gw-modal__overlay modal-overlay${footer ? " modal-overlay--pinned" : ""}`}
+        className={`gw-modal__overlay modal-overlay${footer || variant === "sheet" ? " modal-overlay--pinned" : ""}${variant === "sheet" ? " modal-overlay--sheet" : ""}`}
         role="presentation"
         onClick={
           hideCloseButton
@@ -63,7 +66,7 @@ export const Modal = React.memo<ModalProps>(
       >
         <div
           ref={modalRef}
-          className="gw-modal modal-content"
+          className={`gw-modal modal-content${variant === "sheet" ? " modal-content--sheet" : ""}`}
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}

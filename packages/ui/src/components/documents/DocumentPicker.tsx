@@ -20,10 +20,24 @@ interface DocumentPickerProps {
   /** Visible group label, e.g. "Use in this chat". */
   legend: string;
   description?: string;
+  /** "list": a bordered list for a narrow panel, the box beside the name's first line. */
+  variant?: "rows" | "list";
+  /** Keeps the legend for screen readers only, where a heading or tab already names the group. */
+  legendHidden?: boolean;
 }
 
+const typeOf = (name: string) => (name.includes(".") ? name.split(".").pop()!.toUpperCase() : "File");
+
 /** Library documents with a checkbox each, plus an upload that adds to the library and ticks the file. */
-export default function DocumentPicker({ library, selected, onChange, legend, description }: DocumentPickerProps) {
+export default function DocumentPicker({
+  library,
+  selected,
+  onChange,
+  legend,
+  description,
+  variant = "rows",
+  legendHidden = false,
+}: DocumentPickerProps) {
   const descriptionId = useId();
   const chosen = useMemo(() => new Set(selected ?? []), [selected]);
   const docs = useMemo(
@@ -47,7 +61,7 @@ export default function DocumentPicker({ library, selected, onChange, legend, de
   return (
     <div>
       <fieldset className="dm-picker" aria-describedby={description ? descriptionId : undefined}>
-        <legend className="dm-picker-legend">{legend}</legend>
+        <legend className={legendHidden ? "visually-hidden" : "dm-picker-legend"}>{legend}</legend>
         {description && (
           <p id={descriptionId} className="dm-file-size" style={{ marginTop: 0 }}>
             {description}
@@ -62,6 +76,32 @@ export default function DocumentPicker({ library, selected, onChange, legend, de
           <p className="dm-error" role="alert">{library.loadError}</p>
         ) : docs.length === 0 ? (
           <p className="dm-empty-state">You have no documents yet. Upload one to use it here.</p>
+        ) : variant === "list" ? (
+          <ul className="dm-list">
+            {docs.map((doc) => {
+              const note = chosen.has(doc.key) ? notes[doc.key] : unreadableType(doc);
+              return (
+                <li key={doc.key} className="dm-list__item">
+                  <label className="dm-list__row">
+                    <input
+                      type="checkbox"
+                      className="dm-checkbox"
+                      checked={chosen.has(doc.key)}
+                      onChange={() => toggle(doc.key)}
+                    />
+                    <span className="dm-list__text">
+                      <span className="dm-list__name">{doc.name}</span>
+                      <span className="dm-list__meta">
+                        {typeOf(doc.name)} · {formatFileSize(doc.size)}
+                        {doc.folder && doc.folder !== LIBRARY_FOLDER ? ` · uploaded for ${doc.folder}` : ""}
+                      </span>
+                      {note && <span className="dm-note dm-list__note">{note}</span>}
+                    </span>
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
         ) : (
           docs.map((doc, index) => {
             const note = chosen.has(doc.key) ? notes[doc.key] : unreadableType(doc);
@@ -102,7 +142,12 @@ export default function DocumentPicker({ library, selected, onChange, legend, de
       </div>
 
       <div className="dm-picker-actions">
-        <LibraryUpload library={library} variant="button" onUploaded={addUploaded} />
+        <LibraryUpload
+          library={library}
+          variant="button"
+          onUploaded={addUploaded}
+          buttonLabel={variant === "list" ? "Upload" : undefined}
+        />
         <Link to="/documents" className="dm-link">
           Manage My documents
         </Link>

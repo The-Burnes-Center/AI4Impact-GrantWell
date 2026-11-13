@@ -280,3 +280,242 @@ div.transcript[tabindex]:focus-visible {
     color: var(--gw-color-primary-hover);
   }
 }
+
+/* ── Turns ── */
+
+.userTurn {
+  align-self: flex-end;
+  max-width: 80%;
+  margin-left: auto;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background-color: var(--gw-color-primary-light);
+  color: var(--gw-color-text-strong);
+  font-size: 15px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.answer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  color: var(--gw-color-text);
+  font-size: 15px;
+  line-height: 1.65;
+  overflow-wrap: break-word;
+}
+
+.answerStopped {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0 0;
+  color: var(--gw-color-text-secondary);
+  font-size: 13px;
+  font-style: italic;
+}
+
+.answerActions {
+  margin-left: -10px;
+}
+
+/* ── Ask next ── */
+
+.askNext {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.askNextHeading {
+  margin: 0;
+  color: var(--gw-color-text-secondary);
+  font-family: var(--gw-font-family);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.askNextList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.askNextChip {
+  min-height: 44px;
+  max-width: 100%;
+  padding: 6px 14px;
+  border: 1px solid var(--gw-color-primary);
+  border-radius: 22px;
+  background-color: var(--gw-color-surface);
+  color: var(--gw-color-primary-deep);
+  font-size: 14px;
+  line-height: 1.3;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--gw-color-primary-light);
+  }
+
+  &:focus-visible {
+    outline: var(--gw-focus-width) solid var(--gw-color-focus);
+    outline-offset: var(--gw-focus-offset);
+  }
+}
+
+/* ── Grant panel ── */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.panelTabs {
+  display: flex;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--gw-color-border);
+}
+
+.panelTab {
+  display: inline-flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 48px;
+  padding: 0 6px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--gw-color-text-secondary);
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--gw-color-primary-deep);
+  }
+
+  &:focus-visible {
+    outline: var(--gw-focus-width) solid var(--gw-color-focus);
+    outline-offset: -3px;
+  }
+
+  &[aria-selected="true"] {
+    border-bottom-color: var(--gw-color-primary);
+    color: var(--gw-color-primary-deep);
+    font-weight: 600;
+  }
+}
+
+.panelBadge {
+  padding: 1px 7px;
+  border-radius: 10px;
+  background-color: var(--gw-color-surface-subtle);
+  color: var(--gw-color-text);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.panelBadgeOn {
+  background-color: var(--gw-color-primary-light);
+  color: var(--gw-color-primary-deep);
+}
+
+.panelBody {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.panelHint {
+  margin: 0;
+  color: var(--gw-color-text-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.panelLink {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  min-height: 44px;
+  color: var(--gw-color-primary-deep);
+  font-size: 14px;
+  font-weight: 600;
+
+  &:hover {
+    color: var(--gw-color-primary-hover);
+  }
+}
+
+.facts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+}
+
+.fact {
+  dt {
+    color: var(--gw-color-text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  dd {
+    margin: 2px 0 0;
+    color: var(--gw-color-text);
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+}
+
+.factMissing {
+  color: var(--gw-color-text-secondary);
+  font-style: italic;
+}
+
+.sourceCard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid var(--gw-color-border-input);
+  border-radius: var(--gw-radius-container);
+
+  &:focus-visible,
+  &:focus {
+    outline: var(--gw-focus-width) solid var(--gw-color-focus);
+    outline-offset: var(--gw-focus-offset);
+  }
+}
+
+.sourceCardHeading {
+  margin: 0;
+  color: var(--gw-color-text-strong);
+  font-family: var(--gw-font-family);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.sourceCardQuote {
+  margin: 0;
+  padding-left: 10px;
+  border-left: 3px solid var(--gw-color-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}

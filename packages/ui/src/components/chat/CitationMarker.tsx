@@ -110,7 +110,7 @@ export default function CitationMarker({ citation, grant, onSelect }: CitationMa
         className={styles.citationMarker}
         aria-expanded={onSelect ? undefined : open}
         aria-controls={open ? popoverId : undefined}
-        aria-label={`Source ${citation.n}, ${heading}`}
+        aria-label={onSelect ? `Source ${citation.n}, show in the panel` : `Source ${citation.n}, ${heading}`}
         onClick={() => (onSelect ? onSelect(citation) : setOpen((value) => !value))}
       >
         {citation.n}
