@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { LuArrowDown, LuArrowUp, LuArchiveX, LuChevronDown, LuFileX, LuRefreshCw, LuUpload } from "react-icons/lu";
+import React, { Fragment, useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { LuArchiveX, LuChevronDown, LuFileX, LuRefreshCw, LuUpload } from "react-icons/lu";
 import { ApiClient } from "../../../common/api-client/api-client";
 import type {
   ReviewItem,
@@ -8,6 +8,7 @@ import type {
 import ProcessingMetrics from "./ProcessingMetrics";
 import ReviewExpandedRow from "./ReviewExpandedRow";
 import TableScrollRegion from "../../../components/ui/TableScrollRegion";
+import SortableHeader from "../../../components/ui/SortableHeader";
 import { Modal } from "../../../components/common/Modal";
 import { sectionLabel } from "./section-labels";
 
@@ -87,7 +88,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
   const [resultsAnnouncement, setResultsAnnouncement] = useState("");
   const hasLoaded = useRef(false);
 
-  const tableRef = useRef<HTMLDivElement>(null);
+  const tableRef = useRef<HTMLTableElement>(null);
   const selectAllRef = useRef<HTMLInputElement | null>(null);
   const toggleRefs = useRef(new Map<string, HTMLButtonElement>());
   // A resolved review can leave the list on reload; then focus falls back to the table.
@@ -444,10 +445,19 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
 
       <TableScrollRegion label="Processing reviews table" minWidth={960} className="table-scroll review-table-scroll">
       <div className="table-container">
-        <div role="table" aria-label="Processing reviews" ref={tableRef} tabIndex={-1} aria-busy={loading}>
-          <div className="table-header review-table-grid-select" role="rowgroup">
-            <div role="row" style={{ display: "contents" }}>
-              <div className="header-cell review-checkbox-cell" role="cell">
+        <table className="gw-table" aria-label="Processing reviews" ref={tableRef} tabIndex={-1} aria-busy={loading}>
+          <colgroup>
+            <col style={{ width: 104 }} />
+            <col />
+            <col style={{ width: "16%" }} />
+            <col style={{ width: 110 }} />
+            <col style={{ width: 140 }} />
+            <col style={{ width: 140 }} />
+            <col style={{ width: 88 }} />
+          </colgroup>
+          <thead>
+            <tr>
+              <td className="header-cell review-checkbox-cell">
                 <label className="gw-select-all">
                   <input
                     type="checkbox"
@@ -462,87 +472,79 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                   />
                   <span aria-hidden="true">Select all</span>
                 </label>
-              </div>
-              <div className="header-cell" role="columnheader">Grant name</div>
-              <div className="header-cell" role="columnheader">Reason</div>
-              <div className="header-cell" role="columnheader">Status</div>
-              <div
-                className="header-cell"
-                role="columnheader"
-                aria-sort={sortOrder.key === "deadline" ? "ascending" : "none"}
-              >
-                <button type="button" onClick={() => setSortOrder({ key: "deadline" })} className="gw-sort-button">
-                  Deadline
-                  {sortOrder.key === "deadline" && <LuArrowUp size={12} aria-hidden="true" />}
-                </button>
-              </div>
-              <div
-                className="header-cell"
-                role="columnheader"
-                aria-sort={sortOrder.key === "queued" ? (sortOrder.oldestFirst ? "ascending" : "descending") : "none"}
-              >
-                <button type="button" onClick={sortByQueued} className="gw-sort-button">
-                  In queue since
-                  {sortOrder.key === "queued" &&
-                    (sortOrder.oldestFirst ? <LuArrowUp size={12} aria-hidden="true" /> : <LuArrowDown size={12} aria-hidden="true" />)}
-                </button>
-              </div>
-              <div className="header-cell" role="columnheader">Details</div>
-            </div>
-          </div>
+              </td>
+              <th scope="col" className="header-cell">Grant name</th>
+              <th scope="col" className="header-cell">Reason</th>
+              <th scope="col" className="header-cell">Status</th>
+              <SortableHeader
+                label="Deadline"
+                direction={sortOrder.key === "deadline" ? "ascending" : null}
+                onSort={() => setSortOrder({ key: "deadline" })}
+              />
+              <SortableHeader
+                label="In queue since"
+                direction={sortOrder.key === "queued" ? (sortOrder.oldestFirst ? "ascending" : "descending") : null}
+                onSort={sortByQueued}
+              />
+              <th scope="col" className="header-cell review-details-cell">Details</th>
+            </tr>
+          </thead>
           {loaded && (
-            <div className="table-body" role="rowgroup">
+            <tbody>
               {reviews.length === 0 ? (
-                <div role="row">
-                  <div className="no-data" role="cell" aria-colspan={TABLE_COLUMN_COUNT}>
-                    <LuFileX size={24} className="no-data-icon" aria-hidden="true" />
-                    <p>
-                      {statusFilter === "pending_review"
-                        ? "No grants pending review"
-                        : `No reviews with status "${STATUS_LABELS[statusFilter]}"`}
-                    </p>
-                  </div>
-                </div>
+                <tr>
+                  <td className="row-cell row-cell--empty" colSpan={TABLE_COLUMN_COUNT}>
+                    <div className="no-data">
+                      <LuFileX size={24} className="no-data-icon" aria-hidden="true" />
+                      <p>
+                        {statusFilter === "pending_review"
+                          ? "No grants pending review"
+                          : `No reviews with status "${STATUS_LABELS[statusFilter]}"`}
+                      </p>
+                    </div>
+                  </td>
+                </tr>
               ) : (
                 sortedReviews.map((review) => {
                   const badge = deadlineBadge(review);
                   return (
-                    <div key={`${review.nofo_name}-${review.review_id}`} style={{ display: "contents" }}>
-                      <div
-                        className={`table-row review-table-row review-table-grid-select ${expandedNofo === review.nofo_name ? "review-table-row--expanded" : ""} ${selected.has(review.review_id) ? "review-table-row--selected" : ""}`}
-                        role="row"
+                    <Fragment key={`${review.nofo_name}-${review.review_id}`}>
+                      <tr
+                        className={`table-row review-table-row ${expandedNofo === review.nofo_name ? "review-table-row--expanded" : ""} ${selected.has(review.review_id) ? "review-table-row--selected" : ""}`}
                       >
-                        <div className="row-cell review-checkbox-cell" role="cell">
+                        <td className="row-cell review-checkbox-cell">
                           <input
                             type="checkbox"
                             checked={selected.has(review.review_id)}
                             onChange={() => toggleSelect(review.review_id)}
                             aria-label={`Select ${review.nofo_name}`}
                           />
-                        </div>
-                        <div className="row-cell" role="cell">
+                        </td>
+                        <td className="row-cell">
                           <span className="review-nofo-name">
                             {review.nofo_name}
                           </span>
-                        </div>
-                        <div className="row-cell" role="cell">{getReasonSummary(review)}</div>
-                        <div className="row-cell" role="cell">
+                        </td>
+                        <td className="row-cell">{getReasonSummary(review)}</td>
+                        <td className="row-cell">
                           <span className={`gw-tag review-status-badge ${STATUS_CLASS_MAP[review.status] || "review-status-badge--pending"}`}>
                             {STATUS_LABELS[review.status] || review.status}
                           </span>
-                        </div>
-                        <div className="row-cell review-deadline-cell" role="cell">
-                          <span className="review-date">
-                            {review.deadline ? formatDeadline(review.deadline) : "No deadline"}
-                          </span>
-                          {badge && <span className={`gw-tag review-deadline-badge ${badge.className}`}>{badge.label}</span>}
-                        </div>
-                        <div className="row-cell" role="cell">
+                        </td>
+                        <td className="row-cell">
+                          <div className="review-deadline-cell">
+                            <span className="review-date">
+                              {review.deadline ? formatDeadline(review.deadline) : "No deadline"}
+                            </span>
+                            {badge && <span className={`gw-tag review-deadline-badge ${badge.className}`}>{badge.label}</span>}
+                          </div>
+                        </td>
+                        <td className="row-cell">
                           <span className="review-date">
                             {new Date(review.created_at).toLocaleDateString("en-US", { timeZone: "America/New_York" })}
                           </span>
-                        </div>
-                        <div className="row-cell actions" role="cell">
+                        </td>
+                        <td className="row-cell review-details-cell">
                           <button
                             type="button"
                             ref={(el) => {
@@ -562,8 +564,8 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                               aria-hidden="true"
                             />
                           </button>
-                        </div>
-                      </div>
+                        </td>
+                      </tr>
 
                       {expandedNofo === review.nofo_name && (
                         <ReviewExpandedRow
@@ -575,13 +577,13 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                           colSpan={TABLE_COLUMN_COUNT}
                         />
                       )}
-                    </div>
+                    </Fragment>
                   );
                 })
               )}
-            </div>
+            </tbody>
           )}
-        </div>
+        </table>
         {loading && (
           <div className="review-loading" aria-hidden="true">
             Loading reviews...

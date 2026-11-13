@@ -634,3 +634,4 @@ a.gw-tab { text-decoration: none; }
 
 /* The control fills the header's height in place of the cell padding, giving a 44px target. */
 .header-cell:has(> .gw-select-all, > .gw-sort-button) { padding-block: 0; }
+.review-checkbox-cell > .gw-select-all { justify-content: center; }

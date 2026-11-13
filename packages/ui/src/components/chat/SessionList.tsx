@@ -11,11 +11,12 @@ import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { DateTime } from "luxon";
 import { useNavigate } from "react-router";
-import { LuArrowUpDown, LuArrowUp, LuArrowDown, LuPlus, LuTrash, LuRefreshCw, LuCalendar } from "react-icons/lu";
+import { LuPlus, LuTrash, LuRefreshCw, LuCalendar } from "react-icons/lu";
 import { DeleteConfirmationModal } from "../common/DeleteConfirmationModal";
 import GrantPickerModal, { type PickedGrant } from "../common/GrantPickerModal";
 import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
 import TableScrollRegion from "../ui/TableScrollRegion";
+import SortableHeader from "../ui/SortableHeader";
 import PaginationControls from "../common/PaginationControls";
 import PageHeader from "../common/PageHeader";
 import { v4 as uuidv4 } from "uuid";
@@ -159,10 +160,8 @@ export default function Sessions(props: SessionsProps) {
     return sortedSessions.slice(startIndex, startIndex + pageSize);
   }, [sortedSessions, currentPage, pageSize]);
 
-  const getSortIcon = (field: "title" | "time_stamp") => {
-    if (sortField !== field) return <LuArrowUpDown size={14} aria-hidden="true" />;
-    return sortDirection === "asc" ? <LuArrowUp size={14} aria-hidden="true" /> : <LuArrowDown size={14} aria-hidden="true" />;
-  };
+  const sortDirectionFor = (field: "title" | "time_stamp") =>
+    sortField !== field ? null : sortDirection === "asc" ? "ascending" : "descending";
 
   const formatSessionTime = (timestamp: string) => {
     return DateTime.fromISO(new Date(timestamp).toISOString()).toLocaleString(
@@ -172,6 +171,14 @@ export default function Sessions(props: SessionsProps) {
 
   const startChat = (documentIdentifier: string) => {
     navigate(`/chat/${uuidv4()}?grant=${encodeURIComponent(documentIdentifier)}`);
+  };
+
+  const newChat = () => {
+    if (props.documentIdentifier) {
+      startChat(props.documentIdentifier);
+    } else {
+      setShowGrantPicker(true);
+    }
   };
 
   const handleGrantPicked = (grant: PickedGrant) => {
@@ -206,13 +213,7 @@ export default function Sessions(props: SessionsProps) {
           <>
             <button
               className="gw-btn gw-btn--primary action-button add-button"
-              onClick={() => {
-                if (props.documentIdentifier) {
-                  startChat(props.documentIdentifier);
-                } else {
-                  setShowGrantPicker(true);
-                }
-              }}
+              onClick={newChat}
             >
               <LuPlus size={16} className="button-icon" aria-hidden="true" />
               <span>New chat</span>
@@ -250,13 +251,17 @@ export default function Sessions(props: SessionsProps) {
         }
       />
 
-      {/* Table section */}
       <TableScrollRegion label="Chats table" minWidth={520}>
       <div className="table-container">
-        <div role="table" aria-label="Chats">
-          <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "104px 2.5fr 1fr" }}>
-            <div role="row" style={{ display: "contents" }}>
-              <div className="header-cell" role="cell">
+        <table className="gw-table" aria-label="Chats">
+          <colgroup>
+            <col style={{ width: 104 }} />
+            <col style={{ width: "71%" }} />
+            <col />
+          </colgroup>
+          <thead>
+            <tr>
+              <td className="header-cell header-cell--select">
                 <label className="gw-select-all">
                   <input
                     type="checkbox"
@@ -271,49 +276,35 @@ export default function Sessions(props: SessionsProps) {
                   />
                   <span aria-hidden="true">Select all</span>
                 </label>
-              </div>
-              <div
-                className="header-cell"
-                role="columnheader"
-                aria-sort={sortField === "title" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
-              >
-                <button
-                  type="button"
-                  className="gw-sort-button"
-                  onClick={() => !isLoading && handleSort("title")}
-                  disabled={isLoading}
-                >
-                  Title {!isLoading && getSortIcon("title")}
-                </button>
-              </div>
-              <div
-                className="header-cell"
-                role="columnheader"
-                aria-sort={sortField === "time_stamp" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
-              >
-                <button
-                  type="button"
-                  className="gw-sort-button"
-                  onClick={() => !isLoading && handleSort("time_stamp")}
-                  disabled={isLoading}
-                >
-                  Time {!isLoading && getSortIcon("time_stamp")}
-                </button>
-              </div>
-            </div>
-          </div>
+              </td>
+              <SortableHeader
+                label="Title"
+                direction={sortDirectionFor("title")}
+                onSort={() => !isLoading && handleSort("title")}
+                disabled={isLoading}
+              />
+              <SortableHeader
+                label="Time"
+                direction={sortDirectionFor("time_stamp")}
+                onSort={() => !isLoading && handleSort("time_stamp")}
+                disabled={isLoading}
+              />
+            </tr>
+          </thead>
           {!isLoading && (
-            <div className="table-body" role={sortedSessions.length === 0 ? undefined : "rowgroup"}>
+            <tbody>
               {sortedSessions.length === 0 ? (
-                <div className="no-data">
-                  <div style={{ fontSize: "18px", fontWeight: "500", marginBottom: "8px" }}>
-                    No chats
-                  </div>
-                </div>
+                <tr>
+                  <td className="row-cell row-cell--empty" colSpan={3}>
+                    <div className="no-data">
+                      <p>No chats</p>
+                    </div>
+                  </td>
+                </tr>
               ) : (
                 paginatedItems.map((item) => (
-                  <div key={item.session_id} className="table-row" role="row" style={{ gridTemplateColumns: "104px 2.5fr 1fr" }}>
-                    <div className="row-cell" role="cell">
+                  <tr key={item.session_id} className="table-row">
+                    <td className="row-cell">
                       <input
                         type="checkbox"
                         checked={selectedItems.some(
@@ -323,8 +314,8 @@ export default function Sessions(props: SessionsProps) {
                         aria-label={`Select ${item.title}, ${formatSessionTime(item.time_stamp)}`}
                         style={{ cursor: "pointer" }}
                       />
-                    </div>
-                    <div className="row-cell" role="cell">
+                    </td>
+                    <td className="row-cell">
                       <button
                         onClick={() => {
                           if (props.onSessionSelect) {
@@ -355,21 +346,21 @@ export default function Sessions(props: SessionsProps) {
                       >
                         {item.title}
                       </button>
-                    </div>
-                    <div className="row-cell" role="cell">
+                    </td>
+                    <td className="row-cell">
                       <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--gw-color-text-secondary)" }}>
                         <LuCalendar size={16} aria-hidden="true" />
                         <time dateTime={item.time_stamp}>
                           {formatSessionTime(item.time_stamp)}
                         </time>
                       </div>
-                    </div>
-                  </div>
+                    </td>
+                  </tr>
                 ))
               )}
-            </div>
+            </tbody>
           )}
-        </div>
+        </table>
         {isLoading && (
           <div className="table-loading" aria-hidden="true">
             <div className="table-loading-spinner"></div>

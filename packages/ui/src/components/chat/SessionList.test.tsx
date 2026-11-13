@@ -24,8 +24,8 @@ describe("SessionList", () => {
   it("keeps Select all out of the column headers, so rows are not announced with it", async () => {
     renderList();
     const selectAll = await screen.findByRole("checkbox", { name: "Select all chats" });
-    expect(selectAll.closest('[role="columnheader"]')).toBeNull();
-    expect(selectAll.closest('[role="cell"]')).not.toBeNull();
+    expect(selectAll.closest("th")).toBeNull();
+    expect(selectAll.closest("td")).not.toBeNull();
   });
 
   it("keeps Delete focusable while nothing is selected, without opening the dialog", async () => {
@@ -41,6 +41,17 @@ describe("SessionList", () => {
 
     await user.click(screen.getByRole("checkbox", { name: /^Select Chat 1,/ }));
     expect(del).not.toHaveAttribute("aria-disabled");
+  });
+
+  it("marks the sorted column and keeps the others sortable", async () => {
+    const { user } = renderList();
+    await screen.findByText("Chat 1");
+    const title = screen.getByRole("columnheader", { name: "Title" });
+    expect(screen.getByRole("columnheader", { name: "Time" })).toHaveAttribute("aria-sort", "descending");
+    expect(title).toHaveAttribute("aria-sort", "none");
+
+    await user.click(within(title).getByRole("button", { name: "Title" }));
+    expect(title).toHaveAttribute("aria-sort", "ascending");
   });
 
   it("announces the shown range when the page changes", async () => {

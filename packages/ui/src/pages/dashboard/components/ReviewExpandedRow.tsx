@@ -51,17 +51,16 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   const [statusMounted, setStatusMounted] = useState(false);
   useEffect(() => setStatusMounted(true), []);
 
-  // The panel is rendered inside an ARIA table, which may only own rows, so it
-  // presents as a full-width row rather than a bare region.
+  // The panel sits in the reviews table, which may only own rows, so it is a full-width row.
   const asTableRow = (content: React.ReactNode) => (
-    <div role="row">
-      <div role="cell" aria-colspan={colSpan}>
+    <tr>
+      <td colSpan={colSpan} className="review-expanded-cell">
         <span role="status" className="visually-hidden">
           {!statusMounted ? "" : loading ? "Loading review details" : (actionInProgress && BUSY_MESSAGES[actionInProgress]) || ""}
         </span>
         {content}
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 
   const loadDetail = useCallback(async () => {

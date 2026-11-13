@@ -95,12 +95,6 @@
   border-bottom: 1px solid var(--gw-color-surface);
 }
 
-.analytics__table th {
-  color: var(--gw-color-heading);
-  font-weight: var(--gw-font-weight-semibold);
-  font-size: var(--gw-font-size-sm);
-  line-height: 1.4;
-}
 
 .analytics__table tbody tr:last-child td {
   border-bottom: none;

@@ -32,7 +32,7 @@ function renderList({ deleted = true } = {}) {
 }
 
 const rowFor = async (title: string) =>
-  (await screen.findByRole("button", { name: new RegExp(`^Open application: ${title}, last modified `) })).closest('[role="row"]') as HTMLElement;
+  (await screen.findByRole("button", { name: new RegExp(`^Open application: ${title}, last modified `) })).closest("tr") as HTMLElement;
 
 describe("DocEditorSessions outcomes", () => {
   it("shows each application's recorded outcome", async () => {
@@ -95,8 +95,8 @@ describe("DocEditorSessions table semantics", () => {
     renderList();
     await rowFor("Fiber plan");
     const selectAll = screen.getByRole("checkbox", { name: "Select all applications" });
-    expect(selectAll.closest('[role="columnheader"]')).toBeNull();
-    expect(selectAll.closest('[role="cell"]')).not.toBeNull();
+    expect(selectAll.closest("th")).toBeNull();
+    expect(selectAll.closest("td")).not.toBeNull();
   });
 
   it("puts the shown range in a status region so a page change is announced", async () => {
