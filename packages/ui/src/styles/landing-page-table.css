@@ -279,22 +279,28 @@
 
 /* Search Tip */
 .search-tip {
-  margin: 8px 4px 0;
+  margin: var(--gw-spacing-sm) 0 0;
   font-size: 13px;
   color: var(--gw-color-text-secondary);
   line-height: 1.4;
 }
 
+/* Inline so the example wraps with the sentence instead of dropping to its own line. */
 .search-tip em {
   color: var(--gw-color-primary);
   font-style: italic;
-  display: inline-block;
   animation: tipFadeIn 0.4s ease-in-out;
 }
 
 @keyframes tipFadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-tip em {
+    animation: none;
+  }
 }
 
 /* Search Loading State */
