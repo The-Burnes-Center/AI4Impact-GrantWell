@@ -384,6 +384,16 @@
   background: var(--gw-color-surface-subtle);
 }
 
+.gw-modal > .gw-modal__footer {
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.gw-modal > .gw-modal__body {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
 @media (max-width: 480px) {
   .gw-modal__header { padding: var(--gw-spacing-md) var(--gw-spacing-lg); }
   .gw-modal__body { padding: var(--gw-spacing-lg); }

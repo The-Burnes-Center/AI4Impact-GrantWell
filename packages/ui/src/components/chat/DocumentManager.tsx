@@ -1,6 +1,5 @@
-import { useEffect, useId, useMemo, useState } from "react";
-import { LuX } from "react-icons/lu";
-import { useFocusTrap } from "../../hooks/use-focus-trap";
+import { useEffect, useMemo, useState } from "react";
+import Modal from "../common/Modal";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useDocumentLibrary } from "../../hooks/use-document-library";
 import { legacySelection } from "../../common/helpers/user-documents";
@@ -29,8 +28,6 @@ export default function DocumentManager({
   const library = useDocumentLibrary();
   const [stored, setStored] = useState<Stored | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
-  const modalRef = useFocusTrap<HTMLDivElement>({ isOpen, onEscape: onClose });
-  const titleId = useId();
 
   useEffect(() => {
     if (!sessionId) return;
@@ -75,48 +72,27 @@ export default function DocumentManager({
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div
-      className="gw-modal__overlay dm-overlay"
-      role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Supporting documents"
+      maxWidth="700px"
+      closeLabel="Close supporting documents"
+      footer={
+        <button type="button" className="gw-btn gw-btn--secondary" onClick={onClose}>
+          Close
+        </button>
+      }
     >
-      <div
-        ref={modalRef}
-        className="gw-modal dm-container"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        style={{ position: "relative" }}
-      >
-        <div className="gw-modal__header dm-header">
-          <h2 id={titleId} className="gw-modal__title dm-title">Supporting documents</h2>
-          <button className="gw-btn gw-btn--icon dm-close-btn" onClick={onClose} aria-label="Close supporting documents">
-            <LuX size={20} aria-hidden="true" />
-          </button>
-        </div>
-
-        <div className="gw-modal__body dm-body">
-          <DocumentPicker
-            library={library}
-            selected={selected}
-            onChange={(keys) => void change(keys)}
-            legend="Use in this chat"
-            description="The AI reads the documents you tick when it answers in this chat. New uploads go to My documents, where every chat and application can use them."
-          />
-          {saveError && <p className="dm-error" role="alert">{saveError}</p>}
-        </div>
-
-        <div className="gw-modal__footer dm-footer">
-          <button className="gw-btn gw-btn--secondary dm-footer-close-btn" onClick={onClose}>
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
+      <DocumentPicker
+        library={library}
+        selected={selected}
+        onChange={(keys) => void change(keys)}
+        legend="Use in this chat"
+        description="The AI reads the documents you tick when it answers in this chat. New uploads go to My documents, where every chat and application can use them."
+      />
+      {saveError && <p className="dm-error" role="alert">{saveError}</p>}
+    </Modal>
   );
 }

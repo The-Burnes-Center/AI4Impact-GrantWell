@@ -113,4 +113,20 @@ describe("chat document picker", () => {
     expect(screen.getByRole("button", { name: "Replace" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Skip duplicates" })).toBeInTheDocument();
   });
+
+  it("is the shared modal, with its actions in a pinned footer after the scrolling body", async () => {
+    server({ document_keys: [], exists: true });
+    const onClose = vi.fn();
+    const { user } = renderApp(<DocumentManager isOpen onClose={onClose} documentIdentifier="Grant A/" sessionId="s1" />);
+    await screen.findByRole("checkbox", { name: /plan\.pdf/ });
+
+    const dialog = screen.getByRole("dialog", { name: "Supporting documents" });
+    expect(dialog.parentElement).toHaveClass("modal-overlay--pinned");
+    const parts = [...dialog.children].map((el) => el.className);
+    expect(parts).toEqual(["gw-modal__header modal-header", "gw-modal__body modal-body", "gw-modal__footer modal-footer"]);
+    await user.click(screen.getByRole("button", { name: "Close" }));
+    await user.click(screen.getByRole("button", { name: "Close supporting documents" }));
+    await user.keyboard("{Escape}");
+    expect(onClose).toHaveBeenCalledTimes(3);
+  });
 });

@@ -17,6 +17,8 @@ interface ModalProps {
   /** id of the element that describes the dialog (aria-describedby). */
   describedBy?: string;
   closeLabel?: string;
+  /** Actions pinned below the body: the header and footer stay in view and only the body scrolls. */
+  footer?: React.ReactNode;
 }
 
 /**
@@ -39,6 +41,7 @@ export const Modal = React.memo<ModalProps>(
     initialFocusRef,
     describedBy,
     closeLabel = "Close modal",
+    footer,
   }) => {
     const Title = titleLevel;
     const modalRef = useFocusTrap<HTMLDivElement>({ isOpen, onEscape: onClose, initialFocus: initialFocusRef });
@@ -48,7 +51,7 @@ export const Modal = React.memo<ModalProps>(
 
     return (
       <div
-        className="gw-modal__overlay modal-overlay"
+        className={`gw-modal__overlay modal-overlay${footer ? " modal-overlay--pinned" : ""}`}
         role="presentation"
         onClick={
           hideCloseButton
@@ -83,6 +86,7 @@ export const Modal = React.memo<ModalProps>(
             )}
           </div>
           <div className="gw-modal__body modal-body">{children}</div>
+          {footer && <div className="gw-modal__footer modal-footer">{footer}</div>}
         </div>
       </div>
     );

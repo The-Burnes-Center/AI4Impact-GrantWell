@@ -20,7 +20,7 @@ Prefer a class or component over inline styles, and tokens (`var(--gw-color-*)`)
 | Toasts | `gw-toast` + `gw-toast--info`, `--success`, `--warning`, `--urgent` | Used by the notification bar. |
 | Tags | `gw-tag` + `gw-tag--neutral`, `--info`, `--success`, `--warning`, `--danger` | Status pills and badges. |
 | Tabs | `gw-tabs` (the `tablist`), `gw-tab` | Roving `tabIndex` and arrow keys are the page's job. |
-| Modal | `gw-modal__overlay`, `gw-modal`, `gw-modal__header`, `gw-modal__title`, `gw-modal__body`; footer actions in `.modal-actions` as the body's last child | Use `<Modal>` (`components/common/Modal.tsx`) rather than the classes: it brings the focus trap, Escape, scroll lock, focus return and labelling. |
+| Modal | `gw-modal__overlay`, `gw-modal`, `gw-modal__header`, `gw-modal__title`, `gw-modal__body`; footer actions in `.modal-actions` as the body's last child, or `<Modal footer>` to pin them below a scrolling body | Use `<Modal>` (`components/common/Modal.tsx`) rather than the classes: it brings the focus trap, Escape, scroll lock, focus return and labelling. |
 | Pagination | `gw-pagination` and its `__*` parts | Use `<PaginationControls>`. |
 | Toggle | `gw-toggle`, `gw-toggle__option` | Joined buttons for one choice among a few (`aria-pressed` or `role="radio"`). |
 | Select all | `gw-select-all` | Select-all checkbox and label above a table. |
