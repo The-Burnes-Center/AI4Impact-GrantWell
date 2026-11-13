@@ -107,6 +107,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   const [addEmail, setAddEmail] = useState("");
   const [addEmailAttempted, setAddEmailAttempted] = useState(false);
   const [addState, setAddState] = useState("");
+  const [addRole, setAddRole] = useState<UserRolePreset>("user");
   const [isCreating, setIsCreating] = useState(false);
 
   const [deleteTarget, setDeleteTarget] = useState<ManagedUser | null>(null);
@@ -117,6 +118,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   const tableRef = useRef<HTMLTableElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const addEmailRef = useRef<HTMLInputElement>(null);
+  const addStateRef = useRef<HTMLSelectElement>(null);
   // Set when a change may remove the row that has focus; checked once the new rows render.
   const refocusAfterReload = useRef(false);
   const savedUsername = useRef<string | null>(null);
@@ -281,12 +283,14 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
       setIsCreating(true);
       await apiClient.userManagement.createUser({
         email,
-        state: isStateAdmin ? undefined : addState || undefined,
+        state: isStateAdmin || addRole === "platformadmin" ? undefined : addState || undefined,
+        rolePreset: addRole,
       });
-      addNotification("success", `User ${email} created. An invitation email has been sent.`);
+      addNotification("success", `Invitation sent to ${email}.`);
       setAddUserModalOpen(false);
       setAddEmail("");
       setAddState("");
+      setAddRole("user");
       const list = await loadUsers();
       const index = list?.findIndex((user) => user.email === email.toLowerCase()) ?? -1;
       if (index >= 0) {
@@ -295,11 +299,11 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
         setCurrentPage(Math.floor(index / pageSize) + 1);
       }
     } catch (error) {
-      addNotification("error", error instanceof Error ? error.message : "Failed to create user");
+      addNotification("error", error instanceof Error ? error.message : "Failed to invite user");
     } finally {
       setIsCreating(false);
     }
-  }, [addEmail, addState, isStateAdmin, apiClient, addNotification, loadUsers, pageSize]);
+  }, [addEmail, addState, addRole, isStateAdmin, apiClient, addNotification, loadUsers, pageSize]);
 
   const handleDeleteUser = useCallback(async () => {
     if (!deleteTarget) {
@@ -353,6 +357,16 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
 
   const addEmailValid = addEmail.trim().length > 0 && EMAIL_PATTERN.test(addEmail);
   const addEmailInvalid = (addEmailAttempted || addEmail.length > 0) && !addEmailValid;
+  const inviteRoleOptions = allRoleOptions.filter((option) => !option.requiresDeveloper || canAssignDeveloper);
+  const addStateFixed = isStateAdmin || addRole === "platformadmin";
+  const addStateRequired = !SINGLE_STATE && !isStateAdmin && addRole === "admin";
+  const addStateMissing = addStateRequired && !addState;
+  const addStateInvalid = addEmailAttempted && addStateMissing;
+  const addStateHint = isStateAdmin
+    ? `New users are added to your state (${userState}) and cannot be changed.`
+    : addRole === "platformadmin"
+      ? "Platform admins aren't tied to a state."
+      : "";
   const savingUser = savingUsername ? users.find((user) => user.username === savingUsername) : undefined;
   const savingEmail = savingUser ? nameOf(savingUser) : undefined;
 
@@ -388,10 +402,11 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
             className="gw-btn gw-btn--primary feature-rollouts-primary-button"
             onClick={() => {
               setAddEmailAttempted(false);
+              setAddRole("user");
               setAddUserModalOpen(true);
             }}
           >
-            <LuUserPlus size={16} aria-hidden="true" /> Add user
+            <LuUserPlus size={16} aria-hidden="true" /> Invite user
           </button>
         </div>
 
@@ -606,10 +621,10 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
         />
       </div>
 
-      <Modal isOpen={addUserModalOpen} onClose={() => setAddUserModalOpen(false)} title="Add new user">
+      <Modal isOpen={addUserModalOpen} onClose={() => setAddUserModalOpen(false)} title="Invite a user">
         <div className="modal-form">
           <p className="modal-description">
-            Enter the email address of the user to add. They will receive an email with instructions to set up their account.
+            Enter the email address of the person to invite and choose their role. They will receive an email with a temporary password to sign in.
           </p>
           <div className="form-group">
             <label htmlFor="add-user-email">Email address</label>
@@ -631,15 +646,38 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               </p>
             )}
           </div>
+          <div className="form-group">
+            <label htmlFor="add-user-role">Role</label>
+            <select
+              id="add-user-role"
+              className="gw-input form-input"
+              value={addRole}
+              onChange={(e) => {
+                const role = e.target.value as UserRolePreset;
+                setAddRole(role);
+                if (role === "platformadmin") setAddState("");
+              }}
+            >
+              {inviteRoleOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
           {!SINGLE_STATE && (
           <div className="form-group">
-            <label htmlFor="add-user-state">{isStateAdmin ? "State" : "State (optional)"}</label>
+            <label htmlFor="add-user-state">{addStateRequired || isStateAdmin ? "State" : "State (optional)"}</label>
             <select
+              ref={addStateRef}
               id="add-user-state"
               className="gw-input form-input"
               value={isStateAdmin ? userState : addState}
               onChange={(e) => setAddState(e.target.value)}
-              disabled={isStateAdmin}
+              disabled={addStateFixed}
+              aria-required={addStateRequired || undefined}
+              aria-invalid={addStateInvalid || undefined}
+              aria-describedby={addStateInvalid ? "add-user-state-error" : addStateHint ? "add-user-state-hint" : undefined}
             >
               {!isStateAdmin && <option value="">Not assigned</option>}
               {SUPPORTED_STATES.map((s) => (
@@ -648,11 +686,13 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                 </option>
               ))}
             </select>
-            {isStateAdmin && (
-              <p className="modal-description">
-                New users are added to your state ({userState}) and cannot be changed.
+            {addStateInvalid ? (
+              <p id="add-user-state-error" className="gw-field__message user-management-field-error">
+                Choose a state for an admin.
               </p>
-            )}
+            ) : addStateHint ? (
+              <p id="add-user-state-hint" className="modal-description">{addStateHint}</p>
+            ) : null}
           </div>
           )}
           <div className="modal-actions">
@@ -669,19 +709,19 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               className="gw-btn gw-btn--primary modal-button primary"
               onClick={() => {
                 if (isCreating) return;
-                if (!addEmailValid) {
+                if (!addEmailValid || addStateMissing) {
                   setAddEmailAttempted(true);
-                  addEmailRef.current?.focus();
+                  (addEmailValid ? addStateRef : addEmailRef).current?.focus();
                   return;
                 }
                 void handleCreateUser();
               }}
               aria-disabled={isCreating || undefined}
             >
-              {isCreating ? "Adding..." : "Add user"}
+              {isCreating ? "Inviting..." : "Invite user"}
             </button>
           </div>
-          <LiveStatus className="visually-hidden">{isCreating ? "Adding user" : null}</LiveStatus>
+          <LiveStatus className="visually-hidden">{isCreating ? "Inviting user" : null}</LiveStatus>
         </div>
       </Modal>
 

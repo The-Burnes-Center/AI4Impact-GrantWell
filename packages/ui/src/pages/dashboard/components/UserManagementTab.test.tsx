@@ -21,15 +21,15 @@ const members = (count: number) => Array.from({ length: count }, (_, i) => membe
 const listed = (users: ManagedUser[], extra: Record<string, unknown> = {}) =>
   json({ users, nextPaginationToken: null, pageSize: users.length, ...extra });
 
-function renderTab({ canAssignDeveloper = false } = {}) {
+function renderTab({ canAssignDeveloper = false, stateAdmin = "" } = {}) {
   const addNotification = vi.fn();
   const view = renderApp(
     <UserManagementTab
       apiClient={testApiClient()}
       addNotification={addNotification}
       canAssignDeveloper={canAssignDeveloper}
-      isStateAdmin={false}
-      userState=""
+      isStateAdmin={Boolean(stateAdmin)}
+      userState={stateAdmin}
       currentUsername="u0"
     />
   );
@@ -146,14 +146,98 @@ describe("UserManagementTab", () => {
     const { user: ui } = renderTab();
     await screen.findByText("p001@example.org");
 
-    await ui.click(screen.getByRole("button", { name: "Add user" }));
-    const dialog = await screen.findByRole("dialog", { name: "Add new user" });
+    await ui.click(screen.getByRole("button", { name: "Invite user" }));
+    const dialog = await screen.findByRole("dialog", { name: "Invite a user" });
     await ui.type(within(dialog).getByLabelText("Email address"), "P0275@example.org");
-    await ui.click(within(dialog).getByRole("button", { name: "Add user" }));
+    await ui.click(within(dialog).getByRole("button", { name: "Invite user" }));
 
     expect(await screen.findByText("p0275@example.org")).toBeInTheDocument();
     expect(screen.getByText("Showing 26 to 31 of 31 users")).toBeInTheDocument();
     expect(net.to(USERS)).toHaveLength(2);
+  });
+
+  it("offers only the roles the inviter may assign", async () => {
+    stubFetch({ [USERS]: listed([member(1)]) });
+    const view = renderTab();
+    await screen.findByText("p001@example.org");
+    await view.user.click(screen.getByRole("button", { name: "Invite user" }));
+    let dialog = await screen.findByRole("dialog", { name: "Invite a user" });
+    const options = (d: HTMLElement) => within(within(d).getByLabelText("Role")).getAllByRole("option").map((o) => o.textContent);
+    expect(options(dialog)).toEqual(["User", "Admin"]);
+    view.unmount();
+
+    stubFetch({ [USERS]: listed([member(1)]) });
+    const dev = renderTab({ canAssignDeveloper: true });
+    await screen.findByText("p001@example.org");
+    await dev.user.click(screen.getByRole("button", { name: "Invite user" }));
+    dialog = await screen.findByRole("dialog", { name: "Invite a user" });
+    expect(options(dialog)).toEqual(["User", "Admin", "Platform admin", "Developer"]);
+  });
+
+  it("needs a state for an invited admin, says so at the field, and sends the role", async () => {
+    const net = stubFetch({
+      [USERS]: listed([member(1)]),
+      "POST /user-management/users": json({ username: "u9", email: "new@example.org" }, 201),
+    });
+    const { user: ui, addNotification } = renderTab();
+    await screen.findByText("p001@example.org");
+    await ui.click(screen.getByRole("button", { name: "Invite user" }));
+    const dialog = await screen.findByRole("dialog", { name: "Invite a user" });
+    await ui.type(within(dialog).getByLabelText("Email address"), "new@example.org");
+    await ui.selectOptions(within(dialog).getByLabelText("Role"), "admin");
+    const state = within(dialog).getByLabelText("State");
+    expect(state).toHaveAttribute("aria-required", "true");
+
+    await ui.click(within(dialog).getByRole("button", { name: "Invite user" }));
+    expect(state).toHaveAttribute("aria-invalid", "true");
+    expect(state).toHaveAccessibleDescription("Choose a state for an admin.");
+    expect(state).toHaveFocus();
+    expect(net.to("POST /user-management/users")).toHaveLength(0);
+
+    await ui.selectOptions(state, "MA");
+    expect(state).not.toHaveAttribute("aria-invalid");
+    await ui.click(within(dialog).getByRole("button", { name: "Invite user" }));
+    await waitFor(() => expect(addNotification).toHaveBeenCalledWith("success", "Invitation sent to new@example.org."));
+    expect(net.last("POST /user-management/users").body).toEqual({ email: "new@example.org", state: "MA", rolePreset: "admin" });
+  });
+
+  it("invites a platform admin with no state", async () => {
+    const net = stubFetch({
+      [USERS]: listed([member(1)]),
+      "POST /user-management/users": json({ username: "u9" }, 201),
+    });
+    const { user: ui } = renderTab({ canAssignDeveloper: true });
+    await screen.findByText("p001@example.org");
+    await ui.click(screen.getByRole("button", { name: "Invite user" }));
+    const dialog = await screen.findByRole("dialog", { name: "Invite a user" });
+    await ui.type(within(dialog).getByLabelText("Email address"), "pa@example.org");
+    await ui.selectOptions(within(dialog).getByLabelText("State (optional)"), "MA");
+    await ui.selectOptions(within(dialog).getByLabelText("Role"), "platformadmin");
+    const state = within(dialog).getByLabelText("State (optional)");
+    expect(state).toBeDisabled();
+    expect(state).toHaveValue("");
+    expect(state).toHaveAccessibleDescription("Platform admins aren't tied to a state.");
+    await ui.click(within(dialog).getByRole("button", { name: "Invite user" }));
+    await waitFor(() => expect(net.to("POST /user-management/users")).toHaveLength(1));
+    expect(net.last("POST /user-management/users").body).toEqual({ email: "pa@example.org", rolePreset: "platformadmin" });
+  });
+
+  it("lets a state admin invite an admin into their own state", async () => {
+    const net = stubFetch({
+      [USERS]: listed([{ ...member(1), state: "MA" }]),
+      "POST /user-management/users": json({ username: "u9" }, 201),
+    });
+    const { user: ui } = renderTab({ stateAdmin: "MA" });
+    await screen.findByText("p001@example.org");
+    await ui.click(screen.getByRole("button", { name: "Invite user" }));
+    const dialog = await screen.findByRole("dialog", { name: "Invite a user" });
+    expect(within(within(dialog).getByLabelText("Role")).getAllByRole("option").map((o) => o.textContent)).toEqual(["User", "Admin"]);
+    expect(within(dialog).getByLabelText("State")).toHaveAccessibleDescription(/added to your state \(MA\)/);
+    await ui.type(within(dialog).getByLabelText("Email address"), "ma@example.org");
+    await ui.selectOptions(within(dialog).getByLabelText("Role"), "admin");
+    await ui.click(within(dialog).getByRole("button", { name: "Invite user" }));
+    await waitFor(() => expect(net.to("POST /user-management/users")).toHaveLength(1));
+    expect(net.last("POST /user-management/users").body).toEqual({ email: "ma@example.org", rolePreset: "admin" });
   });
 
   it("warns when the server stopped before the end of the user pool", async () => {
@@ -294,20 +378,20 @@ describe("UserManagementTab", () => {
     const net = stubFetch({ [USERS]: json({ users: [user(1)], nextPaginationToken: null, pageSize: 25 }) });
     const { user: ui } = renderTab();
     await screen.findByText("person1@example.org");
-    await ui.click(screen.getByRole("button", { name: "Add user" }));
-    const dialog = await screen.findByRole("dialog", { name: "Add new user" });
+    await ui.click(screen.getByRole("button", { name: "Invite user" }));
+    const dialog = await screen.findByRole("dialog", { name: "Invite a user" });
     const email = within(dialog).getByLabelText("Email address");
 
     expect(email).not.toHaveAttribute("aria-invalid", "true");
-    expect(within(dialog).getByRole("button", { name: "Add user" })).not.toHaveAttribute("aria-disabled");
-    await ui.click(within(dialog).getByRole("button", { name: "Add user" }));
+    expect(within(dialog).getByRole("button", { name: "Invite user" })).not.toHaveAttribute("aria-disabled");
+    await ui.click(within(dialog).getByRole("button", { name: "Invite user" }));
     expect(email).toHaveAttribute("aria-invalid", "true");
     expect(email).toHaveAccessibleDescription("Enter an email address in the format user@example.com.");
     expect(email).toHaveFocus();
 
     await ui.type(email, "person@example");
     expect(email).toHaveAccessibleDescription(/format user@example\.com/);
-    expect(within(dialog).getByRole("button", { name: "Add user" })).not.toHaveAttribute("aria-disabled");
+    expect(within(dialog).getByRole("button", { name: "Invite user" })).not.toHaveAttribute("aria-disabled");
     await ui.type(email, ".org");
     expect(email).toHaveValue("person@example.org");
     expect(email).not.toHaveAttribute("aria-invalid", "true");
@@ -330,7 +414,7 @@ describe("UserManagementTab", () => {
     expect(await screen.findByText("person1@example.org")).toBeInTheDocument();
   });
 
-  it("announces Saving and Adding through status regions already in the page", async () => {
+  it("announces Saving and Inviting through status regions already in the page", async () => {
     const replies: Array<() => void> = [];
     const later = (body: unknown) => () =>
       new Promise<Response>((resolve) => replies.push(() => resolve(json(body))));
@@ -349,14 +433,14 @@ describe("UserManagementTab", () => {
     replies.shift()!();
     await waitFor(() => expect(statuses()).not.toContain("Saving changes for person1@example.org"));
 
-    await ui.click(screen.getByRole("button", { name: "Add user" }));
-    const dialog = await screen.findByRole("dialog", { name: "Add new user" });
+    await ui.click(screen.getByRole("button", { name: "Invite user" }));
+    const dialog = await screen.findByRole("dialog", { name: "Invite a user" });
     await ui.type(within(dialog).getByLabelText("Email address"), "new@example.org");
     const status = within(dialog).getByRole("status");
     expect(status).toBeEmptyDOMElement();
-    await ui.click(within(dialog).getByRole("button", { name: "Add user" }));
-    expect(within(dialog).getByRole("button", { name: "Adding..." })).toHaveAttribute("aria-disabled", "true");
-    await waitFor(() => expect(status).toHaveTextContent("Adding user"));
+    await ui.click(within(dialog).getByRole("button", { name: "Invite user" }));
+    expect(within(dialog).getByRole("button", { name: "Inviting..." })).toHaveAttribute("aria-disabled", "true");
+    await waitFor(() => expect(status).toHaveTextContent("Inviting user"));
     replies.shift()!();
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
   });

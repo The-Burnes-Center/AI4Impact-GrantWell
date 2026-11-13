@@ -64,7 +64,7 @@ export class UserManagementClient {
     return readJson(response);
   }
 
-  async createUser(options: { email: string; state?: string }) {
+  async createUser(options: { email: string; state?: string; rolePreset?: UserRolePreset }) {
     const headers = await this.getAuthHeaders();
     const response = await apiFetch(`${this.baseUrl}/user-management/users`, {
       method: "POST",
@@ -72,6 +72,7 @@ export class UserManagementClient {
       body: JSON.stringify({
         email: options.email,
         ...(options.state ? { state: options.state } : {}),
+        ...(options.rolePreset ? { rolePreset: options.rolePreset } : {}),
       }),
     });
 

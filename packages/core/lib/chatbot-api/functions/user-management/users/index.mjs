@@ -131,12 +131,29 @@ async function handleCreate(scope, body) {
     return respond(400, { message: "A valid email address is required" });
   }
 
+  const rolePreset = String(body.rolePreset ?? "user").trim().toLowerCase();
+  const roles = ALLOWED_ROLE_PRESETS.get(rolePreset);
+  if (!roles) {
+    return respond(400, { message: "rolePreset must be one of: user, admin, platformadmin, developer" });
+  }
+  if (SINGLE_STATE && rolePreset === "platformadmin") {
+    return respond(400, { message: "Platform Admin isn't available on a single-state deployment" });
+  }
+  requireRoleAssignmentPermission(scope, rolePreset);
+
   const stateCode = resolveCreateState(scope, body.state);
+  if (rolePreset === "platformadmin" && stateCode) {
+    return respond(400, { message: "Platform administrators cannot be scoped to a state" });
+  }
+  // A stateless Admin would count as a platform admin while the legacy rule is on.
+  if (rolePreset === "admin" && !stateCode) {
+    return respond(400, { message: "Choose a state for an admin" });
+  }
 
   const userAttributes = [
     { Name: "email", Value: email },
     { Name: "email_verified", Value: "true" },
-    { Name: "custom:role", Value: JSON.stringify(["User"]) },
+    { Name: "custom:role", Value: JSON.stringify(roles) },
   ];
   if (stateCode) {
     userAttributes.push({ Name: "custom:state", Value: stateCode });
@@ -155,7 +172,7 @@ async function handleCreate(scope, body) {
     return respond(201, {
       username: response.User?.Username || email,
       email,
-      roles: ["User"],
+      roles,
       state: stateCode,
     });
   } catch (error) {
