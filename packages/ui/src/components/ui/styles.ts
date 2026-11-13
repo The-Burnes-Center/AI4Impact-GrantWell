@@ -1,10 +1,9 @@
 /**
  * Shared UI Styles
  *
- * Centralized style constants for consistent theming across the application.
- * These values mirror the CSS custom properties in styles/tokens.css.
- * Use CSS variables (var(--gw-color-*)) in stylesheets; use these JS
- * exports only when inline styles are unavoidable (e.g., dynamic values).
+ * Colors and shadows resolve to the theme tokens in styles/tokens.css, so each
+ * deployment's palette applies. Prefer the CSS classes; use these only for
+ * inline styles.
  */
 
 // Brand colors
@@ -20,36 +19,37 @@ export const colors = {
   accentHover: "var(--gw-color-accent-hover)",
 
   // Status colors
-  success: "#047857",
-  successLight: "#d4edda",
-  danger: "#CD0D0D",
-  dangerLight: "#ffebee",
-  error: "#CD0D0D",
-  errorLight: "#ffebee",
-  warning: "#F6B622",
-  warningLight: "#fff3cd",
+  success: "var(--gw-color-success)",
+  successLight: "var(--gw-color-success-light)",
+  danger: "var(--gw-color-danger)",
+  dangerLight: "var(--gw-color-danger-light)",
+  error: "var(--gw-color-danger-text)",
+  errorLight: "var(--gw-color-danger-light)",
+  warning: "var(--gw-color-warning)",
+  warningLight: "var(--gw-color-warning-light)",
 
   // Focus
-  focusLight: "var(--gw-color-primary)",
-  focusDark: "var(--gw-color-primary-light)",
+  focusLight: "var(--gw-color-focus)",
+  focusDark: "var(--gw-color-focus-on-dark)",
 
   // Neutral colors
-  white: "#ffffff",
-  background: "#f9fafb",
-  border: "#e2e8f0",
-  borderLight: "#f3f4f6",
-  inputBorder: "#767676",
-  text: "#333333",
-  textSecondary: "#5a5a5a",
-  textMuted: "#6b7280",
-  heading: "var(--gw-color-primary-active)",
+  white: "var(--gw-color-surface)",
+  textInverse: "var(--gw-color-text-inverse)",
+  background: "var(--gw-color-background)",
+  border: "var(--gw-color-border)",
+  borderLight: "var(--gw-color-surface-subtle)",
+  inputBorder: "var(--gw-color-border-input)",
+  text: "var(--gw-color-text)",
+  textSecondary: "var(--gw-color-text-secondary)",
+  textMuted: "var(--gw-color-text-muted)",
+  heading: "var(--gw-color-heading)",
 
   // Disabled state
-  disabledBg: "#F0F0F0",
-  disabledText: "#666666",
+  disabledBg: "var(--gw-color-disabled-bg)",
+  disabledText: "var(--gw-color-disabled-text)",
 
   // Overlay
-  overlay: "rgba(0, 0, 0, 0.6)",
+  overlay: "var(--gw-color-overlay)",
 };
 
 // Typography
@@ -95,10 +95,10 @@ export const borderRadius = {
 
 // Shadows
 export const shadows = {
-  sm: "0 1px 2px rgba(0, 0, 0, 0.05)",
-  md: "0 1px 3px rgba(0, 0, 0, 0.1)",
-  lg: "0 4px 6px rgba(0, 0, 0, 0.1)",
-  xl: "0 10px 25px rgba(0, 0, 0, 0.2)",
+  sm: "var(--gw-shadow-sm)",
+  md: "var(--gw-shadow-md)",
+  lg: "var(--gw-shadow-lg)",
+  xl: "var(--gw-shadow-xl)",
 };
 
 // Transitions
