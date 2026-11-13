@@ -59,6 +59,12 @@ body {
   gap: 15px;
 }
 
+.dashboard-header__description {
+  margin-top: 4px;
+  color: var(--gw-color-text-secondary);
+  font-size: var(--gw-font-size-sm);
+}
+
 .dashboard-header--wrap,
 .dashboard-header--wrap .dashboard-actions {
   flex-wrap: wrap;

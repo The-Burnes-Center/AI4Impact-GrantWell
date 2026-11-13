@@ -202,7 +202,7 @@ export default function Sessions(props: SessionsProps) {
       <div className="dashboard-header dashboard-header--wrap">
         <div>
           <h1>My chats</h1>
-          <p style={{ marginTop: "4px", color: "var(--gw-color-text-secondary)", fontSize: "14px" }}>
+          <p className="dashboard-header__description">
             Manage and access your previous chats
           </p>
         </div>

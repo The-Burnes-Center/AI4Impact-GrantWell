@@ -320,7 +320,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       <div className="dashboard-header dashboard-header--wrap">
         <div>
           <h1 ref={headingRef} tabIndex={-1}>My applications</h1>
-          <p style={{ marginTop: "4px", color: "var(--gw-color-text-secondary)", fontSize: "14px" }}>
+          <p className="dashboard-header__description">
             Manage and continue your saved grant applications
           </p>
         </div>

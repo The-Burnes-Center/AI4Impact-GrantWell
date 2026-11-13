@@ -54,11 +54,15 @@ export default function DocumentsPage() {
         <Breadcrumbs items={[{ label: "Home", href: "/home" }, { label: "My documents" }]} />
 
         <div className="dashboard-main-content" style={{ maxWidth: 900 }}>
-          <h1>My documents</h1>
-          <p className="dm-file-size" style={{ fontSize: 15 }}>
-            Upload a document once and choose it in any chat or application. The AI reads only the
-            documents you tick there.
-          </p>
+          <div className="dashboard-header dashboard-header--wrap">
+            <div>
+              <h1>My documents</h1>
+              <p className="dashboard-header__description">
+                Upload a document once and choose it in any chat or application. The AI reads only the
+                documents you tick there.
+              </p>
+            </div>
+          </div>
 
           <LibraryUpload library={library} />
 
