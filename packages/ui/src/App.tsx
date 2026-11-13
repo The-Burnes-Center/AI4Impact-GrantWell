@@ -25,6 +25,7 @@ const DocEditorSessionsPage = React.lazy(() => import("./pages/document-editor/D
 const Dashboard = React.lazy(() => import("./pages/dashboard/DashboardPage"));
 const ProfilePage = React.lazy(() => import("./pages/profile/ProfilePage"));
 const DocumentsPage = React.lazy(() => import("./pages/documents/DocumentsPage"));
+const GrantPdfPage = React.lazy(() => import("./pages/grant-pdf/GrantPdfPage"));
 const WhatsNewContent = React.lazy(() =>
   import("./pages/whats-new/WhatsNewPage").then((m) => ({ default: m.WhatsNewContent }))
 );
@@ -154,6 +155,7 @@ function AppContent() {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/documents" element={<DocumentsPage />} />
             <Route path="/whats-new" element={<WhatsNewContent />} />
+            <Route path="/grant-pdf" element={<GrantPdfPage />} />
             <Route path="/admin" element={<Dashboard />} />
             <Route
               path="/admin/dashboard"
