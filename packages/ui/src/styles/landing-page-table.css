@@ -436,6 +436,15 @@
   color: var(--gw-color-primary-hover);
 }
 
+/* Primary text on the brand tint is 4.38:1 in the Generic theme; the hover shade clears 4.5:1 everywhere. */
+.gw-alert--brand .landing-sort-reset-link {
+  color: var(--gw-color-primary-hover);
+}
+
+.gw-alert--brand .landing-sort-reset-link:hover {
+  color: var(--gw-color-primary-active);
+}
+
 .landing-sort-reset-link:focus-visible {
   outline: var(--gw-focus-width) solid var(--gw-color-focus);
   outline-offset: var(--gw-focus-offset);

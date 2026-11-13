@@ -274,6 +274,8 @@
 .gw-alert.gw-alert--warning { --gw-alert-bar: var(--gw-color-warning); --gw-alert-fill: var(--gw-color-warning-light); --gw-alert-title: var(--gw-color-warning-text); }
 .gw-alert.gw-alert--urgent { --gw-alert-bar: var(--gw-color-danger); --gw-alert-fill: var(--gw-color-danger-light); --gw-alert-title: var(--gw-color-danger-text); }
 .gw-alert.gw-alert--success { --gw-alert-bar: var(--gw-color-success); --gw-alert-fill: var(--gw-color-success-light); --gw-alert-title: var(--gw-color-success-text); }
+/* Neutral news in the deployment's brand colour, not a status (e.g. search result counts). */
+.gw-alert.gw-alert--brand { --gw-alert-bar: var(--gw-color-primary); --gw-alert-fill: var(--gw-color-primary-light); --gw-alert-title: var(--gw-color-primary-hover); }
 
 .gw-alert__title {
   display: block;
