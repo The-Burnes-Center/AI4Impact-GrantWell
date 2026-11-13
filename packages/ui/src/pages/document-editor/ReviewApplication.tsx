@@ -106,6 +106,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   const [sectionAnswers, setSectionAnswers] = useState<Record<string, string>>({});
   const [loaded, setLoaded] = useState(false);
   const [narrativePageLimit, setNarrativePageLimit] = useState<number | null>(null);
+  const [sectionsSkipped, setSectionsSkipped] = useState<Record<string, string>>({});
   const [viewedIds, setViewedIds] = useState<string[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [exportingFormat, setExportingFormat] = useState<ExportFormat | null>(null);
@@ -141,6 +142,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
           setSections(resolved.sections);
           setSectionAnswers(resolved.answers);
           setNarrativePageLimit(parseNarrativePageLimit(result?.data));
+          setSectionsSkipped(currentDraft.sectionsSkipped ?? {});
         }
       } catch (error) {
         console.error("Error loading draft data:", error);
@@ -455,7 +457,10 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
 
               <p className="ra-preview__status">
                 {!selected.drafted ? (
-                  <strong className="ra-preview__warn">Not drafted yet. Empty sections are left out of the download.</strong>
+                  <strong className="ra-preview__warn">
+                    {sectionsSkipped[selected.section.id] ? `${sectionsSkipped[selected.section.id].replace(/\.$/, "")}.` : "Not drafted yet."} Empty
+                    sections are left out of the download.
+                  </strong>
                 ) : (
                   <>
                     {selectedLength &&

@@ -74,6 +74,7 @@ function renderChecked({ grant = CHECKED_GRANT, onNavigate = () => {} }: { grant
       },
       section_order: ORDER,
       sectionOrder: ORDER,
+      sections_skipped: { "budget-justification": "Not drafted: answer question 6 to give your budget" },
     }),
     "POST /generate-docx": () =>
       new Response("PK", { headers: { "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document" } }),
@@ -123,6 +124,18 @@ describe("ReviewApplication checks", () => {
     expect(within(preview).getByText("2 placeholders to fill, highlighted below.")).toBeInTheDocument();
     const marks = preview.querySelectorAll("mark");
     expect([...marks].map((m) => m.textContent)).toEqual(["Placeholder: [LEAD APPLICANT NAME]", "Placeholder: [CITY, STATE]"]);
+  });
+
+  it("says what to fill in for a section the AI writer skipped", async () => {
+    const { user } = renderChecked();
+    await listLoaded();
+    await user.click(await sectionList().findByRole("button", { name: /Budget justification/ }));
+    const preview = screen.getByRole("region", { name: "Budget justification" });
+    expect(
+      within(preview).getByText(
+        "Not drafted: answer question 6 to give your budget. Empty sections are left out of the download."
+      )
+    ).toBeInTheDocument();
   });
 
   it("states no length for a section without a stated limit", async () => {
