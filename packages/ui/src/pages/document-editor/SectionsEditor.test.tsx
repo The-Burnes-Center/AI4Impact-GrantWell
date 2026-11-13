@@ -25,7 +25,7 @@ const ORDER = [
   { id: "budget", name: "Budget" },
 ];
 
-function Editor(props: { activeJobId?: string; isGenerating?: boolean }) {
+function Editor(props: { activeJobId?: string; isGenerating?: boolean; onBack?: () => void }) {
   const draftSave = useDraftSave({ sessionId: "s1", documentIdentifier: "Grant A", delay: 10, persistOnExit: false });
   return (
     <SectionEditor
@@ -162,6 +162,105 @@ describe("SectionsEditor sections", () => {
       sections: { "statement-of-need": "Old text" },
       section_order: ORDER,
     });
+  });
+});
+
+describe("SectionsEditor opened from Review", () => {
+  it("opens the section Review asked for, once", async () => {
+    localStorage.setItem("gw:draft:s1:openSection", JSON.stringify("budget"));
+    const fake: Fake = {
+      row: { session_id: "s1", status: "editing_sections", sections: { budget: "Money" }, section_order: ORDER, rev: 1 },
+    };
+    stubServer(fake);
+    renderApp(<Editor />);
+
+    const editor = await screen.findByRole("textbox", { name: "Budget" });
+    await waitFor(() => expect(editorText(editor)).toBe("Money"));
+    expect(localStorage.getItem("gw:draft:s1:openSection")).toBe("null");
+  });
+});
+
+describe("SectionsEditor notes on sections the AI skipped or shortened", () => {
+  const SKIP = "Not drafted: answer questions 2 and 3 or add details about your project's need";
+
+  it("says what to fill in for an empty skipped section, and that a section was shortened", async () => {
+    Element.prototype.scrollIntoView = vi.fn();
+    stubServer({
+      row: {
+        session_id: "s1",
+        status: "editing_sections",
+        sections: { "statement-of-need": "", budget: "Meals cost $3 each." },
+        section_order: ORDER,
+        sections_skipped: { "statement-of-need": SKIP },
+        sections_trimmed: { budget: { unit: "characters", max: 3000 } },
+        rev: 1,
+      },
+    });
+    const { user } = renderApp(<Editor />);
+
+    const editor = await screen.findByRole("textbox", { name: "Statement of Need" });
+    expect(await screen.findByText(`${SKIP}.`)).toBeInTheDocument();
+    expect(editor).toHaveAccessibleDescription(`${SKIP}.`);
+    expect(screen.getByRole("button", { name: /Statement of Need.*not drafted/ })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /^2 Budget/ }));
+    const budget = await screen.findByRole("textbox", { name: "Budget" });
+    expect(await screen.findByText("Shortened to fit the 3,000-character limit.")).toBeInTheDocument();
+    expect(budget).toHaveAccessibleDescription("Shortened to fit the 3,000-character limit.");
+    expect(screen.queryByText(`${SKIP}.`)).not.toBeInTheDocument();
+  });
+
+  it("drops the note once the applicant writes in the section", async () => {
+    stubServer({
+      row: {
+        session_id: "s1",
+        status: "editing_sections",
+        sections: { "statement-of-need": "Our own words." },
+        section_order: ORDER,
+        sections_skipped: { "statement-of-need": SKIP },
+        rev: 1,
+      },
+    });
+    renderApp(<Editor />);
+    const editor = await screen.findByRole("textbox", { name: "Statement of Need" });
+    await waitFor(() => expect(editorText(editor)).toBe("Our own words."));
+    expect(screen.queryByText(`${SKIP}.`)).not.toBeInTheDocument();
+  });
+
+  it("shows a skipped section's note instead of a spinner while the others are written", async () => {
+    const fake: Fake = {
+      row: { session_id: "s1", status: "generating_draft", sections: {}, section_order: ORDER, rev: 1 },
+      job: { jobId: "job-1", status: "in_progress", totalSections: 1, sectionsSkipped: { "statement-of-need": SKIP } },
+    };
+    stubServer(fake);
+    renderApp(<Editor activeJobId="job-1" isGenerating />);
+    expect(await screen.findByText(`${SKIP}.`, undefined, { timeout: 5000 })).toBeInTheDocument();
+    expect(screen.queryByText("Generating Statement of Need...")).not.toBeInTheDocument();
+    expect(screen.getByText(/Generating sections \(0\/1\)/)).toBeInTheDocument();
+  });
+
+  it("tells the applicant when a draft had nothing to write from", async () => {
+    stubServer({
+      row: { session_id: "s1", status: "generating_draft", sections: {}, section_order: ORDER, rev: 1 },
+      job: {
+        jobId: "job-1",
+        status: "error",
+        errorCode: "NO_MATERIAL",
+        error: "Add your project basics or answer some questions first; GrantWell needs something to write from.",
+      },
+    });
+    renderApp(
+      <NotificationProvider>
+        <NotificationBar />
+        <Editor activeJobId="job-1" isGenerating />
+      </NotificationProvider>
+    );
+    const message = await screen.findByText(
+      "Add your project basics or answer some questions first; GrantWell needs something to write from.",
+      undefined,
+      { timeout: 5000 }
+    );
+    expect(screen.getAllByRole("alert").some((region) => region.contains(message))).toBe(true);
   });
 });
 
@@ -336,6 +435,31 @@ describe("SectionsEditor announcements and names", () => {
     await waitFor(() => expect(screen.getAllByRole("status").some((r) => r.textContent === "Saved")).toBe(true));
     expect(screen.queryByText("Progress saved")).not.toBeInTheDocument();
     expect(screen.getAllByRole("status").filter((r) => /saved/i.test(r.textContent ?? ""))).toHaveLength(1);
+  });
+});
+
+describe("SectionsEditor footer", () => {
+  it("goes back to Additional information from the first section and to the previous section after that, with one filled button", async () => {
+    const fake: Fake = {
+      row: { session_id: "s1", status: "editing_sections", sections: { budget: "x" }, section_order: ORDER, rev: 1 },
+    };
+    stubServer(fake);
+    const onBack = vi.fn();
+    const { user } = renderApp(<Editor onBack={onBack} />);
+    await screen.findByRole("textbox", { name: "Statement of Need" });
+
+    expect(screen.queryByRole("button", { name: "Previous section" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Save version" })).toHaveClass("gw-btn--secondary");
+    expect(screen.getByRole("button", { name: "Save section & continue" })).toHaveClass("gw-btn--primary");
+
+    await user.click(screen.getByRole("button", { name: "Save section & continue" }));
+    await screen.findByRole("textbox", { name: "Budget" });
+    expect(screen.queryByRole("button", { name: "Back to additional information" })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Previous section" }));
+    await screen.findByRole("textbox", { name: "Statement of Need" });
+
+    await user.click(screen.getByRole("button", { name: "Back to additional information" }));
+    await waitFor(() => expect(onBack).toHaveBeenCalledTimes(1));
   });
 });
 

@@ -2,9 +2,10 @@ import React, { useState, useEffect, useContext, useId, useRef } from "react";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import PaginationControls from "../common/PaginationControls";
+import PageHeader from "../common/PageHeader";
 import { getCurrentUser } from "aws-amplify/auth";
-import { LuArrowUpDown, LuArrowUp, LuArrowDown, LuPlus, LuTrash, LuRefreshCw, LuCalendar, LuCheck } from "react-icons/lu";
-import { useNavigate } from "react-router";
+import { LuPlus, LuTrash, LuRefreshCw, LuCalendar, LuCheck } from "react-icons/lu";
+import { Link, useNavigate } from "react-router";
 import { Utils } from "../../common/utils";
 import { DraftStatus } from "../../common/api-client/drafts-client";
 import { DeleteConfirmationModal } from "../common/DeleteConfirmationModal";
@@ -13,10 +14,15 @@ import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos"
 import { useStartDraft } from "../../hooks/use-start-draft";
 import { useNotifications } from "../notifications/NotificationManager";
 import TableScrollRegion from "../ui/TableScrollRegion";
+import SortableHeader from "../ui/SortableHeader";
 import OutcomeDialog from "../outcomes/OutcomeDialog";
 import type { ApplicationOutcome } from "../../common/api-client/outcomes-client";
 import { OUTCOME_LABELS, formatDollars, type OutcomeInput } from "../../common/application-outcomes";
 import "../../styles/dashboard.css";
+import SkeletonRows from "../ui/SkeletonRows";
+import { CardListItem, CardListToolbar } from "../ui/CardList";
+import { CARD_LIST_QUERY, useMediaQuery } from "../../hooks/use-media-query";
+import { statusToStep } from "../../common/helpers/document-editor-utils";
 
 export interface DocEditorSessionsProps {
   readonly toolsOpen: boolean;
@@ -35,6 +41,13 @@ interface Session {
   document_identifier?: string;
   status?: DraftStatus;
 }
+
+const APPLICATION_SORTS = [
+  { value: "last_modified:desc", label: "Last modified, newest first" },
+  { value: "last_modified:asc", label: "Last modified, oldest first" },
+  { value: "title:asc", label: "Title, A to Z" },
+  { value: "title:desc", label: "Title, Z to A" },
+];
 
 // Grant folder names end in "/", and titles made from them inherit it.
 const withoutTrailingSlash = (text: string) => text.replace(/\/+$/, "");
@@ -189,9 +202,15 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
     currentPage * pageSize
   );
 
-  const getSortIcon = (field: "title" | "last_modified") => {
-    if (sortField !== field) return <LuArrowUpDown size={14} aria-hidden="true" />;
-    return sortDirection === "asc" ? <LuArrowUp size={14} aria-hidden="true" /> : <LuArrowDown size={14} aria-hidden="true" />;
+  const sortDirectionFor = (field: "title" | "last_modified") =>
+    sortField !== field ? null : sortDirection === "asc" ? "ascending" : "descending";
+
+  const newApplication = () => {
+    if (props.documentIdentifier) {
+      navigate(`/document-editor?grant=${encodeURIComponent(props.documentIdentifier)}`);
+    } else {
+      setShowGrantPicker(true);
+    }
   };
 
   const formatSessionTime = (timestamp: string) => {
@@ -275,6 +294,23 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
     };
   };
 
+  const asCards = useMediaQuery(CARD_LIST_QUERY);
+
+  const applicationPath = (item: Session) =>
+    `/document-editor/${item.draft_id}?step=${statusToStep(item.status || "project_basics")}${
+      item.document_identifier ? `&grant=${encodeURIComponent(item.document_identifier)}` : ""
+    }`;
+
+  const emptyState = (
+    <div className="no-data">
+      <p>No applications</p>
+      <button type="button" className="gw-btn gw-btn--primary" onClick={newApplication} aria-label="Create new application">
+        <LuPlus size={16} aria-hidden="true" />
+        <span>New application</span>
+      </button>
+    </div>
+  );
+
   const handleGrantPicked = async (grant: PickedGrant) => {
     setStartingDraft(true);
     try {
@@ -316,230 +352,280 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
         itemLabel="application"
       />
 
-      {/* Header section */}
-      <div className="dashboard-header dashboard-header--wrap">
-        <div>
-          <h1 ref={headingRef} tabIndex={-1}>My applications</h1>
-          <p style={{ marginTop: "4px", color: "var(--gw-color-text-secondary)", fontSize: "14px" }}>
-            Manage and continue your saved grant applications
-          </p>
-        </div>
-        <div className="dashboard-actions">
-          <button
-            className="gw-btn gw-btn--primary action-button add-button"
-            onClick={() => {
-              if (props.documentIdentifier) {
-                navigate(`/document-editor?grant=${encodeURIComponent(props.documentIdentifier)}`);
-              } else {
-                setShowGrantPicker(true);
-              }
-            }}
-            aria-label="Create new application"
-          >
-            <LuPlus size={16} className="button-icon" aria-hidden="true" />
-            <span>New application</span>
-          </button>
-          {hasDocId && onToggleShowAllNOFOs && (
+      <PageHeader
+        title="My applications"
+        intro="Manage and continue your saved grant applications"
+        headingRef={headingRef}
+        actions={
+          <>
             <button
-              className="gw-btn gw-btn--secondary action-button invite-button"
-              onClick={onToggleShowAllNOFOs}
-              aria-label="Show all grants — include applications for other grants"
-              aria-pressed={showAllNOFOs}
+              className="gw-btn gw-btn--primary action-button add-button"
+              onClick={newApplication}
+              aria-label="Create new application"
             >
-              {showAllNOFOs && <LuCheck size={16} className="button-icon" aria-hidden="true" />}
-              <span>Show all grants</span>
+              <LuPlus size={16} className="button-icon" aria-hidden="true" />
+              <span>New application</span>
             </button>
-          )}
-          <button
-            className="gw-btn gw-btn--danger action-button danger-button"
-            onClick={() => setShowModalDelete(true)}
-            disabled={selectedItems.length === 0}
-            style={{
-              backgroundColor: selectedItems.length === 0 ? "var(--gw-color-surface-subtle)" : "var(--gw-color-danger)",
-              color: selectedItems.length === 0 ? "var(--gw-color-text-muted)" : "white",
-              cursor: selectedItems.length === 0 ? "not-allowed" : "pointer",
-            }}
-            aria-label={selectedItems.length === 0 ? "Delete applications (no applications selected)" : `Delete ${selectedItems.length} selected application${selectedItems.length > 1 ? 's' : ''}`}
-            aria-disabled={selectedItems.length === 0}
-          >
-            <LuTrash size={16} className="button-icon" aria-hidden="true" />
-            <span>Delete</span>
-          </button>
-          <button
-            className="gw-btn gw-btn--secondary action-button refresh-button"
-            onClick={async () => {
-              if (isLoading) return;
-              setListNotice("");
-              setIsLoading(true);
-              await getSessions();
-              setIsLoading(false);
-              setListNotice("Applications updated");
-            }}
-            // aria-disabled, not disabled: disabling the focused button would drop focus to the page.
-            aria-disabled={isLoading}
-            aria-label={isLoading ? "Refreshing applications list" : "Refresh applications list"}
-            aria-busy={isLoading}
-          >
-            {isLoading ? (
-              <span className="refresh-loading">Refreshing...</span>
-            ) : (
-              <>
-                <LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" />
-                <span>Refresh</span>
-              </>
+            {hasDocId && onToggleShowAllNOFOs && (
+              <button
+                className="gw-btn gw-btn--secondary action-button invite-button"
+                onClick={onToggleShowAllNOFOs}
+                aria-label="Show all grants — include applications for other grants"
+                aria-pressed={showAllNOFOs}
+              >
+                {showAllNOFOs && <LuCheck size={16} className="button-icon" aria-hidden="true" />}
+                <span>Show all grants</span>
+              </button>
             )}
-          </button>
-        </div>
-      </div>
+            <button
+              className="gw-btn gw-btn--danger action-button danger-button"
+              onClick={() => selectedItems.length > 0 && setShowModalDelete(true)}
+              aria-disabled={selectedItems.length === 0 || undefined}
+              aria-label={selectedItems.length === 0 ? "Delete applications (no applications selected)" : `Delete ${selectedItems.length} selected application${selectedItems.length > 1 ? 's' : ''}`}
+            >
+              <LuTrash size={16} className="button-icon" aria-hidden="true" />
+              <span>Delete</span>
+            </button>
+            <button
+              className="gw-btn gw-btn--secondary action-button refresh-button"
+              onClick={async () => {
+                if (isLoading) return;
+                setListNotice("");
+                setIsLoading(true);
+                await getSessions();
+                setIsLoading(false);
+                setListNotice("Applications updated");
+              }}
+              // aria-disabled, not disabled: disabling the focused button would drop focus to the page.
+              aria-disabled={isLoading}
+              aria-label={isLoading ? "Refreshing applications list" : "Refresh applications list"}
+              aria-busy={isLoading}
+            >
+              {isLoading ? (
+                <span className="refresh-loading">Refreshing...</span>
+              ) : (
+                <>
+                  <LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" />
+                  <span>Refresh</span>
+                </>
+              )}
+            </button>
+          </>
+        }
+      />
 
-      {/* Table section */}
-      <TableScrollRegion label="Applications table" minWidth={880}>
-      <div className="table-container" role="table" aria-label="Applications">
-        <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "104px 2fr 1.3fr 1.5fr 1fr 1.4fr" }}>
-          <div role="row" style={{ display: "contents" }}>
-            <div className="header-cell" role="cell">
-              <label className="gw-select-all">
-                <input
-                  type="checkbox"
-                  checked={selectedItems.length === sessions.length && sessions.length > 0}
-                  onChange={handleSelectAll}
-                  aria-label="Select all applications"
-                  style={{ cursor: "pointer" }}
-                  disabled={isLoading || sessions.length === 0}
-                />
-                <span aria-hidden="true">Select all</span>
-              </label>
-            </div>
-            <div
-              className="header-cell"
-              role="columnheader"
-              aria-sort={sortField === "title" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
-            >
-              <button
-                onClick={() => !isLoading && handleSort("title")}
-                disabled={isLoading}
-                style={{ display: "flex", alignItems: "center", gap: "6px", background: "none", border: "none", cursor: isLoading ? "default" : "pointer", padding: 0, font: "inherit", color: "inherit", textTransform: "inherit", letterSpacing: "inherit" }}
-              >
-                Title {!isLoading && getSortIcon("title")}
-              </button>
-            </div>
-            <div
-              className="header-cell"
-              role="columnheader"
-              aria-sort={sortField === "last_modified" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
-            >
-              <button
-                onClick={() => !isLoading && handleSort("last_modified")}
-                disabled={isLoading}
-                style={{ display: "flex", alignItems: "center", gap: "6px", background: "none", border: "none", cursor: isLoading ? "default" : "pointer", padding: 0, font: "inherit", color: "inherit", textTransform: "inherit", letterSpacing: "inherit" }}
-              >
-                Last Modified {!isLoading && getSortIcon("last_modified")}
-              </button>
-            </div>
-            <div className="header-cell" role="columnheader">Grant</div>
-            <div className="header-cell" role="columnheader" style={{ textAlign: 'center' }}>Status</div>
-            <div className="header-cell" role="columnheader" style={{ textAlign: "left" }}>Outcome</div>
-          </div>
-        </div>
-        <div className="table-body" role={isLoading || paginatedItems.length === 0 ? undefined : "rowgroup"}>
+      {asCards ? (
+        <>
+          <CardListToolbar
+            selectAll={{
+              checked: selectedItems.length === sessions.length && sessions.length > 0,
+              onChange: (checked) => setSelectedItems(checked ? sessions : []),
+              label: "Select all applications",
+              disabled: isLoading || sessions.length === 0,
+            }}
+            sort={{
+              value: `${sortField}:${sortDirection}`,
+              options: APPLICATION_SORTS,
+              onChange: (value) => {
+                const [field, direction] = value.split(":") as ["title" | "last_modified", "asc" | "desc"];
+                setSortField(field);
+                setSortDirection(direction);
+              },
+              disabled: isLoading,
+            }}
+          />
           {isLoading ? (
-            // Visual only — role="table" cannot own a live region, so the
-            // announcement lives in the status region below the table.
-            <div className="table-loading" aria-hidden="true">
-              <div className="table-loading-spinner"></div>
-            </div>
+            <SkeletonRows label="Loading applications" />
           ) : paginatedItems.length === 0 ? (
-            <div className="no-data">
-              <div style={{ fontSize: "18px", fontWeight: "500", marginBottom: "8px" }}>
-                No applications
-              </div>
-            </div>
+            emptyState
           ) : (
-            paginatedItems.map((item) => (
-              <div key={item.draft_id} className="table-row" role="row" style={{ gridTemplateColumns: "104px 2fr 1.3fr 1.5fr 1fr 1.4fr" }}>
-                <div className="row-cell" role="cell">
+            <ul className="gw-card-list" aria-label="Applications">
+              {paginatedItems.map((item) => {
+                const checked = selectedItems.some((i) => i.draft_id === item.draft_id);
+                return (
+                  <CardListItem
+                    key={item.draft_id}
+                    select={{
+                      checked,
+                      onChange: () =>
+                        setSelectedItems(checked ? selectedItems.filter((i) => i.draft_id !== item.draft_id) : [...selectedItems, item]),
+                      label: `Select application: ${rowName(item)}`,
+                    }}
+                    title={
+                      <Link
+                        to={applicationPath(item)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          props.onSessionSelect?.(item.draft_id);
+                        }}
+                      >
+                        {item.title}
+                      </Link>
+                    }
+                    facts={[
+                      { label: "Grant", value: withoutTrailingSlash(item.document_identifier || "") || "Not specified" },
+                      { label: "Last modified", value: <time dateTime={item.last_modified}>{formatSessionTime(item.last_modified)}</time> },
+                      { label: "Status", value: getStatusLabel(item.status) },
+                      { label: "Outcome", value: outcomeText(outcomes[item.draft_id]) },
+                    ]}
+                    actions={
+                      <button
+                        type="button"
+                        className="gw-btn gw-btn--secondary"
+                        onClick={() => setOutcomeTarget({ sessionId: item.draft_id, title: item.title })}
+                        aria-label={`Update outcome for ${rowName(item)}`}
+                      >
+                        Update outcome
+                      </button>
+                    }
+                  />
+                );
+              })}
+            </ul>
+          )}
+        </>
+      ) : (
+      <TableScrollRegion label="Applications table" minWidth={880}>
+      <div className="table-container">
+        <table className="gw-table" aria-label="Applications">
+          <colgroup>
+            <col style={{ width: 104 }} />
+            <col style={{ width: "28%" }} />
+            <col style={{ width: "18%" }} />
+            <col style={{ width: "21%" }} />
+            <col style={{ width: "14%" }} />
+            <col />
+          </colgroup>
+          <thead>
+            <tr>
+              <td className="header-cell header-cell--select">
+                <label className="gw-select-all">
                   <input
                     type="checkbox"
-                    checked={selectedItems.some(
-                      (i) => i.draft_id === item.draft_id
-                    )}
-                    onChange={(e) => handleSelectItem(item, e)}
-                    aria-label={`Select application: ${rowName(item)}`}
+                    checked={selectedItems.length === sessions.length && sessions.length > 0}
+                    onChange={handleSelectAll}
+                    aria-label="Select all applications"
                     style={{ cursor: "pointer" }}
+                    disabled={isLoading || sessions.length === 0}
                   />
-                </div>
-                <div className="row-cell" role="cell">
-                  <button
-                    onClick={() => {
-                      if (props.onSessionSelect) {
-                        props.onSessionSelect(item.draft_id);
-                      }
-                    }}
-                    aria-label={`Open application: ${rowName(item)}`}
-                    style={{
-                      color: "var(--gw-color-primary-hover)",
-                      background: "none",
-                      border: "none",
-                      padding: 0,
-                      cursor: "pointer",
-                      textAlign: "left",
-                      fontSize: "14px",
-                      textDecoration: "underline",
-                    }}
-                  >
-                    {item.title}
-                  </button>
-                </div>
-                <div className="row-cell" role="cell">
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--gw-color-text-secondary)" }}>
-                    <LuCalendar size={16} aria-hidden="true" />
-                    <time dateTime={item.last_modified}>
-                      {formatSessionTime(item.last_modified)}
-                    </time>
-                  </div>
-                </div>
-                <div className="row-cell" role="cell">
-                  {withoutTrailingSlash(item.document_identifier || '') || (
-                    <>
-                      <span aria-hidden="true">—</span>
-                      <span className="visually-hidden">Not specified</span>
-                    </>
-                  )}
-                </div>
-                <div className="row-cell" role="cell" style={{ justifyContent: 'center' }}>
-                  <span style={statusBadgeStyle(item.status)}>
-                    {getStatusLabel(item.status)}
-                  </span>
-                </div>
-                <div className="row-cell" role="cell">
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "2px" }}>
-                    <span style={{ color: outcomes[item.draft_id] ? "inherit" : "var(--gw-color-text-secondary, #5a5a5a)" }}>
-                      {outcomeText(outcomes[item.draft_id])}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setOutcomeTarget({ sessionId: item.draft_id, title: item.title })}
-                      aria-label={`Update outcome for ${rowName(item)}`}
-                      style={{
-                        color: "var(--gw-color-primary-hover)",
-                        background: "none",
-                        border: "none",
-                        padding: 0,
-                        cursor: "pointer",
-                        fontSize: "13px",
-                        textDecoration: "underline",
-                      }}
-                    >
-                      Update outcome
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))
+                  <span aria-hidden="true">Select all</span>
+                </label>
+              </td>
+              <SortableHeader
+                label="Title"
+                direction={sortDirectionFor("title")}
+                onSort={() => !isLoading && handleSort("title")}
+                disabled={isLoading}
+              />
+              <SortableHeader
+                label="Last modified"
+                direction={sortDirectionFor("last_modified")}
+                onSort={() => !isLoading && handleSort("last_modified")}
+                disabled={isLoading}
+              />
+              <th scope="col" className="header-cell">Grant</th>
+              <th scope="col" className="header-cell" style={{ textAlign: "center" }}>Status</th>
+              <th scope="col" className="header-cell">Outcome</th>
+            </tr>
+          </thead>
+          {!isLoading && (
+            <tbody>
+              {paginatedItems.length === 0 ? (
+                <tr>
+                  <td className="row-cell row-cell--empty" colSpan={6}>
+                    {emptyState}
+                  </td>
+                </tr>
+              ) : (
+                paginatedItems.map((item) => (
+                  <tr key={item.draft_id} className="table-row">
+                    <td className="row-cell">
+                      <input
+                        type="checkbox"
+                        checked={selectedItems.some(
+                          (i) => i.draft_id === item.draft_id
+                        )}
+                        onChange={(e) => handleSelectItem(item, e)}
+                        aria-label={`Select application: ${rowName(item)}`}
+                        style={{ cursor: "pointer" }}
+                      />
+                    </td>
+                    <td className="row-cell">
+                      <button
+                        onClick={() => {
+                          if (props.onSessionSelect) {
+                            props.onSessionSelect(item.draft_id);
+                          }
+                        }}
+                        aria-label={`Open application: ${rowName(item)}`}
+                        style={{
+                          color: "var(--gw-color-primary-hover)",
+                          background: "none",
+                          border: "none",
+                          padding: 0,
+                          cursor: "pointer",
+                          textAlign: "left",
+                          fontSize: "14px",
+                          textDecoration: "underline",
+                        }}
+                      >
+                        {item.title}
+                      </button>
+                    </td>
+                    <td className="row-cell">
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--gw-color-text-secondary)" }}>
+                        <LuCalendar size={16} aria-hidden="true" />
+                        <time dateTime={item.last_modified}>
+                          {formatSessionTime(item.last_modified)}
+                        </time>
+                      </div>
+                    </td>
+                    <td className="row-cell">
+                      {withoutTrailingSlash(item.document_identifier || '') || (
+                        <>
+                          <span aria-hidden="true">—</span>
+                          <span className="visually-hidden">Not specified</span>
+                        </>
+                      )}
+                    </td>
+                    <td className="row-cell" style={{ textAlign: "center" }}>
+                      <span style={statusBadgeStyle(item.status)}>
+                        {getStatusLabel(item.status)}
+                      </span>
+                    </td>
+                    <td className="row-cell">
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "2px" }}>
+                        <span style={{ color: outcomes[item.draft_id] ? "inherit" : "var(--gw-color-text-secondary, #5a5a5a)" }}>
+                          {outcomeText(outcomes[item.draft_id])}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setOutcomeTarget({ sessionId: item.draft_id, title: item.title })}
+                          aria-label={`Update outcome for ${rowName(item)}`}
+                          style={{
+                            color: "var(--gw-color-primary-hover)",
+                            background: "none",
+                            border: "none",
+                            padding: 0,
+                            cursor: "pointer",
+                            fontSize: "13px",
+                            textDecoration: "underline",
+                          }}
+                        >
+                          Update outcome
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
           )}
-        </div>
+        </table>
+        {isLoading && <SkeletonRows label="Loading applications" />}
       </div>
       </TableScrollRegion>
+      )}
 
       <div role="status" aria-live="polite" className="visually-hidden">
         {isLoading ? "Loading applications" : listNotice}

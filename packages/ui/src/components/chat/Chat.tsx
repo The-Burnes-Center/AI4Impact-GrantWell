@@ -14,6 +14,8 @@ import { LuCircleHelp, LuChevronDown } from "react-icons/lu";
 import { parseChatHistory } from "./utils";
 import { GrantInReviewError } from "../../common/api-client/grant-in-review";
 import chatStyles from "../../styles/chat.module.scss";
+import { citationsOf } from "./citations";
+import { useChatPanel, type PanelAnswer } from "./chat-panel-context";
 
 // Styles for components
 const styles: Record<string, React.CSSProperties> = {
@@ -23,7 +25,7 @@ const styles: Record<string, React.CSSProperties> = {
     height: "100%",
     position: "relative",
     overflow: "hidden",
-    backgroundColor: "var(--gw-color-background)",
+    backgroundColor: "var(--gw-color-surface)",
     minHeight: 0,
     flex: 1,
   },
@@ -33,7 +35,7 @@ const styles: Record<string, React.CSSProperties> = {
     overflowX: "hidden",
     padding: "20px",
     paddingBottom: "20px",
-    backgroundColor: "var(--gw-color-background)",
+    backgroundColor: "var(--gw-color-surface)",
     minHeight: 0,
     scrollBehavior: "smooth",
   },
@@ -84,13 +86,12 @@ const styles: Record<string, React.CSSProperties> = {
   },
   inputContainer: {
     border: "none",
-    backgroundColor: "var(--gw-color-background)",
-    padding: "20px",
+    backgroundColor: "var(--gw-color-surface)",
+    padding: "12px 20px",
     width: "100%",
     maxWidth: "100%",
     zIndex: 100,
-    boxShadow: "var(--gw-shadow-high)",
-    borderTop: "3px solid var(--gw-color-primary)",
+    borderTop: "1px solid var(--gw-color-border)",
     flexShrink: 0,
     display: "flex",
     flexDirection: "column",
@@ -196,6 +197,10 @@ export default function Chat(props: {
   const savingSessionRef = useRef<Promise<void> | null>(null);
   const [unavailable, setUnavailable] = useState(false);
   const [inReviewMessage, setInReviewMessage] = useState<string | null>(null);
+  const [nextQuestions, setNextQuestions] = useState<string[]>([]);
+  const sendRef = useRef<((text: string) => void) | null>(null);
+  const panel = useChatPanel();
+  const setPanelAnswers = panel?.setAnswers;
 
   const ensureSession = useCallback((): Promise<void> => {
     const pending = pendingSessionRef.current;
@@ -222,6 +227,7 @@ export default function Chat(props: {
     setOlderCursor(null);
     setLoadingOlder(false);
     setEarlierStatus("");
+    setNextQuestions([]);
 
     (async () => {
       if (!props.sessionId) {
@@ -299,7 +305,7 @@ export default function Chat(props: {
 
           const initialMessage = {
             type: ChatBotMessageType.AI,
-            content: `Hello! I see that you are working on the ${grantName} grant. Could you please tell me which agency, municipality, or tribe we are preparing this application for?`,
+            content: `Ask me anything about the ${grantName} grant: eligibility, deadlines, budget rules, scoring and what to submit.`,
             metadata: {},
           };
           setMessageHistory([initialMessage]);
@@ -465,9 +471,27 @@ export default function Chat(props: {
     }
   };
 
+  useEffect(() => {
+    if (!setPanelAnswers) return;
+    const answers: PanelAnswer[] = [];
+    let question = "";
+    for (const message of [...olderMessages, ...messageHistory]) {
+      if (message.type === ChatBotMessageType.Human) {
+        question = message.content;
+        continue;
+      }
+      const sources = Array.isArray(message.metadata?.Sources) ? (message.metadata.Sources as PanelAnswer["sources"]) : [];
+      answers.push({ reply: answers.length + 1, question, citations: citationsOf(message.metadata), sources });
+      question = "";
+    }
+    setPanelAnswers(answers);
+  }, [olderMessages, messageHistory, setPanelAnswers]);
+
   let replyCount = 0;
   const replyNumber = (message: ChatBotHistoryItem) =>
     message.type === ChatBotMessageType.AI ? ++replyCount : undefined;
+  const lastMessage = messageHistory[messageHistory.length - 1];
+  const showNext = !running && nextQuestions.length > 0 && lastMessage?.type === ChatBotMessageType.AI && lastMessage.content.length > 0;
 
   return (
     <section aria-label="GrantWell assistant chat" style={styles.chatContainer}>
@@ -519,6 +543,24 @@ export default function Chat(props: {
               <ChatMessage message={message} documentIdentifier={props.documentIdentifier} replyNumber={replyNumber(message)} />
             </li>
           ))}
+
+          {showNext && (
+            <li>
+              <section aria-labelledby="chat-ask-next" className={chatStyles.askNext}>
+                <h2 id="chat-ask-next" className={chatStyles.askNextHeading}>Ask next</h2>
+                <div className={chatStyles.askNextList}>
+                  {nextQuestions.map((question) => (
+                    <button key={question} type="button" className={chatStyles.askNextChip} onClick={() => {
+                        sendRef.current?.(question);
+                        document.getElementById("chat-input")?.focus({ preventScroll: true });
+                      }}>
+                      {question}
+                    </button>
+                  ))}
+                </div>
+              </section>
+            </li>
+          )}
 
           {messageHistory.length === 0 && !session?.loading && !unavailable && (
             <li style={styles.welcomeText}>{branding.appName}</li>
@@ -606,6 +648,8 @@ export default function Chat(props: {
             documentIdentifier={props.documentIdentifier}
             messageAreaRef={messageAreaRef}
             ensureSession={ensureSession}
+            onNextQuestions={setNextQuestions}
+            sendRef={sendRef}
           />
         </div>
       )}

@@ -17,8 +17,8 @@ interface ReviewExpandedRowProps {
   onActionComplete: () => void;
   addNotification: (type: string, message: string) => void;
   onCollapse: () => void;
-  /** Columns of the parent ARIA table this panel spans. */
-  colSpan: number;
+  /** Columns of the reviews table this panel spans; without it the panel is a plain block (the phone card list). */
+  colSpan?: number;
 }
 
 const BUSY_MESSAGES: Record<string, string> = {
@@ -51,18 +51,25 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   const [statusMounted, setStatusMounted] = useState(false);
   useEffect(() => setStatusMounted(true), []);
 
-  // The panel is rendered inside an ARIA table, which may only own rows, so it
-  // presents as a full-width row rather than a bare region.
-  const asTableRow = (content: React.ReactNode) => (
-    <div role="row">
-      <div role="cell" aria-colspan={colSpan}>
+  // In the reviews table, which may only own rows, the panel is a full-width row.
+  const asTableRow = (content: React.ReactNode) => {
+    const panel = (
+      <>
         <span role="status" className="visually-hidden">
           {!statusMounted ? "" : loading ? "Loading review details" : (actionInProgress && BUSY_MESSAGES[actionInProgress]) || ""}
         </span>
         {content}
-      </div>
-    </div>
-  );
+      </>
+    );
+    if (colSpan === undefined) return <div className="review-expanded-cell review-expanded-cell--block">{panel}</div>;
+    return (
+      <tr>
+        <td colSpan={colSpan} className="review-expanded-cell">
+          {panel}
+        </td>
+      </tr>
+    );
+  };
 
   const loadDetail = useCallback(async () => {
     try {
@@ -301,8 +308,8 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       )}
 
       {review.status === "needs_reupload" && (
-        <div className="gw-alert gw-alert--warning review-dlq-alert" style={{ borderLeft: "4px solid var(--gw-color-warning)" }}>
-          <h4 className="review-dlq-alert__title">Awaiting Document Re-upload</h4>
+        <div className="gw-alert gw-alert--warning review-dlq-alert">
+          <h4 className="review-dlq-alert__title">Awaiting document re-upload</h4>
           <p style={{ margin: "8px 0 0" }}>
             This grant has been marked as needing a new document upload. Upload a corrected grant document to trigger reprocessing.
           </p>
@@ -313,7 +320,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
         <div className="gw-alert gw-alert--warning review-dlq-alert">
           {review.source === "dlq" && (
             <>
-              <h4 className="review-dlq-alert__title">Processing Failed (Dead Letter Queue)</h4>
+              <h4 className="review-dlq-alert__title">Processing failed (dead-letter queue)</h4>
               <p style={{ margin: "8px 0 0" }}>This grant failed processing and was moved to the Dead Letter Queue.</p>
               <div className="review-dlq-guidance">
                 <h5 className="review-dlq-guidance__title">What to do:</h5>

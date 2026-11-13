@@ -156,6 +156,8 @@
 
   /* Cap for full-page content areas so lines stay readable on wide screens. */
   --gw-content-max-width: 1400px;
+  /* Forms and reading columns (Profile, the Write application steps); list pages use the full width. */
+  --gw-form-max-width: 720px;
 
   /* ==============================
    * Corners and elevation, by role (Colorado Design System scale)

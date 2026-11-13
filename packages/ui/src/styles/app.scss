@@ -39,13 +39,9 @@ body {
   }
 }
 
-/* Accessibility: Visible focus indicators */
-*:focus-visible {
-  outline: 3px solid var(--gw-color-primary);
-  outline-offset: 2px;
-}
-
-/* Ensure buttons, links, and interactive elements have visible focus */
+/* One focus ring for everything, the same as the kit controls. The element selectors keep the
+   specificity that older page rules were written against. */
+:focus-visible,
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
@@ -55,8 +51,8 @@ textarea:focus-visible,
 [role="tab"]:focus-visible,
 [role="menuitem"]:focus-visible,
 [role="option"]:focus-visible {
-  outline: 3px solid var(--gw-color-primary);
-  outline-offset: 2px;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
 }
 
 /* Hide focus outline on main element - it's only for screen reader navigation */
@@ -66,30 +62,12 @@ main#main-content:focus-visible {
   outline-offset: 0;
 }
 
-/* Focus visible styles - WCAG 2.2 AA Compliance */
-*:focus-visible {
-  outline: 2px solid var(--gw-color-primary);
-  outline-offset: 2px;
-}
-
-button:focus-visible {
-  outline: 2px solid var(--gw-color-primary);
-  outline-offset: 2px;
-}
-
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible {
-  outline: 2px solid var(--gw-color-primary);
-  outline-offset: 2px;
-}
-
 /* Doubled classes: Bootstrap's .btn:focus-visible / .btn-close:focus { outline: 0 } load after this file. */
 .btn.btn:focus-visible,
 .btn-close.btn-close:focus-visible {
-  outline: 3px solid var(--gw-color-primary);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 2px #fff;
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
+  box-shadow: none;
 }
 
 /* Ensure elements with aria-hidden="true" are excluded from interaction */

@@ -64,7 +64,7 @@ export class UserManagementClient {
     return readJson(response);
   }
 
-  async createUser(options: { email: string; state?: string }) {
+  async createUser(options: { email: string; state?: string; rolePreset?: UserRolePreset }) {
     const headers = await this.getAuthHeaders();
     const response = await apiFetch(`${this.baseUrl}/user-management/users`, {
       method: "POST",
@@ -72,6 +72,7 @@ export class UserManagementClient {
       body: JSON.stringify({
         email: options.email,
         ...(options.state ? { state: options.state } : {}),
+        ...(options.rolePreset ? { rolePreset: options.rolePreset } : {}),
       }),
     });
 
@@ -104,28 +105,18 @@ export class UserManagementClient {
     return readJson(response);
   }
 
-  async updateUserRole(username: string, rolePreset: UserRolePreset) {
+  /** Role and state in one request: the server judges the account they add up to. */
+  async updateUser(
+    username: string,
+    changes: { rolePreset?: UserRolePreset; state?: string }
+  ): Promise<{ username: string; roles?: string[]; state?: string }> {
     const headers = await this.getAuthHeaders();
     const response = await apiFetch(
       `${this.baseUrl}/user-management/users/${encodeURIComponent(username)}/roles`,
       {
         method: "PATCH",
         headers,
-        body: JSON.stringify({ rolePreset }),
-      }
-    );
-
-    return readJson(response);
-  }
-
-  async updateUserState(username: string, state: string) {
-    const headers = await this.getAuthHeaders();
-    const response = await apiFetch(
-      `${this.baseUrl}/user-management/users/${encodeURIComponent(username)}/roles`,
-      {
-        method: "PATCH",
-        headers,
-        body: JSON.stringify({ state }),
+        body: JSON.stringify(changes),
       }
     );
 

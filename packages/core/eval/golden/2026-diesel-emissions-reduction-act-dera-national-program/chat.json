@@ -19,7 +19,7 @@
     "id": "q3",
     "kind": "limits",
     "question": "How many pages can the project narrative be?",
-    "expected": "The Cover Page and Workplan combined are limited to 14 pages (the cover page itself should not exceed one page); required attachments do not count toward the limit.",
+    "expected": "The Cover Page and Workplan combined are limited to 14 pages (the cover page itself should not exceed one page); the budget detail and budget table sit in the project narrative and count toward the 14 pages, while required attachments, including supporting calculations provided as attachments, do not.",
     "quote": "The Cover Page and Workplan combined are limited to 14 pages. Attachments are not included in the",
     "confirmed": false
   },

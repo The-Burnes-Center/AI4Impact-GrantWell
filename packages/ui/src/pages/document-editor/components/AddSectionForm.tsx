@@ -68,11 +68,11 @@ const AddSectionForm: React.FC<AddSectionFormProps> = ({ onAdd, disabled, startO
         disabled={disabled}
       />
       <div className="se-add-section__actions">
-        <button type="submit" className="se-add-section__submit" disabled={disabled || !name.trim()}>
+        <button type="submit" className="gw-btn gw-btn--primary" disabled={disabled || !name.trim()}>
           Add section
         </button>
         {!startOpen && (
-          <button type="button" className="se-add-section__cancel" onClick={close}>
+          <button type="button" className="gw-btn gw-btn--secondary" onClick={close}>
             Cancel
           </button>
         )}

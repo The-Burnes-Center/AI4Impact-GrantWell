@@ -5,14 +5,14 @@ import { getCurrentUser } from "aws-amplify/auth";
 import Card from "../../components/ui/Card";
 import NavigationButtons from "../../components/ui/NavigationButtons";
 import DocumentPicker from "../../components/documents/DocumentPicker";
-import { colors, typography, spacing, borderRadius, transitions } from "../../components/ui/styles";
+import { colors, typography, spacing, borderRadius } from "../../components/ui/styles";
 import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
-import { characterCount, MAX_INPUT_CHARS, readDraftCache, resolveQuestionnaireAnswers } from "../../common/helpers/document-editor-utils";
+import { characterCount, MAX_INPUT_CHARS, readDraftCache, resolveQuestionnaire } from "../../common/helpers/document-editor-utils";
 import { legacySelection } from "../../common/helpers/user-documents";
 import type { useDraftSave } from "../../hooks/use-draft-save";
 import type { DocumentData } from "../../common/types/document";
 import { DailyLimitError } from "../../common/api-client/daily-limit";
-import { InputTooLongError } from "../../common/api-client/drafts-client";
+import { InputTooLongError, jobNoMaterialError, NoMaterialError } from "../../common/api-client/drafts-client";
 import { GrantInReviewError } from "../../common/api-client/grant-in-review";
 import { grantSections } from "../../common/helpers/application-sections";
 
@@ -151,7 +151,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       setGenerationPhase("preparing");
       setIsLoading(false);
 
-      const questionnaireAnswers = await resolveQuestionnaireAnswers(
+      const { answers: questionnaireAnswers, questions } = await resolveQuestionnaire(
         () => apiClient.landingPage.getNOFOQuestions(selectedNofo),
         draftToUse.questionnaire,
       );
@@ -163,6 +163,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         projectBasics: draftToUse.projectBasics || {},
         questionnaire: draftToUse.questionnaire || {},
         questionnaireAnswers,
+        questions,
         additionalInfo,
         sessionId,
         documentKeys,
@@ -177,15 +178,18 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         await new Promise(resolve => setTimeout(resolve, 2000));
         pollCount++;
 
+        let nothingToWrite: NoMaterialError | null = null;
         try {
           const jobStatus = await apiClient.drafts.pollDraftJob(jobId);
+          nothingToWrite = jobNoMaterialError(jobStatus);
 
-          if (jobStatus.sectionNames && jobStatus.sectionNames.length > 0) break;
+          if (!nothingToWrite && jobStatus.sectionNames && jobStatus.sectionNames.length > 0) break;
 
-          if (jobStatus.status === 'completed' || jobStatus.status === 'partial' || jobStatus.status === 'error') break;
+          if (!nothingToWrite && (jobStatus.status === 'completed' || jobStatus.status === 'partial' || jobStatus.status === 'error')) break;
         } catch (err) {
           console.warn('Error polling job status:', err);
         }
+        if (nothingToWrite) throw nothingToWrite;
       }
 
       // Navigate to SectionEditor — it takes over live polling
@@ -195,7 +199,12 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       }
     } catch (error) {
       console.error("Error creating draft:", error);
-      if (error instanceof DailyLimitError || error instanceof InputTooLongError || error instanceof GrantInReviewError) {
+      if (
+        error instanceof DailyLimitError ||
+        error instanceof InputTooLongError ||
+        error instanceof GrantInReviewError ||
+        error instanceof NoMaterialError
+      ) {
         void draftSave.saveFields({ status: "uploading_documents" }, { source: "status_change", immediate: true });
       }
       setSubmitError(error instanceof Error ? error.message : "Failed to create draft. Please try again.");
@@ -221,7 +230,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   // ── Full-page generation view ──────────────────────────────────────
   if (generatingDraft) {
     return (
-      <div style={{ maxWidth: "680px", margin: "0 auto", padding: "48px 16px", fontFamily: typography.fontFamily }}>
+      <div className="gw-form-width gw-form-width--centered" style={{ padding: "48px 16px", fontFamily: typography.fontFamily }}>
         {draftPhaseRegion}
 
         {/* Header */}
@@ -274,21 +283,8 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           </div>
         </div>
 
-        {/* Persistence messaging */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            padding: "14px 18px",
-            background: "var(--gw-color-background)",
-            border: "1px solid var(--gw-color-success-border)",
-            borderRadius: borderRadius.lg,
-            fontSize: typography.fontSize.sm,
-            color: "var(--gw-color-success-text)",
-          }}
-        >
-          <span style={{ fontSize: "18px", flexShrink: 0 }} aria-hidden="true">&#10003;</span>
+        <div className="gw-alert gw-alert--success">
+          <span aria-hidden="true">&#10003;</span>
           <span>
             Your progress is automatically saved. You can close this page and come back anytime — your application will be here.
           </span>
@@ -317,7 +313,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
 
   // ── Normal form ────────────────────────────────────────────────────
   return (
-    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
+    <div className="gw-form-width gw-form-width--centered" style={{ padding: "16px 0" }}>
       {draftPhaseRegion}
 
       <Card
@@ -341,6 +337,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             library={library}
             selected={selected}
             onChange={changeSelection}
+            documentIdentifier={selectedNofo}
             legend="Use in this application"
             description="The AI reads the documents you tick when it writes this application (e.g., organizational details, past performance reports, budgets). New uploads go to My documents."
           />
@@ -421,6 +418,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       }}>
         <NavigationButtons
           onBack={() => onNavigate("questionnaire")}
+          backLabel="Back to questionnaire"
           showContinue={false}
           justify="flex-start"
         />
@@ -429,24 +427,9 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           {hasExistingDraft && (
             <button
               type="button"
+              className="gw-btn gw-btn--secondary"
               onClick={() => onNavigate("sectionEditor")}
               aria-label="Skip to Section editor"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: spacing.sm,
-                padding: `${spacing.md} ${spacing.xl}`,
-                background: colors.white,
-                border: `1px solid ${colors.border}`,
-                borderRadius: borderRadius.md,
-                color: colors.text,
-                fontSize: typography.fontSize.base,
-                fontWeight: typography.fontWeight.medium,
-                fontFamily: typography.fontFamily,
-                cursor: "pointer",
-                transition: transitions.normal,
-                minHeight: "44px",
-              }}
             >
               Skip
             </button>

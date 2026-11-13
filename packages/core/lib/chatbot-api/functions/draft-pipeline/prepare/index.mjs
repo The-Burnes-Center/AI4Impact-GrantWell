@@ -5,7 +5,8 @@
  * Step Functions Map state to fan out; each section retrieves its own
  * passages. `sectionIds` limits the run to those sections (a retry of the
  * ones that failed); the outline every writer sees stays the whole
- * application. Updates the DDB job with sectionNames and totalSections.
+ * application. The plan step that follows decides which sections are drafted and records the
+ * section list on the job; this step only resets the job's counters and per-section maps.
  */
 
 import { S3Client } from '@aws-sdk/client-s3';
@@ -20,6 +21,7 @@ export const handler = async (event) => {
   const {
     jobId, query, documentIdentifier, projectBasics, questionnaire, questionnaireAnswers,
     additionalInfo, sessionId, userId, userState, sectionIds, documentOwner, documentKeys,
+    questions, dailyCredit,
   } = event;
 
   console.log(`Prepare: job ${jobId} for "${documentIdentifier}" (session ${sessionId})`);
@@ -47,10 +49,9 @@ export const handler = async (event) => {
   const outlineRefs = outline.map((s) => ({ id: s.id, name: s.item }));
   const totalSections = sections.length;
 
-  // 3. Update DDB job with section metadata
-  await updateJobMetadata(jobId, sections.map((s) => s.item), sections.map((s) => s.id), totalSections);
+  await resetJob(jobId);
 
-  // 4. Return payload for the Map state
+  // 3. Return payload for the plan step and the Map states
   return {
     jobId,
     query,
@@ -58,6 +59,7 @@ export const handler = async (event) => {
     projectBasics: projectBasics || {},
     questionnaire: questionnaire || {},
     questionnaireAnswers: Array.isArray(questionnaireAnswers) ? questionnaireAnswers : [],
+    questions: Array.isArray(questions) ? questions : [],
     additionalInfo: typeof additionalInfo === "string" ? additionalInfo : "",
     sessionId,
     userId,
@@ -66,8 +68,11 @@ export const handler = async (event) => {
     userState: typeof userState === "string" ? userState : "",
     totalSections,
     sections,
+    // Replaced by the plan step; kept so the writers still run if it fails.
     warmSections: sections.slice(0, 1),
     remainingSections: sections.slice(1),
+    summarySections: [],
+    ...(typeof dailyCredit === 'string' && dailyCredit ? { dailyCredit } : {}),
     sectionNames,
     outline: outlineRefs,
   };
@@ -86,31 +91,23 @@ async function getSummaryFile(documentIdentifier) {
   }
 }
 
-async function updateJobMetadata(jobId, sectionNames, sectionIds, totalSections) {
+async function resetJob(jobId) {
   const tableName = process.env.DRAFT_GENERATION_JOBS_TABLE_NAME;
   if (!tableName) return;
 
   try {
-    const command = new UpdateItemCommand({
+    await dynamoClient.send(new UpdateItemCommand({
       TableName: tableName,
       Key: { jobId: { S: jobId } },
-      UpdateExpression: 'SET #sn = :sn, #si = :si, #ts = :ts, #cc = :zero',
+      UpdateExpression: 'SET #cc = :zero, #sk = :empty, #tr = :empty',
       ExpressionAttributeNames: {
-        '#sn': 'sectionNames',
-        '#si': 'sectionIds',
-        '#ts': 'totalSections',
         '#cc': 'completedSectionCount',
+        '#sk': 'sectionsSkipped',
+        '#tr': 'sectionsTrimmed',
       },
-      ExpressionAttributeValues: marshall({
-        ':sn': sectionNames,
-        ':si': sectionIds,
-        ':ts': totalSections,
-        ':zero': 0,
-      }),
-    });
-    await dynamoClient.send(command);
-    console.log(`Prepare: updated job ${jobId} metadata (${totalSections} sections)`);
+      ExpressionAttributeValues: marshall({ ':zero': 0, ':empty': {} }),
+    }));
   } catch (error) {
-    console.error(`Prepare: error updating job metadata for ${jobId}:`, error);
+    console.error(`Prepare: error resetting job ${jobId}:`, error);
   }
 }

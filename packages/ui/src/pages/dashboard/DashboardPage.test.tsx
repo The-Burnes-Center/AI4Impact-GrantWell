@@ -25,6 +25,7 @@ vi.mock("./components/ProcessingReviewTab", () => stub("Review"));
 vi.mock("./components/AnalyticsTab", () => stub("Analytics"));
 vi.mock("./components/FeatureRolloutsTab", () => stub("Feature rollouts"));
 vi.mock("./components/UserManagementTab", () => stub("User management"));
+vi.mock("./components/DocumentReviewsTab", () => stub("Document reviews"));
 
 const metrics = {
   totalProcessed: 0, successRate: 0, pendingCount: 0, failedCount: 0, approvedCount: 0,
@@ -55,10 +56,10 @@ const tabNames = async () => {
 };
 
 describe("Admin dashboard tabs", () => {
-  it("gives a state admin Grants, Analytics and User Management", async () => {
+  it("gives a state admin Grants, Analytics, User Management and Document reviews", async () => {
     signedInAs({ "custom:role": '["Admin"]', "custom:state": "MA" });
     renderDashboard();
-    expect(await tabNames()).toEqual(["Grants", "Analytics", "User management"]);
+    expect(await tabNames()).toEqual(["Grants", "Analytics", "User management", "Document reviews"]);
   });
 
   it("shows Auto-scrape grants to a developer but not to a state admin on a multi-state site", async () => {
@@ -76,7 +77,7 @@ describe("Admin dashboard tabs", () => {
   it("adds Feature Rollouts for a developer, and no Digest preview tab", async () => {
     signedInAs({ "custom:role": '["Developer"]' });
     renderDashboard();
-    expect(await tabNames()).toEqual(["Grants", "Analytics", "Feature rollouts", "User management"]);
+    expect(await tabNames()).toEqual(["Grants", "Analytics", "Feature rollouts", "User management", "Document reviews"]);
   });
 
   it("sends a non-admin to /home", async () => {
@@ -100,14 +101,19 @@ describe("Admin dashboard tabs", () => {
     expect(screen.getByText("Analytics panel")).toBeInTheDocument();
 
     await user.keyboard("{End}");
-    expect(tab("User management")).toHaveFocus();
-    expect(screen.getByText("User management panel")).toBeInTheDocument();
+    expect(tab("Document reviews")).toHaveFocus();
+    expect(screen.getByText("Document reviews panel")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Document reviews" })).toBeInTheDocument();
 
     await user.keyboard("{ArrowRight}");
     expect(tab("Grants")).toHaveFocus();
 
     await user.keyboard("{ArrowLeft}");
+    expect(tab("Document reviews")).toHaveFocus();
+
+    await user.keyboard("{ArrowLeft}");
     expect(tab("User management")).toHaveFocus();
+    expect(screen.getByText("User management panel")).toBeInTheDocument();
     expect(tab("Grants")).toHaveAttribute("tabindex", "-1");
   });
 });
@@ -132,6 +138,35 @@ describe("Admin dashboard grant list", () => {
     await screen.findByText("Plain Grant");
     const list = screen.getByRole("list", { name: "Listed grants" });
     expect([...list.querySelectorAll("li")].map((li) => li.textContent)).toEqual(["Live Grant", "Plain Grant", "Waiting Grant"]);
+  });
+});
+
+describe("Admin dashboard grant filters", () => {
+  it("filters with labelled Status and Grant type dropdowns above the table", async () => {
+    stubFetch({
+      "GET /s3-nofo-bucket-data": json({
+        nofoData: [
+          { name: "Fed Grant", status: "active", grant_type: "federal" },
+          { name: "State Grant", status: "active", grant_type: "state" },
+          { name: "Old Grant", status: "archived", grant_type: "federal" },
+        ],
+      }),
+      "GET /admin/processing-metrics": json({ metrics }),
+    });
+    signedInAs({ "custom:role": '["Developer"]' });
+    const { user } = renderDashboard();
+    await screen.findByText("Fed Grant");
+    const listed = () => [...screen.getByRole("list", { name: "Listed grants" }).querySelectorAll("li")].map((li) => li.textContent);
+
+    expect(screen.getByRole("heading", { level: 2, name: "Grants" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Filter grants/ })).toBeNull();
+    expect(screen.getByRole("combobox", { name: "Status" })).toHaveValue("active");
+    expect(listed()).toEqual(["Fed Grant", "State Grant"]);
+
+    await user.selectOptions(screen.getByRole("combobox", { name: "Grant type" }), "federal");
+    expect(listed()).toEqual(["Fed Grant"]);
+    await user.selectOptions(screen.getByRole("combobox", { name: "Status" }), "all");
+    expect(listed()).toEqual(["Fed Grant", "Old Grant"]);
   });
 });
 

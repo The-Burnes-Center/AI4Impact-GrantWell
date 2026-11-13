@@ -119,11 +119,37 @@ export async function startApplication(page: Page, nofoName: string): Promise<st
   return new URL(page.url()).pathname.split("/").pop()!;
 }
 
-/** From Project basics: fills it, skips the questionnaire, and stops on Additional information. */
-export async function fillToAdditionalInformation(page: Page): Promise<void> {
+/**
+ * A made-up project with something for every usual narrative section, so the AI writer's
+ * material check (which skips sections with nothing to write from) has material to plan from.
+ */
+export const PROJECT_MATERIAL =
+  `${PROJECT_NAME} is run by the GrantWell E2E Test Organization, a nonprofit that has served Boston, MA for 15 years ` +
+  "with a staff of 12 and an annual budget of $1.2 million. Need: 2,400 low-income residents in our service area lack " +
+  "reliable access to the services this grant supports; a 2025 community survey of 600 households found 41% had " +
+  "gone without them in the past year. Goals: reach 1,000 residents in two years, cut that gap by a quarter, and train " +
+  "40 local volunteers. Activities: months 1-3 hire a project coordinator and sign partner agreements with the city " +
+  "health department and two community colleges; months 4-24 run weekly sessions at three neighborhood sites, offer " +
+  "case management, and hold quarterly community meetings. Staff: a full-time coordinator, a part-time data analyst, " +
+  "and our executive director (10% time), who has managed $3 million in federal awards. Budget: we request $50,000 " +
+  "for personnel ($32,000), supplies and equipment ($10,000) and outreach ($8,000), with a $15,000 local cash match. " +
+  "Evaluation: we track participants served, sessions held and pre/post survey results each quarter and report to " +
+  "the funder twice a year. Sustainability: the city has committed to fund the coordinator after year two, and the " +
+  "trained volunteers keep the sites running.";
+
+/**
+ * From Project basics: fills it, then the questionnaire (each answer the project material when
+ * `material` is set, else left empty), and stops on Additional information.
+ */
+export async function fillToAdditionalInformation(page: Page, { material = false } = {}): Promise<void> {
   for (const [id, value] of Object.entries(PROJECT_BASICS)) await page.locator(`#${id}`).fill(value);
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await expect(page).toHaveURL(/step=questionnaire/);
+  if (material) {
+    const answers = page.locator('textarea[id^="question_"]');
+    await expect(answers.first().or(page.getByText("This grant has no questions yet."))).toBeVisible();
+    for (const answer of await answers.all()) await answer.fill(PROJECT_MATERIAL);
+  }
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await expect(page).toHaveURL(/step=uploadDocuments/);
 }

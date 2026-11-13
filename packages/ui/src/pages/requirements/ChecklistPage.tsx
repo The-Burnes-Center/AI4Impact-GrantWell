@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link, useParams, useLocation, useNavigate, useSearchParams } from "react-router";
+import { useParams, useLocation, useNavigate, useSearchParams } from "react-router";
 import ModelMarkdown from "../../components/common/ModelMarkdown";
 import { citationSup } from "../../components/chat/citation-sup";
 import { remarkCitationMarkers } from "../../components/chat/citations";
@@ -9,13 +9,15 @@ import { useApiClient } from "../../hooks/use-api-client";
 import { useInert } from "../../hooks/use-inert";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import HelpModal from "./components/HelpModal";
-import { GRANT_TYPES, grantTypeTint, type GrantTypeId } from "../../common/types/nofo";
+import PageMessage from "../../components/common/PageMessage";
+import GrantHeader, { type GrantFacts } from "../../components/common/GrantHeader";
+import type { RawNOFOData } from "../../common/types/document";
 import { GrantInReviewError } from "../../common/api-client/grant-in-review";
 import "../../styles/checklists.css";
 
-function RequirementsList({ text }: { text: TabText }) {
+function RequirementsList({ text, grant }: { text: TabText; grant?: string }) {
   const plugins = React.useMemo(() => (text.citations.length ? [remarkCitationMarkers(text.citations)] : []), [text.citations]);
-  const sup = React.useMemo(() => citationSup(text.citations), [text.citations]);
+  const sup = React.useMemo(() => citationSup(text.citations, { grant }), [text.citations, grant]);
   return (
     <ModelMarkdown className="custom-markdown" remarkPlugins={plugins} components={{ sup }}>
       {text.markdown}
@@ -51,7 +53,7 @@ const Checklists: React.FC = () => {
   const apiClient = useApiClient();
 
   const [llmData, setLlmData] = useState<LlmData>({ grantName: "", eligibility: EMPTY_TAB, documents: EMPTY_TAB, narrative: EMPTY_TAB, deadlines: EMPTY_TAB });
-  const [grantType, setGrantType] = useState<GrantTypeId | null>(null);
+  const [grantFacts, setGrantFacts] = useState<GrantFacts | null>(null);
   const [stateGuidance, setStateGuidance] = useState<{ stateName: string; note: string } | null>(null);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -96,10 +98,12 @@ const Checklists: React.FC = () => {
         try {
           const nofoResult = await apiClient.landingPage.getNOFOs();
           if (nofoResult.nofoData) {
-            const match = nofoResult.nofoData.find((n: { name: string; grant_type?: string }) => n.name === documentIdentifier);
-            if (match) setGrantType(match.grant_type || null);
+            const match = nofoResult.nofoData.find((n: RawNOFOData) => n.name === documentIdentifier);
+            if (match) {
+              setGrantFacts({ grantType: match.grant_type, expirationDate: match.expiration_date, isRolling: match.is_rolling });
+            }
           }
-        } catch { /* grant type is optional */ }
+        } catch { /* the facts are optional */ }
 
         setLlmData({
           grantName: result.data.GrantName || "Grant",
@@ -160,93 +164,62 @@ const Checklists: React.FC = () => {
       <div ref={inertMainRef} className="checklist-main" aria-hidden={showHelp}>
         <div className="checklist-main-container">
           {isLoading ? (
-            <div className="checklist-loading" role="status" aria-live="polite">
-              <div className="checklist-loading__spinner"><div className="loading-spinner" /></div>
-              <h2 className="checklist-loading__title">Loading requirements</h2>
-              <p className="checklist-loading__text">Retrieving grant information and requirements...</p>
-              <div className="checklist-loading__tip">
-                <span style={{ fontSize: "24px" }} aria-hidden="true">💡</span>
-                <p className="checklist-loading__tip-text">
-                  Our AI reviews eligibility criteria, deadlines, and requirements to save you hours of research time.
-                </p>
-              </div>
-            </div>
-          ) : inReviewMessage ? (
-            <div className="checklist-error">
-              <h1 className="checklist-error__title">{inReviewMessage}</h1>
-              <Link className="gw-btn gw-btn--primary checklist-error__btn" to="/home">
-                Go to home
-              </Link>
-            </div>
-          ) : notFound ? (
-            <div className="checklist-error">
-              <h1 className="checklist-error__title">Grant not found</h1>
-              <p className="checklist-error__text">
-                We couldn&apos;t find this grant. It may have been removed, or the link is wrong.
-              </p>
-              <Link className="gw-btn gw-btn--primary checklist-error__btn" to="/home">
-                Go to home
-              </Link>
-            </div>
-          ) : error ? (
-            <div className="checklist-error" role="alert">
-              <h1 className="checklist-error__title">Unable to load requirements</h1>
-              <p className="checklist-error__text">{error}</p>
-              <button className="gw-btn gw-btn--primary checklist-error__btn" onClick={() => window.location.reload()}>
-                Try again
-              </button>
-            </div>
-          ) : (
-            <div className="checklist-content">
-              <div className="checklist-content__header">
-                <div className="checklist-content__header-inner">
-                  <h1 className="checklist-content__heading">
-                    Requirements for{" "}
-                    <span className="checklist-content__heading-accent">{llmData.grantName}</span>
-                    {grantType && GRANT_TYPES[grantType] && (
-                      <>
-                        <span className="visually-hidden">,</span>{" "}
-                        <span
-                          className="gw-tag checklist-grant-badge"
-                          style={{
-                            backgroundColor: grantTypeTint(GRANT_TYPES[grantType].color, 8),
-                            color: GRANT_TYPES[grantType].color,
-                            border: `1px solid ${grantTypeTint(GRANT_TYPES[grantType].color, 25)}`,
-                          }}
-                        >
-                          {GRANT_TYPES[grantType].label}
-                        </span>
-                      </>
-                    )}
-                  </h1>
-                  <p className="checklist-content__description">
-                    Key requirement checkpoints for this grant. Review these
-                    requirements to ensure eligibility and understand what documents and narrative sections
-                    you&#39;ll need to prepare.
+            <>
+              <h1 className="visually-hidden">Requirements</h1>
+              <div className="checklist-loading" role="status" aria-live="polite">
+                <div className="checklist-loading__spinner"><div className="loading-spinner" /></div>
+                <h2 className="checklist-loading__title">Loading requirements</h2>
+                <p className="checklist-loading__text">Retrieving grant information and requirements...</p>
+                <div className="checklist-loading__tip">
+                  <span style={{ fontSize: "24px" }} aria-hidden="true">💡</span>
+                  <p className="checklist-loading__tip-text">
+                    Our AI reviews eligibility criteria, deadlines, and requirements to save you hours of research time.
                   </p>
                 </div>
-                <button className="gw-btn gw-btn--secondary checklist-help-btn" onClick={() => setShowHelp(true)}>
-                  <LuInfo size={16} aria-hidden="true" /> Help
-                </button>
               </div>
+            </>
+          ) : inReviewMessage ? (
+            <PageMessage
+              title="This grant isn't available right now"
+              message={inReviewMessage}
+              action={{ label: "Go to home", to: "/home" }}
+            />
+          ) : notFound ? (
+            <PageMessage
+              title="Grant not found"
+              message="We couldn't find this grant. It may have been removed, or the link is wrong."
+              action={{ label: "Go to home", to: "/home" }}
+            />
+          ) : error ? (
+            <PageMessage
+              alert
+              title="Unable to load requirements"
+              message={error}
+              action={{ label: "Try again", onClick: () => window.location.reload() }}
+            />
+          ) : (
+            <div className="checklist-content">
+              <GrantHeader
+                page="Requirements"
+                grantName={llmData.grantName}
+                facts={grantFacts ?? undefined}
+                actions={
+                  <button className="gw-btn gw-btn--secondary checklist-help-btn" onClick={() => setShowHelp(true)}>
+                    <LuInfo size={16} aria-hidden="true" /> Help
+                  </button>
+                }
+              />
+              <p className="checklist-content__description">
+                Key requirement checkpoints for this grant. Review these requirements to ensure eligibility and
+                understand what documents and narrative sections you&#39;ll need to prepare.
+              </p>
 
               {stateGuidance && (
-                <div
-                  role="note"
-                  className="checklist-state-guidance"
-                  style={{
-                    margin: "0 0 20px",
-                    padding: "14px 16px",
-                    borderRadius: "var(--gw-radius-container)",
-                    border: "1px solid var(--gw-color-border, #e2e8f0)",
-                    borderLeft: "4px solid var(--gw-color-primary, #23776C)",
-                    background: "var(--gw-color-surface-subtle, #f0f2f4)",
-                  }}
-                >
-                  <h2 style={{ margin: "0 0 6px", fontSize: "inherit", fontWeight: 700, lineHeight: "inherit" }}>
-                    Additional guidance for {stateGuidance.stateName}
-                  </h2>
-                  <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{stateGuidance.note}</p>
+                <div role="note" className="gw-alert gw-alert--info checklist-state-guidance">
+                  <div>
+                    <h2 className="gw-alert__title">Additional guidance for {stateGuidance.stateName}</h2>
+                    <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{stateGuidance.note}</p>
+                  </div>
                 </div>
               )}
 
@@ -284,13 +257,13 @@ const Checklists: React.FC = () => {
                   >
                     <p className="checklist-content__description">{tabContents[tabId].title}</p>
                     <div className="checklist-tabs__markdown">
-                      <RequirementsList text={tabContents[tabId].content} />
+                      <RequirementsList text={tabContents[tabId].content} grant={documentIdentifier} />
 
                       {tabId === "eligibility" && (
-                        <div className="checklist-info-box">
-                          <LuInfo size={22} color="var(--gw-color-primary)" aria-hidden="true" />
+                        <div className="gw-alert gw-alert--info checklist-info-box">
+                          <LuInfo size={20} aria-hidden="true" />
                           <div>
-                            <h2 className="checklist-info-box__title">Not sure if your organization qualifies?</h2>
+                            <h2 className="gw-alert__title">Not sure if your organization qualifies?</h2>
                             <p className="checklist-info-box__text">
                               Chat with AI can help assess your organization&#39;s eligibility based on
                               these criteria. Click &quot;Chat with AI&quot; in the navigation panel

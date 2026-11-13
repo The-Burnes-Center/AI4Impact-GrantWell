@@ -1,5 +1,5 @@
 import { Component, ErrorInfo, ReactNode } from "react";
-import { Alert } from "react-bootstrap";
+import PageMessage from "./PageMessage";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -47,39 +47,13 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         return this.props.fallback;
       }
 
-      // No role="alert" here: the react-bootstrap Alert below already carries one,
-      // and nesting two makes a screen reader announce the failure twice.
       return (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            minHeight: "200px",
-            padding: "24px",
-          }}
-        >
-          <Alert variant="danger" style={{ maxWidth: "600px", width: "100%" }}>
-            <Alert.Heading>Something went wrong</Alert.Heading>
-            <p>
-              An unexpected error occurred. Please try refreshing the page. If
-              the problem persists, contact support.
-            </p>
-            {this.state.error && (
-              <p className="mb-3" style={{ fontSize: "14px", color: "var(--gw-color-text)" }}>
-                {this.state.error.message}
-              </p>
-            )}
-            <div className="d-flex gap-2">
-              <button type="button" className="gw-btn gw-btn--danger" onClick={this.handleReset}>
-                Try again
-              </button>
-              <button type="button" className="gw-btn gw-btn--secondary" onClick={() => window.location.reload()}>
-                Reload page
-              </button>
-            </div>
-          </Alert>
-        </div>
+        <PageMessage
+          alert
+          title="Something went wrong"
+          message="This page hit an unexpected error. Try again, and if it keeps happening, reload the page."
+          action={{ label: "Try again", onClick: this.handleReset }}
+        />
       );
     }
 

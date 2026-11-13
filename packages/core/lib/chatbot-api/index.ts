@@ -90,6 +90,7 @@ export class ChatBotApi extends Construct {
       analyticsTable: tables.analyticsTable,
       dailyUsageTable: tables.dailyUsageTable,
       applicationOutcomeTable: tables.applicationOutcomeTable,
+      userDocumentTable: tables.userDocumentTable,
       knowledgeBase: knowledgeBase.knowledgeBase,
       knowledgeBaseSource: knowledgeBase.dataSource,
       userDocumentsDataSource: knowledgeBase.userDocumentsDataSource,
@@ -285,6 +286,30 @@ export class ChatBotApi extends Construct {
       integration: s3DownloadAPIIntegration,
       authorizer: httpAuthorizer,
     });
+    restBackend.restAPI.addRoutes({
+      path: "/grant-pdf-url",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: s3DownloadAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
+
+    const documentSafeguardsIntegration = new HttpLambdaIntegration(
+      "DocumentSafeguardsIntegration",
+      lambdaFunctions.documentSafeguardsFunction
+    );
+    for (const [routePath, methods] of [
+      ["/user-documents/type", [apigwv2.HttpMethod.POST]],
+      ["/user-documents/relevance", [apigwv2.HttpMethod.POST]],
+      ["/user-documents/relevance/review", [apigwv2.HttpMethod.POST]],
+      ["/admin/document-reviews", [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST]],
+    ] as const) {
+      restBackend.restAPI.addRoutes({
+        path: routePath,
+        methods: [...methods],
+        integration: documentSafeguardsIntegration,
+        authorizer: httpAuthorizer,
+      });
+    }
 
     const s3UploadNOFOAPIIntegration = new HttpLambdaIntegration(
       "nofoUploadS3APIHandlerFunction",
@@ -474,6 +499,7 @@ export class ChatBotApi extends Construct {
         USER_DOCUMENTS_BUCKET: buckets.userDocumentsBucket.bucketName,
         SYNC_KB_FUNCTION_NAME: lambdaFunctions.syncKBFunction.functionName,
         OUTCOME_TABLE_NAME: tables.applicationOutcomeTable.tableName,
+        USER_DOCUMENT_TABLE_NAME: tables.userDocumentTable.tableName,
       },
       timeout: cdk.Duration.seconds(30),
     });
@@ -492,6 +518,7 @@ export class ChatBotApi extends Construct {
           tables.historyTable.tableArn,
           tables.draftTable.tableArn,
           tables.draftVersionTable.tableArn,
+          tables.userDocumentTable.tableArn,
         ],
       })
     );

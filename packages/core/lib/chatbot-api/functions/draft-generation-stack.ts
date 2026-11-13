@@ -41,8 +41,15 @@ export interface DraftGenerationStackProps extends cdk.NestedStackProps {
   readonly jsSharedLayer: lambda.ILayerVersion;
   /** Bedrock application inference profile owned by the parent. */
   readonly sonnetDraftProfileArn: string;
+  /** Holds each document's per-grant relevance verdict; a section step checks a document that has none. */
+  readonly userDocumentTable: Table;
+  readonly haikuDocCheckProfileArn: string;
   readonly supportedStatesEnv: string;
   readonly legacyStatelessAdminIsPlatform: string;
+  /** Haiku profile for the plan step's check of which sections have material. */
+  readonly haikuDraftPlanProfileArn: string;
+  /** Assemble gives back the day's application when a draft had nothing to write from. */
+  readonly dailyUsageTable: Table;
 }
 
 export class DraftGenerationStack extends cdk.NestedStack {
@@ -100,8 +107,12 @@ export class DraftGenerationStack extends cdk.NestedStack {
           BUCKET: props.ffioNofosBucket.bucketName,
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
           DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
+          USER_DOCUMENT_TABLE_NAME: props.userDocumentTable.tableName,
+          DOC_CHECK_MODEL_ID: props.haikuDocCheckProfileArn,
           SUPPORTED_STATES: props.supportedStatesEnv,
           LEGACY_STATELESS_ADMIN_IS_PLATFORM: props.legacyStatelessAdminIsPlatform,
+          MATCH_MODEL_ID: props.haikuDraftPlanProfileArn,
+          DRAFT_TABLE_NAME: props.draftTable.tableName,
         },
         timeout: cdk.Duration.minutes(5),
         // Holds the grant text, the applicant's PDFs (up to 20 MB) and their base64 request body at once.
@@ -117,6 +128,19 @@ export class DraftGenerationStack extends cdk.NestedStack {
     );
     draftGenerateSectionFunction.addToRolePolicy(
       dynamoUpdateItemPolicy(props.draftGenerationJobsTable.tableArn)
+    );
+    draftGenerateSectionFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ["dynamodb:BatchGetItem", "dynamodb:GetItem", "dynamodb:PutItem"],
+        resources: [props.userDocumentTable.tableArn],
+      })
+    );
+    // A summary section reads the drafted sections from the job and the saved application.
+    draftGenerateSectionFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ["dynamodb:GetItem"],
+        resources: [props.draftGenerationJobsTable.tableArn, props.draftTable.tableArn],
+      })
     );
     for (const bucket of [props.userDocumentsBucket, props.grantArtifactsBucket, props.ffioNofosBucket]) {
       draftGenerateSectionFunction.addToRolePolicy(s3ReadOnlyPolicy(bucket.bucketArn));
@@ -135,6 +159,7 @@ export class DraftGenerationStack extends cdk.NestedStack {
         environment: {
           DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
           DRAFT_TABLE_NAME: props.draftTable.tableName,
+          DAILY_USAGE_TABLE_NAME: props.dailyUsageTable.tableName,
         },
         timeout: cdk.Duration.seconds(30),
         memorySize: 128,
@@ -153,6 +178,9 @@ export class DraftGenerationStack extends cdk.NestedStack {
           props.draftTable.tableArn,
         ],
       })
+    );
+    draftAssembleFunction.addToRolePolicy(
+      dynamoUpdateItemPolicy(props.dailyUsageTable.tableArn)
     );
 
     const draftGenerationPipeline = new DraftGenerationStateMachine(

@@ -6,9 +6,9 @@ Playwright drives the deployed dev site (`grantwell-burnes-staging`) as one dedi
 |---|---|
 | `tests/auth.setup.ts` | Sign in with email, password and TOTP; clear the account's leftovers; pick the run's NOFO |
 | `tests/nofo.spec.ts` | Search the NOFO, select it, read its four requirement tabs |
-| `tests/chat.spec.ts` | Ask the assistant about the NOFO, check the answer and its sources, reload |
-| `tests/documents.spec.ts` | Upload a text file in My documents, tick it in a new chat, ask about it, check Sources, untick it, see it unticked in a new application, delete it |
-| `tests/draft.spec.ts` | Project basics → nothing ticked under Supporting Documents → generate every narrative section → review → export Word and PDF |
+| `tests/chat.spec.ts` | Ask the assistant about the NOFO, check the answer and the Grant panel's Sources tab, reload |
+| `tests/documents.spec.ts` | Upload a text file in My documents as a Budget, tick it in a new chat's Grant panel, wait for the check that it relates to the grant, ask about it, check its sources, untick it, see it unticked in a new application, delete it |
+| `tests/draft.spec.ts` | Project basics, questionnaire answers and additional context → nothing ticked under supporting documents → generate → every section drafted or skipped with a note → review → export Word and PDF |
 | `tests/search.spec.ts` | Plain-language AI search on the home page with Enter: results arrive, the Status filter stays as set |
 | `tests/admin.spec.ts` | Open User Management, see the user list, find the test account by search (read-only) |
 | `tests/smoke.spec.ts` | API only: every read-only route answers with its exact status as the admin, with 401 without a token, 404 for missing items, 403 on Developer-only routes and on another user's document keys |
@@ -91,7 +91,7 @@ The suite deletes only through the app's own APIs, as the test user. The handler
 - **Start of each run:** delete every session and draft the account holds, every `e2e-` file in its My documents, and clear its recently viewed list.
 - **Chat:** delete the session after the reply has finished saving.
 - **Draft:** wait for the generation job to end, delete the draft, then delete it again 10 s later. The pipeline and the version writer can write after the first delete.
-- **Documents:** the journey deletes its file in My documents; if it fails first, cleanup deletes it through the API, along with its chat and application.
+- **Documents:** the journey deletes its file in My documents, which also deletes its type and relevance rows; if it fails first, cleanup deletes it through the API, along with its chat and application.
 
 Some data stays:
 - each run's uploaded file (a few hundred bytes) as a noncurrent version, because the user-documents bucket is versioned with no expiry;

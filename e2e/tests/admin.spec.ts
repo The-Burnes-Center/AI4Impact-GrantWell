@@ -12,7 +12,7 @@ test("User Management lists users and finds the test account", async ({ page }) 
   await tab.click();
 
   const panel = page.locator(".user-management-panel");
-  await expect(panel.getByRole("heading", { name: "User management" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 2, name: "User management" })).toBeVisible();
   await expect(panel.locator(".user-management-table tbody tr").first()).toBeVisible();
 
   await panel.getByRole("searchbox", { name: "Search users" }).fill(USER_EMAIL);

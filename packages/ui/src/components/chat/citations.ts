@@ -1,4 +1,5 @@
 import type { ChatCitation } from "./types";
+import { GRANT_DOCUMENT } from "../../common/grant-pdf";
 
 interface MdNode {
   type: string;
@@ -18,10 +19,17 @@ export function citationsOf(metadata: Record<string, unknown> | undefined): Chat
   );
 }
 
-/** "Grant document, page 12", "board.pdf, pages 3–4" or just the document. */
-export function citationSource(c: ChatCitation): string {
-  if (!c.page) return c.document;
-  return c.lastPage && c.lastPage > c.page ? `${c.document}, pages ${c.page}–${c.lastPage}` : `${c.document}, page ${c.page}`;
+/** The first page a citation covers, when known. */
+export function citationPage(c: ChatCitation): number | undefined {
+  return typeof c.page === "number" && c.page > 0 ? c.page : undefined;
+}
+
+/** "Grant, page 12", "board.pdf, pages 3–4", or just the name when there is no page. */
+export function citationHeading(c: ChatCitation): string {
+  const name = c.document === GRANT_DOCUMENT ? "Grant" : c.document;
+  const page = citationPage(c);
+  if (!page) return name;
+  return c.lastPage && c.lastPage > page ? `${name}, pages ${page}–${c.lastPage}` : `${name}, page ${page}`;
 }
 
 function textNodes(tree: MdNode): MdNode[] {

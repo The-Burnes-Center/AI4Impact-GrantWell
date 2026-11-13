@@ -10,10 +10,12 @@ import { NotificationProvider } from "./components/notifications/NotificationMan
 import NotificationBar from "./components/notifications/NotificationBar";
 import { AccessDeniedProvider } from "./components/access-denied/AccessDeniedManager";
 import { useBranding } from "./common/branding";
+import { PageTitleProvider, usePageTitleOverride } from "./common/page-title";
 import { IS_PROD } from "./common/instance";
 import { EDITOR_STEPS } from "./common/helpers/document-editor-utils";
 import NotFoundPage from "./pages/not-found/NotFoundPage";
 import "./styles/app.scss";
+import LoadingSpinner from "./components/ui/LoadingSpinner";
 
 const Playground = React.lazy(() => import("./pages/chat/playground/PlaygroundPage"));
 const SessionPage = React.lazy(() => import("./pages/chat/sessions/SessionsPage"));
@@ -24,6 +26,7 @@ const DocEditorSessionsPage = React.lazy(() => import("./pages/document-editor/D
 const Dashboard = React.lazy(() => import("./pages/dashboard/DashboardPage"));
 const ProfilePage = React.lazy(() => import("./pages/profile/ProfilePage"));
 const DocumentsPage = React.lazy(() => import("./pages/documents/DocumentsPage"));
+const GrantPdfPage = React.lazy(() => import("./pages/grant-pdf/GrantPdfPage"));
 const WhatsNewContent = React.lazy(() =>
   import("./pages/whats-new/WhatsNewPage").then((m) => ({ default: m.WhatsNewContent }))
 );
@@ -32,6 +35,7 @@ function ScrollToTop(): null {
   const { pathname, search, hash } = useLocation();
   const prevPathRef = useRef<string>("");
   const { appName, analyticsId } = useBranding();
+  const titleOverride = usePageTitleOverride();
 
   useEffect(() => {
     const fullPath = pathname + search;
@@ -58,6 +62,7 @@ function ScrollToTop(): null {
         "/document-editor": "Write application",
         "/document-editor/drafts": "My applications",
         "/documents": "My documents",
+        "/whats-new": "What's new",
       };
 
       if (exactMatches[path]) {
@@ -77,9 +82,10 @@ function ScrollToTop(): null {
       return null;
     };
 
-    const label = getPageLabel(pathname);
+    const label = titleOverride ?? getPageLabel(pathname);
     const home = pathname === "/" || pathname === "/home";
     const step =
+      !titleOverride &&
       label === "Write application" &&
       EDITOR_STEPS.find((s) => s.id === new URLSearchParams(search).get("step"));
     const baseTitle = !label
@@ -104,7 +110,7 @@ function ScrollToTop(): null {
         });
       }
     }
-  }, [pathname, search, hash, appName, analyticsId]);
+  }, [pathname, search, hash, appName, analyticsId, titleOverride]);
 
   return null;
 }
@@ -117,12 +123,13 @@ function AppContent() {
   return (
     <NotificationProvider>
       <AccessDeniedProvider>
+      <PageTitleProvider>
       <ScrollToTop />
       {/* Brand Banner, Header, and Footer are now rendered globally in AppConfigured */}
       <main id="main-content" tabIndex={-1}>
         <NotificationBar />
         <ErrorBoundary>
-          <Suspense fallback={<div className="lazy-loading-fallback" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>Loading...</div>}>
+          <Suspense fallback={<LoadingSpinner message="Loading…" showMessage />}>
             <Routes>
             <Route
               index
@@ -149,6 +156,7 @@ function AppContent() {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/documents" element={<DocumentsPage />} />
             <Route path="/whats-new" element={<WhatsNewContent />} />
+            <Route path="/grant-pdf" element={<GrantPdfPage />} />
             <Route path="/admin" element={<Dashboard />} />
             <Route
               path="/admin/dashboard"
@@ -159,6 +167,7 @@ function AppContent() {
           </Suspense>
         </ErrorBoundary>
       </main>
+      </PageTitleProvider>
       </AccessDeniedProvider>
     </NotificationProvider>
   );

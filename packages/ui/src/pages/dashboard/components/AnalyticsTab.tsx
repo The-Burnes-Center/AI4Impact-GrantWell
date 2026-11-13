@@ -147,24 +147,23 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
               </select>
             </div>
           )}
-          <div
-            className="gw-toggle analytics__window"
-            role="group"
-            aria-label="Time window"
-          >
-            {WINDOWS.map((w) => (
-              <button
-                key={w}
-                type="button"
-                className={`gw-toggle__option analytics__window-btn ${
-                  windowDays === w ? "analytics__window-btn--active" : ""
-                }`}
-                aria-pressed={windowDays === w}
-                onClick={() => setWindowDays(w)}
-              >
-                Last {w} days
-              </button>
-            ))}
+          <div className="gw-field analytics__window">
+            <span className="gw-field__label" id="analytics-window-label">
+              Time period
+            </span>
+            <div className="gw-toggle" role="group" aria-labelledby="analytics-window-label">
+              {WINDOWS.map((w) => (
+                <button
+                  key={w}
+                  type="button"
+                  className="gw-toggle__option"
+                  aria-pressed={windowDays === w}
+                  onClick={() => setWindowDays(w)}
+                >
+                  Last {w} days
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

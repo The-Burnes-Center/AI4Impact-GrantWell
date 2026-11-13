@@ -66,7 +66,7 @@ describe("DocumentEditorPage", () => {
   it("opens Project basics for an application with no row yet", async () => {
     stubServer(null);
     renderEditor("?step=projectBasics&grant=Grant%20A");
-    expect(await screen.findByRole("heading", { level: 1, name: "Grant A" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 1, name: "Write application: Grant A" })).toBeInTheDocument();
     expect(screen.queryByText("Application not found")).not.toBeInTheDocument();
   });
 

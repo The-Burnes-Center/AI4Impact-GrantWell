@@ -48,6 +48,10 @@ function model(input: any) {
     if (props.EligibilityCriteria) return reply(JSON.stringify(SUMMARY));
     if (props.questions) return reply(JSON.stringify(QUESTIONS));
     if (props.content) return reply(JSON.stringify({ content: "We serve 4,200 residents." }));
+    if (props.sections) {
+      const ids = [...body.messages[0].content.at(-1).text.matchAll(/<section id="([^"]+)">/g)].map((m: string[]) => m[1]);
+      return reply(JSON.stringify({ sections: ids.map((id) => ({ id, summary: false, material: true, sources: [], missing: "" })) }));
+    }
     if (props.verdicts) return haikuJudge()(input);
     if (props.results) return reply(JSON.stringify({ results: [] }));
   }
@@ -130,7 +134,7 @@ describe("eval harness", () => {
     expect(r.usage[0].model).toBe(h.models.haiku);
   });
 
-  it("draft gives every section the grant's full text and never searches the KB", async () => {
+  it("draft plans the sections, gives every section the grant's full text and never searches the KB", async () => {
     kb.on(RetrieveCommand).rejects(new Error("drafting must not search the KB"));
     const replay = h.aws.retrieval(h.grant.recordingPath, "replay");
     const r = await h.draft(h.grant, { summary: SUMMARY, retrieval: replay });
@@ -139,8 +143,9 @@ describe("eval harness", () => {
       ["Need", "We serve 4,200 residents."],
       ["Approach", "We serve 4,200 residents."],
     ]);
-    expect(new Set(r.usage.map((u: any) => u.stage)).size).toBe(2);
-    for (const call of bedrock.commandCalls(InvokeModelCommand)) {
+    expect(new Set(r.usage.map((u: any) => u.stage))).toEqual(new Set(["plan", "draft:need", "draft:approach"]));
+    expect(r.usage.find((u: any) => u.stage === "plan").model).toBe(h.models.haiku);
+    for (const call of bedrock.commandCalls(InvokeModelCommand).filter((c) => c.args[0].input.modelId !== h.models.haiku)) {
       const [grantBlock] = JSON.parse(call.args[0].input.body as string).messages[0].content;
       expect(grantBlock.text).toContain("Applications are due December 1, 2026.");
       expect(grantBlock.cache_control).toEqual({ type: "ephemeral" });

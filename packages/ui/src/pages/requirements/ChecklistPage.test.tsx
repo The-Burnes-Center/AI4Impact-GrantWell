@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import { Route, Routes } from "react-router";
 import { describe, expect, it, vi } from "vitest";
 import { json, stubFetch } from "../../test/fetch-routes";
@@ -96,9 +96,8 @@ describe("ChecklistPage missing grant", () => {
     renderChecklist(
       json({ error: "GRANT_IN_REVIEW", message: "This grant is being reviewed and will be back soon." }, 409)
     );
-    expect(
-      await screen.findByRole("heading", { level: 1, name: "This grant is being reviewed and will be back soon." })
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 1, name: "This grant isn't available right now" })).toBeInTheDocument();
+    expect(screen.getByText("This grant is being reviewed and will be back soon.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Go to home" })).toHaveAttribute("href", "/home");
     expect(screen.queryByText("Grant not found")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Try again" })).not.toBeInTheDocument();
@@ -113,10 +112,22 @@ describe("ChecklistPage missing grant", () => {
 });
 
 describe("ChecklistPage heading and tabs", () => {
-  it("keeps the grant type badge apart from the grant name in the heading", async () => {
-    renderChecklist(json(SUMMARY));
+  it("names the page and grant in the h1 and lists the known facts under it", async () => {
+    renderChecklist(
+      json(SUMMARY),
+      json({ nofoData: [{ name: "Grant A", grant_type: "state", expiration_date: "2026-12-15T12:00:00Z" }] })
+    );
     await screen.findByRole("tab", { name: "Eligibility" });
-    expect(screen.getByRole("heading", { level: 1 })).toHaveAccessibleName("Requirements for Grant A, State");
+    expect(screen.getByRole("heading", { level: 1 })).toHaveAccessibleName("Requirements: Grant A");
+    const facts = screen.getByRole("list", { name: "Key facts" });
+    expect(within(facts).getAllByRole("listitem").map((li) => li.textContent)).toEqual(["Due Dec 15, 2026", "State"]);
+  });
+
+  it("leaves out a fact it doesn't know", async () => {
+    renderChecklist(json(SUMMARY), json({ nofoData: [{ name: "Grant A", is_rolling: true }] }));
+    await screen.findByRole("tab", { name: "Eligibility" });
+    const facts = screen.getByRole("list", { name: "Key facts" });
+    expect(within(facts).getAllByRole("listitem").map((li) => li.textContent)).toEqual(["Rolling deadline"]);
   });
 
   it("moves focus with the selection on Arrow, Home and End keys", async () => {
@@ -161,6 +172,7 @@ describe("ChecklistPage requirement citations", () => {
         },
       }),
       "GET /s3-nofo-bucket-data": json({ nofoData: [] }),
+      "GET /grant-pdf-url": json({ available: true, signedUrl: "https://s3.test/x" }),
     });
 
     const { user } = renderApp(
@@ -170,11 +182,14 @@ describe("ChecklistPage requirement citations", () => {
       { route: "/requirements/Grant%20A" }
     );
 
-    const button = await screen.findByRole("button", { name: "Quote 1, Grant document, page 4" });
-    expect(screen.getAllByRole("button", { name: /^Quote/ })).toHaveLength(1);
+    const button = await screen.findByRole("button", { name: "Source 1, Grant, page 4" });
+    expect(screen.getAllByRole("button", { name: /^Source/ })).toHaveLength(1);
     expect(button.closest("li")?.textContent).toMatch(/^Cities: Any city may apply\.1$/);
     await user.click(button);
-    expect(screen.getByText("“Eligible applicants are cities.”")).toBeInTheDocument();
+    const dialog = screen.getByRole("dialog", { name: "Source 1" });
+    expect(dialog.querySelector("q")?.textContent).toBe("Eligible applicants are cities.");
+    const link = await screen.findByRole("link", { name: "Open the grant at page 4 (opens in new tab)" });
+    expect(link).toHaveAttribute("href", "/grant-pdf?grant=Grant+A&page=4");
     const summary = calls.find((c) => c.url.pathname === "/s3-nofo-summary");
     expect(summary?.url.searchParams.get("citations")).toBe("1");
   });

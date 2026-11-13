@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { json, stubFetch } from "../../test/fetch-routes";
 import { testConfig } from "../../test/render";
-import { DraftsClient, InputTooLongError } from "./drafts-client";
+import { DraftsClient, InputTooLongError, NoMaterialError } from "./drafts-client";
 
 const DOCX = "POST /generate-docx";
 const PDF = "POST /generate-pdf";
@@ -35,6 +35,7 @@ describe("DraftsClient.startDraftGeneration", () => {
       documentIdentifier: "Grant A",
       questionnaire: { question_1: "Rural seniors" },
       questionnaireAnswers: [{ question: "Who will the project serve?", answer: "Rural seniors" }],
+      questions: [{ number: 1, question: "Who will the project serve?" }, { number: 2, question: "What will it cost?" }],
       additionalInfo: "We partner with the council on aging.",
       sessionId: "s1",
       documentKeys: ["user-1/documents/plan.pdf"],
@@ -46,6 +47,7 @@ describe("DraftsClient.startDraftGeneration", () => {
       projectBasics: {},
       questionnaire: { question_1: "Rural seniors" },
       questionnaireAnswers: [{ question: "Who will the project serve?", answer: "Rural seniors" }],
+      questions: [{ number: 1, question: "Who will the project serve?" }, { number: 2, question: "What will it cost?" }],
       additionalInfo: "We partner with the council on aging.",
       sessionId: "s1",
       documentKeys: ["user-1/documents/plan.pdf"],
@@ -68,6 +70,14 @@ describe("DraftsClient.startDraftGeneration", () => {
       sessionId: "s1",
     });
     await expect(started).rejects.toBeInstanceOf(InputTooLongError);
+    await expect(started).rejects.toThrow(message);
+  });
+
+  it("carries the API's message when there is nothing to write from", async () => {
+    const message = "Add your project basics or answer some questions first; GrantWell needs something to write from.";
+    stubFetch({ [START]: json({ error: "NO_MATERIAL", message }, 400) });
+    const started = new DraftsClient(testConfig).startDraftGeneration({ query: "q", documentIdentifier: "Grant A", sessionId: "s1" });
+    await expect(started).rejects.toBeInstanceOf(NoMaterialError);
     await expect(started).rejects.toThrow(message);
   });
 });

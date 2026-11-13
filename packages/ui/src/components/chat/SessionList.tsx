@@ -10,16 +10,21 @@ import { getCurrentUser } from "aws-amplify/auth";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { DateTime } from "luxon";
-import { useNavigate } from "react-router";
-import { LuArrowUpDown, LuArrowUp, LuArrowDown, LuPlus, LuTrash, LuRefreshCw, LuCalendar } from "react-icons/lu";
+import { Link, useNavigate } from "react-router";
+import { LuPlus, LuTrash, LuRefreshCw, LuCalendar } from "react-icons/lu";
 import { DeleteConfirmationModal } from "../common/DeleteConfirmationModal";
 import GrantPickerModal, { type PickedGrant } from "../common/GrantPickerModal";
 import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
 import TableScrollRegion from "../ui/TableScrollRegion";
+import SortableHeader from "../ui/SortableHeader";
 import PaginationControls from "../common/PaginationControls";
+import PageHeader from "../common/PageHeader";
 import { v4 as uuidv4 } from "uuid";
 import { useNotifications } from "../notifications/NotificationManager";
 import "../../styles/dashboard.css";
+import SkeletonRows from "../ui/SkeletonRows";
+import { CardListItem, CardListToolbar } from "../ui/CardList";
+import { CARD_LIST_QUERY, useMediaQuery } from "../../hooks/use-media-query";
 
 export interface SessionsProps {
   readonly toolsOpen: boolean;
@@ -28,6 +33,13 @@ export interface SessionsProps {
 }
 
 type Session = import("../../common/api-client/sessions-client").SessionListItem;
+
+const CHAT_SORTS = [
+  { value: "time_stamp:desc", label: "Newest first" },
+  { value: "time_stamp:asc", label: "Oldest first" },
+  { value: "title:asc", label: "Title, A to Z" },
+  { value: "title:desc", label: "Title, Z to A" },
+];
 
 export default function Sessions(props: SessionsProps) {
   const appContext = useContext(AppContext);
@@ -116,17 +128,27 @@ export default function Sessions(props: SessionsProps) {
     setSelectedItems(e.target.checked ? paginatedItems : []);
   };
 
-  const handleSelectItem = (
-    item: Session,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    if (e.target.checked) {
+  const setItemSelected = (item: Session, checked: boolean) => {
+    if (checked) {
       setSelectedItems((prev) => [...prev, item]);
     } else {
       setSelectedItems((prev) =>
         prev.filter((i) => i.session_id !== item.session_id)
       );
     }
+  };
+
+  const handleSelectItem = (
+    item: Session,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => setItemSelected(item, e.target.checked);
+
+  const chatPath = (item: Session) =>
+    `/chat/${item.session_id}${item.document_identifier ? `?grant=${encodeURIComponent(item.document_identifier)}` : ""}`;
+
+  const openChat = (item: Session) => {
+    props.onSessionSelect?.(item.session_id);
+    navigate(chatPath(item));
   };
 
   const handleSort = (field: "title" | "time_stamp") => {
@@ -158,10 +180,8 @@ export default function Sessions(props: SessionsProps) {
     return sortedSessions.slice(startIndex, startIndex + pageSize);
   }, [sortedSessions, currentPage, pageSize]);
 
-  const getSortIcon = (field: "title" | "time_stamp") => {
-    if (sortField !== field) return <LuArrowUpDown size={14} aria-hidden="true" />;
-    return sortDirection === "asc" ? <LuArrowUp size={14} aria-hidden="true" /> : <LuArrowDown size={14} aria-hidden="true" />;
-  };
+  const sortDirectionFor = (field: "title" | "time_stamp") =>
+    sortField !== field ? null : sortDirection === "asc" ? "ascending" : "descending";
 
   const formatSessionTime = (timestamp: string) => {
     return DateTime.fromISO(new Date(timestamp).toISOString()).toLocaleString(
@@ -172,6 +192,26 @@ export default function Sessions(props: SessionsProps) {
   const startChat = (documentIdentifier: string) => {
     navigate(`/chat/${uuidv4()}?grant=${encodeURIComponent(documentIdentifier)}`);
   };
+
+  const newChat = () => {
+    if (props.documentIdentifier) {
+      startChat(props.documentIdentifier);
+    } else {
+      setShowGrantPicker(true);
+    }
+  };
+
+  const asCards = useMediaQuery(CARD_LIST_QUERY);
+
+  const emptyState = (
+    <div className="no-data">
+      <p>No chats</p>
+      <button type="button" className="gw-btn gw-btn--primary" onClick={newChat}>
+        <LuPlus size={16} aria-hidden="true" />
+        <span>New chat</span>
+      </button>
+    </div>
+  );
 
   const handleGrantPicked = (grant: PickedGrant) => {
     addToRecentlyViewed(grant);
@@ -198,72 +238,116 @@ export default function Sessions(props: SessionsProps) {
         itemLabel="chat"
       />
 
-      {/* Header section */}
-      <div className="dashboard-header dashboard-header--wrap">
-        <div>
-          <h1>My chats</h1>
-          <p style={{ marginTop: "4px", color: "var(--gw-color-text-secondary)", fontSize: "14px" }}>
-            Manage and access your previous chats
-          </p>
-        </div>
-        <div className="dashboard-actions">
-          <button
-            className="gw-btn gw-btn--primary action-button add-button"
-            onClick={() => {
-              if (props.documentIdentifier) {
-                startChat(props.documentIdentifier);
-              } else {
-                setShowGrantPicker(true);
-              }
-            }}
-          >
-            <LuPlus size={16} className="button-icon" aria-hidden="true" />
-            <span>New chat</span>
-          </button>
-          <button
-            className="gw-btn gw-btn--danger action-button danger-button"
-            onClick={() => setShowModalDelete(true)}
-            disabled={selectedItems.length === 0}
-            style={{
-              backgroundColor: selectedItems.length === 0 ? "var(--gw-color-surface-subtle)" : "var(--gw-color-danger)",
-              color: selectedItems.length === 0 ? "var(--gw-color-text-muted)" : "white",
-              cursor: selectedItems.length === 0 ? "not-allowed" : "pointer",
-            }}
-          >
-            <LuTrash size={16} className="button-icon" aria-hidden="true" />
-            <span>Delete</span>
-          </button>
-          <button
-            className="gw-btn gw-btn--secondary action-button refresh-button"
-            onClick={async () => {
-              if (isLoading) return;
-              setIsLoading(true);
-              await getSessions();
-              setIsLoading(false);
-            }}
-            aria-disabled={isLoading || undefined}
-            aria-label={isLoading ? "Refreshing chats list" : "Refresh chats list"}
-            aria-busy={isLoading}
-          >
-            {isLoading ? (
-              <span className="refresh-loading">Refreshing...</span>
-            ) : (
-              <>
-                <LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" />
-                <span>Refresh</span>
-              </>
-            )}
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        title="My chats"
+        intro="Manage and access your previous chats"
+        actions={
+          <>
+            <button
+              className="gw-btn gw-btn--primary action-button add-button"
+              onClick={newChat}
+            >
+              <LuPlus size={16} className="button-icon" aria-hidden="true" />
+              <span>New chat</span>
+            </button>
+            <button
+              className="gw-btn gw-btn--danger action-button danger-button"
+              onClick={() => selectedItems.length > 0 && setShowModalDelete(true)}
+              aria-disabled={selectedItems.length === 0 || undefined}
+            >
+              <LuTrash size={16} className="button-icon" aria-hidden="true" />
+              <span>Delete</span>
+            </button>
+            <button
+              className="gw-btn gw-btn--secondary action-button refresh-button"
+              onClick={async () => {
+                if (isLoading) return;
+                setIsLoading(true);
+                await getSessions();
+                setIsLoading(false);
+              }}
+              aria-disabled={isLoading || undefined}
+              aria-label={isLoading ? "Refreshing chats list" : "Refresh chats list"}
+              aria-busy={isLoading}
+            >
+              {isLoading ? (
+                <span className="refresh-loading">Refreshing...</span>
+              ) : (
+                <>
+                  <LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" />
+                  <span>Refresh</span>
+                </>
+              )}
+            </button>
+          </>
+        }
+      />
 
-      {/* Table section */}
+      {asCards ? (
+        <>
+          <CardListToolbar
+            selectAll={{
+              checked: paginatedItems.length > 0 && selectedItems.length === paginatedItems.length,
+              onChange: (checked) => setSelectedItems(checked ? paginatedItems : []),
+              label: "Select all chats",
+              disabled: isLoading || sortedSessions.length === 0,
+            }}
+            sort={{
+              value: `${sortField}:${sortDirection}`,
+              options: CHAT_SORTS,
+              onChange: (value) => {
+                const [field, direction] = value.split(":") as ["title" | "time_stamp", "asc" | "desc"];
+                setSortField(field);
+                setSortDirection(direction);
+              },
+              disabled: isLoading,
+            }}
+          />
+          {isLoading ? (
+            <SkeletonRows label="Loading chats" />
+          ) : sortedSessions.length === 0 ? (
+            emptyState
+          ) : (
+            <ul className="gw-card-list" aria-label="Chats">
+              {paginatedItems.map((item) => (
+                <CardListItem
+                  key={item.session_id}
+                  select={{
+                    checked: selectedItems.some((i) => i.session_id === item.session_id),
+                    onChange: () => setItemSelected(item, !selectedItems.some((i) => i.session_id === item.session_id)),
+                    label: `Select ${item.title}, ${formatSessionTime(item.time_stamp)}`,
+                  }}
+                  title={
+                    <Link
+                      to={chatPath(item)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        openChat(item);
+                      }}
+                    >
+                      {item.title}
+                    </Link>
+                  }
+                  facts={[
+                    { label: "Time", value: <time dateTime={item.time_stamp}>{formatSessionTime(item.time_stamp)}</time> },
+                  ]}
+                />
+              ))}
+            </ul>
+          )}
+        </>
+      ) : (
       <TableScrollRegion label="Chats table" minWidth={520}>
       <div className="table-container">
-        <div role="table" aria-label="Chats">
-          <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "104px 2.5fr 1fr" }}>
-            <div role="row" style={{ display: "contents" }}>
-              <div className="header-cell" role="cell">
+        <table className="gw-table" aria-label="Chats">
+          <colgroup>
+            <col style={{ width: 104 }} />
+            <col style={{ width: "71%" }} />
+            <col />
+          </colgroup>
+          <thead>
+            <tr>
+              <td className="header-cell header-cell--select">
                 <label className="gw-select-all">
                   <input
                     type="checkbox"
@@ -278,67 +362,33 @@ export default function Sessions(props: SessionsProps) {
                   />
                   <span aria-hidden="true">Select all</span>
                 </label>
-              </div>
-              <div
-                className="header-cell"
-                role="columnheader"
-                aria-sort={sortField === "title" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
-              >
-                <button
-                  onClick={() => !isLoading && handleSort("title")}
-                  disabled={isLoading}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    background: "none",
-                    border: "none",
-                    cursor: isLoading ? "default" : "pointer",
-                    padding: "4px 2px",
-                    font: "inherit",
-                    color: "inherit",
-                  }}
-                >
-                  Title {!isLoading && getSortIcon("title")}
-                </button>
-              </div>
-              <div
-                className="header-cell"
-                role="columnheader"
-                aria-sort={sortField === "time_stamp" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
-              >
-                <button
-                  onClick={() => !isLoading && handleSort("time_stamp")}
-                  disabled={isLoading}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    background: "none",
-                    border: "none",
-                    cursor: isLoading ? "default" : "pointer",
-                    padding: "4px 2px",
-                    font: "inherit",
-                    color: "inherit",
-                  }}
-                >
-                  Time {!isLoading && getSortIcon("time_stamp")}
-                </button>
-              </div>
-            </div>
-          </div>
+              </td>
+              <SortableHeader
+                label="Title"
+                direction={sortDirectionFor("title")}
+                onSort={() => !isLoading && handleSort("title")}
+                disabled={isLoading}
+              />
+              <SortableHeader
+                label="Time"
+                direction={sortDirectionFor("time_stamp")}
+                onSort={() => !isLoading && handleSort("time_stamp")}
+                disabled={isLoading}
+              />
+            </tr>
+          </thead>
           {!isLoading && (
-            <div className="table-body" role={sortedSessions.length === 0 ? undefined : "rowgroup"}>
+            <tbody>
               {sortedSessions.length === 0 ? (
-                <div className="no-data">
-                  <div style={{ fontSize: "18px", fontWeight: "500", marginBottom: "8px" }}>
-                    No chats
-                  </div>
-                </div>
+                <tr>
+                  <td className="row-cell row-cell--empty" colSpan={3}>
+                    {emptyState}
+                  </td>
+                </tr>
               ) : (
                 paginatedItems.map((item) => (
-                  <div key={item.session_id} className="table-row" role="row" style={{ gridTemplateColumns: "104px 2.5fr 1fr" }}>
-                    <div className="row-cell" role="cell">
+                  <tr key={item.session_id} className="table-row">
+                    <td className="row-cell">
                       <input
                         type="checkbox"
                         checked={selectedItems.some(
@@ -348,24 +398,10 @@ export default function Sessions(props: SessionsProps) {
                         aria-label={`Select ${item.title}, ${formatSessionTime(item.time_stamp)}`}
                         style={{ cursor: "pointer" }}
                       />
-                    </div>
-                    <div className="row-cell" role="cell">
+                    </td>
+                    <td className="row-cell">
                       <button
-                        onClick={() => {
-                          if (props.onSessionSelect) {
-                            props.onSessionSelect(item.session_id);
-                          }
-
-                          const queryParam = item.document_identifier
-                            ? `?grant=${encodeURIComponent(
-                                item.document_identifier
-                              )}`
-                            : "";
-
-                          navigate(
-                            `/chat/${item.session_id}${queryParam}`
-                          );
-                        }}
+                        onClick={() => openChat(item)}
                         style={{
                           color: "var(--gw-color-primary-hover)",
                           background: "none",
@@ -380,28 +416,25 @@ export default function Sessions(props: SessionsProps) {
                       >
                         {item.title}
                       </button>
-                    </div>
-                    <div className="row-cell" role="cell">
+                    </td>
+                    <td className="row-cell">
                       <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--gw-color-text-secondary)" }}>
                         <LuCalendar size={16} aria-hidden="true" />
                         <time dateTime={item.time_stamp}>
                           {formatSessionTime(item.time_stamp)}
                         </time>
                       </div>
-                    </div>
-                  </div>
+                    </td>
+                  </tr>
                 ))
               )}
-            </div>
+            </tbody>
           )}
-        </div>
-        {isLoading && (
-          <div className="table-loading" aria-hidden="true">
-            <div className="table-loading-spinner"></div>
-          </div>
-        )}
+        </table>
+        {isLoading && <SkeletonRows label="Loading chats" />}
       </div>
       </TableScrollRegion>
+      )}
 
       <div role="status" aria-live="polite" className="visually-hidden">
         {isLoading

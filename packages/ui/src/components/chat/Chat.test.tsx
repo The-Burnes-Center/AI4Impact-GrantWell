@@ -4,10 +4,16 @@ import { signedInAs } from "../../test/amplify";
 import { json, stubFetch, type RouteRequest } from "../../test/fetch-routes";
 import { renderApp } from "../../test/render";
 import Chat from "./Chat";
+import { ChatPanelContext } from "./chat-panel-context";
 
-const panel = vi.hoisted(() => ({ props: null as null | { ensureSession?: () => Promise<void> } }));
+type InputProps = {
+  ensureSession?: () => Promise<void>;
+  onNextQuestions?: (questions: string[]) => void;
+  sendRef?: { current: ((text: string) => void) | null };
+};
+const panel = vi.hoisted(() => ({ props: null as null | InputProps }));
 vi.mock("./ChatInputPanel", () => ({
-  default: (props: { ensureSession?: () => Promise<void> }) => {
+  default: (props: InputProps) => {
     panel.props = props;
     return <div data-testid="chat-input" />;
   },
@@ -16,7 +22,7 @@ vi.mock("./ChatInputPanel", () => ({
 const SESSION = "POST /user-session";
 const SUMMARY = "GET /s3-nofo-summary";
 const GREETING =
-  "Hello! I see that you are working on the Grant A Title grant. Could you please tell me which agency, municipality, or tribe we are preparing this application for?";
+  "Ask me anything about the Grant A Title grant: eligibility, deadlines, budget rules, scoring and what to submit.";
 
 const turns = (from: number, to: number) =>
   Array.from({ length: to - from + 1 }, (_, i) => ({
@@ -198,10 +204,11 @@ describe("Chat new and unavailable chats", () => {
     });
     renderApp(<Chat sessionId="s1" documentIdentifier="Grant A" />);
 
-    await screen.findByText("Question 1");
-    const articles = screen.getAllByRole("article").map((a) => a.textContent);
-    expect(articles[0]).toContain(GREETING);
-    expect(articles[1]).toContain("Question 1");
+    const question = await screen.findByText("Question 1");
+    const answers = screen.getAllByRole("article");
+    expect(answers.map((a) => a.getAttribute("aria-label"))).toEqual(["Answer 1", "Answer 2"]);
+    expect(answers[0]).toHaveTextContent(GREETING);
+    expect(answers[0].compareDocumentPosition(question) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it("says a chat link without a grant or saved messages isn't available", async () => {
@@ -243,5 +250,52 @@ describe("Chat new and unavailable chats", () => {
     expect(screen.queryByTestId("chat-input")).not.toBeInTheDocument();
     expect(container.textContent).not.toMatch(/GRANT_IN_REVIEW|isn't available/);
     expect(operations(net)).toEqual(["get_session"]);
+  });
+});
+
+describe("Chat Ask next and the Grant panel", () => {
+  const citations = [{ n: 1, at: [3], quote: "Due March 1.", document: "Grant document", page: 4 }];
+  const savedChat = () =>
+    json({
+      title: "Chat about Grant A",
+      chat_history: [
+        { user: "When is it due?", chatbot: "March 1.", metadata: JSON.stringify({ Sources: [], Citations: citations }) },
+      ],
+      older_cursor: null,
+    });
+
+  it("shows Ask next under the latest answer and sends the question picked", async () => {
+    stubFetch({ [SESSION]: savedChat() });
+    const { user } = renderApp(<Chat sessionId="s1" documentIdentifier="Grant A" />);
+    await screen.findByText("When is it due?");
+    const send = vi.fn();
+    panel.props!.sendRef!.current = send;
+
+    expect(screen.queryByRole("heading", { name: "Ask next" })).toBeNull();
+    act(() => panel.props!.onNextQuestions!(["Is there a page limit?", "Who can apply?"]));
+
+    const section = screen.getByRole("region", { name: "Ask next" });
+    expect(screen.getByRole("heading", { level: 2, name: "Ask next" })).toBeInTheDocument();
+    expect(section.compareDocumentPosition(screen.getByRole("article")) & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
+    await user.click(screen.getByRole("button", { name: "Who can apply?" }));
+    expect(send).toHaveBeenCalledWith("Who can apply?");
+
+    act(() => panel.props!.onNextQuestions!([]));
+    expect(screen.queryByRole("region", { name: "Ask next" })).toBeNull();
+  });
+
+  it("hands each answer's question, sources and citations to the Grant panel", async () => {
+    stubFetch({ [SESSION]: savedChat() });
+    const setAnswers = vi.fn();
+    renderApp(
+      <ChatPanelContext.Provider value={{ citationsInPanel: true, showSource: vi.fn(), setAnswers }}>
+        <Chat sessionId="s1" documentIdentifier="Grant A" />
+      </ChatPanelContext.Provider>
+    );
+    await screen.findByText("When is it due?");
+    await waitFor(() =>
+      expect(setAnswers).toHaveBeenLastCalledWith([{ reply: 1, question: "When is it due?", sources: [], citations }])
+    );
+    expect(screen.getByRole("button", { name: "Source 1, show in the panel" })).not.toHaveAttribute("aria-expanded");
   });
 });

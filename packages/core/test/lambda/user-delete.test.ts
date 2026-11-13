@@ -76,6 +76,7 @@ function serveTables(store: Store, pageSize = 100) {
     versions: ["draft_key", "rev"],
     analytics: ["pk", "sk"],
     outcomes: ["user_id", "session_id"],
+    "doc-records": ["user_id", "sk"],
   };
   ddb.on(QueryCommand).callsFake((input) => {
     const values = unmarshall(input.ExpressionAttributeValues);
@@ -210,6 +211,22 @@ beforeEach(() => {
 });
 
 describe("DELETE /user-management/users/{username}", () => {
+  it("removes the user's document type and relevance rows, keyed by the folder name", async () => {
+    store["doc-records"] = [
+      { user_id: "user-uuid", sk: "DOC#a" },
+      { user_id: "user-uuid", sk: "REL#a#b", review_status: "pending" },
+      { user_id: "user-uuid-2", sk: "DOC#c" },
+    ];
+    serveTables(store);
+    serveBucket(bucket);
+    const handler = await load({ USER_DOCUMENT_TABLE_NAME: "doc-records" });
+
+    const res = await handler(deleteEvent());
+
+    expect(res.statusCode).toBe(200);
+    expect(store["doc-records"]).toEqual([{ user_id: "user-uuid-2", sk: "DOC#c" }]);
+  });
+
   it("removes a chat's turn rows with it and counts the chat once", async () => {
     store.chats = [
       { user_id: "sub-1", session_id: "c1" },

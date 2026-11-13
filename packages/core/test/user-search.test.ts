@@ -105,10 +105,11 @@ describe("user search", () => {
     expect(JSON.parse(res.body).nextPaginationToken).toBeNull();
   });
 
-  it("still pages normally without a query", async () => {
+  it("returns every page, sorted, without a query", async () => {
     const res = await list("", { roles: ["Developer"] });
-    expect(JSON.parse(res.body).nextPaginationToken).toBe("1");
-    expect(aws.sent.filter((c) => c.name === "ListUsersCommand")).toHaveLength(1);
+    expect(JSON.parse(res.body).nextPaginationToken).toBeNull();
+    expect(await emails(Promise.resolve(res))).toEqual(["al@mass.gov", "bob@ri.gov", "jane.smith@mass.gov", "smithers@ri.gov"]);
+    expect(aws.sent.filter((c) => c.name === "ListUsersCommand")).toHaveLength(2);
   });
 
   it("refuses a plain user", async () => {

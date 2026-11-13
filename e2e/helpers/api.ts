@@ -121,6 +121,24 @@ export async function setChatDocumentKeys(sessionId: string, keys: string[]): Pr
   return result.document_keys;
 }
 
+export interface ChatTurn {
+  user: string;
+  chatbot: string;
+  /** JSON: { Sources: { title, uri }[], Citations?: { n, document, quote }[] } */
+  metadata: string;
+}
+
+/** The chat's newest turns, oldest first, as the session store keeps them. */
+export async function chatTurns(sessionId: string): Promise<ChatTurn[]> {
+  const { sub } = await tokens();
+  const session = await call<{ chat_history?: ChatTurn[] }>("POST", "/user-session", {
+    operation: "get_session",
+    session_id: sessionId,
+    user_id: sub,
+  });
+  return session.chat_history ?? [];
+}
+
 export async function listDocuments(): Promise<LibraryDocument[]> {
   return (await call<{ documents: LibraryDocument[] }>("POST", "/user-documents/list", {})).documents;
 }

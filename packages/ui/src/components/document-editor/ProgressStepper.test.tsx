@@ -27,26 +27,36 @@ describe("ProgressStepper", () => {
   it("lists the steps with each one's state, including steps finished after the current one", () => {
     renderStepper();
     const nav = screen.getByRole("navigation", { name: "Application steps" });
-    const items = within(nav).getAllByRole("listitem");
+    const items = within(within(nav).getAllByRole("list")[0]).getAllByRole("listitem");
     expect(items).toHaveLength(3);
-    expect(within(items[0]).getByRole("button")).toHaveAccessibleName("Step 1 of 3: Basics, current step, completed");
+    expect(items[0]).toHaveAttribute("aria-current", "step");
+    expect(items[0]).toHaveTextContent("Step 1 of 3: Basics, current step, completed");
+    expect(within(items[0]).queryByRole("button")).not.toBeInTheDocument();
     expect(within(items[1]).getByRole("button")).toHaveAccessibleName("Step 2 of 3: Questions, completed");
-    expect(within(items[2]).getByRole("button")).toHaveAccessibleName("Step 3 of 3: Review, locked");
+    expect(items[2]).toHaveTextContent("Step 3 of 3: Review, locked");
   });
 
-  it("keeps a locked step focusable with its tooltip, and ignores clicks on it", async () => {
+  it("goes back to a completed step from its chip", async () => {
     const { user, onStepClick } = renderStepper();
-    const locked = screen.getByRole("button", { name: /Review, locked/ });
-    expect(locked).toBeEnabled();
-    expect(locked).toHaveAttribute("aria-disabled", "true");
-    expect(locked).toHaveAccessibleDescription("Check everything.");
+    await user.click(screen.getByRole("button", { name: "Step 2 of 3: Questions, completed" }));
+    expect(onStepClick).toHaveBeenCalledWith(1);
+  });
 
+  it("keeps the current and locked steps out of the tab order but still names their state", async () => {
+    const { user } = renderStepper();
+    const row = screen.getAllByRole("list")[0];
+    expect(within(row).getAllByRole("button")).toHaveLength(1);
+    expect(screen.getByText("Step 3 of 3: Review, locked")).toBeInTheDocument();
+
+    const questions = within(row).getByRole("button", { name: /Questions/ });
+    expect(questions).toHaveAccessibleDescription("Answer questions.");
     await user.tab();
-    await user.tab();
-    await user.tab();
-    expect(locked).toHaveFocus();
-    await user.click(locked);
-    expect(onStepClick).not.toHaveBeenCalled();
+    expect(questions).toHaveFocus();
+  });
+
+  it("has no progress percentage line", () => {
+    renderStepper();
+    expect(screen.queryByText(/Application progress/)).not.toBeInTheDocument();
   });
 
   it("closes a hover tooltip with Escape while focus is elsewhere", async () => {
@@ -60,8 +70,10 @@ describe("ProgressStepper", () => {
   });
 });
 
+const nav = () => screen.getByRole("navigation", { name: "Application steps" });
+
 describe("ProgressStepper all-steps list", () => {
-  it("names every step with its state and help text for phones, where names and tooltips are hidden", async () => {
+  it("names every step with its state and help text on every screen size, closed at first", async () => {
     const user = userEvent.setup();
     render(
       <ProgressStepper
@@ -73,6 +85,8 @@ describe("ProgressStepper all-steps list", () => {
       />
     );
     const toggle = screen.getByText("All steps");
+    expect(toggle.closest("details")).not.toHaveAttribute("open");
+    expect(nav().querySelector("style")!.textContent).not.toMatch(/\.step-all\s*\{[^}]*display: none/);
     await user.click(toggle);
     const list = toggle.closest("details")!;
     expect(list).toHaveAttribute("open");
@@ -95,9 +109,10 @@ describe("ProgressStepper all-steps list", () => {
     await user.click(screen.getByText("All steps"));
     expect(list).toHaveAttribute("open");
     expect(nav).toHaveClass("progress-stepper-container--list-open");
-    expect(nav.querySelector("style")!.textContent).toMatch(
-      /@media \(max-width: 768px\)[\s\S]*\.progress-stepper-container\.progress-stepper-container--list-open,\s*\.document-editor-header:has\(\+ \.progress-stepper-container--list-open\) \{\s*position: static !important;/
-    );
+    const css = nav.querySelector("style")!.textContent!;
+    const unpin = /\.progress-stepper-container\.progress-stepper-container--list-open,\s*\.document-editor-header:has\(\+ \.progress-stepper-container--list-open\) \{\s*position: static !important;/;
+    expect(css).toMatch(unpin);
+    expect(css.slice(0, css.search(unpin))).not.toContain("@media");
 
     rerender(<ProgressStepper {...props} activeStep={1} />);
     expect(list).not.toHaveAttribute("open");
@@ -129,14 +144,13 @@ describe("ProgressStepper all-steps list", () => {
     });
   });
 
-  it("leaves the scroll alone on a wide screen", async () => {
+  it("scrolls the opened list's summary into view on a wide screen too", async () => {
     vi.stubGlobal("matchMedia", () => ({ matches: false }));
     const scrollIntoView = vi.fn();
     Element.prototype.scrollIntoView = scrollIntoView;
     const { user } = renderStepper();
     await user.click(screen.getByText("All steps"));
-    await waitFor(() => expect(screen.getByText("All steps").closest("details")).toHaveAttribute("open"));
-    expect(scrollIntoView).not.toHaveBeenCalled();
+    await waitFor(() => expect(scrollIntoView).toHaveBeenCalledWith({ block: "nearest", behavior: "smooth" }));
     vi.unstubAllGlobals();
   });
 });

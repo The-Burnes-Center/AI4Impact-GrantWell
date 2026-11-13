@@ -9,6 +9,8 @@ vi.mock("aws-amplify/auth", async () => (await import("./amplify")).auth);
 vi.mock("../common/instance", async () => (await import("./instance")).instanceModule());
 
 beforeEach(() => {
+  // jsdom has no layout, so no scrollIntoView; tests that check scrolling replace it.
+  if (typeof Element.prototype.scrollIntoView !== "function") Element.prototype.scrollIntoView = () => {};
   resetInstance();
   resetAmplify();
   try {

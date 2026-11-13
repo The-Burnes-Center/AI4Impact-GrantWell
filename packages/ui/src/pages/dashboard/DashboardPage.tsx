@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useId, useLayoutEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useCallback, useLayoutEffect, useMemo, useRef } from "react";
 import { SINGLE_STATE } from "../../common/states";
 import { useNavigate, useLocation, Navigate } from "react-router";
 import { useApiClient } from "../../hooks/use-api-client";
@@ -12,23 +12,24 @@ import UserManagementTab from "./components/UserManagementTab";
 import ProcessingReviewTab from "./components/ProcessingReviewTab";
 import ProcessingTab from "./components/ProcessingTab";
 import AnalyticsTab from "./components/AnalyticsTab";
+import DocumentReviewsTab from "./components/DocumentReviewsTab";
 import {
-  LuSearch, LuFilter, LuUpload, LuCheck, LuX,
+  LuSearch, LuUpload, LuCheck, LuX,
   LuRefreshCw, LuDownload, LuInfo, LuLoader, LuArrowRight,
 } from "react-icons/lu";
 import { Modal } from "../../components/common/Modal";
-import Breadcrumbs from "../../components/common/Breadcrumbs";
+import PageHeader from "../../components/common/PageHeader";
 import { GRANT_TYPES, type NOFO, type GrantTypeId } from "../../common/types/nofo";
 import type { RawNOFOData } from "../../common/types/document";
 import { LiveStatus } from "../../components/common/LiveStatus";
 import "../../styles/dashboard.css";
+import LoadingSpinner from "../../components/ui/LoadingSpinner";
+import AdminTabHeader from "./components/AdminTabHeader";
+import FilterSelect from "../../components/ui/FilterSelect";
 
-const STATUS_FILTERS = ["all", "active", "archived"] as const;
-const GRANT_TYPE_FILTERS = ["all", "federal", "state", "quasi", "philanthropic"] as const;
-const FILTER_ITEM_COUNT = STATUS_FILTERS.length + GRANT_TYPE_FILTERS.length;
 
 const Dashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"grants" | "analytics" | "feature-rollouts" | "user-management">("grants");
+  const [activeTab, setActiveTab] = useState<"grants" | "analytics" | "feature-rollouts" | "user-management" | "document-reviews">("grants");
    const [grantsSegment, setGrantsSegment] = useState<"all" | "processing" | "attention">("all");
   const [reviewFocus, setReviewFocus] = useState<string | null>(null);
   // Names of finished grants the admin has dismissed from the Processing tab (client-side, resets on reload).
@@ -38,8 +39,6 @@ const Dashboard: React.FC = () => {
   const [pendingReviewCount, setPendingReviewCount] = useState(0);
   const [nofos, setNofos] = useState<NOFO[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterMenuOpen, setFilterMenuOpen] = useState(false);
-  const [focusedFilterIndex, setFocusedFilterIndex] = useState(0);
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "archived">("active");
   const [grantTypeFilter, setGrantTypeFilter] = useState<GrantTypeId | "all">("all");
 
@@ -57,20 +56,17 @@ const Dashboard: React.FC = () => {
   const [isScraping, setIsScraping] = useState(false);
   const [scrapeConfirmModalOpen, setScrapeConfirmModalOpen] = useState(false);
 
-  const filterMenuRef = useRef<HTMLDivElement>(null);
-  const filterButtonRef = useRef<HTMLButtonElement>(null);
-  const filterItemRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const statusGroupId = useId();
-  const grantTypeGroupId = useId();
   const grantsTabRef = useRef<HTMLButtonElement>(null);
   const analyticsTabRef = useRef<HTMLButtonElement>(null);
   const rolloutsTabRef = useRef<HTMLButtonElement>(null);
   const userManagementTabRef = useRef<HTMLButtonElement>(null);
+  const documentReviewsTabRef = useRef<HTMLButtonElement>(null);
   const tabRefs = {
     grants: grantsTabRef,
     analytics: analyticsTabRef,
     "feature-rollouts": rolloutsTabRef,
     "user-management": userManagementTabRef,
+    "document-reviews": documentReviewsTabRef,
   };
   const processingSegmentRef = useRef<HTMLButtonElement>(null);
   const attentionSegmentRef = useRef<HTMLButtonElement>(null);
@@ -205,6 +201,9 @@ const Dashboard: React.FC = () => {
         ...(canManageUsers
           ? [{ key: "user-management" as const, ref: userManagementTabRef }]
           : []),
+        ...(canManageUsers
+          ? [{ key: "document-reviews" as const, ref: documentReviewsTabRef }]
+          : []),
       ];
       const currentIndex = tabs.findIndex((tab) => tab.key === activeTab);
       if (currentIndex === -1) {
@@ -233,67 +232,6 @@ const Dashboard: React.FC = () => {
     },
     [activeTab, isDeveloper, canManageUsers]
   );
-
-  const toggleFilterMenu = useCallback(() => {
-    if (filterMenuOpen) {
-      setFilterMenuOpen(false);
-      return;
-    }
-    setFocusedFilterIndex(Math.max(STATUS_FILTERS.indexOf(statusFilter), 0));
-    setFilterMenuOpen(true);
-  }, [filterMenuOpen, statusFilter]);
-
-  const closeFilterMenu = useCallback(() => {
-    setFilterMenuOpen(false);
-    filterButtonRef.current?.focus();
-  }, []);
-
-  const handleFilterMenuKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLElement>) => {
-      if (!filterMenuOpen) {
-        return;
-      }
-
-      if (event.key === "Escape") {
-        event.preventDefault();
-        closeFilterMenu();
-        return;
-      }
-
-      const focusItemAt = (index: number) => {
-        filterItemRefs.current[index]?.focus();
-      };
-      const currentIndex = event.target === filterButtonRef.current ? -1 : focusedFilterIndex;
-
-      if (event.key === "ArrowDown") {
-        event.preventDefault();
-        focusItemAt((currentIndex + 1) % FILTER_ITEM_COUNT);
-      } else if (event.key === "ArrowUp") {
-        event.preventDefault();
-        focusItemAt(currentIndex <= 0 ? FILTER_ITEM_COUNT - 1 : currentIndex - 1);
-      } else if (event.key === "Home") {
-        event.preventDefault();
-        focusItemAt(0);
-      } else if (event.key === "End") {
-        event.preventDefault();
-        focusItemAt(FILTER_ITEM_COUNT - 1);
-      }
-    },
-    [filterMenuOpen, focusedFilterIndex, closeFilterMenu]
-  );
-
-  const handleFilterFocusOut = useCallback((event: React.FocusEvent<HTMLElement>) => {
-    const next = event.relatedTarget;
-    if (filterButtonRef.current?.contains(next) || filterMenuRef.current?.contains(next)) {
-      return;
-    }
-    setFilterMenuOpen(false);
-  }, []);
-
-  useEffect(() => {
-    if (!filterMenuOpen) return;
-    filterItemRefs.current[focusedFilterIndex]?.focus();
-  }, [filterMenuOpen, focusedFilterIndex]);
 
   const confirmAutomatedScraper = useCallback(async () => {
     setScrapeConfirmModalOpen(false);
@@ -327,13 +265,6 @@ const Dashboard: React.FC = () => {
     setShowGrantBanner(true);
     fetchNofos();
   }, [fetchNofos]);
-
-  const getActiveFilterCount = useCallback(() => {
-    let count = 0;
-    if (statusFilter !== "all") count++;
-    if (grantTypeFilter !== "all") count++;
-    return count;
-  }, [statusFilter, grantTypeFilter]);
 
   const filteredNofos = useMemo(() => {
     // In-flight new grants live in the "Processing" segment, not the browse list; a live grant
@@ -460,76 +391,47 @@ const Dashboard: React.FC = () => {
     }
   }, [currentPage, paginatedData.totalPages]);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (filterMenuOpen && filterMenuRef.current && filterButtonRef.current &&
-          !filterMenuRef.current.contains(event.target as Node) &&
-          !filterButtonRef.current.contains(event.target as Node)) {
-        const menuHadFocus = filterMenuRef.current.contains(document.activeElement);
-        setFilterMenuOpen(false);
-        if (menuHadFocus) {
-          requestAnimationFrame(() => {
-            if (document.activeElement === document.body) {
-              filterButtonRef.current?.focus();
-            }
-          });
-        }
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [filterMenuOpen]);
 
-  if (loading || roleLoading) return <div className="loading" role="status">Loading Admin dashboard...</div>;
+  if (loading || roleLoading) return <LoadingSpinner message="Loading Admin dashboard…" showMessage />;
   if (!isAdmin) return <Navigate to="/home" replace />;
 
-  const filterCount = getActiveFilterCount();
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
       <UnifiedNavigation />
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        <Breadcrumbs
-          items={[
-            { label: "Home", href: "/home" },
-            { label: "Admin dashboard" },
-          ]}
-        />
-
         <div className="dashboard-main-content">
-          <div className="dashboard-header">
-            <div>
-              <h1>Admin dashboard</h1>
-              <p style={{ marginTop: "4px", color: "var(--gw-color-text-secondary)", fontSize: "14px" }}>
-                Manage grants, users, and processing across your instance
-              </p>
-            </div>
-            <div className="dashboard-actions">
-              <button
-                ref={refreshButtonRef}
-                className="gw-btn gw-btn--secondary action-button refresh-button"
-                onClick={handleRefresh}
-                aria-disabled={isRefreshing}
-                aria-busy={isRefreshing}
-              >
-                {isRefreshing ? (
-                  <span className="refresh-loading">Refreshing...</span>
-                ) : (
-                  <><LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" /><span>Refresh</span></>
-                )}
-                <span className="visually-hidden"> Admin dashboard</span>
-              </button>
-              {hasProcessingNofos && (
+          <PageHeader
+            title="Admin dashboard"
+            intro="Manage grants, users, and processing across your instance"
+            actions={
+              <>
                 <button
+                  ref={refreshButtonRef}
                   className="gw-btn gw-btn--secondary action-button refresh-button"
-                  onClick={() => setAutoRefreshPaused((prev) => !prev)}
-                  {...trackPollControlFocus("pause")}
+                  onClick={handleRefresh}
+                  aria-disabled={isRefreshing}
+                  aria-busy={isRefreshing}
                 >
-                  {autoRefreshPaused ? "Resume auto-refresh" : "Pause auto-refresh"}
+                  {isRefreshing ? (
+                    <span className="refresh-loading">Refreshing...</span>
+                  ) : (
+                    <><LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" /><span>Refresh</span></>
+                  )}
+                  <span className="visually-hidden"> Admin dashboard</span>
                 </button>
-              )}
-            </div>
-          </div>
+                {hasProcessingNofos && (
+                  <button
+                    className="gw-btn gw-btn--secondary action-button refresh-button"
+                    onClick={() => setAutoRefreshPaused((prev) => !prev)}
+                    {...trackPollControlFocus("pause")}
+                  >
+                    {autoRefreshPaused ? "Resume auto-refresh" : "Pause auto-refresh"}
+                  </button>
+                )}
+              </>
+            }
+          />
 
           <LiveStatus className="visually-hidden">{manualRefresh ? "Refreshing Admin dashboard" : null}</LiveStatus>
           <div role="status" aria-live="polite" className="visually-hidden">
@@ -608,6 +510,21 @@ const Dashboard: React.FC = () => {
                 User management
               </button>
             )}
+            {canManageUsers && (
+              <button
+                id="dashboard-tab-document-reviews"
+                ref={documentReviewsTabRef}
+                className={`gw-tab tab-button ${activeTab === "document-reviews" ? "active" : ""}`}
+                onClick={() => setActiveTab("document-reviews")}
+                onKeyDown={handleTabKeyDown}
+                role="tab"
+                aria-selected={activeTab === "document-reviews"}
+                aria-controls={activeTab === "document-reviews" ? "dashboard-panel-document-reviews" : undefined}
+                tabIndex={activeTab === "document-reviews" ? 0 : -1}
+              >
+                Document reviews
+              </button>
+            )}
           </div>
 
           <div className="dashboard-content">
@@ -618,6 +535,7 @@ const Dashboard: React.FC = () => {
                 aria-labelledby="dashboard-tab-grants"
                 tabIndex={0}
               >
+                <AdminTabHeader title="Grants" intro="Every grant on the site, with its status and processing state." />
                 {isAdmin && (
                   <div className="gw-toggle grants-segment" role="group" aria-label="Grant view">
                     <button
@@ -660,9 +578,9 @@ const Dashboard: React.FC = () => {
                   </div>
                 )}
 
-                <h2 className="visually-hidden">
+                <h3 className="visually-hidden">
                   {grantsSegment === "attention" ? "Needs attention" : grantsSegment === "processing" ? "Processing" : "All grants"}
-                </h2>
+                </h3>
                 <div role="status" className="visually-hidden">
                   {grantsSegment === "all" ? resultsAnnouncement : ""}
                 </div>
@@ -733,61 +651,35 @@ const Dashboard: React.FC = () => {
                   </div>
                 )}
                 <div className="search-actions-container">
-                  <div className="search-filter-container">
-                    <div className="search-input-wrapper">
-                      <LuSearch className="search-icon" size={18} aria-hidden="true" />
-                      <label htmlFor="grant-search" className="visually-hidden">Search grants</label>
-                      <input id="grant-search" type="text" className="gw-input search-input" placeholder="Search grants..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                  <div className="gw-filters admin-grant-filters">
+                    <div className="gw-filter admin-grant-filters__search">
+                      <label htmlFor="grant-search" className="gw-filter__label">Search grants</label>
+                      <div className="search-input-wrapper">
+                        <LuSearch className="search-icon" size={18} aria-hidden="true" />
+                        <input id="grant-search" type="text" className="gw-input search-input" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                      </div>
                     </div>
-
-                    <div className="filter-container">
-                      <button ref={filterButtonRef} className={`gw-btn gw-btn--icon filter-button ${filterCount > 0 ? "active" : ""}`}
-                        onClick={toggleFilterMenu} onKeyDown={handleFilterMenuKeyDown} onBlur={handleFilterFocusOut} aria-label={filterCount > 0 ? `Filter grants, ${filterCount} active` : "Filter grants"} aria-expanded={filterMenuOpen} aria-haspopup="menu">
-                        <LuFilter size={18} aria-hidden="true" />
-                        {filterCount > 0 && <span className="filter-badge" aria-hidden="true">{filterCount}</span>}
-                      </button>
-
-                      {filterMenuOpen && (
-                        <div ref={filterMenuRef} className="filter-menu" role="menu" tabIndex={-1} onKeyDown={handleFilterMenuKeyDown} onBlur={handleFilterFocusOut}>
-                          <div className="filter-menu-group" role="group" aria-labelledby={statusGroupId}>
-                            <div className="filter-menu-header" id={statusGroupId}>Filter by status</div>
-                            {STATUS_FILTERS.map((status, index) => (
-                              <button key={status} onClick={() => setStatusFilter(status)}
-                                ref={(el) => { filterItemRefs.current[index] = el; }}
-                                onFocus={() => setFocusedFilterIndex(index)}
-                                className={`filter-option ${statusFilter === status ? "selected" : ""}`}
-                                role="menuitemradio" aria-checked={statusFilter === status}
-                                tabIndex={focusedFilterIndex === index ? 0 : -1}>
-                                <div className="filter-option-content">
-                                  <span className="filter-option-check" aria-hidden="true">{statusFilter === status ? "✓" : ""}</span>
-                                  {status === "all" ? "All statuses" : status.charAt(0).toUpperCase() + status.slice(1)}
-                                </div>
-                              </button>
-                            ))}
-                          </div>
-                          <div className="filter-menu-divider" />
-                          <div className="filter-menu-group" role="group" aria-labelledby={grantTypeGroupId}>
-                            <div className="filter-menu-header" id={grantTypeGroupId}>Filter by grant type</div>
-                            {GRANT_TYPE_FILTERS.map((type, typeIndex) => {
-                              const index = STATUS_FILTERS.length + typeIndex;
-                              return (
-                                <button key={type} onClick={() => setGrantTypeFilter(type)}
-                                  ref={(el) => { filterItemRefs.current[index] = el; }}
-                                  onFocus={() => setFocusedFilterIndex(index)}
-                                  className={`filter-option ${grantTypeFilter === type ? "selected" : ""}`}
-                                  role="menuitemradio" aria-checked={grantTypeFilter === type}
-                                  tabIndex={focusedFilterIndex === index ? 0 : -1}>
-                                  <div className="filter-option-content">
-                                    <span className="filter-option-check" aria-hidden="true">{grantTypeFilter === type ? "✓" : ""}</span>
-                                    {type === "all" ? "All types" : GRANT_TYPES[type].label}
-                                  </div>
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                    <FilterSelect<"all" | "active" | "archived">
+                      id="admin-status-filter"
+                      label="Status"
+                      value={statusFilter}
+                      onChange={setStatusFilter}
+                      options={[
+                        { value: "all", label: "All statuses" },
+                        { value: "active", label: "Active" },
+                        { value: "archived", label: "Archived" },
+                      ]}
+                    />
+                    <FilterSelect<GrantTypeId | "all">
+                      id="admin-grant-type-filter"
+                      label="Grant type"
+                      value={grantTypeFilter}
+                      onChange={setGrantTypeFilter}
+                      options={[
+                        { value: "all", label: "All grant types" },
+                        ...(Object.keys(GRANT_TYPES) as GrantTypeId[]).map((type) => ({ value: type, label: GRANT_TYPES[type].label })),
+                      ]}
+                    />
                   </div>
 
                   <div className="action-buttons">
@@ -848,7 +740,10 @@ const Dashboard: React.FC = () => {
                 aria-labelledby="dashboard-tab-analytics"
                 tabIndex={0}
               >
-                <h2 className="visually-hidden">Analytics</h2>
+                <AdminTabHeader
+                  title="Analytics"
+                  intro="How people use the site: accounts, applications, departments and reported outcomes."
+                />
                 <AnalyticsTab
                   apiClient={apiClient}
                   addNotification={addNotification}
@@ -863,6 +758,10 @@ const Dashboard: React.FC = () => {
                 aria-labelledby="dashboard-tab-rollouts"
                 tabIndex={0}
               >
+                <AdminTabHeader
+                  title="Feature rollouts"
+                  intro="Take the site offline for maintenance, and choose who sees features that are still in testing."
+                />
                 <FeatureRolloutsTab
                   apiClient={apiClient}
                   addNotification={addNotification}
@@ -875,6 +774,14 @@ const Dashboard: React.FC = () => {
                 aria-labelledby="dashboard-tab-user-management"
                 tabIndex={0}
               >
+                <AdminTabHeader
+                  title="User management"
+                  intro={
+                    isStateAdmin
+                      ? `Invite people in ${userState}, change their roles and remove their accounts.`
+                      : "Invite people, change their roles and remove their accounts."
+                  }
+                />
                 <UserManagementTab
                   apiClient={apiClient}
                   addNotification={addNotification}
@@ -883,6 +790,23 @@ const Dashboard: React.FC = () => {
                   userState={userState}
                   currentUsername={username}
                 />
+              </div>
+            ) : activeTab === "document-reviews" ? (
+              <div
+                id="dashboard-panel-document-reviews"
+                role="tabpanel"
+                aria-labelledby="dashboard-tab-document-reviews"
+                tabIndex={0}
+              >
+                <AdminTabHeader
+                  title="Document reviews"
+                  intro={
+                    isStateAdmin
+                      ? `Requests from people in ${userState} to use a document the check found unrelated to a grant.`
+                      : "Requests to use a document the check found unrelated to a grant."
+                  }
+                />
+                <DocumentReviewsTab apiClient={apiClient} />
               </div>
             ) : null}
           </div>

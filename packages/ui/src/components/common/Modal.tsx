@@ -14,6 +14,13 @@ interface ModalProps {
   titleLevel?: "h1" | "h2";
   /** Takes the initial focus instead of the first focusable element (the close button). */
   initialFocusRef?: React.RefObject<HTMLElement | null>;
+  /** id of the element that describes the dialog (aria-describedby). */
+  describedBy?: string;
+  closeLabel?: string;
+  /** Actions pinned below the body: the header and footer stay in view and only the body scrolls. */
+  footer?: React.ReactNode;
+  /** "sheet": full width from the bottom edge, for phones. */
+  variant?: "dialog" | "sheet";
 }
 
 /**
@@ -25,7 +32,20 @@ interface ModalProps {
  * - Consistent styling matching Dashboard
  */
 export const Modal = React.memo<ModalProps>(
-  ({ isOpen, onClose, title, children, maxWidth = "500px", hideCloseButton = false, titleLevel = "h2", initialFocusRef }) => {
+  ({
+    isOpen,
+    onClose,
+    title,
+    children,
+    maxWidth = "500px",
+    hideCloseButton = false,
+    titleLevel = "h2",
+    initialFocusRef,
+    describedBy,
+    closeLabel = "Close modal",
+    footer,
+    variant = "dialog",
+  }) => {
     const Title = titleLevel;
     const modalRef = useFocusTrap<HTMLDivElement>({ isOpen, onEscape: onClose, initialFocus: initialFocusRef });
     const titleId = useId();
@@ -34,7 +54,7 @@ export const Modal = React.memo<ModalProps>(
 
     return (
       <div
-        className="gw-modal__overlay modal-overlay"
+        className={`gw-modal__overlay modal-overlay${footer || variant === "sheet" ? " modal-overlay--pinned" : ""}${variant === "sheet" ? " modal-overlay--sheet" : ""}`}
         role="presentation"
         onClick={
           hideCloseButton
@@ -46,10 +66,11 @@ export const Modal = React.memo<ModalProps>(
       >
         <div
           ref={modalRef}
-          className="gw-modal modal-content"
+          className={`gw-modal modal-content${variant === "sheet" ? " modal-content--sheet" : ""}`}
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
+          aria-describedby={describedBy}
           style={{ maxWidth }}
         >
           <div className="gw-modal__header modal-header">
@@ -61,13 +82,14 @@ export const Modal = React.memo<ModalProps>(
                 type="button"
                 className="gw-btn gw-btn--icon modal-close-button"
                 onClick={onClose}
-                aria-label="Close modal"
+                aria-label={closeLabel}
               >
                 <LuX size={20} aria-hidden="true" />
               </button>
             )}
           </div>
           <div className="gw-modal__body modal-body">{children}</div>
+          {footer && <div className="gw-modal__footer modal-footer">{footer}</div>}
         </div>
       </div>
     );

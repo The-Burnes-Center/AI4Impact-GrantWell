@@ -165,9 +165,12 @@ export const handler = async (event) => {
         sections: job.sections || {},
         failedSections: job.failedSections,
         skippedDocuments: job.skippedDocuments || [],
+        sectionsSkipped: job.sectionsSkipped || {},
+        sectionsTrimmed: job.sectionsTrimmed || {},
         createdAt: job.createdAt,
         completedAt: job.completedAt,
         error: job.error,
+        errorCode: job.errorCode,
         jobType: job.jobType,
         downloadUrl
       })

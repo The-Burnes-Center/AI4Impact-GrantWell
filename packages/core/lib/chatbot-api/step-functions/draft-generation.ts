@@ -38,7 +38,25 @@ export class DraftGenerationStateMachine extends Construct {
       backoffRate: 2,
     });
 
-    // ── Step 2: Map — fan out N parallel section generators ─────────
+    // ── Step 2: Plan — which sections have material to draft ────────
+    // Runs in the section function, which reads the applicant's documents. If it fails, prepare's
+    // split stands and every section is drafted.
+    const planSections = new tasks.LambdaInvoke(this, "PlanSections", {
+      lambdaFunction: props.generateSectionFunction,
+      payload: sfn.TaskInput.fromObject({ step: "plan", "state.$": "$" }),
+      outputPath: "$.Payload",
+      retryOnServiceExceptions: true,
+    });
+    planSections.addRetry({
+      errors: ["States.TaskFailed"],
+      interval: cdk.Duration.seconds(10),
+      maxAttempts: 1,
+      backoffRate: 2,
+    });
+    const planFailed = new sfn.Pass(this, "PlanFailed");
+    planSections.addCatch(planFailed, { resultPath: "$.planError" });
+
+    // ── Step 3: Map — fan out N parallel section generators ─────────
     // Per-section error handler: catch failures gracefully so the Map
     // never aborts — failed sections return a stub with status "error"
     const sectionTask = (suffix: string) => {
@@ -104,6 +122,7 @@ export class DraftGenerationStateMachine extends Construct {
       "userState.$": "$.userState",
       "totalSections.$": "$.totalSections",
       "sectionNames.$": "$.sectionNames",
+      "outline.$": "$.outline",
     };
 
     // A cache entry is readable only once its first response starts, so sections started together
@@ -124,7 +143,16 @@ export class DraftGenerationStateMachine extends Construct {
     });
     generateAllSections.itemProcessor(sectionTask(""));
 
-    // ── Step 3: Assemble ────────────────────────────────────────────
+    // Summaries are written from the drafted sections, so they go last.
+    const generateSummarySections = new sfn.Map(this, "GenerateSummarySections", {
+      maxConcurrency: 5,
+      itemsPath: "$.summarySections",
+      resultPath: "$.summaryResults",
+      itemSelector,
+    });
+    generateSummarySections.itemProcessor(sectionTask("Summary"));
+
+    // ── Step 4: Assemble ────────────────────────────────────────────
     const assembleDraft = new tasks.LambdaInvoke(this, "AssembleDraft", {
       lambdaFunction: props.assembleFunction,
       outputPath: "$.Payload",
@@ -178,9 +206,12 @@ export class DraftGenerationStateMachine extends Construct {
     const handlePipelineError = markJobFailed.next(pipelineFailed);
 
     // ── Chain ───────────────────────────────────────────────────────
+    planFailed.next(warmSection);
     const definition = prepareSections
+      .next(planSections)
       .next(warmSection)
       .next(generateAllSections)
+      .next(generateSummarySections)
       .next(assembleDraft);
 
     prepareSections.addCatch(handlePipelineError, { resultPath: "$.error" });

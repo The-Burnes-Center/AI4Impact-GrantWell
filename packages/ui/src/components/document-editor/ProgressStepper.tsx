@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { LuCheck } from "react-icons/lu";
+import { LuCheck, LuChevronDown, LuChevronRight } from "react-icons/lu";
 
 interface ProgressStepperProps {
   steps: Array<{
@@ -11,7 +11,6 @@ interface ProgressStepperProps {
   activeStep: number;
   onStepClick?: (stepIndex: number) => void;
   completedSteps?: number[];
-  showProgress?: boolean;
   isStepClickable?: (stepIndex: number) => boolean; // Custom function to determine if step is clickable
 }
 
@@ -20,7 +19,6 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
   activeStep,
   onStepClick,
   completedSteps = [],
-  showProgress = true,
   isStepClickable: customIsStepClickable,
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -44,14 +42,13 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
     setAllStepsOpen(false);
   }, [activeStep]);
 
-  // Opening the list unpins the stepper on phones, which can leave the summary above the viewport.
+  // Opening the list unpins the stepper, which can leave the summary above the viewport.
   useEffect(() => {
-    if (!allStepsOpen || !window.matchMedia?.("(max-width: 768px)").matches) return;
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!allStepsOpen) return;
+    const reduceMotion = !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     allStepsSummaryRef.current?.scrollIntoView({ block: "nearest", behavior: reduceMotion ? "auto" : "smooth" });
   }, [allStepsOpen]);
 
-  const progressPercentage = ((activeStep + 1) / steps.length) * 100;
   const isStepCompleted = (index: number) => completedSteps.includes(index);
   const isStepActive = (index: number) => index === activeStep;
   const isStepClickable = (index: number) => {
@@ -86,29 +83,104 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
         width: "100%",
         background: "var(--gw-color-surface)",
         borderBottom: "1px solid var(--gw-color-border)",
-        padding: "20px 24px",
+        padding: "8px 20px",
         position: "sticky",
         top: "var(--gw-editor-header-height, 62px)",
         zIndex: 100,
         boxShadow: "var(--gw-shadow-low)",
+        boxSizing: "border-box",
       }}
     >
       <style>
         {`
+          .step-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 4px;
+            max-width: var(--gw-content-max-width, 1400px);
+            margin: 0 auto;
+            padding: 0;
+            list-style: none;
+          }
           .step-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 4px;
             z-index: 1;
           }
-
           .step-wrapper:hover,
           .step-wrapper:focus-within {
             z-index: 10;
+          }
+          .step-hover {
+            position: relative;
+          }
+          .step-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 44px;
+            min-width: 44px;
+            box-sizing: border-box;
+            padding: 0 10px;
+            border: none;
+            border-radius: var(--gw-radius-control);
+            background: none;
+            color: var(--gw-color-text-secondary);
+            font-family: var(--gw-font-family);
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.3;
+            text-align: left;
+          }
+          button.step-chip {
+            cursor: pointer;
+          }
+          button.step-chip:hover {
+            background: var(--gw-color-surface-subtle);
+            color: var(--gw-color-primary-hover);
+          }
+          button.step-chip:hover .step-chip__label {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+          }
+          .step-chip--current {
+            padding: 0 12px;
+            background: var(--gw-color-primary-light);
+            color: var(--gw-color-primary-hover);
+            font-weight: 600;
+          }
+          .step-chip__marker {
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            box-sizing: border-box;
+            border: 2px solid var(--gw-color-text-muted);
+            border-radius: 50%;
+            background: var(--gw-color-surface);
+            color: var(--gw-color-border-input-hover);
+            font-size: 12px;
+            font-weight: 600;
+          }
+          .step-chip__marker--filled {
+            border-color: var(--gw-color-primary);
+            background: var(--gw-color-primary);
+            color: var(--gw-color-text-inverse);
+          }
+          .step-separator {
+            flex-shrink: 0;
+            color: var(--gw-color-border-strong);
           }
 
           .step-tooltip {
             position: absolute;
             top: calc(100% + 8px);
-            left: 50%;
-            transform: translateX(-50%);
+            left: 0;
             padding: 8px 12px;
             background-color: var(--gw-color-text-strong);
             color: var(--gw-color-text-inverse);
@@ -123,11 +195,10 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.2s ease, transform 0.2s ease;
-            max-width: 220px;
+            max-width: min(220px, calc(100vw - 32px));
             min-width: 150px;
             line-height: 1.5;
           }
-
           /* WCAG 1.4.13: covers the gap so the pointer can move onto the tooltip */
           .step-tooltip::after {
             content: '';
@@ -137,73 +208,56 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
             right: 0;
             height: 12px;
           }
-
-          .step-wrapper:first-child .step-tooltip {
-            left: 0;
-            transform: translateX(0);
-          }
-
-          .step-wrapper:last-child .step-tooltip {
-            left: 50%;
-            right: auto;
-            transform: translateX(calc(-50% + 16px)); /* Center on step circle (16px = half circle width) */
-            max-width: min(220px, calc(100vw - 32px));
-          }
-
           .step-tooltip::before {
             content: '';
             position: absolute;
             bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 15px;
             border: 6px solid transparent;
             border-bottom-color: var(--gw-color-text-strong);
           }
-
-          .step-wrapper:first-child .step-tooltip::before {
-            left: 20px;
-            transform: translateX(0);
-          }
-
-          .step-wrapper:last-child .step-tooltip::before {
-            left: 50%;
-            right: auto;
-            transform: translateX(calc(-50% + 16px));
-          }
-
           .step-tooltip.step-tooltip--visible {
             opacity: 1;
             visibility: visible;
-            transform: translateX(-50%) translateY(2px);
+            transform: translateY(2px);
           }
 
-          .step-wrapper:first-child .step-tooltip.step-tooltip--visible {
-            transform: translateX(0) translateY(2px);
-          }
-
-          .step-wrapper:last-child .step-tooltip.step-tooltip--visible {
-            transform: translateX(calc(-50% + 16px)) translateY(2px);
-          }
-
-          .progress-stepper-container .step-summary,
-          .progress-stepper-container .step-all {
+          .progress-stepper-container .step-summary {
             display: none;
           }
           .step-all {
-            margin: 8px auto 0;
+            margin: 4px auto 0;
             max-width: 360px;
-            border-top: 1px solid var(--gw-color-border);
-            padding-top: 6px;
             font-family: var(--gw-font-family);
             font-size: 13px;
           }
           .step-all > summary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            min-height: 44px;
+            list-style: none;
             cursor: pointer;
-            text-align: center;
             color: var(--gw-color-primary-hover);
             font-weight: 600;
             text-decoration: underline;
             text-underline-offset: 3px;
+          }
+          .step-all > summary::-webkit-details-marker {
+            display: none;
+          }
+          .step-all__chevron {
+            flex-shrink: 0;
+            transition: transform 0.15s ease;
+          }
+          .step-all[open] .step-all__chevron {
+            transform: rotate(180deg);
+          }
+          /* WCAG 2.4.11: the open list can be taller than the screen, so it scrolls with the page. */
+          .progress-stepper-container.progress-stepper-container--list-open,
+          .document-editor-header:has(+ .progress-stepper-container--list-open) {
+            position: static !important;
           }
           .step-all ol {
             display: grid;
@@ -236,218 +290,103 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
 
           @media (max-width: 768px) {
             .progress-stepper-container {
-              padding: 16px 12px !important;
+              padding: 8px 12px !important;
             }
-            .progress-stepper-container .step-label {
-              font-size: 13px !important;
-            }
-            .progress-stepper-container .step-description,
-            .progress-stepper-container .step-progress {
-              display: none;
-            }
-            .progress-stepper-container .step-summary,
-            .progress-stepper-container .step-all {
+            .progress-stepper-container .step-summary {
               display: block;
             }
-            /* WCAG 2.4.11: the open list can be taller than a phone screen, so it scrolls with the page. */
-            .progress-stepper-container.progress-stepper-container--list-open,
-            .document-editor-header:has(+ .progress-stepper-container--list-open) {
-              position: static !important;
-            }
             .step-tooltip {
-              display: none; /* Hide tooltips on mobile for better UX */
+              display: none;
             }
           }
           @media (max-width: 480px) {
             .progress-stepper-container {
-              padding: 12px 8px !important;
+              padding: 8px !important;
             }
-            .progress-stepper-container button {
-              width: 28px !important;
-              height: 28px !important;
-              font-size: 12px !important;
-              margin-bottom: 0 !important;
+            .step-row {
+              justify-content: center;
             }
-            /* Five label columns overlap here; the summary line names the current step. */
-            .progress-stepper-container .step-text {
+            /* Five named chips need several rows here; the summary line names the current step. */
+            .step-chip {
+              justify-content: center;
+              padding: 0;
+            }
+            .step-chip__label {
               display: none;
             }
           }
         `}
       </style>
-      <div style={{ position: "relative" }}>
-        {/* Connector Lines */}
-        {steps.length > 1 && (
-          <div
-            style={{
-              position: "absolute",
-              top: "16px",
-              left: "16px",
-              right: "16px",
-              height: "2px",
-              // Light enough that the completed fill reads against it at 3.4:1.
-              // The circles, not this rail, carry the per-step state.
-              backgroundColor: "var(--gw-color-border-strong)",
-              zIndex: 0,
-            }}
-          >
-            <div
-              style={{
-                width: steps.length > 1 ? `${(activeStep / (steps.length - 1)) * 100}%` : "0%",
-                height: "100%",
-                backgroundColor: "var(--gw-color-primary)",
-                transition: "width 0.3s ease",
-              }}
-            />
-          </div>
-        )}
+      <ol className="step-row">
+        {steps.map((step, index) => {
+          const completed = isStepCompleted(index);
+          const active = isStepActive(index);
+          const clickable = isStepClickable(index) && !active;
+          const tooltipVisible = !tooltipDismissed && (hoveredIndex === index || focusedIndex === index);
+          const content = (
+            <>
+              <span
+                className={`step-chip__marker${completed || active ? " step-chip__marker--filled" : ""}`}
+                aria-hidden="true"
+              >
+                {completed ? <LuCheck size={14} strokeWidth={3} /> : index + 1}
+              </span>
+              <span className="step-chip__label" aria-hidden="true">{step.label}</span>
+              <span className="visually-hidden">
+                {`Step ${index + 1} of ${steps.length}: ${step.label}, ${getStepState(index)}`}
+              </span>
+            </>
+          );
 
-        <ol
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            position: "relative",
-            gap: "8px",
-            listStyle: "none",
-            margin: 0,
-            padding: 0,
-          }}
-        >
-          {steps.map((step, index) => {
-            const completed = isStepCompleted(index);
-            const active = isStepActive(index);
-            const clickable = isStepClickable(index);
-            const tooltipText = getTooltipText(step, index);
-            const tooltipVisible =
-              !tooltipDismissed && (hoveredIndex === index || focusedIndex === index);
-
-            return (
-              <li key={step.id} className="step-wrapper" style={{ flex: 1, position: "relative" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                  onMouseEnter={() => {
-                    setHoveredIndex(index);
-                    setTooltipDismissed(false);
-                  }}
-                  onMouseLeave={() => setHoveredIndex((prev) => (prev === index ? null : prev))}
-                >
-                  <div
-                    id={`tooltip-${step.id}`}
-                    className={`step-tooltip${tooltipVisible ? " step-tooltip--visible" : ""}`}
-                    role="tooltip"
-                  >
-                    {tooltipText}
-                  </div>
-
-                  {/* Step Circle */}
+          return (
+            <li key={step.id} className="step-wrapper" aria-current={active ? "step" : undefined}>
+              <div
+                className="step-hover"
+                onMouseEnter={() => {
+                  setHoveredIndex(index);
+                  setTooltipDismissed(false);
+                }}
+                onMouseLeave={() => setHoveredIndex((prev) => (prev === index ? null : prev))}
+              >
+                {clickable ? (
                   <button
                     type="button"
-                    onClick={() => clickable && onStepClick?.(index)}
-                    aria-disabled={!clickable || undefined}
-                    aria-label={`Step ${index + 1} of ${steps.length}: ${step.label}, ${getStepState(index)}`}
-                    aria-current={active ? "step" : undefined}
+                    className="step-chip"
+                    onClick={() => onStepClick?.(index)}
                     aria-describedby={`tooltip-${step.id}`}
-                    style={{
-                      width: "32px",
-                      height: "32px",
-                      borderRadius: "50%",
-                      border: `2px solid ${completed || active ? "var(--gw-color-primary)" : "var(--gw-color-text-muted)"}`,
-                      backgroundColor: completed || active ? "var(--gw-color-primary)" : "var(--gw-color-surface)",
-                      color: completed || active ? "var(--gw-color-text-inverse)" : "var(--gw-color-border-input-hover)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      cursor: clickable ? "pointer" : "not-allowed",
-                      transition: "all 0.2s ease",
-                      fontFamily: "var(--gw-font-family)",
-                      fontSize: "14px",
-                      fontWeight: 600,
-                      padding: 0,
-                      marginBottom: "8px",
-                    }}
-                    onMouseEnter={(e) => {
-                      if (clickable) {
-                        e.currentTarget.style.transform = "scale(1.1)";
-                        e.currentTarget.style.boxShadow = "var(--gw-shadow-low)";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (clickable) {
-                        e.currentTarget.style.transform = "scale(1)";
-                        e.currentTarget.style.boxShadow = "none";
-                      }
-                    }}
                     onFocus={() => {
                       setFocusedIndex(index);
                       setTooltipDismissed(false);
                     }}
-                    onBlur={() => {
-                      setFocusedIndex(null);
-                    }}
+                    onBlur={() => setFocusedIndex(null)}
                   >
-                    {completed ? (
-                      <LuCheck size={18} strokeWidth={3} aria-hidden="true" />
-                    ) : (
-                      <span>{index + 1}</span>
-                    )}
+                    {content}
                   </button>
-
-                  {/* Step Label */}
-                  <div
-                    className="step-text"
-                    style={{
-                      textAlign: "center",
-                      maxWidth: "120px",
-                      position: "relative",
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontFamily: "var(--gw-font-family)",
-                        fontSize: "15px",
-                        fontWeight: active ? 600 : 500,
-                        color: active ? "var(--gw-color-primary)" : completed ? "var(--gw-color-text-muted)" : "var(--gw-color-text-secondary)",
-                        lineHeight: "1.4",
-                        transition: "color 0.2s ease",
-                        cursor: "default",
-                      }}
-                      className="step-label"
-                    >
-                      {step.label}
-                    </div>
-                    {step.description && (
-                      <div
-                        style={{
-                          fontFamily: "var(--gw-font-family)",
-                          fontSize: "13px",
-                          color: "var(--gw-color-text-secondary)",
-                          marginTop: "4px",
-                          lineHeight: "1.3",
-                        }}
-                        className="step-description"
-                      >
-                        {step.description}
-                      </div>
-                    )}
-                  </div>
+                ) : (
+                  <span className={`step-chip${active ? " step-chip--current" : ""}`}>{content}</span>
+                )}
+                <div
+                  id={`tooltip-${step.id}`}
+                  className={`step-tooltip${tooltipVisible ? " step-tooltip--visible" : ""}`}
+                  role="tooltip"
+                >
+                  {getTooltipText(step, index)}
                 </div>
-              </li>
-            );
-          })}
-        </ol>
-      </div>
+              </div>
+              {index < steps.length - 1 && (
+                <LuChevronRight size={16} className="step-separator" aria-hidden="true" />
+              )}
+            </li>
+          );
+        })}
+      </ol>
 
       {current && (
         <p
           className="step-summary"
           style={{
             textAlign: "center",
-            margin: "12px 0 0",
+            margin: "8px 0 0",
             fontFamily: "var(--gw-font-family)",
             fontSize: "13px",
             color: "var(--gw-color-text-secondary)",
@@ -458,13 +397,16 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
         </p>
       )}
 
-      {/* Phones hide the step names and their tooltips, so the full list, with what is locked, is one tap away. */}
+      {/* Every step's help text and state, reachable without hover; phones also hide the tooltips and the smallest the step names. */}
       <details
         className="step-all"
         open={allStepsOpen}
         onToggle={(e) => setAllStepsOpen(e.currentTarget.open)}
       >
-        <summary ref={allStepsSummaryRef}>All steps</summary>
+        <summary ref={allStepsSummaryRef}>
+          All steps
+          <LuChevronDown size={14} className="step-all__chevron" aria-hidden="true" />
+        </summary>
         <ol>
           {steps.map((step, index) => (
             <li key={step.id} aria-current={isStepActive(index) ? "step" : undefined}>
@@ -485,22 +427,6 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
           ))}
         </ol>
       </details>
-
-      {showProgress && (
-        <div
-          className="step-progress"
-          style={{
-            textAlign: "center",
-            marginTop: "12px",
-            fontFamily: "var(--gw-font-family)",
-            fontSize: "12px",
-            color: "var(--gw-color-text-muted)",
-            fontWeight: 500,
-          }}
-        >
-          {`Application progress: step ${activeStep + 1} of ${steps.length} (${Math.round(progressPercentage)}%)`}
-        </div>
-      )}
     </nav>
   );
 };

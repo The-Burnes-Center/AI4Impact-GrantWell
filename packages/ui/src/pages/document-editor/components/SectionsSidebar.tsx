@@ -1,5 +1,5 @@
 import React from "react";
-import { LuCircleCheckBig, LuCircleAlert, LuLoader, LuLock } from "react-icons/lu";
+import { LuCircleCheckBig, LuCircleAlert, LuCircleMinus, LuLoader, LuLock } from "react-icons/lu";
 import type { ApplicationSection } from "../../../common/helpers/application-sections";
 import AddSectionForm from "./AddSectionForm";
 
@@ -17,6 +17,8 @@ interface SectionsSidebarProps {
   completedSectionCount?: number;
   /** Section ids. */
   failedSections?: string[];
+  /** Sections the AI did not draft, keyed by id; shown as not drafted while they are empty. */
+  skippedSections?: Record<string, string>;
   /** Sections the running job writes; all of them unless it is a retry. */
   generationTotal?: number;
   onAddSection?: (name: string) => void;
@@ -30,12 +32,13 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
   generating,
   completedSectionCount = 0,
   failedSections = [],
+  skippedSections = {},
   generationTotal,
   onAddSection,
 }: SectionsSidebarProps) {
   const total = generationTotal ?? sections.length;
   const isSectionReady = (section: Section) => {
-    return !!sectionAnswers[section.id] || failedSections.includes(section.id);
+    return !!sectionAnswers[section.id] || failedSections.includes(section.id) || !!skippedSections[section.id];
   };
 
   // Backend generates sections in a sliding window of CONCURRENCY_WINDOW; anything
@@ -46,6 +49,7 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
   const getStatus = (section: Section, idx: number) => {
     if (sectionAnswers[section.id]) return "completed";
     if (failedSections.includes(section.id)) return "failed";
+    if (skippedSections[section.id]) return "not drafted";
     if (!generating) return "";
     return isActivelyGenerating(idx) ? "generating" : "pending";
   };
@@ -66,6 +70,8 @@ const SectionsSidebar = React.memo(function SectionsSidebar({
             aria-label={`${section.name}: generating`}
           />
         );
+      case "not drafted":
+        return <LuCircleMinus size={16} style={{ color: 'var(--gw-color-text-muted)' }} role="img" aria-label={`${section.name}: not drafted`} />;
       case "pending":
         return <LuLock size={14} style={{ color: 'var(--gw-color-text-muted)' }} role="img" aria-label={`${section.name}: pending`} />;
       default:

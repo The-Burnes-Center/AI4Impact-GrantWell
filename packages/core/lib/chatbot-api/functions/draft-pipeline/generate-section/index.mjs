@@ -9,18 +9,28 @@
  * The message is ordered for prompt caching: standing instructions and the grant text (shared
  * by every draft of the grant), then the applicant's documents and answers (shared by every
  * section of this draft), then this section's brief.
+ *
+ * Notes to the applicant are removed from the text, and a section over the grant's stated character
+ * or word limit is asked once for a shorter version, then cut at a sentence. Summary sections are
+ * written from the drafted ones. The same function runs the plan step (plan-draft.mjs).
  */
 
 import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
-import { DynamoDBClient, UpdateItemCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, GetItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { loadSupportingDocuments, pdfContentBlocks } from './supporting-documents.mjs';
+import { unmarshall } from '@aws-sdk/util-dynamodb';
+import { grantFolderName, loadSupportingDocuments, pdfContentBlocks } from './supporting-documents.mjs';
+import { relevanceGate } from './document-relevance.mjs';
+import { askMatcher, SUMMARY_SKIP_NOTE } from './material-match.mjs';
+import { planDraft } from './plan-draft.mjs';
+import { isOver, limitText, measure, statedLimit, stripNotes, trimToLimit } from './section-text.mjs';
 
 const bedrockClient = new BedrockRuntimeClient({ region: process.env.AWS_REGION || 'us-east-1' });
 const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION || 'us-east-1' });
 const s3Client = new S3Client({ region: process.env.AWS_REGION || 'us-east-1' });
 
 const CLAUDE_MODEL_ID = process.env.SONNET_MODEL_ID;
+const MATCH_MODEL_ID = process.env.MATCH_MODEL_ID;
 
 const WORDS_PER_PAGE = 500;
 const SECTION_EFFORT = 'medium';
@@ -66,7 +76,7 @@ const STATE_NAME_BY_CODE = (() => {
   }
 })();
 
-const WRAPPER_CLOSING_TAG = /<\s*\/\s*(grant_document|applicant_documents|document|additional_information|questionnaire_responses|response|question|answer)\s*>/gi;
+const WRAPPER_CLOSING_TAG = /<\s*\/\s*(grant_document|applicant_documents|document|additional_information|questionnaire_responses|response|question|answer|drafted_sections|section)\s*>/gi;
 
 function escapeWrapperClosingTags(text) {
   return String(text ?? '').replace(WRAPPER_CLOSING_TAG, '&lt;/$1&gt;');
@@ -100,16 +110,23 @@ The message gives you, in order: the grant (<grant_document>), the applicant's m
    carries them. Start directly with the section's substance.
 7. Do not write an executive summary, vision statement, or project overview unless the
    section description explicitly asks for one; those belong to their own sections
-8. Write only application prose in the applicant's voice. Never address the applicant with
-   guidance, caveats, or TODOs (e.g. "applicants are advised to…", "insert the FEMA
-   declaration number here"). If a required fact is genuinely absent from the applicant's
-   materials and the grant, write [BRACKETED PLACEHOLDER] so the gap is visible rather than
-   inventing a specific figure, date, or declaration number
+8. Write only application prose in the applicant's voice. Never address the applicant or a
+   reviewer anywhere in the section: no notes, caveats, TODOs or remarks about what the
+   materials did or did not include (e.g. "Note on source materials…", "applicants are
+   advised to…", "insert the FEMA declaration number here"). If a required fact is genuinely
+   absent from the applicant's materials and the grant, write a short bracketed placeholder
+   that names only the fact, such as [number of participants], rather than inventing a
+   specific figure, date, or declaration number; never explain inside or after it why it is
+   missing
 9. If the section description marks it conditional ("if applicable") and the questionnaire
    responses indicate it does not apply, return a single sentence saying so — do not
    fabricate a narrative to fill it
 10. Use Markdown headings inside the section: "### " for a heading and "#### " for a
     subheading, each on its own line. Never use a line of only bold text as a heading
+11. Use an applicant document only for what it says about the applicant or this project;
+    never carry a document's unrelated subject matter into the narrative
+12. When the section has a <length_limit>, stay under it; it is counted on the text as a
+    reader sees it, spaces included
 
 Return the section as JSON whose "content" field holds the complete section as a single string.
 </instructions>`;
@@ -122,7 +139,18 @@ const SECTION_SCHEMA = {
   required: ['content'],
 };
 
-export const handler = async (event) => {
+export const handler = async (event) => (event?.step === 'plan' ? planStep(event.state) : writeSection(event));
+
+function planStep(state) {
+  return planDraft(state, {
+    askMatcher: (request) => askMatcher({ bedrock: bedrockClient, modelId: MATCH_MODEL_ID, request }),
+    loadDocuments: () => loadApplicantDocuments(state.documentIdentifier, state.documentOwner || state.userId, state.documentKeys),
+    readSavedSections: () => readSavedSections(state.userId, state.sessionId).catch(() => ({})),
+    saveJobPlan: (plan) => saveJobPlan(state.jobId, plan),
+  });
+}
+
+async function writeSection(event) {
   const {
     sectionItem,
     jobId,
@@ -133,22 +161,35 @@ export const handler = async (event) => {
     questionnaireAnswers,
     additionalInfo,
     userId,
+    sessionId,
     documentOwner,
     documentKeys,
     totalSections,
     userState,
     sectionNames,
+    outline,
   } = event;
 
   const { item: sectionName, description: sectionDescription, index: sectionIndex } = sectionItem;
   const sectionId = sectionItem.id || sectionName;
 
-  const wordBudget = sectionWordBudget(sectionDescription);
+  let drafted = [];
+  if (sectionItem.summary) {
+    drafted = await readDraftedSections({ jobId, userId, sessionId, outline, sectionId });
+    if (drafted.length === 0) {
+      console.log(`GenerateSection: no drafted sections to summarize for "${sectionName}"; leaving it empty`);
+      await recordSkippedSection(jobId, sectionId, SUMMARY_SKIP_NOTE);
+      return { sectionId, sectionName, status: 'skipped' };
+    }
+  }
+
+  const limit = statedLimit(sectionName, sectionDescription);
+  const wordBudget = limitedWordBudget(sectionWordBudget(sectionDescription), limit);
   const maxTokens = tokenCeilingForWords(wordBudget);
 
   console.log(
     `GenerateSection: generating "${sectionName}" (${sectionIndex + 1}/${totalSections}) ` +
-      `budget=${wordBudget}w max_tokens=${maxTokens}`
+      `budget=${wordBudget}w max_tokens=${maxTokens}${limit ? ` limit=${limitText(limit)}` : ''}`
   );
 
   const [grant, supporting] = await Promise.all([
@@ -182,9 +223,10 @@ ${escapeWrapperClosingTags(grant.text)}
 <title>${sectionName}</title>
 <position>Section ${sectionIndex + 1} of the outline above</position>
 <description>${sectionDescription}</description>
-<length_budget>Approximately ${wordBudget} words. Do not exceed this.</length_budget>
+<length_budget>Approximately ${wordBudget} words. Do not exceed this.</length_budget>${limit ? `
+<length_limit>The grant limits this section to ${limitText(limit)}.</length_limit>` : ''}
 </section_to_write>
-
+${draftedSectionsText(drafted)}
 Write the content for the "${sectionName}" grant section.`,
   };
   const contentFor = (pdfs) => [
@@ -201,26 +243,33 @@ Write the content for the "${sectionName}" grant section.`,
     maxTokens,
     effort: SECTION_EFFORT,
   };
+  let firstMessage = contentFor(supporting.pdfs);
   let result;
   try {
-    result = await invokeStructuredOutput(bedrockClient, { ...request, content: contentFor(supporting.pdfs) });
+    result = await invokeStructuredOutput(bedrockClient, { ...request, content: firstMessage });
   } catch (error) {
     // The page estimate can miss: a PDF whose pages overrun the request is dropped and named.
     if (error?.name !== 'ValidationException' || supporting.pdfs.length === 0) throw error;
     console.warn(`GenerateSection: the model rejected the attached PDFs for "${sectionName}" (${error.message}); retrying without them`);
     skipped.push(...supporting.pdfs.map((p) => ({ name: p.fileName, reason: 'too-large' })));
-    result = await invokeStructuredOutput(bedrockClient, { ...request, content: contentFor([]) });
+    firstMessage = contentFor([]);
+    result = await invokeStructuredOutput(bedrockClient, { ...request, content: firstMessage });
   }
 
-  const content = result.content;
-  if (typeof content !== 'string' || content.trim() === '') {
-    throw new Error(
-      `Model returned empty content for "${sectionName}" — refusing to save a blank section`
-    );
+  let content = cleanSection(result.content, sectionName);
+  let trimmed = null;
+  if (isOver(content, limit)) {
+    content = await shortenOnce({ request, firstMessage, content, limit, sectionName });
+    if (isOver(content, limit)) {
+      const before = measure(content)[limit.unit];
+      content = trimToLimit(content, limit);
+      trimmed = { unit: limit.unit, max: limit.max };
+      console.warn(`GenerateSection: cut "${sectionName}" from ${before} to ${measure(content)[limit.unit]} ${limit.unit} (limit ${limit.max})`);
+    }
   }
   console.log(`GenerateSection: generated ${content.length} chars for "${sectionName}"`);
 
-  await updateSectionInJob(jobId, sectionId, sectionName, content, skipped);
+  await updateSectionInJob(jobId, sectionId, sectionName, content, skipped, trimmed);
 
   // Content omitted here: full prose in the Map result overruns SFN's 256 KB limit.
   return {
@@ -228,7 +277,69 @@ Write the content for the "${sectionName}" grant section.`,
     sectionName,
     status: 'completed',
   };
-};
+}
+
+/** The section without notes to the applicant; empty is an error, as before. */
+function cleanSection(raw, sectionName) {
+  if (typeof raw !== 'string' || raw.trim() === '') {
+    throw new Error(`Model returned empty content for "${sectionName}" — refusing to save a blank section`);
+  }
+  const { text, removed } = stripNotes(raw);
+  if (removed > 0) console.warn(`GenerateSection: removed ${removed} note paragraph(s) from "${sectionName}"`);
+  if (text.trim() === '') {
+    throw new Error(`Model returned only notes for "${sectionName}" — refusing to save a blank section`);
+  }
+  return text;
+}
+
+/** One request for a shorter version; on any failure the longer text stands, to be cut. */
+async function shortenOnce({ request, firstMessage, content, limit, sectionName }) {
+  const length = measure(content)[limit.unit];
+  console.warn(`GenerateSection: "${sectionName}" is ${length} ${limit.unit}, over its ${limit.max}; asking for a shorter version`);
+  const target = Math.floor(limit.max * 0.9);
+  try {
+    const shorter = await invokeStructuredOutput(bedrockClient, {
+      ...request,
+      label: `${request.label} (shorter)`,
+      messages: [
+        { role: 'user', content: firstMessage },
+        { role: 'assistant', content: [{ type: 'text', text: JSON.stringify({ content }) }] },
+        {
+          role: 'user',
+          content: [{
+            type: 'text',
+            text: `That draft is ${length.toLocaleString('en-US')} ${limit.unit}, counted on the text as a reader sees it; ` +
+              `the grant's limit for this section is ${limitText(limit)}. Rewrite the whole section to about ` +
+              `${target.toLocaleString('en-US')} ${limit.unit}, keeping its most important content and following the same rules. ` +
+              'Return the complete shorter section.',
+          }],
+        },
+      ],
+    });
+    const text = cleanSection(shorter.content, sectionName);
+    return measure(text)[limit.unit] < length ? text : content;
+  } catch (error) {
+    console.warn(`GenerateSection: the shorter version of "${sectionName}" failed (${error?.message}); cutting the first`);
+    return content;
+  }
+}
+
+function limitedWordBudget(budget, limit) {
+  if (!limit) return budget;
+  const words = limit.unit === 'words' ? limit.max : Math.round(limit.max / 6.5);
+  return Math.max(30, Math.min(budget, Math.floor(words * 0.95)));
+}
+
+function draftedSectionsText(drafted) {
+  if (drafted.length === 0) return '';
+  return `
+<drafted_sections>
+The application's other sections as they stand. Write this summary from them: every fact in it must
+come from these sections or the applicant's materials, and it must not contradict them.
+${drafted.map((d) => `<section title="${String(d.name).replace(/["<>]/g, '')}">\n${escapeWrapperClosingTags(d.content)}\n</section>`).join('\n')}
+</drafted_sections>
+`;
+}
 
 // ── Helpers ──────────────────────────────────────────────────────────
 
@@ -333,6 +444,22 @@ async function loadGrantText(documentIdentifier) {
   return { source: 'summary', text: JSON.stringify(summary, null, 2) };
 }
 
+/** Only documents that relate to this grant (or an admin approved) are used; undefined where not deployed. */
+function documentGate(userId, documentIdentifier) {
+  if (!process.env.USER_DOCUMENT_TABLE_NAME) return undefined;
+  const deps = {
+    ddb: dynamoClient,
+    s3: s3Client,
+    bedrock: bedrockClient,
+    table: process.env.USER_DOCUMENT_TABLE_NAME,
+    bucket: process.env.USER_DOCUMENTS_BUCKET,
+    artifactBuckets: [process.env.ARTIFACTS_BUCKET, process.env.BUCKET],
+    modelId: process.env.DOC_CHECK_MODEL_ID,
+    source: 'draft',
+  };
+  return relevanceGate(deps, { userId, grant: grantFolderName(documentIdentifier) });
+}
+
 /** userId is the library owner (the Cognito username that prefixes the document keys). */
 async function loadApplicantDocuments(documentIdentifier, userId, documentKeys) {
   const empty = { selected: [], pdfs: [], texts: [], skipped: [] };
@@ -344,6 +471,7 @@ async function loadApplicantDocuments(documentIdentifier, userId, documentKeys) 
       userId,
       documentKeys: Array.isArray(documentKeys) ? documentKeys : null,
       documentIdentifier,
+      gate: documentGate(userId, documentIdentifier),
     });
   } catch (error) {
     console.error("GenerateSection: couldn't read the applicant's documents; writing without them:", error);
@@ -372,10 +500,10 @@ function toStrictSchema(schema) {
   return out;
 }
 
-async function invokeStructuredOutput(client, { modelId, content, schema, label, maxTokens, effort }) {
+async function invokeStructuredOutput(client, { modelId, content, messages, schema, label, maxTokens, effort }) {
   const body = JSON.stringify({
     anthropic_version: 'bedrock-2023-05-31',
-    messages: [{ role: 'user', content }],
+    messages: messages ?? [{ role: 'user', content }],
     max_tokens: maxTokens,
     output_config: {
       effort,
@@ -420,28 +548,35 @@ async function invokeStructuredOutput(client, { modelId, content, schema, label,
   }
 }
 
-async function updateSectionInJob(jobId, sectionId, sectionName, content, skipped = []) {
+
+async function updateSectionInJob(jobId, sectionId, sectionName, content, skipped = [], trimmed = null) {
   const tableName = process.env.DRAFT_GENERATION_JOBS_TABLE_NAME;
   if (!tableName) return;
 
   // Every section of a job sees the same selection, so each writes the same skipped list.
   const skippedSet = skipped.length > 0 ? ', #skipped = :skipped' : '';
+  // prepare creates the sectionsTrimmed map this nested path writes into.
+  const trimmedSet = trimmed ? ', #trimmed.#sectionId = :trimmed' : '';
   try {
     const command = new UpdateItemCommand({
       TableName: tableName,
       Key: { jobId: { S: jobId } },
-      UpdateExpression: `SET #sections.#sectionId = :content${skippedSet} ADD #completed :one`,
+      UpdateExpression: `SET #sections.#sectionId = :content${skippedSet}${trimmedSet} ADD #completed :one`,
       ExpressionAttributeNames: {
         '#sections': 'sections',
         '#sectionId': sectionId,
         '#completed': 'completedSectionCount',
         ...(skipped.length > 0 ? { '#skipped': 'skippedDocuments' } : {}),
+        ...(trimmed ? { '#trimmed': 'sectionsTrimmed' } : {}),
       },
       ExpressionAttributeValues: {
         ':content': { S: content },
         ':one': { N: '1' },
         ...(skipped.length > 0
           ? { ':skipped': { L: skipped.map((s) => ({ M: { name: { S: s.name }, reason: { S: s.reason } } })) } }
+          : {}),
+        ...(trimmed
+          ? { ':trimmed': { M: { unit: { S: trimmed.unit }, max: { N: String(trimmed.max) } } } }
           : {}),
       },
     });
@@ -451,4 +586,82 @@ async function updateSectionInJob(jobId, sectionId, sectionName, content, skippe
     console.error(`GenerateSection: error saving "${sectionName}" for job ${jobId}:`, error);
     throw error;
   }
+}
+
+async function recordSkippedSection(jobId, sectionId, note) {
+  const tableName = process.env.DRAFT_GENERATION_JOBS_TABLE_NAME;
+  if (!tableName) return;
+  await dynamoClient.send(new UpdateItemCommand({
+    TableName: tableName,
+    Key: { jobId: { S: jobId } },
+    UpdateExpression: 'SET #skipped.#sectionId = :note',
+    ExpressionAttributeNames: { '#skipped': 'sectionsSkipped', '#sectionId': sectionId },
+    ExpressionAttributeValues: { ':note': { S: note } },
+  }));
+}
+
+async function saveJobPlan(jobId, plan) {
+  const tableName = process.env.DRAFT_GENERATION_JOBS_TABLE_NAME;
+  if (!tableName) return;
+  await dynamoClient.send(new UpdateItemCommand({
+    TableName: tableName,
+    Key: { jobId: { S: jobId } },
+    UpdateExpression: 'SET #sn = :sn, #si = :si, #ts = :ts, #sk = :sk, #ss = :ss',
+    ExpressionAttributeNames: {
+      '#sn': 'sectionNames',
+      '#si': 'sectionIds',
+      '#ts': 'totalSections',
+      '#sk': 'sectionsSkipped',
+      '#ss': 'summarySectionIds',
+    },
+    ExpressionAttributeValues: {
+      ':sn': { L: plan.sectionNames.map((n) => ({ S: n })) },
+      ':si': { L: plan.sectionIds.map((n) => ({ S: n })) },
+      ':ts': { N: String(plan.totalSections) },
+      ':sk': { M: Object.fromEntries(Object.entries(plan.sectionsSkipped).map(([id, note]) => [id, { S: note }])) },
+      ':ss': { L: plan.summarySectionIds.map((n) => ({ S: n })) },
+    },
+  }));
+}
+
+/** The saved application's section text, keyed as the row keys it (by id, or by name before ids). */
+async function readSavedSections(userId, sessionId) {
+  const tableName = process.env.DRAFT_TABLE_NAME;
+  if (!tableName || !userId || !sessionId) return {};
+  const res = await dynamoClient.send(new GetItemCommand({
+    TableName: tableName,
+    Key: { user_id: { S: userId }, session_id: { S: sessionId } },
+    ProjectionExpression: '#sections',
+    ExpressionAttributeNames: { '#sections': 'sections' },
+  }));
+  const sections = res.Item ? unmarshall(res.Item).sections : null;
+  return sections && typeof sections === 'object' ? sections : {};
+}
+
+/** The non-summary sections with text, in outline order: this run's text first, else the saved application's. */
+async function readDraftedSections({ jobId, userId, sessionId, outline, sectionId }) {
+  const tableName = process.env.DRAFT_GENERATION_JOBS_TABLE_NAME;
+  const [job, saved] = await Promise.all([
+    tableName
+      ? dynamoClient
+          .send(new GetItemCommand({
+            TableName: tableName,
+            Key: { jobId: { S: jobId } },
+            ConsistentRead: true,
+            ProjectionExpression: '#sections, #ss',
+            ExpressionAttributeNames: { '#sections': 'sections', '#ss': 'summarySectionIds' },
+          }))
+          .then((res) => (res.Item ? unmarshall(res.Item) : {}))
+      : {},
+    readSavedSections(userId, sessionId).catch((error) => {
+      console.warn(`GenerateSection: couldn't read the saved application: ${error?.name}`);
+      return {};
+    }),
+  ]);
+  const summaries = new Set([...(job.summarySectionIds || []), sectionId]);
+  const fresh = job.sections || {};
+  return (Array.isArray(outline) ? outline : [])
+    .filter((s) => !summaries.has(s.id))
+    .map((s) => ({ name: s.name, content: [fresh[s.id], saved[s.id], saved[s.name]].find((t) => typeof t === 'string' && t.trim()) }))
+    .filter((s) => s.content);
 }

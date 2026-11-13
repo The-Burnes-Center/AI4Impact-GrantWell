@@ -17,6 +17,7 @@ export const APP_ROUTES = [
   "/document-editor/drafts",
   "/document-editor/:sessionId",
   "/documents",
+  "/grant-pdf",
   "/requirements/:documentIdentifier",
 ] as const;
 
