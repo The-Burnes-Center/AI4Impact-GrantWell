@@ -656,6 +656,7 @@ body {
 .table-header {
   display: grid;
   grid-template-columns: 4fr 1fr 1fr 1fr;
+  align-items: center;
   background-color: var(--gw-color-background);
   font-weight: 600;
   border-bottom: 1px solid var(--gw-color-border);
