@@ -146,6 +146,12 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       }
       setSections(resolved.sections);
       setSectionAnswers(answers);
+      const requested = readDraftCache<string>(sessionId, "openSection");
+      if (requested) {
+        writeDraftCache(sessionId, "openSection", null);
+        const index = resolved.sections.findIndex((section) => section.id === requested);
+        if (index > 0) setActiveSection(index);
+      }
       setLoaded(true);
 
       if (draft && !draft.sectionOrder && !generatingRef.current) {
