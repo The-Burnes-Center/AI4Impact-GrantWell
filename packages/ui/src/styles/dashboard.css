@@ -492,21 +492,15 @@ body {
   font-size: var(--gw-font-size-xs);
 }
 
-.user-management-status-pill {
-  display: inline-flex;
-  align-items: center;
+.user-management-row-note {
+  margin: 6px 0 0;
+  max-width: 220px;
+  color: var(--gw-color-text-secondary);
+  font-size: var(--gw-font-size-xs);
 }
 
-.user-management-status-pill.is-enabled {
-  --gw-tag-ink: var(--gw-color-success-text);
-  --gw-tag-fill: var(--gw-color-success-light);
-  --gw-tag-line: var(--gw-color-success-border);
-}
-
-.user-management-status-pill.is-disabled {
-  --gw-tag-ink: var(--gw-color-text-secondary);
-  --gw-tag-fill: var(--gw-color-surface-subtle);
-  --gw-tag-line: var(--gw-color-border);
+.user-management-truncated {
+  margin: 0 0 12px;
 }
 
 .user-management-role-select {
@@ -517,7 +511,8 @@ body {
   margin: 12px 0 0;
   padding: 12px 14px;
   display: grid;
-  gap: 6px;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 16px;
   background-color: var(--gw-color-border, #e2e8f0);
   border: 1px solid var(--gw-color-border, #e2e8f0);
   border-radius: var(--gw-radius-container);
@@ -525,14 +520,16 @@ body {
   line-height: 1.45;
 }
 
+/* Subgrid: every term shares one column as wide as the longest role name. */
 .user-management-role-legend__item {
   display: grid;
-  grid-template-columns: 90px 1fr;
-  gap: 10px;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
   align-items: baseline;
 }
 
 .user-management-role-legend dt {
+  white-space: nowrap;
   font-weight: 600;
   color: var(--gw-color-text, #333333);
 }
@@ -543,9 +540,16 @@ body {
 }
 
 @media screen and (max-width: 600px) {
-  .user-management-role-legend__item {
+  .user-management-role-legend {
     grid-template-columns: 1fr;
+  }
+
+  .user-management-role-legend__item {
     gap: 2px;
+  }
+
+  .user-management-role-legend dt {
+    white-space: normal;
   }
 }
 

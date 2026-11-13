@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { LuKeyRound, LuTrash, LuUserPlus } from "react-icons/lu";
 import type { ApiClient } from "../../../common/api-client/api-client";
 import type { ManagedUser, UserRolePreset } from "../../../common/types/user-management";
@@ -24,20 +24,53 @@ const EMAIL_PATTERN = /\S+@\S+\.\S+/;
 
 type RoleOption = { value: UserRolePreset; label: string; requiresDeveloper?: boolean };
 
-// Platform Admin spans states, so a single-state deployment has none.
+// Platform admin spans states, so a single-state deployment has none.
 const allRoleOptions: RoleOption[] = ([
   { value: "user", label: "User" },
   { value: "admin", label: "Admin" },
-  { value: "platformadmin", label: "Platform Admin", requiresDeveloper: true },
+  { value: "platformadmin", label: "Platform admin", requiresDeveloper: true },
   { value: "developer", label: "Developer", requiresDeveloper: true },
 ] as RoleOption[]).filter((option) => !(SINGLE_STATE && option.value === "platformadmin"));
 
 const ROLE_DEFINITIONS: Record<UserRolePreset, string> = {
   user: "Browse grants, view requirements, and draft applications. No admin access.",
-  admin: "Everything a User can do, plus the Admin dashboard: manage grants, review processing, and manage user roles (User or Admin only). Scoped to their assigned state.",
-  platformadmin: "An Admin with no state restriction: manages grants and users across every state. Cannot be scoped to a state.",
-  developer: "Everything a Platform Admin can do, plus manage feature rollouts and assign any role, including Developer.",
+  admin: "Everything a user can do, plus the Admin dashboard: manage grants, review processing, and manage user roles (User or Admin only). Scoped to their assigned state.",
+  platformadmin: "An admin with no state restriction: manages grants and users across every state. Cannot be scoped to a state.",
+  developer: "Everything a platform admin can do, plus manage feature rollouts and assign any role, including Developer.",
 };
+
+const PAGE_SIZE_OPTIONS = [25, 50, 100];
+
+const STATUS_LABELS: Record<string, string> = {
+  CONFIRMED: "Active",
+  FORCE_CHANGE_PASSWORD: "Invited",
+  RESET_REQUIRED: "Password reset required",
+  UNCONFIRMED: "Email not confirmed",
+  EXTERNAL_PROVIDER: "Single sign-on",
+  COMPROMISED: "Compromised",
+};
+
+function statusTag(user: ManagedUser): { label: string; tone: "success" | "info" | "warning" | "neutral" } {
+  if (!user.enabled) return { label: "Disabled", tone: "neutral" };
+  const label = STATUS_LABELS[user.status] ?? "Unknown";
+  if (user.status === "CONFIRMED") return { label, tone: "success" };
+  if (user.status === "FORCE_CHANGE_PASSWORD") return { label, tone: "info" };
+  return { label, tone: "warning" };
+}
+
+const nameOf = (user: ManagedUser) => user.email || user.username;
+
+// An admin with no state has platform access, so only a developer may make, change or remove one.
+// A single-state deployment implies the state.
+const isStatelessAdmin = (role: UserRolePreset, state: string) => !SINGLE_STATE && role === "admin" && !state;
+
+const STATELESS_ADMIN_ERROR =
+  "Choose a state for an admin. An admin with no state has platform access, which only a developer can grant.";
+
+function compareUsers(a: ManagedUser, b: ManagedUser) {
+  if (Boolean(a.email) !== Boolean(b.email)) return a.email ? -1 : 1;
+  return a.email.localeCompare(b.email) || a.username.localeCompare(b.username);
+}
 
 function getRolePreset(roles: string[]): UserRolePreset {
   const normalizedRoles = roles.map((role) => role.toLowerCase());
@@ -66,16 +99,15 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   currentUsername,
 }) => {
   const [users, setUsers] = useState<ManagedUser[]>([]);
+  const [truncated, setTruncated] = useState(false);
   const [draftRoles, setDraftRoles] = useState<Record<string, UserRolePreset>>({});
   const [draftStates, setDraftStates] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [loaded, setLoaded] = useState(false);
   const [savingUsername, setSavingUsername] = useState<string | null>(null);
   const [rowErrors, setRowErrors] = useState<Record<string, string>>({});
-  const [pageSize, setPageSize] = useState(25);
+  const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[0]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageTokens, setPageTokens] = useState<Array<string | null>>([null]);
-  const [nextPaginationToken, setNextPaginationToken] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeSearchQuery, setActiveSearchQuery] = useState("");
 
@@ -83,6 +115,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   const [addEmail, setAddEmail] = useState("");
   const [addEmailAttempted, setAddEmailAttempted] = useState(false);
   const [addState, setAddState] = useState("");
+  const [addRole, setAddRole] = useState<UserRolePreset>("user");
   const [isCreating, setIsCreating] = useState(false);
 
   const [deleteTarget, setDeleteTarget] = useState<ManagedUser | null>(null);
@@ -93,42 +126,41 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   const tableRef = useRef<HTMLTableElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const addEmailRef = useRef<HTMLInputElement>(null);
-  // Set when a reload may remove the row that has focus; checked once the new rows render.
+  const addStateRef = useRef<HTMLSelectElement>(null);
+  // Set when a change may remove the row that has focus; checked once the new rows render.
   const refocusAfterReload = useRef(false);
   const savedUsername = useRef<string | null>(null);
+  const usersRef = useRef(users);
+  usersRef.current = users;
 
-  const loadUsers = useCallback(async (
-    page: number,
-    nextPageSize: number,
-    tokens: Array<string | null>,
-    query: string
-  ) => {
+  const loadUsers = useCallback(async (): Promise<ManagedUser[] | null> => {
     try {
       setLoading(true);
-      const response = await apiClient.userManagement.listUsers({
-        limit: nextPageSize,
-        paginationToken: query ? null : tokens[page - 1] ?? null,
-        query,
-      });
-      setUsers(response.users);
-      setDraftRoles(
+      const response = await apiClient.userManagement.listUsers();
+      const sorted = [...response.users].sort(compareUsers);
+      // A reload keeps any row's unsaved choice; untouched rows take the server's values.
+      const before = new Map(usersRef.current.map((user) => [user.username, user]));
+      setDraftRoles((drafts) =>
         Object.fromEntries(
-          response.users.map((user) => [user.username, getRolePreset(user.roles)])
+          sorted.map((user) => {
+            const old = before.get(user.username);
+            const edited = old && drafts[user.username] && drafts[user.username] !== getRolePreset(old.roles);
+            return [user.username, edited ? drafts[user.username] : getRolePreset(user.roles)];
+          })
         )
       );
-      setDraftStates(
+      setDraftStates((drafts) =>
         Object.fromEntries(
-          response.users.map((user) => [user.username, user.state || ""])
+          sorted.map((user) => {
+            const old = before.get(user.username);
+            const edited = old && user.username in drafts && drafts[user.username] !== (old.state || "");
+            return [user.username, edited ? drafts[user.username] : user.state || ""];
+          })
         )
       );
-      setNextPaginationToken(response.nextPaginationToken);
-      setPageTokens(() => {
-        const nextTokens = tokens.slice(0, page);
-        if (response.nextPaginationToken) {
-          nextTokens[page] = response.nextPaginationToken;
-        }
-        return nextTokens;
-      });
+      setUsers(sorted);
+      setTruncated(Boolean(response.truncated));
+      return sorted;
     } catch (error) {
       console.error("Error loading users:", error);
       addNotification(
@@ -137,11 +169,27 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           ? `Failed to load users: ${error.message}`
           : "Failed to load users"
       );
+      return null;
     } finally {
       setLoading(false);
       setLoaded(true);
     }
   }, [apiClient, addNotification]);
+
+  const filteredUsers = useMemo(() => {
+    const query = activeSearchQuery.toLowerCase();
+    if (!query) return users;
+    return users.filter(
+      (user) => user.email.toLowerCase().includes(query) || user.username.toLowerCase().includes(query)
+    );
+  }, [users, activeSearchQuery]);
+  const totalPages = Math.max(1, Math.ceil(filteredUsers.length / pageSize));
+  const page = Math.min(currentPage, totalPages);
+  const pageUsers = filteredUsers.slice((page - 1) * pageSize, page * pageSize);
+
+  useEffect(() => {
+    if (currentPage > totalPages) setCurrentPage(totalPages);
+  }, [currentPage, totalPages]);
 
   useEffect(() => {
     if (!refocusAfterReload.current || loading) return;
@@ -159,25 +207,18 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   }, [savingUsername]);
 
   useEffect(() => {
-    void loadUsers(1, pageSize, [null], activeSearchQuery);
-  }, [loadUsers, pageSize, activeSearchQuery]);
-
-  const reloadCurrentPage = useCallback(() => {
-    void loadUsers(currentPage, pageSize, pageTokens, activeSearchQuery);
-  }, [loadUsers, currentPage, pageSize, pageTokens, activeSearchQuery]);
+    void loadUsers();
+  }, [loadUsers]);
 
   const startSearch = useCallback((query: string) => {
     setCurrentPage(1);
-    setPageTokens([null]);
-    setNextPaginationToken(null);
     setActiveSearchQuery(query);
   }, []);
 
   const handleSearchSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (loading) return;
     startSearch(searchQuery.trim());
-  }, [loading, searchQuery, startSearch]);
+  }, [searchQuery, startSearch]);
 
   const handleClearSearch = useCallback(() => {
     setSearchQuery("");
@@ -188,26 +229,13 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   const hasActiveSearch = activeSearchQuery.length > 0;
 
   const handlePageChange = useCallback((nextPage: number) => {
-    if (nextPage < 1) {
-      return;
-    }
-    if (nextPage > currentPage && !nextPaginationToken) {
-      return;
-    }
-    if (nextPage > pageTokens.length) {
-      return;
-    }
-
+    if (nextPage < 1 || nextPage > totalPages) return;
     setCurrentPage(nextPage);
-    void loadUsers(nextPage, pageSize, pageTokens, "");
-  }, [currentPage, loadUsers, nextPaginationToken, pageSize, pageTokens]);
+  }, [totalPages]);
 
   const handlePageSizeChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
-    const nextPageSize = Number.parseInt(event.target.value, 10);
     setCurrentPage(1);
-    setPageTokens([null]);
-    setNextPaginationToken(null);
-    setPageSize(nextPageSize);
+    setPageSize(Number.parseInt(event.target.value, 10));
   }, []);
 
   const handleSave = useCallback(
@@ -222,6 +250,10 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
       if (!roleChanged && !stateChanged) {
         return;
       }
+      if (!canAssignDeveloper && isStatelessAdmin(nextRole ?? currentRole, nextState)) {
+        setRowErrors((current) => ({ ...current, [user.username]: STATELESS_ADMIN_ERROR }));
+        return;
+      }
 
       try {
         setSavingUsername(user.username);
@@ -231,18 +263,15 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           delete rest[user.username];
           return rest;
         });
-        let updatedRoles = user.roles;
-        let updatedState = currentState;
+        const updated = await apiClient.userManagement.updateUser(user.username, {
+          ...(roleChanged ? { rolePreset: nextRole } : {}),
+          ...(stateChanged ? { state: nextState } : {}),
+        });
+        const updatedRoles = updated.roles ?? user.roles;
+        const updatedState = typeof updated.state === "string" ? updated.state : currentState;
 
-        if (roleChanged) {
-          const updated = await apiClient.userManagement.updateUserRole(user.username, nextRole);
-          updatedRoles = updated.roles;
-        }
-        if (stateChanged) {
-          const updated = await apiClient.userManagement.updateUserState(user.username, nextState);
-          updatedState = typeof updated.state === "string" ? updated.state : nextState;
-        }
-
+        setDraftRoles((current) => ({ ...current, [user.username]: getRolePreset(updatedRoles) }));
+        setDraftStates((current) => ({ ...current, [user.username]: updatedState }));
         setUsers((current) =>
           current.map((item) =>
             item.username === user.username
@@ -251,17 +280,17 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           )
         );
         savedUsername.current = user.username;
-        addNotification("success", `Updated ${user.email}`);
+        addNotification("success", `Updated ${nameOf(user)}`);
       } catch (error) {
         console.error("Error updating user:", error);
-        const message = error instanceof Error ? error.message : `Failed to update ${user.email}`;
+        const message = error instanceof Error ? error.message : `Failed to update ${nameOf(user)}`;
         setRowErrors((current) => ({ ...current, [user.username]: message }));
         addNotification("error", message);
       } finally {
         setSavingUsername(null);
       }
     },
-    [apiClient, addNotification, draftRoles, draftStates]
+    [apiClient, addNotification, canAssignDeveloper, draftRoles, draftStates]
   );
 
   const handleCreateUser = useCallback(async () => {
@@ -275,19 +304,27 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
       setIsCreating(true);
       await apiClient.userManagement.createUser({
         email,
-        state: isStateAdmin ? undefined : addState || undefined,
+        state: isStateAdmin || addRole === "platformadmin" ? undefined : addState || undefined,
+        rolePreset: addRole,
       });
-      addNotification("success", `User ${email} created. An invitation email has been sent.`);
+      addNotification("success", `Invitation sent to ${email}.`);
       setAddUserModalOpen(false);
       setAddEmail("");
       setAddState("");
-      reloadCurrentPage();
+      setAddRole("user");
+      const list = await loadUsers();
+      const index = list?.findIndex((user) => user.email === email.toLowerCase()) ?? -1;
+      if (index >= 0) {
+        setSearchQuery("");
+        setActiveSearchQuery("");
+        setCurrentPage(Math.floor(index / pageSize) + 1);
+      }
     } catch (error) {
-      addNotification("error", error instanceof Error ? error.message : "Failed to create user");
+      addNotification("error", error instanceof Error ? error.message : "Failed to invite user");
     } finally {
       setIsCreating(false);
     }
-  }, [addEmail, addState, isStateAdmin, apiClient, addNotification, reloadCurrentPage]);
+  }, [addEmail, addState, addRole, isStateAdmin, apiClient, addNotification, loadUsers, pageSize]);
 
   const handleDeleteUser = useCallback(async () => {
     if (!deleteTarget) {
@@ -297,16 +334,16 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
     try {
       setIsDeleting(true);
       await apiClient.userManagement.deleteUser(deleteTarget.username);
-      addNotification("success", `Deleted ${deleteTarget.email}`);
+      addNotification("success", `Deleted ${nameOf(deleteTarget)}`);
       setDeleteTarget(null);
       refocusAfterReload.current = true;
-      reloadCurrentPage();
+      setUsers((current) => current.filter((user) => user.username !== deleteTarget.username));
     } catch (error) {
       addNotification("error", error instanceof Error ? error.message : "Failed to delete user");
     } finally {
       setIsDeleting(false);
     }
-  }, [deleteTarget, apiClient, addNotification, reloadCurrentPage]);
+  }, [deleteTarget, apiClient, addNotification]);
 
   const handleMfaReset = useCallback(async () => {
     if (!mfaResetTarget) {
@@ -316,7 +353,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
     try {
       setIsResettingMfa(true);
       await apiClient.userManagement.resetUserMfa(mfaResetTarget.username);
-      addNotification("success", `Two-step verification reset for ${mfaResetTarget.email}.`);
+      addNotification("success", `Two-step verification reset for ${nameOf(mfaResetTarget)}.`);
       setMfaResetTarget(null);
     } catch (error) {
       addNotification(
@@ -341,7 +378,20 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
 
   const addEmailValid = addEmail.trim().length > 0 && EMAIL_PATTERN.test(addEmail);
   const addEmailInvalid = (addEmailAttempted || addEmail.length > 0) && !addEmailValid;
-  const savingEmail = savingUsername ? users.find((user) => user.username === savingUsername)?.email : undefined;
+  const inviteRoleOptions = allRoleOptions.filter((option) => !option.requiresDeveloper || canAssignDeveloper);
+  const addStateFixed = isStateAdmin || addRole === "platformadmin";
+  const addStateRequired = !SINGLE_STATE && !isStateAdmin && !canAssignDeveloper && addRole === "admin";
+  const addStateMissing = addStateRequired && !addState;
+  const addStateInvalid = addEmailAttempted && addStateMissing;
+  const addStateHint = isStateAdmin
+    ? `New users are added to your state (${userState}) and cannot be changed.`
+    : addRole === "platformadmin"
+      ? "Platform admins aren't tied to a state."
+      : isStatelessAdmin(addRole, addState)
+        ? "With no state, this admin has platform admin access."
+        : "";
+  const savingUser = savingUsername ? users.find((user) => user.username === savingUsername) : undefined;
+  const savingEmail = savingUser ? nameOf(savingUser) : undefined;
 
   return (
     <div className="user-management-panel">
@@ -369,10 +419,11 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
             className="gw-btn gw-btn--primary feature-rollouts-primary-button"
             onClick={() => {
               setAddEmailAttempted(false);
+              setAddRole("user");
               setAddUserModalOpen(true);
             }}
           >
-            <LuUserPlus size={16} aria-hidden="true" /> Add user
+            <LuUserPlus size={16} aria-hidden="true" /> Invite user
           </button>
         </div>
 
@@ -392,7 +443,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
             />
           </div>
           <div className="feature-rollouts-search-actions">
-            <button type="submit" className="gw-btn gw-btn--primary feature-rollouts-primary-button" aria-disabled={loading}>
+            <button type="submit" className="gw-btn gw-btn--primary feature-rollouts-primary-button">
               Search
             </button>
             <button
@@ -406,12 +457,20 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           </div>
         </form>
 
-        <LiveStatus className="visually-hidden">{savingEmail ? `Saving changes for ${savingEmail}` : null}</LiveStatus>
+        <LiveStatus className="visually-hidden">
+          {savingEmail ? `Saving changes for ${savingEmail}` : loading ? "Updating the user list..." : null}
+        </LiveStatus>
         <p className="feature-rollouts-results-status" role="status" aria-live="polite">
           {hasActiveSearch && !loading
-            ? `${users.length === 0 ? "No" : users.length} user${users.length === 1 ? "" : "s"} found for "${activeSearchQuery}".`
+            ? `${filteredUsers.length === 0 ? "No" : filteredUsers.length} user${filteredUsers.length === 1 ? "" : "s"} found for "${activeSearchQuery}".`
             : ""}
         </p>
+        {truncated && (
+          <p className="gw-alert gw-alert--warning user-management-truncated">
+            This list stops at the first {users.length.toLocaleString()} accounts, so some users are missing from it
+            and from search.
+          </p>
+        )}
 
         <TableScrollRegion label="Users table" className="user-management-table-wrapper">
           <table className="user-management-table" ref={tableRef} tabIndex={-1} aria-label="Users" aria-busy={loading}>
@@ -426,14 +485,16 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               </tr>
             </thead>
             <tbody>
-              {!loading && users.length === 0 ? (
+              {!loading && pageUsers.length === 0 ? (
                 <tr>
                   <td colSpan={(SINGLE_STATE ? 4 : 5) + (REGIONS.length > 0 ? 1 : 0)} className="user-management-table__empty">
                     {hasActiveSearch ? "No matching users found." : "No users yet."}
                   </td>
                 </tr>
               ) : null}
-              {users.map((user) => {
+              {pageUsers.map((user) => {
+                const name = nameOf(user);
+                const status = statusTag(user);
                 const currentRole = getRolePreset(user.roles);
                 const draftRole = draftRoles[user.username] || currentRole;
                 const currentState = user.state || "";
@@ -441,27 +502,30 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                 const isSaving = savingUsername === user.username;
                 const hasChanges = draftRole !== currentRole || draftState !== currentState;
                 const isSelf = user.username === currentUsername;
+                const statelessAdmin = isStatelessAdmin(currentRole, currentState);
+                const developerOnly =
+                  !canAssignDeveloper && (currentRole === "developer" || currentRole === "platformadmin" || statelessAdmin);
+                const roleNoteId = `role-note-${user.username}`;
 
                 return (
                   <tr key={user.username}>
                     <th scope="row">
                       <div className="user-management-user-cell">
-                        <span className="user-management-user-email">{user.email}</span>
+                        <span className="user-management-user-email">{user.email || "No email address"}</span>
                         <span className="user-management-user-username">{user.username}</span>
                       </div>
                     </th>
                     <td>
-                      <span className={`gw-tag user-management-status-pill ${user.enabled ? "is-enabled" : "is-disabled"}`}>
-                        {user.enabled ? user.status : "DISABLED"}
-                      </span>
+                      <span className={`gw-tag gw-tag--${status.tone}`}>{status.label}</span>
                     </td>
                     <td>
                       <label className="visually-hidden" htmlFor={`role-select-${user.username}`}>
-                        Role for {user.email}
+                        Role for {name}
                       </label>
                       <select
                         id={`role-select-${user.username}`}
                         className="gw-input user-management-role-select"
+                        aria-describedby={developerOnly || statelessAdmin ? roleNoteId : undefined}
                         value={draftRole}
                         onChange={(event) =>
                           setDraftRoles((current) => ({
@@ -469,7 +533,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                             [user.username]: event.target.value as UserRolePreset,
                           }))
                         }
-                        disabled={isSaving}
+                        disabled={isSaving || developerOnly}
                       >
                         {allRoleOptions.map((option) => (
                           <option
@@ -481,11 +545,17 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                           </option>
                         ))}
                       </select>
+                      {developerOnly || statelessAdmin ? (
+                        <p id={roleNoteId} className="user-management-row-note">
+                          {statelessAdmin && "No state, so this admin has platform admin access. "}
+                          {developerOnly && (statelessAdmin ? "Only a developer can change it." : "Only a developer can change this account.")}
+                        </p>
+                      ) : null}
                     </td>
                     {!SINGLE_STATE && (
                     <td>
                       <label className="visually-hidden" htmlFor={`state-select-${user.username}`}>
-                        State for {user.email}
+                        State for {name}
                       </label>
                       <select
                         id={`state-select-${user.username}`}
@@ -497,9 +567,9 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                             [user.username]: event.target.value,
                           }))
                         }
-                        disabled={isSaving || isStateAdmin}
+                        disabled={isSaving || isStateAdmin || developerOnly}
                       >
-                        <option value="">Not assigned</option>
+                        <option value="" disabled={!canAssignDeveloper && draftRole === "admin"}>Not assigned</option>
                         {SUPPORTED_STATES.map((s) => (
                           <option key={s.code} value={s.code}>
                             {s.name}
@@ -519,12 +589,12 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                             aria-disabled={isSaving}
                           >
                             {isSaving ? "Saving..." : "Save"}
-                            <span className="visually-hidden"> changes for {user.email}</span>
+                            <span className="visually-hidden"> changes for {name}</span>
                           </button>
                         )}
-                        {!isSelf && (
+                        {!isSelf && !developerOnly && (
                           <RowActionsMenu
-                            label={`More actions for ${user.email}`}
+                            label={`More actions for ${name}`}
                             disabled={isSaving}
                             actions={[
                               ...(MFA_ENABLED
@@ -556,27 +626,24 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
             </tbody>
           </table>
         </TableScrollRegion>
-        {!hasActiveSearch && (
-          <PaginationControls
-            mode="token"
-            currentPage={currentPage}
-            pageItemCount={users.length}
-            hasNextPage={Boolean(nextPaginationToken)}
-            itemsPerPage={pageSize}
-            onPageChange={handlePageChange}
-            onItemsPerPageChange={handlePageSizeChange}
-            itemsPerPageOptions={[25, 50, 60]}
-            itemLabel="users"
-            selectId="user-management-page-size"
-            live
-          />
-        )}
+        <PaginationControls
+          currentPage={page}
+          totalPages={totalPages}
+          totalItems={filteredUsers.length}
+          itemsPerPage={pageSize}
+          onPageChange={handlePageChange}
+          onItemsPerPageChange={handlePageSizeChange}
+          itemsPerPageOptions={PAGE_SIZE_OPTIONS}
+          itemLabel="users"
+          selectId="user-management-page-size"
+          live
+        />
       </div>
 
-      <Modal isOpen={addUserModalOpen} onClose={() => setAddUserModalOpen(false)} title="Add new user">
+      <Modal isOpen={addUserModalOpen} onClose={() => setAddUserModalOpen(false)} title="Invite a user">
         <div className="modal-form">
           <p className="modal-description">
-            Enter the email address of the user to add. They will receive an email with instructions to set up their account.
+            Enter the email address of the person to invite and choose their role. They will receive an email with a temporary password to sign in.
           </p>
           <div className="form-group">
             <label htmlFor="add-user-email">Email address</label>
@@ -598,15 +665,38 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               </p>
             )}
           </div>
+          <div className="form-group">
+            <label htmlFor="add-user-role">Role</label>
+            <select
+              id="add-user-role"
+              className="gw-input form-input"
+              value={addRole}
+              onChange={(e) => {
+                const role = e.target.value as UserRolePreset;
+                setAddRole(role);
+                if (role === "platformadmin") setAddState("");
+              }}
+            >
+              {inviteRoleOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
           {!SINGLE_STATE && (
           <div className="form-group">
-            <label htmlFor="add-user-state">{isStateAdmin ? "State" : "State (optional)"}</label>
+            <label htmlFor="add-user-state">{addStateRequired || isStateAdmin ? "State" : "State (optional)"}</label>
             <select
+              ref={addStateRef}
               id="add-user-state"
               className="gw-input form-input"
               value={isStateAdmin ? userState : addState}
               onChange={(e) => setAddState(e.target.value)}
-              disabled={isStateAdmin}
+              disabled={addStateFixed}
+              aria-required={addStateRequired || undefined}
+              aria-invalid={addStateInvalid || undefined}
+              aria-describedby={addStateInvalid ? "add-user-state-error" : addStateHint ? "add-user-state-hint" : undefined}
             >
               {!isStateAdmin && <option value="">Not assigned</option>}
               {SUPPORTED_STATES.map((s) => (
@@ -615,11 +705,13 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                 </option>
               ))}
             </select>
-            {isStateAdmin && (
-              <p className="modal-description">
-                New users are added to your state ({userState}) and cannot be changed.
+            {addStateInvalid ? (
+              <p id="add-user-state-error" className="gw-field__message user-management-field-error">
+                {STATELESS_ADMIN_ERROR}
               </p>
-            )}
+            ) : addStateHint ? (
+              <p id="add-user-state-hint" className="modal-description">{addStateHint}</p>
+            ) : null}
           </div>
           )}
           <div className="modal-actions">
@@ -636,19 +728,19 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
               className="gw-btn gw-btn--primary modal-button primary"
               onClick={() => {
                 if (isCreating) return;
-                if (!addEmailValid) {
+                if (!addEmailValid || addStateMissing) {
                   setAddEmailAttempted(true);
-                  addEmailRef.current?.focus();
+                  (addEmailValid ? addStateRef : addEmailRef).current?.focus();
                   return;
                 }
                 void handleCreateUser();
               }}
               aria-disabled={isCreating || undefined}
             >
-              {isCreating ? "Adding..." : "Add user"}
+              {isCreating ? "Inviting..." : "Invite user"}
             </button>
           </div>
-          <LiveStatus className="visually-hidden">{isCreating ? "Adding user" : null}</LiveStatus>
+          <LiveStatus className="visually-hidden">{isCreating ? "Inviting user" : null}</LiveStatus>
         </div>
       </Modal>
 
@@ -663,7 +755,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
       >
         <div className="modal-form">
           <p className="modal-description">
-            Permanently delete <strong>{deleteTarget?.email}</strong>? This deletes their account and their chats, applications and supporting documents. It cannot be undone.
+            Permanently delete <strong>{deleteTarget && nameOf(deleteTarget)}</strong>? This deletes their account and their chats, applications and supporting documents. It cannot be undone.
           </p>
           <div className="modal-actions">
             <button
@@ -699,7 +791,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
       >
         <div className="modal-form">
           <p className="modal-description">
-            <strong>{mfaResetTarget?.email}</strong> can set up a new authenticator app the next
+            <strong>{mfaResetTarget && nameOf(mfaResetTarget)}</strong> can set up a new authenticator app the next
             time they sign in.
           </p>
           <div className="modal-actions">

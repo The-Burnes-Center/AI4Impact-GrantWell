@@ -37,6 +37,14 @@ function isPlatformAdmin(roles, state) {
   return LEGACY_STATELESS_ADMIN_IS_PLATFORM && hasRole(roles, "Admin") && !state;
 }
 
+// Who only a developer may create, change or delete. A stateless Admin counts whatever the legacy
+// flag says, so no flag setting lets a non-developer mint or remove one. On a single-state
+// deployment the state is implied, so a stateless Admin there is an ordinary admin.
+function isDeveloperManaged(roles, state) {
+  if (hasRole(roles, "Developer") || hasRole(roles, "PlatformAdmin")) return true;
+  return !SINGLE_STATE && hasRole(roles, "Admin") && !state;
+}
+
 // SUPPORTED_STATES is serialized as [{code,name},...]; extract the codes.
 const SUPPORTED_STATE_CODES = new Set(
   JSON.parse(process.env.SUPPORTED_STATES || "[]").map((s) =>
@@ -54,9 +62,11 @@ const LEGACY_NAME_TO_CODE = {
   "rhode island": "RI",
 };
 
-// ListUsers can't filter by custom attributes or match substrings, so a state admin's view and
-// searches are built by scanning pages and filtering in memory. Bound the scan to stay safe.
+// ListUsers returns users in no defined order, can't filter by custom attributes and can't match
+// substrings, so the list is built from every page, then filtered and sorted in memory.
+// Bound the scan so it ends before the 30 s Lambda and API Gateway timeouts.
 const MAX_LIST_PAGES = 50;
+const SCAN_TIME_RESERVE_MS = 8000;
 
 function normalizeStoredStateCode(raw) {
   const trimmed = String(raw || "").trim();
@@ -66,6 +76,9 @@ function normalizeStoredStateCode(raw) {
   return LEGACY_NAME_TO_CODE[trimmed.toLowerCase()] || "";
 }
 
+const STATELESS_ADMIN_MESSAGE =
+  "Choose a state for an admin. An admin with no state has platform access, which only a developer can grant.";
+
 const headers = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
@@ -73,7 +86,7 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-export const handler = async (event) => {
+export const handler = async (event, context) => {
   try {
     if (event.requestContext?.http?.method === "OPTIONS") {
       return respond(200, {});
@@ -89,7 +102,7 @@ export const handler = async (event) => {
     const method = event.requestContext?.http?.method || "GET";
 
     if (method === "GET") {
-      return await handleList(scope, event);
+      return await handleList(scope, event, context);
     }
     if (method === "POST" && event.routeKey?.endsWith("/mfa-reset")) {
       return await handleMfaReset(scope, actor, event);
@@ -98,10 +111,10 @@ export const handler = async (event) => {
       return await handleCreate(scope, parseBody(event.body));
     }
     if (method === "PATCH") {
-      return await handleUpdate(scope, actor, event);
+      return await handleUpdate(scope, actor, event, context);
     }
     if (method === "DELETE") {
-      return await handleDelete(scope, actor, event);
+      return await handleDelete(scope, actor, event, context);
     }
 
     return respond(405, { message: "Method not allowed" });
@@ -113,19 +126,14 @@ export const handler = async (event) => {
   }
 };
 
-async function handleList(scope, event) {
+// The whole (capped) list in one response: Cognito pages can't be sorted across, so the client pages it.
+async function handleList(scope, event, context) {
   const query = normalizeSearchQuery(event.queryStringParameters?.query);
-  if (scope.kind === "stateAdmin" || query) {
-    const users = await scanUsers(
-      (user) => (scope.kind !== "stateAdmin" || user.state === scope.state) && matchesSearchQuery(user, query)
-    );
-    return respond(200, { users, nextPaginationToken: null, pageSize: users.length });
-  }
-
-  const limit = normalizeLimit(event.queryStringParameters?.limit);
-  const paginationToken = normalizePaginationToken(event.queryStringParameters?.paginationToken);
-  const result = await listUsers(limit, paginationToken);
-  return respond(200, result);
+  const { users, truncated } = await scanUsers(
+    (user) => (scope.kind !== "stateAdmin" || user.state === scope.state) && matchesSearchQuery(user, query),
+    context
+  );
+  return respond(200, { users, nextPaginationToken: null, pageSize: users.length, truncated });
 }
 
 async function handleCreate(scope, body) {
@@ -134,12 +142,28 @@ async function handleCreate(scope, body) {
     return respond(400, { message: "A valid email address is required" });
   }
 
+  const rolePreset = String(body.rolePreset ?? "user").trim().toLowerCase();
+  const roles = ALLOWED_ROLE_PRESETS.get(rolePreset);
+  if (!roles) {
+    return respond(400, { message: "rolePreset must be one of: user, admin, platformadmin, developer" });
+  }
+  if (SINGLE_STATE && rolePreset === "platformadmin") {
+    return respond(400, { message: "Platform Admin isn't available on a single-state deployment" });
+  }
+  requireRoleAssignmentPermission(scope, rolePreset);
+
   const stateCode = resolveCreateState(scope, body.state);
+  if (rolePreset === "platformadmin" && stateCode) {
+    return respond(400, { message: "Platform administrators cannot be scoped to a state" });
+  }
+  if (scope.kind !== "developer" && isDeveloperManaged(roles, stateCode)) {
+    return respond(403, { message: STATELESS_ADMIN_MESSAGE });
+  }
 
   const userAttributes = [
     { Name: "email", Value: email },
     { Name: "email_verified", Value: "true" },
-    { Name: "custom:role", Value: JSON.stringify(["User"]) },
+    { Name: "custom:role", Value: JSON.stringify(roles) },
   ];
   if (stateCode) {
     userAttributes.push({ Name: "custom:state", Value: stateCode });
@@ -158,7 +182,7 @@ async function handleCreate(scope, body) {
     return respond(201, {
       username: response.User?.Username || email,
       email,
-      roles: ["User"],
+      roles,
       state: stateCode,
     });
   } catch (error) {
@@ -169,7 +193,7 @@ async function handleCreate(scope, body) {
   }
 }
 
-async function handleUpdate(scope, actor, event) {
+async function handleUpdate(scope, actor, event, context) {
   const username = decodeURIComponent(event.pathParameters?.username || "").trim();
   if (!username) {
     return respond(400, { message: "Username is required" });
@@ -255,9 +279,13 @@ async function handleUpdate(scope, actor, event) {
     userAttributes.push({ Name: "custom:state", Value: "" });
   }
 
-  if (hasRolePreset) {
-    await assertNotLastPrivilegedUser(target, nextRoles);
+  const finalRoles = nextRoles ?? target.roles;
+  const finalState = nextState ?? target.state;
+  if (scope.kind !== "developer" && isDeveloperManaged(finalRoles, finalState)) {
+    return respond(403, { message: STATELESS_ADMIN_MESSAGE });
   }
+
+  await assertNotLastPrivilegedUser(target, finalRoles, finalState, context);
 
   await cognitoClient.send(
     new AdminUpdateUserAttributesCommand({
@@ -274,7 +302,7 @@ async function handleUpdate(scope, actor, event) {
   });
 }
 
-async function handleDelete(scope, actor, event) {
+async function handleDelete(scope, actor, event, context) {
   const username = decodeURIComponent(event.pathParameters?.username || "").trim();
   if (!username) {
     return respond(400, { message: "Username is required" });
@@ -287,7 +315,7 @@ async function handleDelete(scope, actor, event) {
     return respond(403, { message: "You cannot delete your own account" });
   }
   assertCanManageTarget(scope, target);
-  await assertNotLastPrivilegedUser(target, []);
+  await assertNotLastPrivilegedUser(target, [], "", context);
 
   // Data first: once the account is gone, its sub can no longer be looked up for a retry.
   const removed = await deleteUserData({ sub: target.sub, username: target.username });
@@ -422,7 +450,7 @@ function assertCanManageTarget(scope, target) {
     error.statusCode = 403;
     throw error;
   }
-  if (hasRole(target.roles, "PlatformAdmin")) {
+  if (isDeveloperManaged(target.roles, target.state)) {
     const error = new Error("Only developers can manage platform administrator accounts");
     error.statusCode = 403;
     throw error;
@@ -450,24 +478,20 @@ function requireRoleAssignmentPermission(scope, rolePreset) {
   }
 }
 
-// Best-effort guard against locking the org out by removing its last developer
-// or last platform admin. nextRoles is [] for a delete.
-async function assertNotLastPrivilegedUser(target, nextRoles) {
-  const nextRoleSet = new Set(nextRoles || []);
-  const losesDeveloper = hasRole(target.roles, "Developer") && !nextRoleSet.has("Developer");
-  // The target keeps platform authority only if the next roles still grant it. nextState is
-  // unknown here, so treat a retained bare Admin as platform-holding while legacy is on.
-  const keepsPlatformAdmin =
-    nextRoleSet.has("PlatformAdmin") ||
-    (LEGACY_STATELESS_ADMIN_IS_PLATFORM && nextRoleSet.has("Admin"));
+// Guards against locking the org out by removing its last developer or last platform admin.
+// nextRoles/nextState describe the account after the change; [] and "" for a delete.
+async function assertNotLastPrivilegedUser(target, nextRoles, nextState, context) {
+  const losesDeveloper = hasRole(target.roles, "Developer") && !hasRole(nextRoles, "Developer");
+  // A single-state write pins the state, which is implied there anyway; only a role change counts.
   const losesPlatformAdmin =
-    isPlatformAdmin(target.roles, target.state) && !keepsPlatformAdmin;
+    isPlatformAdmin(target.roles, target.state) &&
+    !isPlatformAdmin(nextRoles, SINGLE_STATE ? target.state : nextState);
 
   if (!losesDeveloper && !losesPlatformAdmin) {
     return;
   }
 
-  const { developers, platformAdmins } = await countPrivilegedUsers();
+  const { developers, platformAdmins } = await countPrivilegedUsers(context);
 
   if (losesDeveloper && developers <= 1) {
     const error = new Error("Cannot remove the last developer");
@@ -481,13 +505,21 @@ async function assertNotLastPrivilegedUser(target, nextRoles) {
   }
 }
 
-async function countPrivilegedUsers() {
+// Reads every page, with no page cap. If time runs out first the count could be short, so the
+// change is refused rather than risk removing the last one.
+async function countPrivilegedUsers(context) {
   let developers = 0;
   let platformAdmins = 0;
   let paginationToken;
-  let pages = 0;
 
   do {
+    if (outOfTime(context)) {
+      const error = new Error(
+        "Couldn't check that another developer or platform administrator remains. Try again."
+      );
+      error.statusCode = 503;
+      throw error;
+    }
     const response = await cognitoClient.send(
       new ListUsersCommand({
         UserPoolId: USER_POOL_ID,
@@ -504,10 +536,16 @@ async function countPrivilegedUsers() {
       }
     }
     paginationToken = response.PaginationToken;
-    pages += 1;
-  } while (paginationToken && pages < MAX_LIST_PAGES);
+  } while (paginationToken);
 
   return { developers, platformAdmins };
+}
+
+function outOfTime(context) {
+  return (
+    typeof context?.getRemainingTimeInMillis === "function" &&
+    context.getRemainingTimeInMillis() < SCAN_TIME_RESERVE_MS
+  );
 }
 
 function resolveCreateState(scope, rawState) {
@@ -525,44 +563,6 @@ function resolveCreateState(scope, rawState) {
   return next;
 }
 
-function normalizeLimit(value) {
-  const parsed = Number.parseInt(String(value || ""), 10);
-  if (!Number.isFinite(parsed) || parsed <= 0) {
-    return 25;
-  }
-
-  return Math.min(parsed, 60);
-}
-
-function normalizePaginationToken(value) {
-  const token = String(value || "").trim();
-  return token.length > 0 ? token : undefined;
-}
-
-async function listUsers(limit, paginationToken) {
-  const response = await cognitoClient.send(
-    new ListUsersCommand({
-      UserPoolId: USER_POOL_ID,
-      Limit: limit,
-      ...(paginationToken ? { PaginationToken: paginationToken } : {}),
-    })
-  );
-
-  const users = (
-    await withRegions(
-      (response.Users || [])
-        .map((user) => ({ user: mapCognitoUser(user), sub: subOf(user) }))
-        .filter(({ user }) => Boolean(user.email))
-    )
-  ).sort((a, b) => a.email.localeCompare(b.email));
-
-  return {
-    users,
-    nextPaginationToken: response.PaginationToken || null,
-    pageSize: limit,
-  };
-}
-
 function normalizeSearchQuery(value) {
   return String(value || "").trim().toLowerCase();
 }
@@ -572,7 +572,12 @@ function matchesSearchQuery(user, query) {
   return user.email.toLowerCase().includes(query) || String(user.username || "").toLowerCase().includes(query);
 }
 
-async function scanUsers(include) {
+function compareUsers(a, b) {
+  if (Boolean(a.email) !== Boolean(b.email)) return a.email ? -1 : 1;
+  return a.email.localeCompare(b.email) || a.username.localeCompare(b.username);
+}
+
+async function scanUsers(include, context) {
   const collected = [];
   let paginationToken;
   let pages = 0;
@@ -587,21 +592,20 @@ async function scanUsers(include) {
     );
     for (const user of response.Users || []) {
       const mapped = mapCognitoUser(user);
-      if (mapped.email && include(mapped)) {
+      if (include(mapped)) {
         collected.push({ user: mapped, sub: subOf(user) });
       }
     }
     paginationToken = response.PaginationToken;
     pages += 1;
-  } while (paginationToken && pages < MAX_LIST_PAGES);
+  } while (paginationToken && pages < MAX_LIST_PAGES && !outOfTime(context));
 
-  if (paginationToken) {
-    console.warn(
-      `scanUsers hit the ${MAX_LIST_PAGES}-page cap; results may be truncated.`
-    );
+  const truncated = Boolean(paginationToken);
+  if (truncated) {
+    console.warn(`scanUsers stopped after ${pages} pages; the user list is truncated.`);
   }
 
-  return (await withRegions(collected)).sort((a, b) => a.email.localeCompare(b.email));
+  return { users: (await withRegions(collected)).sort(compareUsers), truncated };
 }
 
 function subOf(cognitoUser) {
