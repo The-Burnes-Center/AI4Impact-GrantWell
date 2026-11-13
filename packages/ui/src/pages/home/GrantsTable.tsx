@@ -7,6 +7,7 @@ import PaginationControls from "../../components/common/PaginationControls";
 import TableScrollRegion from "../../components/ui/TableScrollRegion";
 import type { AISearchResult } from "../../hooks/use-ai-grant-search";
 import "../../styles/landing-page-table.css";
+import FilterSelect from "../../components/ui/FilterSelect";
 
 type SortColumn = "name" | "agency" | "category" | "type" | "deadline";
 type SortDirection = "asc" | "desc";
@@ -314,70 +315,61 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
   return (
     <div className="landing-grants-table-container">
       {/* Filter Dropdowns */}
-      <div className="landing-table-filters">
-        <div className="landing-filter-dropdown-wrapper">
-          <label htmlFor="status-filter" className="landing-filter-label">Status</label>
-          <select
-            id="status-filter"
-            className="gw-input landing-filter-dropdown"
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as "all" | "active" | "archived")}
-          >
-            <option value="all">All grants ({nofos.filter((nofo) =>
-              (categoryFilter === "all" || nofo.category === categoryFilter) &&
-              (grantTypeFilter === "all" || nofo.grantType === grantTypeFilter)
-            ).length})</option>
-            <option value="active">Active ({getStatusCount("active")})</option>
-            <option value="archived">Archived ({getStatusCount("archived")})</option>
-          </select>
-        </div>
+      <div className="gw-filters landing-table-filters">
+        <FilterSelect<"all" | "active" | "archived">
+          id="status-filter"
+          label="Status"
+          value={statusFilter}
+          onChange={setStatusFilter}
+          options={[
+            {
+              value: "all",
+              label: `All grants (${nofos.filter((nofo) =>
+                (categoryFilter === "all" || nofo.category === categoryFilter) &&
+                (grantTypeFilter === "all" || nofo.grantType === grantTypeFilter)
+              ).length})`,
+            },
+            { value: "active", label: `Active (${getStatusCount("active")})` },
+            { value: "archived", label: `Archived (${getStatusCount("archived")})` },
+          ]}
+        />
 
-        <div className="landing-filter-dropdown-wrapper">
-          <label htmlFor="category-filter" className="landing-filter-label">Category</label>
-          <select
-            id="category-filter"
-            className="gw-input landing-filter-dropdown"
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
-          >
-            <option value="all">All categories ({nofos.filter((nofo) =>
-              (statusFilter === "all" || nofo.status === statusFilter) &&
-              (grantTypeFilter === "all" || nofo.grantType === grantTypeFilter)
-            ).length})</option>
-            {uniqueCategories.map((category) => {
-              const count = getCategoryCount(category);
-              return (
-                <option key={category} value={category}>
-                  {category} ({count})
-                </option>
-              );
-            })}
-          </select>
-        </div>
+        <FilterSelect
+          id="category-filter"
+          label="Category"
+          value={categoryFilter}
+          onChange={setCategoryFilter}
+          options={[
+            {
+              value: "all",
+              label: `All categories (${nofos.filter((nofo) =>
+                (statusFilter === "all" || nofo.status === statusFilter) &&
+                (grantTypeFilter === "all" || nofo.grantType === grantTypeFilter)
+              ).length})`,
+            },
+            ...uniqueCategories.map((category) => ({ value: category, label: `${category} (${getCategoryCount(category)})` })),
+          ]}
+        />
 
-        <div className="landing-filter-dropdown-wrapper">
-          <label htmlFor="grant-type-filter" className="landing-filter-label">Grant type</label>
-          <select
-            id="grant-type-filter"
-            className="gw-input landing-filter-dropdown"
-            value={grantTypeFilter}
-            onChange={(e) => setGrantTypeFilter(e.target.value as GrantTypeId | "all")}
-          >
-            <option value="all">All grant types ({nofos.filter((nofo) =>
-              (statusFilter === "all" || nofo.status === statusFilter) &&
-              (categoryFilter === "all" || nofo.category === categoryFilter)
-            ).length})</option>
-            {Object.keys(GRANT_TYPES).map((type) => {
-              const grantType = type as GrantTypeId;
-              const count = getGrantTypeCount(grantType);
-              return (
-                <option key={type} value={type}>
-                  {GRANT_TYPES[grantType].label} ({count})
-                </option>
-              );
-            })}
-          </select>
-        </div>
+        <FilterSelect<GrantTypeId | "all">
+          id="grant-type-filter"
+          label="Grant type"
+          value={grantTypeFilter}
+          onChange={setGrantTypeFilter}
+          options={[
+            {
+              value: "all",
+              label: `All grant types (${nofos.filter((nofo) =>
+                (statusFilter === "all" || nofo.status === statusFilter) &&
+                (categoryFilter === "all" || nofo.category === categoryFilter)
+              ).length})`,
+            },
+            ...(Object.keys(GRANT_TYPES) as GrantTypeId[]).map((type) => ({
+              value: type,
+              label: `${GRANT_TYPES[type].label} (${getGrantTypeCount(type)})`,
+            })),
+          ]}
+        />
 
         {hasActiveFilters && (
           <button
