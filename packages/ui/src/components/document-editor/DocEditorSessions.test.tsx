@@ -99,6 +99,18 @@ describe("DocEditorSessions table semantics", () => {
     expect(selectAll.closest("td")).not.toBeNull();
   });
 
+  it("offers New application in the empty list, as in the page header", async () => {
+    stubFetch({ "POST /user-draft": json([]), "GET /application-outcomes": json({ outcomes: [] }), "GET /s3-nofo-bucket-data": json({ nofoData: [] }) });
+    const { user } = renderApp(
+      <NotificationProvider>
+        <DocEditorSessions toolsOpen={false} documentIdentifier={null} />
+      </NotificationProvider>
+    );
+    const empty = (await screen.findByText("No applications", { selector: "p" })).closest("td")!;
+    await user.click(within(empty).getByRole("button", { name: "Create new application" }));
+    expect(await screen.findByRole("dialog", { name: "Start a new application" })).toBeInTheDocument();
+  });
+
   it("puts the shown range in a status region so a page change is announced", async () => {
     renderList();
     await rowFor("Fiber plan");

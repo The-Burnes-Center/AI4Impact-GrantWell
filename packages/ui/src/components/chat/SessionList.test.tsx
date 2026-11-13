@@ -54,6 +54,18 @@ describe("SessionList", () => {
     expect(title).toHaveAttribute("aria-sort", "ascending");
   });
 
+  it("offers New chat in the empty list, as in the page header", async () => {
+    stubFetch({ "POST /user-session": json([]), "GET /s3-nofo-bucket-data": json({ nofoData: [] }) });
+    const { user } = renderApp(
+      <NotificationProvider>
+        <SessionList toolsOpen={false} documentIdentifier={null} />
+      </NotificationProvider>
+    );
+    const empty = (await screen.findByText("No chats", { selector: "p" })).closest("td")!;
+    await user.click(within(empty).getByRole("button", { name: "New chat" }));
+    expect(await screen.findByRole("dialog", { name: "Start a new chat" })).toBeInTheDocument();
+  });
+
   it("announces the shown range when the page changes", async () => {
     const { user } = renderList();
     const range = await screen.findByText("Showing 1 to 20 of 25 chats");

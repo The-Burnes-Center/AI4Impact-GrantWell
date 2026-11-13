@@ -298,6 +298,10 @@ export default function Sessions(props: SessionsProps) {
                   <td className="row-cell row-cell--empty" colSpan={3}>
                     <div className="no-data">
                       <p>No chats</p>
+                      <button type="button" className="gw-btn gw-btn--primary" onClick={newChat}>
+                        <LuPlus size={16} aria-hidden="true" />
+                        <span>New chat</span>
+                      </button>
                     </div>
                   </td>
                 </tr>

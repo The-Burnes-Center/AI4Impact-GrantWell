@@ -436,6 +436,10 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                   <td className="row-cell row-cell--empty" colSpan={6}>
                     <div className="no-data">
                       <p>No applications</p>
+                      <button type="button" className="gw-btn gw-btn--primary" onClick={newApplication} aria-label="Create new application">
+                        <LuPlus size={16} aria-hidden="true" />
+                        <span>New application</span>
+                      </button>
                     </div>
                   </td>
                 </tr>
