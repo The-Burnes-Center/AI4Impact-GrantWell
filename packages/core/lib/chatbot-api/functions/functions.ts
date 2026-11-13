@@ -397,6 +397,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
           SONNET_MODEL_ID: sonnetChatProfile.attrInferenceProfileArn,
           VERIFY_MODEL_ID: sonnetChatVerifyProfile.attrInferenceProfileArn,
+          NEXT_QUESTIONS_MODEL_ID: haikuNofoProfile.attrInferenceProfileArn,
           USER_POOL_ID: props.userPool.userPoolId,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
           LEGACY_STATELESS_ADMIN_IS_PLATFORM,
