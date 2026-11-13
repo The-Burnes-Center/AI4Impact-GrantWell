@@ -30,6 +30,7 @@ export function configure({ kbId } = {}) {
     AWS_REGION: process.env.AWS_REGION || "us-east-1",
     SONNET_MODEL_ID: models.sonnet,
     HAIKU_MODEL_ID: models.haiku,
+    MATCH_MODEL_ID: models.haiku,
     VERIFY_MODEL_ID: models.sonnet,
     KB_ID: kbId || "eval-replay",
     BUCKET: "eval-nofos",

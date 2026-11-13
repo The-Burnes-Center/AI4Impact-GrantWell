@@ -1257,6 +1257,9 @@ export class LambdaFunctionStack extends cdk.Stack {
       sonnetDraftProfileArn: sonnetDraftProfile.attrInferenceProfileArn,
       supportedStatesEnv: SUPPORTED_STATES_ENV,
       legacyStatelessAdminIsPlatform: LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+      // Shares the NOFO pipeline's Haiku profile (and its cost tag).
+      haikuDraftPlanProfileArn: haikuNofoProfile.attrInferenceProfileArn,
+      dailyUsageTable: props.dailyUsageTable,
     });
 
     this.draftGenerationStateMachine = draftGeneration.draftGenerationStateMachine;

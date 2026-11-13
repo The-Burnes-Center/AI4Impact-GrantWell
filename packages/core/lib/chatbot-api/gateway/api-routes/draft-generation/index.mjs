@@ -77,9 +77,12 @@ function opensGrantInReview(callerScope, row) {
 /** Pinned by LOG_MARKERS.applicationCapReached. */
 const APPLICATION_CAP_MARKER = "Daily application limit reached";
 
+const NO_MATERIAL_MESSAGE = "Add your project basics or answer some questions first; GrantWell needs something to write from.";
+
 /**
  * Counts one generated application against the user's cap for the current UTC day. False once the
  * cap is reached; the condition makes concurrent starts unable to pass it. Fails open on any other error.
+ * A counted application returns its usage key, so the pipeline can give it back.
  */
 async function takeDailyApplication(userId) {
   const tableName = process.env.DAILY_USAGE_TABLE_NAME;
@@ -102,7 +105,7 @@ async function takeDailyApplication(userId) {
         },
       })
     );
-    return true;
+    return `${userId}#${day}`;
   } catch (err) {
     if (err.name === "ConditionalCheckFailedException") return false;
     console.warn(`Could not count the application for ${userId}:`, err.message);
@@ -186,6 +189,27 @@ export function ownDocumentKeys(raw, owner) {
     .filter((key) => typeof key === "string" && key.startsWith(`${owner}/`)
       && !key.split("/").some((segment) => segment === "." || segment === ".."))
     .slice(0, 100);
+}
+
+/** The grant's questions as the applicant sees them numbered, so a skipped section can name the ones to answer. */
+function normalizeQuestions(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter((q) => q && Number.isInteger(q.number) && q.number > 0 && typeof q.question === "string" && q.question.trim())
+    .slice(0, 60)
+    .map((q) => ({ number: q.number, question: q.question.slice(0, 500) }));
+}
+
+const hasText = (value) => typeof value === "string" && value.trim() !== "";
+
+/** Whether the applicant gave anything at all to write from; a stored selection of no documents is nothing. */
+function hasAnyMaterial({ projectBasics, questionnaire, questionnaireAnswers, additionalInfo, documentKeys }) {
+  if (projectBasics && typeof projectBasics === "object" && Object.values(projectBasics).some(hasText)) return true;
+  if (questionnaireAnswers.length > 0) return true;
+  if (questionnaire && typeof questionnaire === "object" && Object.values(questionnaire).some(hasText)) return true;
+  if (hasText(additionalInfo)) return true;
+  // null: an application from before the library reads its grant's old folder, which only the pipeline sees.
+  return documentKeys === null || documentKeys.length > 0;
 }
 
 /** Keeps only {question, answer} pairs of strings with a non-empty answer. */
@@ -278,12 +302,20 @@ export const handler = async (event) => {
       return { statusCode: 400, headers, body: JSON.stringify({ error: "INPUT_TOO_LONG", message: tooLong }) };
     }
 
+    const jwtClaims = event.requestContext?.authorizer?.jwt?.claims || {};
+    const userId = jwtClaims.sub || event.requestContext?.authorizer?.claims?.sub;
+    // Library keys start with the Cognito username, which can differ from sub.
+    const documentOwner = jwtClaims['cognito:username'] || jwtClaims.username || userId;
+    const documentKeys = ownDocumentKeys(body.documentKeys, documentOwner);
+
+    if (!hasAnyMaterial({ projectBasics, questionnaire, questionnaireAnswers, additionalInfo, documentKeys })) {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: "NO_MATERIAL", message: NO_MATERIAL_MESSAGE }) };
+    }
+
     // Generate a unique job ID for this draft generation
     const jobId = randomUUID();
     console.log(`[Job ${jobId}] Starting draft generation for query: "${query}"`);
 
-    const userId = event.requestContext?.authorizer?.jwt?.claims?.sub
-      || event.requestContext?.authorizer?.claims?.sub;
     if (!userId) {
       return {
         statusCode: 401,
@@ -291,10 +323,6 @@ export const handler = async (event) => {
         body: JSON.stringify({ error: 'Unauthorized: missing JWT claims' })
       };
     }
-
-    // Library keys start with the Cognito username, which can differ from sub.
-    const jwtClaims = event.requestContext?.authorizer?.jwt?.claims || {};
-    const documentOwner = jwtClaims['cognito:username'] || jwtClaims.username || userId;
 
     const callerScope = resolveCallerScope(event);
     const nofoScopeRow = await readNofoScope(String(documentIdentifier).replace(/\/+$/, ""));
@@ -335,7 +363,8 @@ export const handler = async (event) => {
     const userState = callerScope.state || "";
 
     const roles = parseRoles(event.requestContext?.authorizer?.jwt?.claims?.["custom:role"]);
-    if (!roles.some((r) => CAP_EXEMPT_ROLES.includes(r)) && !(await takeDailyApplication(userId))) {
+    const credit = roles.some((r) => CAP_EXEMPT_ROLES.includes(r)) ? true : await takeDailyApplication(userId);
+    if (!credit) {
       console.warn(`${APPLICATION_CAP_MARKER} for ${userId}`);
       return {
         statusCode: 429,
@@ -378,7 +407,9 @@ export const handler = async (event) => {
       sessionId,
       userId,
       documentOwner,
-      documentKeys: ownDocumentKeys(body.documentKeys, documentOwner),
+      documentKeys,
+      questions: normalizeQuestions(body.questions),
+      ...(typeof credit === "string" ? { dailyCredit: credit } : {}),
       userState,
       nofoScope: effectiveScope,
       nofoState: effectiveState,
