@@ -76,6 +76,12 @@ region once it exists, so it is announced.
 
 A focusable, labelled scroll container for wide tables (`label`, optional `minWidth`).
 
+### IconButton
+
+A borderless 44px icon button. `label` is its accessible name and its tooltip, shown on hover and
+keyboard focus and dismissed with Escape; `tipAlign` (`center`, `start`, `end`) keeps the tooltip
+inside a box edge. Other button props pass through.
+
 ## styles.ts
 
 JS constants for the inline styles that remain (the Write application steps). Colours and shadows
