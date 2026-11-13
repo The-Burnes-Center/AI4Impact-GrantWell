@@ -6,8 +6,7 @@ import MfaSetupPanel from "./MfaSetupPanel";
 import MfaRecoveryNote from "./MfaRecoveryNote";
 import { useFocusTrap } from "../../hooks/use-focus-trap";
 import { useBranding } from "../../common/branding";
-import { MFA_DEADLINE_ISO } from "../../common/instance";
-import { deadlineDateText, mfaDeadlinePhase } from "../../common/mfa-deadline";
+import { mfaDeadlinePhase } from "../../common/mfa-deadline";
 import "../profile-gate/profile-gate.css";
 import "../../styles/totp.css";
 
@@ -46,11 +45,15 @@ export default function MfaGate({ children }: { children: React.ReactNode }) {
     let active = true;
     (async () => {
       try {
-        const session = await fetchAuthSession();
+        const isEnrolled = async () => {
+          const pref = await fetchMFAPreference();
+          return pref.enabled?.includes("TOTP") || pref.preferred === "TOTP";
+        };
+        if (await isEnrolled()) return;
+        // An enrolled user was blocked once on a session from before the v3.3.5 deploy; a fresh session cleared it.
+        const session = await fetchAuthSession({ forceRefresh: true });
+        if (!active || (await isEnrolled())) return;
         const claims = session.tokens?.idToken?.payload ?? {};
-        const pref = await fetchMFAPreference();
-        const enrolled = pref.enabled?.includes("TOTP") || pref.preferred === "TOTP";
-        if (!active || enrolled) return;
         setEmail(typeof claims.email === "string" ? claims.email : "");
         setBlocked(true);
       } catch (err) {
@@ -94,11 +97,8 @@ export default function MfaGate({ children }: { children: React.ReactNode }) {
 
         <div className="gw-modal__body profile-gate__body">
           <p className="profile-gate__lead">
-            {MFA_DEADLINE_ISO
-              ? `Since ${deadlineDateText(MFA_DEADLINE_ISO, true)}, GrantWell asks`
-              : "Two-step verification is required on GrantWell. GrantWell asks"}{" "}
-            for a code from an authenticator app when you sign in. Set it up to keep using
-            GrantWell. It takes about a minute.
+            GrantWell asks for a code from an authenticator app when you sign in. Set it up to
+            keep using GrantWell. It takes about a minute.
           </p>
 
           {expanded ? (

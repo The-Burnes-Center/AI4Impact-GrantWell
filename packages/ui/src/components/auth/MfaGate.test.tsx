@@ -26,7 +26,8 @@ describe("MfaGate", () => {
     expect(await screen.findByRole("dialog", { name: "Set up two-step verification to continue" })).toBeInTheDocument();
     expect(screen.queryByText("App content")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Not now" })).not.toBeInTheDocument();
-    expect(screen.getByText(/Since November 2, 2026/)).toBeInTheDocument();
+    expect(screen.getByText(/GrantWell asks for a code from an authenticator app/)).toBeInTheDocument();
+    expect(screen.queryByText(/Since/)).not.toBeInTheDocument();
     await waitFor(() => expect(document.title).toBe("Set up two-step verification – GrantWell"));
 
     await userEvent.keyboard("{Escape}");
@@ -77,13 +78,24 @@ describe("MfaGate", () => {
     expect(gate()).not.toBeInTheDocument();
   });
 
+  it("re-checks on a refreshed session before blocking", async () => {
+    vi.useFakeTimers({ toFake: ["Date"], now: Date.parse("2026-11-03T12:00:00Z") });
+    withMfaDeadline(PAST);
+    auth.fetchMFAPreference.mockResolvedValueOnce({}).mockResolvedValueOnce({ enabled: ["TOTP"], preferred: "TOTP" });
+    renderGate();
+    await waitFor(() => expect(auth.fetchMFAPreference).toHaveBeenCalledTimes(2));
+    expect(auth.fetchAuthSession).toHaveBeenCalledWith({ forceRefresh: true });
+    expect(screen.getByText("App content")).toBeInTheDocument();
+    expect(gate()).not.toBeInTheDocument();
+  });
+
   it("blocks an unenrolled user on a pool that requires MFA without a deadline", async () => {
     instance.MFA_REQUIRED = true;
     renderGate();
 
     expect(await screen.findByRole("dialog", { name: "Set up two-step verification to continue" })).toBeInTheDocument();
     expect(screen.queryByText("App content")).not.toBeInTheDocument();
-    expect(screen.getByText(/Two-step verification is required on GrantWell/)).toBeInTheDocument();
+    expect(screen.getByText(/GrantWell asks for a code from an authenticator app/)).toBeInTheDocument();
     expect(screen.queryByText(/Since|deadline/)).not.toBeInTheDocument();
   });
 

@@ -208,13 +208,21 @@ describe("ProfilePage two-step verification", () => {
     expect(screen.getByRole("button", { name: "Set up two-step verification" })).toBeInTheDocument();
   });
 
-  it("names the deadline when there is one", async () => {
-    instance.MFA_REQUIRED = true;
+  it("names the deadline before it passes", async () => {
+    vi.useFakeTimers({ toFake: ["Date"], now: Date.parse("2026-10-20T12:00:00Z") });
     withMfaDeadline("2026-11-02T00:00:00-05:00");
     mfaEnrolled(true);
     renderProfile();
     expect(await screen.findByText(/GrantWell requires it from November 2, 2026, so it can.t be turned off/)).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Turn off" })).toBeNull();
+  });
+
+  it("drops the date once the deadline has passed", async () => {
+    vi.useFakeTimers({ toFake: ["Date"], now: Date.parse("2026-11-12T12:00:00Z") });
+    withMfaDeadline("2026-11-02T00:00:00-05:00");
+    renderProfile();
+    expect(await screen.findByText("Off. Two-step verification is required on GrantWell.")).toBeInTheDocument();
+    expect(screen.queryByText(/November 2/)).toBeNull();
   });
 });
 

@@ -20,7 +20,7 @@ import PasswordRequirementsList from "../../components/auth/PasswordRequirements
 import { getPasswordRequirements } from "../../components/auth/auth-utils";
 import { clearMfaPromptSnooze } from "../../common/mfa-snooze";
 import { EMAIL_DIGEST, MFA_DEADLINE_ISO, MFA_ENABLED, MFA_REQUIRED, REGIONS } from "../../common/instance";
-import { deadlineDateText } from "../../common/mfa-deadline";
+import { deadlineDateText, mfaDeadlinePhase } from "../../common/mfa-deadline";
 import Breadcrumbs from "../../components/common/Breadcrumbs";
 import { SINGLE_STATE, stateNameFromCode } from "../../common/states";
 import { roleLabel } from "../../common/helpers/auth-roles";
@@ -698,12 +698,12 @@ function MfaSection() {
 
       {status === "on" ? (
         <>
-          {MFA_DEADLINE_ISO ? (
+          {MFA_DEADLINE_ISO && mfaDeadlinePhase() === "before" ? (
             <p className="profile-hint" ref={hint} tabIndex={-1}>
               Two-step verification is on. GrantWell requires it from{" "}
               {deadlineDateText(MFA_DEADLINE_ISO, true)}, so it can&apos;t be turned off.
             </p>
-          ) : MFA_REQUIRED ? (
+          ) : MFA_DEADLINE_ISO || MFA_REQUIRED ? (
             <p className="profile-hint" ref={hint} tabIndex={-1}>
               On. Two-step verification is required on GrantWell, so it can&apos;t be turned off.
             </p>
@@ -737,9 +737,9 @@ function MfaSection() {
       ) : (
         <>
           <p className="profile-hint" ref={hint} tabIndex={-1}>
-            {MFA_DEADLINE_ISO
+            {MFA_DEADLINE_ISO && mfaDeadlinePhase() === "before"
               ? `Off. GrantWell requires it from ${deadlineDateText(MFA_DEADLINE_ISO, true)}.`
-              : MFA_REQUIRED
+              : MFA_DEADLINE_ISO || MFA_REQUIRED
                 ? "Off. Two-step verification is required on GrantWell."
                 : "Off. Recommended — it keeps your account safe if your password is ever exposed."}
           </p>
