@@ -299,7 +299,7 @@ export default function Chat(props: {
 
           const initialMessage = {
             type: ChatBotMessageType.AI,
-            content: `Hello! I see that you are working on the ${grantName} grant. Could you please tell me which agency, municipality, or tribe we are preparing this application for?`,
+            content: `Ask me anything about the ${grantName} grant: eligibility, deadlines, budget rules, scoring and what to submit.`,
             metadata: {},
           };
           setMessageHistory([initialMessage]);

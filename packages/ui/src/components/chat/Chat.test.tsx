@@ -16,7 +16,7 @@ vi.mock("./ChatInputPanel", () => ({
 const SESSION = "POST /user-session";
 const SUMMARY = "GET /s3-nofo-summary";
 const GREETING =
-  "Hello! I see that you are working on the Grant A Title grant. Could you please tell me which agency, municipality, or tribe we are preparing this application for?";
+  "Ask me anything about the Grant A Title grant: eligibility, deadlines, budget rules, scoring and what to submit.";
 
 const turns = (from: number, to: number) =>
   Array.from({ length: to - from + 1 }, (_, i) => ({
