@@ -18,6 +18,18 @@ describe("chat scope", () => {
     expect(prompt).toContain("<user>What does my uploaded budget say about staff costs?</user>");
   });
 
+  it("names only accepted application types and compares dates with today", () => {
+    const prompt = getPromptText("MA");
+    expect(prompt).toContain("Name only application types this grant accepts");
+    expect(prompt).toContain("only a date before today has passed");
+    expect(prompt).toContain("never state today's date itself");
+  });
+
+  it("keeps the conditions attached to amounts, limits and lists", () => {
+    expect(getPromptText("MA")).toContain("include the conditions the grant attaches to it");
+    expect(getPromptText("MA")).toContain('say "No, except …", not "generally no"');
+  });
+
   it("lists every date for applying, including passed earlier steps", () => {
     expect(getPromptText("MA")).toContain("including pre-applications, letters of intent and other required earlier steps, even when they have passed");
     expect(getPromptText("MA")).not.toContain("unless the sentence already says it has passed");
