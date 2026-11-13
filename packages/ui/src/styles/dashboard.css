@@ -1112,10 +1112,8 @@ body {
 }
 
 .processing-tab__group-title {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  font-size: 13px;
+  font-weight: 600;
   color: var(--gw-color-text-secondary);
   margin: 4px 0 0;
 }
@@ -1515,8 +1513,6 @@ select.form-input {
   margin: 16px 0 8px;
   font-size: 13px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
   color: var(--gw-color-text-secondary);
 }
 
@@ -2470,12 +2466,10 @@ select.form-input {
 }
 
 .metric-card__label {
-  font-size: var(--gw-font-size-xs);
+  font-size: 13px;
   color: var(--gw-color-text-secondary);
   margin-top: 6px;
-  font-weight: var(--gw-font-weight-medium);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-weight: var(--gw-font-weight-semibold);
   line-height: 1.3;
 }
 

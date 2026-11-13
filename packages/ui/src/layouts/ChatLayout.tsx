@@ -129,17 +129,6 @@ const styles: Record<string, React.CSSProperties> = {
     padding: "16px 8px",
     overflowY: "auto",
   },
-  sectionHeader: {
-    padding: "8px 12px",
-    marginBottom: "8px",
-    display: "flex",
-    alignItems: "center",
-    color: "var(--gw-color-text-inverse)",
-    fontSize: "14px",
-    fontWeight: 600,
-    textTransform: "uppercase",
-    letterSpacing: "0.5px",
-  },
   navButton: {
     width: "100%",
     display: "flex",
