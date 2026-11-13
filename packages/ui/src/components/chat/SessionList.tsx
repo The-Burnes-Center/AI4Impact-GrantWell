@@ -222,13 +222,8 @@ export default function Sessions(props: SessionsProps) {
           </button>
           <button
             className="gw-btn gw-btn--danger action-button danger-button"
-            onClick={() => setShowModalDelete(true)}
-            disabled={selectedItems.length === 0}
-            style={{
-              backgroundColor: selectedItems.length === 0 ? "var(--gw-color-surface-subtle)" : "var(--gw-color-danger)",
-              color: selectedItems.length === 0 ? "var(--gw-color-text-muted)" : "white",
-              cursor: selectedItems.length === 0 ? "not-allowed" : "pointer",
-            }}
+            onClick={() => selectedItems.length > 0 && setShowModalDelete(true)}
+            aria-disabled={selectedItems.length === 0 || undefined}
           >
             <LuTrash size={16} className="button-icon" aria-hidden="true" />
             <span>Delete</span>

@@ -28,6 +28,21 @@ describe("SessionList", () => {
     expect(selectAll.closest('[role="cell"]')).not.toBeNull();
   });
 
+  it("keeps Delete focusable while nothing is selected, without opening the dialog", async () => {
+    const { user } = renderList();
+    await screen.findByText("Chat 1");
+    const del = screen.getByRole("button", { name: "Delete" });
+    expect(del).toBeEnabled();
+    expect(del).toHaveAttribute("aria-disabled", "true");
+    del.focus();
+    expect(del).toHaveFocus();
+    await user.click(del);
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("checkbox", { name: /^Select Chat 1,/ }));
+    expect(del).not.toHaveAttribute("aria-disabled");
+  });
+
   it("announces the shown range when the page changes", async () => {
     const { user } = renderList();
     const range = await screen.findByText("Showing 1 to 20 of 25 chats");
