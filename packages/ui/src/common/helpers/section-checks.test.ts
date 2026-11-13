@@ -13,7 +13,7 @@ describe("section length", () => {
     expect(sectionPlainText("### Need\n\n**[CITY]** has *many* needs.\n\n- One [item](https://a.b)\n- Two")).toBe(
       "Need [CITY] has many needs. One item Two"
     );
-    expect(measureSection("[LEAD APPLICANT NAME] seeks support.")).toEqual({ characters: 36, words: 5, pages: 0 });
+    expect(measureSection("[LEAD APPLICANT NAME] seeks support.")).toEqual({ characters: 36, words: 5, pages: 0.1 });
     expect(measureSection("word ".repeat(450)).pages).toBe(1.5);
     expect(measureSection("")).toEqual({ characters: 0, words: 0, pages: 0 });
   });

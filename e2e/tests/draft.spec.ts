@@ -82,15 +82,13 @@ test("generates every narrative section and exports the application as Word and 
     expect(text.trim().length, `"${narrativeSections[i]}" length`).toBeGreaterThanOrEqual(MIN_SECTION_CHARS);
   }
   await page.getByRole("button", { name: "Save section & review application" }).click();
-  await expect(page.getByText("All sections complete")).toBeVisible();
+  const reviewSections = page.getByRole("navigation", { name: "Sections" }).getByRole("button");
+  await expect(reviewSections).toHaveCount(narrativeSections.length);
+  await expect(reviewSections.filter({ hasText: "Not drafted" })).toHaveCount(0);
 
-  const exportMenu = page.locator("#ra-export-trigger");
-
-  await exportMenu.click();
-  const [docx] = await Promise.all([
-    page.waitForEvent("download"),
-    page.getByRole("menuitem", { name: "Word Document (.docx)" }).click(),
-  ]);
+  const downloadWord = page.getByRole("button", { name: "Download Word" });
+  const downloadPdf = page.getByRole("button", { name: "Download PDF" });
+  const [docx] = await Promise.all([page.waitForEvent("download"), downloadWord.click()]);
   expect(docx.suggestedFilename()).toBe("grant-application.docx");
   const docxFile = testInfo.outputPath("grant-application.docx");
   await docx.saveAs(docxFile);
@@ -105,12 +103,8 @@ test("generates every narrative section and exports the application as Word and 
     ).toBe(true);
   }
 
-  await expect(exportMenu).toBeEnabled({ timeout: 60_000 });
-  await exportMenu.click();
-  const [pdf] = await Promise.all([
-    page.waitForEvent("download", { timeout: 5 * 60_000 }),
-    page.getByRole("menuitem", { name: "PDF (.pdf)" }).click(),
-  ]);
+  await expect(downloadPdf).not.toHaveAttribute("aria-disabled", "true", { timeout: 60_000 });
+  const [pdf] = await Promise.all([page.waitForEvent("download", { timeout: 5 * 60_000 }), downloadPdf.click()]);
   expect(pdf.suggestedFilename()).toBe("grant-application.pdf");
   const pdfFile = testInfo.outputPath("grant-application.pdf");
   await pdf.saveAs(pdfFile);

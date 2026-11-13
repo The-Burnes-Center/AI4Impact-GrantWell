@@ -40,7 +40,8 @@ export function sectionPlainText(markdown: string | null | undefined): string {
 }
 
 export function pagesForWords(words: number): number {
-  return Math.round((words / WORDS_PER_PAGE) * 10) / 10;
+  const pages = Math.round((words / WORDS_PER_PAGE) * 10) / 10;
+  return words > 0 && pages === 0 ? 0.1 : pages;
 }
 
 export function measureSection(markdown: string | null | undefined): TextMeasure {
