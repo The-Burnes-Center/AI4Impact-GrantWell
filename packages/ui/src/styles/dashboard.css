@@ -2258,6 +2258,9 @@ select.form-input {
 }
 
 .review-dlq-alert {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
   margin-bottom: 16px;
   line-height: 1.6;
 }
