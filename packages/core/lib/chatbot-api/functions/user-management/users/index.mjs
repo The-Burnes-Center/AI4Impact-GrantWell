@@ -54,9 +54,11 @@ const LEGACY_NAME_TO_CODE = {
   "rhode island": "RI",
 };
 
-// ListUsers can't filter by custom attributes or match substrings, so a state admin's view and
-// searches are built by scanning pages and filtering in memory. Bound the scan to stay safe.
+// ListUsers returns users in no defined order, can't filter by custom attributes and can't match
+// substrings, so the list is built from every page, then filtered and sorted in memory.
+// Bound the scan so it ends before the 30 s Lambda and API Gateway timeouts.
 const MAX_LIST_PAGES = 50;
+const SCAN_TIME_RESERVE_MS = 8000;
 
 function normalizeStoredStateCode(raw) {
   const trimmed = String(raw || "").trim();
@@ -73,7 +75,7 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-export const handler = async (event) => {
+export const handler = async (event, context) => {
   try {
     if (event.requestContext?.http?.method === "OPTIONS") {
       return respond(200, {});
@@ -89,7 +91,7 @@ export const handler = async (event) => {
     const method = event.requestContext?.http?.method || "GET";
 
     if (method === "GET") {
-      return await handleList(scope, event);
+      return await handleList(scope, event, context);
     }
     if (method === "POST" && event.routeKey?.endsWith("/mfa-reset")) {
       return await handleMfaReset(scope, actor, event);
@@ -113,19 +115,14 @@ export const handler = async (event) => {
   }
 };
 
-async function handleList(scope, event) {
+// The whole (capped) list in one response: Cognito pages can't be sorted across, so the client pages it.
+async function handleList(scope, event, context) {
   const query = normalizeSearchQuery(event.queryStringParameters?.query);
-  if (scope.kind === "stateAdmin" || query) {
-    const users = await scanUsers(
-      (user) => (scope.kind !== "stateAdmin" || user.state === scope.state) && matchesSearchQuery(user, query)
-    );
-    return respond(200, { users, nextPaginationToken: null, pageSize: users.length });
-  }
-
-  const limit = normalizeLimit(event.queryStringParameters?.limit);
-  const paginationToken = normalizePaginationToken(event.queryStringParameters?.paginationToken);
-  const result = await listUsers(limit, paginationToken);
-  return respond(200, result);
+  const { users, truncated } = await scanUsers(
+    (user) => (scope.kind !== "stateAdmin" || user.state === scope.state) && matchesSearchQuery(user, query),
+    context
+  );
+  return respond(200, { users, nextPaginationToken: null, pageSize: users.length, truncated });
 }
 
 async function handleCreate(scope, body) {
@@ -525,44 +522,6 @@ function resolveCreateState(scope, rawState) {
   return next;
 }
 
-function normalizeLimit(value) {
-  const parsed = Number.parseInt(String(value || ""), 10);
-  if (!Number.isFinite(parsed) || parsed <= 0) {
-    return 25;
-  }
-
-  return Math.min(parsed, 60);
-}
-
-function normalizePaginationToken(value) {
-  const token = String(value || "").trim();
-  return token.length > 0 ? token : undefined;
-}
-
-async function listUsers(limit, paginationToken) {
-  const response = await cognitoClient.send(
-    new ListUsersCommand({
-      UserPoolId: USER_POOL_ID,
-      Limit: limit,
-      ...(paginationToken ? { PaginationToken: paginationToken } : {}),
-    })
-  );
-
-  const users = (
-    await withRegions(
-      (response.Users || [])
-        .map((user) => ({ user: mapCognitoUser(user), sub: subOf(user) }))
-        .filter(({ user }) => Boolean(user.email))
-    )
-  ).sort((a, b) => a.email.localeCompare(b.email));
-
-  return {
-    users,
-    nextPaginationToken: response.PaginationToken || null,
-    pageSize: limit,
-  };
-}
-
 function normalizeSearchQuery(value) {
   return String(value || "").trim().toLowerCase();
 }
@@ -572,10 +531,18 @@ function matchesSearchQuery(user, query) {
   return user.email.toLowerCase().includes(query) || String(user.username || "").toLowerCase().includes(query);
 }
 
-async function scanUsers(include) {
+function compareUsers(a, b) {
+  if (Boolean(a.email) !== Boolean(b.email)) return a.email ? -1 : 1;
+  return a.email.localeCompare(b.email) || a.username.localeCompare(b.username);
+}
+
+async function scanUsers(include, context) {
   const collected = [];
   let paginationToken;
   let pages = 0;
+  const outOfTime = () =>
+    typeof context?.getRemainingTimeInMillis === "function" &&
+    context.getRemainingTimeInMillis() < SCAN_TIME_RESERVE_MS;
 
   do {
     const response = await cognitoClient.send(
@@ -587,21 +554,20 @@ async function scanUsers(include) {
     );
     for (const user of response.Users || []) {
       const mapped = mapCognitoUser(user);
-      if (mapped.email && include(mapped)) {
+      if (include(mapped)) {
         collected.push({ user: mapped, sub: subOf(user) });
       }
     }
     paginationToken = response.PaginationToken;
     pages += 1;
-  } while (paginationToken && pages < MAX_LIST_PAGES);
+  } while (paginationToken && pages < MAX_LIST_PAGES && !outOfTime());
 
-  if (paginationToken) {
-    console.warn(
-      `scanUsers hit the ${MAX_LIST_PAGES}-page cap; results may be truncated.`
-    );
+  const truncated = Boolean(paginationToken);
+  if (truncated) {
+    console.warn(`scanUsers stopped after ${pages} pages; the user list is truncated.`);
   }
 
-  return (await withRegions(collected)).sort((a, b) => a.email.localeCompare(b.email));
+  return { users: (await withRegions(collected)).sort(compareUsers), truncated };
 }
 
 function subOf(cognitoUser) {
