@@ -345,7 +345,6 @@ describe("SectionsEditor footer", () => {
       row: { session_id: "s1", status: "editing_sections", sections: { budget: "x" }, section_order: ORDER, rev: 1 },
     };
     stubServer(fake);
-    Element.prototype.scrollIntoView = vi.fn();
     const onBack = vi.fn();
     const { user } = renderApp(<Editor onBack={onBack} />);
     await screen.findByRole("textbox", { name: "Statement of Need" });

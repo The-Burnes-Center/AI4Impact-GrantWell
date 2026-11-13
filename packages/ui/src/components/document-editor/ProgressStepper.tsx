@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { LuCheck, LuChevronRight } from "react-icons/lu";
+import { LuCheck, LuChevronDown, LuChevronRight } from "react-icons/lu";
 
 interface ProgressStepperProps {
   steps: Array<{
@@ -42,10 +42,10 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
     setAllStepsOpen(false);
   }, [activeStep]);
 
-  // Opening the list unpins the stepper on phones, which can leave the summary above the viewport.
+  // Opening the list unpins the stepper, which can leave the summary above the viewport.
   useEffect(() => {
-    if (!allStepsOpen || !window.matchMedia?.("(max-width: 768px)").matches) return;
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!allStepsOpen) return;
+    const reduceMotion = !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     allStepsSummaryRef.current?.scrollIntoView({ block: "nearest", behavior: reduceMotion ? "auto" : "smooth" });
   }, [allStepsOpen]);
 
@@ -222,25 +222,42 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
             transform: translateY(2px);
           }
 
-          .progress-stepper-container .step-summary,
-          .progress-stepper-container .step-all {
+          .progress-stepper-container .step-summary {
             display: none;
           }
           .step-all {
-            margin: 8px auto 0;
+            margin: 4px auto 0;
             max-width: 360px;
-            border-top: 1px solid var(--gw-color-border);
-            padding-top: 6px;
             font-family: var(--gw-font-family);
             font-size: 13px;
           }
           .step-all > summary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            min-height: 44px;
+            list-style: none;
             cursor: pointer;
-            text-align: center;
             color: var(--gw-color-primary-hover);
             font-weight: 600;
             text-decoration: underline;
             text-underline-offset: 3px;
+          }
+          .step-all > summary::-webkit-details-marker {
+            display: none;
+          }
+          .step-all__chevron {
+            flex-shrink: 0;
+            transition: transform 0.15s ease;
+          }
+          .step-all[open] .step-all__chevron {
+            transform: rotate(180deg);
+          }
+          /* WCAG 2.4.11: the open list can be taller than the screen, so it scrolls with the page. */
+          .progress-stepper-container.progress-stepper-container--list-open,
+          .document-editor-header:has(+ .progress-stepper-container--list-open) {
+            position: static !important;
           }
           .step-all ol {
             display: grid;
@@ -275,14 +292,8 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
             .progress-stepper-container {
               padding: 8px 12px !important;
             }
-            .progress-stepper-container .step-summary,
-            .progress-stepper-container .step-all {
+            .progress-stepper-container .step-summary {
               display: block;
-            }
-            /* WCAG 2.4.11: the open list can be taller than a phone screen, so it scrolls with the page. */
-            .progress-stepper-container.progress-stepper-container--list-open,
-            .document-editor-header:has(+ .progress-stepper-container--list-open) {
-              position: static !important;
             }
             .step-tooltip {
               display: none;
@@ -386,13 +397,16 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
         </p>
       )}
 
-      {/* Phones hide the tooltips, and the smallest hide the step names, so the full list, with what is locked, is one tap away. */}
+      {/* Every step's help text and state, reachable without hover; phones also hide the tooltips and the smallest the step names. */}
       <details
         className="step-all"
         open={allStepsOpen}
         onToggle={(e) => setAllStepsOpen(e.currentTarget.open)}
       >
-        <summary ref={allStepsSummaryRef}>All steps</summary>
+        <summary ref={allStepsSummaryRef}>
+          All steps
+          <LuChevronDown size={14} className="step-all__chevron" aria-hidden="true" />
+        </summary>
         <ol>
           {steps.map((step, index) => (
             <li key={step.id} aria-current={isStepActive(index) ? "step" : undefined}>

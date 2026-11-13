@@ -27,7 +27,7 @@ describe("ProgressStepper", () => {
   it("lists the steps with each one's state, including steps finished after the current one", () => {
     renderStepper();
     const nav = screen.getByRole("navigation", { name: "Application steps" });
-    const items = within(nav).getAllByRole("listitem");
+    const items = within(within(nav).getAllByRole("list")[0]).getAllByRole("listitem");
     expect(items).toHaveLength(3);
     expect(items[0]).toHaveAttribute("aria-current", "step");
     expect(items[0]).toHaveTextContent("Step 1 of 3: Basics, current step, completed");
@@ -70,8 +70,10 @@ describe("ProgressStepper", () => {
   });
 });
 
+const nav = () => screen.getByRole("navigation", { name: "Application steps" });
+
 describe("ProgressStepper all-steps list", () => {
-  it("names every step with its state and help text for phones, where names and tooltips are hidden", async () => {
+  it("names every step with its state and help text on every screen size, closed at first", async () => {
     const user = userEvent.setup();
     render(
       <ProgressStepper
@@ -83,6 +85,8 @@ describe("ProgressStepper all-steps list", () => {
       />
     );
     const toggle = screen.getByText("All steps");
+    expect(toggle.closest("details")).not.toHaveAttribute("open");
+    expect(nav().querySelector("style")!.textContent).not.toMatch(/\.step-all\s*\{[^}]*display: none/);
     await user.click(toggle);
     const list = toggle.closest("details")!;
     expect(list).toHaveAttribute("open");
@@ -105,9 +109,10 @@ describe("ProgressStepper all-steps list", () => {
     await user.click(screen.getByText("All steps"));
     expect(list).toHaveAttribute("open");
     expect(nav).toHaveClass("progress-stepper-container--list-open");
-    expect(nav.querySelector("style")!.textContent).toMatch(
-      /@media \(max-width: 768px\)[\s\S]*\.progress-stepper-container\.progress-stepper-container--list-open,\s*\.document-editor-header:has\(\+ \.progress-stepper-container--list-open\) \{\s*position: static !important;/
-    );
+    const css = nav.querySelector("style")!.textContent!;
+    const unpin = /\.progress-stepper-container\.progress-stepper-container--list-open,\s*\.document-editor-header:has\(\+ \.progress-stepper-container--list-open\) \{\s*position: static !important;/;
+    expect(css).toMatch(unpin);
+    expect(css.slice(0, css.search(unpin))).not.toContain("@media");
 
     rerender(<ProgressStepper {...props} activeStep={1} />);
     expect(list).not.toHaveAttribute("open");
@@ -139,14 +144,13 @@ describe("ProgressStepper all-steps list", () => {
     });
   });
 
-  it("leaves the scroll alone on a wide screen", async () => {
+  it("scrolls the opened list's summary into view on a wide screen too", async () => {
     vi.stubGlobal("matchMedia", () => ({ matches: false }));
     const scrollIntoView = vi.fn();
     Element.prototype.scrollIntoView = scrollIntoView;
     const { user } = renderStepper();
     await user.click(screen.getByText("All steps"));
-    await waitFor(() => expect(screen.getByText("All steps").closest("details")).toHaveAttribute("open"));
-    expect(scrollIntoView).not.toHaveBeenCalled();
+    await waitFor(() => expect(scrollIntoView).toHaveBeenCalledWith({ block: "nearest", behavior: "smooth" }));
     vi.unstubAllGlobals();
   });
 });
