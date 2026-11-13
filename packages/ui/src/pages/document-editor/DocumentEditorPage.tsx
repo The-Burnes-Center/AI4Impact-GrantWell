@@ -415,7 +415,6 @@ const DocumentEditor: React.FC = () => {
               }}
               onStepClick={(idx) => navigateToStep(EDITOR_STEPS[idx].id)}
               completedSteps={Array.from({ length: furthestStepIndex }, (_, i) => i)}
-              showProgress
             />
 
             <div className="document-editor-workspace" style={{ flex: 1 }}>
