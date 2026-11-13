@@ -373,9 +373,13 @@ const DocumentEditor: React.FC = () => {
     const observer = new ResizeObserver(update);
     observer.observe(header);
     if (stepper) observer.observe(stepper);
+    // Opening "All steps" unpins both bars without changing their size, which ResizeObserver can't see.
+    const unpinObserver = new MutationObserver(update);
+    if (stepper) unpinObserver.observe(stepper, { attributes: true, attributeFilter: ["class"] });
     window.addEventListener("resize", update);
     return () => {
       observer.disconnect();
+      unpinObserver.disconnect();
       window.removeEventListener("resize", update);
       document.documentElement.style.removeProperty("--gw-editor-sticky-height");
     };
