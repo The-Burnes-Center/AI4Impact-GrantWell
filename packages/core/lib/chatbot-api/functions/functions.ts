@@ -135,8 +135,6 @@ export class LambdaFunctionStack extends cdk.Stack {
   public readonly applicationExportsBucket: s3.Bucket;
   public readonly autoArchiveExpiredNofosFunction: lambda.Function;
   public readonly notificationDigestFunction: lambda.Function;
-  public readonly notificationDigestPreviewFunction: lambda.Function;
-  public readonly notificationDigestBroadcastFunction: lambda.Function;
   public readonly processingQueueEmailFunction?: lambda.Function;
   public readonly notificationUnsubscribeFunction: lambda.Function;
   public readonly notificationSesFeedbackFunction: lambda.Function;
@@ -1421,10 +1419,6 @@ export class LambdaFunctionStack extends cdk.Stack {
     }
 
     this.notificationDigestFunction = notifications.notificationDigestFunction;
-    this.notificationDigestPreviewFunction =
-      notifications.notificationDigestPreviewFunction;
-    this.notificationDigestBroadcastFunction =
-      notifications.notificationDigestBroadcastFunction;
     this.notificationUnsubscribeFunction =
       notifications.notificationUnsubscribeFunction;
     this.notificationSesFeedbackFunction =

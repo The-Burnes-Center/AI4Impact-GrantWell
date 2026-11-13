@@ -58,8 +58,6 @@ export interface NotificationsStackProps extends cdk.NestedStackProps {
 
 export class NotificationsStack extends cdk.NestedStack {
   public readonly notificationDigestFunction: lambda.Function;
-  public readonly notificationDigestPreviewFunction: lambda.Function;
-  public readonly notificationDigestBroadcastFunction: lambda.Function;
   public readonly notificationUnsubscribeFunction: lambda.Function;
   public readonly notificationSesFeedbackFunction: lambda.Function;
   public readonly processingQueueEmailFunction?: lambda.Function;
@@ -118,63 +116,6 @@ export class NotificationsStack extends cdk.NestedStack {
     }
 
     this.notificationDigestFunction = notificationDigestFunction;
-
-    // Developer-only digest preview: renders the real template (shared layer) against real data —
-    // the caller's own prefs and the live active NOFO pool — and can also send a test message to the
-    // caller.
-    const notificationDigestPreviewFunction = new lambda.Function(
-      this,
-      "NotificationDigestPreviewFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_24_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "notifications/digest-preview")
-        ),
-        handler: "index.handler",
-        layers: [props.jsSharedLayer],
-        environment: {
-          USER_NOTIFICATION_PREFS_TABLE_NAME:
-            props.userNotificationPrefsTable.tableName,
-          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
-          DEPLOYMENT_URL: siteUrl,
-          ...(notificationSender && { NOTIFICATION_SENDER: notificationSender }),
-          SES_CONFIGURATION_SET: props.sesConfigurationSet.configurationSetName,
-          SUPPORTED_STATES: props.supportedStatesEnv,
-          ...digestBrandEnv,
-        },
-        timeout: cdk.Duration.seconds(15),
-      }
-    );
-    // Preview runs the real selection: read the caller's prefs and the active NOFO pool.
-    props.userNotificationPrefsTable.grantReadData(
-      notificationDigestPreviewFunction
-    );
-    props.nofoMetadataTable.grantReadData(notificationDigestPreviewFunction);
-    // Test-send uses the same verified sender as the digest.
-    if (notificationSender) {
-      notificationDigestPreviewFunction.addToRolePolicy(sesSendEmailPolicy(notificationSender));
-    }
-    this.notificationDigestPreviewFunction = notificationDigestPreviewFunction;
-
-    // Developer-only trigger that fires the real digest on demand (async-invokes the digest Lambda),
-    // for a single user or everyone. Route is wired in chatbot-api/index.ts.
-    const notificationDigestBroadcastFunction = new lambda.Function(
-      this,
-      "NotificationDigestBroadcastFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_24_X,
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "notifications/digest-broadcast")
-        ),
-        handler: "index.handler",
-        environment: {
-          DIGEST_FUNCTION_NAME: notificationDigestFunction.functionName,
-        },
-        timeout: cdk.Duration.seconds(15),
-      }
-    );
-    notificationDigestFunction.grantInvoke(notificationDigestBroadcastFunction);
-    this.notificationDigestBroadcastFunction = notificationDigestBroadcastFunction;
 
     // Public one-click unsubscribe endpoint (no JWT — the signed token is the authorization). Sets
     // the caller's frequency to "off". Route is wired in chatbot-api/index.ts without an authorizer.

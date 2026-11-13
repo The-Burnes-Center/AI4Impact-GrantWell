@@ -3,7 +3,6 @@ import { Route, Routes } from "react-router";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { signedInAs } from "../../test/amplify";
 import { json, stubFetch } from "../../test/fetch-routes";
-import { instance } from "../../test/instance";
 import { renderApp } from "../../test/render";
 import Dashboard from "./DashboardPage";
 
@@ -26,7 +25,6 @@ vi.mock("./components/ProcessingReviewTab", () => stub("Review"));
 vi.mock("./components/AnalyticsTab", () => stub("Analytics"));
 vi.mock("./components/FeatureRolloutsTab", () => stub("Feature rollouts"));
 vi.mock("./components/UserManagementTab", () => stub("User management"));
-vi.mock("./components/DigestPreviewTab", () => stub("Digest preview"));
 
 const metrics = {
   totalProcessed: 0, successRate: 0, pendingCount: 0, failedCount: 0, approvedCount: 0,
@@ -75,17 +73,10 @@ describe("Admin dashboard tabs", () => {
     expect(await screen.findByRole("button", { name: /Auto-scrape grants/ })).toBeTruthy();
   });
 
-  it("adds Feature Rollouts and Digest Preview for a developer", async () => {
+  it("adds Feature Rollouts for a developer, and no Digest preview tab", async () => {
     signedInAs({ "custom:role": '["Developer"]' });
     renderDashboard();
-    expect(await tabNames()).toEqual(["Grants", "Analytics", "Feature rollouts", "User management", "Digest preview"]);
-  });
-
-  it("drops Digest Preview on a deployment without digests", async () => {
-    instance.EMAIL_DIGEST = false;
-    signedInAs({ "custom:role": '["Developer"]' });
-    renderDashboard();
-    expect(await tabNames()).not.toContain("Digest preview");
+    expect(await tabNames()).toEqual(["Grants", "Analytics", "Feature rollouts", "User management"]);
   });
 
   it("sends a non-admin to /home", async () => {

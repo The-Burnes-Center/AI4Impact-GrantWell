@@ -682,33 +682,6 @@ export class ChatBotApi extends Construct {
       });
     }
 
-    // Developer-only: render the real digest template against real data (the caller's prefs and the
-    // live active NOFO pool); POST can also send the rendered digest to the caller as a test.
-    // The function is defined in LambdaFunctionStack so it shares that stack's
-    // js-shared layer (avoids a cross-stack layer reference).
-    const notificationDigestPreviewIntegration = new HttpLambdaIntegration(
-      "NotificationDigestPreviewIntegration",
-      lambdaFunctions.notificationDigestPreviewFunction
-    );
-    restBackend.restAPI.addRoutes({
-      path: "/notification-digest/preview",
-      methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST],
-      integration: notificationDigestPreviewIntegration,
-      authorizer: httpAuthorizer,
-    });
-
-    // Developer-only: fire the real digest on demand (scope=me → caller, scope=all → everyone).
-    const notificationDigestBroadcastIntegration = new HttpLambdaIntegration(
-      "NotificationDigestBroadcastIntegration",
-      lambdaFunctions.notificationDigestBroadcastFunction
-    );
-    restBackend.restAPI.addRoutes({
-      path: "/notification-digest/broadcast",
-      methods: [apigwv2.HttpMethod.POST],
-      integration: notificationDigestBroadcastIntegration,
-      authorizer: httpAuthorizer,
-    });
-
     const notificationUnsubscribeIntegration = new HttpLambdaIntegration(
       "NotificationUnsubscribeIntegration",
       lambdaFunctions.notificationUnsubscribeFunction

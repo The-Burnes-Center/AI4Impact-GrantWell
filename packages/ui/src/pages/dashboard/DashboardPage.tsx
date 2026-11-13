@@ -11,7 +11,6 @@ import FeatureRolloutsTab from "./components/FeatureRolloutsTab";
 import UserManagementTab from "./components/UserManagementTab";
 import ProcessingReviewTab from "./components/ProcessingReviewTab";
 import ProcessingTab from "./components/ProcessingTab";
-import DigestPreviewTab from "./components/DigestPreviewTab";
 import AnalyticsTab from "./components/AnalyticsTab";
 import {
   LuSearch, LuFilter, LuUpload, LuCheck, LuX,
@@ -22,7 +21,6 @@ import Breadcrumbs from "../../components/common/Breadcrumbs";
 import { GRANT_TYPES, type NOFO, type GrantTypeId } from "../../common/types/nofo";
 import type { RawNOFOData } from "../../common/types/document";
 import { LiveStatus } from "../../components/common/LiveStatus";
-import { EMAIL_DIGEST } from "../../common/instance";
 import "../../styles/dashboard.css";
 
 const STATUS_FILTERS = ["all", "active", "archived"] as const;
@@ -30,7 +28,7 @@ const GRANT_TYPE_FILTERS = ["all", "federal", "state", "quasi", "philanthropic"]
 const FILTER_ITEM_COUNT = STATUS_FILTERS.length + GRANT_TYPE_FILTERS.length;
 
 const Dashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"grants" | "analytics" | "feature-rollouts" | "user-management" | "digest-preview">("grants");
+  const [activeTab, setActiveTab] = useState<"grants" | "analytics" | "feature-rollouts" | "user-management">("grants");
    const [grantsSegment, setGrantsSegment] = useState<"all" | "processing" | "attention">("all");
   const [reviewFocus, setReviewFocus] = useState<string | null>(null);
   // Names of finished grants the admin has dismissed from the Processing tab (client-side, resets on reload).
@@ -68,13 +66,11 @@ const Dashboard: React.FC = () => {
   const analyticsTabRef = useRef<HTMLButtonElement>(null);
   const rolloutsTabRef = useRef<HTMLButtonElement>(null);
   const userManagementTabRef = useRef<HTMLButtonElement>(null);
-  const digestPreviewTabRef = useRef<HTMLButtonElement>(null);
   const tabRefs = {
     grants: grantsTabRef,
     analytics: analyticsTabRef,
     "feature-rollouts": rolloutsTabRef,
     "user-management": userManagementTabRef,
-    "digest-preview": digestPreviewTabRef,
   };
   const processingSegmentRef = useRef<HTMLButtonElement>(null);
   const attentionSegmentRef = useRef<HTMLButtonElement>(null);
@@ -208,9 +204,6 @@ const Dashboard: React.FC = () => {
           : []),
         ...(canManageUsers
           ? [{ key: "user-management" as const, ref: userManagementTabRef }]
-          : []),
-        ...(isDeveloper && EMAIL_DIGEST
-          ? [{ key: "digest-preview" as const, ref: digestPreviewTabRef }]
           : []),
       ];
       const currentIndex = tabs.findIndex((tab) => tab.key === activeTab);
@@ -615,21 +608,6 @@ const Dashboard: React.FC = () => {
                 User management
               </button>
             )}
-            {isDeveloper && EMAIL_DIGEST && (
-              <button
-                id="dashboard-tab-digest-preview"
-                ref={digestPreviewTabRef}
-                className={`gw-tab tab-button ${activeTab === "digest-preview" ? "active" : ""}`}
-                onClick={() => setActiveTab("digest-preview")}
-                onKeyDown={handleTabKeyDown}
-                role="tab"
-                aria-selected={activeTab === "digest-preview"}
-                aria-controls={activeTab === "digest-preview" ? "dashboard-panel-digest-preview" : undefined}
-                tabIndex={activeTab === "digest-preview" ? 0 : -1}
-              >
-                Digest preview
-              </button>
-            )}
           </div>
 
           <div className="dashboard-content">
@@ -906,16 +884,7 @@ const Dashboard: React.FC = () => {
                   currentUsername={username}
                 />
               </div>
-            ) : (
-              <div
-                id="dashboard-panel-digest-preview"
-                role="tabpanel"
-                aria-labelledby="dashboard-tab-digest-preview"
-                tabIndex={0}
-              >
-                <DigestPreviewTab apiClient={apiClient} addNotification={addNotification} />
-              </div>
-            )}
+            ) : null}
           </div>
         </div>
 

@@ -87,7 +87,6 @@ const NOT_FOUND: Probe[] = [
 const DEVELOPER_ONLY: Probe[] = [
   get("/feature-rollouts/ai-grant-search", 403),
   get("/feature-rollouts/ai-grant-search/users", 403),
-  get("/notification-digest/preview", 403),
 ];
 
 const downloadUrl = (name: string, fileName: () => Promise<string>): Probe => ({
