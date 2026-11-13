@@ -95,13 +95,6 @@
   border-bottom: 1px solid var(--gw-color-surface);
 }
 
-.analytics__table th {
-  color: var(--gw-color-text-secondary);
-  font-weight: 600;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
 
 .analytics__table tbody tr:last-child td {
   border-bottom: none;

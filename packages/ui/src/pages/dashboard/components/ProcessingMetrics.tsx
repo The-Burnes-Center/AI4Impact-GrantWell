@@ -82,7 +82,7 @@ const ProcessingMetrics: React.FC<ProcessingMetricsProps> = ({
         <div className={`metric-card__value ${metrics.needsReuploadCount > 0 ? "review-quality-score--medium" : ""}`}>
           {metrics.needsReuploadCount}
         </div>
-        <div className="metric-card__label">Needs Re-upload</div>
+        <div className="metric-card__label">Needs re-upload</div>
         {metrics.needsReuploadCount > 0 && <ScoreFlag rating="medium" label="Needs action" />}
       </div>
       <div className="metric-card">

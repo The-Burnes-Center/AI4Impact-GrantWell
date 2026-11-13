@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef, useId } from "react";
-import { createPortal } from "react-dom";
-import { useFocusTrap } from "../../../hooks/use-focus-trap";
+import React, { useState, useEffect, useId } from "react";
+import { Modal } from "../../../components/common/Modal";
 
 interface HelpModalProps {
   isOpen: boolean;
@@ -9,9 +8,6 @@ interface HelpModalProps {
 
 const HelpModal = React.memo(function HelpModal({ isOpen, onClose }: HelpModalProps) {
   const [dontShowAgain, setDontShowAgain] = useState(false);
-  const modalRef = useFocusTrap({ isOpen, onEscape: handleClose, lockScroll: true });
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const titleId = useId();
   const descriptionId = useId();
 
   useEffect(() => {
@@ -30,84 +26,60 @@ const HelpModal = React.memo(function HelpModal({ isOpen, onClose }: HelpModalPr
     onClose();
   }
 
-  if (!isOpen) return null;
-
-  return createPortal(
-    <div
-      role="presentation"
-      className="gw-modal__overlay help-modal-overlay"
-      onClick={(e) => { if (e.target === e.currentTarget) handleClose(); }}
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      title="How to use this page"
+      maxWidth="650px"
+      describedBy={descriptionId}
+      closeLabel="Close help dialog"
     >
-      <div
-        ref={modalRef}
-        tabIndex={-1}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        aria-describedby={descriptionId}
-        className="gw-modal help-modal"
-      >
-        <div className="gw-modal__header help-modal__header">
-          <h2 id={titleId} className="gw-modal__title help-modal__title">
-            How to use this page
-          </h2>
-          <button
-            ref={closeButtonRef}
-            onClick={handleClose}
-            className="gw-btn gw-btn--icon help-modal__close"
-            aria-label="Close help dialog"
-          >
-            &times;
-          </button>
-        </div>
+      <p id={descriptionId} className="help-modal__text">
+        GrantWell uses generative AI to extract and summarize the key
+        elements of the grant.
+      </p>
 
-        <div id={descriptionId} className="gw-modal__body help-modal__body">
-          <p className="help-modal__text">
-            GrantWell uses generative AI to extract and summarize the key
-            elements of the grant.
-          </p>
-
-          <div className="help-modal__highlight">
-            <p style={{ margin: 0, lineHeight: "1.6", fontSize: "15px", color: "var(--gw-color-text)" }}>
-              Click through the tabs above (
-              <strong style={{ fontWeight: 600 }}>
-                Eligibility, Required documents, Narrative sections, Key deadlines
-              </strong>
-              ) to see what you need for this grant.
-            </p>
-          </div>
-
-          {[
-            { title: "Have a question?", text: 'Use "Chat with AI" in the left sidebar to get help understanding the grant requirements.' },
-            { title: "Ready to start writing?", text: 'Click "Write application" in the left sidebar to begin drafting.' },
-            { title: "Want a different grant?", text: 'Use "Recently viewed grants" on the Home page to return to a grant you viewed before, or choose a new grant from the list there.' },
-          ].map((section) => (
-            <div key={section.title} style={{ marginBottom: 20 }}>
-              <h3 className="help-modal__section-title">{section.title}</h3>
-              <p className="help-modal__section-text">{section.text}</p>
-            </div>
-          ))}
-
-          <div className="help-modal__checkbox-container">
-            <input
-              type="checkbox"
-              id="dont-show-again"
-              checked={dontShowAgain}
-              onChange={(e) => setDontShowAgain(e.target.checked)}
-              className="help-modal__checkbox"
-            />
-            <label htmlFor="dont-show-again" className="help-modal__checkbox-label">
-              Do not show this again
-            </label>
-          </div>
-
-          <button onClick={handleClose} className="gw-btn gw-btn--primary help-modal__confirm-btn">
-            Got it
-          </button>
-        </div>
+      <div className="help-modal__highlight">
+        <p style={{ margin: 0, lineHeight: "1.6", fontSize: "15px", color: "var(--gw-color-text)" }}>
+          Click through the tabs above (
+          <strong style={{ fontWeight: 600 }}>
+            Eligibility, Required documents, Narrative sections, Key deadlines
+          </strong>
+          ) to see what you need for this grant.
+        </p>
       </div>
-    </div>,
-    document.body
+
+      {[
+        { title: "Have a question?", text: 'Use "Chat with AI" in the left sidebar to get help understanding the grant requirements.' },
+        { title: "Ready to start writing?", text: 'Click "Write application" in the left sidebar to begin drafting.' },
+        { title: "Want a different grant?", text: 'Use "Recently viewed grants" on the Home page to return to a grant you viewed before, or choose a new grant from the list there.' },
+      ].map((section) => (
+        <div key={section.title} style={{ marginBottom: 20 }}>
+          <h3 className="help-modal__section-title">{section.title}</h3>
+          <p className="help-modal__section-text">{section.text}</p>
+        </div>
+      ))}
+
+      <div className="help-modal__checkbox-container">
+        <input
+          type="checkbox"
+          id="dont-show-again"
+          checked={dontShowAgain}
+          onChange={(e) => setDontShowAgain(e.target.checked)}
+          className="help-modal__checkbox"
+        />
+        <label htmlFor="dont-show-again" className="help-modal__checkbox-label">
+          Do not show this again
+        </label>
+      </div>
+
+      <div className="modal-actions">
+        <button type="button" onClick={handleClose} className="gw-btn gw-btn--primary">
+          Got it
+        </button>
+      </div>
+    </Modal>
   );
 });
 

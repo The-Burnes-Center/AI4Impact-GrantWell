@@ -1,309 +1,90 @@
-# UI Components Library
+# UI kit
 
-A collection of reusable, accessible React components for the GrantWell application.
+GrantWell's shared look has two layers:
 
-## Overview
+1. **CSS classes** (`gw-*`) in `src/styles/components.css`. Shapes follow the Colorado Design System;
+   colours come from each deployment's tokens (`src/styles/tokens.css`, overridden by an instance's
+   `chrome/theme.css`). Page CSS adds layout (margins, widths), never looks.
+2. **React components** in this folder, for the few patterns that need behaviour as well as styling.
 
-This library provides standardized UI components that ensure consistency across the application while following accessibility best practices (WCAG 2.1 compliant).
+Prefer a class or component over inline styles, and tokens (`var(--gw-color-*)`) over hex values.
+`npm run lint:colors` fails on new hardcoded colours.
 
-## Installation
+## Classes
 
-Components are already part of the project. Import them directly from their files:
+| Pattern | Classes | Notes |
+|---|---|---|
+| Buttons | `gw-btn` + `gw-btn--primary`, `--secondary`, `--danger`, `--inverse` (on dark fills); `--slim`, `--icon` | One primary per action area. Back/Cancel are secondary on the left, the main action on the right. |
+| Fields | `gw-field` wrapping `gw-field__label`, `gw-field__required` (the `*`, `aria-hidden`), `gw-input`, `gw-field__help`, `gw-field__message` (error) or `gw-field__message--success` | Point the input's `aria-describedby` at the help and message ids, and set `aria-invalid` when it has an error. `gw-input--error` / `--success` colour the border. |
+| Alerts | `gw-alert` + `gw-alert--info`, `--success`, `--warning`, `--urgent`; `gw-alert__title` | A leading `<svg>` takes the bar colour. Wrap the title and text in one `<div>`, since the alert is a flex row. Add `role="alert"` / `role="status"` yourself where the message is announced. react-bootstrap `<Alert>` gets the same look. |
+| Toasts | `gw-toast` + `gw-toast--info`, `--success`, `--warning`, `--urgent` | Used by the notification bar. |
+| Tags | `gw-tag` + `gw-tag--neutral`, `--info`, `--success`, `--warning`, `--danger` | Status pills and badges. |
+| Tabs | `gw-tabs` (the `tablist`), `gw-tab` | Roving `tabIndex` and arrow keys are the page's job. |
+| Modal | `gw-modal__overlay`, `gw-modal`, `gw-modal__header`, `gw-modal__title`, `gw-modal__body`; footer actions in `.modal-actions` as the body's last child | Use `<Modal>` (`components/common/Modal.tsx`) rather than the classes: it brings the focus trap, Escape, scroll lock, focus return and labelling. |
+| Pagination | `gw-pagination` and its `__*` parts | Use `<PaginationControls>`. |
+| Toggle | `gw-toggle`, `gw-toggle__option` | Joined buttons for one choice among a few (`aria-pressed` or `role="radio"`). |
+| Select all | `gw-select-all` | Select-all checkbox and label above a table. |
 
-```tsx
-import Button from '../components/ui/Button';
-import Card from '../components/ui/Card';
-import LoadingSpinner from '../components/ui/LoadingSpinner';
-import { colors, spacing } from '../components/ui/styles';
-```
+Every kit control draws the same focus ring: `var(--gw-focus-width) solid var(--gw-color-focus)` at
+`var(--gw-focus-offset)`. `app.scss` gives every other focusable element that ring too.
 
 ## Components
 
+Import each from its file; there is no barrel file.
+
 ### Button
 
-A versatile button component with multiple variants and sizes.
+A thin wrapper over `gw-btn`. `variant`: `primary` (default), `secondary`, `danger`, `ghost` (renders
+as secondary); `size="sm"` adds `gw-btn--slim`; `fullWidth`; `loading` shows dots and ignores clicks
+but stays focusable (`aria-disabled`).
 
 ```tsx
-import Button from '../components/ui/Button';
-
-// Primary button (default)
-<Button onClick={handleSubmit}>Submit</Button>
-
-// Secondary button
-<Button variant="secondary" onClick={handleCancel}>Cancel</Button>
-
-// Danger button
-<Button variant="danger" onClick={handleDelete}>Delete</Button>
-
-// Small size with loading state
-<Button size="sm" loading={isLoading}>Save</Button>
-
-// Full width button
-<Button fullWidth>Sign In</Button>
+<Button onClick={save}>Save</Button>
+<Button variant="secondary" onClick={cancel}>Cancel</Button>
 ```
-
-**Props:**
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `variant` | `'primary' \| 'secondary' \| 'danger' \| 'ghost'` | `'primary'` | Visual style |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Button size |
-| `fullWidth` | `boolean` | `false` | Take full container width |
-| `loading` | `boolean` | `false` | Show loading state |
-| `disabled` | `boolean` | `false` | Disable button |
-
----
 
 ### Card
 
-A container component with optional header.
-
-```tsx
-import Card from '../components/ui/Card';
-
-// Simple card
-<Card>
-  <p>Card content here</p>
-</Card>
-
-// Card with header
-<Card header="Settings">
-  <SettingsForm />
-</Card>
-
-// Card with header actions
-<Card 
-  header="Users" 
-  headerActions={<Button size="sm">Add User</Button>}
->
-  <UserList />
-</Card>
-```
-
-**Props:**
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `header` | `string` | - | Header title |
-| `headerActions` | `ReactNode` | - | Actions in header |
-| `headerStyle` | `'primary' \| 'default' \| 'none'` | `'primary'` | Header appearance |
-| `padding` | `'none' \| 'sm' \| 'md' \| 'lg'` | `'md'` | Content padding |
-
----
-
-### LoadingSpinner
-
-An accessible loading indicator.
-
-```tsx
-import LoadingSpinner from '../components/ui/LoadingSpinner';
-
-// Default spinner
-<LoadingSpinner />
-
-// With message
-<LoadingSpinner message="Loading data..." showMessage />
-
-// Small inline spinner
-<LoadingSpinner size="sm" centered={false} />
-
-// Custom color
-<LoadingSpinner color="#28a745" />
-```
-
-**Props:**
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Spinner size |
-| `color` | `string` | Primary color | Spinner color |
-| `message` | `string` | `'Loading...'` | Screen reader text |
-| `showMessage` | `boolean` | `false` | Show message visually |
-| `centered` | `boolean` | `true` | Center in container |
-
----
-
-### FormErrorSummary
-
-Displays a summary of form validation errors.
-
-```tsx
-import FormErrorSummary from '../components/ui/FormErrorSummary';
-
-<FormErrorSummary
-  errors={{
-    name: "Name is required",
-    email: "Invalid email format"
-  }}
-  fieldLabels={{
-    name: "Full Name",
-    email: "Email Address"
-  }}
-/>
-```
-
-**Props:**
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `errors` | `Record<string, string \| undefined>` | Required | Error messages by field |
-| `fieldLabels` | `Record<string, string>` | `{}` | Display labels for fields |
-| `title` | `string` | Auto-generated | Summary title |
-| `focusRequest` | `number` | — | Bump on each submit to move focus to the summary; errors shown on blur never move focus |
-| `onErrorClick` | `(field: string) => void` | Focus the field | Handler for an error link |
-| `id` | `string` | Generated | Stable id, for forms that re-focus the summary themselves |
-
-Announced by moving focus, not by a live region — carrying both would make a
-screen reader read the summary twice.
-
----
-
-### AutoSaveIndicator
-
-Shows auto-save status (saving/saved).
-
-```tsx
-import AutoSaveIndicator from '../components/ui/AutoSaveIndicator';
-
-const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
-
-<AutoSaveIndicator status={saveStatus} />
-
-// Custom labels
-<AutoSaveIndicator 
-  status={saveStatus}
-  savingText="Syncing..."
-  savedText="Synced"
-/>
-```
-
-**Props:**
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `status` | `'idle' \| 'saving' \| 'saved' \| 'error'` | Required | Current status |
-| `savingText` | `string` | `'Saving...'` | Saving message |
-| `savedText` | `string` | `'Saved'` | Saved message |
-| `errorText` | `string` | `'Error saving'` | Error message |
-
----
+The Write application step container. `header` (an h2), `headerActions`, `headerStyle`
+(`primary` filled bar, the default; `default` plain; `none`), `padding` (`none` | `sm` | `md` | `lg`).
 
 ### NavigationButtons
 
-Back/Continue button pair for multi-step forms.
+Back and Continue for the Write application steps. Name the step in `backLabel`
+("Back to project basics"). Also `continueLabel`, `showBack`, `showContinue`, `continueDisabled`,
+`continueLoading` (announced in a status region) and `justify`.
 
-```tsx
-import NavigationButtons from '../components/ui/NavigationButtons';
+### AutoSaveIndicator
 
-// Basic usage
-<NavigationButtons
-  onBack={() => goToStep(currentStep - 1)}
-  onContinue={() => goToStep(currentStep + 1)}
-/>
+Save status for a step: `status` is `idle` | `pending` | `saving` | `saved` | `error`. `idleText` keeps
+a line on screen while idle; `onRetry` adds a Retry button on error; `variant="onPrimary"` for the
+filled Card header. It announces one "Saved" per save and one alert per failure; pass
+`announce={false}` on a second, visual-only copy.
 
-// First step (no back button)
-<NavigationButtons
-  showBack={false}
-  onContinue={handleNext}
-/>
+### FormErrorSummary
 
-// Custom labels
-<NavigationButtons
-  onBack={handleBack}
-  onContinue={handleSubmit}
-  backLabel="Previous"
-  continueLabel="Submit"
-/>
+The error list at the top of a form. `errors` and `fieldLabels` by field name; bump `focusRequest` on
+each failed submit to move focus to it (it is announced by focus, not a live region). Each error links
+to its field.
 
-// Loading state
-<NavigationButtons
-  onContinue={handleSubmit}
-  continueLoading={isSubmitting}
-/>
-```
+### LoadingSpinner
 
-**Props:**
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `onBack` | `() => void` | - | Back button handler |
-| `onContinue` | `() => void` | - | Continue button handler |
-| `backLabel` | `string` | `'Back'` | Back button text |
-| `continueLabel` | `string` | `'Continue'` | Continue button text |
-| `showBack` | `boolean` | `true` | Show back button |
-| `showContinue` | `boolean` | `true` | Show continue button |
-| `continueDisabled` | `boolean` | `false` | Disable continue |
-| `continueLoading` | `boolean` | `false` | Loading state |
+`size` (`sm` | `md` | `lg`), `message`, `showMessage`, `centered`. The message goes into a status
+region once it exists, so it is announced.
 
----
+### TableScrollRegion
 
-## Style Constants
+A focusable, labelled scroll container for wide tables (`label`, optional `minWidth`).
 
-Import design tokens for consistent styling:
+## styles.ts
 
-```tsx
-import { colors, typography, spacing, borderRadius, shadows } from '../components/ui/styles';
-
-// Use in styles
-const myStyle = {
-  color: colors.primary,           // #23776C
-  fontFamily: typography.fontFamily, // 'Noto Sans', sans-serif
-  padding: spacing.lg,             // 16px
-  borderRadius: borderRadius.md,   // 6px
-  boxShadow: shadows.md,           // 0 1px 3px rgba(0, 0, 0, 0.1)
-};
-```
-
-### Available Tokens
-
-**Colors:**
-- `colors.primary` - Brand green (#23776C)
-- `colors.primaryHover` - Darker green (#195C53)
-- `colors.error` - Error red (#CD0D0D)
-- `colors.success` - Success green (#047857)
-- `colors.text` - Primary text (#333333)
-- `colors.textSecondary` - Secondary text (#5a5a5a)
-- `colors.border` - Border color (#e2e8f0)
-- `colors.white` - White (#ffffff)
-- `colors.background` - Background (#f9fafb)
-
-**Typography:**
-- `typography.fontFamily` - 'Noto Sans', sans-serif
-- `typography.fontSize.sm` - 14px
-- `typography.fontSize.base` - 16px
-- `typography.fontSize.lg` - 18px
-- `typography.fontWeight.medium` - 500
-- `typography.fontWeight.semibold` - 600
-
-**Spacing:**
-- `spacing.xs` - 4px
-- `spacing.sm` - 8px
-- `spacing.md` - 12px
-- `spacing.lg` - 16px
-- `spacing.xl` - 20px
-- `spacing['2xl']` - 24px
-
-**Border Radius:**
-- `borderRadius.sm` - 4px
-- `borderRadius.md` - 6px
-- `borderRadius.lg` - 8px
-- `borderRadius.xl` - 12px
-
----
+JS constants for the inline styles that remain (the Write application steps). Colours and shadows
+resolve to the same tokens (`colors.primary` is `var(--gw-color-primary)`, `colors.error` is
+`var(--gw-color-danger-text)`, `colors.textInverse` is for text on a primary fill), so they follow each
+deployment's theme. Spacing, font sizes and radii are fixed pixel values. New code should use classes
+and tokens instead.
 
 ## Accessibility
 
-All components follow WCAG 2.1 guidelines:
-
-- Proper ARIA attributes
-- Keyboard navigation support
-- Focus management
-- Screen reader announcements
-- Color contrast compliance
-- Error messaging with `role="alert"`
-
----
-
-## Contributing
-
-When adding new components:
-
-1. Place in `src/components/ui/`
-2. Add JSDoc comments with examples
-3. Import directly from the file (no barrel/index files)
-4. Update this README
-5. Follow existing patterns for consistency
+WCAG 2.2 AA: 4.5:1 text and 3:1 non-text contrast, a visible focus ring, targets of at least 24px (kit
+buttons are 40px), and never colour alone; pair a status colour with an icon or text.

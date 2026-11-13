@@ -51,17 +51,16 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   const [statusMounted, setStatusMounted] = useState(false);
   useEffect(() => setStatusMounted(true), []);
 
-  // The panel is rendered inside an ARIA table, which may only own rows, so it
-  // presents as a full-width row rather than a bare region.
+  // The panel sits in the reviews table, which may only own rows, so it is a full-width row.
   const asTableRow = (content: React.ReactNode) => (
-    <div role="row">
-      <div role="cell" aria-colspan={colSpan}>
+    <tr>
+      <td colSpan={colSpan} className="review-expanded-cell">
         <span role="status" className="visually-hidden">
           {!statusMounted ? "" : loading ? "Loading review details" : (actionInProgress && BUSY_MESSAGES[actionInProgress]) || ""}
         </span>
         {content}
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 
   const loadDetail = useCallback(async () => {
@@ -301,8 +300,8 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
       )}
 
       {review.status === "needs_reupload" && (
-        <div className="gw-alert gw-alert--warning review-dlq-alert" style={{ borderLeft: "4px solid var(--gw-color-warning)" }}>
-          <h4 className="review-dlq-alert__title">Awaiting Document Re-upload</h4>
+        <div className="gw-alert gw-alert--warning review-dlq-alert">
+          <h4 className="review-dlq-alert__title">Awaiting document re-upload</h4>
           <p style={{ margin: "8px 0 0" }}>
             This grant has been marked as needing a new document upload. Upload a corrected grant document to trigger reprocessing.
           </p>
@@ -313,7 +312,7 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
         <div className="gw-alert gw-alert--warning review-dlq-alert">
           {review.source === "dlq" && (
             <>
-              <h4 className="review-dlq-alert__title">Processing Failed (Dead Letter Queue)</h4>
+              <h4 className="review-dlq-alert__title">Processing failed (dead-letter queue)</h4>
               <p style={{ margin: "8px 0 0" }}>This grant failed processing and was moved to the Dead Letter Queue.</p>
               <div className="review-dlq-guidance">
                 <h5 className="review-dlq-guidance__title">What to do:</h5>

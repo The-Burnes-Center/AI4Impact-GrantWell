@@ -39,7 +39,7 @@ const QUEUE: ReviewItem[] = [
 
 const names = () => [...document.querySelectorAll(".review-nofo-name")].map((el) => el.textContent);
 const deadlineCell = (name: string) => {
-  const row = screen.getByText(name).closest('[role="row"]') as HTMLElement;
+  const row = screen.getByText(name).closest("tr") as HTMLElement;
   return within(row).getAllByRole("cell")[4];
 };
 
@@ -142,7 +142,7 @@ describe("ProcessingReviewTab", () => {
     const { user } = renderTab(json({ reviews: QUEUE, expiredOpenCount: 1 }));
     await screen.findByText("Today Grant");
     const selectAll = screen.getByRole("checkbox", { name: "Select all reviews" }) as HTMLInputElement;
-    expect(selectAll.closest('[role="columnheader"]')).toBeNull();
+    expect(selectAll.closest("th")).toBeNull();
 
     await user.click(screen.getByRole("checkbox", { name: "Select Soon Grant" }));
     expect(selectAll.indeterminate).toBe(true);
@@ -386,7 +386,7 @@ describe("requirements the grant doesn't support", () => {
       "POST /admin/processing-reviews/Held-Grant/approve": () =>
         new Promise<Response>((resolve) => { release = () => resolve(json({ message: "ok" })); }),
     });
-    const region = screen.getAllByRole("status").find((el) => el.closest('[role="cell"]'))!;
+    const region = screen.getAllByRole("status").find((el) => el.closest("td"))!;
     expect(region).toBeEmptyDOMElement();
 
     await user.click(screen.getByRole("button", { name: /^Approve as is — / }));

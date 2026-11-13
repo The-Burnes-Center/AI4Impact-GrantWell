@@ -5,7 +5,7 @@ import { useApiClient } from "../../../hooks/use-api-client";
 import { getCurrentUser } from "aws-amplify/auth";
 import { v4 as uuidv4 } from "uuid";
 import UnifiedNavigation from "../../../components/navigation/UnifiedNavigation";
-import Breadcrumbs from "../../../components/common/Breadcrumbs";
+import PageHeader from "../../../components/common/PageHeader";
 import "../../../styles/dashboard.css";
 
 export default function SessionPage() {
@@ -73,18 +73,14 @@ export default function SessionPage() {
     <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
       <UnifiedNavigation />
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        <Breadcrumbs
-          items={[
-            { label: "Home", href: "/home" },
-            { label: "My chats" },
-          ]}
-        />
-
         <div className="dashboard-main-content">
           {isLoading ? (
-            <div style={{ display: "flex", justifyContent: "center", padding: "48px" }} role="status" aria-label="Loading chats">
-              <p style={{ color: "var(--gw-color-text-secondary)" }}>Loading chats...</p>
-            </div>
+            <>
+              <PageHeader title="My chats" />
+              <div style={{ display: "flex", justifyContent: "center", padding: "48px" }} role="status" aria-label="Loading chats">
+                <p style={{ color: "var(--gw-color-text-secondary)" }}>Loading chats...</p>
+              </div>
+            </>
           ) : (
             <Sessions
               toolsOpen={true}

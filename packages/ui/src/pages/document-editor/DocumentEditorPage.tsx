@@ -26,6 +26,7 @@ import { LiveStatus } from "../../components/common/LiveStatus";
 import { getCurrentUser } from "aws-amplify/auth";
 import type { DocumentDraft } from "../../common/api-client/drafts-client";
 import type { DocumentData } from "../../common/types/document";
+import { usePageTitle } from "../../common/page-title";
 import "../../styles/document-editor.css";
 
 const ERROR_MESSAGES = {
@@ -373,6 +374,8 @@ const DocumentEditor: React.FC = () => {
     };
   }, [welcomeModalOpen, grantPickerOpen, error]);
 
+  usePageTitle(notFound ? "Application not found" : null);
+
   if (notFound) {
     return (
       <div style={{ maxWidth: "560px", margin: "0 auto", padding: "48px 16px", lineHeight: 1.5 }}>
@@ -415,7 +418,6 @@ const DocumentEditor: React.FC = () => {
               }}
               onStepClick={(idx) => navigateToStep(EDITOR_STEPS[idx].id)}
               completedSteps={Array.from({ length: furthestStepIndex }, (_, i) => i)}
-              showProgress
             />
 
             <div className="document-editor-workspace" style={{ flex: 1 }}>

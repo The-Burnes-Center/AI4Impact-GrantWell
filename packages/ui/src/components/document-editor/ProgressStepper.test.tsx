@@ -29,24 +29,34 @@ describe("ProgressStepper", () => {
     const nav = screen.getByRole("navigation", { name: "Application steps" });
     const items = within(nav).getAllByRole("listitem");
     expect(items).toHaveLength(3);
-    expect(within(items[0]).getByRole("button")).toHaveAccessibleName("Step 1 of 3: Basics, current step, completed");
+    expect(items[0]).toHaveAttribute("aria-current", "step");
+    expect(items[0]).toHaveTextContent("Step 1 of 3: Basics, current step, completed");
+    expect(within(items[0]).queryByRole("button")).not.toBeInTheDocument();
     expect(within(items[1]).getByRole("button")).toHaveAccessibleName("Step 2 of 3: Questions, completed");
-    expect(within(items[2]).getByRole("button")).toHaveAccessibleName("Step 3 of 3: Review, locked");
+    expect(items[2]).toHaveTextContent("Step 3 of 3: Review, locked");
   });
 
-  it("keeps a locked step focusable with its tooltip, and ignores clicks on it", async () => {
+  it("goes back to a completed step from its chip", async () => {
     const { user, onStepClick } = renderStepper();
-    const locked = screen.getByRole("button", { name: /Review, locked/ });
-    expect(locked).toBeEnabled();
-    expect(locked).toHaveAttribute("aria-disabled", "true");
-    expect(locked).toHaveAccessibleDescription("Check everything.");
+    await user.click(screen.getByRole("button", { name: "Step 2 of 3: Questions, completed" }));
+    expect(onStepClick).toHaveBeenCalledWith(1);
+  });
 
+  it("keeps the current and locked steps out of the tab order but still names their state", async () => {
+    const { user } = renderStepper();
+    const row = screen.getAllByRole("list")[0];
+    expect(within(row).getAllByRole("button")).toHaveLength(1);
+    expect(screen.getByText("Step 3 of 3: Review, locked")).toBeInTheDocument();
+
+    const questions = within(row).getByRole("button", { name: /Questions/ });
+    expect(questions).toHaveAccessibleDescription("Answer questions.");
     await user.tab();
-    await user.tab();
-    await user.tab();
-    expect(locked).toHaveFocus();
-    await user.click(locked);
-    expect(onStepClick).not.toHaveBeenCalled();
+    expect(questions).toHaveFocus();
+  });
+
+  it("has no progress percentage line", () => {
+    renderStepper();
+    expect(screen.queryByText(/Application progress/)).not.toBeInTheDocument();
   });
 
   it("closes a hover tooltip with Escape while focus is elsewhere", async () => {

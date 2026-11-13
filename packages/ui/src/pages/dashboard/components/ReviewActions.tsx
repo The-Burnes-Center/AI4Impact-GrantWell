@@ -70,7 +70,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
   // needs_reupload is a terminal holding state: the only meaningful moves are
   // supplying the new document or abandoning the entry.
   if (status === "needs_reupload") {
-    const reuploadDocLabel = actionInProgress === "reupload" ? "Uploading..." : "Re-upload Document";
+    const reuploadDocLabel = actionInProgress === "reupload" ? "Uploading..." : "Re-upload document";
     return (
       <div className="review-expanded-row__actions">
         <button
@@ -166,7 +166,7 @@ const ReviewActions: React.FC<ReviewActionsProps> = ({
     </button>
   );
 
-  const needsReuploadLabel = actionInProgress === "needs_reupload" ? "Marking..." : "Needs Re-upload";
+  const needsReuploadLabel = actionInProgress === "needs_reupload" ? "Marking..." : "Needs re-upload";
 
   const needsReuploadBtn = (
     <button

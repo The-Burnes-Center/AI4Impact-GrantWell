@@ -567,19 +567,9 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               <p id="se-lock-note" style={{ margin: 0, fontSize: '14px', color: 'var(--gw-color-primary-hover)' }}>
                 Sections are read-only while they are being written. You can edit them when writing finishes.
               </p>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '10px 16px',
-                background: 'var(--gw-color-background)',
-                border: '1px solid var(--gw-color-success-border)',
-                borderRadius: 'var(--gw-radius-container)',
-                fontSize: '13px',
-                color: 'var(--gw-color-success-text)',
-              }}>
-                <span style={{ fontSize: '15px', flexShrink: 0 }} aria-hidden="true">&#10003;</span>
-                Your progress is automatically saved. You can leave and come back anytime.
+              <div className="gw-alert gw-alert--success">
+                <span aria-hidden="true">&#10003;</span>
+                <span>Your progress is automatically saved. You can leave and come back anytime.</span>
               </div>
             </div>
           )}

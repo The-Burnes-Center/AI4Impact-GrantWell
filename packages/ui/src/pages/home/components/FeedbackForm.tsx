@@ -287,7 +287,7 @@ const FeedbackForm = React.memo(function FeedbackForm() {
 
               <button
                 type="submit"
-                className="feedback-submit"
+                className="gw-btn gw-btn--primary feedback-submit"
                 aria-disabled={isSubmitting || undefined}
               >
                 {isSubmitting ? "Submitting..." : "Send feedback"}

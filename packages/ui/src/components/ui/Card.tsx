@@ -68,7 +68,7 @@ const Card: React.FC<CardProps> = ({
   const headerStyles: Record<string, React.CSSProperties> = {
     primary: {
       background: colors.primary,
-      color: colors.white,
+      color: colors.textInverse,
       padding: `${spacing.xl} ${spacing["2xl"]}`,
     },
     default: {

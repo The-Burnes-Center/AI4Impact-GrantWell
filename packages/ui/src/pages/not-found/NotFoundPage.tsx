@@ -1,13 +1,8 @@
-import { useEffect } from "react";
 import { Link } from "react-router";
-import { useBranding } from "../../common/branding";
+import { usePageTitle } from "../../common/page-title";
 
 export default function NotFoundPage() {
-  const { appName } = useBranding();
-
-  useEffect(() => {
-    document.title = `Page not found – ${appName}`;
-  }, [appName]);
+  usePageTitle("Page not found");
 
   return (
     <div style={{ maxWidth: "560px", margin: "0 auto", padding: "48px 16px", lineHeight: 1.5 }}>

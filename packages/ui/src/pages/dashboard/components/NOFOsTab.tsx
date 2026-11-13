@@ -97,7 +97,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
   const [promoting, setPromoting] = useState(false);
   const reviewFlagIdPrefix = useId();
 
-  const tableRef = useRef<HTMLDivElement>(null);
+  const tableRef = useRef<HTMLTableElement>(null);
   // Pin re-sorts, archive/delete remove the row: keep focus on the control or fall back to the table.
   const focusBeforeUpdate = useRef<Element | null>(null);
   const updateNofosKeepingFocus = useCallback((updater: (nofos: NOFO[]) => NOFO[]) => {
@@ -454,27 +454,36 @@ const NOFOsTab = React.memo(function NOFOsTab({
   return (
     <div className="tab-content">
       <TableScrollRegion label="Grants table" minWidth={640}>
-      <div className="table-container" role="table" aria-label="Grants" ref={tableRef} tabIndex={-1}>
-        <div className="table-header" role="rowgroup">
-          <div role="row" style={{ display: "contents" }}>
-            <div className="header-cell" role="columnheader">Name</div>
-            <div className="header-cell" role="columnheader">Type</div>
-            <div className="header-cell" role="columnheader">Deadline</div>
-            <div className="header-cell" role="columnheader">Actions</div>
-          </div>
-        </div>
-        <div className="table-body" role="rowgroup">
+      <div className="table-container">
+      <table className="gw-table" aria-label="Grants" ref={tableRef} tabIndex={-1}>
+        <colgroup>
+          <col style={{ width: "57%" }} />
+          <col style={{ width: "14%" }} />
+          <col style={{ width: "14%" }} />
+          <col />
+        </colgroup>
+        <thead>
+          <tr>
+            <th scope="col" className="header-cell">Name</th>
+            <th scope="col" className="header-cell">Type</th>
+            <th scope="col" className="header-cell">Deadline</th>
+            <th scope="col" className="header-cell header-cell--end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
           {nofos.length === 0 && (
-            <div role="row">
-              <div className="no-data" role="cell" aria-colspan={4}>
-                <LuFileX size={24} className="no-data-icon" aria-hidden="true" />
-                <p>No grants found</p>
-              </div>
-            </div>
+            <tr>
+              <td className="row-cell row-cell--empty" colSpan={4}>
+                <div className="no-data">
+                  <LuFileX size={24} className="no-data-icon" aria-hidden="true" />
+                  <p>No grants found</p>
+                </div>
+              </td>
+            </tr>
           )}
           {nofos.map((nofo) => (
-            <div key={nofo.id} className="table-row" role="row">
-              <div className="row-cell" role="rowheader">
+            <tr key={nofo.id} className="table-row">
+              <th scope="row" className="row-cell">
                 <span className="nofo-name">{nofo.name}</span>
                 {nofo.isPinned && (
                   <span className="gw-tag gw-tag--info pinned-badge"><LuPin size={14} aria-hidden="true" /><span>Pinned</span></span>
@@ -512,8 +521,8 @@ const NOFOsTab = React.memo(function NOFOsTab({
                     )}
                   </>
                 ) : null}
-              </div>
-              <div className="row-cell" role="cell">
+              </th>
+              <td className="row-cell">
                 {nofo.grantType && GRANT_TYPES[nofo.grantType] ? (
                   <span
                     className="gw-tag grant-type-badge"
@@ -528,8 +537,8 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 ) : (
                   <span className="gw-tag grant-type-badge unset">Unset</span>
                 )}
-              </div>
-              <div className="row-cell" role="cell">
+              </td>
+              <td className="row-cell">
                 {nofo.isRolling ? (
                   <span className="expiry-date rolling">Rolling</span>
                 ) : nofo.expirationDate ? (
@@ -537,8 +546,9 @@ const NOFOsTab = React.memo(function NOFOsTab({
                 ) : (
                   <span className="expiry-date no-date">N/A</span>
                 )}
-              </div>
-              <div className="row-cell actions" role="cell">
+              </td>
+              <td className="row-cell actions">
+                <div className="row-cell__flex row-cell__flex--end">
                 {(() => {
                   // Mirror the backend scope check: a state admin may only modify
                   // NOFOs owned by their own state. Unknown scope fails closed, so
@@ -582,10 +592,12 @@ const NOFOsTab = React.memo(function NOFOsTab({
                     </>
                   );
                 })()}
-              </div>
-            </div>
+                </div>
+              </td>
+            </tr>
           ))}
-        </div>
+        </tbody>
+      </table>
       </div>
       </TableScrollRegion>
 

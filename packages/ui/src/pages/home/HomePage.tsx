@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useBranding } from "../../common/branding";
 import { v4 as uuidv4 } from "uuid";
+import { LuX } from "react-icons/lu";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useAIGrantSearch } from "../../hooks/use-ai-grant-search";
 import { useFeatureRolloutAccess } from "../../hooks/use-feature-rollout-access";
@@ -260,24 +261,24 @@ export default function HomePage() {
 
         {/* Redirect message */}
         {/* Pre-mounted so the message is announced; the close button stays outside the region. */}
-        <div className={redirectMessage ? "redirect-banner" : undefined}>
+        <div className={redirectMessage ? "gw-alert gw-alert--info redirect-banner" : undefined}>
           <div style={{ flex: 1 }} role="status" aria-live="polite">
             {redirectMessage && <p className="redirect-banner__text">{redirectMessage}</p>}
           </div>
           {redirectMessage && (
             <button
               onClick={() => setRedirectMessage(null)}
-              className="redirect-banner__close"
+              className="gw-btn gw-btn--icon redirect-banner__close"
               aria-label="Close message"
             >
-              &times;
+              <LuX size={20} aria-hidden="true" />
             </button>
           )}
         </div>
 
         {/* Error state */}
         {error && (
-          <div className="gw-alert gw-alert--info redirect-banner" role="alert" aria-live="assertive">
+          <div className="gw-alert gw-alert--urgent redirect-banner" role="alert" aria-live="assertive">
             <div style={{ flex: 1 }}>
               <p className="redirect-banner__text">{error}</p>
             </div>
