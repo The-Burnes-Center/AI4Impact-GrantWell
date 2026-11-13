@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { getCurrentUser } from "aws-amplify/auth";
+import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
 import { useDraftsClient } from "./use-drafts-client";
 import { useAutoSave } from "./use-auto-save";
 import { useNotifications } from "../components/notifications/NotificationManager";
 import { Utils } from "../common/utils";
+import { tokenExpiry } from "../common/session-ended";
 import {
   DraftConflictError,
   type DocumentDraft,
@@ -14,6 +15,9 @@ import {
 import { writeDraftCache } from "../common/helpers/document-editor-utils";
 import type { ProjectBasicsData } from "../common/types/document";
 import type { SectionRef } from "../common/helpers/application-sections";
+
+/** Renew the kept token when it has less than this left; it lasts 15 minutes. */
+const TOKEN_RENEW_MS = 3 * 60_000;
 
 export interface DraftSaveFields {
   title?: string;
@@ -80,6 +84,23 @@ export function useDraftSave({
   const dirtySectionsRef = useRef<Set<string>>(new Set());
   const dirtyPartsRef = useRef<Set<DraftPart>>(new Set());
   const [storageUse, setStorageUse] = useState<DraftStorageUse | null>(null);
+
+  // The exit save can't await a token, so renew the kept one before it runs out.
+  useEffect(() => {
+    const timer = setInterval(async () => {
+      const token = authTokenRef.current;
+      const exp = token ? tokenExpiry(token) : null;
+      if (exp === null || exp * 1000 - Date.now() > TOKEN_RENEW_MS) return;
+      try {
+        const session = await fetchAuthSession({ forceRefresh: true });
+        const fresh = session.tokens?.idToken?.toString();
+        if (fresh) authTokenRef.current = fresh;
+      } catch {
+        /* a failed renewal leaves the exit save to skip the network */
+      }
+    }, 60_000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -220,6 +241,8 @@ export function useDraftSave({
       cacheLocally(snapshot);
       const token = authTokenRef.current;
       if (!token || !sessionId) return;
+      const exp = tokenExpiry(token);
+      if (exp !== null && exp * 1000 <= Date.now()) return;
       draftsClient.saveDraftOnExit(
         {
           // Unconditional: last-write-wins beats losing the text entirely.
