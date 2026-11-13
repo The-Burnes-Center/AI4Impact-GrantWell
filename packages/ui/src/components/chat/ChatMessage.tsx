@@ -6,6 +6,7 @@ import styles from "../../styles/chat.module.scss";
 import { ChatBotHistoryItem, ChatBotMessageType } from "./types";
 import { citationSup } from "./citation-sup";
 import { citationsOf, remarkCitationMarkers } from "./citations";
+import { grantNameOf } from "../../common/grant-pdf";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 
@@ -36,7 +37,10 @@ function ChatMessage(props: ChatMessageProps) {
   const appContext = useContext(AppContext);
   const citations = React.useMemo(() => citationsOf(props.message?.metadata), [props.message?.metadata]);
   const citationPlugins = React.useMemo(() => (citations.length ? [remarkCitationMarkers(citations)] : []), [citations]);
-  const citationSupRenderer = React.useMemo(() => citationSup(citations), [citations]);
+  const citationSupRenderer = React.useMemo(
+    () => citationSup(citations, { grant: grantNameOf(props.documentIdentifier) }),
+    [citations, props.documentIdentifier]
+  );
 
 
 

@@ -13,9 +13,9 @@ import { GRANT_TYPES, grantTypeTint, type GrantTypeId } from "../../common/types
 import { GrantInReviewError } from "../../common/api-client/grant-in-review";
 import "../../styles/checklists.css";
 
-function RequirementsList({ text }: { text: TabText }) {
+function RequirementsList({ text, grant }: { text: TabText; grant?: string }) {
   const plugins = React.useMemo(() => (text.citations.length ? [remarkCitationMarkers(text.citations)] : []), [text.citations]);
-  const sup = React.useMemo(() => citationSup(text.citations), [text.citations]);
+  const sup = React.useMemo(() => citationSup(text.citations, { grant }), [text.citations, grant]);
   return (
     <ModelMarkdown className="custom-markdown" remarkPlugins={plugins} components={{ sup }}>
       {text.markdown}
@@ -276,7 +276,7 @@ const Checklists: React.FC = () => {
                   >
                     <p className="checklist-content__description">{tabContents[tabId].title}</p>
                     <div className="checklist-tabs__markdown">
-                      <RequirementsList text={tabContents[tabId].content} />
+                      <RequirementsList text={tabContents[tabId].content} grant={documentIdentifier} />
 
                       {tabId === "eligibility" && (
                         <div className="gw-alert gw-alert--info checklist-info-box">

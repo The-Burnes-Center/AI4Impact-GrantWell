@@ -161,6 +161,7 @@ describe("ChecklistPage requirement citations", () => {
         },
       }),
       "GET /s3-nofo-bucket-data": json({ nofoData: [] }),
+      "GET /grant-pdf-url": json({ available: true, signedUrl: "https://s3.test/x" }),
     });
 
     const { user } = renderApp(
@@ -170,11 +171,14 @@ describe("ChecklistPage requirement citations", () => {
       { route: "/requirements/Grant%20A" }
     );
 
-    const button = await screen.findByRole("button", { name: "Quote 1, Grant document, page 4" });
-    expect(screen.getAllByRole("button", { name: /^Quote/ })).toHaveLength(1);
+    const button = await screen.findByRole("button", { name: "Source 1, Grant, page 4" });
+    expect(screen.getAllByRole("button", { name: /^Source/ })).toHaveLength(1);
     expect(button.closest("li")?.textContent).toMatch(/^Cities: Any city may apply\.1$/);
     await user.click(button);
-    expect(screen.getByText("“Eligible applicants are cities.”")).toBeInTheDocument();
+    const dialog = screen.getByRole("dialog", { name: "Source 1" });
+    expect(dialog.querySelector("q")?.textContent).toBe("Eligible applicants are cities.");
+    const link = await screen.findByRole("link", { name: "Open the grant at page 4 (opens in new tab)" });
+    expect(link).toHaveAttribute("href", "/grant-pdf?grant=Grant+A&page=4");
     const summary = calls.find((c) => c.url.pathname === "/s3-nofo-summary");
     expect(summary?.url.searchParams.get("citations")).toBe("1");
   });
