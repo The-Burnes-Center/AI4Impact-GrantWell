@@ -1324,8 +1324,6 @@ html:has(.document-editor-root) {
 }
 
 .se-add-section__toggle:focus-visible,
-.se-add-section__submit:focus-visible,
-.se-add-section__cancel:focus-visible,
 .se-add-section__input:focus-visible {
   outline: var(--gw-focus-width) solid var(--gw-color-focus);
   outline-offset: var(--gw-focus-offset);
@@ -1351,33 +1349,6 @@ html:has(.document-editor-root) {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-}
-
-.se-add-section__submit,
-.se-add-section__cancel {
-  min-height: 44px;
-  padding: 8px 16px;
-  border-radius: var(--gw-radius-control);
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.se-add-section__submit {
-  border: none;
-  background: var(--gw-color-primary);
-  color: var(--gw-color-surface, #ffffff);
-}
-
-.se-add-section__submit:disabled {
-  background: var(--gw-color-disabled-bg, #F0F0F0);
-  color: var(--gw-color-disabled-text, #666666);
-  cursor: not-allowed;
-}
-
-.se-add-section__cancel {
-  border: 1px solid var(--gw-color-border, #e2e8f0);
-  background: var(--gw-color-surface, #ffffff);
-  color: var(--gw-color-text, #333333);
 }
 
 /* Content suggestions grid (disabled feature) */

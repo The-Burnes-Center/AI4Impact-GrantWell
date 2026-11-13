@@ -140,7 +140,7 @@ const FinishedCard: React.FC<{
       {published ? (
         <button
           type="button"
-          className="processing-tab__action processing-tab__action--primary"
+          className="gw-btn gw-btn--primary processing-tab__action"
           onClick={() => onViewSummary(nofo.name)}
         >
           View requirements <LuArrowRight size={14} aria-hidden="true" />
@@ -148,7 +148,7 @@ const FinishedCard: React.FC<{
       ) : (
         <button
           type="button"
-          className="processing-tab__action processing-tab__action--attention"
+          className="gw-btn gw-btn--secondary processing-tab__action"
           onClick={() => onOpenReview(nofo.name)}
         >
           Go to Needs attention <LuArrowRight size={14} aria-hidden="true" />
