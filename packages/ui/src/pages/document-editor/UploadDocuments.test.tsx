@@ -103,6 +103,7 @@ describe("Write application documents", () => {
       [SUMMARY]: json({ data: { ProjectNarrativeSections: [{ item: "Need", description: "d" }] } }),
       [QUESTIONS]: json({ data: { questions: [{ id: 1, question: "Who will it serve?" }, { id: 2, question: "What will it cost?" }] } }),
       [START]: json({ jobId: "job-1" }),
+      [RELEVANCE]: related,
       ...routes,
     });
     const draftSave = fakeDraftSave();

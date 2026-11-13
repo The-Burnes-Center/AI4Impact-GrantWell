@@ -28,6 +28,9 @@ const LIBRARY = [
   doc("user-1/documents/sheet.xlsx", "sheet.xlsx", "documents"),
 ];
 
+const RELATED = (req: RouteRequest) =>
+  json({ documents: (req.body as { documentKeys: string[] }).documentKeys.map((key) => ({ key, status: "related", usable: true })) });
+
 function server(stored: { document_keys: string[] | null; exists: boolean }, library = LIBRARY) {
   const saved: string[][] = [];
   const net = stubFetch({
@@ -42,6 +45,7 @@ function server(stored: { document_keys: string[] | null; exists: boolean }, lib
     },
     [UPLOAD_URL]: json({ signedUrl: "https://s3.test/put" }),
     [PDF]: json({ available: true, signedUrl: "https://s3.test/grant" }),
+    "POST /user-documents/relevance": RELATED,
   });
   return { net, saved };
 }
@@ -187,7 +191,7 @@ describe("Grant panel documents", () => {
     open();
     const sheet = await screen.findByRole("checkbox", { name: /sheet\.xlsx/ });
     expect(sheet).toBeChecked();
-    expect(sheet).toHaveAccessibleName(/XLSX · 1000 B/);
+    expect(sheet).toHaveAccessibleName(/Type not set · 1000 B/);
     expect(sheet).toHaveAccessibleName(/The AI can't read this file type/);
   });
 
@@ -198,9 +202,18 @@ describe("Grant panel documents", () => {
 
     const input = container.querySelector('input[type="file"]') as HTMLInputElement;
     await user.upload(input, new File(["hello"], "notes.txt", { type: "text/plain" }));
+    const dialog = await screen.findByRole("dialog", { name: "What kind of document is this?" });
+    await user.selectOptions(within(dialog).getByRole("combobox", { name: /Document type/ }), "other");
+    await user.type(within(dialog).getByRole("textbox", { name: /What is it\?/ }), "Notes");
+    await user.click(within(dialog).getByRole("button", { name: "Upload" }));
 
     await waitFor(() => expect(saved).toHaveLength(1));
-    expect(net.last(UPLOAD_URL).body).toMatchObject({ fileName: "user-1/documents/notes.txt", fileSize: 5 });
+    expect(net.last(UPLOAD_URL).body).toMatchObject({
+      fileName: "user-1/documents/notes.txt",
+      fileSize: 5,
+      documentType: "other",
+      description: "Notes",
+    });
     expect(saved[0]).toEqual(["user-1/documents/notes.txt"]);
   });
 

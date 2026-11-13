@@ -13,7 +13,6 @@ import ProcessingReviewTab from "./components/ProcessingReviewTab";
 import ProcessingTab from "./components/ProcessingTab";
 import AnalyticsTab from "./components/AnalyticsTab";
 import DocumentReviewsTab from "./components/DocumentReviewsTab";
-import AdminTabHeader from "./components/AdminTabHeader";
 import {
   LuSearch, LuUpload, LuCheck, LuX,
   LuRefreshCw, LuDownload, LuInfo, LuLoader, LuArrowRight,

@@ -52,6 +52,7 @@ beforeEach(() => {
     "POST /user-documents/list": json({ documents: [] }),
     "POST /user-session": json({ document_keys: [], exists: true }),
     "GET /grant-pdf-url": json({ available: true, signedUrl: "https://s3.test/g" }),
+    "POST /user-documents/relevance": json({ documents: [] }),
   });
 });
 
@@ -71,7 +72,7 @@ describe("Chat page Grant panel", () => {
   it("shows the panel beside the chat and hides it with a toggle the browser remembers", async () => {
     phoneScreen(false);
     const { user, unmount } = render();
-    expect(await screen.findByRole("heading", { level: 1, name: "Grant A Title" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 1, name: "Chat: Grant A Title" })).toBeInTheDocument();
     const panel = screen.getByRole("complementary", { name: "Grant panel" });
     const toggle = screen.getByRole("button", { name: "Hide grant panel" });
     expect(toggle).toHaveAttribute("aria-expanded", "true");
@@ -94,7 +95,7 @@ describe("Chat page Grant panel", () => {
   it("opens the Sources tab at the card a citation number picks, with focus on it", async () => {
     phoneScreen(false);
     const { user } = render();
-    await screen.findByRole("heading", { level: 1, name: "Grant A Title" });
+    await screen.findByRole("heading", { level: 1, name: "Chat: Grant A Title" });
     await user.click(screen.getByRole("button", { name: "Source 2, show in the panel" }));
 
     expect(screen.getByRole("tab", { name: "Sources, 2" })).toHaveAttribute("aria-selected", "true");
@@ -106,7 +107,7 @@ describe("Chat page Grant panel", () => {
   it("puts the panel in a Grant info sheet on a phone, which Escape closes back to its button", async () => {
     phoneScreen(true);
     const { user } = render();
-    await screen.findByRole("heading", { level: 1, name: "Grant A Title" });
+    await screen.findByRole("heading", { level: 1, name: "Chat: Grant A Title" });
     expect(screen.queryByRole("complementary", { name: "Grant panel" })).toBeNull();
     expect(screen.queryByRole("button", { name: /grant panel/ })).toBeNull();
 
