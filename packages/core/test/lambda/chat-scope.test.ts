@@ -18,7 +18,8 @@ describe("chat scope", () => {
     expect(prompt).toContain("<user>What does my uploaded budget say about staff costs?</user>");
   });
 
-  it("doesn't double the passed marker", () => {
-    expect(getPromptText("MA")).toContain("writing (passed) right after that date unless the sentence already says it has passed");
+  it("lists every date for applying, including passed earlier steps", () => {
+    expect(getPromptText("MA")).toContain("including pre-applications, letters of intent and other required earlier steps, even when they have passed");
+    expect(getPromptText("MA")).not.toContain("unless the sentence already says it has passed");
   });
 });
