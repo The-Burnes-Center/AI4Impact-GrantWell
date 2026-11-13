@@ -165,6 +165,21 @@ describe("SectionsEditor sections", () => {
   });
 });
 
+describe("SectionsEditor opened from Review", () => {
+  it("opens the section Review asked for, once", async () => {
+    localStorage.setItem("gw:draft:s1:openSection", JSON.stringify("budget"));
+    const fake: Fake = {
+      row: { session_id: "s1", status: "editing_sections", sections: { budget: "Money" }, section_order: ORDER, rev: 1 },
+    };
+    stubServer(fake);
+    renderApp(<Editor />);
+
+    const editor = await screen.findByRole("textbox", { name: "Budget" });
+    await waitFor(() => expect(editorText(editor)).toBe("Money"));
+    expect(localStorage.getItem("gw:draft:s1:openSection")).toBe("null");
+  });
+});
+
 describe("SectionsEditor versions", () => {
   const saveVersion = async (versionStatus: number) => {
     const fake: Fake = {

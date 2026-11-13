@@ -16,7 +16,6 @@
 .marketing .welcome-modal-btn--primary,
 .marketing .help-modal__confirm-btn,
 .marketing .checklist-help-btn,
-.marketing .ra-export-pdf-btn,
 .marketing .se-save-btn,
 .marketing .se-next-btn,
 .marketing .pg-upload-btn,
@@ -26,27 +25,6 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  white-space: nowrap;
-}
-.marketing .ra-edit-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 12px 26px;
-  border-radius: var(--gw-radius-button);
-  background-color: transparent;
-  color: var(--mk-green);
-  border: 1px solid var(--mk-green);
-  font-family: var(--gw-font-button);
-  font-size: 13px;
-  line-height: 22px;
-  font-weight: 600;
-  letter-spacing: var(--gw-button-letter-spacing, 1.3px);
-  text-transform: var(--gw-button-text-transform);
-  text-decoration: none;
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
   white-space: nowrap;
 }
 
@@ -64,23 +42,12 @@
   gap: 10px;
   white-space: nowrap;
 }
-.marketing .ra-edit-btn:hover {
-  background-color: var(--mk-green);
-  color: var(--gw-color-text-inverse);
-  border-color: var(--mk-green);
-}
-
-.marketing .ra-edit-btn:active {
-  transform: translateY(1px);
-}
 
 /* ==========================================================================
  * Auth-card surface (white, soft shadow, 16px radius)
  * ======================================================================== */
 .marketing .history-card,
 .marketing .resource-card,
-.marketing .ra-card,
-.marketing .ra-stat-card,
 .marketing .se-editor-card,
 .marketing .se-checklist-card {
   background-color: var(--mk-white);

@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import type { Components } from "react-markdown";
 import { useApiClient } from "../../hooks/use-api-client";
 import { getCurrentUser } from "aws-amplify/auth";
-import { LuFileText, LuDownload, LuArrowLeft, LuSquarePen, LuInfo, LuCircleCheckBig, LuTriangleAlert, LuChevronDown, LuEye } from "react-icons/lu";
-import { readDraftCache, pollForExportUrl } from "../../common/helpers/document-editor-utils";
+import { LuArrowLeft, LuInfo, LuTriangleAlert } from "react-icons/lu";
+import { readDraftCache, writeDraftCache, pollForExportUrl } from "../../common/helpers/document-editor-utils";
 import {
   exportSections,
   grantSections,
@@ -10,6 +11,19 @@ import {
   toSectionId,
   type ApplicationSection,
 } from "../../common/helpers/application-sections";
+import {
+  findPlaceholders,
+  isOverLimit,
+  measureSection,
+  pagesForWords,
+  parseNarrativePageLimit,
+  parseSectionLimit,
+  remarkPlaceholderMarks,
+  type SectionLimit,
+  type TextMeasure,
+} from "../../common/helpers/section-checks";
+import { normalizeSectionMarkdown } from "../../components/document-editor/rich-text/section-markdown";
+import ModelMarkdown from "../../components/common/ModelMarkdown";
 import StepBand from "../../components/ui/StepBand";
 import "../../styles/document-editor.css";
 
@@ -30,6 +44,59 @@ const PDF_EXPORT_POLL_MS = 2000;
 /** Must stay under the generator's own 5-minute Lambda timeout. */
 const PDF_EXPORT_TIMEOUT_MS = 4 * 60 * 1000;
 
+interface SectionCheck {
+  section: ApplicationSection;
+  text: string;
+  drafted: boolean;
+  opened: boolean;
+  measure: TextMeasure;
+  limit: SectionLimit | null;
+  over: boolean;
+  placeholders: number;
+  status: string | null;
+  warn: boolean;
+}
+
+const plural = (n: number, one: string, many = `${one}s`) => (n === 1 ? one : many);
+const formatNumber = (n: number) => n.toLocaleString("en-US");
+
+function statusOf(check: Omit<SectionCheck, "status" | "warn">): Pick<SectionCheck, "status" | "warn"> {
+  if (!check.drafted) return { status: "Not drafted", warn: true };
+  if (check.over) return { status: "Over limit", warn: true };
+  if (!check.opened) return { status: "Not opened", warn: true };
+  if (check.placeholders > 0) return { status: `${check.placeholders} to fill`, warn: false };
+  return { status: null, warn: false };
+}
+
+function lengthLine({ measure, limit, over }: SectionCheck): string | null {
+  if (!limit) return null;
+  const unit = plural(limit.max, limit.unit.slice(0, -1), limit.unit);
+  if (limit.unit === "pages") {
+    return `About ${measure.pages} of ${formatNumber(limit.max)} ${unit}${over ? ", over the limit." : "."}`;
+  }
+  const used = measure[limit.unit];
+  return `${formatNumber(used)} of ${formatNumber(limit.max)} ${unit}${over ? `, ${formatNumber(used - limit.max)} over.` : "."}`;
+}
+
+const PREVIEW_COMPONENTS: Components = {
+  mark({ children }) {
+    return (
+      <mark className="ra-mark">
+        <span className="visually-hidden">Placeholder: </span>
+        {children}
+      </mark>
+    );
+  },
+  h1: ({ children }) => <h4>{children}</h4>,
+  h2: ({ children }) => <h4>{children}</h4>,
+  h3: ({ children }) => <h4>{children}</h4>,
+  h4: ({ children }) => <h5>{children}</h5>,
+  h5: ({ children }) => <h5>{children}</h5>,
+  h6: ({ children }) => <h5>{children}</h5>,
+};
+
+const PREVIEW_PLUGINS = [remarkPlaceholderMarks];
+
 const ReviewApplication: React.FC<ReviewApplicationProps> = ({
   selectedNofo,
   sessionId,
@@ -37,17 +104,17 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
 }) => {
   const [sections, setSections] = useState<ApplicationSection[]>([]);
   const [sectionAnswers, setSectionAnswers] = useState<Record<string, string>>({});
-  const [completenessPassed, setCompletenessPassed] = useState(false);
-  const [unviewedSections, setUnviewedSections] = useState<string[]>([]);
-  const [stats, setStats] = useState({ wordCount: 0, pageCount: 0, complete: 0 });
+  const [loaded, setLoaded] = useState(false);
+  const [narrativePageLimit, setNarrativePageLimit] = useState<number | null>(null);
+  const [viewedIds, setViewedIds] = useState<string[]>([]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [exportingFormat, setExportingFormat] = useState<ExportFormat | null>(null);
-  const [exportDropdownOpen, setExportDropdownOpen] = useState(false);
   const [exportStatus, setExportStatus] = useState("");
   const [exportError, setExportError] = useState<string | null>(null);
   const [includeContactDetails, setIncludeContactDetails] = useState(false);
   const [grantType, setGrantType] = useState<string | null>(null);
-  const exportDropdownRef = useRef<HTMLDivElement>(null);
-  const exportTriggerRef = useRef<HTMLButtonElement>(null);
+  const previewHeadingRef = useRef<HTMLHeadingElement>(null);
+  const focusPreviewRef = useRef(false);
   const exportInFlightRef = useRef(false);
   const apiClient = useApiClient();
 
@@ -73,9 +140,12 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
           );
           setSections(resolved.sections);
           setSectionAnswers(resolved.answers);
+          setNarrativePageLimit(parseNarrativePageLimit(result?.data));
         }
       } catch (error) {
         console.error("Error loading draft data:", error);
+      } finally {
+        setLoaded(true);
       }
     };
 
@@ -101,70 +171,75 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
 
   useEffect(() => {
     if (sections.length === 0) return;
-    const viewed = (readDraftCache<string[]>(sessionId, "sectionsViewed") || []).map(
-      (key) => toSectionId(key, sections) ?? key
+    setViewedIds(
+      (readDraftCache<string[]>(sessionId, "sectionsViewed") || []).map((key) => toSectionId(key, sections) ?? key)
     );
-    setUnviewedSections(sections.filter((s) => !viewed.includes(s.id)).map((s) => s.name));
+    setSelectedId((current) => (current && sections.some((s) => s.id === current) ? current : sections[0].id));
   }, [sections, sessionId]);
 
+  const checks = useMemo<SectionCheck[]>(
+    () =>
+      sections.map((section) => {
+        const text = sectionAnswers[section.id] || "";
+        const measure = measureSection(text);
+        const limit = parseSectionLimit(section.name, section.description);
+        const base = {
+          section,
+          text,
+          drafted: text.trim().length > 0,
+          opened: viewedIds.includes(section.id),
+          measure,
+          limit,
+          over: !!limit && isOverLimit(measure, limit),
+          placeholders: findPlaceholders(text).length,
+        };
+        return { ...base, ...statusOf(base) };
+      }),
+    [sections, sectionAnswers, viewedIds]
+  );
+
   useEffect(() => {
-    if (sections.length > 0) {
-      const complete = sections.filter(
-        (s) => (sectionAnswers[s.id] || "").trim().length > 0
-      ).length;
-      setCompletenessPassed(complete === sections.length);
+    if (!focusPreviewRef.current) return;
+    focusPreviewRef.current = false;
+    previewHeadingRef.current?.focus();
+  }, [selectedId]);
 
-      const allText = sections
-        .map((s) => sectionAnswers[s.id] || "")
-        .join(" ");
-      const wordCount = allText.trim().split(/\s+/).filter(Boolean).length;
-      const pageCount = Math.max(1, Math.round(wordCount / 300));
-      setStats({ wordCount, pageCount, complete });
-    }
-  }, [sections, sectionAnswers]);
+  const toCheck = checks.filter((c) => c.status).length;
+  const narrativePages = pagesForWords(checks.reduce((total, c) => total + c.measure.words, 0));
+  const summary = loaded
+    ? [
+        toCheck === 0 ? "Nothing to check" : `${toCheck} ${plural(toCheck, "thing")} to check`,
+        narrativePageLimit
+          ? `about ${narrativePages} of ${narrativePageLimit} narrative ${plural(narrativePageLimit, "page")}${
+              narrativePages > narrativePageLimit ? ", over the limit" : ""
+            }`
+          : null,
+      ]
+        .filter(Boolean)
+        .join(" · ")
+    : undefined;
 
-  // Close export dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (exportDropdownRef.current && !exportDropdownRef.current.contains(e.target as Node)) {
-        setExportDropdownOpen(false);
-      }
-    };
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && exportDropdownOpen) {
-        setExportDropdownOpen(false);
-        const trigger = exportDropdownRef.current?.querySelector<HTMLElement>('[aria-haspopup]');
-        trigger?.focus();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleEscape);
-    if (exportDropdownOpen) {
-      requestAnimationFrame(() => {
-        const firstItem = exportDropdownRef.current?.querySelector<HTMLElement>('[role="menuitem"]');
-        firstItem?.focus();
-      });
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscape);
-    };
-  }, [exportDropdownOpen]);
+  const selected = checks.find((c) => c.section.id === selectedId) ?? null;
 
-  const handleExportMenuKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    const items = Array.from(
-      exportDropdownRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? []
-    );
-    const currentIndex = items.indexOf(document.activeElement as HTMLElement);
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      const next = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
-      items[next]?.focus();
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      const prev = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
-      items[prev]?.focus();
+  const markOpened = (id: string) => {
+    const seen = readDraftCache<string[]>(sessionId, "sectionsViewed") || [];
+    if (!seen.includes(id)) writeDraftCache(sessionId, "sectionsViewed", [...seen, id]);
+    setViewedIds((current) => (current.includes(id) ? current : [...current, id]));
+  };
+
+  const chooseSection = (id: string) => {
+    markOpened(id);
+    if (id === selectedId) {
+      previewHeadingRef.current?.focus();
+      return;
     }
+    focusPreviewRef.current = true;
+    setSelectedId(id);
+  };
+
+  const editSection = (id: string) => {
+    writeDraftCache(sessionId, "openSection", id);
+    onNavigate("sectionEditor");
   };
 
   const fetchDraftForExport = async () => {
@@ -224,8 +299,6 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
 
     const label = EXPORT_LABELS[format];
     const filename = `grant-application.${format}`;
-    setExportDropdownOpen(false);
-    exportTriggerRef.current?.focus();
     setExportingFormat(format);
     setExportError(null);
     setExportStatus(`Generating ${label}. This may take a moment.`);
@@ -278,117 +351,147 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
     }
   };
 
-  const completenessClass = completenessPassed
-    ? "gw-alert--success"
-    : "gw-alert--warning";
+  const exportButton = (format: ExportFormat, text: string, variant: string) => (
+    <button
+      type="button"
+      className={`gw-btn ${variant} ra-export-btn`}
+      onClick={() => runExport(format)}
+      // Stays focusable while busy, so focus is not lost from the button that was pressed.
+      aria-disabled={exportingFormat !== null || undefined}
+      aria-busy={exportingFormat === format || undefined}
+    >
+      {exportingFormat === format ? (
+        <>
+          <span className="ra-export-btn__spinner" aria-hidden="true" />
+          {`Generating ${EXPORT_LABELS[format]}…`}
+        </>
+      ) : (
+        text
+      )}
+    </button>
+  );
+
+  const selectedLength = selected ? lengthLine(selected) : null;
 
   return (
     <div className="ra-container">
-      {/* Review Section */}
-      <div className="ra-card">
-        <StepBand title="Review" />
+      <StepBand
+        title="Review"
+        description={summary}
+        className="ra-band"
+        actions={
+          <>
+            {exportButton("docx", "Download Word", "gw-btn--inverse-outline")}
+            {exportButton("pdf", "Download PDF", "gw-btn--inverse")}
+          </>
+        }
+      />
 
-        <div className="ra-stats-grid">
-          <div className="ra-stat-card">
-            <div className="ra-stat-card__value ra-stat-card__value--words">
-              {stats.wordCount}
-            </div>
-            <div className="ra-stat-card__label">Total word count</div>
-            <div className="ra-stat-card__sublabel">Across all sections</div>
-          </div>
-
-          <div className="ra-stat-card">
-            <div className="ra-stat-card__value ra-stat-card__value--pages">
-              {stats.pageCount}
-            </div>
-            <div className="ra-stat-card__label">Estimated pages</div>
-            <div className="ra-stat-card__sublabel">In PDF format</div>
-          </div>
-
-          <div className="ra-stat-card">
-            <div className={`ra-stat-card__value ${completenessPassed ? "ra-stat-card__value--passed" : "ra-stat-card__value--incomplete"}`}>
-              {stats.complete}/{sections.length}
-            </div>
-            <div className="ra-stat-card__label">Completion status</div>
-            <div className="ra-stat-card__sublabel">Sections complete</div>
-          </div>
-        </div>
-
-        {/* Completeness Check Message */}
-        <div className={`gw-alert ${completenessClass} ra-compliance`}>
-          {completenessPassed
-            ? <LuCircleCheckBig size={20} aria-hidden="true" />
-            : <LuTriangleAlert size={20} aria-hidden="true" />
-          }
-          <div>
-            <h3 className="gw-alert__title">
-              {completenessPassed
-                ? "All sections complete"
-                : "Some sections incomplete"}
-            </h3>
-            <p className="ra-compliance__text">
-              {completenessPassed
-                ? "All required sections have been completed. Review your content for accuracy and alignment with the grant requirements before exporting."
-                : "Please complete all required sections before exporting your application."}
-            </p>
-          </div>
-        </div>
+      <div className="ra-export-bar">
+        <label className="ra-export-option">
+          <input
+            type="checkbox"
+            checked={includeContactDetails}
+            onChange={(e) => setIncludeContactDetails(e.target.checked)}
+            disabled={exportingFormat !== null}
+          />
+          Include contact name and email on the cover page
+        </label>
+        <p className="ra-export-note">You can download at any time. The checks below only point out what to look at.</p>
       </div>
 
-      {/* Before You Export Section */}
-      <div className="ra-card">
-        <h3 className="ra-export-section__title">Before you export</h3>
+      {exportError && (
+        <div className="gw-alert gw-alert--urgent ra-export-error">
+          <LuTriangleAlert className="ra-export-error__icon" aria-hidden="true" />
+          <span>{exportError}</span>
+        </div>
+      )}
 
-        {unviewedSections.length > 0 && (
-          <div className="gw-alert gw-alert--warning ra-unviewed">
-            <LuEye size={20} aria-hidden="true" />
-            <div className="ra-unviewed__body">
-              <h4 className="gw-alert__title">
-                {unviewedSections.length === 1
-                  ? "1 section hasn't been opened yet"
-                  : `${unviewedSections.length} sections haven't been opened yet`}
-              </h4>
-              <p className="ra-unviewed__text">
-                This content was drafted for you and never reviewed. You can still
-                export, but reading it first is strongly recommended.
-              </p>
-              <ul className="ra-unviewed__list">
-                {unviewedSections.map((name) => (
-                  <li key={name} className="ra-unviewed__item">
-                    {name}
+      {/* Mounted before any export starts: a region that appears together with
+          its first message is routinely missed by screen readers. */}
+      <div role="status" aria-live="polite" className="visually-hidden">
+        {exportStatus}
+      </div>
+
+      {checks.length > 0 && (
+        <div className="ra-layout">
+          <nav className="ra-sections" aria-label="Sections">
+            <ul className="ra-sections__list">
+              {checks.map((check) => {
+                const current = check.section.id === selectedId;
+                return (
+                  <li key={check.section.id}>
+                    <button
+                      type="button"
+                      className="ra-sections__item"
+                      aria-current={current ? "true" : undefined}
+                      onClick={() => chooseSection(check.section.id)}
+                    >
+                      <span className="ra-sections__name">{check.section.name}</span>
+                      {check.status && (
+                        <span className={check.warn ? "ra-sections__status ra-sections__status--warn" : "ra-sections__status"}>
+                          <span className="visually-hidden">, </span>
+                          {check.status}
+                        </span>
+                      )}
+                    </button>
                   </li>
-                ))}
-              </ul>
-              <button
-                type="button"
-                onClick={() => onNavigate("sectionEditor")}
-                className="gw-btn gw-btn--secondary"
-              >
-                Review these sections
-              </button>
-            </div>
-          </div>
-        )}
+                );
+              })}
+            </ul>
+          </nav>
 
-        <div className="ra-export-grid">
-          <button
-            onClick={() => onNavigate("sectionEditor")}
-            className="ra-edit-btn"
-          >
-            <div className="ra-edit-btn__icon-wrapper">
-              <LuSquarePen className="ra-edit-btn__icon" aria-hidden="true" />
-            </div>
-            <div className="ra-edit-btn__text">
-              <div className="ra-edit-btn__title">Make final edits</div>
-              <div className="ra-edit-btn__subtitle">
-                Return to Section editor
+          {selected && (
+            <section className="ra-preview" aria-labelledby="ra-preview-title">
+              <div className="ra-preview__head">
+                <h3 id="ra-preview-title" ref={previewHeadingRef} tabIndex={-1} className="ra-preview__title">
+                  {selected.section.name}
+                </h3>
+                <button type="button" className="ra-preview__edit" onClick={() => editSection(selected.section.id)}>
+                  Edit this section
+                  <span className="visually-hidden">: {selected.section.name}</span>
+                </button>
               </div>
-            </div>
-          </button>
-        </div>
-      </div>
 
-      {/* What Happens After Export Section */}
+              <p className="ra-preview__status">
+                {!selected.drafted ? (
+                  <strong className="ra-preview__warn">Not drafted yet. Empty sections are left out of the download.</strong>
+                ) : (
+                  <>
+                    {selectedLength &&
+                      (selected.over ? (
+                        <strong className="ra-preview__warn">{selectedLength}</strong>
+                      ) : (
+                        <span>{selectedLength}</span>
+                      ))}
+                    {!selected.opened && (
+                      <strong className="ra-preview__warn">
+                        {selectedLength ? " " : ""}Drafted for you and not opened yet.
+                      </strong>
+                    )}
+                    {selected.placeholders > 0 && (
+                      <span>
+                        {selectedLength || !selected.opened ? " " : ""}
+                        {`${selected.placeholders} ${plural(selected.placeholders, "placeholder")} to fill, highlighted below.`}
+                      </span>
+                    )}
+                    {!selectedLength && selected.opened && selected.placeholders === 0 && (
+                      <span>Nothing to check in this section.</span>
+                    )}
+                  </>
+                )}
+              </p>
+
+              {selected.drafted && (
+                <ModelMarkdown className="ra-preview__text" remarkPlugins={PREVIEW_PLUGINS} components={PREVIEW_COMPONENTS}>
+                  {normalizeSectionMarkdown(selected.text)}
+                </ModelMarkdown>
+              )}
+            </section>
+          )}
+        </div>
+      )}
+
       <div className="ra-info-section">
         <div className="ra-info-header">
           <LuInfo className="ra-info-header__icon" aria-hidden="true" />
@@ -398,8 +501,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
         </div>
         <ul className="ra-info-list">
           <li className="ra-info-list__item">
-            You&apos;ll download a professionally formatted PDF of your
-            application
+            You&apos;ll download a formatted Word document or PDF of your application
           </li>
           {grantType === "federal" ? (
             <>
@@ -424,113 +526,15 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
         </ul>
       </div>
 
-      {exportingFormat && (
-        <p className="ra-export-progress">
-          <span className="ra-export-progress__spinner" aria-hidden="true" />
-          {`Generating ${EXPORT_LABELS[exportingFormat]}…`}
-        </p>
-      )}
-
-      {exportError && (
-        <div className="gw-alert gw-alert--urgent ra-export-error">
-          <LuTriangleAlert className="ra-export-error__icon" aria-hidden="true" />
-          <span>{exportError}</span>
-        </div>
-      )}
-
-      {/* Mounted before any export starts: a region that appears together with
-          its first message is routinely missed by screen readers. */}
-      <div role="status" aria-live="polite" className="visually-hidden">
-        {exportStatus}
-      </div>
-
-      <label className="ra-export-option">
-        <input
-          type="checkbox"
-          checked={includeContactDetails}
-          onChange={(e) => setIncludeContactDetails(e.target.checked)}
-          disabled={exportingFormat !== null}
-        />
-        Include contact name and email on the cover page
-      </label>
-
-      {/* Action Buttons */}
       <div className="ra-actions">
         <button
+          type="button"
           onClick={() => onNavigate("sectionEditor")}
           className="gw-btn gw-btn--secondary ra-back-btn"
         >
           <LuArrowLeft className="ra-back-btn__icon" aria-hidden="true" />
           Back to section editor
         </button>
-
-        {/* Export As dropdown */}
-        <div className="ra-export-dropdown" ref={exportDropdownRef}>
-          <button
-            id="ra-export-trigger"
-            ref={exportTriggerRef}
-            onClick={() => {
-              if (exportingFormat === null) setExportDropdownOpen((o) => !o);
-            }}
-            disabled={!completenessPassed}
-            // Stays focusable while busy: export moves focus here once the menu closes.
-            aria-disabled={exportingFormat !== null || undefined}
-            className="gw-btn gw-btn--primary ra-export-pdf-btn"
-            aria-haspopup="menu"
-            aria-expanded={exportDropdownOpen}
-            aria-busy={exportingFormat !== null}
-          >
-            {exportingFormat ? (
-              <>
-                <span className="ra-export-pdf-btn__spinner" aria-hidden="true" />
-                {`Generating ${EXPORT_LABELS[exportingFormat]}…`}
-              </>
-            ) : (
-              <>
-                <LuDownload className="ra-export-pdf-btn__icon" aria-hidden="true" />
-                Export as
-                <LuChevronDown
-                  size={16}
-                  style={{ marginLeft: "6px" }}
-                  aria-hidden="true"
-                />
-              </>
-            )}
-          </button>
-
-          {exportDropdownOpen && (
-            <div
-              className="ra-export-dropdown__menu"
-              role="menu"
-              tabIndex={-1}
-              aria-labelledby="ra-export-trigger"
-              onKeyDown={handleExportMenuKeyDown}
-              // Tabbing out closes it, so an open menu is never left behind.
-              onBlur={(e) => {
-                if (!exportDropdownRef.current?.contains(e.relatedTarget as Node | null)) setExportDropdownOpen(false);
-              }}
-            >
-              <button
-                className="ra-export-dropdown__item"
-                role="menuitem"
-                onClick={() => runExport("pdf")}
-                disabled={exportingFormat !== null}
-              >
-                <LuDownload size={14} aria-hidden="true" />
-                PDF (.pdf)
-              </button>
-              <button
-                className="ra-export-dropdown__item"
-                role="menuitem"
-                onClick={() => runExport("docx")}
-                disabled={exportingFormat !== null}
-              >
-                <LuFileText size={14} aria-hidden="true" />
-                Word Document (.docx)
-              </button>
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );

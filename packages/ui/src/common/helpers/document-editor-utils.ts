@@ -57,7 +57,8 @@ export type DraftCachePart =
   | "questionnaire"
   | "sections"
   | "additionalInfo"
-  | "sectionsViewed";
+  | "sectionsViewed"
+  | "openSection";
 
 const DRAFT_CACHE_PREFIX = "gw:draft";
 
