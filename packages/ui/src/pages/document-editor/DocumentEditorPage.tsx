@@ -260,11 +260,17 @@ const DocumentEditor: React.FC = () => {
     } catch (err) {
       console.error("Failed to start new document:", err);
       setError(ERROR_MESSAGES.START_FAILED);
-    } finally {
       setStartingDraft(false);
+    } finally {
       setGrantPickerOpen(false);
     }
   }, [startDraft, navigate, setError]);
+
+  // The router can commit the new session's URL after the picker closes; until it does,
+  // stay on the loading view rather than flash a session-less form.
+  useEffect(() => {
+    if (sessionId) setStartingDraft(false);
+  }, [sessionId]);
 
   const handleGrantPicked = useCallback(async (grant: PickedGrant) => {
     addToRecentlyViewed(grant);
