@@ -2,7 +2,10 @@
 .landing-grants-table-container {
   width: 100%;
   margin: 0 auto;
-  padding: 20px 0;
+}
+
+.landing-grants-table-container .gw-pagination {
+  padding-bottom: 0;
 }
 
 .landing-table-loading {
@@ -15,8 +18,8 @@
 .landing-table-filters {
   display: flex;
   align-items: flex-end;
-  gap: 15px;
-  margin-bottom: 20px;
+  gap: var(--gw-spacing-lg);
+  margin-bottom: var(--gw-spacing-lg);
   flex-wrap: wrap;
 }
 
@@ -237,15 +240,14 @@
   margin: 0;
 }
 
-/* Pagination */
+/* Show more / Show less for AI results */
 .landing-table-pagination {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  margin-top: 20px;
-  padding: 15px 0;
+  margin-top: var(--gw-spacing-lg);
   flex-wrap: wrap;
-  gap: 15px;
+  gap: var(--gw-spacing-lg);
 }
 
 /* Search Status Banner */
@@ -253,8 +255,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
-  gap: 12px;
+  margin-bottom: var(--gw-spacing-lg);
+  gap: var(--gw-spacing-md);
 }
 
 .search-clear-button {

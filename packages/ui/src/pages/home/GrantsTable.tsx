@@ -605,7 +605,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
 
       {/* Show More / Show Less for AI results */}
       {!awaitingAIResults && hasRankedResults && filteredNofos.length > AI_INITIAL_LIMIT && (
-        <div className="landing-table-pagination" style={{ justifyContent: "center" }}>
+        <div className="landing-table-pagination">
           <button
             className="gw-btn gw-btn--primary landing-show-more-button"
             onClick={() => setShowAllAIResults((prev) => !prev)}
