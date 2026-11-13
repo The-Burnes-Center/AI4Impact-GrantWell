@@ -24,7 +24,7 @@ export function hasRole(roles: string[], role: string): boolean {
 }
 
 const ROLE_LABELS: Record<string, string> = {
-  PlatformAdmin: "Platform Admin",
+  PlatformAdmin: "Platform admin",
   Admin: "Admin",
   Developer: "Developer",
   User: "User",

@@ -217,7 +217,7 @@ This release makes it easier to write and keep track of your applications. You c
 - New **Reset two-step verification** action for a user who has lost access to their authenticator app; it also signs them out everywhere, and they can set up a new app the next time they sign in
 - Reset is available for the same users you can already edit, so state admins can reset users in their own state
 - Deleting a user now also deletes their chats, applications and supporting documents, and the confirmation says so
-- Roles are shown with readable names such as "Platform Admin"
+- Roles are shown with readable names such as "Platform admin"
 - **Search users** by any part of their email address or username; state admins see only users in their own state
 - If User Management can't load, it shows the reason instead of a general error
 

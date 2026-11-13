@@ -219,6 +219,15 @@ describe("UserManagementTab", () => {
     expect(screen.getByRole("button", { name: "More actions for p002@example.org" })).toBeInTheDocument();
   });
 
+  it("names the roles in sentence case in the legend and the role picker", async () => {
+    stubFetch({ [USERS]: listed([member(1)]) });
+    renderTab();
+    await screen.findByText("p001@example.org");
+    const legend = screen.getByLabelText("Role definitions");
+    expect(within(legend).getAllByRole("term").map((t) => t.textContent)).toEqual(["User", "Admin", "Platform admin", "Developer"]);
+    expect(within(screen.getByLabelText("Role for p001@example.org")).getByRole("option", { name: "Platform admin" })).toBeInTheDocument();
+  });
+
   it("shows Save only on a row you've changed, and no menu on your own row", async () => {
     stubFetch({ [USERS]: json({ users: [user(0), user(1)], nextPaginationToken: null, pageSize: 25 }) });
     const { user: ui } = renderTab();

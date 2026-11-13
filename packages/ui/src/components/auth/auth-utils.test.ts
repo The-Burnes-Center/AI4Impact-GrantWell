@@ -68,7 +68,7 @@ describe("parseRoleClaim", () => {
   });
 
   it("labels PlatformAdmin for people and passes unknown roles through", () => {
-    expect(roleLabel("PlatformAdmin")).toBe("Platform Admin");
+    expect(roleLabel("PlatformAdmin")).toBe("Platform admin");
     expect(roleLabel("Auditor")).toBe("Auditor");
   });
 });

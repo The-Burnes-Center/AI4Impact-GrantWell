@@ -23,19 +23,19 @@ const EMAIL_PATTERN = /\S+@\S+\.\S+/;
 
 type RoleOption = { value: UserRolePreset; label: string; requiresDeveloper?: boolean };
 
-// Platform Admin spans states, so a single-state deployment has none.
+// Platform admin spans states, so a single-state deployment has none.
 const allRoleOptions: RoleOption[] = ([
   { value: "user", label: "User" },
   { value: "admin", label: "Admin" },
-  { value: "platformadmin", label: "Platform Admin", requiresDeveloper: true },
+  { value: "platformadmin", label: "Platform admin", requiresDeveloper: true },
   { value: "developer", label: "Developer", requiresDeveloper: true },
 ] as RoleOption[]).filter((option) => !(SINGLE_STATE && option.value === "platformadmin"));
 
 const ROLE_DEFINITIONS: Record<UserRolePreset, string> = {
   user: "Browse grants, view requirements, and draft applications. No admin access.",
-  admin: "Everything a User can do, plus the Admin dashboard: manage grants, review processing, and manage user roles (User or Admin only). Scoped to their assigned state.",
-  platformadmin: "An Admin with no state restriction: manages grants and users across every state. Cannot be scoped to a state.",
-  developer: "Everything a Platform Admin can do, plus manage feature rollouts and assign any role, including Developer.",
+  admin: "Everything a user can do, plus the Admin dashboard: manage grants, review processing, and manage user roles (User or Admin only). Scoped to their assigned state.",
+  platformadmin: "An admin with no state restriction: manages grants and users across every state. Cannot be scoped to a state.",
+  developer: "Everything a platform admin can do, plus manage feature rollouts and assign any role, including Developer.",
 };
 
 const PAGE_SIZE_OPTIONS = [25, 50, 100];
