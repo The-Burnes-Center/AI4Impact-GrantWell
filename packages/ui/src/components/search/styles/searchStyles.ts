@@ -1,13 +1,5 @@
 import React from "react";
 
-export const searchContainerStyle: React.CSSProperties = {
-  position: "relative",
-  maxWidth: "650px",
-  width: "100%",
-  margin: "0 auto",
-  zIndex: 100,
-};
-
 export const inputContainerStyle: React.CSSProperties = {
   position: "relative",
   width: "100%",
