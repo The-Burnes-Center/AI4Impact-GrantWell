@@ -2543,3 +2543,9 @@ select.form-input {
   color: var(--gw-color-text-secondary);
   text-align: center;
 }
+
+.review-expanded-cell--block {
+  margin-top: var(--gw-spacing-xs);
+  border-top: 1px solid var(--gw-color-border);
+  border-bottom: none;
+}

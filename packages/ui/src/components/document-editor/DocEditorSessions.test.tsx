@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { json, stubFetch } from "../../test/fetch-routes";
 import { renderApp } from "../../test/render";
 import { NotificationProvider } from "../notifications/NotificationManager";
@@ -115,5 +115,36 @@ describe("DocEditorSessions table semantics", () => {
     renderList();
     await rowFor("Fiber plan");
     expect(screen.getByText("Showing 1 to 2 of 2 applications")).toHaveAttribute("role", "status");
+  });
+});
+
+describe("DocEditorSessions on a phone", () => {
+  it("renders a list of cards with labelled facts, a select box per card, Select all and Sort by", async () => {
+    vi.stubGlobal("matchMedia", (query: string) => ({ matches: query === "(max-width: 767px)" }));
+    try {
+      const { user } = renderList();
+      const list = await screen.findByRole("list", { name: "Applications" });
+      expect(screen.queryByRole("table")).toBeNull();
+
+      const cards = within(list).getAllByRole("listitem");
+      expect(cards.map((c) => within(c).getByRole("heading", { level: 2 }).textContent)).toEqual(["Transit study", "Fiber plan"]);
+      const fiber = cards[1];
+      expect(within(fiber).getByRole("link", { name: "Fiber plan" })).toHaveAttribute(
+        "href",
+        "/document-editor/a?step=sectionEditor&grant=Broadband"
+      );
+      expect([...fiber.querySelectorAll("dt")].map((dt) => dt.textContent)).toEqual(["Grant", "Last modified", "Status", "Outcome"]);
+      expect(await within(fiber).findByText("Awarded · $40,000")).toBeInTheDocument();
+      expect(within(fiber).getByRole("checkbox", { name: /^Select application: Fiber plan, last modified / })).not.toBeChecked();
+      expect(within(fiber).getByRole("button", { name: /^Update outcome for Fiber plan/ })).toHaveClass("gw-btn--secondary");
+
+      await user.click(screen.getByRole("checkbox", { name: "Select all applications" }));
+      expect(within(list).getAllByRole("checkbox").every((c) => (c as HTMLInputElement).checked)).toBe(true);
+
+      await user.selectOptions(screen.getByRole("combobox", { name: "Sort by" }), "title:asc");
+      expect(within(list).getAllByRole("heading", { level: 2 }).map((h) => h.textContent)).toEqual(["Fiber plan", "Transit study"]);
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 });

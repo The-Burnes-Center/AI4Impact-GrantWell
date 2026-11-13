@@ -17,8 +17,8 @@ interface ReviewExpandedRowProps {
   onActionComplete: () => void;
   addNotification: (type: string, message: string) => void;
   onCollapse: () => void;
-  /** Columns of the parent ARIA table this panel spans. */
-  colSpan: number;
+  /** Columns of the reviews table this panel spans; without it the panel is a plain block (the phone card list). */
+  colSpan?: number;
 }
 
 const BUSY_MESSAGES: Record<string, string> = {
@@ -51,17 +51,25 @@ const ReviewExpandedRow: React.FC<ReviewExpandedRowProps> = ({
   const [statusMounted, setStatusMounted] = useState(false);
   useEffect(() => setStatusMounted(true), []);
 
-  // The panel sits in the reviews table, which may only own rows, so it is a full-width row.
-  const asTableRow = (content: React.ReactNode) => (
-    <tr>
-      <td colSpan={colSpan} className="review-expanded-cell">
+  // In the reviews table, which may only own rows, the panel is a full-width row.
+  const asTableRow = (content: React.ReactNode) => {
+    const panel = (
+      <>
         <span role="status" className="visually-hidden">
           {!statusMounted ? "" : loading ? "Loading review details" : (actionInProgress && BUSY_MESSAGES[actionInProgress]) || ""}
         </span>
         {content}
-      </td>
-    </tr>
-  );
+      </>
+    );
+    if (colSpan === undefined) return <div className="review-expanded-cell review-expanded-cell--block">{panel}</div>;
+    return (
+      <tr>
+        <td colSpan={colSpan} className="review-expanded-cell">
+          {panel}
+        </td>
+      </tr>
+    );
+  };
 
   const loadDetail = useCallback(async () => {
     try {

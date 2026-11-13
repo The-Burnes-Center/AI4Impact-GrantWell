@@ -418,3 +418,25 @@ describe("requirements the grant doesn't support", () => {
     expect(screen.getByRole("button", { name: /^Approve as is — / })).not.toHaveAccessibleName(/recommended/);
   });
 });
+
+describe("ProcessingReviewTab on a phone", () => {
+  it("lists reviews as cards whose details open inside the card", async () => {
+    vi.stubGlobal("matchMedia", (query: string) => ({ matches: query === "(max-width: 767px)" }));
+    try {
+      const { user } = renderTab(json({ reviews: QUEUE, expiredOpenCount: 0 }));
+      const list = await screen.findByRole("list", { name: "Processing reviews" });
+      expect(screen.queryByRole("table")).toBeNull();
+      const cards = within(list).getAllByRole("listitem");
+      expect(cards.map((c) => within(c).getByRole("heading", { level: 4 }).textContent)).toEqual(QUEUE.map((r) => r.nofo_name));
+      expect([...cards[0].querySelectorAll("dt")].map((dt) => dt.textContent)).toEqual(["Reason", "Status", "Deadline", "In queue since"]);
+
+      await user.selectOptions(screen.getByRole("combobox", { name: "Sort by" }), "queued:oldest");
+      expect(within(list).getAllByRole("heading", { level: 4 })[0]).toHaveTextContent("Expired Grant");
+
+      await user.click(screen.getByRole("checkbox", { name: "Select all reviews" }));
+      expect(screen.getByText(`${QUEUE.length} selected`, { selector: ".review-bulk-bar__count" })).toBeInTheDocument();
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+});

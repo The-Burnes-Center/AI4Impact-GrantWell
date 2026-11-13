@@ -10,7 +10,7 @@ import { getCurrentUser } from "aws-amplify/auth";
 import { ApiClient } from "../../common/api-client/api-client";
 import { AppContext } from "../../common/app-context";
 import { DateTime } from "luxon";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { LuPlus, LuTrash, LuRefreshCw, LuCalendar } from "react-icons/lu";
 import { DeleteConfirmationModal } from "../common/DeleteConfirmationModal";
 import GrantPickerModal, { type PickedGrant } from "../common/GrantPickerModal";
@@ -23,6 +23,8 @@ import { v4 as uuidv4 } from "uuid";
 import { useNotifications } from "../notifications/NotificationManager";
 import "../../styles/dashboard.css";
 import SkeletonRows from "../ui/SkeletonRows";
+import { CardListItem, CardListToolbar } from "../ui/CardList";
+import { CARD_LIST_QUERY, useMediaQuery } from "../../hooks/use-media-query";
 
 export interface SessionsProps {
   readonly toolsOpen: boolean;
@@ -31,6 +33,13 @@ export interface SessionsProps {
 }
 
 type Session = import("../../common/api-client/sessions-client").SessionListItem;
+
+const CHAT_SORTS = [
+  { value: "time_stamp:desc", label: "Newest first" },
+  { value: "time_stamp:asc", label: "Oldest first" },
+  { value: "title:asc", label: "Title, A to Z" },
+  { value: "title:desc", label: "Title, Z to A" },
+];
 
 export default function Sessions(props: SessionsProps) {
   const appContext = useContext(AppContext);
@@ -119,17 +128,27 @@ export default function Sessions(props: SessionsProps) {
     setSelectedItems(e.target.checked ? paginatedItems : []);
   };
 
-  const handleSelectItem = (
-    item: Session,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    if (e.target.checked) {
+  const setItemSelected = (item: Session, checked: boolean) => {
+    if (checked) {
       setSelectedItems((prev) => [...prev, item]);
     } else {
       setSelectedItems((prev) =>
         prev.filter((i) => i.session_id !== item.session_id)
       );
     }
+  };
+
+  const handleSelectItem = (
+    item: Session,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => setItemSelected(item, e.target.checked);
+
+  const chatPath = (item: Session) =>
+    `/chat/${item.session_id}${item.document_identifier ? `?grant=${encodeURIComponent(item.document_identifier)}` : ""}`;
+
+  const openChat = (item: Session) => {
+    props.onSessionSelect?.(item.session_id);
+    navigate(chatPath(item));
   };
 
   const handleSort = (field: "title" | "time_stamp") => {
@@ -181,6 +200,18 @@ export default function Sessions(props: SessionsProps) {
       setShowGrantPicker(true);
     }
   };
+
+  const asCards = useMediaQuery(CARD_LIST_QUERY);
+
+  const emptyState = (
+    <div className="no-data">
+      <p>No chats</p>
+      <button type="button" className="gw-btn gw-btn--primary" onClick={newChat}>
+        <LuPlus size={16} aria-hidden="true" />
+        <span>New chat</span>
+      </button>
+    </div>
+  );
 
   const handleGrantPicked = (grant: PickedGrant) => {
     addToRecentlyViewed(grant);
@@ -252,6 +283,60 @@ export default function Sessions(props: SessionsProps) {
         }
       />
 
+      {asCards ? (
+        <>
+          <CardListToolbar
+            selectAll={{
+              checked: paginatedItems.length > 0 && selectedItems.length === paginatedItems.length,
+              onChange: (checked) => setSelectedItems(checked ? paginatedItems : []),
+              label: "Select all chats",
+              disabled: isLoading || sortedSessions.length === 0,
+            }}
+            sort={{
+              value: `${sortField}:${sortDirection}`,
+              options: CHAT_SORTS,
+              onChange: (value) => {
+                const [field, direction] = value.split(":") as ["title" | "time_stamp", "asc" | "desc"];
+                setSortField(field);
+                setSortDirection(direction);
+              },
+              disabled: isLoading,
+            }}
+          />
+          {isLoading ? (
+            <SkeletonRows label="Loading chats" />
+          ) : sortedSessions.length === 0 ? (
+            emptyState
+          ) : (
+            <ul className="gw-card-list" aria-label="Chats">
+              {paginatedItems.map((item) => (
+                <CardListItem
+                  key={item.session_id}
+                  select={{
+                    checked: selectedItems.some((i) => i.session_id === item.session_id),
+                    onChange: () => setItemSelected(item, !selectedItems.some((i) => i.session_id === item.session_id)),
+                    label: `Select ${item.title}, ${formatSessionTime(item.time_stamp)}`,
+                  }}
+                  title={
+                    <Link
+                      to={chatPath(item)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        openChat(item);
+                      }}
+                    >
+                      {item.title}
+                    </Link>
+                  }
+                  facts={[
+                    { label: "Time", value: <time dateTime={item.time_stamp}>{formatSessionTime(item.time_stamp)}</time> },
+                  ]}
+                />
+              ))}
+            </ul>
+          )}
+        </>
+      ) : (
       <TableScrollRegion label="Chats table" minWidth={520}>
       <div className="table-container">
         <table className="gw-table" aria-label="Chats">
@@ -297,13 +382,7 @@ export default function Sessions(props: SessionsProps) {
               {sortedSessions.length === 0 ? (
                 <tr>
                   <td className="row-cell row-cell--empty" colSpan={3}>
-                    <div className="no-data">
-                      <p>No chats</p>
-                      <button type="button" className="gw-btn gw-btn--primary" onClick={newChat}>
-                        <LuPlus size={16} aria-hidden="true" />
-                        <span>New chat</span>
-                      </button>
-                    </div>
+                    {emptyState}
                   </td>
                 </tr>
               ) : (
@@ -322,21 +401,7 @@ export default function Sessions(props: SessionsProps) {
                     </td>
                     <td className="row-cell">
                       <button
-                        onClick={() => {
-                          if (props.onSessionSelect) {
-                            props.onSessionSelect(item.session_id);
-                          }
-
-                          const queryParam = item.document_identifier
-                            ? `?grant=${encodeURIComponent(
-                                item.document_identifier
-                              )}`
-                            : "";
-
-                          navigate(
-                            `/chat/${item.session_id}${queryParam}`
-                          );
-                        }}
+                        onClick={() => openChat(item)}
                         style={{
                           color: "var(--gw-color-primary-hover)",
                           background: "none",
@@ -369,6 +434,7 @@ export default function Sessions(props: SessionsProps) {
         {isLoading && <SkeletonRows label="Loading chats" />}
       </div>
       </TableScrollRegion>
+      )}
 
       <div role="status" aria-live="polite" className="visually-hidden">
         {isLoading

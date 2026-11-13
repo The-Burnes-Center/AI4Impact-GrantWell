@@ -1,5 +1,5 @@
 import { screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { json, stubFetch } from "../../test/fetch-routes";
 import { renderApp } from "../../test/render";
 import { NotificationProvider } from "../notifications/NotificationManager";
@@ -74,5 +74,26 @@ describe("SessionList", () => {
     await user.click(screen.getByRole("button", { name: "Next page" }));
     expect(range).toHaveTextContent("Showing 21 to 25 of 25 chats");
     expect(within(screen.getByRole("table", { name: "Chats" })).getAllByRole("row")).toHaveLength(6);
+  });
+});
+
+describe("SessionList on a phone", () => {
+  it("lists chats as cards with a linked title, its time and a select box, sorted from Sort by", async () => {
+    vi.stubGlobal("matchMedia", (query: string) => ({ matches: query === "(max-width: 767px)" }));
+    try {
+      const { user } = renderList();
+      const list = await screen.findByRole("list", { name: "Chats" });
+      expect(screen.queryByRole("table")).toBeNull();
+      const first = within(list).getAllByRole("listitem")[0];
+      expect(within(first).getByRole("heading", { level: 2, name: "Chat 1" })).toBeInTheDocument();
+      expect(within(first).getByRole("link", { name: "Chat 1" })).toHaveAttribute("href", "/chat/s0");
+      expect(first.querySelector("dt")?.textContent).toBe("Time");
+      expect(within(first).getByRole("checkbox", { name: /^Select Chat 1,/ })).toBeInTheDocument();
+
+      await user.selectOptions(screen.getByRole("combobox", { name: "Sort by" }), "time_stamp:asc");
+      expect(within(list).getAllByRole("heading", { level: 2 })[0]).toHaveTextContent("Chat 25");
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 });

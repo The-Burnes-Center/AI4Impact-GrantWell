@@ -5,7 +5,7 @@ import PaginationControls from "../common/PaginationControls";
 import PageHeader from "../common/PageHeader";
 import { getCurrentUser } from "aws-amplify/auth";
 import { LuPlus, LuTrash, LuRefreshCw, LuCalendar, LuCheck } from "react-icons/lu";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Utils } from "../../common/utils";
 import { DraftStatus } from "../../common/api-client/drafts-client";
 import { DeleteConfirmationModal } from "../common/DeleteConfirmationModal";
@@ -20,6 +20,9 @@ import type { ApplicationOutcome } from "../../common/api-client/outcomes-client
 import { OUTCOME_LABELS, formatDollars, type OutcomeInput } from "../../common/application-outcomes";
 import "../../styles/dashboard.css";
 import SkeletonRows from "../ui/SkeletonRows";
+import { CardListItem, CardListToolbar } from "../ui/CardList";
+import { CARD_LIST_QUERY, useMediaQuery } from "../../hooks/use-media-query";
+import { statusToStep } from "../../common/helpers/document-editor-utils";
 
 export interface DocEditorSessionsProps {
   readonly toolsOpen: boolean;
@@ -38,6 +41,13 @@ interface Session {
   document_identifier?: string;
   status?: DraftStatus;
 }
+
+const APPLICATION_SORTS = [
+  { value: "last_modified:desc", label: "Last modified, newest first" },
+  { value: "last_modified:asc", label: "Last modified, oldest first" },
+  { value: "title:asc", label: "Title, A to Z" },
+  { value: "title:desc", label: "Title, Z to A" },
+];
 
 // Grant folder names end in "/", and titles made from them inherit it.
 const withoutTrailingSlash = (text: string) => text.replace(/\/+$/, "");
@@ -284,6 +294,23 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
     };
   };
 
+  const asCards = useMediaQuery(CARD_LIST_QUERY);
+
+  const applicationPath = (item: Session) =>
+    `/document-editor/${item.draft_id}?step=${statusToStep(item.status || "project_basics")}${
+      item.document_identifier ? `&grant=${encodeURIComponent(item.document_identifier)}` : ""
+    }`;
+
+  const emptyState = (
+    <div className="no-data">
+      <p>No applications</p>
+      <button type="button" className="gw-btn gw-btn--primary" onClick={newApplication} aria-label="Create new application">
+        <LuPlus size={16} aria-hidden="true" />
+        <span>New application</span>
+      </button>
+    </div>
+  );
+
   const handleGrantPicked = async (grant: PickedGrant) => {
     setStartingDraft(true);
     try {
@@ -387,6 +414,77 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
         }
       />
 
+      {asCards ? (
+        <>
+          <CardListToolbar
+            selectAll={{
+              checked: selectedItems.length === sessions.length && sessions.length > 0,
+              onChange: (checked) => setSelectedItems(checked ? sessions : []),
+              label: "Select all applications",
+              disabled: isLoading || sessions.length === 0,
+            }}
+            sort={{
+              value: `${sortField}:${sortDirection}`,
+              options: APPLICATION_SORTS,
+              onChange: (value) => {
+                const [field, direction] = value.split(":") as ["title" | "last_modified", "asc" | "desc"];
+                setSortField(field);
+                setSortDirection(direction);
+              },
+              disabled: isLoading,
+            }}
+          />
+          {isLoading ? (
+            <SkeletonRows label="Loading applications" />
+          ) : paginatedItems.length === 0 ? (
+            emptyState
+          ) : (
+            <ul className="gw-card-list" aria-label="Applications">
+              {paginatedItems.map((item) => {
+                const checked = selectedItems.some((i) => i.draft_id === item.draft_id);
+                return (
+                  <CardListItem
+                    key={item.draft_id}
+                    select={{
+                      checked,
+                      onChange: () =>
+                        setSelectedItems(checked ? selectedItems.filter((i) => i.draft_id !== item.draft_id) : [...selectedItems, item]),
+                      label: `Select application: ${rowName(item)}`,
+                    }}
+                    title={
+                      <Link
+                        to={applicationPath(item)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          props.onSessionSelect?.(item.draft_id);
+                        }}
+                      >
+                        {item.title}
+                      </Link>
+                    }
+                    facts={[
+                      { label: "Grant", value: withoutTrailingSlash(item.document_identifier || "") || "Not specified" },
+                      { label: "Last modified", value: <time dateTime={item.last_modified}>{formatSessionTime(item.last_modified)}</time> },
+                      { label: "Status", value: getStatusLabel(item.status) },
+                      { label: "Outcome", value: outcomeText(outcomes[item.draft_id]) },
+                    ]}
+                    actions={
+                      <button
+                        type="button"
+                        className="gw-btn gw-btn--secondary"
+                        onClick={() => setOutcomeTarget({ sessionId: item.draft_id, title: item.title })}
+                        aria-label={`Update outcome for ${rowName(item)}`}
+                      >
+                        Update outcome
+                      </button>
+                    }
+                  />
+                );
+              })}
+            </ul>
+          )}
+        </>
+      ) : (
       <TableScrollRegion label="Applications table" minWidth={880}>
       <div className="table-container">
         <table className="gw-table" aria-label="Applications">
@@ -435,13 +533,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
               {paginatedItems.length === 0 ? (
                 <tr>
                   <td className="row-cell row-cell--empty" colSpan={6}>
-                    <div className="no-data">
-                      <p>No applications</p>
-                      <button type="button" className="gw-btn gw-btn--primary" onClick={newApplication} aria-label="Create new application">
-                        <LuPlus size={16} aria-hidden="true" />
-                        <span>New application</span>
-                      </button>
-                    </div>
+                    {emptyState}
                   </td>
                 </tr>
               ) : (
@@ -533,6 +625,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
         {isLoading && <SkeletonRows label="Loading applications" />}
       </div>
       </TableScrollRegion>
+      )}
 
       <div role="status" aria-live="polite" className="visually-hidden">
         {isLoading ? "Loading applications" : listNotice}
