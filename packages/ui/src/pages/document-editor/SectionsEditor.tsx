@@ -6,6 +6,7 @@ import SectionsSidebar from "./components/SectionsSidebar";
 import AddSectionForm from "./components/AddSectionForm";
 import { useNotifications } from "../../components/notifications/NotificationManager";
 import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
+import StepBand from "../../components/ui/StepBand";
 import VersionHistoryPanel from "../../components/document-editor/VersionHistoryPanel";
 import ConfirmationModal from "../../components/common/ConfirmationModal";
 import { readDraftCache, resolveQuestionnaireAnswers, writeDraftCache } from "../../common/helpers/document-editor-utils";
@@ -482,8 +483,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       <div className="se-container">
         <div className="se-editor-area" ref={editorAreaRef}>
           <div className="se-editor-inner">
+            <StepBand title="Section editor" />
             <div className="se-empty-state">
-              <h2 className="se-section-title">Sections</h2>
               <p>This grant doesn&apos;t list narrative sections. Add your own section to start writing.</p>
               <AddSectionForm onAdd={handleAddSection} startOpen />
             </div>
@@ -498,6 +499,21 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       {/* Editor area - now on the left */}
       <div className="se-editor-area" ref={editorAreaRef}>
         <div className="se-editor-inner">
+          <StepBand
+            title="Section editor"
+            actions={
+              <AutoSaveIndicator
+                status={saveStatus}
+                variant="onPrimary"
+                onRetry={() => {
+                  // Without idleText the indicator unmounts once the save settles.
+                  sectionTitleRef.current?.focus();
+                  retry();
+                }}
+              />
+            }
+          />
+
           {/* Always mounted so the failure text lands as a mutation, and holding
               the message alone so the retry button is not read out as part of it. */}
           <div role="alert" className="visually-hidden">
@@ -575,18 +591,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
           )}
 
           <div className="se-section-header">
-            <h2 className="se-section-title" id="se-section-title" ref={sectionTitleRef} tabIndex={-1}>
-              {activeSectionName || "Section editor"}
-            </h2>
+            <h3 className="se-section-title" id="se-section-title" ref={sectionTitleRef} tabIndex={-1}>
+              {activeSectionName || "Section"}
+            </h3>
             <div className="se-section-header-actions">
-              <AutoSaveIndicator
-                status={saveStatus}
-                onRetry={() => {
-                  // Without idleText the indicator unmounts once the save settles.
-                  sectionTitleRef.current?.focus();
-                  retry();
-                }}
-              />
               {undoCandidate && (
                 <button
                   type="button"

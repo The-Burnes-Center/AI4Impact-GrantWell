@@ -205,25 +205,9 @@ html:has(.document-editor-root) {
   border: 1px solid var(--gw-color-border);
 }
 
-.ra-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.ra-header__icon {
-  width: 24px;
-  height: 24px;
-  color: var(--gw-color-focus);
-  margin-right: 12px;
-  flex-shrink: 0;
-}
-
-.ra-header__title {
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--gw-color-text-strong);
-  margin: 0;
+.ra-card > .gw-step-band {
+  margin: -24px -24px 20px;
+  border-radius: var(--gw-radius-container) var(--gw-radius-container) 0 0;
 }
 
 /* Stats Grid */
@@ -608,6 +592,11 @@ html:has(.document-editor-root) {
   margin: 0 auto;
 }
 
+.se-editor-inner > .gw-step-band {
+  margin-bottom: 16px;
+  border-radius: var(--gw-radius-container);
+}
+
 .se-section-header {
   display: flex;
   align-items: flex-start;
@@ -631,7 +620,7 @@ html:has(.document-editor-root) {
 }
 
 .se-section-title {
-  font-size: 24px;
+  font-size: var(--gw-font-size-xl);
   font-weight: 700;
   color: var(--gw-color-text-strong);
   margin: 0;

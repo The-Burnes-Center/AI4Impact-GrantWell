@@ -26,6 +26,7 @@
 
 import React from "react";
 import { colors, typography, spacing, borderRadius, shadows } from "./styles";
+import StepBand from "./StepBand";
 
 export interface CardProps {
   /** Card title displayed in header */
@@ -65,21 +66,14 @@ const Card: React.FC<CardProps> = ({
     ...style,
   };
 
-  const headerStyles: Record<string, React.CSSProperties> = {
-    primary: {
-      background: colors.primary,
-      color: colors.textInverse,
-      padding: `${spacing.xl} ${spacing["2xl"]}`,
-    },
-    default: {
-      background: colors.background,
-      color: colors.text,
-      padding: `${spacing.lg} ${spacing["2xl"]}`,
-      borderBottom: `1px solid ${colors.border}`,
-    },
-    none: {
-      display: "none",
-    },
+  const defaultHeaderStyle: React.CSSProperties = {
+    background: colors.background,
+    color: colors.text,
+    padding: `${spacing.lg} ${spacing["2xl"]}`,
+    borderBottom: `1px solid ${colors.border}`,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
   };
 
   const bodyStyle: React.CSSProperties = {
@@ -88,15 +82,9 @@ const Card: React.FC<CardProps> = ({
 
   return (
     <div style={containerStyle}>
-      {header && headerStyle !== "none" && (
-        <div
-          style={{
-            ...headerStyles[headerStyle],
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
+      {header && headerStyle === "primary" && <StepBand title={header} actions={headerActions} />}
+      {header && headerStyle === "default" && (
+        <div style={defaultHeaderStyle}>
           <h2
             style={{
               margin: 0,

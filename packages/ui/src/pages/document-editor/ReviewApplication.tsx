@@ -10,6 +10,7 @@ import {
   toSectionId,
   type ApplicationSection,
 } from "../../common/helpers/application-sections";
+import StepBand from "../../components/ui/StepBand";
 import "../../styles/document-editor.css";
 
 interface ReviewApplicationProps {
@@ -285,10 +286,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
     <div className="ra-container">
       {/* Review Section */}
       <div className="ra-card">
-        <div className="ra-header">
-          <LuFileText className="ra-header__icon" aria-hidden="true" />
-          <h2 className="ra-header__title">Review</h2>
-        </div>
+        <StepBand title="Review" />
 
         <div className="ra-stats-grid">
           <div className="ra-stat-card">
