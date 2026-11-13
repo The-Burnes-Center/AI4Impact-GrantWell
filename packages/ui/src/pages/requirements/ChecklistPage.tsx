@@ -161,18 +161,18 @@ const Checklists: React.FC = () => {
         <div className="checklist-main-container">
           {isLoading ? (
             <>
-            <h1 className="visually-hidden">Requirements</h1>
-            <div className="checklist-loading" role="status" aria-live="polite">
-              <div className="checklist-loading__spinner"><div className="loading-spinner" /></div>
-              <h2 className="checklist-loading__title">Loading requirements</h2>
-              <p className="checklist-loading__text">Retrieving grant information and requirements...</p>
-              <div className="checklist-loading__tip">
-                <span style={{ fontSize: "24px" }} aria-hidden="true">💡</span>
-                <p className="checklist-loading__tip-text">
-                  Our AI reviews eligibility criteria, deadlines, and requirements to save you hours of research time.
-                </p>
+              <h1 className="visually-hidden">Requirements</h1>
+              <div className="checklist-loading" role="status" aria-live="polite">
+                <div className="checklist-loading__spinner"><div className="loading-spinner" /></div>
+                <h2 className="checklist-loading__title">Loading requirements</h2>
+                <p className="checklist-loading__text">Retrieving grant information and requirements...</p>
+                <div className="checklist-loading__tip">
+                  <span style={{ fontSize: "24px" }} aria-hidden="true">💡</span>
+                  <p className="checklist-loading__tip-text">
+                    Our AI reviews eligibility criteria, deadlines, and requirements to save you hours of research time.
+                  </p>
+                </div>
               </div>
-            </div>
             </>
           ) : inReviewMessage ? (
             <div className="checklist-error">
