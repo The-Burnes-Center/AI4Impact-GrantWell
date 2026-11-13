@@ -1,126 +1,153 @@
 # GrantWell Accessibility Conformance Report
 
-**WCAG Edition — Based on VPAT® Version 2.5**
+**WCAG Edition (Based on VPAT® Version 2.5 Rev)**
 
 | | |
 |---|---|
-| **Name of Product/Version** | GrantWell (web application), v2.0.0 |
-| **Product Description** | AI-assisted grant discovery and application-drafting tool for municipalities: grant (NOFO) browsing and search, requirements checklists, an AI chat assistant, a guided document editor, and an administrative dashboard. |
-| **Report Date** | August 27, 2026 |
-| **Contact Information** | Anjith Prakash, Burnes Center for Social Change / AI for Impact — chathankandy.a@ai4impact.ai |
-| **Applicable Standards/Guidelines** | [WCAG 2.2](https://www.w3.org/TR/WCAG22/), Level A (Table 1) and Level AA (Table 2) |
-| **Evaluator** | Anjith Prakash (Burnes Center for Social Change / AI for Impact), with AI-assisted auditing and test automation performed by Anthropic's Claude (Claude Code) |
-
-## Evaluation Methods
-
-1. **Source-code audit** of the full frontend SPA (`lib/user-interface/app/src` — React 18 + Vite, 133 source files, 19 stylesheets), covering document structure and semantics, forms and input assistance, keyboard operability and focus, non-text content and visual presentation, and dynamic content, status messages and rich-widget ARIA. Every finding is cited to file and line.
-2. **Contrast measurement** computing the WCAG relative-luminance ratio for every `color:` declaration in every stylesheet and every inline colour in TSX/TS, each evaluated against its *actual resolved background* rather than an assumed white, and against the correct threshold for its content type (4.5:1 text, 3:1 large text and meaningful non-text), with the inactive-component and decorative-content exemptions applied.
-3. **Real-browser measurement** (Playwright + Chromium) of computed styles under genuine keyboard navigation, used to settle CSS-cascade questions that static reading cannot — focus-indicator visibility and colour, resolved backgrounds, and layout at 1280/900/600/400px.
-4. **Automated rule checks**: `axe-core` (WCAG 2.0/2.1/2.2 A + AA rulesets) against the built application, and `eslint-plugin-jsx-a11y` at `strict` preset with structural rules escalated to error severity across the whole source tree.
-5. **Component-level accessibility tests** exercising computed accessible names, ARIA table structure, live-region behaviour and keyboard activation paths on the components implicated by prior findings.
-6. **Screen-reader pass** (July 10, 2026): NVDA on Windows 11 with Microsoft Edge, automated via Guidepup with captured speech output, covering all nine user-reachable pages plus deep states — the maintenance page, the session delete-confirmation modal, document-editor wizard steps, the section-editor stepper, and the dashboard Grants tab. Conducted against the build current on that date.
+| **Name of Product/Version** | GrantWell (web application), version 3.3.5 |
+| **Report Date** | November 12, 2026 |
+| **Product Description** | AI-assisted grant discovery and application tool for state agencies, municipalities and community organizations: grant search and filters, requirements checklists with cited grant passages, an AI chat assistant, a five-step application writer with version history and Word/PDF export, a supporting-documents library, profile and two-step verification, and an administrative dashboard. |
+| **Contact Information** | Anjith Prakash, Burnes Center for Social Change / AI for Impact, chathankandy.a@ai4impact.ai |
+| **Evaluator** | Anjith Prakash (Burnes Center for Social Change / AI for Impact), with AI-assisted review and test automation by Anthropic's Claude (Claude Code) |
+| **Evaluated deployment** | grantwell.us (the Generic deployment), signed out and signed in as a standard user and as an administrator |
 
 ## Notes
 
-1. **Scope**: the deployed web frontend — both the unauthenticated marketing, landing and login pages and the authenticated application (home, requirements checklist, chat, document editor, sessions, admin dashboard). Out of scope: PDF/DOCX exports generated via jsPDF/docx, email content sent by Cognito, and AWS-hosted backend services.
-2. **Content-dependent caveat**: NOFO summaries and AI chat responses render author- and AI-supplied markdown. Conformance of that dynamic content — link-text quality, language of parts — depends on the content itself.
-3. **Runtime theming**: `BrandingProvider` overwrites six `--gw-color-*` custom properties per deployment instance, so a rebrand can in principle move any brand-colour ratio in this report. The palette is therefore validated rather than assumed: `findBrandingContrastFailures` checks every brand pair the UI paints — brand text on the brand tint, primary text and links, headings, accent text, labels on filled buttons, focus rings on both light and tinted surfaces, and accent borders — against 4.5:1 for text and 3:1 for non-text, and warns during development when a palette fails. Both shipping palettes pass all eight checks. Instances supplying their own colours should call this function in their build.
-4. WCAG 2.2 removed Success Criterion 4.1.1 Parsing; it is intentionally absent from Table 1.
+1. This report covers GrantWell version 3.3.5. It replaces the report for version 2.0.0 dated August 27, 2026.
+2. An independent accessibility audit by Deque Systems (June 25–30, 2026; 143 issues across 17 pages and 8 components) was used as the checklist for this evaluation. Each of the 143 issues in Deque's issue export, and every remark in its VPAT, was re-checked by issue ID against version 3.3.5; all are resolved. Remarks below cite Deque issue IDs where they help. Deque has not re-audited version 3.3.5.
+3. Sign-in includes Cloudflare Turnstile, a third-party security check, configured in Invisible mode: it shows no visible or focusable content and asks nothing of the user.
+4. Grant summaries and chat answers display text written by the AI from grant documents. Their link text and language follow the grant documents themselves.
+5. Out of scope: Word and PDF files exported by users, email sent by GrantWell, and the AWS-hosted services behind the web application.
+
+## Evaluation Methods Used
+
+1. **Independent audit as checklist.** Deque's June 2026 audit: its executive summary, its VPAT and its full issue export (143 issues, each with the page, the element and the WCAG criterion). Each issue was traced by ID to the code that renders it and confirmed fixed in version 3.3.5 in AI-assisted reviews that were given only the audit and the code, and in the browser wherever the issue concerns layout, zoom, focus or contrast.
+2. **Source review.** Review of the full web interface at the release commit (packages/ui: React 18, TypeScript, CSS), with each finding cited to file and line, including how the CSS cascade resolves between the GrantWell styles and Bootstrap.
+3. **Browser testing.** Playwright with Chromium on 23 page states, including all five application steps on an application with generated sections, at 1280×900, 1280×720, 844×390 (landscape), 640×450 and 640×360 (200% zoom), 960×540 (1920×1080 at 200%), 320×640 and 320×256. Each state was checked for horizontal scrolling and content outside the viewport, clipping under the WCAG text-spacing override, a visible focus indicator at every Tab stop, and focused elements hidden by other content. Targeted checks covered each Deque issue that needs a browser and the rich-text Section editor: toolbar keyboard use, the pinned toolbar and caret, and pasting from word processors.
+4. **Automated checks.** axe-core 4.13 with the WCAG 2.0, 2.1 and 2.2 A and AA rule sets on every page state: 0 violations. The eslint jsx-a11y rules run on every change.
+5. **Screen reader.** Guidepup's NVDA 2026.2 build on Windows with Microsoft Edge, driven by Guidepup with the speech captured, on November 12, 2026: sign-in, header and tabs, the side menu inside a grant, the phone menu, admin tabs and toggles, a second deployment's full footer and accordions, the rich-text Section editor (toolbar, Text style and phone Format menus, link dialog) and Select all in My applications. The evaluator reviewed the speech with AI assistance, and the fixes it prompted were confirmed in later runs. The speech capture records what follows a key press, so status messages that arrive later were verified with component and browser tests.
+6. **Contrast measurement.** WCAG contrast ratios computed from the colors that actually render on grantwell.us, including hover, focus, pressed, read-only and disabled states.
+7. **Component tests.** 420 automated interface tests, including accessible names, live regions, focus movement, keyboard operation of menus, tabs, dialogs, the editor toolbar and the sign-in time limit, and Markdown round-trips for the Section editor; plus 483 back-end tests, including the Word and PDF export of headings, lists and links.
+
+## Scope of Evaluation
+
+The pages and states in the following table were evaluated.
+
+| Page or state | Address |
+|---|---|
+| Landing page | `/` |
+| Sign in, Create account, Verify email, Forgot and reset password | `/login` |
+| Two-step verification: code entry and first-time setup | `/login (after the password)` |
+| What's new | `/whats-new` |
+| Page not found | any unknown address |
+| Home: grant search, filters and grants table | `/home` |
+| Requirements (with cited grant passages) | `/requirements/<grant>` |
+| Chat with AI | `/chat/<chat>?grant=<grant>` |
+| My chats | `/chat/sessions` |
+| My applications | `/document-editor/drafts` |
+| New application dialog | `/document-editor?grant=<grant>` |
+| Application steps: Project basics, Questionnaire, Additional information, Section editor, Review | `/document-editor/<application>?step=…` |
+| Version history and Word/PDF export | Section editor and Review |
+| My documents | `/documents` |
+| Profile (account, two-step verification, notifications) | `/profile` |
+| Admin dashboard: Grants, Needs attention, Analytics, User management | `/admin/dashboard` |
+| Header, tabs, side menu, phone menu, footer, Help & feedback | every signed-in page |
+
+## Applicable Standards/Guidelines
+
+This report covers the degree of conformance for the following accessibility standard/guidelines:
+
+| Standard/Guideline | Included In Report |
+|---|---|
+| Web Content Accessibility Guidelines 2.0 | Level A (Yes) / Level AA (Yes) / Level AAA (No) |
+| Web Content Accessibility Guidelines 2.1 | Level A (Yes) / Level AA (Yes) / Level AAA (No) |
+| [Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/) | Level A (Yes) / Level AA (Yes) / Level AAA (No) |
 
 ## Terms
 
-- **Supports**: The functionality of the product has at least one method that meets the criterion without known defects, or meets with equivalent facilitation.
+The terms used in the Conformance Level information are defined as follows:
+
+- **Supports**: The functionality of the product has at least one method that meets the criterion without known defects or meets with equivalent facilitation.
 - **Partially Supports**: Some functionality of the product does not meet the criterion.
 - **Does Not Support**: The majority of product functionality does not meet the criterion.
 - **Not Applicable**: The criterion is not relevant to the product.
+- **Not Evaluated**: The product has not been evaluated against the criterion. This can only be used in WCAG Level AAA criteria.
 
----
+## WCAG 2.2 Report
 
-## Table 1: Success Criteria, Level A
+Note: When reporting on conformance with the WCAG 2.2 Success Criteria, the criteria are scoped for full pages, complete processes, and accessibility-supported ways of using technology as documented in the WCAG 2.2 Conformance Requirements.
 
-| Criteria | Conformance Level | Remarks and Explanations |
-|---|---|---|
-| **1.1.1 Non-text Content** | Supports | Every `<img>` carries `alt`; decorative images use `alt=""` and inline SVGs are `aria-hidden="true"`. No icon-only button lacks an accessible name — icon buttons consistently pair an `aria-hidden` icon with an `aria-label`. Spinners expose `role="status"` with a label. |
-| **1.2.1 Audio-only and Video-only (Prerecorded)** | Not Applicable | No audio or video content exists. Microphone input for chat produces no audio output. |
-| **1.2.2 Captions (Prerecorded)** | Not Applicable | No prerecorded media. |
-| **1.2.3 Audio Description or Media Alternative (Prerecorded)** | Not Applicable | No prerecorded media. |
-| **1.3.1 Info and Relationships** | Supports | Relationships are programmatic throughout: real `<table>` with `<th scope="col">`, complete ARIA table roles with `aria-sort` on div-based tables, `fieldset`/`legend` on radio groups, `label htmlFor` on every control. Loading and empty states are rendered outside `role="table"` containers so the required owned-element structure holds in every state. A shared `Breadcrumbs` component renders `<nav>`/`<ol>`/`<li>` with `aria-current="page"`. Sidebar section titles are real headings. |
-| **1.3.2 Meaningful Sequence** | Supports | DOM order matches visual order; the only `row-reverse`/`order` uses are cosmetic and preserve reading order. |
-| **1.3.3 Sensory Characteristics** | Supports | Positional wording is always paired with the control's name; the home page carries a visually-hidden orientation note for screen-reader users. |
-| **1.4.1 Use of Color** | Supports | Diff views pair colour with "+/−" glyphs, hidden "Added:/Removed:" text and strikethrough; statuses pair a shape-distinct icon with a visible text label and repeat the state in the accessible name; required fields use an asterisk plus `aria-required`. |
-| **1.4.2 Audio Control** | Not Applicable | No auto-playing audio. |
-| **2.1.1 Keyboard** | Supports | Navigation, menus (arrow keys, Home/End, Escape), tabs (roving tabindex), tables, modals and both upload dropzones are keyboard operable. Grant selection is a real `<button>` in each row's name cell, reached by Tab and activated by Enter or Space via the same handler as pointer input. |
-| **2.1.2 No Keyboard Trap** | Supports | The shared focus trap wraps Tab but always releases on Escape and restores focus to the invoker; nested dialogs maintain a trap stack. Textareas are native and Tab exits normally. |
-| **2.1.4 Character Key Shortcuts** | Not Applicable | No single-character shortcuts; all key handling uses Enter, Escape, Tab, arrows, Home, End and Space. |
-| **2.2.1 Timing Adjustable** | Supports | No session or idle timeout exists in the SPA. Voice input has no app-imposed limit — recording ends when the user stops it. The chat response deadline warns at 40 seconds and offers an unlimited-use "Keep waiting" control with 20 seconds to respond, announced assertively. Toasts either never auto-dismiss or pause on hover and focus with a manual dismiss. |
-| **2.2.2 Pause, Stop, Hide** | Supports | Chat streaming has a labelled Stop control. Rotating search-example tips have a persistent, keyboard-reachable "Pause examples" toggle (`aria-pressed`) whose state survives pointer and focus leaving the widget. The dashboard's 10-second auto-refresh has a "Pause auto-refresh" toggle rendered whenever the poll can run. A global `prefers-reduced-motion` rule disables animation. |
-| **2.3.1 Three Flashes or Below Threshold** | Supports | No flashing or blinking content; the only infinite animations are loading spinners. |
-| **2.4.1 Bypass Blocks** | Supports | "Skip to main content" links in both the public and authenticated navbars, hidden until focused, targeting `main#main-content` with `tabIndex={-1}`. Landmarks are labelled throughout. |
-| **2.4.2 Page Titled** | Supports | Static descriptive title in `index.html`; per-route `document.title` for all authenticated routes, including dynamic ones. |
-| **2.4.3 Focus Order** | Supports | Modals save and restore invoker focus and focus the first control on open; SPA route changes move focus to `<main>`; menus focus their first item on open and return focus to the trigger on every close path — item activation, Escape and outside-click. |
-| **2.4.4 Link Purpose (In Context)** | Supports | No "click here"-style links. Links use content titles or contextual `aria-label`s, and external links announce "(opens in new tab)". |
-| **2.5.1 Pointer Gestures** | Not Applicable | No multipoint or path-based gestures. Drag-and-drop upload zones have click and keyboard alternatives (see 2.5.7). |
-| **2.5.2 Pointer Cancellation** | Supports | All activation uses standard `onClick` (up event); no down-event activation. Outside-`mousedown` is used only to dismiss menus, which is a permitted abort. |
-| **2.5.3 Label in Name** | Supports | Accessible names contain their visible text, with the visible string first. Where a control's visible label is state-dependent, the accessible name is derived from the same expression that renders the text so the two cannot drift. Icon-only controls carry clean `aria-label`s and are outside the criterion's scope. |
-| **2.5.4 Motion Actuation** | Not Applicable | No device-motion or user-motion input. |
-| **3.1.1 Language of Page** | Supports | `<html lang="en">`. |
-| **3.2.1 On Focus** | Supports | Focus handlers only apply styling or pause a timer; none trigger a context change. |
-| **3.2.2 On Input** | Supports | No select auto-navigates; filters and page-size controls update in place. Debounced AI search updates results in place with a status region rather than changing context; Enter triggers a search explicitly. |
-| **3.2.6 Consistent Help** | Supports | Where help is offered — chat playground and requirements checklist — it is a Help button in the same header position opening a labelled dialog. Informative note: no app-wide help mechanism exists on Home, Dashboard or Editor, which the criterion permits since it requires consistency only where help is provided. |
-| **3.3.1 Error Identification** | Supports | Errors are identified in text and announced: a form error summary receives focus and links to each failing field; per-field errors pair `aria-invalid` with `aria-describedby` and `role="alert"`. |
-| **3.3.2 Labels or Instructions** | Supports | No placeholder-only fields; every input, select and textarea has a programmatic label. Instructions are provided where needed — a live password-requirements checklist linked by `aria-describedby`, upload format and size limits, and a required-field legend. |
-| **3.3.7 Redundant Entry** | Supports | The auth flow carries the email across sign-in, forgot-password, reset and verify steps without re-asking. The document-editor wizard repopulates previously entered data from the backend draft or local storage on every revisit. |
-| **4.1.2 Name, Role, Value** | Supports | Correct WAI-ARIA tabs, menus with `aria-haspopup`/`aria-expanded`, dialogs with `role="dialog"`, `aria-modal` and `aria-labelledby` resolving to a rendered heading, plus `aria-sort`, `aria-current`, `aria-busy` and `aria-pressed` where applicable. Concurrently-mountable ids are generated with `useId()`. Backgrounds behind dialogs are made genuinely `inert`, not merely `aria-hidden`, so no focusable control is left inside a hidden subtree. Sidebar items expose their generation status in the accessible name, derived from the same predicate that selects the visible icon. |
+### Table 1: Success Criteria, Level A
 
----
-
-## Table 2: Success Criteria, Level AA
+Notes: 4.1.1 Parsing is obsolete and was removed in WCAG 2.2, so it is not listed. Under the WCAG 2.0 and 2.1 errata it is always satisfied for HTML content.
 
 | Criteria | Conformance Level | Remarks and Explanations |
 |---|---|---|
-| **1.2.4 Captions (Live)** | Not Applicable | No live media. |
-| **1.2.5 Audio Description (Prerecorded)** | Not Applicable | No prerecorded media. |
-| **1.3.4 Orientation** | Supports | Responsive layouts throughout; no orientation locks or orientation-dependent functionality. |
-| **1.3.5 Identify Input Purpose** | Supports | Correct `autocomplete` tokens throughout: `email`, `current-password`/`new-password`, `one-time-code` with `inputMode="numeric"` in auth; `organization`, `address-level2`, `postal-code`, `name` and `email` in the project-basics form. |
-| **1.4.3 Contrast (Minimum)** | Partially Supports | Every text colour has been measured against its actual resolved background — including the `#F8F6F1` landing canvas and the `#DFECE0` row-hover tint, not an assumed white — and all identified failures are fixed: body text 12.63:1, secondary text 6.90:1, quality scores 5.02–5.74:1, status pills ≥5.58:1, placeholders ≥4.59:1 on every fill they occupy, and brand-primary text on the brand tint raised to `#195C53` at 6.38:1. **Rated Partially Supports** because two rounds of progressively deeper sweeps each surfaced failures the previous round missed, so residual risk remains in states not exercised here; and because the Analytics amber series renders at 1.63:1 against white, mitigated by direct value labels and a visually-hidden data table rather than by contrast. |
-| **1.4.4 Resize Text** | Supports | Full-page zoom to 200% works — flex and percentage layouts with breakpoints, no fixed-height text containers that clip. Font sizes are largely px-based, so browser zoom rather than text-only scaling is the supported mechanism. |
-| **1.4.5 Images of Text** | Supports | The only text-as-image instances are logotypes, which are exempt. |
-| **1.4.10 Reflow** | Supports | Media queries down to 320px in nearly every stylesheet; no min-width on page containers; wide data tables use permitted `overflow-x: auto`. Verified at 1280/900/600/400px in a real browser. |
-| **1.4.11 Non-text Contrast** | Supports | Focus indicators are a global 2px `#23776C` outline at 5.35:1 with a `#DFECE0` variant on dark surfaces, applied to buttons, links, form controls and ARIA roles alike, with no unreplaced `outline: none` remaining on any keyboard-reachable control. Field borders that are a control's sole boundary are `#767676` at 4.54:1. Meaningful icons and progress indicators meet 3:1, including the stepper's completed-versus-remaining connector. |
-| **1.4.12 Text Spacing** | Supports | No fixed-height or `overflow: hidden` multi-line text containers; `white-space: nowrap` is confined to visually-hidden utilities, single-line cells and buttons. |
-| **1.4.13 Content on Hover or Focus** | Supports | The stepper tooltip is hoverable, persistent, and dismissible with Escape from keyboard focus as well as hover. The click-toggled feedback popover has a labelled close button and restores focus. Native `title` tooltips are user-agent controlled and exempt. |
-| **2.4.5 Multiple Ways** | Supports | Six routes to content: persistent top navigation, sidebar navigation, home search including AI search, a filterable and sortable grants table, a Recently Viewed panel, and breadcrumbs on interior pages. |
-| **2.4.6 Headings and Labels** | Supports | One descriptive `<h1>` per view with logical h2/h3 flow; labels are descriptive throughout. Minor: markdown headings in chat replies are demoted, which can skip levels. |
-| **2.4.7 Focus Visible** | Supports | Every keyboard-reachable control shows a visible indicator. No inline `outline: "none"` remains anywhere in the source tree, so no stylesheet rule can be silently overridden by an inline style. The remaining CSS `outline: none` declarations apply only to programmatic focus targets — modal containers, headings and skip-link destinations — which are not tab stops. |
-| **2.4.11 Focus Not Obscured (Minimum)** | Supports | Sticky elements — table headers, side navigation, the edge feedback tab — cannot fully hide a focused element; no fixed full-width overlays sit over scrolling content. |
-| **2.5.7 Dragging Movements** | Supports | Both drag-and-drop upload zones offer single-pointer and keyboard alternatives; no other draggable interactions exist. |
-| **2.5.8 Target Size (Minimum)** | Supports | Interactive targets meet 24×24 CSS pixels or qualify under the spacing exception: table checkboxes sit in 44px-tall cells, modal close buttons are 44px, and sort headers carry 12×16px padding. |
-| **3.1.2 Language of Parts** | Not Applicable | All UI text is English; no passages in other languages ship. |
-| **3.2.3 Consistent Navigation** | Supports | Global chrome — header, navbar, footer — renders once for every authenticated route in the same order; the sidebar is a single shared component with fixed item order on all tool pages. |
-| **3.2.4 Consistent Identification** | Supports | Consistent icon-and-label pairs (trash for delete, download, X for close), skip links, pagination and modal-close labelling across pages. |
-| **3.3.3 Error Suggestion** | Supports | Specific corrective messages throughout: field-level format and range suggestions, Cognito errors mapped to actionable text, and per-file upload rejection reasons stating the limit. |
-| **3.3.4 Error Prevention (Legal, Financial, Data)** | Supports | Every destructive action is confirmed by a shared modal naming the items with a "cannot be undone" warning; user deletion names the account; NOFO rejection requires typed justification plus a second confirmation echoing the reason. Wizard data is auto-saved and reviewable before submission. |
-| **3.3.8 Accessible Authentication (Minimum)** | Supports | No CAPTCHA or cognitive test in any auth flow; paste is never blocked; password managers and OS code autofill are supported via `current-password`, `new-password` and `one-time-code` tokens; every password field has a show-password toggle. |
-| **4.1.3 Status Messages** | Partially Supports | Live regions are mounted before their content and populated on change, so announcements are not lost to same-moment insertion. Errors and time-sensitive messages announce assertively, informational ones politely, and interactive controls sit outside live regions so their labels are not read as part of the message. Chat announces the start and completion of a reply rather than re-reading it on every streamed chunk. Toasts route to persistent assertive and polite containers. Document export announces start, success and failure. **Rated Partially Supports** because a small number of surfaces still create their region together with its text, and because per-section status transitions in the document editor are conveyed visually and in each control's accessible name but are not announced as they occur. |
+| **1.1.1 Non-text Content (Level A)** | Supports | Images that carry information have text alternatives: the GrantWell logo, partner logos, status icons in the section list (for example "Budget: completed") and the grant-type badges. Decorative icons, including the warning triangle in confirmation dialogs and every icon inside a labelled button, are hidden from assistive technology. Charts on the Analytics tab are hidden from screen readers and followed by data tables with the same figures. Checked on all pages in scope, including the footer and Create account. |
+| **1.2.1 Audio-only and Video-only (Prerecorded) (Level A)** | Not Applicable | There is no prerecorded audio-only or video-only content. |
+| **1.2.2 Captions (Prerecorded) (Level A)** | Not Applicable | There is no prerecorded video with audio. |
+| **1.2.3 Audio Description or Media Alternative (Prerecorded) (Level A)** | Not Applicable | There is no prerecorded video. |
+| **1.3.1 Info and Relationships (Level A)** | Supports | Each page has one h1 and a heading outline in order; while the New application dialog is open, its title is the h1. Grant, chat, application, user and outcome lists are tables with column headers, or ARIA tables with row and column headers. Form fields have programmatic labels; groups of radio buttons, checkboxes and toggles are named groups; each application's outcome fields are grouped under its name. Requirement lists, the questionnaire and the application steps are lists. Side-menu group titles are group labels, not headings ahead of the page h1. The Section editor is a rich-text editor: section headings and lists are real headings (h3, h4) and lists, including older AI text written as bold lines (Deque 2745439), and the Word and PDF exports keep them. Select all checkboxes are not column headers (Deque 2743642). |
+| **1.3.2 Meaningful Sequence (Level A)** | Supports | Reading and Tab order follow the visual order on every page. Static text on Additional information, including the document picker instructions, is read in sequence. |
+| **1.3.3 Sensory Characteristics (Level A)** | Supports | Instructions refer to controls by their names, not by shape, color, size or position. |
+| **1.4.1 Use of Color (Level A)** | Supports | Color is never the only cue. Links in text are underlined; the current tab and step have a bar or fill and an accessible state; errors have an icon and text; review recommendations are named in text. On the Analytics tab, Active bars are hatched as well as colored, and data tables follow each chart. |
+| **1.4.2 Audio Control (Level A)** | Not Applicable | No audio plays automatically. |
+| **2.1.1 Keyboard (Level A)** | Supports | All functionality works from the keyboard: grant selection, filters and sort, the application stepper (locked steps stay focusable and say why they are locked), the Section editor toolbar (one Tab stop, arrow keys between tools, standard Ctrl shortcuts) and its phone Format menu, version history, the export menu, the document picker, admin row menus and dialogs. Every dialog has a close button and closes with Escape. Scrolling tables and text boxes are focusable regions. |
+| **2.1.2 No Keyboard Trap (Level A)** | Supports | Focus can always leave every component. Dialogs keep focus inside until closed, then return it to the control that opened them, or into the dialog beneath, or to the main content. |
+| **2.1.4 Character Key Shortcuts (Level A 2.1 and 2.2)** | Not Applicable | There are no single-character keyboard shortcuts. |
+| **2.2.1 Timing Adjustable (Level A)** | Supports | The only time limit is Cognito's 15-minute limit on each sign-in step after the password: the code step and Set new password. Two minutes before it ends, a warning shows a live countdown and a Keep signing in button, which restarts the step as many times as needed without re-entering the password or losing a partly typed code (first-time setup shows a new QR code, as the warning says). Screen readers hear the warning at two minutes and again at 30 seconds. There is no time limit once signed in. Messages and notifications stay until dismissed, and AI answers have no response deadline. |
+| **2.2.2 Pause, Stop, Hide (Level A)** | Supports | Nothing moves, blinks or scrolls automatically. The admin processing queue, which refreshes every 10 seconds, has a Pause auto-refresh control. Loading indicators stop when loading ends. |
+| **2.3.1 Three Flashes or Below Threshold (Level A)** | Supports | Nothing flashes. |
+| **2.4.1 Bypass Blocks (Level A)** | Supports | Every page starts with a working Skip to main content link that moves focus to the main landmark, including Sign up and Verify email. Pages use banner, navigation, main and contentinfo landmarks. |
+| **2.4.2 Page Titled (Level A)** | Supports | Every page and step has a descriptive title, for example "Create account – GrantWell", "Questionnaire – Write application – GrantWell" and "Set up two-step verification – GrantWell". |
+| **2.4.3 Focus Order (Level A)** | Supports | Focus order matches the visual order. Dialogs hold focus until closed (Deque 2748796, 2743882, 2748926), return it afterwards, and never pull it away from someone already working inside them. Error summaries take focus only when Continue is pressed, not while fields are filled in (Deque 2743771). When a focused control goes away (a completed form, a dismissed card, a view switch, a finished step, Keep signing in, a background refresh), focus moves to the content that replaces it. Buttons that are busy or unavailable keep focus. Menus close when focus leaves them, and a Text style choice returns focus to the text. |
+| **2.4.4 Link Purpose (In Context) (Level A)** | Supports | Link text, or the text with its context, describes each link. Links that open a new tab say so, including links in AI answers. |
+| **2.5.1 Pointer Gestures (Level A 2.1 and 2.2)** | Supports | No function needs a multipoint or path-based gesture. |
+| **2.5.2 Pointer Cancellation (Level A 2.1 and 2.2)** | Supports | Actions run on the up event and can be cancelled by moving the pointer off the control. |
+| **2.5.3 Label in Name (Level A 2.1 and 2.2)** | Supports | Every control's accessible name contains its visible label, including while busy (for example "Refreshing chats list"), the Additional context field, review actions such as Needs re-upload (Deque 2748887), Make final edits, and the section list, whose names start with each section's number and name. |
+| **2.5.4 Motion Actuation (Level A 2.1 and 2.2)** | Not Applicable | No function uses device or user motion. |
+| **3.1.1 Language of Page (Level A)** | Supports | Every page sets lang="en". |
+| **3.2.1 On Focus (Level A)** | Supports | Receiving focus never changes context. |
+| **3.2.2 On Input (Level A)** | Supports | Entering data never changes context by itself. The six-digit code is submitted with Verify, not on the sixth digit; filters update results in place and announce the new count. |
+| **3.2.6 Consistent Help (Level A 2.2 only)** | Supports | Help & feedback is in the same place in the header on every signed-in page. |
+| **3.3.1 Error Identification (Level A)** | Supports | Errors name the field and describe the problem in text under it, and focus moves to the first field to fix, including the email address in Add user. If the security check fails, the message says so, offers Try the check again, and gives the support email. |
+| **3.3.2 Labels or Instructions (Level A)** | Supports | Every field has a visible label, including the Home feedback field (Deque 2744302), Select all checkboxes (Deque 2748963), summary item fields in the admin review and the Analytics state filter; required fields are marked; password rules are shown with the password field; Profile setup says which fields are missing. Placeholder text is only ever an example. |
+| **3.3.7 Redundant Entry (Level A 2.2 only)** | Supports | Information entered earlier in an application is kept and shown in later steps; nothing must be typed twice. |
+| **4.1.2 Name, Role, Value (Level A)** | Supports | Custom controls expose name, role and state: tabs, toggles (pressed), the stepper (current step, locked), accordions (expanded), menus, the version list, table sort buttons, and the Section editor, a multi-line text box named for its section, whose toolbar toggles report pressed and whose Text style menu reports the current style. Tooltip content is available to screen readers through descriptions and, on phones, through the All steps list. Navigation items are links. |
 
----
+### Table 2: Success Criteria, Level AA
 
-## Summary of Results
-
-| Conformance Level | Level A (31 criteria) | Level AA (24 criteria) |
+| Criteria | Conformance Level | Remarks and Explanations |
 |---|---|---|
-| Supports | 24 | 19 |
-| Partially Supports | 0 | 2 |
-| Does Not Support | 0 | 0 |
-| Not Applicable | 7 | 3 |
+| **1.2.4 Captions (Live) (Level AA)** | Not Applicable | There is no live audio or video. |
+| **1.2.5 Audio Description (Prerecorded) (Level AA)** | Not Applicable | There is no prerecorded video. |
+| **1.3.4 Orientation (Level AA 2.1 and 2.2)** | Supports | Nothing is locked to an orientation. Every application step was checked at 844×390 landscape and phone portrait; the title bar and stepper stop pinning on short screens. |
+| **1.3.5 Identify Input Purpose (Level AA 2.1 and 2.2)** | Supports | Fields that collect the user's own information have autocomplete values: email, current and new password, one-time code, organization, organization title and state (address-level1), on sign-up, profile setup and Profile. |
+| **1.4.3 Contrast (Minimum) (Level AA)** | Supports | Text meets 4.5:1, or 3:1 when large, in every state, measured from the rendered colors: for example body text 12.6:1, secondary text 6.9:1, links 5.4:1, hover text on tinted fills 6.4:1 or more, Make final edits on hover 5.4:1, sign-in buttons 5.35:1 at rest and 7.8:1 on hover and focus, and busy or disabled button text such as Saving…, Publishing… and Creating draft… 5.04:1. Checked on Sign up, Verify email, Home, My chats, My applications, Review, the admin tabs and User management. |
+| **1.4.4 Resize Text (Level AA)** | Supports | At 200% zoom (640×450, 640×360 and 960×540) nothing is lost, clipped or covered on any page in scope, including Chat with AI, whose transcript and message box stay reachable, and the application steps. |
+| **1.4.5 Images of Text (Level AA)** | Supports | Text is never shown as an image, apart from logos. |
+| **1.4.10 Reflow (Level AA 2.1 and 2.2)** | Supports | At 320 CSS pixels every page reflows to one column without horizontal scrolling, except data tables, which scroll inside labelled regions. The header becomes a menu, toggles, dialog buttons and bulk actions wrap, the application stepper adds an All steps list with each step's state and help text, and the Section editor toolbar becomes a Format menu. |
+| **1.4.11 Non-text Contrast (Level AA 2.1 and 2.2)** | Supports | Field borders are 4.54:1, focus rings 5.35:1 (2px, with a 2px gap), and selected, pressed and current states at least 3:1, including radio buttons and checkboxes on Home, Sign up and Verify email, and the chart bars and focus rings on the Analytics tab. |
+| **1.4.12 Text Spacing (Level AA 2.1 and 2.2)** | Supports | With line height 1.5, letter spacing 0.12em, word spacing 0.16em and paragraph spacing 2em, no text is cut off and all text follows the new spacing, at 1280 and 320 pixels on every page in scope. |
+| **1.4.13 Content on Hover or Focus (Level AA 2.1 and 2.2)** | Supports | Tooltips open on hover and focus, stay while hovered, and close with Escape from anywhere; menus stay open until dismissed. On phones the step tooltips' text is also in the All steps list. |
+| **2.4.5 Multiple Ways (Level AA)** | Supports | Pages are reached from the header tabs, the side menu, breadcrumbs and grant search. |
+| **2.4.6 Headings and Labels (Level AA)** | Supports | Headings and labels describe their topic or purpose, for example "Filter by status", "State guidance note" and "Search outcomes", and "Requested amount (USD)" (Deque 2743818). Repeated buttons carry the item they act on, for example "Copy reply 1 to clipboard", "Add item to Required documents" and each application's name with its date. |
+| **2.4.7 Focus Visible (Level AA)** | Supports | Every focusable element shows a 2px focus ring with a 2px gap, including sign-in fields, Bootstrap form controls, toggles, tabs, pagination, file pickers (on the button they cover), footer links on dark backgrounds, Chat with AI, the Section editor and its toolbar, menu items, and the Needs attention view, including Source document preview (Deque 2748844). |
+| **2.4.11 Focus Not Obscured (Minimum) (Level AA 2.2 only)** | Supports | Focused elements are never entirely hidden. The application title bar and stepper reserve scroll padding; on phones the open All steps list unpins them so it never covers the field in focus, and on tall screens the editor toolbar stays below the stepper with the caret kept clear of it. Checked by tabbing through every step at 1280×900, 1280×720, 960×540, 844×390 and 320×568, and the New application dialog at 200%. |
+| **2.5.7 Dragging Movements (Level AA 2.2 only)** | Supports | Document upload accepts drag and drop and also a Browse button; nothing needs dragging. |
+| **2.5.8 Target Size (Minimum) (Level AA 2.2 only)** | Supports | Targets are at least 24×24 CSS pixels, or are links within text, including the TOTP Copy button, alert and banner close buttons and Create an account. |
+| **3.1.2 Language of Parts (Level AA)** | Supports | Content is in English; there are no passages in another language. |
+| **3.2.3 Consistent Navigation (Level AA)** | Supports | The header, tabs and side menu are in the same order on every page. |
+| **3.2.4 Consistent Identification (Level AA)** | Supports | Controls with the same function have the same name everywhere, for example Help & feedback, Delete and Version history. |
+| **3.3.3 Error Suggestion (Level AA)** | Supports | Error messages say how to fix the input, for example "Enter the 6-digit code from your authenticator app." |
+| **3.3.4 Error Prevention (Legal, Financial, Data) (Level AA)** | Supports | There are no legal or financial transactions. Deleting chats, applications, documents, users or an account asks for confirmation first, and application text can be restored from version history. |
+| **3.3.8 Accessible Authentication (Minimum) (Level AA 2.2 only)** | Supports | Sign-in accepts pasted and password-manager passwords (current-password, new-password) and pasted or autofilled one-time codes (one-time-code). The security check asks nothing of the user. |
+| **4.1.3 Status Messages (Level AA 2.1 and 2.2)** | Supports | Status messages are announced without moving focus, once each: search, filter and page results, saved and deleted notices, busy states such as Refreshing, Saving, Adding, Publishing and Reprocessing, selection counts, sign-in busy and time-limit messages, upload and export progress, generation progress, the grant picker, the processing banner and version history. Each comes from a region that is in the page before its message. |
 
-## Known Issues
+### Table 3: Success Criteria, Level AAA
 
-1. **Analytics chart series** (1.4.3) — the amber series renders at 1.63:1 against white. Every chart carries direct value labels and a visually-hidden data table, so the information is available without relying on the graphic, but the colour itself does not meet the text threshold.
-2. **Per-section generation status** (4.1.3) — while the document editor generates sections, each section's pending, generating and completed state is exposed in its control's accessible name and by a distinct icon, and overall progress is announced, but individual transitions are not announced as they occur. This is a deliberate trade-off against announcement flooding.
-3. **Breadcrumb implementations** (1.3.1, maintainability) — a shared `Breadcrumbs` component exists and three pages use it; the remaining implementations are semantically equivalent but duplicated, and can drift.
-4. **Markdown heading levels in chat** (2.4.6) — headings inside AI replies are demoted to fit the page outline, which can skip a level depending on the content generated.
+Notes: Not Evaluated. GrantWell was not evaluated for WCAG 2.2 Level AAA conformance.
 
----
+## Legal Disclaimer
 
-*"Voluntary Product Accessibility Template" and "VPAT" are registered service marks of the Information Technology Industry Council (ITI). This report uses the VPAT WCAG edition structure; verify current template language at https://www.itic.org/policy/accessibility/vpat before external publication.*
+This report describes the accessibility of GrantWell version 3.3.5 as evaluated on the date above. It is provided for information and is not a warranty. Later versions, content added by users or administrators, and configuration by other deployments can change conformance. The Burnes Center for Social Change welcomes reports of accessibility barriers through Help & feedback in GrantWell or by email to hello@grantwell.us.
