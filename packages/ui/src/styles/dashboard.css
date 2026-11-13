@@ -486,21 +486,15 @@ body {
   font-size: var(--gw-font-size-xs);
 }
 
-.user-management-status-pill {
-  display: inline-flex;
-  align-items: center;
+.user-management-row-note {
+  margin: 6px 0 0;
+  max-width: 220px;
+  color: var(--gw-color-text-secondary);
+  font-size: var(--gw-font-size-xs);
 }
 
-.user-management-status-pill.is-enabled {
-  --gw-tag-ink: var(--gw-color-success-text);
-  --gw-tag-fill: var(--gw-color-success-light);
-  --gw-tag-line: var(--gw-color-success-border);
-}
-
-.user-management-status-pill.is-disabled {
-  --gw-tag-ink: var(--gw-color-text-secondary);
-  --gw-tag-fill: var(--gw-color-surface-subtle);
-  --gw-tag-line: var(--gw-color-border);
+.user-management-truncated {
+  margin: 0 0 12px;
 }
 
 .user-management-role-select {

@@ -21,7 +21,10 @@ export interface ManagedUser {
 }
 
 export interface ManagedUsersResponse {
+  /** Every account the caller may see, sorted by email. */
   users: ManagedUser[];
   nextPaginationToken: string | null;
   pageSize: number;
+  /** The server stopped scanning before the end of the user pool. */
+  truncated?: boolean;
 }

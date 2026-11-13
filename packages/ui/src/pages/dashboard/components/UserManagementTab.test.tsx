@@ -1,7 +1,7 @@
 import { screen, waitFor, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { ManagedUser } from "../../../common/types/user-management";
-import { json, stubFetch, type RouteRequest } from "../../../test/fetch-routes";
+import { json, stubFetch } from "../../../test/fetch-routes";
 import { renderApp, testApiClient } from "../../../test/render";
 import UserManagementTab from "./UserManagementTab";
 
@@ -16,13 +16,18 @@ const user = (n: number): ManagedUser => ({
   state: "",
 });
 
-function renderTab() {
+const member = (n: number): ManagedUser => ({ ...user(n), email: `p${String(n).padStart(3, "0")}@example.org` });
+const members = (count: number) => Array.from({ length: count }, (_, i) => member(i + 1));
+const listed = (users: ManagedUser[], extra: Record<string, unknown> = {}) =>
+  json({ users, nextPaginationToken: null, pageSize: users.length, ...extra });
+
+function renderTab({ canAssignDeveloper = false } = {}) {
   const addNotification = vi.fn();
   const view = renderApp(
     <UserManagementTab
       apiClient={testApiClient()}
       addNotification={addNotification}
-      canAssignDeveloper={false}
+      canAssignDeveloper={canAssignDeveloper}
       isStateAdmin={false}
       userState=""
       currentUsername="u0"
@@ -43,66 +48,175 @@ describe("UserManagementTab", () => {
     );
   });
 
-  it("pages forward with the server's token and back without one", async () => {
-    const pages: Record<string, Response> = {
-      "": json({ users: [user(1), user(2)], nextPaginationToken: "page-2", pageSize: 25 }),
-      "page-2": json({ users: [user(3)], nextPaginationToken: null, pageSize: 25 }),
-    };
-    const net = stubFetch({
-      [USERS]: (req: RouteRequest) => pages[req.url.searchParams.get("paginationToken") ?? ""].clone(),
-    });
+  it("loads every user once and pages through them in email order", async () => {
+    const net = stubFetch({ [USERS]: listed([...members(60)].reverse()) });
     const { user: ui } = renderTab();
 
-    expect(await screen.findByText("person1@example.org")).toBeInTheDocument();
-    await ui.click(screen.getByRole("button", { name: "Next page" }));
-    expect(await screen.findByText("person3@example.org")).toBeInTheDocument();
-    expect(screen.getByText("Showing 26 to 26 users on page 2")).toBeInTheDocument();
+    expect(await screen.findByText("p001@example.org")).toBeInTheDocument();
+    expect(rows()).toHaveLength(25);
+    expect(screen.getByText("Showing 1 to 25 of 60 users")).toBeInTheDocument();
+    expect(within(rows()[24]).getByText("p025@example.org")).toBeInTheDocument();
+
+    await ui.click(screen.getByRole("button", { name: "Go to page 3" }));
+    expect(rows().map((r) => within(r).getAllByText(/@example\.org$/)[0].textContent)).toEqual(
+      Array.from({ length: 10 }, (_, i) => `p0${51 + i}@example.org`)
+    );
+    expect(screen.getByText("Showing 51 to 60 of 60 users")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Next page" })).toHaveAttribute("aria-disabled", "true");
+    expect(screen.getByRole("button", { name: "Go to page 3" })).toHaveAttribute("aria-current", "page");
 
     await ui.click(screen.getByRole("button", { name: "Previous page" }));
-    expect(await screen.findByText("person1@example.org")).toBeInTheDocument();
-    expect(net.to(USERS).map((c) => c.url.searchParams.get("paginationToken"))).toEqual([null, "page-2", null]);
+    expect(screen.getByText("Showing 26 to 50 of 60 users")).toBeInTheDocument();
+    expect(net.to(USERS)).toHaveLength(1);
+    expect(net.last(USERS).url.search).toBe("");
   });
 
-  it("searches from page 1, says how many matched, and clears back to the full list", async () => {
-    const net = stubFetch({
-      [USERS]: (req: RouteRequest) =>
-        req.url.searchParams.get("query")
-          ? json({ users: [user(7)], nextPaginationToken: null, pageSize: 25 })
-          : json({ users: [user(1), user(2)], nextPaginationToken: "page-2", pageSize: 25 }),
-    });
+  it("searches the loaded list from page 1, says how many matched, and clears back to the full list", async () => {
+    const net = stubFetch({ [USERS]: listed([...members(40), { ...user(7), email: "seven@example.org", username: "person7" }]) });
     const { user: ui } = renderTab();
-    await screen.findByText("person1@example.org");
+    await screen.findByText("p001@example.org");
+    await ui.click(screen.getByRole("button", { name: "Next page" }));
 
-    await ui.type(screen.getByRole("searchbox", { name: "Search users" }), " person7 ");
+    await ui.type(screen.getByRole("searchbox", { name: "Search users" }), " PERSON7 ");
     await ui.click(screen.getByRole("button", { name: "Search" }));
-    expect(await screen.findByText('1 user found for "person7".')).toBeInTheDocument();
+    expect(await screen.findByText('1 user found for "PERSON7".')).toBeInTheDocument();
     expect(rows()).toHaveLength(1);
-    expect(screen.queryByRole("navigation", { name: "Pagination" })).not.toBeInTheDocument();
-
-    const searchCall = net.last(USERS);
-    expect(searchCall.url.searchParams.get("query")).toBe("person7");
-    expect(searchCall.url.searchParams.get("paginationToken")).toBeNull();
+    expect(screen.getByText("Showing 1 to 1 of 1 users")).toBeInTheDocument();
+    expect(net.to(USERS)).toHaveLength(1);
 
     await ui.click(screen.getByRole("button", { name: "Clear" }));
-    await waitFor(() => expect(rows()).toHaveLength(2));
-    expect(screen.getByRole("navigation", { name: "Pagination" })).toBeInTheDocument();
+    await waitFor(() => expect(rows()).toHaveLength(25));
+    expect(screen.getByText("Showing 1 to 25 of 41 users")).toBeInTheDocument();
   });
 
   it("goes back to page 1 when the page size changes", async () => {
+    stubFetch({ [USERS]: listed(members(120)) });
+    const { user: ui } = renderTab();
+    await screen.findByText("p001@example.org");
+    await ui.click(screen.getByRole("button", { name: "Go to page 2" }));
+
+    await ui.selectOptions(screen.getByLabelText("Items per page:"), "100");
+    expect(rows()).toHaveLength(100);
+    expect(screen.getByText("Showing 1 to 100 of 120 users")).toBeInTheDocument();
+  });
+
+  it("stays on the same page after deleting a user, without reloading the list", async () => {
     const net = stubFetch({
-      [USERS]: json({ users: [user(1)], nextPaginationToken: "page-2", pageSize: 25 }),
+      [USERS]: listed(members(30)),
+      "DELETE /user-management/users/u27": json({ username: "u27", deleted: true }),
     });
     const { user: ui } = renderTab();
-    await screen.findByText("person1@example.org");
+    await screen.findByText("p001@example.org");
     await ui.click(screen.getByRole("button", { name: "Next page" }));
-    await waitFor(() => expect(net.to(USERS)).toHaveLength(2));
 
-    await ui.selectOptions(screen.getByLabelText("Items per page:"), "50");
-    await waitFor(() => expect(net.to(USERS)).toHaveLength(3));
-    const last = net.last(USERS).url.searchParams;
-    expect(last.get("limit")).toBe("50");
-    expect(last.get("paginationToken")).toBeNull();
+    await ui.click(screen.getByRole("button", { name: "More actions for p027@example.org" }));
+    await ui.click(await screen.findByRole("menuitem", { name: "Delete" }));
+    await ui.click(within(await screen.findByRole("dialog", { name: "Delete user" })).getByRole("button", { name: "Delete user" }));
+
+    await waitFor(() => expect(screen.queryByText("p027@example.org")).not.toBeInTheDocument());
+    expect(screen.getByText("Showing 26 to 29 of 29 users")).toBeInTheDocument();
+    expect(net.to(USERS)).toHaveLength(1);
+  });
+
+  it("goes back a page when deleting the only user on the last page", async () => {
+    stubFetch({
+      [USERS]: listed(members(26)),
+      "DELETE /user-management/users/u26": json({ username: "u26", deleted: true }),
+    });
+    const { user: ui } = renderTab();
+    await screen.findByText("p001@example.org");
+    await ui.click(screen.getByRole("button", { name: "Next page" }));
+    await ui.click(screen.getByRole("button", { name: "More actions for p026@example.org" }));
+    await ui.click(await screen.findByRole("menuitem", { name: "Delete" }));
+    await ui.click(within(await screen.findByRole("dialog", { name: "Delete user" })).getByRole("button", { name: "Delete user" }));
+
+    expect(await screen.findByText("Showing 1 to 25 of 25 users")).toBeInTheDocument();
+    expect(rows()).toHaveLength(25);
+  });
+
+  it("reloads after inviting and opens the page with the new user", async () => {
+    let created = false;
+    const net = stubFetch({
+      [USERS]: () => listed(created ? [...members(30), { ...user(99), email: "p0275@example.org" }] : members(30)),
+      "POST /user-management/users": () => {
+        created = true;
+        return json({ username: "u99", email: "p0275@example.org" }, 201);
+      },
+    });
+    const { user: ui } = renderTab();
+    await screen.findByText("p001@example.org");
+
+    await ui.click(screen.getByRole("button", { name: "Add user" }));
+    const dialog = await screen.findByRole("dialog", { name: "Add new user" });
+    await ui.type(within(dialog).getByLabelText("Email address"), "P0275@example.org");
+    await ui.click(within(dialog).getByRole("button", { name: "Add user" }));
+
+    expect(await screen.findByText("p0275@example.org")).toBeInTheDocument();
+    expect(screen.getByText("Showing 26 to 31 of 31 users")).toBeInTheDocument();
+    expect(net.to(USERS)).toHaveLength(2);
+  });
+
+  it("warns when the server stopped before the end of the user pool", async () => {
+    stubFetch({ [USERS]: listed(members(3), { truncated: true }) });
+    renderTab();
+    expect(await screen.findByText(/stops at the first 3 accounts/)).toBeInTheDocument();
+  });
+
+  it("labels each account's status in words", async () => {
+    stubFetch({
+      [USERS]: listed([
+        { ...member(1), status: "CONFIRMED" },
+        { ...member(2), status: "FORCE_CHANGE_PASSWORD" },
+        { ...member(3), enabled: false },
+        { ...member(4), status: "RESET_REQUIRED" },
+      ]),
+    });
+    renderTab();
+    await screen.findByText("p001@example.org");
+    expect(rows().map((r) => within(r).getAllByRole("cell")[0].textContent)).toEqual([
+      "Active",
+      "Invited",
+      "Disabled",
+      "Password reset required",
+    ]);
+  });
+
+  it("names an account without an email by its username", async () => {
+    stubFetch({ [USERS]: listed([member(1), { ...user(2), email: "", username: "ext-2" }]) });
+    renderTab();
+    expect(await screen.findByText("No email address")).toBeInTheDocument();
+    expect(screen.getByLabelText("Role for ext-2")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "More actions for ext-2" })).toBeInTheDocument();
+  });
+
+  it("locks developer and platform admin rows for an admin who isn't a developer, and flags a stateless admin", async () => {
+    const accounts = [
+      { ...member(1), roles: ["Developer"] },
+      { ...member(2), roles: ["PlatformAdmin"] },
+      { ...member(3), roles: ["Admin"] },
+      { ...member(4), roles: ["Admin"], state: "MA" },
+    ];
+    stubFetch({ [USERS]: listed(accounts) });
+    const view = renderTab();
+    await screen.findByText("p001@example.org");
+
+    for (const n of ["001", "002"]) {
+      expect(screen.getByLabelText(`Role for p${n}@example.org`)).toBeDisabled();
+      expect(screen.getByLabelText(`Role for p${n}@example.org`)).toHaveAccessibleDescription("Only a developer can change this account.");
+      expect(screen.queryByRole("button", { name: `More actions for p${n}@example.org` })).not.toBeInTheDocument();
+    }
+    expect(screen.getByLabelText("Role for p003@example.org")).toBeEnabled();
+    expect(screen.getByLabelText("Role for p003@example.org")).toHaveAccessibleDescription(
+      "No state, so this admin has platform admin access."
+    );
+    expect(screen.getByLabelText("Role for p004@example.org")).not.toHaveAccessibleDescription();
+
+    view.unmount();
+    stubFetch({ [USERS]: listed(accounts) });
+    renderTab({ canAssignDeveloper: true });
+    await screen.findByText("p001@example.org");
+    expect(screen.getByLabelText("Role for p001@example.org")).toBeEnabled();
+    expect(screen.getByRole("button", { name: "More actions for p002@example.org" })).toBeInTheDocument();
   });
 
   it("shows Save only on a row you've changed, and no menu on your own row", async () => {
