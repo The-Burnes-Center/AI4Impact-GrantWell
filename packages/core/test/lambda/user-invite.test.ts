@@ -94,13 +94,29 @@ describe("inviting a user with a role", () => {
     expect(created()).toBeNull();
   });
 
-  it("refuses an admin without a state, which would act as a platform admin", async () => {
-    const handler = await load();
-    for (const actor of ["developer", "platformAdmin"] as const) {
-      const res = await invite(handler, actor, { rolePreset: "admin" });
-      expect(res).toMatchObject({ status: 400, body: { message: "Choose a state for an admin" } });
+  it.each(["platformAdmin", "legacyAdmin"] as const)(
+    "refuses %s inviting an admin with no state, which would be a platform admin",
+    async (actor) => {
+      const handler = await load();
+      for (const state of [undefined, ""]) {
+        const res = await invite(handler, actor, { rolePreset: "admin", ...(state === undefined ? {} : { state }) });
+        expect(res.status).toBe(403);
+        expect(res.body.message).toMatch(/^Choose a state for an admin/);
+      }
+      expect(created()).toBeNull();
     }
+  );
+
+  it("refuses the stateless admin even with the legacy rule off", async () => {
+    const handler = await load({ LEGACY_STATELESS_ADMIN_IS_PLATFORM: "false" });
+    expect((await invite(handler, "platformAdmin", { rolePreset: "admin" })).status).toBe(403);
     expect(created()).toBeNull();
+  });
+
+  it("lets a developer invite an admin with no state", async () => {
+    const handler = await load();
+    expect((await invite(handler, "developer", { rolePreset: "admin" })).status).toBe(201);
+    expect(created()).toEqual({ role: ["Admin"], state: "", email: "new@example.org" });
   });
 
   it("refuses an unknown role", async () => {

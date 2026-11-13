@@ -37,6 +37,14 @@ function isPlatformAdmin(roles, state) {
   return LEGACY_STATELESS_ADMIN_IS_PLATFORM && hasRole(roles, "Admin") && !state;
 }
 
+// Who only a developer may create, change or delete. A stateless Admin counts whatever the legacy
+// flag says, so no flag setting lets a non-developer mint or remove one. On a single-state
+// deployment the state is implied, so a stateless Admin there is an ordinary admin.
+function isDeveloperManaged(roles, state) {
+  if (hasRole(roles, "Developer") || hasRole(roles, "PlatformAdmin")) return true;
+  return !SINGLE_STATE && hasRole(roles, "Admin") && !state;
+}
+
 // SUPPORTED_STATES is serialized as [{code,name},...]; extract the codes.
 const SUPPORTED_STATE_CODES = new Set(
   JSON.parse(process.env.SUPPORTED_STATES || "[]").map((s) =>
@@ -67,6 +75,9 @@ function normalizeStoredStateCode(raw) {
   if (SUPPORTED_STATE_CODES.has(upper)) return upper;
   return LEGACY_NAME_TO_CODE[trimmed.toLowerCase()] || "";
 }
+
+const STATELESS_ADMIN_MESSAGE =
+  "Choose a state for an admin. An admin with no state has platform access, which only a developer can grant.";
 
 const headers = {
   "Access-Control-Allow-Origin": "*",
@@ -100,10 +111,10 @@ export const handler = async (event, context) => {
       return await handleCreate(scope, parseBody(event.body));
     }
     if (method === "PATCH") {
-      return await handleUpdate(scope, actor, event);
+      return await handleUpdate(scope, actor, event, context);
     }
     if (method === "DELETE") {
-      return await handleDelete(scope, actor, event);
+      return await handleDelete(scope, actor, event, context);
     }
 
     return respond(405, { message: "Method not allowed" });
@@ -145,9 +156,8 @@ async function handleCreate(scope, body) {
   if (rolePreset === "platformadmin" && stateCode) {
     return respond(400, { message: "Platform administrators cannot be scoped to a state" });
   }
-  // A stateless Admin would count as a platform admin while the legacy rule is on.
-  if (rolePreset === "admin" && !stateCode) {
-    return respond(400, { message: "Choose a state for an admin" });
+  if (scope.kind !== "developer" && isDeveloperManaged(roles, stateCode)) {
+    return respond(403, { message: STATELESS_ADMIN_MESSAGE });
   }
 
   const userAttributes = [
@@ -183,7 +193,7 @@ async function handleCreate(scope, body) {
   }
 }
 
-async function handleUpdate(scope, actor, event) {
+async function handleUpdate(scope, actor, event, context) {
   const username = decodeURIComponent(event.pathParameters?.username || "").trim();
   if (!username) {
     return respond(400, { message: "Username is required" });
@@ -269,9 +279,13 @@ async function handleUpdate(scope, actor, event) {
     userAttributes.push({ Name: "custom:state", Value: "" });
   }
 
-  if (hasRolePreset) {
-    await assertNotLastPrivilegedUser(target, nextRoles);
+  const finalRoles = nextRoles ?? target.roles;
+  const finalState = nextState ?? target.state;
+  if (scope.kind !== "developer" && isDeveloperManaged(finalRoles, finalState)) {
+    return respond(403, { message: STATELESS_ADMIN_MESSAGE });
   }
+
+  await assertNotLastPrivilegedUser(target, finalRoles, finalState, context);
 
   await cognitoClient.send(
     new AdminUpdateUserAttributesCommand({
@@ -288,7 +302,7 @@ async function handleUpdate(scope, actor, event) {
   });
 }
 
-async function handleDelete(scope, actor, event) {
+async function handleDelete(scope, actor, event, context) {
   const username = decodeURIComponent(event.pathParameters?.username || "").trim();
   if (!username) {
     return respond(400, { message: "Username is required" });
@@ -301,7 +315,7 @@ async function handleDelete(scope, actor, event) {
     return respond(403, { message: "You cannot delete your own account" });
   }
   assertCanManageTarget(scope, target);
-  await assertNotLastPrivilegedUser(target, []);
+  await assertNotLastPrivilegedUser(target, [], "", context);
 
   // Data first: once the account is gone, its sub can no longer be looked up for a retry.
   const removed = await deleteUserData({ sub: target.sub, username: target.username });
@@ -436,7 +450,7 @@ function assertCanManageTarget(scope, target) {
     error.statusCode = 403;
     throw error;
   }
-  if (hasRole(target.roles, "PlatformAdmin")) {
+  if (isDeveloperManaged(target.roles, target.state)) {
     const error = new Error("Only developers can manage platform administrator accounts");
     error.statusCode = 403;
     throw error;
@@ -464,18 +478,14 @@ function requireRoleAssignmentPermission(scope, rolePreset) {
   }
 }
 
-// Best-effort guard against locking the org out by removing its last developer
-// or last platform admin. nextRoles is [] for a delete.
-async function assertNotLastPrivilegedUser(target, nextRoles) {
-  const nextRoleSet = new Set(nextRoles || []);
-  const losesDeveloper = hasRole(target.roles, "Developer") && !nextRoleSet.has("Developer");
-  // The target keeps platform authority only if the next roles still grant it. nextState is
-  // unknown here, so treat a retained bare Admin as platform-holding while legacy is on.
-  const keepsPlatformAdmin =
-    nextRoleSet.has("PlatformAdmin") ||
-    (LEGACY_STATELESS_ADMIN_IS_PLATFORM && nextRoleSet.has("Admin"));
+// Guards against locking the org out by removing its last developer or last platform admin.
+// nextRoles/nextState describe the account after the change; [] and "" for a delete.
+async function assertNotLastPrivilegedUser(target, nextRoles, nextState, context) {
+  const losesDeveloper = hasRole(target.roles, "Developer") && !hasRole(nextRoles, "Developer");
+  // A single-state write pins the state, which is implied there anyway; only a role change counts.
   const losesPlatformAdmin =
-    isPlatformAdmin(target.roles, target.state) && !keepsPlatformAdmin;
+    isPlatformAdmin(target.roles, target.state) &&
+    !isPlatformAdmin(nextRoles, SINGLE_STATE ? target.state : nextState);
 
   if (!losesDeveloper && !losesPlatformAdmin) {
     return;
@@ -524,6 +534,13 @@ async function countPrivilegedUsers() {
   return { developers, platformAdmins };
 }
 
+function outOfTime(context) {
+  return (
+    typeof context?.getRemainingTimeInMillis === "function" &&
+    context.getRemainingTimeInMillis() < SCAN_TIME_RESERVE_MS
+  );
+}
+
 function resolveCreateState(scope, rawState) {
   if (SINGLE_STATE) return SINGLE_STATE;
   if (scope.kind === "stateAdmin") {
@@ -557,9 +574,6 @@ async function scanUsers(include, context) {
   const collected = [];
   let paginationToken;
   let pages = 0;
-  const outOfTime = () =>
-    typeof context?.getRemainingTimeInMillis === "function" &&
-    context.getRemainingTimeInMillis() < SCAN_TIME_RESERVE_MS;
 
   do {
     const response = await cognitoClient.send(
@@ -577,7 +591,7 @@ async function scanUsers(include, context) {
     }
     paginationToken = response.PaginationToken;
     pages += 1;
-  } while (paginationToken && pages < MAX_LIST_PAGES && !outOfTime());
+  } while (paginationToken && pages < MAX_LIST_PAGES && !outOfTime(context));
 
   const truncated = Boolean(paginationToken);
   if (truncated) {
