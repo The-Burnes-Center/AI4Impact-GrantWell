@@ -27,6 +27,16 @@ describe("My documents", () => {
     expect(screen.getByRole("button", { name: "Browse files" })).toBeInTheDocument();
   });
 
+  it("says when there are no documents, and describes Browse files with the file limits", async () => {
+    stubFetch({ [LIST]: json({ documents: [] }) });
+    renderApp(<DocumentsPage />, { route: "/documents" });
+
+    expect(await screen.findByText(/None yet\. Documents you upload appear here/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Browse files" })).toHaveAccessibleDescription(
+      "PDF, Word, Excel, PowerPoint, text and more, up to 100 MB each"
+    );
+  });
+
   it("asks before deleting and deletes by the file's real key", async () => {
     const net = stubFetch({ [LIST]: json({ documents: LIBRARY }), [DELETE]: json({ message: "ok" }) });
     const { user } = renderApp(<DocumentsPage />, { route: "/documents" });

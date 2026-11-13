@@ -81,14 +81,17 @@ export default function LibraryUpload({ library, onUploaded, variant = "dropzone
             if (e.dataTransfer.files?.length) take(Array.from(e.dataTransfer.files));
           }}
         >
-          <LuUpload size={40} className="dm-upload-icon" aria-hidden="true" />
-          <p className="dm-drop-text">Drag and drop files here, or</p>
-          <button type="button" className="gw-btn gw-btn--primary dm-upload-btn" onClick={() => !busy && browse()} aria-disabled={busy || undefined} aria-describedby={instructionsId}>
-            <LuUpload size={16} aria-hidden="true" /> {busy ? "Uploading..." : "Browse files"}
-          </button>
-          <p className="dm-browse-text" id={instructionsId}>
-            PDF, Word, Excel, PowerPoint, text and more, up to 100 MB each
+          <LuUpload size={24} className="dm-upload-icon" aria-hidden="true" />
+          <p className="dm-drop-text">
+            <strong>Drag files here</strong> <span className="dm-drop-text__or">or</span>
+            <br />
+            <span className="dm-browse-text" id={instructionsId}>
+              PDF, Word, Excel, PowerPoint, text and more, up to 100 MB each
+            </span>
           </p>
+          <button type="button" className="gw-btn gw-btn--primary dm-upload-btn" onClick={() => !busy && browse()} aria-disabled={busy || undefined} aria-describedby={instructionsId}>
+            {busy ? "Uploading..." : "Browse files"}
+          </button>
         </div>
       ) : (
         <button type="button" className="gw-btn gw-btn--primary dm-upload-btn" onClick={() => !busy && browse()} aria-disabled={busy || undefined}>

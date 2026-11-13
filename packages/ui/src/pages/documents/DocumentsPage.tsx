@@ -77,7 +77,9 @@ export default function DocumentsPage() {
           ) : library.loadError ? (
             <p className="dm-error" role="alert">{library.loadError}</p>
           ) : docs.length === 0 ? (
-            <p className="dm-empty-state">You haven&apos;t uploaded any documents yet.</p>
+            <p className="dm-library-empty">
+              None yet. Documents you upload appear here, ready to tick in any chat or application.
+            </p>
           ) : (
             <ul aria-labelledby="your-documents" style={{ listStyle: "none", padding: 0, margin: 0 }}>
               {docs.map((doc) => (
