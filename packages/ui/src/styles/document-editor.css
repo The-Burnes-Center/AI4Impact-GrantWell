@@ -9,12 +9,12 @@
   background: var(--gw-color-background);
 }
 
-/* WCAG 2.4.11: DocumentEditorPage measures the pinned header and stepper. */
+/* WCAG 2.4.11: DocumentEditorPage measures the pinned stepper. */
 html:has(.document-editor-root) {
   scroll-padding-top: calc(var(--gw-editor-sticky-height, 0px) + 16px);
 }
 
-/* On short viewports the two pinned bars would cover most of the page. */
+/* On short viewports the pinned stepper would cover most of the page. */
 @media (max-height: 500px) {
   .document-editor-header,
   .progress-stepper-container {
@@ -32,25 +32,11 @@ html:has(.document-editor-root) {
 }
 
 .document-editor-header {
+  padding: 16px 20px;
   background: var(--gw-color-surface);
-  box-shadow: var(--gw-shadow-low);
+  border-bottom: 1px solid var(--gw-color-border);
   width: 100%;
-  max-width: 100%;
-  overflow: visible;
   box-sizing: border-box;
-}
-
-.document-editor-nofo-title {
-  font-size: 22px;
-  font-weight: var(--gw-font-heading-1-weight, 600);
-  color: var(--gw-color-text-strong);
-  margin: 0;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  hyphens: auto;
-  max-width: 100%;
-  line-height: 1.4;
 }
 
 @media (max-width: 900px) {
@@ -67,11 +53,7 @@ html:has(.document-editor-root) {
   }
 
   .document-editor-header {
-    padding: 8px;
-  }
-
-  .document-editor-nofo-title {
-    font-size: 18px; /* Smaller font for narrow viewports */
+    padding: 12px;
   }
 }
 

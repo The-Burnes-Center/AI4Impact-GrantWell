@@ -10,7 +10,8 @@ import { useInert } from "../../hooks/use-inert";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
 import HelpModal from "./components/HelpModal";
 import PageMessage from "../../components/common/PageMessage";
-import { GRANT_TYPES, grantTypeTint, type GrantTypeId } from "../../common/types/nofo";
+import GrantHeader, { type GrantFacts } from "../../components/common/GrantHeader";
+import type { RawNOFOData } from "../../common/types/document";
 import { GrantInReviewError } from "../../common/api-client/grant-in-review";
 import "../../styles/checklists.css";
 
@@ -52,7 +53,7 @@ const Checklists: React.FC = () => {
   const apiClient = useApiClient();
 
   const [llmData, setLlmData] = useState<LlmData>({ grantName: "", eligibility: EMPTY_TAB, documents: EMPTY_TAB, narrative: EMPTY_TAB, deadlines: EMPTY_TAB });
-  const [grantType, setGrantType] = useState<GrantTypeId | null>(null);
+  const [grantFacts, setGrantFacts] = useState<GrantFacts | null>(null);
   const [stateGuidance, setStateGuidance] = useState<{ stateName: string; note: string } | null>(null);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -97,10 +98,12 @@ const Checklists: React.FC = () => {
         try {
           const nofoResult = await apiClient.landingPage.getNOFOs();
           if (nofoResult.nofoData) {
-            const match = nofoResult.nofoData.find((n: { name: string; grant_type?: string }) => n.name === documentIdentifier);
-            if (match) setGrantType(match.grant_type || null);
+            const match = nofoResult.nofoData.find((n: RawNOFOData) => n.name === documentIdentifier);
+            if (match) {
+              setGrantFacts({ grantType: match.grant_type, expirationDate: match.expiration_date, isRolling: match.is_rolling });
+            }
           }
-        } catch { /* grant type is optional */ }
+        } catch { /* the facts are optional */ }
 
         setLlmData({
           grantName: result.data.GrantName || "Grant",
@@ -196,37 +199,20 @@ const Checklists: React.FC = () => {
             />
           ) : (
             <div className="checklist-content">
-              <div className="checklist-content__header">
-                <div className="checklist-content__header-inner">
-                  <h1 className="checklist-content__heading">
-                    Requirements for{" "}
-                    <span className="checklist-content__heading-accent">{llmData.grantName}</span>
-                    {grantType && GRANT_TYPES[grantType] && (
-                      <>
-                        <span className="visually-hidden">,</span>{" "}
-                        <span
-                          className="gw-tag checklist-grant-badge"
-                          style={{
-                            backgroundColor: grantTypeTint(GRANT_TYPES[grantType].color, 8),
-                            color: GRANT_TYPES[grantType].color,
-                            border: `1px solid ${grantTypeTint(GRANT_TYPES[grantType].color, 25)}`,
-                          }}
-                        >
-                          {GRANT_TYPES[grantType].label}
-                        </span>
-                      </>
-                    )}
-                  </h1>
-                  <p className="checklist-content__description">
-                    Key requirement checkpoints for this grant. Review these
-                    requirements to ensure eligibility and understand what documents and narrative sections
-                    you&#39;ll need to prepare.
-                  </p>
-                </div>
-                <button className="gw-btn gw-btn--secondary checklist-help-btn" onClick={() => setShowHelp(true)}>
-                  <LuInfo size={16} aria-hidden="true" /> Help
-                </button>
-              </div>
+              <GrantHeader
+                page="Requirements"
+                grantName={llmData.grantName}
+                facts={grantFacts ?? undefined}
+                actions={
+                  <button className="gw-btn gw-btn--secondary checklist-help-btn" onClick={() => setShowHelp(true)}>
+                    <LuInfo size={16} aria-hidden="true" /> Help
+                  </button>
+                }
+              />
+              <p className="checklist-content__description">
+                Key requirement checkpoints for this grant. Review these requirements to ensure eligibility and
+                understand what documents and narrative sections you&#39;ll need to prepare.
+              </p>
 
               {stateGuidance && (
                 <div role="note" className="gw-alert gw-alert--info checklist-state-guidance">

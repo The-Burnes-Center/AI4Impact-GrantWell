@@ -24,6 +24,7 @@ import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos"
 import ProgressStepper from "../../components/document-editor/ProgressStepper";
 import { LiveStatus } from "../../components/common/LiveStatus";
 import PageMessage from "../../components/common/PageMessage";
+import GrantHeader from "../../components/common/GrantHeader";
 import { getCurrentUser } from "aws-amplify/auth";
 import type { DocumentDraft } from "../../common/api-client/drafts-client";
 import type { DocumentData } from "../../common/types/document";
@@ -247,8 +248,8 @@ const DocumentEditor: React.FC = () => {
     setIsNofoLoading(true);
     apiClient.landingPage
       .getNOFOSummary(selectedNofo, { forApplication: true })
-      .then((result) => setNofoName(result?.data?.GrantName || "Write application"))
-      .catch(() => setNofoName("Write application"))
+      .then((result) => setNofoName(result?.data?.GrantName || selectedNofo))
+      .catch(() => setNofoName(selectedNofo))
       .finally(() => setIsNofoLoading(false));
   }, [selectedNofo, apiClient]);
 
@@ -353,8 +354,7 @@ const DocumentEditor: React.FC = () => {
     ? `/document-editor/drafts?grant=${encodeURIComponent(selectedNofo)}`
     : "/document-editor/drafts";
 
-  // WCAG 2.4.11: the header wraps on long grant names, so the stepper's offset
-  // and the page's scroll padding follow the pinned bars' real heights.
+  // WCAG 2.4.11: the stepper's offset and the page's scroll padding follow the pinned bars' real heights.
   useEffect(() => {
     const root = rootRef.current;
     const header = headerRef.current;
@@ -363,7 +363,7 @@ const DocumentEditor: React.FC = () => {
     const pinnedHeight = (el: HTMLElement | null) =>
       el && getComputedStyle(el).position === "sticky" ? el.offsetHeight : 0;
     const update = () => {
-      root.style.setProperty("--gw-editor-header-height", `${header.offsetHeight}px`);
+      root.style.setProperty("--gw-editor-header-height", `${pinnedHeight(header)}px`);
       document.documentElement.style.setProperty(
         "--gw-editor-sticky-height",
         `${pinnedHeight(header) + pinnedHeight(stepper)}px`
@@ -413,12 +413,9 @@ const DocumentEditor: React.FC = () => {
       <div className="document-content" style={{ flex: 1, display: "flex", flexDirection: "column", margin: 0, padding: 0 }}>
         {!welcomeModalOpen && !grantPickerOpen && (
           <>
-            <div ref={headerRef} className="document-editor-header" style={{ background: "var(--gw-color-surface)", borderBottom: "1px solid var(--gw-color-border)", position: "sticky", top: 0, zIndex: 101, boxShadow: "var(--gw-shadow-low)" }}>
-              <div style={{ padding: 16 }}>
-                <h1 className="document-editor-nofo-title" style={{ margin: 0, fontSize: "22px", lineHeight: 1.4, wordBreak: "break-word" }}>
-                  {isNofoLoading ? "Loading..." : nofoName || "Write application"}
-                </h1>
-              </div>
+            {/* Not pinned: the stepper below stays pinned, and two pinned bars would cover too much of the page. */}
+            <div ref={headerRef} className="document-editor-header">
+              <GrantHeader page="Write application" grantName={isNofoLoading ? "Loading…" : nofoName || "Grant"} />
             </div>
 
             <ProgressStepper
