@@ -90,9 +90,10 @@ const load = (documentKeys?: string[] | null, limits = {}) =>
 const LIB = path.join(__dirname, "../../lib/chatbot-api/functions");
 
 describe("loading supporting documents", () => {
-  it("is one module, copied byte for byte into the chat Lambda", () => {
-    const read = (dir: string) => readFileSync(path.join(LIB, dir, "supporting-documents.mjs"), "utf8");
-    expect(read("websocket-chat")).toBe(read("draft-pipeline/generate-section"));
+  it.each(["supporting-documents.mjs", "document-relevance.mjs"])("%s is one module, copied byte for byte into each Lambda that reads documents", (file) => {
+    const read = (dir: string) => readFileSync(path.join(LIB, dir, file), "utf8");
+    expect(read("draft-pipeline/generate-section")).toBe(read("websocket-chat"));
+    expect(read("knowledge-management/document-safeguards")).toBe(read("websocket-chat"));
   });
 
   it("finds a grant's pre-library folder from a trailing-slash grant id", () => {
