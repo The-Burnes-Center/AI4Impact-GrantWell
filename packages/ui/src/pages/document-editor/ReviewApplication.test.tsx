@@ -146,7 +146,24 @@ describe("ReviewApplication checks", () => {
     expect(sectionList().getByRole("button", { name: /Work plan/ })).toHaveAttribute("aria-current", "true");
     expect(abstract).not.toHaveAttribute("aria-current");
     expect(screen.getByText("About 0.1 of 2 pages.")).toBeInTheDocument();
-    expect(screen.getByText("Drafted for you and not opened in the Section editor yet.")).toBeInTheDocument();
+  });
+
+  it("counts a section chosen in Review as opened, and remembers it", async () => {
+    const { user, unmount } = renderChecked();
+    await listLoaded();
+    expect(await screen.findByText(/^4 things to check/)).toBeInTheDocument();
+
+    await user.click(sectionList().getByRole("button", { name: /^Work plan\s*,\s*Not opened$/ }));
+
+    expect(sectionList().getByRole("button", { name: /^Work plan$/ })).toBeInTheDocument();
+    expect(screen.queryByText(/not opened yet/)).not.toBeInTheDocument();
+    expect(screen.getByText(/^3 things to check/)).toBeInTheDocument();
+    expect(JSON.parse(localStorage.getItem("gw:draft:s1:sectionsViewed")!)).toContain("work-plan");
+
+    unmount();
+    renderApp(<ReviewApplication selectedNofo="Grant B" sessionId="s1" onNavigate={() => {}} />);
+    await listLoaded();
+    expect(await sectionList().findByRole("button", { name: /^Work plan$/ })).toBeInTheDocument();
   });
 
   it("sends Edit this section to that section in the Section editor", async () => {

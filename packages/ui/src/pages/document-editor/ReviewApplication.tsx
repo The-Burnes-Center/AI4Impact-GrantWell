@@ -221,7 +221,14 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
 
   const selected = checks.find((c) => c.section.id === selectedId) ?? null;
 
+  const markOpened = (id: string) => {
+    const seen = readDraftCache<string[]>(sessionId, "sectionsViewed") || [];
+    if (!seen.includes(id)) writeDraftCache(sessionId, "sectionsViewed", [...seen, id]);
+    setViewedIds((current) => (current.includes(id) ? current : [...current, id]));
+  };
+
   const chooseSection = (id: string) => {
+    markOpened(id);
     if (id === selectedId) {
       previewHeadingRef.current?.focus();
       return;
@@ -459,7 +466,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
                       ))}
                     {!selected.opened && (
                       <strong className="ra-preview__warn">
-                        {selectedLength ? " " : ""}Drafted for you and not opened in the Section editor yet.
+                        {selectedLength ? " " : ""}Drafted for you and not opened yet.
                       </strong>
                     )}
                     {selected.placeholders > 0 && (
