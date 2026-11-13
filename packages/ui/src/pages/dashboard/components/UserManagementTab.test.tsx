@@ -354,6 +354,33 @@ describe("UserManagementTab", () => {
     expect(net.last("POST /user-management/users").body).toEqual({ email: "lead@example.org", rolePreset: "admin" });
   });
 
+  it("keeps unsaved changes in other rows when an invite reloads the list", async () => {
+    let created = false;
+    stubFetch({
+      [USERS]: () => listed(created ? [...members(3), { ...user(9), email: "p0025@example.org" }] : members(3)),
+      "POST /user-management/users": () => {
+        created = true;
+        return json({ username: "u9" }, 201);
+      },
+    });
+    const { user: ui } = renderTab();
+    await screen.findByText("p001@example.org");
+    await ui.selectOptions(screen.getByLabelText("Role for p002@example.org"), "admin");
+    await ui.selectOptions(screen.getByLabelText("State for p003@example.org"), "NY");
+
+    await ui.click(screen.getByRole("button", { name: "Invite user" }));
+    const dialog = await screen.findByRole("dialog", { name: "Invite a user" });
+    await ui.type(within(dialog).getByLabelText("Email address"), "p0025@example.org");
+    await ui.click(within(dialog).getByRole("button", { name: "Invite user" }));
+    expect(await screen.findByText("p0025@example.org")).toBeInTheDocument();
+
+    expect(screen.getByLabelText("Role for p002@example.org")).toHaveValue("admin");
+    expect(screen.getByLabelText("State for p003@example.org")).toHaveValue("NY");
+    expect(screen.getByLabelText("Role for p001@example.org")).toHaveValue("user");
+    expect(screen.getByRole("button", { name: /^Save ?changes for p002@example\.org$/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^Save ?changes for p003@example\.org$/ })).toBeInTheDocument();
+  });
+
   it("names the roles in sentence case in the legend and the role picker", async () => {
     stubFetch({ [USERS]: listed([member(1)]) });
     renderTab();

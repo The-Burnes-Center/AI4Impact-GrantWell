@@ -129,20 +129,32 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   // Set when a change may remove the row that has focus; checked once the new rows render.
   const refocusAfterReload = useRef(false);
   const savedUsername = useRef<string | null>(null);
+  const usersRef = useRef(users);
+  usersRef.current = users;
 
   const loadUsers = useCallback(async (): Promise<ManagedUser[] | null> => {
     try {
       setLoading(true);
       const response = await apiClient.userManagement.listUsers();
       const sorted = [...response.users].sort(compareUsers);
-      setDraftRoles(
+      // A reload keeps any row's unsaved choice; untouched rows take the server's values.
+      const before = new Map(usersRef.current.map((user) => [user.username, user]));
+      setDraftRoles((drafts) =>
         Object.fromEntries(
-          response.users.map((user) => [user.username, getRolePreset(user.roles)])
+          sorted.map((user) => {
+            const old = before.get(user.username);
+            const edited = old && drafts[user.username] && drafts[user.username] !== getRolePreset(old.roles);
+            return [user.username, edited ? drafts[user.username] : getRolePreset(user.roles)];
+          })
         )
       );
-      setDraftStates(
+      setDraftStates((drafts) =>
         Object.fromEntries(
-          response.users.map((user) => [user.username, user.state || ""])
+          sorted.map((user) => {
+            const old = before.get(user.username);
+            const edited = old && user.username in drafts && drafts[user.username] !== (old.state || "");
+            return [user.username, edited ? drafts[user.username] : user.state || ""];
+          })
         )
       );
       setUsers(sorted);
