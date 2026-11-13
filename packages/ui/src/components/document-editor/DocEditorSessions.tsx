@@ -433,7 +433,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
                 disabled={isLoading}
                 style={{ display: "flex", alignItems: "center", gap: "6px", background: "none", border: "none", cursor: isLoading ? "default" : "pointer", padding: 0, font: "inherit", color: "inherit", textTransform: "inherit", letterSpacing: "inherit" }}
               >
-                Last Modified {!isLoading && getSortIcon("last_modified")}
+                Last modified {!isLoading && getSortIcon("last_modified")}
               </button>
             </div>
             <div className="header-cell" role="columnheader">Grant</div>
