@@ -488,3 +488,10 @@
     align-items: stretch;
   }
 }
+
+/* Stacked filters stay one width; otherwise Clear filters squeezes the last one onto its row. */
+@media screen and (max-width: 720px) {
+  .landing-filter-dropdown-wrapper {
+    flex-basis: 100%;
+  }
+}
