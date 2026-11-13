@@ -11,6 +11,7 @@ import TableScrollRegion from "../../../components/ui/TableScrollRegion";
 import SortableHeader from "../../../components/ui/SortableHeader";
 import { Modal } from "../../../components/common/Modal";
 import { sectionLabel } from "./section-labels";
+import SkeletonRows from "../../../components/ui/SkeletonRows";
 
 interface ProcessingReviewTabProps {
   apiClient: ApiClient;
@@ -584,11 +585,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
             </tbody>
           )}
         </table>
-        {loading && (
-          <div className="review-loading" aria-hidden="true">
-            Loading reviews...
-          </div>
-        )}
+        {loading && <SkeletonRows label="Loading reviews" />}
         <div role="status" className="visually-hidden">
           {loading ? "Loading reviews" : resultsAnnouncement}
         </div>

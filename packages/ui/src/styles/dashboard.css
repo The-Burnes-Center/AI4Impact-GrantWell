@@ -1595,24 +1595,6 @@ select.form-input {
   animation: loading-spin 1s linear infinite;
 }
 
-/* Table loading state */
-.table-loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 60px 20px;
-  min-height: 200px;
-}
-
-.table-loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid var(--gw-color-border);
-  border-top-color: var(--gw-color-primary);
-  border-radius: 50%;
-  animation: loading-spin 1s linear infinite;
-}
-
 @keyframes loading-spin {
   to {
     transform: rotate(360deg);
@@ -2313,13 +2295,6 @@ select.form-input {
 
 .review-status-filter {
   min-height: 44px;
-}
-
-.review-loading {
-  padding: 40px;
-  text-align: center;
-  color: var(--gw-color-text-secondary);
-  font-size: var(--gw-font-size-sm);
 }
 
 .review-nofo-name {

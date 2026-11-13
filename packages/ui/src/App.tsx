@@ -15,6 +15,7 @@ import { IS_PROD } from "./common/instance";
 import { EDITOR_STEPS } from "./common/helpers/document-editor-utils";
 import NotFoundPage from "./pages/not-found/NotFoundPage";
 import "./styles/app.scss";
+import LoadingSpinner from "./components/ui/LoadingSpinner";
 
 const Playground = React.lazy(() => import("./pages/chat/playground/PlaygroundPage"));
 const SessionPage = React.lazy(() => import("./pages/chat/sessions/SessionsPage"));
@@ -127,7 +128,7 @@ function AppContent() {
       <main id="main-content" tabIndex={-1}>
         <NotificationBar />
         <ErrorBoundary>
-          <Suspense fallback={<div className="lazy-loading-fallback" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>Loading...</div>}>
+          <Suspense fallback={<LoadingSpinner message="Loading…" showMessage />}>
             <Routes>
             <Route
               index

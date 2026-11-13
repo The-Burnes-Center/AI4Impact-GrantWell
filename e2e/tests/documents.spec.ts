@@ -78,7 +78,7 @@ test("uses a document from My documents in a chat, leaves it unticked in a new a
     await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "My documents" }).click();
     await expect(page).toHaveURL(/\/documents$/);
     await expect(page.getByRole("heading", { level: 1, name: "My documents" })).toBeVisible();
-    await expect(page.getByText("Loading your documents...")).toHaveCount(0);
+    await expect(page.getByRole("status", { name: "Loading your documents" })).toHaveCount(0);
 
     documentKey = key;
     const [chooser] = await Promise.all([
@@ -185,7 +185,7 @@ test("uses a document from My documents in a chat, leaves it unticked in a new a
     await expect(library(page).getByText(fileName)).toHaveCount(0);
     expect((await listDocuments()).map((d) => d.key)).not.toContain(key);
     await page.reload();
-    await expect(page.getByText("Loading your documents...")).toHaveCount(0);
+    await expect(page.getByRole("status", { name: "Loading your documents" })).toHaveCount(0);
     await expect(library(page).getByText(fileName)).toHaveCount(0);
   });
 });

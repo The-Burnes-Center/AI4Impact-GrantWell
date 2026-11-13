@@ -22,6 +22,7 @@ import { GRANT_TYPES, type NOFO, type GrantTypeId } from "../../common/types/nof
 import type { RawNOFOData } from "../../common/types/document";
 import { LiveStatus } from "../../components/common/LiveStatus";
 import "../../styles/dashboard.css";
+import LoadingSpinner from "../../components/ui/LoadingSpinner";
 
 const STATUS_FILTERS = ["all", "active", "archived"] as const;
 const GRANT_TYPE_FILTERS = ["all", "federal", "state", "quasi", "philanthropic"] as const;
@@ -480,7 +481,7 @@ const Dashboard: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [filterMenuOpen]);
 
-  if (loading || roleLoading) return <div className="loading" role="status">Loading Admin dashboard...</div>;
+  if (loading || roleLoading) return <LoadingSpinner message="Loading Admin dashboard…" showMessage />;
   if (!isAdmin) return <Navigate to="/home" replace />;
 
   const filterCount = getActiveFilterCount();

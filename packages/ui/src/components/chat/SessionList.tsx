@@ -22,6 +22,7 @@ import PageHeader from "../common/PageHeader";
 import { v4 as uuidv4 } from "uuid";
 import { useNotifications } from "../notifications/NotificationManager";
 import "../../styles/dashboard.css";
+import SkeletonRows from "../ui/SkeletonRows";
 
 export interface SessionsProps {
   readonly toolsOpen: boolean;
@@ -365,11 +366,7 @@ export default function Sessions(props: SessionsProps) {
             </tbody>
           )}
         </table>
-        {isLoading && (
-          <div className="table-loading" aria-hidden="true">
-            <div className="table-loading-spinner"></div>
-          </div>
-        )}
+        {isLoading && <SkeletonRows label="Loading chats" />}
       </div>
       </TableScrollRegion>
 

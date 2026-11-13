@@ -8,6 +8,7 @@ import { useDocumentLibrary } from "../../hooks/use-document-library";
 import { LIBRARY_FOLDER, formatFileSize, type LibraryDocument } from "../../common/helpers/user-documents";
 import "../../styles/dashboard.css";
 import "../../styles/document-manager.css";
+import SkeletonRows from "../../components/ui/SkeletonRows";
 
 const formatDate = (value: string) =>
   new Date(value).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
@@ -66,7 +67,7 @@ export default function DocumentsPage() {
 
           <h2 id="your-documents" style={{ fontSize: 18, marginTop: 32 }}>Your documents ({docs.length})</h2>
           {library.loading ? (
-            <p>Loading your documents...</p>
+            <SkeletonRows label="Loading your documents" />
           ) : library.loadError ? (
             <p className="dm-error" role="alert">{library.loadError}</p>
           ) : docs.length === 0 ? (

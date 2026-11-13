@@ -9,6 +9,7 @@ import { Modal } from "../../../components/common/Modal";
 import PaginationControls from "../../../components/common/PaginationControls";
 import TableScrollRegion from "../../../components/ui/TableScrollRegion";
 import RowActionsMenu, { type RowAction } from "./RowActionsMenu";
+import SkeletonRows from "../../../components/ui/SkeletonRows";
 
 interface UserManagementTabProps {
   apiClient: ApiClient;
@@ -330,8 +331,8 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   if (!loaded) {
     return (
       <>
-        <div className="feature-rollouts-panel" aria-busy="true">
-          <span aria-hidden="true">Loading users...</span>
+        <div className="feature-rollouts-panel">
+          <SkeletonRows label="Loading users" />
         </div>
         <LiveStatus className="visually-hidden">Loading users...</LiveStatus>
       </>

@@ -700,3 +700,35 @@ a.gw-tab { text-decoration: none; }
   color: var(--gw-color-text-secondary);
 }
 .gw-page-message .gw-btn { min-height: 44px; }
+
+/* ==============================
+ * Skeleton rows: list loading
+ * ============================== */
+
+.gw-skeleton {
+  display: flex;
+  flex-direction: column;
+  background: var(--gw-color-surface);
+}
+.gw-skeleton__row {
+  display: flex;
+  align-items: center;
+  gap: var(--gw-spacing-lg);
+  min-height: 52px;
+  padding: 0 var(--gw-spacing-lg);
+  border-bottom: 1px solid var(--gw-color-border);
+}
+.gw-skeleton__bar {
+  display: block;
+  height: 12px;
+  border-radius: var(--gw-radius-check);
+  background: var(--gw-color-border);
+  animation: gw-skeleton-pulse 1.5s ease-in-out infinite;
+}
+.gw-skeleton__bar--check { flex: 0 0 16px; height: 16px; }
+@keyframes gw-skeleton-pulse {
+  50% { opacity: 0.5; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gw-skeleton__bar { animation: none; }
+}

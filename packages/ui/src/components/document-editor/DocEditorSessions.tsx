@@ -19,6 +19,7 @@ import OutcomeDialog from "../outcomes/OutcomeDialog";
 import type { ApplicationOutcome } from "../../common/api-client/outcomes-client";
 import { OUTCOME_LABELS, formatDollars, type OutcomeInput } from "../../common/application-outcomes";
 import "../../styles/dashboard.css";
+import SkeletonRows from "../ui/SkeletonRows";
 
 export interface DocEditorSessionsProps {
   readonly toolsOpen: boolean;
@@ -529,11 +530,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
             </tbody>
           )}
         </table>
-        {isLoading && (
-          <div className="table-loading" aria-hidden="true">
-            <div className="table-loading-spinner"></div>
-          </div>
-        )}
+        {isLoading && <SkeletonRows label="Loading applications" />}
       </div>
       </TableScrollRegion>
 

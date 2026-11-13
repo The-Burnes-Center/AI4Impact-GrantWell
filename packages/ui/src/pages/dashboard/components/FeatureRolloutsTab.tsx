@@ -6,6 +6,7 @@ import FeatureRolloutAllowlistManager from "./FeatureRolloutAllowlistManager";
 import FeatureRolloutModeSelector from "./FeatureRolloutModeSelector";
 import FeatureRolloutOverview from "./FeatureRolloutOverview";
 import FeatureRolloutPanel from "./FeatureRolloutPanel";
+import LoadingSpinner from "../../../components/ui/LoadingSpinner";
 
 const FEATURE_KEY = "ai-grant-search";
 const MAINTENANCE_KEY = "maintenance-mode";
@@ -198,8 +199,8 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
 
   if (loading) {
     return (
-      <div className="feature-rollouts-panel" aria-busy="true">
-        <span role="status">Loading feature rollouts...</span>
+      <div className="feature-rollouts-panel">
+        <LoadingSpinner message="Loading feature rollouts…" showMessage />
       </div>
     );
   }
