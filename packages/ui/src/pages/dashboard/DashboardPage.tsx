@@ -12,6 +12,8 @@ import UserManagementTab from "./components/UserManagementTab";
 import ProcessingReviewTab from "./components/ProcessingReviewTab";
 import ProcessingTab from "./components/ProcessingTab";
 import AnalyticsTab from "./components/AnalyticsTab";
+import DocumentReviewsTab from "./components/DocumentReviewsTab";
+import AdminTabHeader from "./components/AdminTabHeader";
 import {
   LuSearch, LuFilter, LuUpload, LuCheck, LuX,
   LuRefreshCw, LuDownload, LuInfo, LuLoader, LuArrowRight,
@@ -28,7 +30,7 @@ const GRANT_TYPE_FILTERS = ["all", "federal", "state", "quasi", "philanthropic"]
 const FILTER_ITEM_COUNT = STATUS_FILTERS.length + GRANT_TYPE_FILTERS.length;
 
 const Dashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"grants" | "analytics" | "feature-rollouts" | "user-management">("grants");
+  const [activeTab, setActiveTab] = useState<"grants" | "analytics" | "feature-rollouts" | "user-management" | "document-reviews">("grants");
    const [grantsSegment, setGrantsSegment] = useState<"all" | "processing" | "attention">("all");
   const [reviewFocus, setReviewFocus] = useState<string | null>(null);
   // Names of finished grants the admin has dismissed from the Processing tab (client-side, resets on reload).
@@ -66,11 +68,13 @@ const Dashboard: React.FC = () => {
   const analyticsTabRef = useRef<HTMLButtonElement>(null);
   const rolloutsTabRef = useRef<HTMLButtonElement>(null);
   const userManagementTabRef = useRef<HTMLButtonElement>(null);
+  const documentReviewsTabRef = useRef<HTMLButtonElement>(null);
   const tabRefs = {
     grants: grantsTabRef,
     analytics: analyticsTabRef,
     "feature-rollouts": rolloutsTabRef,
     "user-management": userManagementTabRef,
+    "document-reviews": documentReviewsTabRef,
   };
   const processingSegmentRef = useRef<HTMLButtonElement>(null);
   const attentionSegmentRef = useRef<HTMLButtonElement>(null);
@@ -204,6 +208,9 @@ const Dashboard: React.FC = () => {
           : []),
         ...(canManageUsers
           ? [{ key: "user-management" as const, ref: userManagementTabRef }]
+          : []),
+        ...(canManageUsers
+          ? [{ key: "document-reviews" as const, ref: documentReviewsTabRef }]
           : []),
       ];
       const currentIndex = tabs.findIndex((tab) => tab.key === activeTab);
@@ -599,6 +606,21 @@ const Dashboard: React.FC = () => {
                 User management
               </button>
             )}
+            {canManageUsers && (
+              <button
+                id="dashboard-tab-document-reviews"
+                ref={documentReviewsTabRef}
+                className={`gw-tab tab-button ${activeTab === "document-reviews" ? "active" : ""}`}
+                onClick={() => setActiveTab("document-reviews")}
+                onKeyDown={handleTabKeyDown}
+                role="tab"
+                aria-selected={activeTab === "document-reviews"}
+                aria-controls={activeTab === "document-reviews" ? "dashboard-panel-document-reviews" : undefined}
+                tabIndex={activeTab === "document-reviews" ? 0 : -1}
+              >
+                Document reviews
+              </button>
+            )}
           </div>
 
           <div className="dashboard-content">
@@ -874,6 +896,23 @@ const Dashboard: React.FC = () => {
                   userState={userState}
                   currentUsername={username}
                 />
+              </div>
+            ) : activeTab === "document-reviews" ? (
+              <div
+                id="dashboard-panel-document-reviews"
+                role="tabpanel"
+                aria-labelledby="dashboard-tab-document-reviews"
+                tabIndex={0}
+              >
+                <AdminTabHeader
+                  title="Document reviews"
+                  intro={
+                    isStateAdmin
+                      ? `Requests from people in ${userState} to use a document the check found unrelated to a grant.`
+                      : "Requests to use a document the check found unrelated to a grant."
+                  }
+                />
+                <DocumentReviewsTab apiClient={apiClient} />
               </div>
             ) : null}
           </div>
