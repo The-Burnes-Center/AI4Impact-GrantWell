@@ -208,7 +208,6 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
   return (
     <div className="feature-rollouts-panel">
       <FeatureRolloutPanel
-        eyebrow="Developer controls"
         title="Maintenance mode"
         description="Take the site offline for all users and admins. Developers bypass the maintenance page automatically."
         overview={
@@ -217,7 +216,7 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
               <span className={`gw-tag feature-rollouts-badge ${maintenanceConfig.mode === "all" ? "feature-rollouts-badge--danger" : "feature-rollouts-badge--success"}`}>
                 Current state
               </span>
-              <h3>{maintenanceConfig.mode === "all" ? "Site is offline" : "Site is live"}</h3>
+              <p className="feature-rollouts-overview-card__value">{maintenanceConfig.mode === "all" ? "Site is offline" : "Site is live"}</p>
               <p>
                 {maintenanceConfig.mode === "all"
                   ? "All users and admins see the maintenance page. Developers can still access the site."
@@ -226,7 +225,7 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
             </article>
             <article className="feature-rollouts-overview-card">
               <span className="gw-tag feature-rollouts-badge feature-rollouts-badge--neutral">Audit</span>
-              <h3>Last updated {maintenanceUpdatedAtLabel}</h3>
+              <p className="feature-rollouts-overview-card__value">Last updated {maintenanceUpdatedAtLabel}</p>
               <p>{maintenanceConfig.updatedBy ? `Changed by ${maintenanceConfig.updatedBy}.` : "No changes recorded yet."}</p>
             </article>
           </section>
@@ -289,7 +288,6 @@ const FeatureRolloutsTab: React.FC<FeatureRolloutsTabProps> = ({
       <div style={{ marginTop: "2rem" }} />
 
       <FeatureRolloutPanel
-        eyebrow="Developer controls"
         title="AI search beta"
         description="Control who sees the AI-powered grant search."
         overview={

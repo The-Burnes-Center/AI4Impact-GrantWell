@@ -50,7 +50,7 @@ const FeatureRolloutAllowlistManager: React.FC<FeatureRolloutAllowlistManagerPro
     <div className="feature-rollouts-mode-content">
       <section className="feature-rollouts-section">
         <div className="feature-rollouts-section-header">
-          <h3>Allowlisted users</h3>
+          <h4>Allowlisted users</h4>
           <p>Manage the users who should see AI search in allowlisted mode.</p>
         </div>
         {users.length === 0 ? (
@@ -82,7 +82,7 @@ const FeatureRolloutAllowlistManager: React.FC<FeatureRolloutAllowlistManagerPro
 
       <section className="feature-rollouts-section">
         <div className="feature-rollouts-section-header">
-          <h3>Search users</h3>
+          <h4>Search users</h4>
           <p>Search Cognito users by email before allowlisting them.</p>
         </div>
 

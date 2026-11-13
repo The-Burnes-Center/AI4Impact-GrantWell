@@ -23,6 +23,7 @@ import type { RawNOFOData } from "../../common/types/document";
 import { LiveStatus } from "../../components/common/LiveStatus";
 import "../../styles/dashboard.css";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
+import AdminTabHeader from "./components/AdminTabHeader";
 
 const STATUS_FILTERS = ["all", "active", "archived"] as const;
 const GRANT_TYPE_FILTERS = ["all", "federal", "state", "quasi", "philanthropic"] as const;
@@ -610,6 +611,7 @@ const Dashboard: React.FC = () => {
                 aria-labelledby="dashboard-tab-grants"
                 tabIndex={0}
               >
+                <AdminTabHeader title="Grants" intro="Every grant on the site, with its status and processing state." />
                 {isAdmin && (
                   <div className="gw-toggle grants-segment" role="group" aria-label="Grant view">
                     <button
@@ -652,9 +654,9 @@ const Dashboard: React.FC = () => {
                   </div>
                 )}
 
-                <h2 className="visually-hidden">
+                <h3 className="visually-hidden">
                   {grantsSegment === "attention" ? "Needs attention" : grantsSegment === "processing" ? "Processing" : "All grants"}
-                </h2>
+                </h3>
                 <div role="status" className="visually-hidden">
                   {grantsSegment === "all" ? resultsAnnouncement : ""}
                 </div>
@@ -840,7 +842,10 @@ const Dashboard: React.FC = () => {
                 aria-labelledby="dashboard-tab-analytics"
                 tabIndex={0}
               >
-                <h2 className="visually-hidden">Analytics</h2>
+                <AdminTabHeader
+                  title="Analytics"
+                  intro="How people use the site: accounts, applications, departments and reported outcomes."
+                />
                 <AnalyticsTab
                   apiClient={apiClient}
                   addNotification={addNotification}
@@ -855,6 +860,10 @@ const Dashboard: React.FC = () => {
                 aria-labelledby="dashboard-tab-rollouts"
                 tabIndex={0}
               >
+                <AdminTabHeader
+                  title="Feature rollouts"
+                  intro="Take the site offline for maintenance, and choose who sees features that are still in testing."
+                />
                 <FeatureRolloutsTab
                   apiClient={apiClient}
                   addNotification={addNotification}
@@ -867,6 +876,14 @@ const Dashboard: React.FC = () => {
                 aria-labelledby="dashboard-tab-user-management"
                 tabIndex={0}
               >
+                <AdminTabHeader
+                  title="User management"
+                  intro={
+                    isStateAdmin
+                      ? `Add people in ${userState}, change their roles and remove their accounts.`
+                      : "Add people, change their roles and remove their accounts."
+                  }
+                />
                 <UserManagementTab
                   apiClient={apiClient}
                   addNotification={addNotification}

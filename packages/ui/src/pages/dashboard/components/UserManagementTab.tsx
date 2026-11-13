@@ -348,10 +348,6 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
       <div className="feature-rollouts-card">
         <div className="feature-rollouts-card__header">
           <div>
-            <span className="feature-rollouts-eyebrow">
-              {isStateAdmin ? "State administration" : "Developer controls"}
-            </span>
-            <h2>User management</h2>
             <p>
               {isStateAdmin
                 ? `Manage users in ${userState}. You can add users, change roles between User and Admin, and remove users — all scoped to ${userState}.`
