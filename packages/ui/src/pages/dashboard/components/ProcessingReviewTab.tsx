@@ -452,7 +452,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
         <div role="table" aria-label="Processing reviews" ref={tableRef} tabIndex={-1} aria-busy={loading}>
           <div className="table-header review-table-grid-select" role="rowgroup">
             <div role="row" style={{ display: "contents" }}>
-              <div className="header-cell review-checkbox-cell" role="columnheader" aria-label="Select">
+              <div className="header-cell review-checkbox-cell" role="cell">
                 <label className="gw-select-all">
                   <input
                     type="checkbox"

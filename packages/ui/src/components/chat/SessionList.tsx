@@ -263,7 +263,7 @@ export default function Sessions(props: SessionsProps) {
         <div role="table" aria-label="Chats">
           <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "104px 2.5fr 1fr" }}>
             <div role="row" style={{ display: "contents" }}>
-              <div className="header-cell" role="columnheader" aria-label="Select">
+              <div className="header-cell" role="cell">
                 <label className="gw-select-all">
                   <input
                     type="checkbox"

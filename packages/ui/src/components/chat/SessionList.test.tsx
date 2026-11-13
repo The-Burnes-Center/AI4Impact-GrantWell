@@ -21,12 +21,11 @@ function renderList() {
 }
 
 describe("SessionList", () => {
-  it("names the select column Select, apart from its Select all checkbox", async () => {
+  it("keeps Select all out of the column headers, so rows are not announced with it", async () => {
     renderList();
     const selectAll = await screen.findByRole("checkbox", { name: "Select all chats" });
-    const header = screen.getByRole("columnheader", { name: "Select" });
-    expect(header).toContainElement(selectAll);
-    expect(screen.queryByText("Select", { selector: ".visually-hidden" })).toBeNull();
+    expect(selectAll.closest('[role="columnheader"]')).toBeNull();
+    expect(selectAll.closest('[role="cell"]')).not.toBeNull();
   });
 
   it("announces the shown range when the page changes", async () => {

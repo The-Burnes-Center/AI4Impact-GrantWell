@@ -91,11 +91,12 @@ describe("DocEditorSessions list actions", () => {
 });
 
 describe("DocEditorSessions table semantics", () => {
-  it("names the select column Select, apart from its Select all checkbox", async () => {
+  it("keeps Select all out of the column headers, so rows are not announced with it", async () => {
     renderList();
     await rowFor("Fiber plan");
-    const header = screen.getByRole("columnheader", { name: "Select" });
-    expect(header).toContainElement(screen.getByRole("checkbox", { name: "Select all applications" }));
+    const selectAll = screen.getByRole("checkbox", { name: "Select all applications" });
+    expect(selectAll.closest('[role="columnheader"]')).toBeNull();
+    expect(selectAll.closest('[role="cell"]')).not.toBeNull();
   });
 
   it("puts the shown range in a status region so a page change is announced", async () => {

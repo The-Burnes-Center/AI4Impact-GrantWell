@@ -142,7 +142,7 @@ describe("ProcessingReviewTab", () => {
     const { user } = renderTab(json({ reviews: QUEUE, expiredOpenCount: 1 }));
     await screen.findByText("Today Grant");
     const selectAll = screen.getByRole("checkbox", { name: "Select all reviews" }) as HTMLInputElement;
-    expect(screen.getByRole("columnheader", { name: /^Select/ })).toContainElement(selectAll);
+    expect(selectAll.closest('[role="columnheader"]')).toBeNull();
 
     await user.click(screen.getByRole("checkbox", { name: "Select Soon Grant" }));
     expect(selectAll.indeterminate).toBe(true);

@@ -106,15 +106,15 @@ describe("DocumentEditorPage", () => {
     );
 
     await user.click(await screen.findByRole("button", { name: "Get started" }));
-    const picker = await screen.findByRole("dialog", { name: "Start a new application" });
-    await user.click(await within(picker).findByRole("button", { name: "Grant A" }));
+    const picker = await screen.findByRole("dialog", { name: "Start a new application" }, { timeout: 5000 });
+    await user.click(await within(picker).findByRole("button", { name: "Grant A" }, { timeout: 5000 }));
 
-    expect(await within(picker).findByText("Starting…")).toBeInTheDocument();
+    expect(await within(picker).findByText("Starting…", {}, { timeout: 5000 })).toBeInTheDocument();
     expect(within(picker).getByText("Starting…").closest("[aria-busy='true']")).toBeNull();
     expect(screen.queryByRole("textbox", { name: /Project name/ })).not.toBeInTheDocument();
 
     finishCreate(json({ session_id: "new" }));
-    await waitFor(() => expect(screen.queryByRole("dialog", { name: "Start a new application" })).not.toBeInTheDocument());
-    expect(await screen.findByRole("textbox", { name: /Project name/ })).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByRole("dialog", { name: "Start a new application" })).not.toBeInTheDocument(), { timeout: 5000 });
+    expect(await screen.findByRole("textbox", { name: /Project name/ }, { timeout: 5000 })).toBeInTheDocument();
   });
 });

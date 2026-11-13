@@ -397,7 +397,7 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
       <div className="table-container" role="table" aria-label="Applications">
         <div className="table-header" role="rowgroup" style={{ gridTemplateColumns: "104px 2fr 1.3fr 1.5fr 1fr 1.4fr" }}>
           <div role="row" style={{ display: "contents" }}>
-            <div className="header-cell" role="columnheader" aria-label="Select">
+            <div className="header-cell" role="cell">
               <label className="gw-select-all">
                 <input
                   type="checkbox"
