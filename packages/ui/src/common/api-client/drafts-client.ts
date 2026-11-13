@@ -761,7 +761,7 @@ export class DraftsClient {
       },
       body: JSON.stringify({
         draftData: {
-          title: draftData.title || 'Grant Application',
+          title: draftData.title || 'Grant application',
           grantName: draftData.grantName,
           projectBasics: draftData.projectBasics || {},
           sections: draftData.sections || {},
@@ -810,7 +810,7 @@ export class DraftsClient {
       body: JSON.stringify({
         async: true,
         draftData: {
-          title: draftData.title || 'Grant Application',
+          title: draftData.title || 'Grant application',
           grantName: draftData.grantName,
           projectBasics: draftData.projectBasics || {},
           sections: draftData.sections || {},
@@ -847,7 +847,7 @@ export class DraftsClient {
       },
       body: JSON.stringify({
         draftData: {
-          title: draftData.title || 'Grant Application',
+          title: draftData.title || 'Grant application',
           grantName: draftData.grantName,
           projectBasics: draftData.projectBasics || {},
           sections: draftData.sections || {},

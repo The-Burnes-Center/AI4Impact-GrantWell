@@ -323,7 +323,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as "all" | "active" | "archived")}
           >
-            <option value="all">All Grants ({nofos.filter((nofo) =>
+            <option value="all">All grants ({nofos.filter((nofo) =>
               (categoryFilter === "all" || nofo.category === categoryFilter) &&
               (grantTypeFilter === "all" || nofo.grantType === grantTypeFilter)
             ).length})</option>
@@ -340,7 +340,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
           >
-            <option value="all">All Categories ({nofos.filter((nofo) =>
+            <option value="all">All categories ({nofos.filter((nofo) =>
               (statusFilter === "all" || nofo.status === statusFilter) &&
               (grantTypeFilter === "all" || nofo.grantType === grantTypeFilter)
             ).length})</option>
