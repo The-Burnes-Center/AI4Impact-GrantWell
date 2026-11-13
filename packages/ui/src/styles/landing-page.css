@@ -187,14 +187,17 @@
   display: flex;
   flex-direction: row;
   gap: 10px;
-  margin: 28px 0 8px 0;
+  margin: var(--gw-spacing-lg) 0 0;
   width: 100%;
   justify-content: center;
   flex-wrap: wrap;
 }
 
-.cta-nav--highlighted {
-  margin: 20px 0 8px 0;
+/* The highlight's padding is taken back by negative margins so the buttons and the table below do not move. */
+.cta-nav.cta-nav--highlighted {
+  width: auto;
+  padding: var(--gw-spacing-lg) var(--gw-spacing-xl);
+  margin: 0 calc(-1 * var(--gw-spacing-xl)) calc(-1 * var(--gw-spacing-lg));
 }
 
 .cta-btn {
