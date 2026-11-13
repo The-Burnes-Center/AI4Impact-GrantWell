@@ -13,7 +13,7 @@ const user = (n: number): ManagedUser => ({
   status: "CONFIRMED",
   enabled: true,
   roles: [],
-  state: "",
+  state: "MA",
 });
 
 const member = (n: number): ManagedUser => ({ ...user(n), email: `p${String(n).padStart(3, "0")}@example.org` });
@@ -190,7 +190,7 @@ describe("UserManagementTab", () => {
 
     await ui.click(within(dialog).getByRole("button", { name: "Invite user" }));
     expect(state).toHaveAttribute("aria-invalid", "true");
-    expect(state).toHaveAccessibleDescription("Choose a state for an admin.");
+    expect(state).toHaveAccessibleDescription(/^Choose a state for an admin\. An admin with no state has platform access/);
     expect(state).toHaveFocus();
     expect(net.to("POST /user-management/users")).toHaveLength(0);
 
@@ -273,34 +273,85 @@ describe("UserManagementTab", () => {
     expect(screen.getByRole("button", { name: "More actions for ext-2" })).toBeInTheDocument();
   });
 
-  it("locks developer and platform admin rows for an admin who isn't a developer, and flags a stateless admin", async () => {
+  it("locks developer, platform admin and stateless admin rows for an admin who isn't a developer", async () => {
     const accounts = [
-      { ...member(1), roles: ["Developer"] },
-      { ...member(2), roles: ["PlatformAdmin"] },
-      { ...member(3), roles: ["Admin"] },
+      { ...member(1), roles: ["Developer"], state: "" },
+      { ...member(2), roles: ["PlatformAdmin"], state: "" },
+      { ...member(3), roles: ["Admin"], state: "" },
       { ...member(4), roles: ["Admin"], state: "MA" },
     ];
     stubFetch({ [USERS]: listed(accounts) });
     const view = renderTab();
     await screen.findByText("p001@example.org");
 
-    for (const n of ["001", "002"]) {
+    for (const n of ["001", "002", "003"]) {
       expect(screen.getByLabelText(`Role for p${n}@example.org`)).toBeDisabled();
-      expect(screen.getByLabelText(`Role for p${n}@example.org`)).toHaveAccessibleDescription("Only a developer can change this account.");
+      expect(screen.getByLabelText(`State for p${n}@example.org`)).toBeDisabled();
       expect(screen.queryByRole("button", { name: `More actions for p${n}@example.org` })).not.toBeInTheDocument();
     }
-    expect(screen.getByLabelText("Role for p003@example.org")).toBeEnabled();
+    expect(screen.getByLabelText("Role for p001@example.org")).toHaveAccessibleDescription("Only a developer can change this account.");
     expect(screen.getByLabelText("Role for p003@example.org")).toHaveAccessibleDescription(
-      "No state, so this admin has platform admin access."
+      "No state, so this admin has platform admin access. Only a developer can change it."
     );
+    expect(screen.getByLabelText("Role for p004@example.org")).toBeEnabled();
     expect(screen.getByLabelText("Role for p004@example.org")).not.toHaveAccessibleDescription();
+    expect(screen.getByRole("button", { name: "More actions for p004@example.org" })).toBeInTheDocument();
 
     view.unmount();
     stubFetch({ [USERS]: listed(accounts) });
     renderTab({ canAssignDeveloper: true });
     await screen.findByText("p001@example.org");
     expect(screen.getByLabelText("Role for p001@example.org")).toBeEnabled();
+    expect(screen.getByLabelText("Role for p003@example.org")).toBeEnabled();
+    expect(screen.getByLabelText("Role for p003@example.org")).toHaveAccessibleDescription(
+      "No state, so this admin has platform admin access."
+    );
     expect(screen.getByRole("button", { name: "More actions for p002@example.org" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "More actions for p003@example.org" })).toBeInTheDocument();
+  });
+
+  it("won't let an admin who isn't a developer make a stateless admin", async () => {
+    const net = stubFetch({
+      [USERS]: listed([{ ...member(1), state: "" }, member(2)]),
+      "PATCH /user-management/users/u1/roles": json({ username: "u1", roles: ["Admin"], state: "NY" }),
+    });
+    const { user: ui } = renderTab();
+    await screen.findByText("p001@example.org");
+
+    await ui.selectOptions(screen.getByLabelText("Role for p002@example.org"), "admin");
+    expect(within(screen.getByLabelText("State for p002@example.org")).getByRole("option", { name: "Not assigned" })).toBeDisabled();
+
+    await ui.selectOptions(screen.getByLabelText("Role for p001@example.org"), "admin");
+    await ui.click(screen.getByRole("button", { name: /^Save ?changes for p001@example\.org$/ }));
+    expect(await screen.findByRole("alert")).toHaveTextContent(/^Choose a state for an admin/);
+    expect(net.to("PATCH /user-management/users/u1/roles")).toHaveLength(0);
+
+    await ui.selectOptions(screen.getByLabelText("State for p001@example.org"), "NY");
+    await ui.click(screen.getByRole("button", { name: /^Save ?changes for p001@example\.org$/ }));
+    await waitFor(() => expect(net.to("PATCH /user-management/users/u1/roles")).toHaveLength(1));
+    expect(net.last("PATCH /user-management/users/u1/roles").body).toEqual({ rolePreset: "admin", state: "NY" });
+    await waitFor(() =>
+      expect(screen.queryByRole("button", { name: /^Save ?changes for p001@example\.org$/ })).not.toBeInTheDocument()
+    );
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("lets a developer invite an admin with no state, and says what that means", async () => {
+    const net = stubFetch({
+      [USERS]: listed([member(1)]),
+      "POST /user-management/users": json({ username: "u9" }, 201),
+    });
+    const { user: ui } = renderTab({ canAssignDeveloper: true });
+    await screen.findByText("p001@example.org");
+    await ui.click(screen.getByRole("button", { name: "Invite user" }));
+    const dialog = await screen.findByRole("dialog", { name: "Invite a user" });
+    await ui.type(within(dialog).getByLabelText("Email address"), "lead@example.org");
+    await ui.selectOptions(within(dialog).getByLabelText("Role"), "admin");
+    const state = within(dialog).getByLabelText("State (optional)");
+    expect(state).toHaveAccessibleDescription("With no state, this admin has platform admin access.");
+    await ui.click(within(dialog).getByRole("button", { name: "Invite user" }));
+    await waitFor(() => expect(net.to("POST /user-management/users")).toHaveLength(1));
+    expect(net.last("POST /user-management/users").body).toEqual({ email: "lead@example.org", rolePreset: "admin" });
   });
 
   it("names the roles in sentence case in the legend and the role picker", async () => {

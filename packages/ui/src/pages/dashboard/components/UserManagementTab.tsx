@@ -59,6 +59,13 @@ function statusTag(user: ManagedUser): { label: string; tone: "success" | "info"
 
 const nameOf = (user: ManagedUser) => user.email || user.username;
 
+// An admin with no state has platform access, so only a developer may make, change or remove one.
+// A single-state deployment implies the state.
+const isStatelessAdmin = (role: UserRolePreset, state: string) => !SINGLE_STATE && role === "admin" && !state;
+
+const STATELESS_ADMIN_ERROR =
+  "Choose a state for an admin. An admin with no state has platform access, which only a developer can grant.";
+
 function compareUsers(a: ManagedUser, b: ManagedUser) {
   if (Boolean(a.email) !== Boolean(b.email)) return a.email ? -1 : 1;
   return a.email.localeCompare(b.email) || a.username.localeCompare(b.username);
@@ -128,8 +135,6 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
       setLoading(true);
       const response = await apiClient.userManagement.listUsers();
       const sorted = [...response.users].sort(compareUsers);
-      setUsers(sorted);
-      setTruncated(Boolean(response.truncated));
       setDraftRoles(
         Object.fromEntries(
           response.users.map((user) => [user.username, getRolePreset(user.roles)])
@@ -140,6 +145,8 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           response.users.map((user) => [user.username, user.state || ""])
         )
       );
+      setUsers(sorted);
+      setTruncated(Boolean(response.truncated));
       return sorted;
     } catch (error) {
       console.error("Error loading users:", error);
@@ -230,6 +237,10 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
       if (!roleChanged && !stateChanged) {
         return;
       }
+      if (!canAssignDeveloper && isStatelessAdmin(nextRole ?? currentRole, nextState)) {
+        setRowErrors((current) => ({ ...current, [user.username]: STATELESS_ADMIN_ERROR }));
+        return;
+      }
 
       try {
         setSavingUsername(user.username);
@@ -239,18 +250,15 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           delete rest[user.username];
           return rest;
         });
-        let updatedRoles = user.roles;
-        let updatedState = currentState;
+        const updated = await apiClient.userManagement.updateUser(user.username, {
+          ...(roleChanged ? { rolePreset: nextRole } : {}),
+          ...(stateChanged ? { state: nextState } : {}),
+        });
+        const updatedRoles = updated.roles ?? user.roles;
+        const updatedState = typeof updated.state === "string" ? updated.state : currentState;
 
-        if (roleChanged) {
-          const updated = await apiClient.userManagement.updateUserRole(user.username, nextRole);
-          updatedRoles = updated.roles;
-        }
-        if (stateChanged) {
-          const updated = await apiClient.userManagement.updateUserState(user.username, nextState);
-          updatedState = typeof updated.state === "string" ? updated.state : nextState;
-        }
-
+        setDraftRoles((current) => ({ ...current, [user.username]: getRolePreset(updatedRoles) }));
+        setDraftStates((current) => ({ ...current, [user.username]: updatedState }));
         setUsers((current) =>
           current.map((item) =>
             item.username === user.username
@@ -269,7 +277,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
         setSavingUsername(null);
       }
     },
-    [apiClient, addNotification, draftRoles, draftStates]
+    [apiClient, addNotification, canAssignDeveloper, draftRoles, draftStates]
   );
 
   const handleCreateUser = useCallback(async () => {
@@ -359,14 +367,16 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   const addEmailInvalid = (addEmailAttempted || addEmail.length > 0) && !addEmailValid;
   const inviteRoleOptions = allRoleOptions.filter((option) => !option.requiresDeveloper || canAssignDeveloper);
   const addStateFixed = isStateAdmin || addRole === "platformadmin";
-  const addStateRequired = !SINGLE_STATE && !isStateAdmin && addRole === "admin";
+  const addStateRequired = !SINGLE_STATE && !isStateAdmin && !canAssignDeveloper && addRole === "admin";
   const addStateMissing = addStateRequired && !addState;
   const addStateInvalid = addEmailAttempted && addStateMissing;
   const addStateHint = isStateAdmin
     ? `New users are added to your state (${userState}) and cannot be changed.`
     : addRole === "platformadmin"
       ? "Platform admins aren't tied to a state."
-      : "";
+      : isStatelessAdmin(addRole, addState)
+        ? "With no state, this admin has platform admin access."
+        : "";
   const savingUser = savingUsername ? users.find((user) => user.username === savingUsername) : undefined;
   const savingEmail = savingUser ? nameOf(savingUser) : undefined;
 
@@ -485,8 +495,9 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                 const isSaving = savingUsername === user.username;
                 const hasChanges = draftRole !== currentRole || draftState !== currentState;
                 const isSelf = user.username === currentUsername;
-                const developerOnly = !canAssignDeveloper && (currentRole === "developer" || currentRole === "platformadmin");
-                const statelessAdmin = currentRole === "admin" && !currentState;
+                const statelessAdmin = isStatelessAdmin(currentRole, currentState);
+                const developerOnly =
+                  !canAssignDeveloper && (currentRole === "developer" || currentRole === "platformadmin" || statelessAdmin);
                 const roleNoteId = `role-note-${user.username}`;
 
                 return (
@@ -527,10 +538,11 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                           </option>
                         ))}
                       </select>
-                      {developerOnly ? (
-                        <p id={roleNoteId} className="user-management-row-note">Only a developer can change this account.</p>
-                      ) : statelessAdmin ? (
-                        <p id={roleNoteId} className="user-management-row-note">No state, so this admin has platform admin access.</p>
+                      {developerOnly || statelessAdmin ? (
+                        <p id={roleNoteId} className="user-management-row-note">
+                          {statelessAdmin && "No state, so this admin has platform admin access. "}
+                          {developerOnly && (statelessAdmin ? "Only a developer can change it." : "Only a developer can change this account.")}
+                        </p>
                       ) : null}
                     </td>
                     {!SINGLE_STATE && (
@@ -550,7 +562,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                         }
                         disabled={isSaving || isStateAdmin || developerOnly}
                       >
-                        <option value="">Not assigned</option>
+                        <option value="" disabled={!canAssignDeveloper && draftRole === "admin"}>Not assigned</option>
                         {SUPPORTED_STATES.map((s) => (
                           <option key={s.code} value={s.code}>
                             {s.name}
@@ -688,7 +700,7 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
             </select>
             {addStateInvalid ? (
               <p id="add-user-state-error" className="gw-field__message user-management-field-error">
-                Choose a state for an admin.
+                {STATELESS_ADMIN_ERROR}
               </p>
             ) : addStateHint ? (
               <p id="add-user-state-hint" className="modal-description">{addStateHint}</p>
