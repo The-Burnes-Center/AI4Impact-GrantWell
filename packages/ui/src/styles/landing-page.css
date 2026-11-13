@@ -2,15 +2,29 @@
 
 /* Layout — off-white canvas, full-bleed, with content centered on top */
 .landing-page {
+  --landing-section-gap: var(--gw-spacing-4xl);
+  /* Centred blocks (intro, search, banners, about, resources, feedback) share this width. */
+  --landing-measure: 700px;
   /* Auto margins in the column-flex app shell shrink-wrap the box to its content's width instead of the viewport's. */
   width: 100%;
   max-width: 950px;
   margin: 0 auto;
-  padding: 40px 40px 60px;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
+  padding: var(--landing-section-gap) 40px;
   position: relative;
+}
+
+/* Block flow, not flex gap: the pre-mounted, empty redirect live region must not add a gap of its own,
+   and margins collapse through it. */
+.landing-page > * {
+  margin-block: 0;
+}
+
+.landing-page > * + * {
+  margin-top: var(--landing-section-gap);
+}
+
+.landing-page > .landing-header {
+  margin-top: 0;
 }
 
 /* Full-bleed without 100vw: 100vw counts the classic scrollbar and scrolls the page sideways. */
@@ -29,7 +43,7 @@
   background-color: transparent;
   border-radius: var(--gw-radius-none);
   box-shadow: none;
-  padding: 16px 0;
+  padding: 0;
   box-sizing: border-box;
   width: 100%;
 }
@@ -43,18 +57,11 @@
   background-color: var(--mk-green-deepest);
   color: var(--mk-green-light);
   border-radius: var(--gw-radius-none);
-  padding: 56px 0;
+  padding: var(--landing-section-gap) 0;
   width: 100%;
   position: relative;
   box-shadow: 0 0 0 100vmax var(--mk-green-deepest);
   clip-path: inset(0 -100vmax);
-}
-
-.content-box--band .content-box__inner {
-  max-width: 950px;
-  margin: 0 auto;
-  padding: 0 40px;
-  box-sizing: border-box;
 }
 
 /* Inside the band, neutralize light-text-on-light defaults */
@@ -67,11 +74,8 @@
 }
 
 @media (max-width: 720px) {
-  .landing-page { padding: 24px 20px 40px; gap: 24px; }
-  .content-box { padding: 24px 0; }
-  .content-box--band { padding: 40px 0; }
-  .content-box--band .content-box__inner { padding: 0 20px; }
-  .feedback-form-container { padding: 22px 18px; }
+  .landing-page { --landing-section-gap: var(--gw-spacing-3xl); padding-inline: 20px; }
+  .feedback-form-container { padding: var(--gw-spacing-2xl) var(--gw-spacing-xl); }
   .feedback-heading { font-size: 24px; }
   .feedback-radio-group { gap: 24px; }
 }
@@ -82,8 +86,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 16px 0 36px;
-  gap: 14px;
+  gap: var(--gw-spacing-md);
   position: relative;
   width: 100%;
 }
@@ -109,9 +112,9 @@
 }
 
 /* Redirect message banner */
-.redirect-banner {
-  margin: 20px auto;
-  max-width: 700px;
+.landing-page > .redirect-banner {
+  margin-inline: auto;
+  max-width: var(--landing-measure);
   align-items: center;
 }
 
@@ -127,10 +130,10 @@
 }
 
 /* How it works section */
-.how-it-works {
-  margin: 0 auto 20px auto;
+.landing-page > .how-it-works {
+  margin-inline: auto;
   padding: 0;
-  max-width: 700px;
+  max-width: var(--landing-measure);
   text-align: center;
 }
 
@@ -138,7 +141,7 @@
   font-size: 18px;
   font-weight: 600;
   color: var(--gw-color-primary);
-  margin: 0 0 12px 0;
+  margin: 0 0 var(--gw-spacing-md);
   text-align: center;
 }
 
@@ -152,6 +155,14 @@
 .how-it-works__action-label {
   color: var(--gw-color-primary);
   font-weight: 600;
+}
+
+.landing-page > .integrated-search {
+  position: relative;
+  z-index: 100;
+  width: 100%;
+  max-width: var(--landing-measure);
+  margin-inline: auto;
 }
 
 .cta-block {
@@ -194,8 +205,7 @@
 .history-panel {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  margin-bottom: 30px;
+  gap: var(--gw-spacing-xl);
 }
 
 .history-panel__heading {
@@ -204,7 +214,7 @@
   line-height: 1;
   text-align: center;
   color: var(--gw-color-primary);
-  margin-bottom: 20px;
+  margin: 0;
 }
 
 .history-card {
@@ -257,10 +267,9 @@
 
 /* About Panel */
 .about-panel {
-  max-width: 800px;
+  max-width: var(--landing-measure);
   margin: 0 auto;
   text-align: center;
-  padding: 20px 0;
 }
 
 .about-panel__heading {
@@ -268,14 +277,18 @@
   line-height: 1.2;
   text-align: center;
   color: var(--gw-color-primary);
-  margin-bottom: 20px;
+  margin: 0 0 var(--gw-spacing-xl);
 }
 
 .about-panel__text {
   font-size: 16px;
   line-height: 1.7;
   color: var(--gw-color-text-secondary);
-  margin-bottom: 16px;
+  margin: 0 0 var(--gw-spacing-lg);
+}
+
+.about-panel__text:last-child {
+  margin-bottom: 0;
 }
 
 /* Resources Panel */
@@ -283,8 +296,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
-  margin-bottom: 30px;
+  gap: var(--gw-spacing-xl);
 }
 
 .resources-panel__heading {
@@ -297,7 +309,7 @@
 
 .resources-panel .resource-card {
   width: 100%;
-  max-width: 480px;
+  max-width: var(--landing-measure);
 }
 
 .resource-card {
@@ -385,9 +397,9 @@
   border: none;
   border-radius: var(--gw-radius-container);
   box-shadow: 0 4px 16px color-mix(in srgb, var(--gw-color-primary-active) 8%, transparent);
-  max-width: 640px;
+  max-width: var(--landing-measure);
   margin: 0 auto;
-  padding: 32px;
+  padding: var(--gw-spacing-3xl);
 }
 
 .feedback-heading {
@@ -396,7 +408,7 @@
   line-height: 1.2;
   font-weight: 400;
   color: var(--mk-green-deepest);
-  margin: 0 0 20px;
+  margin: 0 0 var(--gw-spacing-xl);
   padding: 0;
 }
 
@@ -683,11 +695,6 @@
   .feedback-tab {
     display: none;
   }
-}
-
-/* Grants table section */
-.grants-table-section {
-  padding: 20px 0;
 }
 
 /* Responsive */
