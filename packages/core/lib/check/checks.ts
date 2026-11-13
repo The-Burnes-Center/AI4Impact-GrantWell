@@ -133,8 +133,11 @@ export function selectorClasses(css: string): Set<string> {
   return classes;
 }
 
+// One alternative per quote keeps the match linear; a backreference with a lazy [\s\S] backtracks badly on long files.
+const QUOTED = /"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`/g;
+
 const quotedWords = (source: string) =>
-  (source.match(/(["'`])(?:\\.|(?!\1)[\s\S])*?\1/g) ?? []).flatMap((s) => s.slice(1, -1).match(/-?[_a-zA-Z][\w-]*/g) ?? []);
+  (source.match(QUOTED) ?? []).flatMap((s) => s.slice(1, -1).match(/-?[_a-zA-Z][\w-]*/g) ?? []);
 
 /** CHROME_CLASSES (kept for instances to target) and CHROME_CLASSES_RETIRED (old name → what to use) from the UI's chrome-api.ts. */
 export function chromeClassContract(uiAppDir: string): { kept: Set<string>; retired: Map<string, string> } {
@@ -148,8 +151,8 @@ export function chromeClassContract(uiAppDir: string): { kept: Set<string>; reti
 }
 
 const classNameWords = (source: string) =>
-  [...source.matchAll(/className\s*[=:]\s*\{?\s*(["'`])((?:\\.|(?!\1)[\s\S])*?)\1/g)].flatMap(
-    (m) => m[2].replace(/\$\{[^}]*\}/g, " ").match(/-?[_a-zA-Z][\w-]*/g) ?? []
+  [...source.matchAll(/className\s*[=:]\s*\{?\s*("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)/g)].flatMap(
+    (m) => m[1].slice(1, -1).replace(/\$\{[^}]*\}/g, " ").match(/-?[_a-zA-Z][\w-]*/g) ?? []
   );
 
 /**
