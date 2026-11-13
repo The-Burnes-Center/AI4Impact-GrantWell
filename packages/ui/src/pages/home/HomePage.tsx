@@ -361,7 +361,7 @@ export default function HomePage() {
 
         {/* Grants Table */}
         <ContentBox>
-          <section aria-labelledby="grants-table-heading" className="grants-table-section">
+          <section aria-labelledby="grants-table-heading">
             <h2 id="grants-table-heading" className="visually-hidden">
               Grants table with filters
             </h2>

@@ -16,7 +16,7 @@ Prefer a class or component over inline styles, and tokens (`var(--gw-color-*)`)
 |---|---|---|
 | Buttons | `gw-btn` + `gw-btn--primary`, `--secondary`, `--danger`, `--inverse` (on dark fills); `--slim`, `--icon` | One primary per action area. Back/Cancel are secondary on the left, the main action on the right. |
 | Fields | `gw-field` wrapping `gw-field__label`, `gw-field__required` (the `*`, `aria-hidden`), `gw-input`, `gw-field__help`, `gw-field__message` (error) or `gw-field__message--success` | Point the input's `aria-describedby` at the help and message ids, and set `aria-invalid` when it has an error. `gw-input--error` / `--success` colour the border. |
-| Alerts | `gw-alert` + `gw-alert--info`, `--success`, `--warning`, `--urgent`; `gw-alert__title` | A leading `<svg>` takes the bar colour. Wrap the title and text in one `<div>`, since the alert is a flex row. Add `role="alert"` / `role="status"` yourself where the message is announced. react-bootstrap `<Alert>` gets the same look. |
+| Alerts | `gw-alert` + `gw-alert--info`, `--success`, `--warning`, `--urgent`, `--brand` (brand tint, for neutral news such as result counts); `gw-alert__title` | A leading `<svg>` takes the bar colour. Wrap the title and text in one `<div>`, since the alert is a flex row. Add `role="alert"` / `role="status"` yourself where the message is announced. react-bootstrap `<Alert>` gets the same look. |
 | Toasts | `gw-toast` + `gw-toast--info`, `--success`, `--warning`, `--urgent` | Used by the notification bar. |
 | Tags | `gw-tag` + `gw-tag--neutral`, `--info`, `--success`, `--warning`, `--danger` | Status pills and badges. |
 | Tabs | `gw-tabs` (the `tablist`), `gw-tab` | Roving `tabIndex` and arrow keys are the page's job. |

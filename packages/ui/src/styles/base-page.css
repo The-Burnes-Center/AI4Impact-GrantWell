@@ -34,8 +34,6 @@
   animation: ctaButtonsHighlight 0.8s ease-out;
   background: linear-gradient(135deg, color-mix(in srgb, var(--gw-color-info) 8%, transparent) 0%, color-mix(in srgb, var(--gw-color-info) 2%, transparent) 100%);
   border-radius: var(--gw-radius-container);
-  padding: 16px 20px;
-  margin: 20px 0 8px 0;
 }
 
 .cta-buttons-container.highlight button {
@@ -52,7 +50,8 @@
     animation: none;
     /* Keep the visual indicator but without motion */
     background: linear-gradient(135deg, color-mix(in srgb, var(--gw-color-info) 12%, transparent) 0%, color-mix(in srgb, var(--gw-color-info) 6%, transparent) 100%);
-    border: 2px solid color-mix(in srgb, var(--gw-color-info) 30%, transparent);
+    outline: 2px solid color-mix(in srgb, var(--gw-color-info) 30%, transparent);
+    outline-offset: -2px;
   }
   
   .cta-buttons-container.highlight button {

@@ -2,7 +2,6 @@ import React, { useState, useRef, useCallback, useEffect, useId } from "react";
 
 import { IntegratedSearchBarProps } from "./types";
 import { SearchInput } from "./components/SearchInput";
-import { searchContainerStyle } from "./styles/searchStyles";
 
 const SEARCH_DEBOUNCE_MS = 400;
 const MIN_QUERY_LENGTH = 3;
@@ -133,7 +132,7 @@ const IntegratedSearchBar: React.FC<IntegratedSearchBarProps> = ({
   const showSuggestion = onSearch && trimmedTerm.length > 0 && queryWordCount <= 3;
 
   return (
-    <div style={searchContainerStyle} ref={searchRef}>
+    <div className="integrated-search" ref={searchRef}>
       <SearchInput
         ref={inputRef}
         searchTerm={searchTerm}

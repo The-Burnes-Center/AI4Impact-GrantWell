@@ -404,7 +404,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
       {/* Results summary. Announced by the results region below, not here — this
           banner is built at the same moment as its text and contains a button. */}
       {searchResults && !isSearching && !searchError && (
-        <div className="gw-alert gw-alert--info search-status-banner">
+        <div className="gw-alert gw-alert--brand search-status-banner">
           <span>
             Found <strong>{filteredNofos.length}</strong> grant{filteredNofos.length !== 1 ? "s" : ""} matching
             your search{!showAllAIResults && filteredNofos.length > AI_INITIAL_LIMIT
@@ -597,7 +597,7 @@ export const GrantsTable: React.FC<GrantsTableProps> = ({
 
       {/* Show More / Show Less for AI results */}
       {!awaitingAIResults && hasRankedResults && filteredNofos.length > AI_INITIAL_LIMIT && (
-        <div className="landing-table-pagination" style={{ justifyContent: "center" }}>
+        <div className="landing-table-pagination">
           <button
             className="gw-btn gw-btn--primary landing-show-more-button"
             onClick={() => setShowAllAIResults((prev) => !prev)}
