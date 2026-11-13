@@ -41,6 +41,9 @@ export interface DraftGenerationStackProps extends cdk.NestedStackProps {
   readonly jsSharedLayer: lambda.ILayerVersion;
   /** Bedrock application inference profile owned by the parent. */
   readonly sonnetDraftProfileArn: string;
+  /** Holds each document's per-grant relevance verdict; a section step checks a document that has none. */
+  readonly userDocumentTable: Table;
+  readonly haikuDocCheckProfileArn: string;
   readonly supportedStatesEnv: string;
   readonly legacyStatelessAdminIsPlatform: string;
 }
@@ -100,6 +103,8 @@ export class DraftGenerationStack extends cdk.NestedStack {
           BUCKET: props.ffioNofosBucket.bucketName,
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
           DRAFT_GENERATION_JOBS_TABLE_NAME: props.draftGenerationJobsTable.tableName,
+          USER_DOCUMENT_TABLE_NAME: props.userDocumentTable.tableName,
+          DOC_CHECK_MODEL_ID: props.haikuDocCheckProfileArn,
           SUPPORTED_STATES: props.supportedStatesEnv,
           LEGACY_STATELESS_ADMIN_IS_PLATFORM: props.legacyStatelessAdminIsPlatform,
         },
@@ -117,6 +122,12 @@ export class DraftGenerationStack extends cdk.NestedStack {
     );
     draftGenerateSectionFunction.addToRolePolicy(
       dynamoUpdateItemPolicy(props.draftGenerationJobsTable.tableArn)
+    );
+    draftGenerateSectionFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ["dynamodb:BatchGetItem", "dynamodb:GetItem", "dynamodb:PutItem"],
+        resources: [props.userDocumentTable.tableArn],
+      })
     );
     for (const bucket of [props.userDocumentsBucket, props.grantArtifactsBucket, props.ffioNofosBucket]) {
       draftGenerateSectionFunction.addToRolePolicy(s3ReadOnlyPolicy(bucket.bucketArn));
