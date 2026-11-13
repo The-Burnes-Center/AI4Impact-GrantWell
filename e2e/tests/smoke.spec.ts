@@ -8,8 +8,9 @@
  * promote-copy; review approve, reject, needs-reupload and close-expired; reupload-nofo and
  * reprocess-nofo; /automated-nofo-scraper; digest broadcast and POST preview; /submit-feedback;
  * /draft-generation; /ai-grant-search; PUT /notification-prefs; feature-rollout PATCH/PUT/DELETE;
- * user-documents upload-url and delete; user-session set_document_keys (documents.spec checks that
- * it keeps only the caller's own keys).
+ * user-documents upload-url, delete, type, relevance (it runs the check) and relevance/review;
+ * POST /admin/document-reviews; user-session set_document_keys (documents.spec checks that it
+ * keeps only the caller's own keys).
  */
 import { randomUUID } from "node:crypto";
 import { rawCall } from "../helpers/api";
@@ -53,6 +54,12 @@ const READS: Probe[] = [
   get("/admin/analytics", 200),
   get("/admin/processing-metrics", 200),
   get("/admin/processing-reviews", 200),
+  ...["pending", "decided"].map(
+    (status): Probe => ({
+      ...get(`/admin/document-reviews?status=${status}`, 200),
+      check: async (body) => expect(Array.isArray(body.reviews), "reviews array").toBe(true),
+    })
+  ),
   get("/user-management/users?limit=1", 200),
   {
     name: "POST /user-documents/list (own library)",
