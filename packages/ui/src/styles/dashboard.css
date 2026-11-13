@@ -159,7 +159,7 @@ body {
 
 .feature-rollouts-card__header h2,
 .feature-rollouts-section-header h3,
-.feature-rollouts-overview-card h3 {
+.feature-rollouts-overview-card .feature-rollouts-overview-card__value {
   margin: 0 0 8px;
   color: var(--gw-color-primary);
 }
@@ -171,7 +171,7 @@ body {
 }
 
 .feature-rollouts-section-header h3,
-.feature-rollouts-overview-card h3 {
+.feature-rollouts-overview-card .feature-rollouts-overview-card__value {
   font-size: var(--gw-font-size-lg);
   font-weight: var(--gw-font-weight-semibold);
   line-height: 1.3;
