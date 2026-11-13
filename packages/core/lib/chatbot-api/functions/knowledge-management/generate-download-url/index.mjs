@@ -1,5 +1,6 @@
 /**
- * Generates a presigned GET URL for downloading a document from S3.
+ * Presigned GET URLs: the caller's own supporting documents (POST), and a grant's published PDF
+ * (GET /grant-pdf-url, see grant-pdf.mjs).
  *
  * Env: USER_DOCUMENTS_BUCKET
  */
@@ -10,6 +11,7 @@ import { extractUserId } from '../shared/auth.mjs';
 import { success, unauthorized, forbidden, badRequest, serverError } from '../shared/response.mjs';
 import { getS3Client, getBucketName } from '../shared/s3.mjs';
 import { isOwnKey } from '../shared/keys.mjs';
+import { grantPdfUrl } from './grant-pdf.mjs';
 
 const URL_EXPIRATION_SECONDS = 300;
 
@@ -17,6 +19,7 @@ export const handler = async (event) => {
   try {
     const userId = extractUserId(event);
     if (!userId) return unauthorized();
+    if (event.requestContext?.http?.method === 'GET') return await grantPdfUrl(event);
 
     const body = JSON.parse(event.body);
     const { fileName } = body;
