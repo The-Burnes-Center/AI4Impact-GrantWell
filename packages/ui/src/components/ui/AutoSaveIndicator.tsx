@@ -66,14 +66,14 @@ const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
     fontSize: typography.fontSize.sm,
     fontFamily: typography.fontFamily,
     fontWeight: typography.fontWeight.medium,
-    color: onPrimary ? colors.white : status === "error" ? colors.error : colors.textSecondary,
+    color: onPrimary ? colors.textInverse : status === "error" ? colors.error : colors.textSecondary,
   };
 
   const spinnerStyle: React.CSSProperties = {
     width: "14px",
     height: "14px",
     border: `2px solid ${onPrimary ? "color-mix(in srgb, var(--gw-color-surface) 40%, transparent)" : colors.borderLight}`,
-    borderTopColor: onPrimary ? colors.white : colors.primary,
+    borderTopColor: onPrimary ? colors.textInverse : colors.primary,
     borderRadius: "50%",
     animation: "autosave-spin 0.8s linear infinite",
   };
@@ -128,7 +128,7 @@ const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
           )}
 
           {status === "saved" && (
-            <span style={{ display: "flex", alignItems: "center", gap: "6px", color: onPrimary ? colors.white : colors.success }}>
+            <span style={{ display: "flex", alignItems: "center", gap: "6px", color: onPrimary ? colors.textInverse : colors.success }}>
               <svg
                 width="14"
                 height="14"
@@ -176,7 +176,7 @@ const AutoSaveIndicator: React.FC<AutoSaveIndicatorProps> = ({
                     background: "none",
                     border: "none",
                     padding: 0,
-                    color: onPrimary ? colors.white : colors.error,
+                    color: onPrimary ? colors.textInverse : colors.error,
                     font: "inherit",
                     fontWeight: typography.fontWeight.semibold,
                     textDecoration: "underline",

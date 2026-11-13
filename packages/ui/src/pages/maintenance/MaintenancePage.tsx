@@ -27,7 +27,7 @@ export default function MaintenancePage() {
           </svg>
         </div>
 
-        <h1 className="maintenance-title">{appName} is Under Maintenance</h1>
+        <h1 className="maintenance-title">{appName} is under maintenance</h1>
 
         <p className="maintenance-message">
           We are currently performing scheduled maintenance to improve your

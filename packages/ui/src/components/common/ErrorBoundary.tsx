@@ -60,7 +60,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
           }}
         >
           <Alert variant="danger" style={{ maxWidth: "600px", width: "100%" }}>
-            <Alert.Heading>Something went wrong</Alert.Heading>
+            <h1 className="alert-heading">Something went wrong</h1>
             <p>
               An unexpected error occurred. Please try refreshing the page. If
               the problem persists, contact support.

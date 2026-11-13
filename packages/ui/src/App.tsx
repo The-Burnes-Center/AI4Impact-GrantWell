@@ -10,6 +10,7 @@ import { NotificationProvider } from "./components/notifications/NotificationMan
 import NotificationBar from "./components/notifications/NotificationBar";
 import { AccessDeniedProvider } from "./components/access-denied/AccessDeniedManager";
 import { useBranding } from "./common/branding";
+import { PageTitleProvider, usePageTitleOverride } from "./common/page-title";
 import { IS_PROD } from "./common/instance";
 import { EDITOR_STEPS } from "./common/helpers/document-editor-utils";
 import NotFoundPage from "./pages/not-found/NotFoundPage";
@@ -32,6 +33,7 @@ function ScrollToTop(): null {
   const { pathname, search, hash } = useLocation();
   const prevPathRef = useRef<string>("");
   const { appName, analyticsId } = useBranding();
+  const titleOverride = usePageTitleOverride();
 
   useEffect(() => {
     const fullPath = pathname + search;
@@ -58,6 +60,7 @@ function ScrollToTop(): null {
         "/document-editor": "Write application",
         "/document-editor/drafts": "My applications",
         "/documents": "My documents",
+        "/whats-new": "What's new",
       };
 
       if (exactMatches[path]) {
@@ -77,9 +80,10 @@ function ScrollToTop(): null {
       return null;
     };
 
-    const label = getPageLabel(pathname);
+    const label = titleOverride ?? getPageLabel(pathname);
     const home = pathname === "/" || pathname === "/home";
     const step =
+      !titleOverride &&
       label === "Write application" &&
       EDITOR_STEPS.find((s) => s.id === new URLSearchParams(search).get("step"));
     const baseTitle = !label
@@ -104,7 +108,7 @@ function ScrollToTop(): null {
         });
       }
     }
-  }, [pathname, search, hash, appName, analyticsId]);
+  }, [pathname, search, hash, appName, analyticsId, titleOverride]);
 
   return null;
 }
@@ -117,6 +121,7 @@ function AppContent() {
   return (
     <NotificationProvider>
       <AccessDeniedProvider>
+      <PageTitleProvider>
       <ScrollToTop />
       {/* Brand Banner, Header, and Footer are now rendered globally in AppConfigured */}
       <main id="main-content" tabIndex={-1}>
@@ -159,6 +164,7 @@ function AppContent() {
           </Suspense>
         </ErrorBoundary>
       </main>
+      </PageTitleProvider>
       </AccessDeniedProvider>
     </NotificationProvider>
   );

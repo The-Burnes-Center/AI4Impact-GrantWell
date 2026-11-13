@@ -6,12 +6,9 @@ import "../../components/whats-new/whats-new.css";
 import "../../styles/marketing-landing.css";
 import { PublicSiteHeader, SiteBanner, SiteFooter } from "../../components/common/ChromeSlots";
 import { HAS_CHROME_HEADER } from "../../common/chrome";
+import { useBranding } from "../../common/branding";
 
 export function WhatsNewContent() {
-  useEffect(() => {
-    document.title = "What's new – GrantWell";
-  }, []);
-
   return (
     <div className="whats-new">
       <h1>What&apos;s new</h1>
@@ -24,6 +21,12 @@ export function WhatsNewContent() {
 
 /** Public: the same page whats-new.html pre-renders for crawlers. */
 export default function WhatsNewPage() {
+  const { appName } = useBranding();
+
+  useEffect(() => {
+    document.title = `What's new – ${appName}`;
+  }, [appName]);
+
   return (
     <div className="marketing">
       <SkipLink />

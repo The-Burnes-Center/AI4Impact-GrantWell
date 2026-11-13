@@ -4,7 +4,7 @@ import Chat from "../../../components/chat/Chat";
 import { Link, useParams, useSearchParams } from "react-router";
 import { LuCircleHelp, LuUpload, LuFileText } from "react-icons/lu";
 import { useApiClient } from "../../../hooks/use-api-client";
-import { useFocusTrap } from "../../../hooks/use-focus-trap";
+import { Modal } from "../../../components/common/Modal";
 import { useInert } from "../../../hooks/use-inert";
 import DocumentManager from "../../../components/chat/DocumentManager";
 import "../../../styles/playground.css";
@@ -23,7 +23,6 @@ export default function Playground() {
   const [uploadedFileCount, setUploadedFileCount] = useState(0);
   const helpButtonRef = React.useRef<HTMLButtonElement>(null);
   const inertContentRef = useInert<HTMLDivElement>(helpOpen);
-  const titleId = useId();
   const descriptionId = useId();
 
   const handleCloseModal = useCallback(() => {
@@ -35,11 +34,6 @@ export default function Playground() {
     setHelpOpen(false);
     setTimeout(() => helpButtonRef.current?.focus(), 100);
   }, [dontShowAgain]);
-
-  const modalRef = useFocusTrap<HTMLDivElement>({
-    isOpen: helpOpen,
-    onEscape: handleCloseModal,
-  });
 
   useEffect(() => {
     const fetchNofoName = async () => {
@@ -142,106 +136,82 @@ export default function Playground() {
         }
       />
 
-      {/* Help Modal */}
-      {helpOpen && (
-        <div className="gw-modal__overlay pg-modal-overlay">
-          <div
-            ref={modalRef}
-            tabIndex={-1}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={titleId}
-            aria-describedby={descriptionId}
-            className="gw-modal pg-modal"
-          >
-            {/* Header */}
-            <div className="gw-modal__header pg-modal-header">
-              <h2 id={titleId} className="gw-modal__title pg-modal-title">
-                Welcome to Chat with AI
-              </h2>
-              <button
-                onClick={handleCloseModal}
-                className="gw-btn gw-btn--icon pg-modal-close-btn"
-                aria-label="Close help dialog"
-              >
-                <span aria-hidden="true">×</span>
-              </button>
-            </div>
+      <Modal
+        isOpen={helpOpen}
+        onClose={handleCloseModal}
+        title="Welcome to Chat with AI"
+        maxWidth="650px"
+        describedBy={descriptionId}
+        closeLabel="Close help dialog"
+      >
+        <p id={descriptionId} className="pg-modal-intro">
+          This AI-powered assistant is your expert guide for understanding
+          a grant. Ask questions about any aspect of the grant application
+          and get instant answers.
+        </p>
 
-            {/* Content */}
-            <div id={descriptionId} className="gw-modal__body pg-modal-body">
-              <p className="pg-modal-intro">
-                This AI-powered assistant is your expert guide for understanding
-                a grant. Ask questions about any aspect of the grant application
-                and get instant answers.
-              </p>
-
-              <div className="pg-highlight-box">
-                <h3 className="pg-highlight-title">You can ask GrantWell to:</h3>
-                <ul className="pg-highlight-list">
-                  <li>
-                    Explain specific grant requirements, eligibility criteria,
-                    and grant sections
-                  </li>
-                  <li>
-                    Review your applications for completeness based on
-                    evaluation criteria
-                  </li>
-                  <li>
-                    Assess your organization's eligibility for specific grants
-                  </li>
-                  <li>
-                    Explain deadlines, submission requirements, budget rules, and
-                    compliance requirements
-                  </li>
-                </ul>
-              </div>
-
-              <div className="pg-info-section">
-                <h3 className="pg-info-heading">Sources</h3>
-                <p className="pg-info-text">
-                  If the assistant references the grant or your supporting
-                  documents, they will show up underneath the relevant message.
-                </p>
-              </div>
-
-              <div className="pg-info-section">
-                <h3 className="pg-info-heading">My chats</h3>
-                <p className="pg-info-text">
-                  All chats are saved and can be accessed later via the{" "}
-                  <Link to="/chat/sessions" className="pg-info-link">
-                    My chats
-                  </Link>{" "}
-                  page.
-                </p>
-              </div>
-
-              <div className="pg-checkbox-row">
-                <input
-                  type="checkbox"
-                  id="dont-show-again-playground"
-                  checked={dontShowAgain}
-                  onChange={(e) => setDontShowAgain(e.target.checked)}
-                  className="pg-checkbox"
-                />
-                <label
-                  htmlFor="dont-show-again-playground"
-                  className="pg-checkbox-label"
-                >
-                  Do not show this again
-                </label>
-              </div>
-
-              <button
-                onClick={handleCloseModal}
-                className="gw-btn gw-btn--primary pg-got-it-btn"
-              >
-                Got it
-              </button>
-            </div>
-          </div>
+        <div className="pg-highlight-box">
+          <h3 className="pg-highlight-title">You can ask GrantWell to:</h3>
+          <ul className="pg-highlight-list">
+            <li>
+              Explain specific grant requirements, eligibility criteria,
+              and grant sections
+            </li>
+            <li>
+              Review your applications for completeness based on
+              evaluation criteria
+            </li>
+            <li>
+              Assess your organization's eligibility for specific grants
+            </li>
+            <li>
+              Explain deadlines, submission requirements, budget rules, and
+              compliance requirements
+            </li>
+          </ul>
         </div>
-      )}
+
+        <div className="pg-info-section">
+          <h3 className="pg-info-heading">Sources</h3>
+          <p className="pg-info-text">
+            If the assistant references the grant or your supporting
+            documents, they will show up underneath the relevant message.
+          </p>
+        </div>
+
+        <div className="pg-info-section">
+          <h3 className="pg-info-heading">My chats</h3>
+          <p className="pg-info-text">
+            All chats are saved and can be accessed later via the{" "}
+            <Link to="/chat/sessions" className="pg-info-link">
+              My chats
+            </Link>{" "}
+            page.
+          </p>
+        </div>
+
+        <div className="pg-checkbox-row">
+          <input
+            type="checkbox"
+            id="dont-show-again-playground"
+            checked={dontShowAgain}
+            onChange={(e) => setDontShowAgain(e.target.checked)}
+            className="pg-checkbox"
+          />
+          <label
+            htmlFor="dont-show-again-playground"
+            className="pg-checkbox-label"
+          >
+            Do not show this again
+          </label>
+        </div>
+
+        <div className="modal-actions">
+          <button type="button" onClick={handleCloseModal} className="gw-btn gw-btn--primary">
+            Got it
+          </button>
+        </div>
+      </Modal>
     </>
   );
 }

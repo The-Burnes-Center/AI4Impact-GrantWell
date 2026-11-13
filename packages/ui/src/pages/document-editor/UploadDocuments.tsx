@@ -5,7 +5,7 @@ import { getCurrentUser } from "aws-amplify/auth";
 import Card from "../../components/ui/Card";
 import NavigationButtons from "../../components/ui/NavigationButtons";
 import DocumentPicker from "../../components/documents/DocumentPicker";
-import { colors, typography, spacing, borderRadius, transitions } from "../../components/ui/styles";
+import { colors, typography, spacing, borderRadius } from "../../components/ui/styles";
 import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
 import { characterCount, MAX_INPUT_CHARS, readDraftCache, resolveQuestionnaireAnswers } from "../../common/helpers/document-editor-utils";
 import { legacySelection } from "../../common/helpers/user-documents";
@@ -274,21 +274,8 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           </div>
         </div>
 
-        {/* Persistence messaging */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            padding: "14px 18px",
-            background: "var(--gw-color-background)",
-            border: "1px solid var(--gw-color-success-border)",
-            borderRadius: borderRadius.lg,
-            fontSize: typography.fontSize.sm,
-            color: "var(--gw-color-success-text)",
-          }}
-        >
-          <span style={{ fontSize: "18px", flexShrink: 0 }} aria-hidden="true">&#10003;</span>
+        <div className="gw-alert gw-alert--success">
+          <span aria-hidden="true">&#10003;</span>
           <span>
             Your progress is automatically saved. You can close this page and come back anytime — your application will be here.
           </span>
@@ -421,6 +408,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       }}>
         <NavigationButtons
           onBack={() => onNavigate("questionnaire")}
+          backLabel="Back to questionnaire"
           showContinue={false}
           justify="flex-start"
         />
@@ -429,24 +417,9 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
           {hasExistingDraft && (
             <button
               type="button"
+              className="gw-btn gw-btn--secondary"
               onClick={() => onNavigate("sectionEditor")}
               aria-label="Skip to Section editor"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: spacing.sm,
-                padding: `${spacing.md} ${spacing.xl}`,
-                background: colors.white,
-                border: `1px solid ${colors.border}`,
-                borderRadius: borderRadius.md,
-                color: colors.text,
-                fontSize: typography.fontSize.base,
-                fontWeight: typography.fontWeight.medium,
-                fontFamily: typography.fontFamily,
-                cursor: "pointer",
-                transition: transitions.normal,
-                minHeight: "44px",
-              }}
             >
               Skip
             </button>

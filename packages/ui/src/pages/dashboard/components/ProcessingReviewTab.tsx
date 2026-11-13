@@ -24,7 +24,7 @@ type StatusFilter = "all" | "pending_review" | "approved" | "rejected" | "failed
 const STATUS_LABELS: Record<string, string> = {
   all: "All statuses",
   pending_review: "Pending review",
-  needs_reupload: "Needs Re-upload",
+  needs_reupload: "Needs re-upload",
   approved: "Approved",
   rejected: "Rejected",
   failed: "Failed",
@@ -425,10 +425,10 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
               className="gw-btn gw-btn--secondary review-btn review-btn--needs-reupload"
               onClick={() => canMarkReupload && bulkAction === null && void handleBulkNeedsReupload()}
               aria-disabled={!canMarkReupload || bulkAction !== null || undefined}
-              aria-label={`${bulkAction === "needs_reupload" ? "Marking..." : "Needs Re-upload"} — mark ${selected.size} selected grant${selected.size === 1 ? "" : "s"} as needs re-upload`}
+              aria-label={`${bulkAction === "needs_reupload" ? "Marking..." : "Needs re-upload"} — mark ${selected.size} selected grant${selected.size === 1 ? "" : "s"} as needs re-upload`}
             >
               <LuUpload size={14} aria-hidden="true" />
-              <span>{bulkAction === "needs_reupload" ? "Marking..." : "Needs Re-upload"}</span>
+              <span>{bulkAction === "needs_reupload" ? "Marking..." : "Needs re-upload"}</span>
             </button>
             <button
               className="review-bulk-bar__clear"

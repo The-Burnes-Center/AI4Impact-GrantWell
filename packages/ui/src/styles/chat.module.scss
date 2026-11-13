@@ -15,7 +15,7 @@
 }
 
 .markdownTableScroll:focus-visible {
-  outline: 3px solid var(--gw-color-primary);
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
   outline-offset: 3px;
   border-radius: 8px;
 }
@@ -176,7 +176,7 @@ div.transcript[tabindex]:focus-visible {
   }
 
   &:focus-visible {
-    outline: 3px solid var(--gw-color-primary);
+    outline: var(--gw-focus-width) solid var(--gw-color-focus);
     outline-offset: 1px;
   }
 

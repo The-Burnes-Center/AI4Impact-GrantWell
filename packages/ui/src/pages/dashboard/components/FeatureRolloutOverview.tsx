@@ -41,13 +41,13 @@ const FeatureRolloutOverview: React.FC<FeatureRolloutOverviewProps> = ({
     <section className="feature-rollouts-overview" aria-label="AI search rollout summary">
       <article className="feature-rollouts-overview-card">
         <span className={`gw-tag feature-rollouts-badge ${summary.badgeClass}`}>Current state</span>
-        <h3>{summary.label}</h3>
+        <p className="feature-rollouts-overview-card__value">{summary.label}</p>
         <p>{summary.detail}</p>
       </article>
 
       <article className="feature-rollouts-overview-card">
         <span className="gw-tag feature-rollouts-badge feature-rollouts-badge--info">Allowlist</span>
-        <h3>{allowlistedCount} user{allowlistedCount === 1 ? "" : "s"}</h3>
+        <p className="feature-rollouts-overview-card__value">{allowlistedCount} user{allowlistedCount === 1 ? "" : "s"}</p>
         <p>
           Stored entries stay ready for targeted rollout even when the feature is disabled.
         </p>
@@ -55,7 +55,7 @@ const FeatureRolloutOverview: React.FC<FeatureRolloutOverviewProps> = ({
 
       <article className="feature-rollouts-overview-card">
         <span className="gw-tag feature-rollouts-badge feature-rollouts-badge--neutral">Audit</span>
-        <h3>Last updated {updatedAtLabel}</h3>
+        <p className="feature-rollouts-overview-card__value">Last updated {updatedAtLabel}</p>
         <p>{updatedByLabel ? `Changed by ${updatedByLabel}.` : "No changes recorded yet."}</p>
       </article>
     </section>

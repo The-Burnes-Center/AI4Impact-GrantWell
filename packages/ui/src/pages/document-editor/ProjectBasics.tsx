@@ -91,18 +91,10 @@ const InputField: React.FC<InputFieldProps> = React.memo(({
   const hasError = error && touched;
   
   return (
-    <div style={{ marginBottom: spacing.xl }}>
-      <label
-        htmlFor={name}
-        style={{
-          display: "block",
-          marginBottom: spacing.sm,
-          fontWeight: typography.fontWeight.medium,
-          color: colors.text,
-          fontFamily: typography.fontFamily,
-        }}
-      >
-        {label} <span style={{ color: colors.error }} aria-hidden="true">*</span>
+    <div className="gw-field" style={{ marginBottom: spacing.xl }}>
+      <label htmlFor={name} className="gw-field__label">
+        {label}
+        <span className="gw-field__required" aria-hidden="true">*</span>
       </label>
       <div style={{ position: "relative" }}>
         {prefix && (
@@ -141,31 +133,12 @@ const InputField: React.FC<InputFieldProps> = React.memo(({
           }}
         />
       </div>
-      <span
-        id={`${name}-help`}
-        style={{
-          display: "block",
-          fontSize: typography.fontSize.sm,
-          color: colors.textSecondary,
-          marginTop: spacing.xs,
-          fontFamily: typography.fontFamily,
-        }}
-      >
+      <span id={`${name}-help`} className="gw-field__help">
         {helpText}
       </span>
       {/* Not an alert: on submit the focused summary reads every error at once. */}
       {hasError && (
-        <span
-          id={`${name}-error`}
-          style={{
-            display: "block",
-            fontSize: typography.fontSize.sm,
-            color: colors.error,
-            marginTop: spacing.xs,
-            fontWeight: typography.fontWeight.medium,
-            fontFamily: typography.fontFamily,
-          }}
-        >
+        <span id={`${name}-error`} className="gw-field__message">
           {error}
         </span>
       )}
@@ -401,7 +374,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
           </div>
 
           <div style={{ marginBottom: spacing.lg, fontSize: typography.fontSize.sm, color: colors.textSecondary }}>
-            <span style={{ color: colors.error }} aria-hidden="true">*</span> Indicates required field
+            <span className="gw-field__required" aria-hidden="true">*</span> Indicates required field
           </div>
 
           <FormErrorSummary errors={displayErrors} fieldLabels={FIELD_LABELS} focusRequest={summaryFocusRequest} />
