@@ -350,11 +350,9 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
           <div>
             <p>
               {isStateAdmin
-                ? `Manage users in ${userState}. You can add users, change roles between User and Admin, and remove users — all scoped to ${userState}.`
-                : `Edit user roles directly from the table below.${
-                    canAssignDeveloper
-                      ? " Developers can assign all roles."
-                      : " Admins can assign User or Admin roles only."
+                ? `You can invite users in ${userState}, switch them between User and Admin, and remove them.`
+                : `Change roles in the table below. ${
+                    canAssignDeveloper ? "You can assign any role." : "You can assign the User and Admin roles."
                   }`}
             </p>
             <dl className="user-management-role-legend" aria-label="Role definitions">

@@ -880,8 +880,8 @@ const Dashboard: React.FC = () => {
                   title="User management"
                   intro={
                     isStateAdmin
-                      ? `Add people in ${userState}, change their roles and remove their accounts.`
-                      : "Add people, change their roles and remove their accounts."
+                      ? `Invite people in ${userState}, change their roles and remove their accounts.`
+                      : "Invite people, change their roles and remove their accounts."
                   }
                 />
                 <UserManagementTab
