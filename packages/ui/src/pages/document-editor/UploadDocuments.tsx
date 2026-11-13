@@ -328,6 +328,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
             library={library}
             selected={selected}
             onChange={changeSelection}
+            documentIdentifier={selectedNofo}
             legend="Use in this application"
             description="The AI reads the documents you tick when it writes this application (e.g., organizational details, past performance reports, budgets). New uploads go to My documents."
           />
