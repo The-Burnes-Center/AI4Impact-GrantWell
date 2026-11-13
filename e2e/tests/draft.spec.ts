@@ -20,13 +20,14 @@ test.afterEach(async () => {
   await clearRecentlyViewed();
 });
 
-const SIDEBAR_LABEL = /^Section (\d+) of (\d+): (.*?)(?:, (completed|failed|generating|pending))?(?: \(not yet available\))?$/;
+const SIDEBAR_LABEL = /^(\d+) (.*?), section \1 of (\d+)(?:, (completed|failed|generating|pending))?(?:, not yet available)?$/;
+const SIDEBAR_BUTTON = /^\d+ .*, section \d+ of \d+/;
 
 async function sidebar(page: import("@playwright/test").Page) {
-  const buttons = page.getByRole("button", { name: /^Section \d+ of \d+: / });
+  const buttons = page.getByRole("button", { name: SIDEBAR_BUTTON });
   const labels = await buttons.evaluateAll((els) => els.map((e) => e.getAttribute("aria-label") ?? ""));
   return labels.map((label) => {
-    const [, , , name, status] = label.match(SIDEBAR_LABEL) ?? [];
+    const [, , name, , status] = label.match(SIDEBAR_LABEL) ?? [];
     return { name, status };
   });
 }
@@ -73,11 +74,11 @@ test("generates every narrative section and exports the application as Word and 
   expect((await sidebar(page)).map((s) => s.name)).toEqual(narrativeSections);
   await expect(page.getByText(/section\(s\) failed to generate/)).toHaveCount(0);
 
-  const buttons = page.getByRole("button", { name: /^Section \d+ of \d+: / });
+  const buttons = page.getByRole("button", { name: SIDEBAR_BUTTON });
   for (let i = 0; i < narrativeSections.length; i++) {
     await buttons.nth(i).click();
     await expect(page.locator("#se-section-title")).toHaveText(narrativeSections[i]);
-    const text = await page.locator("textarea.se-textarea").inputValue();
+    const text = await page.locator('[role="textbox"][contenteditable]').first().innerText();
     expect(text.trim().length, `"${narrativeSections[i]}" length`).toBeGreaterThanOrEqual(MIN_SECTION_CHARS);
   }
   await page.getByRole("button", { name: "Save section & review application" }).click();

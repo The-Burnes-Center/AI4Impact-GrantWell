@@ -17,7 +17,7 @@ test("User Management lists users and finds the test account", async ({ page }) 
 
   await panel.getByRole("searchbox", { name: "Search users" }).fill(USER_EMAIL);
   await panel.getByRole("button", { name: "Search", exact: true }).click();
-  await expect(panel.getByRole("status")).toHaveText(`1 user found for "${USER_EMAIL}".`);
+  await expect(panel.getByRole("status").filter({ hasText: "user found" })).toHaveText(`1 user found for "${USER_EMAIL}".`);
   await expect(panel.locator(".user-management-table")).toContainText(USER_EMAIL);
   await expect(page.getByText("Failed to load users")).toHaveCount(0);
 });
