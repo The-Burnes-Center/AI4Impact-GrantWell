@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/vitest";
 import { cleanup } from "@testing-library/react";
-import { afterEach, beforeEach, vi } from "vitest";
+import { afterAll, afterEach, beforeEach, vi } from "vitest";
 import { resetAmplify } from "./amplify";
 import { restoreFetch } from "./fetch-routes";
 import { resetInstance } from "./instance";
@@ -27,3 +27,6 @@ afterEach(() => {
     throw new Error(`Unexpected requests (add them to stubFetch):\n  ${unexpected.join("\n  ")}`);
   }
 });
+
+// ProseMirror's DOM observer schedules its selection sync on a short timer; let it run while jsdom still exists.
+afterAll(() => new Promise((resolve) => setTimeout(resolve, 60)));
