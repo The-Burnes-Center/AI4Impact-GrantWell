@@ -31,6 +31,8 @@ import "../../styles/document-editor.css";
 
 interface SectionEditorProps {
   onContinue: () => void;
+  /** Leaves for the previous step (Additional information) from the first section. */
+  onBack?: () => void;
   selectedNofo: string | null;
   sessionId: string;
   activeJobId?: string;
@@ -45,6 +47,7 @@ const STORAGE_WARNING_SHARE = 0.75;
 
 const SectionEditor: React.FC<SectionEditorProps> = ({
   onContinue,
+  onBack,
   selectedNofo,
   sessionId,
   activeJobId,
@@ -336,6 +339,15 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     } else {
       onContinue();
     }
+  };
+
+  const handleBackToPreviousStep = async () => {
+    try {
+      await commitActiveSection();
+    } catch (error) {
+      console.error("Error saving before going back:", error);
+    }
+    onBack?.();
   };
 
   const handleRetryFailedSections = useCallback(async () => {
@@ -698,7 +710,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
           <div className="se-actions-bar">
             <button
               id="save-button"
-              className="gw-btn gw-btn--primary se-save-btn"
+              className="gw-btn gw-btn--secondary se-save-btn"
               onClick={() => setLabelPromptOpen(true)}
               disabled={savingVersion || generating}
             >
@@ -707,14 +719,21 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
             </button>
 
             <div className="se-nav-buttons">
-              {activeSection > 0 && (
+              {activeSection > 0 ? (
                 <button
                   className="gw-btn gw-btn--secondary se-prev-btn"
                   onClick={() => setActiveSection(activeSection - 1)}
                 >
                   <LuChevronLeft size={18} className="se-icon--left" aria-hidden="true" />
-                  Previous
+                  Previous section
                 </button>
+              ) : (
+                onBack && (
+                  <button className="gw-btn gw-btn--secondary se-prev-btn" onClick={handleBackToPreviousStep}>
+                    <LuChevronLeft size={18} className="se-icon--left" aria-hidden="true" />
+                    Back to additional information
+                  </button>
+                )
               )}
 
               <button

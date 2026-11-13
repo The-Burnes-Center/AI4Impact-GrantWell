@@ -174,20 +174,6 @@ html:has(.document-editor-root) {
   line-height: 1.6;
 }
 
-.welcome-modal-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.welcome-modal-btn {
-  width: 100%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
 /* ===== ReviewApplication (ra-) Styles ===== */
 
 .ra-container {

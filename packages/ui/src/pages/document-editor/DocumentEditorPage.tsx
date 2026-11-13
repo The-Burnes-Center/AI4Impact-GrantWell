@@ -337,7 +337,7 @@ const DocumentEditor: React.FC = () => {
       case "uploadDocuments":
         return <UploadDocuments selectedNofo={selectedNofo} onNavigate={navigateToStep} onNavigateToEditor={navigateToSectionEditor} sessionId={sessionId || ""} documentData={documentData} draftSave={draftSave} />;
       case "sectionEditor":
-        return <SectionEditor onContinue={() => navigateToStep("reviewApplication")} selectedNofo={selectedNofo} sessionId={sessionId || ""} activeJobId={activeJobId} isGenerating={isGeneratingDraft} draftSave={draftSave} />;
+        return <SectionEditor onContinue={() => navigateToStep("reviewApplication")} onBack={() => navigateToStep("uploadDocuments")} selectedNofo={selectedNofo} sessionId={sessionId || ""} activeJobId={activeJobId} isGenerating={isGeneratingDraft} draftSave={draftSave} />;
       case "reviewApplication":
         return <ReviewApplication selectedNofo={selectedNofo} sessionId={sessionId || ""} onNavigate={navigateToStep} />;
       default:
