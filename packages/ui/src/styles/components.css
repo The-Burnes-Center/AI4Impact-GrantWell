@@ -72,6 +72,16 @@
   color: var(--gw-color-primary-hover);
 }
 
+/* Outlined partner to --inverse on the same band. */
+.gw-btn.gw-btn--inverse-outline {
+  background: transparent;
+  color: var(--gw-color-text-inverse);
+  border-color: var(--gw-color-text-inverse);
+}
+.gw-btn.gw-btn--inverse-outline:hover:not(:disabled):not([aria-disabled="true"]) {
+  background: var(--gw-color-primary-hover);
+}
+
 /* Tight spaces: table rows, toolbars, headers. */
 .gw-btn.gw-btn--slim {
   min-height: 32px;
@@ -657,6 +667,13 @@ a.gw-tab { text-decoration: none; }
   font-size: var(--gw-font-size-2xl);
   font-weight: var(--gw-font-weight-semibold);
   line-height: 1.3;
+  color: var(--gw-color-text-inverse);
+}
+.gw-step-band__heading { min-width: 0; }
+.gw-step-band__description {
+  margin: var(--gw-spacing-xs) 0 0;
+  font-size: var(--gw-font-size-sm);
+  line-height: 1.5;
   color: var(--gw-color-text-inverse);
 }
 .gw-step-band__actions {
