@@ -34,4 +34,27 @@ describe.each(Object.keys(ENVS))("draft generation state machine (%s)", (env) =>
     expect(selector).not.toHaveProperty("grantInfos.$");
     expect(selector).not.toHaveProperty("applicantDocuments.$");
   });
+
+  it("plans the sections before writing them, and writes summaries last", () => {
+    const def = JSON.parse(stateMachineDefinitions(env).find((d) => d.includes('"GenerateAllSections"'))!.replace(/<ref>/g, "x"));
+    const shape = Object.fromEntries(
+      Object.entries<any>(def.States).map(([name, state]) => [
+        name,
+        {
+          Type: state.Type,
+          Next: state.Next,
+          ItemsPath: state.ItemsPath,
+          ResultPath: state.ResultPath,
+          Payload: state.Parameters?.Payload,
+          Catch: state.Catch?.map((c: any) => ({ Next: c.Next, ResultPath: c.ResultPath })),
+          Items: state.ItemProcessor ? Object.keys(state.ItemProcessor.States) : undefined,
+        },
+      ])
+    );
+    expect(def.StartAt).toBe("PrepareSections");
+    expect(JSON.parse(JSON.stringify(shape))).toMatchSnapshot();
+    const selector = def.States.GenerateSummarySections.ItemSelector;
+    expect(selector).toEqual(def.States.GenerateAllSections.ItemSelector);
+    expect(selector).toMatchObject({ "outline.$": "$.outline", "sessionId.$": "$.sessionId" });
+  });
 });

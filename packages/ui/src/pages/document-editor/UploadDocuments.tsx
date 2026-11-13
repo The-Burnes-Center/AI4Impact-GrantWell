@@ -7,12 +7,12 @@ import NavigationButtons from "../../components/ui/NavigationButtons";
 import DocumentPicker from "../../components/documents/DocumentPicker";
 import { colors, typography, spacing, borderRadius } from "../../components/ui/styles";
 import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
-import { characterCount, MAX_INPUT_CHARS, readDraftCache, resolveQuestionnaireAnswers } from "../../common/helpers/document-editor-utils";
+import { characterCount, MAX_INPUT_CHARS, readDraftCache, resolveQuestionnaire } from "../../common/helpers/document-editor-utils";
 import { legacySelection } from "../../common/helpers/user-documents";
 import type { useDraftSave } from "../../hooks/use-draft-save";
 import type { DocumentData } from "../../common/types/document";
 import { DailyLimitError } from "../../common/api-client/daily-limit";
-import { InputTooLongError } from "../../common/api-client/drafts-client";
+import { InputTooLongError, jobNoMaterialError, NoMaterialError } from "../../common/api-client/drafts-client";
 import { GrantInReviewError } from "../../common/api-client/grant-in-review";
 import { grantSections } from "../../common/helpers/application-sections";
 
@@ -151,7 +151,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       setGenerationPhase("preparing");
       setIsLoading(false);
 
-      const questionnaireAnswers = await resolveQuestionnaireAnswers(
+      const { answers: questionnaireAnswers, questions } = await resolveQuestionnaire(
         () => apiClient.landingPage.getNOFOQuestions(selectedNofo),
         draftToUse.questionnaire,
       );
@@ -163,6 +163,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         projectBasics: draftToUse.projectBasics || {},
         questionnaire: draftToUse.questionnaire || {},
         questionnaireAnswers,
+        questions,
         additionalInfo,
         sessionId,
         documentKeys,
@@ -177,15 +178,18 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
         await new Promise(resolve => setTimeout(resolve, 2000));
         pollCount++;
 
+        let nothingToWrite: NoMaterialError | null = null;
         try {
           const jobStatus = await apiClient.drafts.pollDraftJob(jobId);
+          nothingToWrite = jobNoMaterialError(jobStatus);
 
-          if (jobStatus.sectionNames && jobStatus.sectionNames.length > 0) break;
+          if (!nothingToWrite && jobStatus.sectionNames && jobStatus.sectionNames.length > 0) break;
 
-          if (jobStatus.status === 'completed' || jobStatus.status === 'partial' || jobStatus.status === 'error') break;
+          if (!nothingToWrite && (jobStatus.status === 'completed' || jobStatus.status === 'partial' || jobStatus.status === 'error')) break;
         } catch (err) {
           console.warn('Error polling job status:', err);
         }
+        if (nothingToWrite) throw nothingToWrite;
       }
 
       // Navigate to SectionEditor — it takes over live polling
@@ -195,7 +199,12 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       }
     } catch (error) {
       console.error("Error creating draft:", error);
-      if (error instanceof DailyLimitError || error instanceof InputTooLongError || error instanceof GrantInReviewError) {
+      if (
+        error instanceof DailyLimitError ||
+        error instanceof InputTooLongError ||
+        error instanceof GrantInReviewError ||
+        error instanceof NoMaterialError
+      ) {
         void draftSave.saveFields({ status: "uploading_documents" }, { source: "status_change", immediate: true });
       }
       setSubmitError(error instanceof Error ? error.message : "Failed to create draft. Please try again.");

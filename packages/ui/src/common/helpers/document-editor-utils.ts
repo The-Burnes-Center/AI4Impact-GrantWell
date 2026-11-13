@@ -1,5 +1,5 @@
 import type { DraftJobStatus, DraftStatus } from "../api-client/drafts-client";
-import type { QuestionnaireAnswer } from "../types/document";
+import type { NumberedQuestion, QuestionnaireAnswer } from "../types/document";
 
 /**
  * Maps a UI step ID to the backend draft status string.
@@ -141,6 +141,14 @@ export async function resolveQuestionnaireAnswers(
   fetchQuestions: () => Promise<unknown>,
   questionnaire: Record<string, string> | null | undefined,
 ): Promise<QuestionnaireAnswer[]> {
+  return (await resolveQuestionnaire(fetchQuestions, questionnaire)).answers;
+}
+
+/** The answers with their questions, and every question numbered as the questionnaire lists it. */
+export async function resolveQuestionnaire(
+  fetchQuestions: () => Promise<unknown>,
+  questionnaire: Record<string, string> | null | undefined,
+): Promise<{ answers: QuestionnaireAnswer[]; questions: NumberedQuestion[] }> {
   let questions: { id: number | string; question: string }[] = [];
   try {
     const fetched = ((await fetchQuestions()) as { data?: { questions?: unknown } } | null)?.data?.questions;
@@ -148,7 +156,12 @@ export async function resolveQuestionnaireAnswers(
   } catch (error) {
     console.warn("Could not load the grant's questions for the drafter:", error);
   }
-  return questionnaireAnswers(questions, questionnaire);
+  return {
+    answers: questionnaireAnswers(questions, questionnaire),
+    questions: questions
+      .map((q, index) => ({ number: index + 1, question: q.question }))
+      .filter((q) => typeof q.question === "string" && q.question.trim() !== ""),
+  };
 }
 
 export async function pollForExportUrl(options: {

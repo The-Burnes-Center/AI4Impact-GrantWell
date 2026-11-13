@@ -1,0 +1,161 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`draft generation state machine (dev) > plans the sections before writing them, and writes summaries last 1`] = `
+{
+  "AssembleDraft": {
+    "Catch": [
+      {
+        "Next": "MarkJobFailed",
+        "ResultPath": "$.error",
+      },
+    ],
+    "Type": "Task",
+  },
+  "GenerateAllSections": {
+    "Items": [
+      "GenerateSection",
+      "SectionErrorFallback",
+    ],
+    "ItemsPath": "$.remainingSections",
+    "Next": "GenerateSummarySections",
+    "ResultPath": "$.sectionResults",
+    "Type": "Map",
+  },
+  "GenerateFirstSection": {
+    "Items": [
+      "GenerateSectionFirst",
+      "SectionErrorFallbackFirst",
+    ],
+    "ItemsPath": "$.warmSections",
+    "Next": "GenerateAllSections",
+    "ResultPath": "$.warmResults",
+    "Type": "Map",
+  },
+  "GenerateSummarySections": {
+    "Items": [
+      "GenerateSectionSummary",
+      "SectionErrorFallbackSummary",
+    ],
+    "ItemsPath": "$.summarySections",
+    "Next": "AssembleDraft",
+    "ResultPath": "$.summaryResults",
+    "Type": "Map",
+  },
+  "MarkJobFailed": {
+    "Next": "PipelineFailed",
+    "ResultPath": null,
+    "Type": "Task",
+  },
+  "PipelineFailed": {
+    "Type": "Fail",
+  },
+  "PlanFailed": {
+    "Next": "GenerateFirstSection",
+    "Type": "Pass",
+  },
+  "PlanSections": {
+    "Catch": [
+      {
+        "Next": "PlanFailed",
+        "ResultPath": "$.planError",
+      },
+    ],
+    "Next": "GenerateFirstSection",
+    "Payload": {
+      "state.$": "$",
+      "step": "plan",
+    },
+    "Type": "Task",
+  },
+  "PrepareSections": {
+    "Catch": [
+      {
+        "Next": "MarkJobFailed",
+        "ResultPath": "$.error",
+      },
+    ],
+    "Next": "PlanSections",
+    "Type": "Task",
+  },
+}
+`;
+
+exports[`draft generation state machine (prod) > plans the sections before writing them, and writes summaries last 1`] = `
+{
+  "AssembleDraft": {
+    "Catch": [
+      {
+        "Next": "MarkJobFailed",
+        "ResultPath": "$.error",
+      },
+    ],
+    "Type": "Task",
+  },
+  "GenerateAllSections": {
+    "Items": [
+      "GenerateSection",
+      "SectionErrorFallback",
+    ],
+    "ItemsPath": "$.remainingSections",
+    "Next": "GenerateSummarySections",
+    "ResultPath": "$.sectionResults",
+    "Type": "Map",
+  },
+  "GenerateFirstSection": {
+    "Items": [
+      "GenerateSectionFirst",
+      "SectionErrorFallbackFirst",
+    ],
+    "ItemsPath": "$.warmSections",
+    "Next": "GenerateAllSections",
+    "ResultPath": "$.warmResults",
+    "Type": "Map",
+  },
+  "GenerateSummarySections": {
+    "Items": [
+      "GenerateSectionSummary",
+      "SectionErrorFallbackSummary",
+    ],
+    "ItemsPath": "$.summarySections",
+    "Next": "AssembleDraft",
+    "ResultPath": "$.summaryResults",
+    "Type": "Map",
+  },
+  "MarkJobFailed": {
+    "Next": "PipelineFailed",
+    "ResultPath": null,
+    "Type": "Task",
+  },
+  "PipelineFailed": {
+    "Type": "Fail",
+  },
+  "PlanFailed": {
+    "Next": "GenerateFirstSection",
+    "Type": "Pass",
+  },
+  "PlanSections": {
+    "Catch": [
+      {
+        "Next": "PlanFailed",
+        "ResultPath": "$.planError",
+      },
+    ],
+    "Next": "GenerateFirstSection",
+    "Payload": {
+      "state.$": "$",
+      "step": "plan",
+    },
+    "Type": "Task",
+  },
+  "PrepareSections": {
+    "Catch": [
+      {
+        "Next": "MarkJobFailed",
+        "ResultPath": "$.error",
+      },
+    ],
+    "Next": "PlanSections",
+    "Type": "Task",
+  },
+}
+`;

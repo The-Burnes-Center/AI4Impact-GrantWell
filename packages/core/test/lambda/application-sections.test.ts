@@ -134,8 +134,9 @@ describe("preparing a run", () => {
       { id: "budget-narrative", name: "Budget" },
       { id: "need-2", name: "Need" },
     ]);
-    const meta = unmarshall(ddb.commandCalls(UpdateItemCommand)[0].args[0].input.ExpressionAttributeValues as any);
-    expect(meta[":si"]).toEqual(["need", "budget-narrative", "need-2"]);
+    // The plan step records the section list; prepare only resets the per-section maps it writes into.
+    const reset = unmarshall(ddb.commandCalls(UpdateItemCommand)[0].args[0].input.ExpressionAttributeValues as any);
+    expect(reset).toEqual({ ":zero": 0, ":empty": {} });
   });
 
   it("writes only the requested sections on a retry, with the whole outline for context", async () => {

@@ -87,6 +87,51 @@ describe("Write application documents", () => {
     await waitFor(() => expect(onNavigateToEditor).toHaveBeenCalledWith("job-1"), { timeout: 4000 });
   });
 
+  const NOTHING = "Add your project basics or answer some questions first; GrantWell needs something to write from.";
+
+  it.each([
+    ["the API refuses the start", { [START]: json({ error: "NO_MATERIAL", message: NOTHING }, 400) }],
+    [
+      "the draft finds nothing to write from",
+      { [JOB]: json({ jobId: "job-1", status: "error", errorCode: "NO_MATERIAL", error: NOTHING, sectionNames: ["Need"] }) },
+    ],
+  ])("says what to add when %s, and stays on this step", async (_label, routes) => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const net = stubFetch({
+      [LIST]: json({ documents: LIBRARY }),
+      [DRAFT]: (req: RouteRequest) => json((req.body as { operation: string }).operation === "get_draft" ? BASE_ROW : {}),
+      [SUMMARY]: json({ data: { ProjectNarrativeSections: [{ item: "Need", description: "d" }] } }),
+      [QUESTIONS]: json({ data: { questions: [{ id: 1, question: "Who will it serve?" }, { id: 2, question: "What will it cost?" }] } }),
+      [START]: json({ jobId: "job-1" }),
+      ...routes,
+    });
+    const draftSave = fakeDraftSave();
+    const onNavigateToEditor = vi.fn();
+    const { user } = renderApp(
+      <UploadDocuments
+        selectedNofo="Grant A/"
+        onNavigate={() => {}}
+        onNavigateToEditor={onNavigateToEditor}
+        sessionId="s1"
+        draftSave={draftSave}
+      />
+    );
+    await screen.findByRole("checkbox", { name: /budget\.pdf/ });
+
+    await user.click(screen.getByRole("button", { name: "Create draft" }));
+
+    expect(await screen.findByText(NOTHING, undefined, { timeout: 5000 })).toBeInTheDocument();
+    expect(onNavigateToEditor).not.toHaveBeenCalled();
+    expect(draftSave.saveFields).toHaveBeenLastCalledWith(
+      { status: "uploading_documents" },
+      { source: "status_change", immediate: true }
+    );
+    expect((net.last(START).body as { questions: unknown }).questions).toEqual([
+      { number: 1, question: "Who will it serve?" },
+      { number: 2, question: "What will it cost?" },
+    ]);
+  });
+
   it("says the AI writer waits while the grant is in review, and leaves the application where it was", async () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     const net = stubFetch({

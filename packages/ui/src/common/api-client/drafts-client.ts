@@ -1,6 +1,6 @@
 import { Utils } from "../utils";
 import { AppConfig } from "../types/app";
-import type { ProjectBasicsData, QuestionnaireAnswer, RawDraftRecord } from "../types/document";
+import type { NumberedQuestion, ProjectBasicsData, QuestionnaireAnswer, RawDraftRecord } from "../types/document";
 import { apiFetch } from "../session-ended";
 import { dailyLimitError } from "./daily-limit";
 import { grantInReviewError } from "./grant-in-review";
@@ -19,6 +19,35 @@ function inputTooLongError(status: number, body: unknown): InputTooLongError | n
   const { error, message } = body as { error?: unknown; message?: unknown };
   if (error !== "INPUT_TOO_LONG" || typeof message !== "string" || !message) return null;
   return new InputTooLongError(message);
+}
+
+/** A draft start refused because there is nothing to write from; the message says what to add. */
+export class NoMaterialError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "NoMaterialError";
+  }
+}
+
+const NO_MATERIAL_MESSAGE = "Add your project basics or answer some questions first; GrantWell needs something to write from.";
+
+function noMaterialError(status: number, body: unknown): NoMaterialError | null {
+  if (status !== 400 || typeof body !== "object" || body === null) return null;
+  const { error, message } = body as { error?: unknown; message?: unknown };
+  if (error !== "NO_MATERIAL") return null;
+  return new NoMaterialError(typeof message === "string" && message ? message : NO_MATERIAL_MESSAGE);
+}
+
+/** The NoMaterialError for a finished job that had nothing to write from, else null. */
+export function jobNoMaterialError(job: Pick<DraftJobStatus, "status" | "errorCode" | "error">): NoMaterialError | null {
+  if (job.status !== "error" || job.errorCode !== "NO_MATERIAL") return null;
+  return new NoMaterialError(job.error || NO_MATERIAL_MESSAGE);
+}
+
+/** A section the AI shortened to fit the grant's stated limit. */
+export interface SectionTrim {
+  unit: "characters" | "words";
+  max: number;
 }
 
 // Unified status that represents both the step and state in the grant writing flow
@@ -71,6 +100,10 @@ export interface DocumentDraft {
   /** Approximate stored size after the last save, against the per-application limit. */
   itemBytes?: number;
   itemLimitBytes?: number;
+  /** Sections the AI left empty, keyed by id, with the note saying what to fill in. */
+  sectionsSkipped?: Record<string, string>;
+  /** Sections the AI shortened to fit the grant's stated limit, keyed by id. */
+  sectionsTrimmed?: Record<string, SectionTrim>;
 }
 
 /** Thrown by updateDraft when the row moved on; `remote` is the server state. */
@@ -124,7 +157,10 @@ export interface DraftJobStatus {
   failedSections?: string[];
   /** Selected documents the AI could not read for this draft, with why. */
   skippedDocuments?: { name: string; reason: string }[];
+  sectionsSkipped?: Record<string, string>;
+  sectionsTrimmed?: Record<string, SectionTrim>;
   error?: string;
+  errorCode?: 'NO_MATERIAL';
   jobType?: 'export';
   downloadUrl?: string;
 }
@@ -186,6 +222,8 @@ export class DraftsClient {
       lastModified: (row.last_modified as string) || new Date().toISOString(),
       rev: typeof row.rev === 'number' ? row.rev : undefined,
       lastWriteSource: row.last_write_source as DraftWriteSource | undefined,
+      sectionsSkipped: (row.sections_skipped as Record<string, string>) || {},
+      sectionsTrimmed: (row.sections_trimmed as Record<string, SectionTrim>) || {},
     };
   }
 
@@ -570,6 +608,8 @@ export class DraftsClient {
     projectBasics?: ProjectBasicsData;
     questionnaire?: Record<string, string>;
     questionnaireAnswers?: QuestionnaireAnswer[];
+    /** Every question as the applicant sees it numbered, answered or not. */
+    questions?: NumberedQuestion[];
     additionalInfo?: string;
     sessionId: string;
     /** The application's selected documents; null keeps the pre-library default (its grant's old folder). */
@@ -588,6 +628,7 @@ export class DraftsClient {
         projectBasics: params.projectBasics || {},
         questionnaire: params.questionnaire || {},
         questionnaireAnswers: params.questionnaireAnswers || [],
+        questions: params.questions || [],
         additionalInfo: params.additionalInfo || '',
         sessionId: params.sessionId,
         documentKeys: params.documentKeys ?? null,
@@ -600,6 +641,8 @@ export class DraftsClient {
       if (limitError) throw limitError;
       const tooLong = inputTooLongError(response.status, errorData);
       if (tooLong) throw tooLong;
+      const nothing = noMaterialError(response.status, errorData);
+      if (nothing) throw nothing;
       const inReview = grantInReviewError(response.status, errorData);
       if (inReview) throw inReview;
       throw new Error(errorData.error || 'Failed to start draft generation');
@@ -617,6 +660,7 @@ export class DraftsClient {
     projectBasics?: ProjectBasicsData;
     questionnaire?: Record<string, string>;
     questionnaireAnswers?: QuestionnaireAnswer[];
+    questions?: NumberedQuestion[];
     additionalInfo?: string;
     sessionId: string;
     /** Rewrite only these sections; the rest of the application is left alone. */
@@ -640,6 +684,7 @@ export class DraftsClient {
         projectBasics: params.projectBasics || {},
         questionnaire: params.questionnaire || {},
         questionnaireAnswers: params.questionnaireAnswers || [],
+        questions: params.questions || [],
         additionalInfo: params.additionalInfo || '',
         sessionId: params.sessionId,
         sectionIds: params.sectionIds,
@@ -663,6 +708,8 @@ export class DraftsClient {
       if (limitError) throw limitError;
       const tooLong = inputTooLongError(startResponse.status, errorMessage);
       if (tooLong) throw tooLong;
+      const nothing = noMaterialError(startResponse.status, errorMessage);
+      if (nothing) throw nothing;
       const inReview = grantInReviewError(startResponse.status, errorMessage);
       if (inReview) throw inReview;
       throw new Error(errorMessage.error || 'Failed to start draft generation');
@@ -687,6 +734,7 @@ export class DraftsClient {
 
       console.log(`[Polling] Checking draft generation job ${jobId} status (attempt ${pollCount}/${maxPolls})`);
 
+      let failure: Error | null = null;
       try {
         const statusResponse = await apiFetch(this.API + `/draft-generation-jobs/${jobId}`, {
           method: 'GET',
@@ -714,14 +762,16 @@ export class DraftsClient {
           if (params.onProgress) params.onProgress(statusData.status, pollCount, maxPolls);
           return { jobId, sections: statusData.sections || {} };
         } else if (statusData.status === 'error') {
-          throw new Error(statusData.error || 'Draft generation failed');
+          failure = jobNoMaterialError(statusData) ?? new Error(statusData.error || 'Draft generation failed');
+        } else if (params.onProgress) {
+          params.onProgress('in_progress', pollCount, maxPolls);
         }
-
-        if (params.onProgress) params.onProgress('in_progress', pollCount, maxPolls);
       } catch (err) {
         console.error('[Polling] Error checking job status:', err);
         if (params.onProgress) params.onProgress('in_progress', pollCount, maxPolls);
       }
+      // Outside the try, which keeps polling through transient errors: a failed job is final.
+      if (failure) throw failure;
     }
 
     // If we've exhausted polls, throw an error
