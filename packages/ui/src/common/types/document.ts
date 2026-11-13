@@ -19,6 +19,12 @@ export interface QuestionnaireAnswer {
   answer: string;
 }
 
+/** A question as the questionnaire numbers it, so a section the AI skips can name the ones to answer. */
+export interface NumberedQuestion {
+  number: number;
+  question: string;
+}
+
 export interface DocumentData {
   id: string;
   nofoId: string;

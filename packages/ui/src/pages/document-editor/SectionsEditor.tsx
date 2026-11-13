@@ -8,7 +8,7 @@ import { useNotifications } from "../../components/notifications/NotificationMan
 import AutoSaveIndicator from "../../components/ui/AutoSaveIndicator";
 import VersionHistoryPanel from "../../components/document-editor/VersionHistoryPanel";
 import ConfirmationModal from "../../components/common/ConfirmationModal";
-import { readDraftCache, resolveQuestionnaireAnswers, writeDraftCache } from "../../common/helpers/document-editor-utils";
+import { readDraftCache, resolveQuestionnaire, writeDraftCache } from "../../common/helpers/document-editor-utils";
 import {
   grantSections,
   keyedById,
@@ -18,10 +18,10 @@ import {
   toSectionId,
   type ApplicationSection,
 } from "../../common/helpers/application-sections";
-import type { DraftJobStatus, DraftVersionMeta } from "../../common/api-client/drafts-client";
+import type { DraftJobStatus, DraftVersionMeta, SectionTrim } from "../../common/api-client/drafts-client";
 import type { useDraftSave } from "../../hooks/use-draft-save";
 import { DailyLimitError } from "../../common/api-client/daily-limit";
-import { InputTooLongError } from "../../common/api-client/drafts-client";
+import { InputTooLongError, jobNoMaterialError, NoMaterialError } from "../../common/api-client/drafts-client";
 import { GrantInReviewError } from "../../common/api-client/grant-in-review";
 import { SKIP_REASON_TEXT } from "../../common/helpers/user-documents";
 import { LiveStatus } from "../../components/common/LiveStatus";
@@ -58,6 +58,9 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   const [generating, setGenerating] = useState(!!activeJobId && !!initialIsGenerating);
   const [failedSections, setFailedSections] = useState<string[]>([]);
   const [skippedDocuments, setSkippedDocuments] = useState<{ name: string; reason: string }[]>([]);
+  /** Sections the AI left empty, with what to fill in, and those it shortened to fit a limit. */
+  const [sectionsSkipped, setSectionsSkipped] = useState<Record<string, string>>({});
+  const [sectionsTrimmed, setSectionsTrimmed] = useState<Record<string, SectionTrim>>({});
   const [completedSectionCount, setCompletedSectionCount] = useState(0);
   const [generationTotal, setGenerationTotal] = useState<number | undefined>(undefined);
   const [historyOpen, setHistoryOpen] = useState(false);
@@ -142,6 +145,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       }
       setSections(resolved.sections);
       setSectionAnswers(answers);
+      setSectionsSkipped(draft?.sectionsSkipped ?? {});
+      setSectionsTrimmed(draft?.sectionsTrimmed ?? {});
       setLoaded(true);
 
       if (draft && !draft.sectionOrder && !generatingRef.current) {
@@ -175,6 +180,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
         if (draft) draftSave.setBaseline(draft);
         setSections(resolved.sections);
         setSectionAnswers(answers);
+        setSectionsSkipped(draft?.sectionsSkipped ?? {});
+        setSectionsTrimmed(draft?.sectionsTrimmed ?? {});
         writeDraftCache(sessionId, "sections", answers);
         setFailedSections(
           (job.failedSections || [])
@@ -207,6 +214,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       try {
         const jobStatus: DraftJobStatus = await apiClient.drafts.pollDraftJob(activeJobId);
         if (jobStatus.skippedDocuments?.length) setSkippedDocuments(jobStatus.skippedDocuments);
+        if (jobStatus.sectionsSkipped) setSectionsSkipped(keyedById(jobStatus.sectionsSkipped, sectionsRef.current));
+        if (typeof jobStatus.totalSections === "number") setGenerationTotal(jobStatus.totalSections);
 
         // Shown as it arrives; the editor is read-only, so nothing here is saved.
         if (jobStatus.sections) {
@@ -220,6 +229,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
         if (jobStatus.status === "completed" || jobStatus.status === "partial" || jobStatus.status === "error") {
           finished = true;
           clearInterval(interval);
+          const nothingToWrite = jobNoMaterialError(jobStatus);
+          if (nothingToWrite) addNotification("error", nothingToWrite.message);
           await finishGeneration(jobStatus);
         }
       } catch (err) {
@@ -229,7 +240,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [activeJobId, generating, apiClient, finishGeneration]);
+  }, [activeJobId, generating, apiClient, finishGeneration, addNotification]);
 
   useEffect(() => {
     if (previousSectionRef.current === activeSection) return;
@@ -353,7 +364,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       const currentDraft = await apiClient.drafts.getDraft({ sessionId, userId: username });
       if (!currentDraft) throw new Error("No draft found");
 
-      const questionnaireAnswers = await resolveQuestionnaireAnswers(
+      const { answers: questionnaireAnswers, questions } = await resolveQuestionnaire(
         () => apiClient.landingPage.getNOFOQuestions(selectedNofo),
         currentDraft.questionnaire,
       );
@@ -364,6 +375,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
         projectBasics: currentDraft.projectBasics || {},
         questionnaire: currentDraft.questionnaire || {},
         questionnaireAnswers,
+        questions,
         additionalInfo: currentDraft.additionalInfo || "",
         sessionId,
         sectionIds: retrying,
@@ -393,7 +405,12 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       setFailedSections(retrying);
       setGenerating(false);
       setGenerationTotal(undefined);
-      if (error instanceof DailyLimitError || error instanceof InputTooLongError || error instanceof GrantInReviewError) {
+      if (
+        error instanceof DailyLimitError ||
+        error instanceof InputTooLongError ||
+        error instanceof GrantInReviewError ||
+        error instanceof NoMaterialError
+      ) {
         addNotification("error", error.message);
       }
     }
@@ -476,6 +493,14 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   const nearStorageLimit =
     !!storageUse && storageUse.limit > 0 && storageUse.bytes >= storageUse.limit * STORAGE_WARNING_SHARE;
   const failedNames = failedSections.map((id) => sections.find((s) => s.id === id)?.name ?? id);
+  const activeText = active ? sectionAnswers[active.id] ?? "" : "";
+  const skipNote = active && !activeText.trim() ? sectionsSkipped[active.id] : undefined;
+  const trim = active && activeText.trim() ? sectionsTrimmed[active.id] : undefined;
+  const sectionNote = skipNote
+    ? `${skipNote}.`
+    : trim
+      ? `Shortened to fit the ${trim.max.toLocaleString("en-US")}-${trim.unit === "words" ? "word" : "character"} limit.`
+      : undefined;
 
   if (loaded && sections.length === 0 && !generating) {
     return (
@@ -660,9 +685,15 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
             )
           )}
 
+          {sectionNote && (
+            <p id="se-section-note" className="gw-alert gw-alert--info se-storage-warning">
+              {sectionNote}
+            </p>
+          )}
+
           {/* Editor */}
           <div className="se-editor-card">
-            {generating && active && !sectionAnswers[active.id] ? (
+            {generating && active && !sectionAnswers[active.id] && !sectionsSkipped[active.id] ? (
               <div className="se-skeleton-container">
                 <div className="se-skeleton-label">
                   <div className="se-skeleton-spinner" />
@@ -688,7 +719,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                   onChange={handleEditorChange}
                   readOnly={generating}
                   labelledBy="se-section-title"
-                  describedBy={generating ? "se-lock-note" : undefined}
+                  describedBy={[generating && "se-lock-note", sectionNote && "se-section-note"].filter(Boolean).join(" ") || undefined}
                   placeholder={active ? `Start writing your ${active.name} here...` : undefined}
                 />
               </Suspense>
@@ -742,6 +773,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
         generating={generating}
         completedSectionCount={completedSectionCount}
         failedSections={failedSections}
+        skippedSections={sectionsSkipped}
         generationTotal={generationTotal}
         onAddSection={handleAddSection}
       />

@@ -165,6 +165,90 @@ describe("SectionsEditor sections", () => {
   });
 });
 
+describe("SectionsEditor notes on sections the AI skipped or shortened", () => {
+  const SKIP = "Not drafted: answer questions 2 and 3 or add details about your project's need";
+
+  it("says what to fill in for an empty skipped section, and that a section was shortened", async () => {
+    Element.prototype.scrollIntoView = vi.fn();
+    stubServer({
+      row: {
+        session_id: "s1",
+        status: "editing_sections",
+        sections: { "statement-of-need": "", budget: "Meals cost $3 each." },
+        section_order: ORDER,
+        sections_skipped: { "statement-of-need": SKIP },
+        sections_trimmed: { budget: { unit: "characters", max: 3000 } },
+        rev: 1,
+      },
+    });
+    const { user } = renderApp(<Editor />);
+
+    const editor = await screen.findByRole("textbox", { name: "Statement of Need" });
+    expect(await screen.findByText(`${SKIP}.`)).toBeInTheDocument();
+    expect(editor).toHaveAccessibleDescription(`${SKIP}.`);
+    expect(screen.getByRole("button", { name: /Statement of Need.*not drafted/ })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /^2 Budget/ }));
+    const budget = await screen.findByRole("textbox", { name: "Budget" });
+    expect(await screen.findByText("Shortened to fit the 3,000-character limit.")).toBeInTheDocument();
+    expect(budget).toHaveAccessibleDescription("Shortened to fit the 3,000-character limit.");
+    expect(screen.queryByText(`${SKIP}.`)).not.toBeInTheDocument();
+  });
+
+  it("drops the note once the applicant writes in the section", async () => {
+    stubServer({
+      row: {
+        session_id: "s1",
+        status: "editing_sections",
+        sections: { "statement-of-need": "Our own words." },
+        section_order: ORDER,
+        sections_skipped: { "statement-of-need": SKIP },
+        rev: 1,
+      },
+    });
+    renderApp(<Editor />);
+    const editor = await screen.findByRole("textbox", { name: "Statement of Need" });
+    await waitFor(() => expect(editorText(editor)).toBe("Our own words."));
+    expect(screen.queryByText(`${SKIP}.`)).not.toBeInTheDocument();
+  });
+
+  it("shows a skipped section's note instead of a spinner while the others are written", async () => {
+    const fake: Fake = {
+      row: { session_id: "s1", status: "generating_draft", sections: {}, section_order: ORDER, rev: 1 },
+      job: { jobId: "job-1", status: "in_progress", totalSections: 1, sectionsSkipped: { "statement-of-need": SKIP } },
+    };
+    stubServer(fake);
+    renderApp(<Editor activeJobId="job-1" isGenerating />);
+    expect(await screen.findByText(`${SKIP}.`, undefined, { timeout: 5000 })).toBeInTheDocument();
+    expect(screen.queryByText("Generating Statement of Need...")).not.toBeInTheDocument();
+    expect(screen.getByText(/Generating sections \(0\/1\)/)).toBeInTheDocument();
+  });
+
+  it("tells the applicant when a draft had nothing to write from", async () => {
+    stubServer({
+      row: { session_id: "s1", status: "generating_draft", sections: {}, section_order: ORDER, rev: 1 },
+      job: {
+        jobId: "job-1",
+        status: "error",
+        errorCode: "NO_MATERIAL",
+        error: "Add your project basics or answer some questions first; GrantWell needs something to write from.",
+      },
+    });
+    renderApp(
+      <NotificationProvider>
+        <NotificationBar />
+        <Editor activeJobId="job-1" isGenerating />
+      </NotificationProvider>
+    );
+    const message = await screen.findByText(
+      "Add your project basics or answer some questions first; GrantWell needs something to write from.",
+      undefined,
+      { timeout: 5000 }
+    );
+    expect(screen.getAllByRole("alert").some((region) => region.contains(message))).toBe(true);
+  });
+});
+
 describe("SectionsEditor versions", () => {
   const saveVersion = async (versionStatus: number) => {
     const fake: Fake = {
