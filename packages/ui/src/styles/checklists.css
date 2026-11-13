@@ -134,46 +134,11 @@
   border-radius: var(--gw-radius-control);
 }
 
-.checklist-content__header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px 24px;
-  margin-bottom: 48px;
-}
-
-.checklist-content__header-inner {
-  flex: 1 1 320px;
-  min-width: 0;
-}
-
-/* Flex items' margins don't collapse into the header's own margin-bottom. */
-.checklist-content__header-inner > :last-child {
-  margin-bottom: 0;
-}
-
-.checklist-content__heading {
-  font-family: var(--gw-font-heading-1, var(--gw-font-family));
-  font-weight: var(--gw-font-heading-1-weight, 600);
-  color: var(--gw-color-primary-active);
-  letter-spacing: -0.01em;
-  font-size: 32px;
-  line-height: 1.4;
-  margin: 0 0 20px 0;
-  word-spacing: 0.05em;
-}
-
-.checklist-content__heading-accent {
-  color: var(--gw-color-primary);
-}
-
 .checklist-content__description {
   font-family: var(--gw-font-family);
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.6;
-  margin-top: 12px;
-  margin-bottom: 24px;
+  margin: 16px 0 32px;
   color: var(--gw-color-text);
 }
 
@@ -231,12 +196,6 @@
 }
 
 /* Grant type badge */
-.checklist-grant-badge {
-  display: inline-block;
-  margin-left: 12px;
-  vertical-align: middle;
-}
-
 /* Loading state */
 .checklist-loading {
   display: flex;
@@ -292,35 +251,6 @@
 }
 
 /* Error state */
-.checklist-error {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 300px;
-  padding: 40px;
-  text-align: center;
-}
-
-.checklist-error__title {
-  font-size: 24px;
-  font-weight: var(--gw-font-heading-1-weight, 600);
-  color: var(--gw-color-text);
-  margin-bottom: 12px;
-}
-
-.checklist-error__text {
-  font-size: 16px;
-  color: var(--gw-color-text-secondary);
-  margin-bottom: 24px;
-}
-
-.checklist-error__btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
 /* Help modal */
 .help-modal__text {
   margin-bottom: 20px;

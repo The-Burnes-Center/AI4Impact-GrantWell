@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router";
 import { useApiClient } from "../../hooks/use-api-client";
 import { useDraftsClient } from "../../hooks/use-drafts-client";
 import { useDraftSave } from "../../hooks/use-draft-save";
@@ -23,6 +23,8 @@ import GrantPickerModal, { type PickedGrant } from "../../components/common/Gran
 import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
 import ProgressStepper from "../../components/document-editor/ProgressStepper";
 import { LiveStatus } from "../../components/common/LiveStatus";
+import PageMessage from "../../components/common/PageMessage";
+import GrantHeader from "../../components/common/GrantHeader";
 import { getCurrentUser } from "aws-amplify/auth";
 import type { DocumentDraft } from "../../common/api-client/drafts-client";
 import type { DocumentData } from "../../common/types/document";
@@ -246,8 +248,8 @@ const DocumentEditor: React.FC = () => {
     setIsNofoLoading(true);
     apiClient.landingPage
       .getNOFOSummary(selectedNofo, { forApplication: true })
-      .then((result) => setNofoName(result?.data?.GrantName || "Write application"))
-      .catch(() => setNofoName("Write application"))
+      .then((result) => setNofoName(result?.data?.GrantName || selectedNofo))
+      .catch(() => setNofoName(selectedNofo))
       .finally(() => setIsNofoLoading(false));
   }, [selectedNofo, apiClient]);
 
@@ -260,11 +262,17 @@ const DocumentEditor: React.FC = () => {
     } catch (err) {
       console.error("Failed to start new document:", err);
       setError(ERROR_MESSAGES.START_FAILED);
-    } finally {
       setStartingDraft(false);
+    } finally {
       setGrantPickerOpen(false);
     }
   }, [startDraft, navigate, setError]);
+
+  // The router can commit the new session's URL after the picker closes; until it does,
+  // stay on the loading view rather than flash a session-less form.
+  useEffect(() => {
+    if (sessionId) setStartingDraft(false);
+  }, [sessionId]);
 
   const handleGrantPicked = useCallback(async (grant: PickedGrant) => {
     addToRecentlyViewed(grant);
@@ -330,7 +338,7 @@ const DocumentEditor: React.FC = () => {
       case "uploadDocuments":
         return <UploadDocuments selectedNofo={selectedNofo} onNavigate={navigateToStep} onNavigateToEditor={navigateToSectionEditor} sessionId={sessionId || ""} documentData={documentData} draftSave={draftSave} />;
       case "sectionEditor":
-        return <SectionEditor onContinue={() => navigateToStep("reviewApplication")} selectedNofo={selectedNofo} sessionId={sessionId || ""} activeJobId={activeJobId} isGenerating={isGeneratingDraft} draftSave={draftSave} />;
+        return <SectionEditor onContinue={() => navigateToStep("reviewApplication")} onBack={() => navigateToStep("uploadDocuments")} selectedNofo={selectedNofo} sessionId={sessionId || ""} activeJobId={activeJobId} isGenerating={isGeneratingDraft} draftSave={draftSave} />;
       case "reviewApplication":
         return <ReviewApplication selectedNofo={selectedNofo} sessionId={sessionId || ""} onNavigate={navigateToStep} />;
       default:
@@ -346,8 +354,7 @@ const DocumentEditor: React.FC = () => {
     ? `/document-editor/drafts?grant=${encodeURIComponent(selectedNofo)}`
     : "/document-editor/drafts";
 
-  // WCAG 2.4.11: the header wraps on long grant names, so the stepper's offset
-  // and the page's scroll padding follow the pinned bars' real heights.
+  // WCAG 2.4.11: the stepper's offset and the page's scroll padding follow the pinned bars' real heights.
   useEffect(() => {
     const root = rootRef.current;
     const header = headerRef.current;
@@ -356,7 +363,7 @@ const DocumentEditor: React.FC = () => {
     const pinnedHeight = (el: HTMLElement | null) =>
       el && getComputedStyle(el).position === "sticky" ? el.offsetHeight : 0;
     const update = () => {
-      root.style.setProperty("--gw-editor-header-height", `${header.offsetHeight}px`);
+      root.style.setProperty("--gw-editor-header-height", `${pinnedHeight(header)}px`);
       document.documentElement.style.setProperty(
         "--gw-editor-sticky-height",
         `${pinnedHeight(header) + pinnedHeight(stepper)}px`
@@ -378,19 +385,26 @@ const DocumentEditor: React.FC = () => {
 
   if (notFound) {
     return (
-      <div style={{ maxWidth: "560px", margin: "0 auto", padding: "48px 16px", lineHeight: 1.5 }}>
-        <h1 style={{ fontSize: "1.75rem", marginBottom: "12px" }}>Application not found</h1>
-        <p>This application doesn&apos;t exist. It may have been deleted.</p>
-        <p>
-          <Link to="/document-editor/drafts" style={{ color: "var(--gw-color-primary)", fontWeight: 600 }}>
-            Go to My applications
-          </Link>
-        </p>
-      </div>
+      <PageMessage
+        title="Application not found"
+        message="This application doesn't exist. It may have been deleted."
+        action={{ label: "Go to My applications", to: "/document-editor/drafts" }}
+      />
     );
   }
 
-  if (error) return <EditorError message={error} />;
+  // Replaces the whole editor, so it takes focus: the control that had it is gone.
+  if (error) {
+    return (
+      <PageMessage
+        alert
+        focusTitle
+        title="Something went wrong"
+        message={`${error}. Try again in a moment.`}
+        action={{ label: "Try again", onClick: () => window.location.reload() }}
+      />
+    );
+  }
 
   return (
     <div ref={rootRef} className="document-editor-root" style={{ display: "flex", alignItems: "stretch", flex: "1 0 auto", width: "100%", margin: 0, padding: 0 }}>
@@ -399,12 +413,9 @@ const DocumentEditor: React.FC = () => {
       <div className="document-content" style={{ flex: 1, display: "flex", flexDirection: "column", margin: 0, padding: 0 }}>
         {!welcomeModalOpen && !grantPickerOpen && (
           <>
-            <div ref={headerRef} className="document-editor-header" style={{ background: "var(--gw-color-surface)", borderBottom: "1px solid var(--gw-color-border)", position: "sticky", top: 0, zIndex: 101, boxShadow: "var(--gw-shadow-low)" }}>
-              <div style={{ padding: 16 }}>
-                <h1 className="document-editor-nofo-title" style={{ margin: 0, fontSize: "22px", lineHeight: 1.4, wordBreak: "break-word" }}>
-                  {isNofoLoading ? "Loading..." : nofoName || "Write application"}
-                </h1>
-              </div>
+            {/* Not pinned: the stepper below stays pinned, and two pinned bars would cover too much of the page. */}
+            <div ref={headerRef} className="document-editor-header">
+              <GrantHeader page="Write application" grantName={isNofoLoading ? "Loading…" : nofoName || "Grant"} />
             </div>
 
             <ProgressStepper
@@ -477,16 +488,3 @@ const DocumentEditor: React.FC = () => {
 };
 
 export default DocumentEditor;
-
-/** Replaces the whole editor, so it takes focus (the control that had it is gone) and is the page's h1. */
-function EditorError({ message }: { message: string }) {
-  const title = useRef<HTMLHeadingElement>(null);
-  useEffect(() => title.current?.focus(), []);
-  return (
-    <div className="checklist-error" style={{ padding: 40 }}>
-      <h1 ref={title} tabIndex={-1} className="checklist-error__title">Error</h1>
-      <p className="checklist-error__text">{message}</p>
-      <button className="gw-btn gw-btn--primary checklist-error__btn" onClick={() => window.location.reload()}>Retry</button>
-    </div>
-  );
-}

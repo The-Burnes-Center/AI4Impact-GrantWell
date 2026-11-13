@@ -1,7 +1,6 @@
 import React from "react";
 
 interface FeatureRolloutPanelProps {
-  eyebrow: string;
   title: string;
   description: string;
   overview: React.ReactNode;
@@ -10,7 +9,6 @@ interface FeatureRolloutPanelProps {
 }
 
 const FeatureRolloutPanel: React.FC<FeatureRolloutPanelProps> = ({
-  eyebrow,
   title,
   description,
   overview,
@@ -20,8 +18,7 @@ const FeatureRolloutPanel: React.FC<FeatureRolloutPanelProps> = ({
   <div className="feature-rollouts-card">
     <div className="feature-rollouts-card__header">
       <div>
-        <span className="feature-rollouts-eyebrow">{eyebrow}</span>
-        <h2>{title}</h2>
+        <h3>{title}</h3>
         <p>{description}</p>
       </div>
     </div>

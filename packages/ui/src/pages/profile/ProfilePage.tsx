@@ -29,6 +29,7 @@ import type { DigestFrequency } from "../../common/api-client/notifications-clie
 import { PROFILE_FIELD_MAX_LENGTH } from "../../common/api-client/user-profile-client";
 import "../../styles/dashboard.css";
 import "./profile.css";
+import LoadingSpinner from "../../components/ui/LoadingSpinner";
 
 const FREQUENCIES: { value: DigestFrequency; label: string }[] = [
   { value: "off", label: "Off" },
@@ -305,7 +306,7 @@ export default function ProfilePage() {
 
   // Hold rendering until identity (email, state, roles) resolves.
   if (identityLoading) {
-    return <div className="loading">Loading...</div>;
+    return <LoadingSpinner message="Loading your profile…" showMessage />;
   }
 
   return (
@@ -328,7 +329,7 @@ export default function ProfilePage() {
             {EMAIL_DIGEST && <a href="#profile-notifications">Notifications</a>}
           </nav>
 
-          <div className="profile-card-stack">
+          <div className="profile-card-stack gw-form-width">
             <div id="profile-account" className="profile-anchor">
               <Card header="Account" headerStyle="default">
                 <dl className="profile-identity profile-section">

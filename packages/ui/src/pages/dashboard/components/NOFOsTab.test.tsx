@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { NOFO } from "../../../common/types/nofo";
 import { renderApp, testApiClient } from "../../../test/render";
@@ -56,6 +56,24 @@ describe("NOFOsTab row actions for a state admin", () => {
     await user.click(screen.getByRole("button", { name: "More actions for Federal Grant" }));
     for (const item of ["Edit", "Delete", "State guidance"]) {
       expect(screen.getByRole("menuitem", { name: item })).toBeInTheDocument();
+    }
+  });
+});
+
+describe("NOFOsTab on a phone", () => {
+  it("lists grants as cards with the type, deadline and the same row actions", () => {
+    deployment.single = null;
+    vi.stubGlobal("matchMedia", (query: string) => ({ matches: query === "(max-width: 767px)" }));
+    try {
+      renderTab();
+      expect(screen.queryByRole("table")).toBeNull();
+      const cards = within(screen.getByRole("list", { name: "Grants" })).getAllByRole("listitem");
+      expect(cards.map((c) => within(c).getByRole("heading", { level: 4 }).textContent)).toEqual(["Ma Grant", "Federal Grant", "Old Grant"]);
+      expect([...cards[0].querySelectorAll("dt")].map((dt) => dt.textContent)).toEqual(["Type", "Deadline"]);
+      expect(within(cards[0]).getByRole("button", { name: "Pin grant Ma Grant" })).toBeInTheDocument();
+      expect(pinnable()).toEqual(["Ma Grant"]);
+    } finally {
+      vi.unstubAllGlobals();
     }
   });
 });

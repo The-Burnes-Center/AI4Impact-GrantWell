@@ -7,6 +7,7 @@ import { useApiClient } from "../../../hooks/use-api-client";
 import { Modal } from "../../../components/common/Modal";
 import { useInert } from "../../../hooks/use-inert";
 import DocumentManager from "../../../components/chat/DocumentManager";
+import GrantHeader from "../../../components/common/GrantHeader";
 import "../../../styles/playground.css";
 
 export default function Playground() {
@@ -84,12 +85,12 @@ export default function Playground() {
     <>
       <BaseAppLayout
         header={
-          <div className="pg-header">
-            <h1 className="pg-header-title">
-              <span className="pg-header-eyebrow">Chat with AI</span>
-              {isLoading ? "Loading..." : nofoName}
-            </h1>
-            <div className="pg-header-actions">
+          <GrantHeader
+            className="pg-header"
+            page="Chat"
+            grantName={isLoading ? "Loading…" : nofoName}
+            actions={
+              <>
               {documentIdentifier && (
                 <button
                   className="gw-btn gw-btn--primary pg-upload-btn"
@@ -114,8 +115,9 @@ export default function Playground() {
               >
                 <LuCircleHelp size={16} aria-hidden="true" /> Help
               </button>
-            </div>
-          </div>
+              </>
+            }
+          />
         }
         documentIdentifier={documentIdentifier}
         sessionId={sessionId}

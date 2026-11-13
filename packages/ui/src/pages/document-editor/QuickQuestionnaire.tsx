@@ -141,7 +141,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
   // Loading state
   if (loading) {
     return (
-      <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 0" }}>
+      <div className="gw-form-width gw-form-width--centered" style={{ padding: "32px 0" }}>
         <LoadingSpinner message="Loading questions..." showMessage centered />
       </div>
     );
@@ -150,7 +150,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
   // Error state
   if (error) {
     return (
-      <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 0", textAlign: "center" }}>
+      <div className="gw-form-width gw-form-width--centered" style={{ padding: "32px 0", textAlign: "center" }}>
         <p role="alert" className="gw-alert gw-alert--urgent" style={{ marginBottom: "16px", textAlign: "left" }}>{error}</p>
         <button type="button" className="gw-btn gw-btn--primary" onClick={() => window.location.reload()}>
           Retry
@@ -162,7 +162,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
   // No questions found state
   if (noQuestionsFound) {
     return (
-      <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 0" }}>
+      <div className="gw-form-width gw-form-width--centered" style={{ padding: "32px 0" }}>
         <Card>
           <LiveStatus>
             <p style={{ fontSize: "16px", marginBottom: "16px", textAlign: "center" }}>
@@ -180,7 +180,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
   }
 
   return (
-    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
+    <div className="gw-form-width gw-form-width--centered" style={{ padding: "16px 0" }}>
       <Card
         header="Questionnaire"
         headerActions={

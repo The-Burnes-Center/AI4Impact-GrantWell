@@ -9,6 +9,7 @@ import { Modal } from "../../../components/common/Modal";
 import PaginationControls from "../../../components/common/PaginationControls";
 import TableScrollRegion from "../../../components/ui/TableScrollRegion";
 import RowActionsMenu, { type RowAction } from "./RowActionsMenu";
+import SkeletonRows from "../../../components/ui/SkeletonRows";
 
 interface UserManagementTabProps {
   apiClient: ApiClient;
@@ -330,8 +331,8 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
   if (!loaded) {
     return (
       <>
-        <div className="feature-rollouts-panel" aria-busy="true">
-          <span aria-hidden="true">Loading users...</span>
+        <div className="feature-rollouts-panel">
+          <SkeletonRows label="Loading users" />
         </div>
         <LiveStatus className="visually-hidden">Loading users...</LiveStatus>
       </>
@@ -347,17 +348,11 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
       <div className="feature-rollouts-card">
         <div className="feature-rollouts-card__header">
           <div>
-            <span className="feature-rollouts-eyebrow">
-              {isStateAdmin ? "State administration" : "Developer controls"}
-            </span>
-            <h2>User management</h2>
             <p>
               {isStateAdmin
-                ? `Manage users in ${userState}. You can add users, change roles between User and Admin, and remove users — all scoped to ${userState}.`
-                : `Edit user roles directly from the table below.${
-                    canAssignDeveloper
-                      ? " Developers can assign all roles."
-                      : " Admins can assign User or Admin roles only."
+                ? `You can invite users in ${userState}, switch them between User and Admin, and remove them.`
+                : `Change roles in the table below. ${
+                    canAssignDeveloper ? "You can assign any role." : "You can assign the User and Admin roles."
                   }`}
             </p>
             <dl className="user-management-role-legend" aria-label="Role definitions">

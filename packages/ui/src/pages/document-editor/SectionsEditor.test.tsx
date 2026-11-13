@@ -25,7 +25,7 @@ const ORDER = [
   { id: "budget", name: "Budget" },
 ];
 
-function Editor(props: { activeJobId?: string; isGenerating?: boolean }) {
+function Editor(props: { activeJobId?: string; isGenerating?: boolean; onBack?: () => void }) {
   const draftSave = useDraftSave({ sessionId: "s1", documentIdentifier: "Grant A", delay: 10, persistOnExit: false });
   return (
     <SectionEditor
@@ -336,6 +336,31 @@ describe("SectionsEditor announcements and names", () => {
     await waitFor(() => expect(screen.getAllByRole("status").some((r) => r.textContent === "Saved")).toBe(true));
     expect(screen.queryByText("Progress saved")).not.toBeInTheDocument();
     expect(screen.getAllByRole("status").filter((r) => /saved/i.test(r.textContent ?? ""))).toHaveLength(1);
+  });
+});
+
+describe("SectionsEditor footer", () => {
+  it("goes back to Additional information from the first section and to the previous section after that, with one filled button", async () => {
+    const fake: Fake = {
+      row: { session_id: "s1", status: "editing_sections", sections: { budget: "x" }, section_order: ORDER, rev: 1 },
+    };
+    stubServer(fake);
+    const onBack = vi.fn();
+    const { user } = renderApp(<Editor onBack={onBack} />);
+    await screen.findByRole("textbox", { name: "Statement of Need" });
+
+    expect(screen.queryByRole("button", { name: "Previous section" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Save version" })).toHaveClass("gw-btn--secondary");
+    expect(screen.getByRole("button", { name: "Save section & continue" })).toHaveClass("gw-btn--primary");
+
+    await user.click(screen.getByRole("button", { name: "Save section & continue" }));
+    await screen.findByRole("textbox", { name: "Budget" });
+    expect(screen.queryByRole("button", { name: "Back to additional information" })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Previous section" }));
+    await screen.findByRole("textbox", { name: "Statement of Need" });
+
+    await user.click(screen.getByRole("button", { name: "Back to additional information" }));
+    await waitFor(() => expect(onBack).toHaveBeenCalledTimes(1));
   });
 });
 

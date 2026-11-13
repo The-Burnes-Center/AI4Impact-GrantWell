@@ -374,11 +374,9 @@ function ChatMessage(props: ChatMessageProps) {
                             {grantSources.length > 0 && (
                               <div role="group" aria-label={grantName || "Grant"}>
                                 <div aria-hidden="true" style={{
-                                  fontSize: "11px",
+                                  fontSize: "12px",
                                   fontWeight: 600,
                                   color: "var(--gw-color-text-secondary, #5a5a5a)",
-                                  textTransform: "uppercase",
-                                  letterSpacing: "0.5px",
                                   marginBottom: "4px",
                                 }}>
                                   {grantName || "Grant"}
@@ -410,11 +408,9 @@ function ChatMessage(props: ChatMessageProps) {
                             {uploadedFiles.length > 0 && (
                               <div role="group" aria-label="Your supporting documents" style={{ marginTop: grantSources.length > 0 ? "6px" : "0" }}>
                                 <div aria-hidden="true" style={{
-                                  fontSize: "11px",
+                                  fontSize: "12px",
                                   fontWeight: 600,
                                   color: "var(--gw-color-text-secondary, #5a5a5a)",
-                                  textTransform: "uppercase",
-                                  letterSpacing: "0.5px",
                                   marginBottom: "4px",
                                 }}>
                                   Your supporting documents

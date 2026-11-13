@@ -200,7 +200,8 @@ describe("UserManagementTab", () => {
       }),
     });
     renderTab();
-    const region = screen.getByRole("status");
+    expect(screen.getByRole("status", { name: "Loading users" })).toBeInTheDocument();
+    const region = screen.getAllByRole("status").find((r) => !r.hasAttribute("aria-label"))!;
     expect(region).toBeEmptyDOMElement();
     await waitFor(() => expect(region).toHaveTextContent("Loading users..."));
     release();

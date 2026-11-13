@@ -356,7 +356,7 @@ const ProjectBasics: React.FC<ProjectBasicsProps> = ({
   });
 
   return (
-    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
+    <div className="gw-form-width gw-form-width--centered" style={{ padding: "16px 0" }}>
         <Card
           header="Project basics"
           headerActions={

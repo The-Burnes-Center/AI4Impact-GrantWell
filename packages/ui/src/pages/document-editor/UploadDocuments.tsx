@@ -221,7 +221,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
   // ── Full-page generation view ──────────────────────────────────────
   if (generatingDraft) {
     return (
-      <div style={{ maxWidth: "680px", margin: "0 auto", padding: "48px 16px", fontFamily: typography.fontFamily }}>
+      <div className="gw-form-width gw-form-width--centered" style={{ padding: "48px 16px", fontFamily: typography.fontFamily }}>
         {draftPhaseRegion}
 
         {/* Header */}
@@ -304,7 +304,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
 
   // ── Normal form ────────────────────────────────────────────────────
   return (
-    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px 0" }}>
+    <div className="gw-form-width gw-form-width--centered" style={{ padding: "16px 0" }}>
       {draftPhaseRegion}
 
       <Card

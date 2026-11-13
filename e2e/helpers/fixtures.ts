@@ -33,8 +33,8 @@ async function visibleErrors(page: Page): Promise<string[]> {
   if (page.isClosed()) return [];
   const notifications = page.locator(NOTIFICATION_ERRORS).filter({ visible: true });
   const boundary = page
-    .locator(".alert-danger")
-    .filter({ has: page.locator(".alert-heading", { hasText: /^Something went wrong$/ }) })
+    .locator(".gw-page-message")
+    .filter({ has: page.getByRole("heading", { level: 1, name: /^Something went wrong$/ }) })
     .filter({ visible: true });
   try {
     return [

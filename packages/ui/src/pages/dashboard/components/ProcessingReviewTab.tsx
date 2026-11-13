@@ -11,6 +11,9 @@ import TableScrollRegion from "../../../components/ui/TableScrollRegion";
 import SortableHeader from "../../../components/ui/SortableHeader";
 import { Modal } from "../../../components/common/Modal";
 import { sectionLabel } from "./section-labels";
+import SkeletonRows from "../../../components/ui/SkeletonRows";
+import { CardListItem, CardListToolbar } from "../../../components/ui/CardList";
+import { CARD_LIST_QUERY, useMediaQuery } from "../../../hooks/use-media-query";
 
 interface ProcessingReviewTabProps {
   apiClient: ApiClient;
@@ -53,6 +56,12 @@ const REPROCESSABLE_STATUSES = new Set(["failed", "pending_review", "needs_reupl
 
 /** Checkbox, name, reason, status, deadline, in queue since, details — the expanded row spans all of them. */
 const TABLE_COLUMN_COUNT = 7;
+
+const REVIEW_SORTS = [
+  { value: "deadline", label: "Deadline, soonest first" },
+  { value: "queued:oldest", label: "In queue longest" },
+  { value: "queued:newest", label: "Newest in queue" },
+];
 
 type SortOrder = { key: "deadline" } | { key: "queued"; oldestFirst: boolean };
 
@@ -276,6 +285,19 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
     handleActionComplete();
   }, [selectedReviews, apiClient, addNotification]);
 
+  const asCards = useMediaQuery(CARD_LIST_QUERY);
+
+  const emptyState = (
+    <div className="no-data">
+      <LuFileX size={24} className="no-data-icon" aria-hidden="true" />
+      <p>
+        {statusFilter === "pending_review"
+          ? "No grants pending review"
+          : `No reviews with status "${STATUS_LABELS[statusFilter]}"`}
+      </p>
+    </div>
+  );
+
   const toggleExpand = (nofoName: string) => {
     setExpandedNofo((prev) => (prev === nofoName ? null : nofoName));
   };
@@ -443,6 +465,105 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
         </div>
       )}
 
+      {asCards ? (
+        <>
+          <CardListToolbar
+            selectAll={{
+              checked: reviews.length > 0 && selected.size === reviews.length,
+              onChange: () => toggleSelectAll(),
+              label: "Select all reviews",
+              disabled: reviews.length === 0,
+              inputRef: (el) => {
+                selectAllRef.current = el;
+                if (el) el.indeterminate = selected.size > 0 && selected.size < reviews.length;
+              },
+            }}
+            sort={{
+              value: sortOrder.key === "deadline" ? "deadline" : sortOrder.oldestFirst ? "queued:oldest" : "queued:newest",
+              options: REVIEW_SORTS,
+              onChange: (value) =>
+                setSortOrder(value === "deadline" ? { key: "deadline" } : { key: "queued", oldestFirst: value === "queued:oldest" }),
+            }}
+          />
+          {loading ? (
+            <SkeletonRows label="Loading reviews" />
+          ) : loaded && reviews.length === 0 ? (
+            emptyState
+          ) : (
+            <ul className="gw-card-list" aria-label="Processing reviews" aria-busy={loading}>
+              {sortedReviews.map((review) => {
+                const badge = deadlineBadge(review);
+                const expanded = expandedNofo === review.nofo_name;
+                return (
+                  <CardListItem
+                    key={`${review.nofo_name}-${review.review_id}`}
+                    headingLevel={4}
+                    select={{
+                      checked: selected.has(review.review_id),
+                      onChange: () => toggleSelect(review.review_id),
+                      label: `Select ${review.nofo_name}`,
+                    }}
+                    title={review.nofo_name}
+                    facts={[
+                      { label: "Reason", value: getReasonSummary(review) },
+                      {
+                        label: "Status",
+                        value: (
+                          <span className={`gw-tag review-status-badge ${STATUS_CLASS_MAP[review.status] || "review-status-badge--pending"}`}>
+                            {STATUS_LABELS[review.status] || review.status}
+                          </span>
+                        ),
+                      },
+                      {
+                        label: "Deadline",
+                        value: (
+                          <span className="review-deadline-cell">
+                            <span className="review-date">{review.deadline ? formatDeadline(review.deadline) : "No deadline"}</span>
+                            {badge && <span className={`gw-tag review-deadline-badge ${badge.className}`}>{badge.label}</span>}
+                          </span>
+                        ),
+                      },
+                      {
+                        label: "In queue since",
+                        value: new Date(review.created_at).toLocaleDateString("en-US", { timeZone: "America/New_York" }),
+                      },
+                    ]}
+                    actions={
+                      <button
+                        type="button"
+                        ref={(el) => {
+                          if (el) toggleRefs.current.set(review.nofo_name, el);
+                          else toggleRefs.current.delete(review.nofo_name);
+                        }}
+                        className="gw-btn gw-btn--secondary"
+                        onClick={() => toggleExpand(review.nofo_name)}
+                        aria-expanded={expanded}
+                        aria-label={`${expanded ? "Hide" : "View"} details for ${review.nofo_name}`}
+                      >
+                        {expanded ? "Hide details" : "View details"}
+                        <LuChevronDown size={14} className={`review-chevron ${expanded ? "review-chevron--expanded" : ""}`} aria-hidden="true" />
+                      </button>
+                    }
+                  >
+                    {expanded && (
+                      <ReviewExpandedRow
+                        review={review}
+                        apiClient={apiClient}
+                        onActionComplete={() => handleActionComplete(review.nofo_name)}
+                        addNotification={addNotification}
+                        onCollapse={() => collapse(review.nofo_name)}
+                      />
+                    )}
+                  </CardListItem>
+                );
+              })}
+            </ul>
+          )}
+          <div role="status" className="visually-hidden">
+            {loading ? "Loading reviews" : resultsAnnouncement}
+          </div>
+        </>
+      ) : (
       <TableScrollRegion label="Processing reviews table" minWidth={960} className="table-scroll review-table-scroll">
       <div className="table-container">
         <table className="gw-table" aria-label="Processing reviews" ref={tableRef} tabIndex={-1} aria-busy={loading}>
@@ -494,14 +615,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
               {reviews.length === 0 ? (
                 <tr>
                   <td className="row-cell row-cell--empty" colSpan={TABLE_COLUMN_COUNT}>
-                    <div className="no-data">
-                      <LuFileX size={24} className="no-data-icon" aria-hidden="true" />
-                      <p>
-                        {statusFilter === "pending_review"
-                          ? "No grants pending review"
-                          : `No reviews with status "${STATUS_LABELS[statusFilter]}"`}
-                      </p>
-                    </div>
+                    {emptyState}
                   </td>
                 </tr>
               ) : (
@@ -584,16 +698,13 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
             </tbody>
           )}
         </table>
-        {loading && (
-          <div className="review-loading" aria-hidden="true">
-            Loading reviews...
-          </div>
-        )}
+        {loading && <SkeletonRows label="Loading reviews" />}
         <div role="status" className="visually-hidden">
           {loading ? "Loading reviews" : resultsAnnouncement}
         </div>
       </div>
       </TableScrollRegion>
+      )}
     </div>
   );
 };

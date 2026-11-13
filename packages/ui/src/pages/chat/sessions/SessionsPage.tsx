@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import UnifiedNavigation from "../../../components/navigation/UnifiedNavigation";
 import PageHeader from "../../../components/common/PageHeader";
 import "../../../styles/dashboard.css";
+import SkeletonRows from "../../../components/ui/SkeletonRows";
 
 export default function SessionPage() {
   const navigate = useNavigate();
@@ -77,9 +78,7 @@ export default function SessionPage() {
           {isLoading ? (
             <>
               <PageHeader title="My chats" />
-              <div style={{ display: "flex", justifyContent: "center", padding: "48px" }} role="status" aria-label="Loading chats">
-                <p style={{ color: "var(--gw-color-text-secondary)" }}>Loading chats...</p>
-              </div>
+              <SkeletonRows label="Loading chats" announce />
             </>
           ) : (
             <Sessions

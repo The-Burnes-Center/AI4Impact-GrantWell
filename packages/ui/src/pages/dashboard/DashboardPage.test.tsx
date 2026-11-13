@@ -135,6 +135,35 @@ describe("Admin dashboard grant list", () => {
   });
 });
 
+describe("Admin dashboard grant filters", () => {
+  it("filters with labelled Status and Grant type dropdowns above the table", async () => {
+    stubFetch({
+      "GET /s3-nofo-bucket-data": json({
+        nofoData: [
+          { name: "Fed Grant", status: "active", grant_type: "federal" },
+          { name: "State Grant", status: "active", grant_type: "state" },
+          { name: "Old Grant", status: "archived", grant_type: "federal" },
+        ],
+      }),
+      "GET /admin/processing-metrics": json({ metrics }),
+    });
+    signedInAs({ "custom:role": '["Developer"]' });
+    const { user } = renderDashboard();
+    await screen.findByText("Fed Grant");
+    const listed = () => [...screen.getByRole("list", { name: "Listed grants" }).querySelectorAll("li")].map((li) => li.textContent);
+
+    expect(screen.getByRole("heading", { level: 2, name: "Grants" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Filter grants/ })).toBeNull();
+    expect(screen.getByRole("combobox", { name: "Status" })).toHaveValue("active");
+    expect(listed()).toEqual(["Fed Grant", "State Grant"]);
+
+    await user.selectOptions(screen.getByRole("combobox", { name: "Grant type" }), "federal");
+    expect(listed()).toEqual(["Fed Grant"]);
+    await user.selectOptions(screen.getByRole("combobox", { name: "Status" }), "all");
+    expect(listed()).toEqual(["Fed Grant", "Old Grant"]);
+  });
+});
+
 describe("Admin dashboard Refresh", () => {
   it("announces Refreshing from a status region already in the page, and not on the first load", async () => {
     let hold = false;

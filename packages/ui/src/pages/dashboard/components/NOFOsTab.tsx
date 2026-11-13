@@ -10,6 +10,8 @@ import GrantActionsDropdown from "./GrantActionsDropdown";
 import SummaryEditor from "./SummaryEditor";
 import { PROCESSING_LABELS } from "./processing-stages";
 import TableScrollRegion from "../../../components/ui/TableScrollRegion";
+import { CardListItem } from "../../../components/ui/CardList";
+import { CARD_LIST_QUERY, useMediaQuery } from "../../../hooks/use-media-query";
 import { Utils } from "../../../common/utils";
 import type { NOFO, GrantTypeId, CustomQuestion, ReviewFlag } from "../../../common/types/nofo";
 import { GRANT_TYPES, grantTypeTint, GRANT_CATEGORIES } from "../../../common/types/nofo";
@@ -451,8 +453,145 @@ const NOFOsTab = React.memo(function NOFOsTab({
     );
   };
 
+
+  const asCards = useMediaQuery(CARD_LIST_QUERY);
+
+  const nameMarkers = (nofo: NOFO) => (
+    <>
+      {nofo.isPinned && (
+        <span className="gw-tag gw-tag--info pinned-badge"><LuPin size={14} aria-hidden="true" /><span>Pinned</span></span>
+      )}
+      {nofo.processingStatus === "quarantined" ? (
+        <button
+          type="button"
+          className="grant-review-link grant-review-link--needs-review"
+          onClick={() => onOpenReview?.(nofo.name)}
+        >
+          <LuTriangleAlert size={12} aria-hidden="true" />
+          Needs review
+        </button>
+      ) : nofo.processingStatus ? (
+        <span className="grant-processing-marker">
+          <span className="grant-processing-marker__dot" aria-hidden="true" />
+          {PROCESSING_LABELS[nofo.processingStatus] || "Processing"}
+        </span>
+      ) : nofo.reviewFlag ? (
+        <>
+          <button
+            type="button"
+            className="grant-review-link grant-review-link--suggested"
+            onClick={() => handleEditSummary(nofo)}
+            aria-describedby={reviewFlagTitle(nofo.reviewFlag) ? `${reviewFlagIdPrefix}-${nofo.id}` : undefined}
+          >
+            <LuInfo size={12} aria-hidden="true" />
+            Review suggested
+          </button>
+          {/* Shown, not a hover tooltip, so keyboard and touch users see why too. */}
+          {reviewFlagTitle(nofo.reviewFlag) && (
+            <span id={`${reviewFlagIdPrefix}-${nofo.id}`} className="grant-review-reason">
+              {reviewFlagTitle(nofo.reviewFlag)}
+            </span>
+          )}
+        </>
+      ) : null}
+    </>
+  );
+
+  const typeBadge = (nofo: NOFO) =>
+    nofo.grantType && GRANT_TYPES[nofo.grantType] ? (
+      <span
+        className="gw-tag grant-type-badge"
+        style={{
+          backgroundColor: grantTypeTint(GRANT_TYPES[nofo.grantType].color, 8),
+          color: GRANT_TYPES[nofo.grantType].color,
+          borderColor: grantTypeTint(GRANT_TYPES[nofo.grantType].color, 60),
+        }}
+      >
+        {GRANT_TYPES[nofo.grantType].label}
+      </span>
+    ) : (
+      <span className="gw-tag grant-type-badge unset">Unset</span>
+    );
+
+  const deadlineText = (nofo: NOFO) =>
+    nofo.isRolling ? (
+      <span className="expiry-date rolling">Rolling</span>
+    ) : nofo.expirationDate ? (
+      <span className="expiry-date">{Utils.formatExpirationDate(nofo.expirationDate!)}</span>
+    ) : (
+      <span className="expiry-date no-date">N/A</span>
+    );
+
+  const rowActions = (nofo: NOFO) => {
+    // Mirror the backend scope check: a state admin may only modify
+    // NOFOs owned by their own state. Unknown scope fails closed, so
+    // every mutating action (pin/delete/archive/edit) is gated together.
+    // A single-state deployment's admins may edit every grant (canEditAnyNofo).
+    const editDisabled = Boolean(
+      isStateAdmin &&
+        !(SINGLE_STATE && userState === SINGLE_STATE.code) &&
+        !(nofo.scope === "state" && nofo.state === userState)
+    );
+    // On a federal grant, a state admin instead gets state-scoped actions:
+    // attach guidance for their state, or fork it into their own copy.
+    const showStateActions = Boolean(isStateAdmin && nofo.scope === "federal");
+    // Custom questions apply to state grants; offer them to any admin allowed to edit
+    // this grant (dev/regular admins, or the owning state's admin).
+    const showCustomQuestions = Boolean(!editDisabled && nofo.scope === "state");
+    return (
+      <>
+        {!editDisabled && (nofo.isPinned ? (
+          <button className="gw-btn gw-btn--icon action-button unpin" onClick={(e) => handleUnpinGrant(nofo, e)} aria-label={`Unpin grant ${nofo.name}`} title="Unpin grant">
+            <LuPinOff size={18} aria-hidden="true" />
+          </button>
+        ) : (
+          <button className="gw-btn gw-btn--icon action-button pin" onClick={(e) => handlePinGrant(nofo, e)} aria-label={`Pin grant ${nofo.name}`} title="Pin grant">
+            <LuPin size={18} aria-hidden="true" />
+          </button>
+        ))}
+        <GrantActionsDropdown
+          nofo={nofo}
+          onToggleStatus={() => toggleNofoStatus(nofo)}
+          onEdit={() => handleEditNofo(nofo)}
+          onEditSummary={() => handleEditSummary(nofo)}
+          onDelete={() => handleDeleteNofo(nofo)}
+          editDisabled={editDisabled}
+          showStateActions={showStateActions}
+          onEditOverlay={() => handleEditOverlay(nofo)}
+          onPromoteToCopy={() => handlePromoteToCopy(nofo)}
+          showCustomQuestions={showCustomQuestions}
+          onEditCustomQuestions={() => handleEditCustomQuestions(nofo)}
+        />
+      </>
+    );
+  };
+
   return (
     <div className="tab-content">
+      {asCards ? (
+        nofos.length === 0 ? (
+          <div className="no-data">
+            <LuFileX size={24} className="no-data-icon" aria-hidden="true" />
+            <p>No grants found</p>
+          </div>
+        ) : (
+          <ul className="gw-card-list" aria-label="Grants">
+            {nofos.map((nofo) => (
+              <CardListItem
+                key={nofo.id}
+                headingLevel={4}
+                title={nofo.name}
+                facts={[
+                  { label: "Type", value: typeBadge(nofo) },
+                  { label: "Deadline", value: deadlineText(nofo) },
+                ]}
+                badges={nameMarkers(nofo)}
+                actions={rowActions(nofo)}
+              />
+            ))}
+          </ul>
+        )
+      ) : (
       <TableScrollRegion label="Grants table" minWidth={640}>
       <div className="table-container">
       <table className="gw-table" aria-label="Grants" ref={tableRef} tabIndex={-1}>
@@ -485,113 +624,17 @@ const NOFOsTab = React.memo(function NOFOsTab({
             <tr key={nofo.id} className="table-row">
               <th scope="row" className="row-cell">
                 <span className="nofo-name">{nofo.name}</span>
-                {nofo.isPinned && (
-                  <span className="gw-tag gw-tag--info pinned-badge"><LuPin size={14} aria-hidden="true" /><span>Pinned</span></span>
-                )}
-                {nofo.processingStatus === "quarantined" ? (
-                  <button
-                    type="button"
-                    className="grant-review-link grant-review-link--needs-review"
-                    onClick={() => onOpenReview?.(nofo.name)}
-                  >
-                    <LuTriangleAlert size={12} aria-hidden="true" />
-                    Needs review
-                  </button>
-                ) : nofo.processingStatus ? (
-                  <span className="grant-processing-marker">
-                    <span className="grant-processing-marker__dot" aria-hidden="true" />
-                    {PROCESSING_LABELS[nofo.processingStatus] || "Processing"}
-                  </span>
-                ) : nofo.reviewFlag ? (
-                  <>
-                    <button
-                      type="button"
-                      className="grant-review-link grant-review-link--suggested"
-                      onClick={() => handleEditSummary(nofo)}
-                      aria-describedby={reviewFlagTitle(nofo.reviewFlag) ? `${reviewFlagIdPrefix}-${nofo.id}` : undefined}
-                    >
-                      <LuInfo size={12} aria-hidden="true" />
-                      Review suggested
-                    </button>
-                    {/* Shown, not a hover tooltip, so keyboard and touch users see why too. */}
-                    {reviewFlagTitle(nofo.reviewFlag) && (
-                      <span id={`${reviewFlagIdPrefix}-${nofo.id}`} className="grant-review-reason">
-                        {reviewFlagTitle(nofo.reviewFlag)}
-                      </span>
-                    )}
-                  </>
-                ) : null}
+                {nameMarkers(nofo)}
               </th>
               <td className="row-cell">
-                {nofo.grantType && GRANT_TYPES[nofo.grantType] ? (
-                  <span
-                    className="gw-tag grant-type-badge"
-                    style={{
-                      backgroundColor: grantTypeTint(GRANT_TYPES[nofo.grantType].color, 8),
-                      color: GRANT_TYPES[nofo.grantType].color,
-                      borderColor: grantTypeTint(GRANT_TYPES[nofo.grantType].color, 60),
-                    }}
-                  >
-                    {GRANT_TYPES[nofo.grantType].label}
-                  </span>
-                ) : (
-                  <span className="gw-tag grant-type-badge unset">Unset</span>
-                )}
+                {typeBadge(nofo)}
               </td>
               <td className="row-cell">
-                {nofo.isRolling ? (
-                  <span className="expiry-date rolling">Rolling</span>
-                ) : nofo.expirationDate ? (
-                  <span className="expiry-date">{Utils.formatExpirationDate(nofo.expirationDate!)}</span>
-                ) : (
-                  <span className="expiry-date no-date">N/A</span>
-                )}
+                {deadlineText(nofo)}
               </td>
               <td className="row-cell actions">
                 <div className="row-cell__flex row-cell__flex--end">
-                {(() => {
-                  // Mirror the backend scope check: a state admin may only modify
-                  // NOFOs owned by their own state. Unknown scope fails closed, so
-                  // every mutating action (pin/delete/archive/edit) is gated together.
-                  // A single-state deployment's admins may edit every grant (canEditAnyNofo).
-                  const editDisabled = Boolean(
-                    isStateAdmin &&
-                      !(SINGLE_STATE && userState === SINGLE_STATE.code) &&
-                      !(nofo.scope === "state" && nofo.state === userState)
-                  );
-                  // On a federal grant, a state admin instead gets state-scoped actions:
-                  // attach guidance for their state, or fork it into their own copy.
-                  const showStateActions = Boolean(isStateAdmin && nofo.scope === "federal");
-                  // Custom questions apply to state grants; offer them to any admin allowed to edit
-                  // this grant (dev/regular admins, or the owning state's admin).
-                  const showCustomQuestions = Boolean(!editDisabled && nofo.scope === "state");
-                  return (
-                    <>
-                      {!editDisabled && (nofo.isPinned ? (
-                        <button className="gw-btn gw-btn--icon action-button unpin" onClick={(e) => handleUnpinGrant(nofo, e)} aria-label={`Unpin grant ${nofo.name}`} title="Unpin grant">
-                          <LuPinOff size={18} aria-hidden="true" />
-                        </button>
-                      ) : (
-                        <button className="gw-btn gw-btn--icon action-button pin" onClick={(e) => handlePinGrant(nofo, e)} aria-label={`Pin grant ${nofo.name}`} title="Pin grant">
-                          <LuPin size={18} aria-hidden="true" />
-                        </button>
-                      ))}
-                      <GrantActionsDropdown
-                        nofo={nofo}
-                        onToggleStatus={() => toggleNofoStatus(nofo)}
-                        onEdit={() => handleEditNofo(nofo)}
-                        onEditSummary={() => handleEditSummary(nofo)}
-                        onDelete={() => handleDeleteNofo(nofo)}
-                        editDisabled={editDisabled}
-                        showStateActions={showStateActions}
-                        onEditOverlay={() => handleEditOverlay(nofo)}
-                        onPromoteToCopy={() => handlePromoteToCopy(nofo)}
-                        showCustomQuestions={showCustomQuestions}
-                        onEditCustomQuestions={() => handleEditCustomQuestions(nofo)}
-                      />
-                    </>
-                  );
-                })()}
+                {rowActions(nofo)}
                 </div>
               </td>
             </tr>
@@ -600,6 +643,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
       </table>
       </div>
       </TableScrollRegion>
+      )}
 
       {/* Edit NOFO Modal */}
       <Modal isOpen={editModalOpen} onClose={() => setEditModalOpen(false)} title="Edit grant">

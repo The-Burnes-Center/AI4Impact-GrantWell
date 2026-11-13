@@ -49,8 +49,6 @@ const groupHeadingStyle: React.CSSProperties = {
   fontSize: "var(--gw-font-size-sm, 14px)",
   fontWeight: 600,
   color: "var(--gw-color-nav-text, #e2e8f0)",
-  textTransform: "var(--gw-button-text-transform, uppercase)",
-  letterSpacing: "var(--gw-button-letter-spacing, 1px)",
   fontFamily: "var(--gw-font-family, 'Noto Sans', sans-serif)",
 };
 
