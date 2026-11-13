@@ -53,12 +53,16 @@ const RichTextToolbar: React.FC<RichTextToolbarProps> = ({ editor, controlsId, r
     };
     update();
     const frame = requestAnimationFrame(update);
-    window.addEventListener("scroll", update, { passive: true });
+    // Capture also catches scrolling inside an inner column, which doesn't bubble to window.
+    window.addEventListener("scroll", update, { passive: true, capture: true });
     window.addEventListener("resize", update);
+    const rootStyle = new MutationObserver(update);
+    rootStyle.observe(document.documentElement, { attributes: true, attributeFilter: ["style"] });
     return () => {
       cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", update);
+      window.removeEventListener("scroll", update, { capture: true });
       window.removeEventListener("resize", update);
+      rootStyle.disconnect();
     };
   }, []);
   const state = useEditorState({
