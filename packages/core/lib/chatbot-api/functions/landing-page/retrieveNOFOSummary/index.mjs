@@ -12,90 +12,12 @@ import {
   withRequirementCitations,
   withSectionIds,
   REQUIREMENT_CITATIONS_FILE,
+  canViewGrant,
+  effectiveGrantScope,
+  grantViewerScope,
+  readGrantRow,
+  stateNameFromCode,
 } from 'grantwell-shared';
-
-// SUPPORTED_STATES injected as [{code,name}] (from config.states via supportedStatesEnv in lib/config/instance-config.ts).
-const SUPPORTED_STATES = (() => {
-  try {
-    const parsed = JSON.parse(process.env.SUPPORTED_STATES || "[]");
-    return Array.isArray(parsed) ? parsed.filter((s) => s && typeof s.code === "string") : [];
-  } catch {
-    return [];
-  }
-})();
-const SUPPORTED_STATE_CODES = new Set(SUPPORTED_STATES.map((s) => s.code));
-const STATE_NAME_BY_CODE = Object.fromEntries(SUPPORTED_STATES.map((s) => [s.code, s.name]));
-const stateNameFromCode = (code) => STATE_NAME_BY_CODE[code] || code;
-
-function parseRoles(raw) {
-  if (Array.isArray(raw)) return raw.filter((r) => typeof r === "string");
-  if (typeof raw !== "string" || raw.trim() === "") return [];
-  try {
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed.filter((r) => typeof r === "string") : [];
-  } catch {
-    return [raw];
-  }
-}
-
-// Platform authority comes from the explicit PlatformAdmin role; this flag keeps pre-migration
-// stateless admins working and must stay on until every pool is migrated.
-const LEGACY_STATELESS_ADMIN_IS_PLATFORM =
-  String(process.env.LEGACY_STATELESS_ADMIN_IS_PLATFORM ?? "true").toLowerCase() !== "false";
-
-function resolveCallerScope(event) {
-  const claims = event?.requestContext?.authorizer?.jwt?.claims || {};
-  const roles = parseRoles(claims["custom:role"]);
-  const stateRaw = String(claims["custom:state"] || "").trim().toUpperCase();
-  const state = SUPPORTED_STATE_CODES.has(stateRaw) ? stateRaw : "";
-
-  if (roles.includes("Developer")) return { role: "developer", state };
-  if (roles.includes("PlatformAdmin")) return { role: "regularAdmin", state: "" };
-  if (roles.includes("Admin")) {
-    if (state) return { role: "stateAdmin", state };
-    return LEGACY_STATELESS_ADMIN_IS_PLATFORM
-      ? { role: "regularAdmin", state: "" }
-      : { role: "unscopedAdmin", state: "" };
-  }
-  return { role: "user", state };
-}
-
-function assertUserCanAccessNofo(callerScope, nofoScope, nofoState) {
-  if (callerScope.role === "developer" || callerScope.role === "regularAdmin") return;
-  if (nofoScope === "federal") return;
-  if (nofoScope === "state" && nofoState && nofoState === callerScope.state) return;
-
-  const err = new Error("ACCESS_DENIED_STATE");
-  err.code = "ACCESS_DENIED_STATE";
-  err.statusCode = 403;
-  err.userState = callerScope.state || null;
-  err.nofoState = nofoState || null;
-  throw err;
-}
-
-// Returns { scope, state, status } from the grant's metadata row, or null when there is no row or it can't be read.
-async function readNofoScope(tableName, nofoName) {
-  if (!tableName || !nofoName) return null;
-  try {
-    const dynamoClient = new DynamoDBClient();
-    const result = await dynamoClient.send(
-      new GetItemCommand({
-        TableName: tableName,
-        Key: marshall({ nofo_name: nofoName }),
-      })
-    );
-    if (!result.Item) return null;
-    const row = unmarshall(result.Item);
-    return {
-      scope: typeof row.scope === "string" ? row.scope : null,
-      state: typeof row.state === "string" ? row.state : null,
-      status: typeof row.status === "string" ? row.status : null,
-    };
-  } catch (err) {
-    console.warn(`Could not read scope/state for ${nofoName}:`, err.message);
-    return null;
-  }
-}
 
 /**
  * A state's guidance overlay on a federal NOFO, if one exists for `stateCode`. Returns the
@@ -139,32 +61,26 @@ export const handler = async (event) => {
 
     const basePath = baseFileName.split('/')[0];
 
-    const existingScope = await readNofoScope(process.env.NOFO_METADATA_TABLE_NAME, basePath);
-    // Untagged rows default to federal (permissive) so legacy NOFOs stay viewable; a missing row is denied.
-    const effectiveScope = existingScope ? existingScope.scope || "federal" : null;
+    const existingScope = await readGrantRow(process.env.NOFO_METADATA_TABLE_NAME, basePath);
+    const effectiveScope = effectiveGrantScope(existingScope);
     const effectiveState = existingScope?.state || null;
 
-    const callerScope = resolveCallerScope(event);
-    try {
-      assertUserCanAccessNofo(callerScope, effectiveScope, effectiveState);
-    } catch (authError) {
-      if (authError.code === "ACCESS_DENIED_STATE") {
-        const stateName = effectiveState ? stateNameFromCode(effectiveState) : "another state";
-        return {
-          statusCode: 403,
-          headers: corsHeaders,
-          body: JSON.stringify({
-            error: "ACCESS_DENIED_STATE",
-            message: existingScope
-              ? `This grant is specific to ${stateName}. Please contact a platform administrator to request access.`
-              : "We couldn't confirm your access to this grant. Please contact a platform administrator to request access.",
-            userState: authError.userState,
-            nofoState: authError.nofoState,
-            cta: { label: "Go back to home", target: "/home" },
-          }),
-        };
-      }
-      throw authError;
+    const callerScope = grantViewerScope(event);
+    if (!canViewGrant(callerScope, existingScope)) {
+      const stateName = effectiveState ? stateNameFromCode(effectiveState) : "another state";
+      return {
+        statusCode: 403,
+        headers: corsHeaders,
+        body: JSON.stringify({
+          error: "ACCESS_DENIED_STATE",
+          message: existingScope
+            ? `This grant is specific to ${stateName}. Please contact a platform administrator to request access.`
+            : "We couldn't confirm your access to this grant. Please contact a platform administrator to request access.",
+          userState: callerScope.state || null,
+          nofoState: effectiveState,
+          cta: { label: "Go back to home", target: "/home" },
+        }),
+      };
     }
 
     const inReview =
