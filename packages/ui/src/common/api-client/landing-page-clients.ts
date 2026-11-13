@@ -95,6 +95,17 @@ export class LandingPageClient {
     }
   }
 
+  /** A short-lived link to the grant's PDF; `available: false` when its source is text, null when there is none to open. */
+  async getGrantPdf(grant: string): Promise<{ available: boolean; signedUrl?: string } | null> {
+    const token = await Utils.authenticate();
+    const url = new URL(`${this.API}/grant-pdf-url`);
+    url.searchParams.append("grant", grant);
+    const response = await apiFetch(url, { method: "GET", headers: { Authorization: token } });
+    if (response.status === 404) return null;
+    if (!response.ok) throw Object.assign(new Error(`Error: ${response.status}`), { status: response.status });
+    return await response.json();
+  }
+
   /** Only Write application reads these; while the grant is in review it gets the question text alone. */
   async getNOFOQuestions(documentKey: string) {
     try {

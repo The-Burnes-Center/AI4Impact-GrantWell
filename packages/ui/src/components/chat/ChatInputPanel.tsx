@@ -89,6 +89,7 @@ const RESPONSE_WARN_MS = 60000;
 const RESPONSE_EXTEND_MS = 60000;
 
 const LIMIT_SENTINEL = "<!LIMIT!>";
+const NEXT_SENTINEL = "<!NEXT!>";
 
 export interface ChatInputPanelProps {
   running: boolean;
@@ -100,6 +101,10 @@ export interface ChatInputPanelProps {
   messageAreaRef?: React.RefObject<HTMLDivElement>;
   /** Saves a chat that exists only on screen so far; called before its first message goes out. */
   ensureSession?: () => Promise<void>;
+  /** The Ask next questions that follow an answer; [] when a new message goes out. */
+  onNextQuestions?: (questions: string[]) => void;
+  /** Filled with a function that sends the given text as the next message. */
+  sendRef?: React.MutableRefObject<((text: string) => void) | null>;
 }
 
 export abstract class ChatScrollState {
@@ -336,8 +341,12 @@ function ChatInputPanel(props: ChatInputPanelProps) {
     }
   };
 
+  useEffect(() => {
+    if (props.sendRef) props.sendRef.current = (text: string) => void handleSendMessage(text);
+  });
+
   /**Sends a message to the chat API */
-  const handleSendMessage = async () => {
+  const handleSendMessage = async (text?: string) => {
     if (!props.documentIdentifier) {
       addNotification(
         "error",
@@ -356,12 +365,13 @@ function ChatInputPanel(props: ChatInputPanelProps) {
     );
     if (!username) return;
 
-    const messageToSend = state.value.trim();
+    const messageToSend = (text ?? state.value).trim();
     if (messageToSend.length === 0) {
       addNotification("error", "Please do not submit blank text!");
       return;
     }
-    setState({ value: "" });
+    if (text === undefined) setState({ value: "" });
+    props.onNextQuestions?.([]);
 
     try {
       props.setRunning(true);
@@ -492,6 +502,17 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           console.warn("Ignored an API Gateway frame on the chat socket:", data.data);
           return;
         }
+        // The reply ends with its sources; Ask next can still arrive after the user sends another message.
+        if (wsRef.current !== ws) return;
+        if (typeof data.data === "string" && data.data.startsWith(NEXT_SENTINEL)) {
+          try {
+            const next = JSON.parse(data.data.slice(NEXT_SENTINEL.length));
+            if (Array.isArray(next)) props.onNextQuestions?.(next.filter((q): q is string => typeof q === "string"));
+          } catch {
+            // Ask next is optional.
+          }
+          return;
+        }
         clearResponseTimeout();
         if (stoppedRef.current) return;
         if (typeof data.data === "string" && data.data.startsWith("<!ACCESS_DENIED!>")) {
@@ -540,6 +561,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           incomingMetadata = true;
           return;
         }
+        let finished = false;
         if (data.data === RESET_SENTINEL) {
           receivedData = "";
         } else if (!incomingMetadata) {
@@ -562,6 +584,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           sources = Array.isArray(meta?.Citations)
             ? { Sources: sourceData, Citations: meta.Citations }
             : { Sources: sourceData };
+          finished = true;
         }
 
         // Update the chat history state with the new message
@@ -580,6 +603,7 @@ function ChatInputPanel(props: ChatInputPanelProps) {
           },
         ];
         props.setMessageHistory(messageHistoryRef.current);
+        if (finished) props.setRunning(false);
       });
       // Handle possible errors
       ws.addEventListener("error", function error(err) {

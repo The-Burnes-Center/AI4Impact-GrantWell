@@ -1448,6 +1448,31 @@ body {
   }
 }
 
+/* A dialog with pinned actions keeps them in view at any height; only its body scrolls. */
+@media (max-height: 480px) {
+  .modal-overlay--pinned {
+    align-items: center !important;
+    padding: 8px;
+    overflow-y: hidden;
+  }
+
+  .modal-overlay--pinned .modal-content {
+    max-height: calc(100vh - 16px) !important;
+    max-height: calc(100dvh - 16px) !important;
+    overflow: hidden !important;
+  }
+
+  .modal-overlay--pinned .modal-body {
+    overflow-y: auto !important;
+  }
+
+  .modal-overlay--pinned .modal-header,
+  .modal-overlay--pinned .modal-footer {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+}
+
 .modal-form {
   margin-bottom: 15px;
 }

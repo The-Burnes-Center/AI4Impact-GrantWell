@@ -285,6 +285,12 @@ export class ChatBotApi extends Construct {
       integration: s3DownloadAPIIntegration,
       authorizer: httpAuthorizer,
     });
+    restBackend.restAPI.addRoutes({
+      path: "/grant-pdf-url",
+      methods: [apigwv2.HttpMethod.GET],
+      integration: s3DownloadAPIIntegration,
+      authorizer: httpAuthorizer,
+    });
 
     const s3UploadNOFOAPIIntegration = new HttpLambdaIntegration(
       "nofoUploadS3APIHandlerFunction",

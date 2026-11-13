@@ -386,6 +386,16 @@
   background: var(--gw-color-surface-subtle);
 }
 
+.gw-modal > .gw-modal__footer {
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.gw-modal > .gw-modal__body {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
 @media (max-width: 480px) {
   .gw-modal__header { padding: var(--gw-spacing-md) var(--gw-spacing-lg); }
   .gw-modal__body { padding: var(--gw-spacing-lg); }
@@ -394,6 +404,79 @@
     margin: var(--gw-spacing-lg) calc(-1 * var(--gw-spacing-lg)) calc(-1 * var(--gw-spacing-lg));
     padding: var(--gw-spacing-md) var(--gw-spacing-lg);
   }
+}
+
+/* A modal that rises from the bottom edge on phones. */
+.gw-modal__overlay.modal-overlay--sheet {
+  align-items: flex-end !important;
+  padding: 0;
+}
+
+.gw-modal.modal-content--sheet {
+  max-width: none !important;
+  max-height: calc(100vh - 48px) !important;
+  max-height: calc(100dvh - 48px) !important;
+  border-radius: var(--gw-radius-lg) var(--gw-radius-lg) 0 0;
+}
+
+.modal-content--sheet .gw-modal__body {
+  padding: 0;
+}
+
+/* Borderless 44px icon button (components/ui/IconButton.tsx) and its tooltip. */
+.gw-tip {
+  position: relative;
+  display: inline-flex;
+}
+
+.gw-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--gw-radius-control);
+  background: transparent;
+  color: var(--gw-color-text);
+  cursor: pointer;
+}
+
+.gw-icon-btn:hover {
+  background: var(--gw-color-surface-subtle);
+}
+
+.gw-icon-btn:focus-visible {
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
+}
+
+.gw-tip__bubble {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  z-index: var(--gw-z-tooltip);
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  border-radius: var(--gw-radius-control);
+  background: var(--gw-color-text-strong);
+  color: var(--gw-color-text-inverse);
+  font-size: 13px;
+  line-height: 1.3;
+  white-space: nowrap;
+  pointer-events: auto;
+}
+
+.gw-tip--end .gw-tip__bubble {
+  right: 0;
+  left: auto;
+  transform: none;
+}
+
+.gw-tip--start .gw-tip__bubble {
+  left: 0;
+  transform: none;
 }
 
 /* Toasts: the alert's left bar on a white card with the mid shadow. */

@@ -1,48 +1,89 @@
 /* Playground Page Styles */
 
-/* ── Header ── */
-.pg-header {
-  padding: 16px 32px;
-  border-bottom: 1px solid var(--gw-color-border, #e2e8f0);
-  background-color: var(--gw-color-surface, #ffffff);
-  box-shadow: var(--gw-shadow-low);
-  position: relative;
-  z-index: 10;
+/* ── Layout: the chat card, with the Grant panel beside it on wide screens ── */
+.pg-layout {
+  flex: 1;
+  min-height: 0;
+  box-sizing: border-box;
+  padding: 20px 24px;
+  overflow-y: auto;
+  background-color: var(--gw-color-background);
 }
 
-.pg-upload-btn {
-  display: inline-flex;
+.pg-layout__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: flex-start;
+  gap: 20px;
+  max-width: 900px;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.pg-layout__inner--panel {
+  max-width: 1200px;
+}
+
+.pg-chat {
+  display: flex;
+  flex: 999 1 560px;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--gw-color-border);
+  border-radius: var(--gw-radius-container);
+  background-color: var(--gw-color-surface);
+}
+
+.pg-chat-header {
+  display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px 12px;
+  padding: 14px 12px 14px 20px;
+  border-bottom: 1px solid var(--gw-color-border);
+}
+
+.pg-chat-heading {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.pg-chat-heading .gw-grant-header__title {
+  font-size: var(--gw-font-size-xl);
+}
+
+.pg-chat-actions {
+  display: flex;
+  flex-shrink: 0;
   align-items: center;
   gap: 8px;
-}
-
-.pg-upload-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  background-color: color-mix(in srgb, var(--gw-color-surface) 25%, transparent);
-  padding: 2px 7px;
-  border-radius: var(--gw-radius-container);
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 1;
-  min-width: 20px;
-  justify-content: center;
 }
 
 .pg-help-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  min-height: 44px;
 }
 
-/* ── Chat content area ── */
-.pg-content {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  min-height: 0;
+.pg-panel {
+  flex: 1 1 360px;
+  min-width: min(300px, 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  border: 1px solid var(--gw-color-border);
+  border-radius: var(--gw-radius-container);
+  background-color: var(--gw-color-surface);
+}
+
+.pg-panel[hidden] {
+  display: none;
 }
 
 /* ── Help modal ── */
@@ -137,19 +178,22 @@
   user-select: none;
 }
 
-/* ── Mobile responsive ── */
+/* ── Phones: the chat fills the screen; the panel opens as the Grant info sheet ── */
 @media (max-width: 767px) {
-  .pg-header {
-    padding: 16px 20px;
+  .pg-layout {
+    padding: 0;
   }
 
-  .pg-header .gw-grant-header__actions {
-    width: 100%;
-    flex-direction: column;
+  .pg-chat {
+    border: 0;
+    border-radius: 0;
   }
 
-  .pg-upload-btn,
-  .pg-help-btn {
-    width: 100%;
+  .pg-chat-header {
+    padding: 12px 16px;
+  }
+
+  .pg-chat-heading .gw-grant-header__title {
+    font-size: 17px;
   }
 }

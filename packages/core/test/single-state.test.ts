@@ -53,6 +53,7 @@ describe("tenancy: single", () => {
       ["AuthorizationSignUpTriggerFunction", "MA"],
       ["ChatbotAPIAIGrantSearchFunction", "MA"],
       ["ChatbotAPIChatHandlerFunction", "MA"],
+      ["ChatbotAPIDownloadS3FilesHandlerFunction", "MA"],
       ["ChatbotAPIDraftGeneratorAPIFunction", "MA"],
       ["ChatbotAPIGetQuestionsForNOFOs", "MA"],
       ["ChatbotAPIGetRequirementsForNOFOs", "MA"],

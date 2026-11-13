@@ -43,7 +43,7 @@ describe("ChatMessage waiting", () => {
 });
 
 describe("ChatMessage reply", () => {
-  it("names its copy and sources buttons after the reply number and starts headings at h2", () => {
+  const reply = () =>
     renderApp(
       <ChatMessage
         replyNumber={3}
@@ -55,60 +55,32 @@ describe("ChatMessage reply", () => {
       />
     );
 
-    expect(screen.getByRole("button", { name: "Copy reply 3 to clipboard" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Sources (1) for reply 3" })).toHaveTextContent("Sources (1)");
+  it("is an article named after its number, with headings from h2 and no sources list (the panel has them)", () => {
+    reply();
+    expect(screen.getByRole("article", { name: "Answer 3" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { level: 2, name: "Summary" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { level: 3, name: "Budget" })).toBeInTheDocument();
-  });
-});
-
-describe("ChatMessage citations", () => {
-  const content = "Applications are due **March 1, 2027**. Late ones are not read. Use `code here` too.";
-  const citations = [
-    { n: 1, at: [38], quote: "All applications must be received by March 1, 2027.", document: "Grant document", page: 12, lastPage: 12 },
-    { n: 2, at: [62, 38], quote: "Late applications will not be reviewed.", document: "board.pdf", page: 3, lastPage: 4 },
-  ];
-  const render = () =>
-    renderApp(<ChatMessage message={{ type: ChatBotMessageType.AI, content, metadata: { Sources: [], Citations: citations } }} />);
-
-  it("puts numbered quote buttons after the cited text", () => {
-    const { container } = render();
-
-    const buttons = screen.getAllByRole("button", { name: /^Quote \d/ });
-    expect(buttons.map((b) => b.getAttribute("aria-label"))).toEqual([
-      "Quote 1, Grant document, page 12",
-      "Quote 2, board.pdf, pages 3–4",
-      "Quote 2, board.pdf, pages 3–4",
-    ]);
-    expect(container.querySelector("strong")?.textContent).toBe("March 1, 202712");
-    expect(container.querySelector("code")?.textContent).toBe("code here");
+    expect(screen.queryByRole("button", { name: /Sources/ })).toBeNull();
   });
 
-  it("shows the quote under its button and closes on Escape, keeping focus on the button", async () => {
-    const { user } = render();
-    const button = screen.getByRole("button", { name: "Quote 1, Grant document, page 12" });
+  it("copies the answer, says so, and shows its name as a tooltip that Escape dismisses", async () => {
+    const { user } = reply();
+    const copy = screen.getByRole("button", { name: "Copy answer 3" });
 
-    expect(button).toHaveAttribute("aria-expanded", "false");
-    await user.click(button);
-    expect(button).toHaveAttribute("aria-expanded", "true");
-    const quote = document.getElementById(button.getAttribute("aria-controls")!);
-    expect(quote?.textContent).toBe("“All applications must be received by March 1, 2027.”Grant document, page 12");
-
+    await user.hover(copy);
+    expect(screen.getByText("Copy answer 3", { selector: ".gw-tip__bubble" })).toBeInTheDocument();
     await user.keyboard("{Escape}");
-    expect(button).toHaveAttribute("aria-expanded", "false");
-    expect(button).toHaveFocus();
+    expect(document.querySelector(".gw-tip__bubble")).toBeNull();
+
+    await user.click(copy);
+    expect(await navigator.clipboard.readText()).toBe("# Summary\n\n## Budget\n\nText");
+    expect(screen.getByRole("status")).toHaveTextContent("Copied");
   });
 
-  it("closes when the user clicks elsewhere", async () => {
-    const { user } = render();
-    const button = screen.getByRole("button", { name: "Quote 1, Grant document, page 12" });
-    await user.click(button);
-    await user.click(document.body);
-    expect(button).toHaveAttribute("aria-expanded", "false");
-  });
-
-  it("renders older answers without citations as before", () => {
-    renderApp(<ChatMessage message={{ type: ChatBotMessageType.AI, content, metadata: {} }} />);
-    expect(screen.queryByRole("button", { name: /^Quote/ })).toBeNull();
+  it("shows the user's own turn as text", () => {
+    renderApp(<ChatMessage message={{ type: ChatBotMessageType.Human, content: "When is it due?", metadata: {} }} />);
+    expect(screen.getByText("When is it due?")).toBeInTheDocument();
+    expect(screen.queryByRole("article")).toBeNull();
   });
 });
+

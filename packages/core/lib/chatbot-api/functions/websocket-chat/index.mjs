@@ -16,6 +16,7 @@ import { loadSupportingDocuments, pdfContentBlocks, SKIP_REASONS } from "./suppo
 import { numberCitations, usablePageMap } from "./citations.mjs";
 import { sourceKeys } from "./fact-check.mjs";
 import { CHECK_MARKER, verifyAnswer } from "./verify.mjs";
+import { NEXT_SENTINEL, nextQuestions } from "./next-questions.mjs";
 
 const ENDPOINT = process.env.WEBSOCKET_API_ENDPOINT;
 const wsConnectionClient = new ApiGatewayManagementApiClient({ endpoint: ENDPOINT });
@@ -459,6 +460,7 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
     let sources = [];
     let citations = [];
     let check = null;
+    let nextInput = null;
     if (!grantSource) {
       modelResponse = GRANT_UNAVAILABLE_MESSAGE;
       await post(modelResponse);
@@ -540,6 +542,26 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
       }
       await post(modelResponse);
       sources = [grantSource.source, ...applicant.included.map((fileName) => ({ title: fileName, uri: `userDocuments/${fileName}` }))];
+      if (check) nextInput = { grantText: grantSource.text, documents: applicant.included, asked: [...savedChat.turns.map((t) => t.user), userMessage], answer: attempt.text };
+    }
+
+    // Saved before the sources go out: the client takes them as the end of the reply and may send its next message.
+    if (grantSource) {
+      const saved = await invokeSessionHandler({
+        operation: "update_session",
+        user_id: userId,
+        session_id: sessionId,
+        new_chat_entry: [{
+          user: userMessage,
+          chatbot: modelResponse,
+          metadata: JSON.stringify({ Sources: sources, ...(citations.length && { Citations: citations }) }),
+        }],
+        title: `Chat about ${documentIdentifier}`,
+        document_identifier: documentIdentifier,
+      });
+      if (saved.statusCode !== 200) {
+        console.error("Could not save the chat turn:", saved.error || saved.body || saved.errorMessage);
+      }
     }
 
     let command;
@@ -567,20 +589,9 @@ const getUserResponse = async (id, requestJSON, authenticatedUserId) => {
       return;
     }
 
-    const saved = await invokeSessionHandler({
-      operation: "update_session",
-      user_id: userId,
-      session_id: sessionId,
-      new_chat_entry: [{
-        user: userMessage,
-        chatbot: modelResponse,
-        metadata: JSON.stringify({ Sources: sources, ...(citations.length && { Citations: citations }) }),
-      }],
-      title: `Chat about ${documentIdentifier}`,
-      document_identifier: documentIdentifier,
-    });
-    if (saved.statusCode !== 200) {
-      console.error("Could not save the chat turn:", saved.error || saved.body || saved.errorMessage);
+    if (nextInput) {
+      const next = await nextQuestions(nextInput);
+      if (next.length) await post(`${NEXT_SENTINEL}${JSON.stringify(next)}`);
     }
 
     try {

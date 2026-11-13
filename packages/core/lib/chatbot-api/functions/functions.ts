@@ -397,6 +397,7 @@ export class LambdaFunctionStack extends cdk.Stack {
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
           SONNET_MODEL_ID: sonnetChatProfile.attrInferenceProfileArn,
           VERIFY_MODEL_ID: sonnetChatVerifyProfile.attrInferenceProfileArn,
+          NEXT_QUESTIONS_MODEL_ID: haikuNofoProfile.attrInferenceProfileArn,
           USER_POOL_ID: props.userPool.userPoolId,
           SUPPORTED_STATES: SUPPORTED_STATES_ENV,
           LEGACY_STATELESS_ADMIN_IS_PLATFORM,
@@ -1225,8 +1226,14 @@ export class LambdaFunctionStack extends cdk.Stack {
           path.join(__dirname, "knowledge-management")
         ),
         handler: "generate-download-url/index.handler",
+        layers: [jsSharedLayer],
         environment: {
           USER_DOCUMENTS_BUCKET: props.userDocumentsBucket.bucketName,
+          NOFO_BUCKET: props.ffioNofosBucket.bucketName,
+          NOFO_METADATA_TABLE_NAME: props.nofoMetadataTable.tableName,
+          SUPPORTED_STATES: SUPPORTED_STATES_ENV,
+          LEGACY_STATELESS_ADMIN_IS_PLATFORM,
+          ...SINGLE_STATE_ENV,
         },
         timeout: cdk.Duration.seconds(30),
       }
@@ -1238,7 +1245,17 @@ export class LambdaFunctionStack extends cdk.Stack {
         actions: ["s3:GetObject"],
         resources: [
           props.userDocumentsBucket.bucketArn + "/*",
+          `${props.ffioNofosBucket.bucketArn}/*/NOFO-File-PDF`,
+          `${props.ffioNofosBucket.bucketArn}/*/NOFO-File-TXT`,
         ],
+      })
+    );
+    downloadS3APIHandlerFunction.addToRolePolicy(s3ListBucketPolicy(props.ffioNofosBucket.bucketArn));
+    downloadS3APIHandlerFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["dynamodb:GetItem"],
+        resources: [props.nofoMetadataTable.tableArn],
       })
     );
     this.downloadS3Function = downloadS3APIHandlerFunction;

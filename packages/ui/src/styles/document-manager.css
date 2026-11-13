@@ -6,47 +6,6 @@
   100% { transform: rotate(360deg); }
 }
 
-/* ── Modal overlay ── */
-.dm-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: var(--gw-z-modal, 1000);
-}
-
-/* ── Modal container ── */
-.dm-container {
-  width: 700px;
-  max-width: 90vw;
-  max-height: 80vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ── Header ── */
-.dm-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.dm-title {
-  margin: 0;
-}
-
-.dm-close-btn {
-  color: var(--gw-color-text-secondary, #5a5a5a);
-  min-width: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 /* ── Tabs ── */
 .dm-tab-container {
   display: flex;
@@ -83,12 +42,6 @@
 .dm-tab[aria-selected="true"] {
   border-bottom-color: var(--gw-color-primary);
   color: var(--gw-color-primary);
-}
-
-/* ── Body ── */
-.dm-body {
-  overflow-y: auto;
-  flex-grow: 1;
 }
 
 /* ── Drop zone ── */
@@ -321,12 +274,6 @@
   width: 30px;
   height: 30px;
   animation: dm-spin 1s linear infinite;
-}
-
-/* ── Footer ── */
-.dm-footer {
-  display: flex;
-  justify-content: flex-end;
 }
 
 /* ── Delete confirmation dialog ── */
@@ -674,6 +621,56 @@
   flex: 1;
   min-width: 0;
   cursor: pointer;
+}
+
+.dm-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--gw-color-border);
+  border-radius: var(--gw-radius-container);
+}
+
+.dm-list__item + .dm-list__item {
+  border-top: 1px solid var(--gw-color-border);
+}
+
+.dm-list__row {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  column-gap: 12px;
+  align-items: start;
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.dm-list__row .dm-checkbox {
+  margin: 1px 0 0;
+}
+
+.dm-list__text {
+  min-width: 0;
+}
+
+.dm-list__name {
+  display: block;
+  font-weight: 600;
+  color: var(--gw-color-text-strong);
+  overflow-wrap: anywhere;
+}
+
+.dm-list__meta,
+.dm-list__note {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+}
+
+.dm-list__meta {
+  color: var(--gw-color-text-secondary);
 }
 
 .dm-picker-actions {
