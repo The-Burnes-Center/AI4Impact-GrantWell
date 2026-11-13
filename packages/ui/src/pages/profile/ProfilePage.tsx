@@ -328,7 +328,7 @@ export default function ProfilePage() {
             {EMAIL_DIGEST && <a href="#profile-notifications">Notifications</a>}
           </nav>
 
-          <div className="profile-card-stack">
+          <div className="profile-card-stack gw-form-width">
             <div id="profile-account" className="profile-anchor">
               <Card header="Account" headerStyle="default">
                 <dl className="profile-identity profile-section">

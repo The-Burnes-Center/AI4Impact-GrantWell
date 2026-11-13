@@ -162,3 +162,13 @@ textarea:focus-visible,
   --bs-text-opacity: 1;
   color: var(--bs-secondary-color) !important;
 }
+
+/* ==============================
+ * Form width
+ * ============================== */
+
+.gw-form-width {
+  width: 100%;
+  max-width: var(--gw-form-max-width);
+}
+.gw-form-width--centered { margin-inline: auto; }
