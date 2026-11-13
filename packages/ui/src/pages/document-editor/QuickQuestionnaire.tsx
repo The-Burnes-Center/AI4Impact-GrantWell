@@ -172,6 +172,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
         </Card>
         <NavigationButtons
           onBack={() => onNavigate("projectBasics")}
+          backLabel="Back to project basics"
           onContinue={onContinue}
         />
       </div>
@@ -277,6 +278,7 @@ const QuickQuestionnaire: React.FC<QuickQuestionnaireProps> = ({
 
       <NavigationButtons
         onBack={() => onNavigate("projectBasics")}
+        backLabel="Back to project basics"
         onContinue={handleCreateDraft}
       />
     </div>

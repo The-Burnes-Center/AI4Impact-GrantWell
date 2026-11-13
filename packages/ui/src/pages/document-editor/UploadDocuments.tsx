@@ -408,6 +408,7 @@ const UploadDocuments: React.FC<UploadDocumentsProps> = ({
       }}>
         <NavigationButtons
           onBack={() => onNavigate("questionnaire")}
+          backLabel="Back to questionnaire"
           showContinue={false}
           justify="flex-start"
         />

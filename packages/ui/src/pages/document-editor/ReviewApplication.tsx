@@ -463,7 +463,7 @@ const ReviewApplication: React.FC<ReviewApplicationProps> = ({
           className="gw-btn gw-btn--secondary ra-back-btn"
         >
           <LuArrowLeft className="ra-back-btn__icon" aria-hidden="true" />
-          Back to editing
+          Back to section editor
         </button>
 
         {/* Export As dropdown */}
