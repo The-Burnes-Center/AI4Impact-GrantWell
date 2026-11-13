@@ -416,9 +416,10 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
               aria-sort={sortField === "title" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
             >
               <button
+                type="button"
+                className="gw-sort-button"
                 onClick={() => !isLoading && handleSort("title")}
                 disabled={isLoading}
-                style={{ display: "flex", alignItems: "center", gap: "6px", background: "none", border: "none", cursor: isLoading ? "default" : "pointer", padding: 0, font: "inherit", color: "inherit", textTransform: "inherit", letterSpacing: "inherit" }}
               >
                 Title {!isLoading && getSortIcon("title")}
               </button>
@@ -429,16 +430,17 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
               aria-sort={sortField === "last_modified" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
             >
               <button
+                type="button"
+                className="gw-sort-button"
                 onClick={() => !isLoading && handleSort("last_modified")}
                 disabled={isLoading}
-                style={{ display: "flex", alignItems: "center", gap: "6px", background: "none", border: "none", cursor: isLoading ? "default" : "pointer", padding: 0, font: "inherit", color: "inherit", textTransform: "inherit", letterSpacing: "inherit" }}
               >
                 Last modified {!isLoading && getSortIcon("last_modified")}
               </button>
             </div>
             <div className="header-cell" role="columnheader">Grant</div>
             <div className="header-cell" role="columnheader" style={{ textAlign: 'center' }}>Status</div>
-            <div className="header-cell" role="columnheader" style={{ textAlign: "left" }}>Outcome</div>
+            <div className="header-cell" role="columnheader">Outcome</div>
           </div>
         </div>
         <div className="table-body" role={isLoading || paginatedItems.length === 0 ? undefined : "rowgroup"}>

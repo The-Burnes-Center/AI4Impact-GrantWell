@@ -285,19 +285,10 @@ export default function Sessions(props: SessionsProps) {
                 aria-sort={sortField === "title" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
               >
                 <button
+                  type="button"
+                  className="gw-sort-button"
                   onClick={() => !isLoading && handleSort("title")}
                   disabled={isLoading}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    background: "none",
-                    border: "none",
-                    cursor: isLoading ? "default" : "pointer",
-                    padding: "4px 2px",
-                    font: "inherit",
-                    color: "inherit",
-                  }}
                 >
                   Title {!isLoading && getSortIcon("title")}
                 </button>
@@ -308,19 +299,10 @@ export default function Sessions(props: SessionsProps) {
                 aria-sort={sortField === "time_stamp" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"}
               >
                 <button
+                  type="button"
+                  className="gw-sort-button"
                   onClick={() => !isLoading && handleSort("time_stamp")}
                   disabled={isLoading}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    background: "none",
-                    border: "none",
-                    cursor: isLoading ? "default" : "pointer",
-                    padding: "4px 2px",
-                    font: "inherit",
-                    color: "inherit",
-                  }}
                 >
                   Time {!isLoading && getSortIcon("time_stamp")}
                 </button>

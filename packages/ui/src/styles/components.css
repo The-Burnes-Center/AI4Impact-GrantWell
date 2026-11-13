@@ -615,4 +615,22 @@ a.gw-tab { text-decoration: none; }
   white-space: nowrap;
 }
 .gw-select-all input { margin: 0; flex-shrink: 0; }
-.header-cell:has(> .gw-select-all) { padding-block: 0; }
+
+.gw-sort-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+.gw-sort-button:disabled { cursor: default; }
+
+/* The control fills the header's height in place of the cell padding, giving a 44px target. */
+.header-cell:has(> .gw-select-all, > .gw-sort-button) { padding-block: 0; }

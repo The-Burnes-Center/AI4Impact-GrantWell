@@ -55,11 +55,6 @@ const TABLE_COLUMN_COUNT = 7;
 
 type SortOrder = { key: "deadline" } | { key: "queued"; oldestFirst: boolean };
 
-const SORT_BUTTON_STYLE: React.CSSProperties = {
-  display: "inline-flex", alignItems: "center", gap: "4px", background: "none", border: "none",
-  cursor: "pointer", padding: 0, font: "inherit", color: "inherit",
-};
-
 function deadlineBadge(review: ReviewItem): { label: string; className: string } | null {
   const { daysLeft, deadlineUrgency } = review;
   if (deadlineUrgency === "expired") return { label: "Expired", className: "review-deadline-badge--expired" };
@@ -476,7 +471,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                 role="columnheader"
                 aria-sort={sortOrder.key === "deadline" ? "ascending" : "none"}
               >
-                <button type="button" onClick={() => setSortOrder({ key: "deadline" })} style={SORT_BUTTON_STYLE}>
+                <button type="button" onClick={() => setSortOrder({ key: "deadline" })} className="gw-sort-button">
                   Deadline
                   {sortOrder.key === "deadline" && <LuArrowUp size={12} aria-hidden="true" />}
                 </button>
@@ -486,7 +481,7 @@ const ProcessingReviewTab: React.FC<ProcessingReviewTabProps> = ({
                 role="columnheader"
                 aria-sort={sortOrder.key === "queued" ? (sortOrder.oldestFirst ? "ascending" : "descending") : "none"}
               >
-                <button type="button" onClick={sortByQueued} style={SORT_BUTTON_STYLE}>
+                <button type="button" onClick={sortByQueued} className="gw-sort-button">
                   In queue since
                   {sortOrder.key === "queued" &&
                     (sortOrder.oldestFirst ? <LuArrowUp size={12} aria-hidden="true" /> : <LuArrowDown size={12} aria-hidden="true" />)}

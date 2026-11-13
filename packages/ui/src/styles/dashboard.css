@@ -676,10 +676,8 @@ body {
   font-weight: var(--gw-font-weight-semibold);
 }
 
-/* Right-align the Actions header to match the action buttons */
-.header-cell:last-child {
+.header-cell--end {
   text-align: right;
-  padding-right: 16px;
 }
 
 .table-body {

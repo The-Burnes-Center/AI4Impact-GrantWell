@@ -460,7 +460,7 @@ const NOFOsTab = React.memo(function NOFOsTab({
             <div className="header-cell" role="columnheader">Name</div>
             <div className="header-cell" role="columnheader">Type</div>
             <div className="header-cell" role="columnheader">Deadline</div>
-            <div className="header-cell" role="columnheader">Actions</div>
+            <div className="header-cell header-cell--end" role="columnheader">Actions</div>
           </div>
         </div>
         <div className="table-body" role="rowgroup">
