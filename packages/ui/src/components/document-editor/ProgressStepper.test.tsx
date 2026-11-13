@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import ProgressStepper from "./ProgressStepper";
@@ -118,11 +118,12 @@ describe("ProgressStepper all-steps list", () => {
       const summary = screen.getByText("All steps");
 
       await user.click(summary);
-      expect(scrollIntoView).toHaveBeenCalledTimes(1);
+      await waitFor(() => expect(scrollIntoView).toHaveBeenCalledTimes(1));
       expect(scrollIntoView.mock.contexts[0]).toBe(summary);
       expect(scrollIntoView).toHaveBeenCalledWith({ block: "nearest", behavior });
 
       await user.click(summary);
+      await waitFor(() => expect(summary.closest("details")).not.toHaveAttribute("open"));
       expect(scrollIntoView).toHaveBeenCalledTimes(1);
       vi.unstubAllGlobals();
     });
@@ -134,6 +135,7 @@ describe("ProgressStepper all-steps list", () => {
     Element.prototype.scrollIntoView = scrollIntoView;
     const { user } = renderStepper();
     await user.click(screen.getByText("All steps"));
+    await waitFor(() => expect(screen.getByText("All steps").closest("details")).toHaveAttribute("open"));
     expect(scrollIntoView).not.toHaveBeenCalled();
     vi.unstubAllGlobals();
   });
