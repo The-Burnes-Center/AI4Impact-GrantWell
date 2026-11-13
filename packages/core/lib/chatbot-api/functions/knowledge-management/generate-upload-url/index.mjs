@@ -1,11 +1,15 @@
 /**
- * Generates a presigned PUT URL for uploading a document to S3.
+ * Generates a presigned PUT URL for uploading a document to S3. A library upload
+ * ("<userId>/documents/<file>") must say what kind of document it is; that is stored first.
  *
- * Env: USER_DOCUMENTS_BUCKET
+ * Env: USER_DOCUMENTS_BUCKET, USER_DOCUMENT_TABLE_NAME
  */
 
 import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
+import { marshall } from '@aws-sdk/util-dynamodb';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { cleanDocumentType, docSortKey } from '../document-safeguards/document-relevance.mjs';
 import { extractUserId } from '../shared/auth.mjs';
 import { success, unauthorized, forbidden, badRequest, serverError } from '../shared/response.mjs';
 import { getS3Client, getBucketName } from '../shared/s3.mjs';
@@ -43,6 +47,28 @@ const ALLOWED_EXTENSIONS = new Set([
   'epub', 'odt', 'tsv', 'eml', 'msg',
 ]);
 
+let ddb;
+
+async function storeDocumentType(userId, key, documentType) {
+  ddb ??= new DynamoDBClient({ region: process.env.AWS_REGION || 'us-east-1' });
+  await ddb.send(
+    new PutItemCommand({
+      TableName: process.env.USER_DOCUMENT_TABLE_NAME,
+      Item: marshall(
+        {
+          user_id: userId,
+          sk: docSortKey(key),
+          document_key: key,
+          doc_type: documentType.type,
+          description: documentType.description ?? undefined,
+          updated_at: new Date().toISOString(),
+        },
+        { removeUndefinedValues: true }
+      ),
+    })
+  );
+}
+
 export const handler = async (event) => {
   try {
     const userId = extractUserId(event);
@@ -78,6 +104,11 @@ export const handler = async (event) => {
     if (fileSize > MAX_FILE_SIZE_BYTES) {
       return badRequest(`File exceeds maximum size of ${MAX_FILE_SIZE_BYTES} bytes`);
     }
+
+    const libraryUpload = fileName.startsWith(`${userId}/documents/`);
+    const documentType = libraryUpload || body.documentType ? cleanDocumentType(body.documentType, body.description) : null;
+    if (documentType?.error) return badRequest(documentType.error);
+    if (documentType && process.env.USER_DOCUMENT_TABLE_NAME) await storeDocumentType(userId, fileName, documentType);
 
     // ContentLength makes S3 enforce exact byte match — a client that lied
     // about fileSize cannot upload more than declared.

@@ -2,10 +2,11 @@
  * Loads the documents an applicant selected from their library straight from the user-documents
  * bucket, so the model reads them in full instead of through knowledge-base search.
  *
- * Self-contained (only @aws-sdk/client-s3 and node:zlib). The copy in websocket-chat/ must stay
+ * Self-contained (only @aws-sdk/client-s3 and node:zlib). The copies in websocket-chat/,
+ * draft-pipeline/generate-section/ and knowledge-management/document-safeguards/ must stay
  * byte-identical (test/lambda/supporting-documents.test.ts checks).
  *
- *   const docs = await loadSupportingDocuments({ s3, bucket, userId, documentKeys, documentIdentifier });
+ *   const docs = await loadSupportingDocuments({ s3, bucket, userId, documentKeys, documentIdentifier, gate });
  *   docs.selected  [key]                              what the selection resolved to
  *   docs.pdfs      [{ key, fileName, bytes, pages }]  attach with pdfContentBlocks(docs)
  *   docs.texts     [{ key, fileName, content }]       full text (DOCX, txt, csv, md, html, ...)
@@ -15,6 +16,10 @@
  * chat's or application's stored selection; null or undefined means none was ever stored, which
  * selects everything in that grant's pre-library folder ("<userId>/<grant>/" and "<grant>//").
  * Selected keys no longer in the library (deleted files) are ignored.
+ *
+ * gate, when given, decides which readable files may be used at all (document-relevance.mjs):
+ * async (objects) => Map<key, { usable, reason?: 'not-related' | 'not-checked' }>. A file missing
+ * from the map is not used.
  */
 
 import { GetObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
@@ -38,9 +43,13 @@ export const SKIP_REASONS = Object.freeze({
   'too-large': 'Too large for the AI to read',
   'over-budget': 'Skipped: the other selected files used up what the AI can read at once',
   unreadable: "The AI couldn't open this file",
+  'not-related': "Not used: doesn't look related to this grant",
+  'not-checked': "Couldn't check this document yet, try again",
 });
 
 const TEXT_EXTENSIONS = new Set(['txt', 'csv', 'tsv', 'md', 'html', 'json', 'xml', 'rtf']);
+
+export const normalizeEtag = (etag) => String(etag ?? '').replace(/"/g, '');
 
 export function grantFolderName(documentIdentifier) {
   return String(documentIdentifier ?? '').replace(/\/+$/, '').split('/').pop() || '';
@@ -62,7 +71,7 @@ export function selectDocuments(library, { userId, documentKeys, documentIdentif
   return prefix ? library.filter((o) => o.key.startsWith(prefix)) : [];
 }
 
-function kindOf(fileName) {
+export function kindOf(fileName) {
   const ext = fileName.includes('.') ? fileName.split('.').pop().toLowerCase() : '';
   if (ext === 'pdf') return 'pdf';
   if (ext === 'docx') return 'docx';
@@ -78,14 +87,14 @@ export async function listLibrary(s3, bucket, userId) {
     const page = await s3.send(new ListObjectsV2Command({ Bucket: bucket, Prefix: prefix, ContinuationToken }));
     for (const o of page.Contents || []) {
       if (o.Key.endsWith('.metadata.json') || o.Key.endsWith('/') || !o.Size) continue;
-      objects.push({ key: o.Key, fileName: o.Key.split('/').pop(), size: o.Size, lastModified: new Date(o.LastModified ?? 0).getTime() });
+      objects.push({ key: o.Key, fileName: o.Key.split('/').pop(), size: o.Size, etag: normalizeEtag(o.ETag), lastModified: new Date(o.LastModified ?? 0).getTime() });
     }
     ContinuationToken = page.IsTruncated ? page.NextContinuationToken : undefined;
   } while (ContinuationToken);
   return objects.sort((a, b) => b.lastModified - a.lastModified || a.key.localeCompare(b.key));
 }
 
-async function readObject(s3, bucket, key) {
+export async function readObject(s3, bucket, key) {
   const res = await s3.send(new GetObjectCommand({ Bucket: bucket, Key: key }));
   return Buffer.from(await res.Body.transformToByteArray());
 }
@@ -144,7 +153,13 @@ export function extractDocxText(buffer, maxInflatedBytes = DEFAULT_LIMITS.maxInf
     .trim();
 }
 
-export async function loadSupportingDocuments({ s3, bucket, userId, documentKeys, documentIdentifier, limits = {} }) {
+/** Within the per-file caps; the shared budgets apply later, to the files actually used. */
+function fitsAlone({ fileName, size }, caps) {
+  const kind = kindOf(fileName);
+  return Boolean(kind) && size <= (kind === 'pdf' ? caps.maxPdfBytes : caps.maxDownloadBytes);
+}
+
+export async function loadSupportingDocuments({ s3, bucket, userId, documentKeys, documentIdentifier, limits = {}, gate }) {
   const caps = { ...DEFAULT_LIMITS, ...limits };
   const result = { selected: [], pdfs: [], texts: [], skipped: [] };
   if (!s3 || !bucket || !userId) return result;
@@ -155,6 +170,7 @@ export async function loadSupportingDocuments({ s3, bucket, userId, documentKeys
   let textChars = 0;
   const objects = selectDocuments(await listLibrary(s3, bucket, userId), { userId, documentKeys, documentIdentifier });
   result.selected = objects.map((o) => o.key);
+  const allowed = gate ? await gate(objects.filter((o, index) => index < caps.maxFiles && fitsAlone(o, caps))) : null;
 
   for (const [index, object] of objects.entries()) {
     const { key, fileName, size } = object;
@@ -163,13 +179,12 @@ export async function loadSupportingDocuments({ s3, bucket, userId, documentKeys
     if (!kind) { skip('unsupported'); continue; }
     if (index >= caps.maxFiles) { skip('over-budget'); continue; }
 
-    if (kind === 'pdf') {
-      if (size > caps.maxPdfBytes) { skip('too-large'); continue; }
-      if (pdfBytes + size > caps.maxPdfBytes) { skip('over-budget'); continue; }
-    } else if (size > caps.maxDownloadBytes) {
-      skip('too-large');
+    if (!fitsAlone(object, caps)) { skip('too-large'); continue; }
+    if (allowed && !allowed.get(key)?.usable) {
+      skip(allowed.get(key)?.reason === 'not-related' ? 'not-related' : 'not-checked');
       continue;
     }
+    if (kind === 'pdf' && pdfBytes + size > caps.maxPdfBytes) { skip('over-budget'); continue; }
 
     let bytes;
     try {

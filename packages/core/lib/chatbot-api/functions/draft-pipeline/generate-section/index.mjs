@@ -14,7 +14,8 @@
 import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
 import { DynamoDBClient, UpdateItemCommand } from '@aws-sdk/client-dynamodb';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { loadSupportingDocuments, pdfContentBlocks } from './supporting-documents.mjs';
+import { grantFolderName, loadSupportingDocuments, pdfContentBlocks } from './supporting-documents.mjs';
+import { relevanceGate } from './document-relevance.mjs';
 
 const bedrockClient = new BedrockRuntimeClient({ region: process.env.AWS_REGION || 'us-east-1' });
 const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION || 'us-east-1' });
@@ -333,6 +334,22 @@ async function loadGrantText(documentIdentifier) {
   return { source: 'summary', text: JSON.stringify(summary, null, 2) };
 }
 
+/** Only documents that relate to this grant (or an admin approved) are used; undefined where not deployed. */
+function documentGate(userId, documentIdentifier) {
+  if (!process.env.USER_DOCUMENT_TABLE_NAME) return undefined;
+  const deps = {
+    ddb: dynamoClient,
+    s3: s3Client,
+    bedrock: bedrockClient,
+    table: process.env.USER_DOCUMENT_TABLE_NAME,
+    bucket: process.env.USER_DOCUMENTS_BUCKET,
+    artifactBuckets: [process.env.ARTIFACTS_BUCKET, process.env.BUCKET],
+    modelId: process.env.DOC_CHECK_MODEL_ID,
+    source: 'draft',
+  };
+  return relevanceGate(deps, { userId, grant: grantFolderName(documentIdentifier) });
+}
+
 /** userId is the library owner (the Cognito username that prefixes the document keys). */
 async function loadApplicantDocuments(documentIdentifier, userId, documentKeys) {
   const empty = { selected: [], pdfs: [], texts: [], skipped: [] };
@@ -344,6 +361,7 @@ async function loadApplicantDocuments(documentIdentifier, userId, documentKeys) 
       userId,
       documentKeys: Array.isArray(documentKeys) ? documentKeys : null,
       documentIdentifier,
+      gate: documentGate(userId, documentIdentifier),
     });
   } catch (error) {
     console.error("GenerateSection: couldn't read the applicant's documents; writing without them:", error);

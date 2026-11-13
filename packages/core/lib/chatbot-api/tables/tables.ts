@@ -29,6 +29,7 @@ export class TableStack extends Stack {
   public readonly analyticsTable: Table;
   public readonly dailyUsageTable: Table;
   public readonly applicationOutcomeTable: Table;
+  public readonly userDocumentTable: Table;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -266,5 +267,24 @@ export class TableStack extends Stack {
     });
 
     this.applicationOutcomeTable = applicationOutcomeTable;
+
+    // Per library document: its type (DOC#...) and, per grant, whether it relates to that grant
+    // (REL#...), with any review request. user_id is the document folder (Cognito username).
+    // ReviewIndex holds only rows with a request, for the admins' queue.
+    const userDocumentTable = new Table(this, 'UserDocumentTable', {
+      ...BACKED_UP,
+      partitionKey: { name: 'user_id', type: AttributeType.STRING },
+      sortKey: { name: 'sk', type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+    });
+
+    userDocumentTable.addGlobalSecondaryIndex({
+      indexName: 'ReviewIndex',
+      partitionKey: { name: 'review_status', type: AttributeType.STRING },
+      sortKey: { name: 'requested_at', type: AttributeType.STRING },
+      projectionType: ProjectionType.ALL,
+    });
+
+    this.userDocumentTable = userDocumentTable;
   }
 }
