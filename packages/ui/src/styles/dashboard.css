@@ -59,6 +59,12 @@ body {
   gap: 15px;
 }
 
+/* A flex column so the breadcrumb and header keep both margins wherever the header is placed. */
+.gw-page-header {
+  display: flex;
+  flex-direction: column;
+}
+
 .dashboard-header__description {
   margin-top: 4px;
   color: var(--gw-color-text-secondary);

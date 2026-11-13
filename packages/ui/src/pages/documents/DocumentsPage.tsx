@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { LuDownload, LuFileText, LuTrash2 } from "react-icons/lu";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
-import Breadcrumbs from "../../components/common/Breadcrumbs";
+import PageHeader from "../../components/common/PageHeader";
 import ConfirmationModal from "../../components/common/ConfirmationModal";
 import LibraryUpload from "../../components/documents/LibraryUpload";
 import { useDocumentLibrary } from "../../hooks/use-document-library";
@@ -51,18 +51,11 @@ export default function DocumentsPage() {
     <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
       <UnifiedNavigation />
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        <Breadcrumbs items={[{ label: "Home", href: "/home" }, { label: "My documents" }]} />
-
-        <div className="dashboard-main-content" style={{ maxWidth: 900 }}>
-          <div className="dashboard-header dashboard-header--wrap">
-            <div>
-              <h1>My documents</h1>
-              <p className="dashboard-header__description">
-                Upload a document once and choose it in any chat or application. The AI reads only the
-                documents you tick there.
-              </p>
-            </div>
-          </div>
+        <div className="dashboard-main-content">
+          <PageHeader
+            title="My documents"
+            intro="Upload a document once and choose it in any chat or application. The AI reads only the documents you tick there."
+          />
 
           <LibraryUpload library={library} />
 

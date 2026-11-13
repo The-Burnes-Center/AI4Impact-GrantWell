@@ -17,6 +17,7 @@ import GrantPickerModal, { type PickedGrant } from "../common/GrantPickerModal";
 import { addToRecentlyViewed } from "../../common/helpers/recently-viewed-nofos";
 import TableScrollRegion from "../ui/TableScrollRegion";
 import PaginationControls from "../common/PaginationControls";
+import PageHeader from "../common/PageHeader";
 import { v4 as uuidv4 } from "uuid";
 import { useNotifications } from "../notifications/NotificationManager";
 import "../../styles/dashboard.css";
@@ -198,59 +199,56 @@ export default function Sessions(props: SessionsProps) {
         itemLabel="chat"
       />
 
-      {/* Header section */}
-      <div className="dashboard-header dashboard-header--wrap">
-        <div>
-          <h1>My chats</h1>
-          <p className="dashboard-header__description">
-            Manage and access your previous chats
-          </p>
-        </div>
-        <div className="dashboard-actions">
-          <button
-            className="gw-btn gw-btn--primary action-button add-button"
-            onClick={() => {
-              if (props.documentIdentifier) {
-                startChat(props.documentIdentifier);
-              } else {
-                setShowGrantPicker(true);
-              }
-            }}
-          >
-            <LuPlus size={16} className="button-icon" aria-hidden="true" />
-            <span>New chat</span>
-          </button>
-          <button
-            className="gw-btn gw-btn--danger action-button danger-button"
-            onClick={() => selectedItems.length > 0 && setShowModalDelete(true)}
-            aria-disabled={selectedItems.length === 0 || undefined}
-          >
-            <LuTrash size={16} className="button-icon" aria-hidden="true" />
-            <span>Delete</span>
-          </button>
-          <button
-            className="gw-btn gw-btn--secondary action-button refresh-button"
-            onClick={async () => {
-              if (isLoading) return;
-              setIsLoading(true);
-              await getSessions();
-              setIsLoading(false);
-            }}
-            aria-disabled={isLoading || undefined}
-            aria-label={isLoading ? "Refreshing chats list" : "Refresh chats list"}
-            aria-busy={isLoading}
-          >
-            {isLoading ? (
-              <span className="refresh-loading">Refreshing...</span>
-            ) : (
-              <>
-                <LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" />
-                <span>Refresh</span>
-              </>
-            )}
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        title="My chats"
+        intro="Manage and access your previous chats"
+        actions={
+          <>
+            <button
+              className="gw-btn gw-btn--primary action-button add-button"
+              onClick={() => {
+                if (props.documentIdentifier) {
+                  startChat(props.documentIdentifier);
+                } else {
+                  setShowGrantPicker(true);
+                }
+              }}
+            >
+              <LuPlus size={16} className="button-icon" aria-hidden="true" />
+              <span>New chat</span>
+            </button>
+            <button
+              className="gw-btn gw-btn--danger action-button danger-button"
+              onClick={() => selectedItems.length > 0 && setShowModalDelete(true)}
+              aria-disabled={selectedItems.length === 0 || undefined}
+            >
+              <LuTrash size={16} className="button-icon" aria-hidden="true" />
+              <span>Delete</span>
+            </button>
+            <button
+              className="gw-btn gw-btn--secondary action-button refresh-button"
+              onClick={async () => {
+                if (isLoading) return;
+                setIsLoading(true);
+                await getSessions();
+                setIsLoading(false);
+              }}
+              aria-disabled={isLoading || undefined}
+              aria-label={isLoading ? "Refreshing chats list" : "Refresh chats list"}
+              aria-busy={isLoading}
+            >
+              {isLoading ? (
+                <span className="refresh-loading">Refreshing...</span>
+              ) : (
+                <>
+                  <LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" />
+                  <span>Refresh</span>
+                </>
+              )}
+            </button>
+          </>
+        }
+      />
 
       {/* Table section */}
       <TableScrollRegion label="Chats table" minWidth={520}>

@@ -6,7 +6,6 @@ import { v4 as uuidv4 } from "uuid";
 import { statusToStep } from "../../common/helpers/document-editor-utils";
 import DocEditorSessions from "../../components/document-editor/DocEditorSessions";
 import UnifiedNavigation from "../../components/navigation/UnifiedNavigation";
-import Breadcrumbs from "../../components/common/Breadcrumbs";
 import { useNotifications } from "../../components/notifications/NotificationManager";
 import "../../styles/dashboard.css";
 
@@ -85,17 +84,10 @@ export default function DocEditorSessionsPage() {
     }
   };
 
-  const breadcrumbItems = [
-    { label: "Home", href: "/home" },
-    { label: "My applications" },
-  ];
-
   return (
     <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
       <UnifiedNavigation documentIdentifier={docId || undefined} />
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        <Breadcrumbs items={breadcrumbItems} />
-
         <div className="dashboard-main-content">
           <DocEditorSessions
             toolsOpen={true}

@@ -17,7 +17,7 @@ import {
   LuRefreshCw, LuDownload, LuInfo, LuLoader, LuArrowRight,
 } from "react-icons/lu";
 import { Modal } from "../../components/common/Modal";
-import Breadcrumbs from "../../components/common/Breadcrumbs";
+import PageHeader from "../../components/common/PageHeader";
 import { GRANT_TYPES, type NOFO, type GrantTypeId } from "../../common/types/nofo";
 import type { RawNOFOData } from "../../common/types/document";
 import { LiveStatus } from "../../components/common/LiveStatus";
@@ -489,47 +489,38 @@ const Dashboard: React.FC = () => {
     <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
       <UnifiedNavigation />
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        <Breadcrumbs
-          items={[
-            { label: "Home", href: "/home" },
-            { label: "Admin dashboard" },
-          ]}
-        />
-
         <div className="dashboard-main-content">
-          <div className="dashboard-header">
-            <div>
-              <h1>Admin dashboard</h1>
-              <p style={{ marginTop: "4px", color: "var(--gw-color-text-secondary)", fontSize: "14px" }}>
-                Manage grants, users, and processing across your instance
-              </p>
-            </div>
-            <div className="dashboard-actions">
-              <button
-                ref={refreshButtonRef}
-                className="gw-btn gw-btn--secondary action-button refresh-button"
-                onClick={handleRefresh}
-                aria-disabled={isRefreshing}
-                aria-busy={isRefreshing}
-              >
-                {isRefreshing ? (
-                  <span className="refresh-loading">Refreshing...</span>
-                ) : (
-                  <><LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" /><span>Refresh</span></>
-                )}
-                <span className="visually-hidden"> Admin dashboard</span>
-              </button>
-              {hasProcessingNofos && (
+          <PageHeader
+            title="Admin dashboard"
+            intro="Manage grants, users, and processing across your instance"
+            actions={
+              <>
                 <button
+                  ref={refreshButtonRef}
                   className="gw-btn gw-btn--secondary action-button refresh-button"
-                  onClick={() => setAutoRefreshPaused((prev) => !prev)}
-                  {...trackPollControlFocus("pause")}
+                  onClick={handleRefresh}
+                  aria-disabled={isRefreshing}
+                  aria-busy={isRefreshing}
                 >
-                  {autoRefreshPaused ? "Resume auto-refresh" : "Pause auto-refresh"}
+                  {isRefreshing ? (
+                    <span className="refresh-loading">Refreshing...</span>
+                  ) : (
+                    <><LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" /><span>Refresh</span></>
+                  )}
+                  <span className="visually-hidden"> Admin dashboard</span>
                 </button>
-              )}
-            </div>
-          </div>
+                {hasProcessingNofos && (
+                  <button
+                    className="gw-btn gw-btn--secondary action-button refresh-button"
+                    onClick={() => setAutoRefreshPaused((prev) => !prev)}
+                    {...trackPollControlFocus("pause")}
+                  >
+                    {autoRefreshPaused ? "Resume auto-refresh" : "Pause auto-refresh"}
+                  </button>
+                )}
+              </>
+            }
+          />
 
           <LiveStatus className="visually-hidden">{manualRefresh ? "Refreshing Admin dashboard" : null}</LiveStatus>
           <div role="status" aria-live="polite" className="visually-hidden">

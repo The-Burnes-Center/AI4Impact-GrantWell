@@ -21,7 +21,7 @@ import { getPasswordRequirements } from "../../components/auth/auth-utils";
 import { clearMfaPromptSnooze } from "../../common/mfa-snooze";
 import { EMAIL_DIGEST, MFA_DEADLINE_ISO, MFA_ENABLED, MFA_REQUIRED, REGIONS } from "../../common/instance";
 import { deadlineDateText, mfaDeadlinePhase } from "../../common/mfa-deadline";
-import Breadcrumbs from "../../components/common/Breadcrumbs";
+import PageHeader from "../../components/common/PageHeader";
 import { SINGLE_STATE, stateNameFromCode } from "../../common/states";
 import { roleLabel } from "../../common/helpers/auth-roles";
 import { GRANT_CATEGORIES } from "../../common/types/nofo";
@@ -312,24 +312,15 @@ export default function ProfilePage() {
     <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
       <UnifiedNavigation />
       <div className="dashboard-container" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        <Breadcrumbs
-          items={[
-            { label: "Home", href: "/home" },
-            { label: "Profile" },
-          ]}
-        />
-
         <div className="dashboard-main-content">
-          <div className="dashboard-header">
-            <div>
-              <h1>Profile</h1>
-              <p style={{ marginTop: "4px", color: "var(--gw-color-text-secondary)", fontSize: "14px" }}>
-                {EMAIL_DIGEST
-                  ? "Your account, sign-in security, and notification preferences"
-                  : "Your account and sign-in security"}
-              </p>
-            </div>
-          </div>
+          <PageHeader
+            title="Profile"
+            intro={
+              EMAIL_DIGEST
+                ? "Your account, sign-in security, and notification preferences"
+                : "Your account and sign-in security"
+            }
+          />
 
           <nav className="profile-jump-links" aria-label="Profile sections">
             <a href="#profile-account">Account</a>

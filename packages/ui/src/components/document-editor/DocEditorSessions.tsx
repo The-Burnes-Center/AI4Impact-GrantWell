@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useId, useRef } from "react";
 import { AppContext } from "../../common/app-context";
 import { ApiClient } from "../../common/api-client/api-client";
 import PaginationControls from "../common/PaginationControls";
+import PageHeader from "../common/PageHeader";
 import { getCurrentUser } from "aws-amplify/auth";
 import { LuArrowUpDown, LuArrowUp, LuArrowDown, LuPlus, LuTrash, LuRefreshCw, LuCalendar, LuCheck } from "react-icons/lu";
 import { useNavigate } from "react-router";
@@ -316,75 +317,73 @@ export default function DocEditorSessions(props: DocEditorSessionsProps) {
         itemLabel="application"
       />
 
-      {/* Header section */}
-      <div className="dashboard-header dashboard-header--wrap">
-        <div>
-          <h1 ref={headingRef} tabIndex={-1}>My applications</h1>
-          <p className="dashboard-header__description">
-            Manage and continue your saved grant applications
-          </p>
-        </div>
-        <div className="dashboard-actions">
-          <button
-            className="gw-btn gw-btn--primary action-button add-button"
-            onClick={() => {
-              if (props.documentIdentifier) {
-                navigate(`/document-editor?grant=${encodeURIComponent(props.documentIdentifier)}`);
-              } else {
-                setShowGrantPicker(true);
-              }
-            }}
-            aria-label="Create new application"
-          >
-            <LuPlus size={16} className="button-icon" aria-hidden="true" />
-            <span>New application</span>
-          </button>
-          {hasDocId && onToggleShowAllNOFOs && (
+      <PageHeader
+        title="My applications"
+        intro="Manage and continue your saved grant applications"
+        headingRef={headingRef}
+        actions={
+          <>
             <button
-              className="gw-btn gw-btn--secondary action-button invite-button"
-              onClick={onToggleShowAllNOFOs}
-              aria-label="Show all grants — include applications for other grants"
-              aria-pressed={showAllNOFOs}
+              className="gw-btn gw-btn--primary action-button add-button"
+              onClick={() => {
+                if (props.documentIdentifier) {
+                  navigate(`/document-editor?grant=${encodeURIComponent(props.documentIdentifier)}`);
+                } else {
+                  setShowGrantPicker(true);
+                }
+              }}
+              aria-label="Create new application"
             >
-              {showAllNOFOs && <LuCheck size={16} className="button-icon" aria-hidden="true" />}
-              <span>Show all grants</span>
+              <LuPlus size={16} className="button-icon" aria-hidden="true" />
+              <span>New application</span>
             </button>
-          )}
-          <button
-            className="gw-btn gw-btn--danger action-button danger-button"
-            onClick={() => selectedItems.length > 0 && setShowModalDelete(true)}
-            aria-disabled={selectedItems.length === 0 || undefined}
-            aria-label={selectedItems.length === 0 ? "Delete applications (no applications selected)" : `Delete ${selectedItems.length} selected application${selectedItems.length > 1 ? 's' : ''}`}
-          >
-            <LuTrash size={16} className="button-icon" aria-hidden="true" />
-            <span>Delete</span>
-          </button>
-          <button
-            className="gw-btn gw-btn--secondary action-button refresh-button"
-            onClick={async () => {
-              if (isLoading) return;
-              setListNotice("");
-              setIsLoading(true);
-              await getSessions();
-              setIsLoading(false);
-              setListNotice("Applications updated");
-            }}
-            // aria-disabled, not disabled: disabling the focused button would drop focus to the page.
-            aria-disabled={isLoading}
-            aria-label={isLoading ? "Refreshing applications list" : "Refresh applications list"}
-            aria-busy={isLoading}
-          >
-            {isLoading ? (
-              <span className="refresh-loading">Refreshing...</span>
-            ) : (
-              <>
-                <LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" />
-                <span>Refresh</span>
-              </>
+            {hasDocId && onToggleShowAllNOFOs && (
+              <button
+                className="gw-btn gw-btn--secondary action-button invite-button"
+                onClick={onToggleShowAllNOFOs}
+                aria-label="Show all grants — include applications for other grants"
+                aria-pressed={showAllNOFOs}
+              >
+                {showAllNOFOs && <LuCheck size={16} className="button-icon" aria-hidden="true" />}
+                <span>Show all grants</span>
+              </button>
             )}
-          </button>
-        </div>
-      </div>
+            <button
+              className="gw-btn gw-btn--danger action-button danger-button"
+              onClick={() => selectedItems.length > 0 && setShowModalDelete(true)}
+              aria-disabled={selectedItems.length === 0 || undefined}
+              aria-label={selectedItems.length === 0 ? "Delete applications (no applications selected)" : `Delete ${selectedItems.length} selected application${selectedItems.length > 1 ? 's' : ''}`}
+            >
+              <LuTrash size={16} className="button-icon" aria-hidden="true" />
+              <span>Delete</span>
+            </button>
+            <button
+              className="gw-btn gw-btn--secondary action-button refresh-button"
+              onClick={async () => {
+                if (isLoading) return;
+                setListNotice("");
+                setIsLoading(true);
+                await getSessions();
+                setIsLoading(false);
+                setListNotice("Applications updated");
+              }}
+              // aria-disabled, not disabled: disabling the focused button would drop focus to the page.
+              aria-disabled={isLoading}
+              aria-label={isLoading ? "Refreshing applications list" : "Refresh applications list"}
+              aria-busy={isLoading}
+            >
+              {isLoading ? (
+                <span className="refresh-loading">Refreshing...</span>
+              ) : (
+                <>
+                  <LuRefreshCw size={16} className="button-icon refresh-icon" aria-hidden="true" />
+                  <span>Refresh</span>
+                </>
+              )}
+            </button>
+          </>
+        }
+      />
 
       {/* Table section */}
       <TableScrollRegion label="Applications table" minWidth={880}>
