@@ -15,10 +15,24 @@ export interface UserProfile {
   profileComplete: boolean;
 }
 
+/** The profile on a deployment with the structured profile step (PROFILE_FORM). */
+export interface FormProfile {
+  /** Empty for a profile saved by the old form, which then counts as incomplete. */
+  applicantType: string;
+  /** The typed organization name or the chosen entity; empty when the type asks neither. */
+  organization: string;
+  jobTitle: string;
+  locations: string[];
+  state: string;
+  profileComplete: boolean;
+}
+
 export type UserProfileInput = Pick<
   UserProfile,
   "agency" | "organization" | "jobTitle"
 > & { region?: string };
+
+export type FormProfileInput = Pick<FormProfile, "applicantType" | "organization" | "jobTitle" | "locations">;
 
 export interface RecentlyViewedItem {
   label: string;
@@ -33,7 +47,7 @@ export class UserProfileClient {
     this.API = appConfig.httpEndpoint;
   }
 
-  async getProfile(): Promise<UserProfile> {
+  async getProfile(): Promise<UserProfile & Partial<FormProfile>> {
     const token = await Utils.authenticate();
     const response = await apiFetch(`${this.API}/user-profile`, {
       method: "GET",
@@ -45,7 +59,7 @@ export class UserProfileClient {
     return response.json();
   }
 
-  async updateProfile(profile: UserProfileInput): Promise<UserProfile> {
+  async updateProfile(profile: UserProfileInput | FormProfileInput): Promise<UserProfile & Partial<FormProfile>> {
     const token = await Utils.authenticate();
     const response = await apiFetch(`${this.API}/user-profile`, {
       method: "PUT",

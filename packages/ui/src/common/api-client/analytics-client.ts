@@ -16,6 +16,12 @@ export interface RankedItem {
   count: number;
 }
 
+export interface ApplicantTypeUsage {
+  applicantType: string;
+  state: string;
+  events: number;
+}
+
 export interface AgencyUsage {
   agency: string;
   state: string;
@@ -48,6 +54,8 @@ export interface AnalyticsData {
   draftsDownloaded: number;
   draftsCompleted: number;
   usageByAgency: AgencyUsage[];
+  /** Grouped by the structured profile step's applicant type; absent from older backends. */
+  usageByApplicantType?: ApplicantTypeUsage[];
   draftFunnel: DraftFunnel;
 }
 

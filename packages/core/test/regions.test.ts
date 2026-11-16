@@ -13,7 +13,7 @@ let variantOut: string;
 beforeAll(async () => {
   const instances: InstanceConfig[] = (await import(path.join(appDir, "config", "instances.ts"))).instances;
   dev = instances.find((i) => i.aws.environment === ENVS.dev.ENVIRONMENT)!;
-  variantOut = synthVariant(`({ ...i, regions: ${JSON.stringify(REGIONS)} })`);
+  variantOut = synthVariant(`({ ...i, regions: ${JSON.stringify(REGIONS)}, profileForm: undefined })`);
 }, 300_000);
 
 const functions = (all: Record<string, Resource>) =>
@@ -31,12 +31,12 @@ const actionsOf = (all: Record<string, Resource>, f: Resource) => {
 
 describe("validation", () => {
   it("accepts a list of distinct, trimmed names", () => {
-    expect(() => validateInstanceConfig({ ...dev, regions: REGIONS })).not.toThrow();
-    expect(() => validateInstanceConfig({ ...dev, regions: [] })).not.toThrow();
+    expect(() => validateInstanceConfig({ ...dev, profileForm: undefined, regions: REGIONS })).not.toThrow();
+    expect(() => validateInstanceConfig({ ...dev, profileForm: undefined, regions: [] })).not.toThrow();
   });
 
   it.each([[["Region 1", "region 1"]], [[" Region 1"]], [[""]], [["x".repeat(201)]]])("rejects %j", (regions) => {
-    expect(() => validateInstanceConfig({ ...dev, regions })).toThrow(/regions/);
+    expect(() => validateInstanceConfig({ ...dev, profileForm: undefined, regions })).toThrow(/regions/);
   });
 });
 
@@ -44,7 +44,8 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
   describe(env, () => {
     it("wires the Region question exactly when the config lists regions", async () => {
       const instances: InstanceConfig[] = (await import(path.join(appDir, "config", "instances.ts"))).instances;
-      const listed = instances.find((i) => i.aws.environment === ENVS[env].ENVIRONMENT)!.regions ?? [];
+      const instance = instances.find((i) => i.aws.environment === ENVS[env].ENVIRONMENT)!;
+      const listed = instance.regions ?? [];
       const all = resourcesIn(outDir(env));
       const profileVars = vars(fn(all, "ChatbotAPIUserProfileFunction"));
       const users = fn(all, "ChatbotAPIManageUsersFunction");
@@ -54,7 +55,8 @@ for (const env of Object.keys(ENVS) as (keyof typeof ENVS)[]) {
       } else {
         expect(profileVars).not.toHaveProperty("REGIONS");
         expect(vars(users)).not.toHaveProperty("REGIONS_ENABLED");
-        expect(actionsOf(all, users)).not.toContain("dynamodb:BatchGetItem");
+        // The structured profile step reads profile rows too.
+        if (!instance.profileForm) expect(actionsOf(all, users)).not.toContain("dynamodb:BatchGetItem");
       }
     });
   });

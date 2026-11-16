@@ -19,6 +19,7 @@ import type {
 } from "../../../common/api-client/analytics-client";
 import { SINGLE_STATE, SUPPORTED_STATES, stateNameFromCode } from "../../../common/states";
 import { DEFAULT_COLORS, contrastRatio, mix } from "../../../common/palette";
+import { PROFILE_FORM } from "../../../common/instance";
 import OutcomesSection from "./OutcomesSection";
 import "../../../styles/analytics.css";
 
@@ -309,7 +310,7 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({
               itemHeader="Grant"
               items={data.topPursuedNofos}
             />
-            <UsageByAgencyTable data={data} />
+            {PROFILE_FORM ? <UsageByApplicantTypeTable data={data} /> : <UsageByAgencyTable data={data} />}
           </div>
         </div>
       )}
@@ -414,6 +415,42 @@ const UsageByAgencyTable: React.FC<{ data: AnalyticsData }> = ({ data }) => (
     )}
   </section>
 );
+
+const UsageByApplicantTypeTable: React.FC<{ data: AnalyticsData }> = ({ data }) => {
+  const rows = data.usageByApplicantType ?? [];
+  return (
+    <section className="analytics__card">
+      <div className="analytics__card-head">
+        <h3 className="analytics__card-title">Usage by applicant type</h3>
+        <p className="analytics__card-sub">Activity volume, grouped by the applicant type users chose</p>
+      </div>
+      {rows.length === 0 ? (
+        <div className="no-data">No data yet.</div>
+      ) : (
+        <table className="analytics__table">
+          <thead>
+            <tr>
+              <th scope="col">Applicant type</th>
+              {!SINGLE_STATE && <th scope="col">State</th>}
+              <th scope="col" className="analytics__num">
+                Events
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((a) => (
+              <tr key={`${a.state}-${a.applicantType}`}>
+                <td>{a.applicantType}</td>
+                {!SINGLE_STATE && <td>{a.state || "Not assigned"}</td>}
+                <td className="analytics__num">{a.events.toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </section>
+  );
+};
 
 // Screen-reader / relief table equivalent for each chart (dataviz accessibility pass).
 const VisuallyHiddenTable: React.FC<{

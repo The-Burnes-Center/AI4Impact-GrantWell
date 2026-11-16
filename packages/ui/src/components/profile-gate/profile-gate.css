@@ -205,3 +205,16 @@
   flex-wrap: wrap;
   margin-top: 16px;
 }
+
+/* The structured profile step: room for the longer choices and the county chips. */
+.profile-gate__panel--wide {
+  max-width: 520px;
+}
+
+.profile-gate__lead--note {
+  margin-top: -10px;
+}
+
+.profile-gate__form-fields {
+  margin-bottom: 16px;
+}

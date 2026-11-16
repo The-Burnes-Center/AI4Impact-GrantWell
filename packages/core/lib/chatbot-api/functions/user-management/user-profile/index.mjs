@@ -13,6 +13,9 @@ const PROFILE_SK = "PROFILE";
 const MAX_FIELD = 200;
 // The deployment's Region choices; empty means no Region question.
 const REGIONS = JSON.parse(process.env.REGIONS || "[]");
+// The structured profile step's choices (types as [name, organization, location]); null for the
+// Department / Organization / Role form.
+const FORM = process.env.PROFILE_FORM ? JSON.parse(process.env.PROFILE_FORM) : null;
 // Must match MAX_RECENTLY_VIEWED in the web app's recently-viewed helper.
 const MAX_RECENTLY_VIEWED = 6;
 const MAX_RECENTLY_VIEWED_INPUT = 25;
@@ -111,6 +114,7 @@ function cleanField(value, label) {
 // Agency, Organization and Role/Title are all required (hard-block profile gate), and Region too
 // when the deployment asks it.
 function validateProfile(body) {
+  if (FORM) return validateFormProfile(body);
   const fields = {
     agency: cleanField(body.agency, "Agency"),
     organization: cleanField(body.organization, "Organization"),
@@ -118,12 +122,50 @@ function validateProfile(body) {
   };
   if (REGIONS.length === 0) return fields;
   const region = cleanField(body.region, "Region");
-  if (!REGIONS.includes(region)) {
-    const error = new Error("Region must be one of the listed regions");
-    error.statusCode = 400;
-    throw error;
-  }
+  if (!REGIONS.includes(region)) throw badRequest("Region must be one of the listed regions");
   return { ...fields, region };
+}
+
+function badRequest(message) {
+  const error = new Error(message);
+  error.statusCode = 400;
+  return error;
+}
+
+function formType(name) {
+  const t = FORM.types.find(([n]) => n === name);
+  return t ? { name: t[0], organization: t[1], location: t[2] } : null;
+}
+
+function validateFormProfile(body) {
+  const type = formType(String(body.applicantType ?? "").trim());
+  if (!type) throw badRequest("Applicant type must be one of the listed types");
+  const fields = { applicantType: type.name, jobTitle: cleanField(body.jobTitle, "Role"), organization: "", locations: [] };
+  if (type.organization === "entity") {
+    fields.organization = cleanField(body.organization, "Entity");
+    if (!FORM.entities.includes(fields.organization)) throw badRequest("Entity must be one of the listed entities");
+  } else if (type.organization === "name") {
+    fields.organization = cleanField(body.organization, "Organization name");
+  }
+  if (type.location) {
+    const picked = Array.isArray(body.locations) ? [...new Set(body.locations.map((l) => String(l ?? "").trim()))] : [];
+    if (picked.length === 0) throw badRequest("Choose at least one location");
+    if (picked.includes(FORM.all) ? picked.length > 1 : !picked.every((l) => FORM.locations.includes(l))) {
+      throw badRequest(`Locations must be ${FORM.all} or listed locations`);
+    }
+    fields.locations = picked;
+  }
+  return fields;
+}
+
+function formProfileComplete({ applicantType, organization, jobTitle, locations }) {
+  const type = formType(applicantType);
+  if (!type || !jobTitle) return false;
+  if (type.organization === "entity" && !FORM.entities.includes(organization)) return false;
+  if (type.organization === "name" && !organization) return false;
+  if (!type.location) return true;
+  if (locations.length === 0) return false;
+  return locations.includes(FORM.all) ? locations.length === 1 : locations.every((l) => FORM.locations.includes(l));
 }
 
 async function getProfile(userId) {
@@ -138,6 +180,16 @@ async function getProfile(userId) {
   const organization = typeof item.organization === "string" ? item.organization : "";
   const jobTitle = typeof item.job_title === "string" ? item.job_title : "";
   const region = typeof item.region === "string" ? item.region : "";
+  if (FORM) {
+    const fields = {
+      applicantType: typeof item.applicant_type === "string" ? item.applicant_type : "",
+      organization,
+      jobTitle,
+      locations: Array.isArray(item.locations) ? item.locations.filter((l) => typeof l === "string") : [],
+    };
+    // Rows saved by the old form have no applicant type, so those users answer the new one.
+    return { ...fields, state: typeof item.state === "string" ? item.state : "", profileComplete: formProfileComplete(fields) };
+  }
   return {
     agency,
     organization,
@@ -150,6 +202,7 @@ async function getProfile(userId) {
 }
 
 async function putProfile(userId, fields) {
+  if (FORM) return putFormProfile(userId, fields);
   const iso = new Date().toISOString();
   // UpdateItem (not Put) so we never touch last_active_at / ttl on the same row. This row is a
   // PROFILE row — it must never carry a ttl.
@@ -169,6 +222,36 @@ async function putProfile(userId, fields) {
           ":s": fields.state || "",
           ":t": iso,
           ":r": fields.region,
+        },
+        { removeUndefinedValues: true }
+      ),
+    })
+  );
+}
+
+// Clears the old form's Department and Region, and any answer the new type doesn't ask.
+async function putFormProfile(userId, fields) {
+  const iso = new Date().toISOString();
+  const set = ["applicant_type = :a", "job_title = :j", "#st = :s", "profile_completed_at = :t", "updated_at = :t"];
+  const remove = ["agency", "#rg"];
+  if (fields.organization) set.push("organization = :o");
+  else remove.push("organization");
+  if (fields.locations.length) set.push("locations = :l");
+  else remove.push("locations");
+  await dynamoClient.send(
+    new UpdateItemCommand({
+      TableName: TABLE_NAME,
+      Key: marshall({ pk: `USER#${userId}`, sk: PROFILE_SK }),
+      UpdateExpression: `SET ${set.join(", ")} REMOVE ${remove.join(", ")}`,
+      ExpressionAttributeNames: { "#st": "state", "#rg": "region" },
+      ExpressionAttributeValues: marshall(
+        {
+          ":a": fields.applicantType,
+          ":j": fields.jobTitle,
+          ":s": fields.state || "",
+          ":t": iso,
+          ...(fields.organization && { ":o": fields.organization }),
+          ...(fields.locations.length && { ":l": fields.locations }),
         },
         { removeUndefinedValues: true }
       ),

@@ -105,6 +105,7 @@ export const handler = async (event) => {
       draftsDownloaded: countType(scopedEvents, "draft_downloaded"),
       draftsCompleted: countType(scopedEvents, "draft_completed"),
       usageByAgency: buildUsageByAgency(scopedEvents, profileByUser),
+      usageByApplicantType: buildUsageByApplicantType(scopedEvents, profileByUser),
       draftFunnel: buildDraftFunnel(scopedDrafts),
     });
   } catch (error) {
@@ -149,6 +150,7 @@ async function scanProfiles() {
         user_id: String(item.pk || "").replace(/^USER#/, ""),
         agency: item.agency || "",
         organization: item.organization || "",
+        applicant_type: typeof item.applicant_type === "string" ? item.applicant_type : "",
         state: typeof item.state === "string" ? item.state.toUpperCase() : "",
         last_active_at: item.last_active_at || null,
       });
@@ -333,6 +335,23 @@ function buildUsageByAgency(events, profileByUser) {
   }
   return [...byAgency.values()]
     .sort((a, b) => b.events - a.events || a.agency.localeCompare(b.agency))
+    .slice(0, TOP_N);
+}
+
+// The same, grouped by applicant type, for deployments with the structured profile step.
+function buildUsageByApplicantType(events, profileByUser) {
+  const byType = new Map();
+  for (const e of events) {
+    const profile = profileByUser.get(e.user_id);
+    const applicantType = (profile?.applicant_type || "").trim() || "Unknown";
+    const state = profile?.state || e.state || "";
+    const key = `${state}::${applicantType}`;
+    const entry = byType.get(key) || { applicantType, state, events: 0 };
+    entry.events += 1;
+    byType.set(key, entry);
+  }
+  return [...byType.values()]
+    .sort((a, b) => b.events - a.events || a.applicantType.localeCompare(b.applicantType))
     .slice(0, TOP_N);
 }
 

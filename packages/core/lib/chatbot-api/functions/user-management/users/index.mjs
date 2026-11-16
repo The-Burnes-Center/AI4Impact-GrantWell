@@ -20,6 +20,8 @@ const USER_POOL_ID = process.env.USER_POOL_ID;
 const ANALYTICS_TABLE_NAME = process.env.ANALYTICS_TABLE_NAME;
 // The deployment asks a Region question; each listed user then carries the region from their profile row.
 const REGIONS_ENABLED = process.env.REGIONS_ENABLED === "true";
+// The structured profile step is on; each listed user carries their applicant type, organization and locations.
+const PROFILE_FORM_ENABLED = process.env.PROFILE_FORM_ENABLED === "true";
 const ALLOWED_ROLE_PRESETS = new Map([
   ["user", ["User"]],
   ["admin", ["Admin"]],
@@ -605,7 +607,7 @@ async function scanUsers(include, context) {
     console.warn(`scanUsers stopped after ${pages} pages; the user list is truncated.`);
   }
 
-  return { users: (await withRegions(collected)).sort(compareUsers), truncated };
+  return { users: (await withProfileFields(collected)).sort(compareUsers), truncated };
 }
 
 function subOf(cognitoUser) {
@@ -615,10 +617,19 @@ function subOf(cognitoUser) {
 const BATCH_GET_SIZE = 100;
 const BATCH_GET_ATTEMPTS = 5;
 
-// A failed lookup shows blank regions rather than failing the whole list.
-async function withRegions(entries) {
-  if (!REGIONS_ENABLED) return entries.map(({ user }) => user);
-  const regionBySub = new Map();
+// A failed lookup shows blank fields rather than failing the whole list.
+async function withProfileFields(entries) {
+  if (!REGIONS_ENABLED && !PROFILE_FORM_ENABLED) return entries.map(({ user }) => user);
+  const projection = PROFILE_FORM_ENABLED ? "pk, applicant_type, organization, locations" : "pk, #rg";
+  const names = PROFILE_FORM_ENABLED ? undefined : { "#rg": "region" };
+  const fieldsOf = PROFILE_FORM_ENABLED
+    ? (item) => ({
+        applicantType: typeof item?.applicant_type === "string" ? item.applicant_type : "",
+        organization: typeof item?.organization === "string" ? item.organization : "",
+        locations: Array.isArray(item?.locations) ? item.locations.filter((l) => typeof l === "string") : [],
+      })
+    : (item) => ({ region: typeof item?.region === "string" ? item.region : "" });
+  const bySub = new Map();
   try {
     const subs = [...new Set(entries.map(({ sub }) => sub).filter(Boolean))];
     for (let i = 0; i < subs.length; i += BATCH_GET_SIZE) {
@@ -629,23 +640,23 @@ async function withRegions(entries) {
             RequestItems: {
               [ANALYTICS_TABLE_NAME]: {
                 Keys: keys,
-                ProjectionExpression: "pk, #rg",
-                ExpressionAttributeNames: { "#rg": "region" },
+                ProjectionExpression: projection,
+                ...(names && { ExpressionAttributeNames: names }),
               },
             },
           })
         );
         for (const raw of response.Responses?.[ANALYTICS_TABLE_NAME] || []) {
           const item = unmarshall(raw);
-          if (typeof item.region === "string") regionBySub.set(String(item.pk).slice("USER#".length), item.region);
+          bySub.set(String(item.pk).slice("USER#".length), item);
         }
         keys = response.UnprocessedKeys?.[ANALYTICS_TABLE_NAME]?.Keys || [];
       }
     }
   } catch (error) {
-    console.error("Region lookup failed:", error);
+    console.error("Profile lookup failed:", error);
   }
-  return entries.map(({ user, sub }) => ({ ...user, region: regionBySub.get(sub) || "" }));
+  return entries.map(({ user, sub }) => ({ ...user, ...fieldsOf(bySub.get(sub)) }));
 }
 
 async function getTargetUser(username) {

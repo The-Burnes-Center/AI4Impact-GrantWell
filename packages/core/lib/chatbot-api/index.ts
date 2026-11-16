@@ -28,7 +28,7 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as logs from "aws-cdk-lib/aws-logs";
 import * as path from "path";
-import { InstanceConfig, allowedOrigins, limits, regions, singleState, supportedStatesEnv } from "../config/instance-config";
+import { InstanceConfig, allowedOrigins, limits, profileForm, regions, singleState, supportedStatesEnv } from "../config/instance-config";
 
 // See the matching constant in functions/functions.ts: while "true", a legacy stateless Admin
 // still resolves to platform-wide. Flip both to "false" only after migrating every pool.
@@ -491,6 +491,7 @@ export class ChatBotApi extends Construct {
       LEGACY_STATELESS_ADMIN_IS_PLATFORM,
         ...(singleState(props.config) && { SINGLE_STATE: singleState(props.config)!.code }),
         ...(regions(props.config).length && { REGIONS_ENABLED: "true" }),
+        ...(profileForm(props.config) && { PROFILE_FORM_ENABLED: "true" }),
         CHAT_HISTORY_TABLE_NAME: tables.historyTable.tableName,
         DRAFT_TABLE_NAME: tables.draftTable.tableName,
         DRAFT_VERSION_TABLE_NAME: tables.draftVersionTable.tableName,
@@ -524,7 +525,7 @@ export class ChatBotApi extends Construct {
     );
     manageUsersFunction.addToRolePolicy(
       new iam.PolicyStatement({
-        actions: ["dynamodb:Query", "dynamodb:UpdateItem", "dynamodb:DeleteItem", ...(regions(props.config).length ? ["dynamodb:BatchGetItem"] : [])],
+        actions: ["dynamodb:Query", "dynamodb:UpdateItem", "dynamodb:DeleteItem", ...(regions(props.config).length || profileForm(props.config) ? ["dynamodb:BatchGetItem"] : [])],
         resources: [tables.analyticsTable.tableArn],
       })
     );

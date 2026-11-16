@@ -38,6 +38,29 @@ describe("apiFetch", () => {
     expect(mod.hasSessionEndedNotice()).toBe(true);
   });
 
+  const jwt = (exp: number) =>
+    ["e30", btoa(JSON.stringify({ exp })).replace(/=+$/, "").replace(/\+/g, "-").replace(/\//g, "_"), "sig"].join(".");
+
+  it("keeps the session when the 401 is for a token that had already expired, such as the exit save's kept copy", async () => {
+    respondWith(401);
+    await mod.apiFetch("/x", { headers: { Authorization: `Bearer ${jwt(Math.floor(Date.now() / 1000) - 2)}` } });
+    await settle();
+    expect(signOut).not.toHaveBeenCalled();
+    expect(assign).not.toHaveBeenCalled();
+  });
+
+  it("still ends the session on a 401 for a token that hasn't expired", async () => {
+    respondWith(401);
+    await mod.apiFetch("/x", { headers: { Authorization: `Bearer ${jwt(Math.floor(Date.now() / 1000) + 600)}` } });
+    await settle();
+    expect(signOut).toHaveBeenCalledTimes(1);
+  });
+
+  it("reads a token's expiry, and nothing from a token that isn't a JWT", () => {
+    expect(mod.tokenExpiry(`Bearer ${jwt(1800000000)}`)).toBe(1800000000);
+    expect(mod.tokenExpiry("t")).toBeNull();
+  });
+
   it("leaves 403 alone: it means wrong state or not an admin", async () => {
     respondWith(403);
     await mod.apiFetch("/x", authed);

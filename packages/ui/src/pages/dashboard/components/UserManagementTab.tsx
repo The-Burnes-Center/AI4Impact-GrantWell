@@ -3,7 +3,7 @@ import { LuKeyRound, LuTrash, LuUserPlus } from "react-icons/lu";
 import type { ApiClient } from "../../../common/api-client/api-client";
 import type { ManagedUser, UserRolePreset } from "../../../common/types/user-management";
 import { SUPPORTED_STATES } from "../../../common/types/user-management";
-import { MFA_ENABLED, REGIONS, SINGLE_STATE } from "../../../common/instance";
+import { MFA_ENABLED, PROFILE_FORM, REGIONS, SINGLE_STATE } from "../../../common/instance";
 import { LiveStatus } from "../../../components/common/LiveStatus";
 import { Modal } from "../../../components/common/Modal";
 import PaginationControls from "../../../components/common/PaginationControls";
@@ -481,13 +481,16 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                 <th scope="col">Role</th>
                 {!SINGLE_STATE && <th scope="col">State</th>}
                 {REGIONS.length > 0 && <th scope="col">Region</th>}
+                {PROFILE_FORM && <th scope="col">Applicant type</th>}
+                {PROFILE_FORM && <th scope="col">Organization</th>}
+                {PROFILE_FORM?.locations && <th scope="col">{PROFILE_FORM.locations.label}</th>}
                 <th scope="col" className="user-management-table__actions">Action</th>
               </tr>
             </thead>
             <tbody>
               {!loading && pageUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={(SINGLE_STATE ? 4 : 5) + (REGIONS.length > 0 ? 1 : 0)} className="user-management-table__empty">
+                  <td colSpan={(SINGLE_STATE ? 4 : 5) + (REGIONS.length > 0 ? 1 : 0) + (PROFILE_FORM ? (PROFILE_FORM.locations ? 3 : 2) : 0)} className="user-management-table__empty">
                     {hasActiveSearch ? "No matching users found." : "No users yet."}
                   </td>
                 </tr>
@@ -579,6 +582,9 @@ const UserManagementTab: React.FC<UserManagementTabProps> = ({
                     </td>
                     )}
                     {REGIONS.length > 0 && <td>{user.region || "Not set"}</td>}
+                    {PROFILE_FORM && <td>{user.applicantType || "Not set"}</td>}
+                    {PROFILE_FORM && <td>{user.organization || "—"}</td>}
+                    {PROFILE_FORM?.locations && <td>{user.locations?.length ? user.locations.join(", ") : "—"}</td>}
                     <td className="user-management-table__actions">
                       <div className="user-management-actions-cell">
                         {(hasChanges || isSaving) && (
