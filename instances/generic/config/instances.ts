@@ -1,6 +1,5 @@
 import type { InstanceConfig, UsState } from "grantwell-core";
 import { branding } from "./branding";
-import { profileForm } from "./profile-form-check";
 
 const states: UsState[] = [
   { code: "CA", name: "California" },
@@ -61,7 +60,6 @@ export const instances: InstanceConfig[] = [
     scraper: { dailySchedule: false },
     monitoring: { dailyBrief: true },
     e2e: { testEmails: ["e2e-dev@grantwell.invalid"] },
-    ...({ profileForm } as object),
     tags: {},
     branding,
   },
