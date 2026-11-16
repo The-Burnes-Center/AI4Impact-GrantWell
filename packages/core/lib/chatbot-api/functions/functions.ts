@@ -13,6 +13,8 @@ import {
   processingQueueEmailEnabled,
   queueEmailRecipientsParameter,
   regions,
+  profileForm,
+  profileFormEnv,
   sesEmail,
   singleState,
   supportedStatesEnv,
@@ -1688,6 +1690,7 @@ export class LambdaFunctionStack extends cdk.Stack {
       environment: {
         ANALYTICS_TABLE_NAME: props.analyticsTable.tableName,
         ...(regions(config).length && { REGIONS: JSON.stringify(regions(config)) }),
+        ...(profileForm(config) && { PROFILE_FORM: profileFormEnv(config) }),
       },
       timeout: cdk.Duration.seconds(30),
     });

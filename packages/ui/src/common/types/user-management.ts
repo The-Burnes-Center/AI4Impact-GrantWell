@@ -18,6 +18,10 @@ export interface ManagedUser {
   state: string;
   /** Present only when the deployment asks a Region question. */
   region?: string;
+  /** With the structured profile step (PROFILE_FORM). */
+  applicantType?: string;
+  organization?: string;
+  locations?: string[];
 }
 
 export interface ManagedUsersResponse {

@@ -19,7 +19,17 @@ import { LiveStatus } from "../../components/common/LiveStatus";
 import PasswordRequirementsList from "../../components/auth/PasswordRequirementsList";
 import { getPasswordRequirements } from "../../components/auth/auth-utils";
 import { clearMfaPromptSnooze } from "../../common/mfa-snooze";
-import { EMAIL_DIGEST, MFA_DEADLINE_ISO, MFA_ENABLED, MFA_REQUIRED, REGIONS } from "../../common/instance";
+import { EMAIL_DIGEST, MFA_DEADLINE_ISO, MFA_ENABLED, MFA_REQUIRED, PROFILE_FORM, REGIONS } from "../../common/instance";
+import ProfileFormFields from "../../components/profile-form/ProfileFormFields";
+import {
+  type Answers,
+  EMPTY_ANSWERS,
+  FIELD_ORDER,
+  fieldId,
+  problems,
+  sameAnswers,
+  toInput,
+} from "../../components/profile-form/profile-form-logic";
 import { deadlineDateText, mfaDeadlinePhase } from "../../common/mfa-deadline";
 import PageHeader from "../../components/common/PageHeader";
 import { SINGLE_STATE, stateNameFromCode } from "../../common/states";
@@ -89,6 +99,10 @@ export default function ProfilePage() {
   const [orgError, setOrgError] = useState<string | null>(null);
   const [orgMissing, setOrgMissing] = useState<string[]>([]);
   const [orgSaved, setOrgSaved] = useState(false);
+  // The structured profile step's answers, on deployments that have it (PROFILE_FORM).
+  const [answers, setAnswers] = useState<Answers>(EMPTY_ANSWERS);
+  const [answersBaseline, setAnswersBaseline] = useState<Answers>(EMPTY_ANSWERS);
+  const [answersSubmitted, setAnswersSubmitted] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -101,6 +115,16 @@ export default function ProfilePage() {
         setOrgJobTitle(p.jobTitle || "");
         const region = REGIONS.includes(p.region) ? p.region : "";
         setOrgRegion(region);
+        if (p.applicantType) {
+          const loaded = {
+            applicantType: p.applicantType,
+            organization: p.organization || "",
+            jobTitle: p.jobTitle || "",
+            locations: p.locations ?? [],
+          };
+          setAnswers(loaded);
+          setAnswersBaseline(loaded);
+        }
         setOrgBaseline({
           agency: p.agency || "",
           organization: p.organization || "",
@@ -151,6 +175,37 @@ export default function ProfilePage() {
         jobTitle: orgJobTitle.trim(),
         region: orgRegion,
       });
+      setOrgSaved(true);
+    } catch {
+      setOrgError("Could not save your organization details.");
+    } finally {
+      setOrgSaving(false);
+    }
+  };
+
+  const answersDirty = !sameAnswers(answers, answersBaseline);
+
+  const onSaveAnswers = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const form = PROFILE_FORM;
+    if (!form || !answersDirty) return;
+    const found = problems(form, answers);
+    const first = FIELD_ORDER.find((f) => found[f]);
+    setAnswersSubmitted(true);
+    if (first) {
+      setOrgError("Fill in the fields marked below.");
+      document.getElementById(fieldId("profile", first))?.focus();
+      return;
+    }
+    setOrgSaving(true);
+    setOrgError(null);
+    setOrgSaved(false);
+    try {
+      const input = toInput(form, answers);
+      await apiClient.userProfile.updateProfile(input);
+      setAnswers(input);
+      setAnswersBaseline(input);
+      setAnswersSubmitted(false);
       setOrgSaved(true);
     } catch {
       setOrgError("Could not save your organization details.");
@@ -341,138 +396,178 @@ export default function ProfilePage() {
                   <dd>{stateLabel}</dd>
                 </dl>
 
-                <h3 className="profile-subheading">Organization details</h3>
-                <p className="profile-hint">
-                  Your department, organization, {REGIONS.length > 0 ? "role, and region" : "and role"}. Used to understand who&apos;s
-                  using GrantWell.
-                </p>
-                {orgError && (
-                  <div className="gw-alert gw-alert--urgent profile-alert profile-alert--error" role="alert">
-                    {orgError}
-                  </div>
-                )}
-                <LiveStatus>
-                  {orgSaved && (
-                    <div className="gw-alert gw-alert--success profile-alert profile-alert--success">
-                      Organization details saved.
-                    </div>
-                  )}
-                </LiveStatus>
-                <form onSubmit={onSaveOrg}>
-                  <div className="profile-section">
-                    <label className="profile-field-label" htmlFor="profile-agency">
-                      Department
-                      <span className="gw-field__required" aria-hidden="true">*</span>
-                    </label>
-                    <input
-                      id="profile-agency"
-                      aria-required="true"
-                      aria-invalid={orgMissing.includes("profile-agency") || undefined}
-                      aria-describedby={orgMissing.includes("profile-agency") ? "profile-agency-error" : undefined}
-                      type="text"
-                      value={orgAgency}
-                      onChange={(e) => {
-                        setOrgAgency(e.target.value);
-                        setOrgMissing((m) => m.filter((id) => id !== "profile-agency"));
-                        setOrgSaved(false);
-                      }}
-                      className="gw-input profile-input"
-                      placeholder="e.g. Department of Transportation"
-                      maxLength={PROFILE_FIELD_MAX_LENGTH}
-                    />
-                    {orgMissing.includes("profile-agency") && (
-                      <p id="profile-agency-error" className="gw-field__message">Enter your department</p>
+                {PROFILE_FORM ? (
+                  <>
+                    <h3 className="profile-subheading">Organization &amp; preferences</h3>
+                    <p className="profile-hint">{PROFILE_FORM.lead}</p>
+                    {orgError && (
+                      <div className="gw-alert gw-alert--urgent profile-alert profile-alert--error" role="alert">
+                        {orgError}
+                      </div>
                     )}
-                  </div>
-                  <div className="profile-section">
-                    <label className="profile-field-label" htmlFor="profile-org">
-                      Organization
-                      <span className="gw-field__required" aria-hidden="true">*</span>
-                    </label>
-                    <input
-                      id="profile-org"
-                      aria-required="true"
-                      aria-invalid={orgMissing.includes("profile-org") || undefined}
-                      aria-describedby={orgMissing.includes("profile-org") ? "profile-org-error" : undefined}
-                      type="text"
-                      autoComplete="organization"
-                      value={orgOrganization}
-                      onChange={(e) => {
-                        setOrgOrganization(e.target.value);
-                        setOrgMissing((m) => m.filter((id) => id !== "profile-org"));
-                        setOrgSaved(false);
-                      }}
-                      className="gw-input profile-input"
-                      placeholder="e.g. Planning Division"
-                      maxLength={PROFILE_FIELD_MAX_LENGTH}
-                    />
-                    {orgMissing.includes("profile-org") && (
-                      <p id="profile-org-error" className="gw-field__message">Enter your organization</p>
-                    )}
-                  </div>
-                  <div className="profile-section">
-                    <label className="profile-field-label" htmlFor="profile-title">
-                      Role / Title
-                      <span className="gw-field__required" aria-hidden="true">*</span>
-                    </label>
-                    <input
-                      id="profile-title"
-                      aria-required="true"
-                      aria-invalid={orgMissing.includes("profile-title") || undefined}
-                      aria-describedby={orgMissing.includes("profile-title") ? "profile-title-error" : undefined}
-                      type="text"
-                      autoComplete="organization-title"
-                      value={orgJobTitle}
-                      onChange={(e) => {
-                        setOrgJobTitle(e.target.value);
-                        setOrgMissing((m) => m.filter((id) => id !== "profile-title"));
-                        setOrgSaved(false);
-                      }}
-                      className="gw-input profile-input"
-                      placeholder="e.g. Grants Manager"
-                      maxLength={PROFILE_FIELD_MAX_LENGTH}
-                    />
-                    {orgMissing.includes("profile-title") && (
-                      <p id="profile-title-error" className="gw-field__message">Enter your role or title</p>
-                    )}
-                  </div>
-                  {REGIONS.length > 0 && (
-                    <div className="profile-section">
-                      <label className="profile-field-label" htmlFor="profile-region">
-                        Region
-                        <span className="gw-field__required" aria-hidden="true">*</span>
-                      </label>
-                      <select
-                        id="profile-region"
-                        aria-required="true"
-                        aria-invalid={orgMissing.includes("profile-region") || undefined}
-                        aria-describedby={orgMissing.includes("profile-region") ? "profile-region-error" : undefined}
-                        value={orgRegion}
-                        onChange={(e) => {
-                          setOrgRegion(e.target.value);
-                        setOrgMissing((m) => m.filter((id) => id !== "profile-region"));
-                          setOrgSaved(false);
-                        }}
-                        className="gw-input profile-input"
-                      >
-                        <option value="">Select a region</option>
-                        {REGIONS.map((r) => (
-                          <option key={r} value={r}>
-                            {r}
-                          </option>
-                        ))}
-                      </select>
-                      {orgMissing.includes("profile-region") && (
-                        <p id="profile-region-error" className="gw-field__message">Choose your region</p>
+                    <LiveStatus>
+                      {orgSaved && (
+                        <div className="gw-alert gw-alert--success profile-alert profile-alert--success">
+                          Organization details saved.
+                        </div>
                       )}
-                    </div>
-                  )}
-                  <div className="profile-actions">
-                    <Button type="submit" loading={orgSaving} aria-disabled={!orgDirty || undefined}>
-                      Save changes
-                    </Button>
-                  </div>
-                </form>
+                    </LiveStatus>
+                    <form onSubmit={onSaveAnswers} noValidate>
+                      <div className="profile-section">
+                        <ProfileFormFields
+                          form={PROFILE_FORM}
+                          value={answers}
+                          onChange={(next) => {
+                            setAnswers(next);
+                            setOrgSaved(false);
+                          }}
+                          idPrefix="profile"
+                          errors={answersSubmitted ? problems(PROFILE_FORM, answers) : {}}
+                        />
+                      </div>
+                      <div className="profile-actions">
+                        <Button type="submit" loading={orgSaving} aria-disabled={!answersDirty || undefined}>
+                          Save changes
+                        </Button>
+                      </div>
+                    </form>
+                  </>
+                ) : (
+                  <>
+                    <h3 className="profile-subheading">Organization details</h3>
+                    <p className="profile-hint">
+                      Your department, organization, {REGIONS.length > 0 ? "role, and region" : "and role"}. Used to understand who&apos;s
+                      using GrantWell.
+                    </p>
+                    {orgError && (
+                      <div className="gw-alert gw-alert--urgent profile-alert profile-alert--error" role="alert">
+                        {orgError}
+                      </div>
+                    )}
+                    <LiveStatus>
+                      {orgSaved && (
+                        <div className="gw-alert gw-alert--success profile-alert profile-alert--success">
+                          Organization details saved.
+                        </div>
+                      )}
+                    </LiveStatus>
+                    <form onSubmit={onSaveOrg}>
+                      <div className="profile-section">
+                        <label className="profile-field-label" htmlFor="profile-agency">
+                          Department
+                          <span className="gw-field__required" aria-hidden="true">*</span>
+                        </label>
+                        <input
+                          id="profile-agency"
+                          aria-required="true"
+                          aria-invalid={orgMissing.includes("profile-agency") || undefined}
+                          aria-describedby={orgMissing.includes("profile-agency") ? "profile-agency-error" : undefined}
+                          type="text"
+                          value={orgAgency}
+                          onChange={(e) => {
+                            setOrgAgency(e.target.value);
+                            setOrgMissing((m) => m.filter((id) => id !== "profile-agency"));
+                            setOrgSaved(false);
+                          }}
+                          className="gw-input profile-input"
+                          placeholder="e.g. Department of Transportation"
+                          maxLength={PROFILE_FIELD_MAX_LENGTH}
+                        />
+                        {orgMissing.includes("profile-agency") && (
+                          <p id="profile-agency-error" className="gw-field__message">Enter your department</p>
+                        )}
+                      </div>
+                      <div className="profile-section">
+                        <label className="profile-field-label" htmlFor="profile-org">
+                          Organization
+                          <span className="gw-field__required" aria-hidden="true">*</span>
+                        </label>
+                        <input
+                          id="profile-org"
+                          aria-required="true"
+                          aria-invalid={orgMissing.includes("profile-org") || undefined}
+                          aria-describedby={orgMissing.includes("profile-org") ? "profile-org-error" : undefined}
+                          type="text"
+                          autoComplete="organization"
+                          value={orgOrganization}
+                          onChange={(e) => {
+                            setOrgOrganization(e.target.value);
+                            setOrgMissing((m) => m.filter((id) => id !== "profile-org"));
+                            setOrgSaved(false);
+                          }}
+                          className="gw-input profile-input"
+                          placeholder="e.g. Planning Division"
+                          maxLength={PROFILE_FIELD_MAX_LENGTH}
+                        />
+                        {orgMissing.includes("profile-org") && (
+                          <p id="profile-org-error" className="gw-field__message">Enter your organization</p>
+                        )}
+                      </div>
+                      <div className="profile-section">
+                        <label className="profile-field-label" htmlFor="profile-title">
+                          Role / Title
+                          <span className="gw-field__required" aria-hidden="true">*</span>
+                        </label>
+                        <input
+                          id="profile-title"
+                          aria-required="true"
+                          aria-invalid={orgMissing.includes("profile-title") || undefined}
+                          aria-describedby={orgMissing.includes("profile-title") ? "profile-title-error" : undefined}
+                          type="text"
+                          autoComplete="organization-title"
+                          value={orgJobTitle}
+                          onChange={(e) => {
+                            setOrgJobTitle(e.target.value);
+                            setOrgMissing((m) => m.filter((id) => id !== "profile-title"));
+                            setOrgSaved(false);
+                          }}
+                          className="gw-input profile-input"
+                          placeholder="e.g. Grants Manager"
+                          maxLength={PROFILE_FIELD_MAX_LENGTH}
+                        />
+                        {orgMissing.includes("profile-title") && (
+                          <p id="profile-title-error" className="gw-field__message">Enter your role or title</p>
+                        )}
+                      </div>
+                      {REGIONS.length > 0 && (
+                        <div className="profile-section">
+                          <label className="profile-field-label" htmlFor="profile-region">
+                            Region
+                            <span className="gw-field__required" aria-hidden="true">*</span>
+                          </label>
+                          <select
+                            id="profile-region"
+                            aria-required="true"
+                            aria-invalid={orgMissing.includes("profile-region") || undefined}
+                            aria-describedby={orgMissing.includes("profile-region") ? "profile-region-error" : undefined}
+                            value={orgRegion}
+                            onChange={(e) => {
+                              setOrgRegion(e.target.value);
+                            setOrgMissing((m) => m.filter((id) => id !== "profile-region"));
+                              setOrgSaved(false);
+                            }}
+                            className="gw-input profile-input"
+                          >
+                            <option value="">Select a region</option>
+                            {REGIONS.map((r) => (
+                              <option key={r} value={r}>
+                                {r}
+                              </option>
+                            ))}
+                          </select>
+                          {orgMissing.includes("profile-region") && (
+                            <p id="profile-region-error" className="gw-field__message">Choose your region</p>
+                          )}
+                        </div>
+                      )}
+                      <div className="profile-actions">
+                        <Button type="submit" loading={orgSaving} aria-disabled={!orgDirty || undefined}>
+                          Save changes
+                        </Button>
+                      </div>
+                    </form>
+                  </>
+                )}
               </Card>
             </div>
 

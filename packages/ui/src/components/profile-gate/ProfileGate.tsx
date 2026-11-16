@@ -14,9 +14,11 @@ import { PROFILE_FIELD_MAX_LENGTH } from "../../common/api-client/user-profile-c
 import { useAdminCheck } from "../../hooks/use-admin-check";
 import { useFocusTrap } from "../../hooks/use-focus-trap";
 import { SINGLE_STATE, stateNameFromCode } from "../../common/states";
-import { REGIONS } from "../../common/instance";
+import { PROFILE_FORM, REGIONS } from "../../common/instance";
 import { useBranding } from "../../common/branding";
 import Button from "../ui/Button";
+import ProfileFormFields from "../profile-form/ProfileFormFields";
+import { type Answers, EMPTY_ANSWERS, FIELD_ORDER, fieldId, problems, toInput } from "../profile-form/profile-form-logic";
 import "./profile-gate.css";
 
 interface ProfileGateProps {
@@ -83,6 +85,8 @@ export default function ProfileGate({ children }: ProfileGateProps) {
   });
   const [region, setRegion] = useState("");
   const [regionTouched, setRegionTouched] = useState(false);
+  const [answers, setAnswers] = useState<Answers>(EMPTY_ANSWERS);
+  const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -94,7 +98,7 @@ export default function ProfileGate({ children }: ProfileGateProps) {
   useEffect(() => {
     if (!gating) return;
     const previous = document.title;
-    document.title = `Complete your profile – ${appName}`;
+    document.title = `${PROFILE_FORM?.title ?? "Complete your profile"} – ${appName}`;
     return () => {
       document.title = previous;
     };
@@ -112,6 +116,15 @@ export default function ProfileGate({ children }: ProfileGateProps) {
           jobTitle: profile.jobTitle || "",
         });
         setRegion(REGIONS.includes(profile.region) ? profile.region : "");
+        // Answers from the old form don't carry over: those users start the new one empty.
+        if (profile.applicantType) {
+          setAnswers({
+            applicantType: profile.applicantType,
+            organization: profile.organization || "",
+            jobTitle: profile.jobTitle || "",
+            locations: profile.locations ?? [],
+          });
+        }
         setProfileState(profile.state || "");
         setNeedsProfile(!profile.profileComplete);
       } catch {
@@ -148,6 +161,28 @@ export default function ProfileGate({ children }: ProfileGateProps) {
   const onSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
+      const form = PROFILE_FORM;
+      if (form) {
+        const found = problems(form, answers);
+        const first = FIELD_ORDER.find((f) => found[f]);
+        setSubmitted(true);
+        if (first) {
+          setError("Fix the fields marked below.");
+          document.getElementById(fieldId("gate", first))?.focus();
+          return;
+        }
+        setSaving(true);
+        setError(null);
+        try {
+          await apiClient.userProfile.updateProfile(toInput(form, answers));
+          setNeedsProfile(false);
+        } catch (err) {
+          setError(err instanceof Error ? err.message : "Could not save your profile.");
+        } finally {
+          setSaving(false);
+        }
+        return;
+      }
       setTouched({ agency: true, organization: true, jobTitle: true });
       setRegionTouched(true);
       if (!allFilled) {
@@ -172,7 +207,7 @@ export default function ProfileGate({ children }: ProfileGateProps) {
         setSaving(false);
       }
     },
-    [apiClient, allFilled, values, region]
+    [apiClient, allFilled, values, region, answers]
   );
 
   if (!checking && !needsProfile) {
@@ -204,21 +239,33 @@ export default function ProfileGate({ children }: ProfileGateProps) {
           aria-labelledby="profile-gate-title"
           ref={dialogRef}
         >
-          <div className="gw-modal profile-gate__panel">
+          <div className={`gw-modal profile-gate__panel${PROFILE_FORM ? " profile-gate__panel--wide" : ""}`}>
             <header className="gw-modal__header profile-gate__header">
               <span className="profile-gate__header-icon" aria-hidden="true">
                 <LuBuilding2 size={22} />
               </span>
               <h2 className="gw-modal__title profile-gate__title" id="profile-gate-title">
-                Complete your profile
+                {PROFILE_FORM?.title ?? "Complete your profile"}
               </h2>
             </header>
 
             <div className="gw-modal__body profile-gate__body">
               <p className="profile-gate__lead">
-                One-time setup. Tell us a little about where you work — this helps us
-                understand who&apos;s using GrantWell.
+                {PROFILE_FORM ? (
+                  PROFILE_FORM.lead
+                ) : (
+                  <>
+                    One-time setup. Tell us a little about where you work — this helps us
+                    understand who&apos;s using GrantWell.
+                  </>
+                )}
               </p>
+              {PROFILE_FORM && (
+                <p className="profile-gate__lead profile-gate__lead--note">
+                  Fields marked <span aria-hidden="true">*</span>
+                  <span className="visually-hidden">with an asterisk</span> are required.
+                </p>
+              )}
 
               {/* The empty slot is the live region; the styled alert is inserted into it. */}
               <div role="alert">
@@ -231,7 +278,18 @@ export default function ProfileGate({ children }: ProfileGateProps) {
               </div>
 
               <form onSubmit={onSubmit} noValidate>
-                {FIELDS.map(({ key, label, placeholder, autoComplete, Icon }) => {
+                {PROFILE_FORM && (
+                  <div className="profile-gate__form-fields">
+                    <ProfileFormFields
+                      form={PROFILE_FORM}
+                      value={answers}
+                      onChange={setAnswers}
+                      idPrefix="gate"
+                      errors={submitted ? problems(PROFILE_FORM, answers) : {}}
+                    />
+                  </div>
+                )}
+                {!PROFILE_FORM && FIELDS.map(({ key, label, placeholder, autoComplete, Icon }) => {
                   const showError = touched[key] && values[key].trim().length === 0;
                   const inputId = `gate-${key}`;
                   return (

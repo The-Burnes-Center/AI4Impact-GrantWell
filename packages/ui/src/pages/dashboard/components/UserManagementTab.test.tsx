@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { ManagedUser } from "../../../common/types/user-management";
 import { json, stubFetch } from "../../../test/fetch-routes";
 import { renderApp, testApiClient } from "../../../test/render";
+import { instance } from "../../../test/instance";
 import UserManagementTab from "./UserManagementTab";
 
 const USERS = "GET /user-management/users";
@@ -531,5 +532,29 @@ describe("UserManagementTab", () => {
     const region = screen.getByRole("region", { name: /^Users table/ });
     expect(region).toHaveAttribute("tabindex", "0");
     expect(region).toContainElement(screen.getByRole("table", { name: "Users" }));
+  });
+});
+
+describe("UserManagementTab with the structured profile step", () => {
+  it("shows each user's applicant type, organization and counties", async () => {
+    instance.PROFILE_FORM = {
+      title: "t",
+      lead: "l",
+      applicantTypes: [{ name: "501(c)(3) Nonprofit", organization: "name", location: true }],
+      locations: { label: "County", all: "Statewide / Multi-County", choices: ["Adams", "Denver"] },
+    };
+    stubFetch({
+      [USERS]: listed([
+        { ...member(1), applicantType: "501(c)(3) Nonprofit", organization: "Mile High Youth", locations: ["Adams", "Denver"] },
+        member(2),
+      ]),
+    });
+    renderTab();
+    await screen.findByText("p001@example.org");
+    const headers = within(screen.getByRole("table")).getAllByRole("columnheader").map((h) => h.textContent);
+    expect(headers).toEqual(expect.arrayContaining(["Applicant type", "Organization", "County"]));
+    expect(within(rows()[0]).getByText("501(c)(3) Nonprofit")).toBeInTheDocument();
+    expect(within(rows()[0]).getByText("Adams, Denver")).toBeInTheDocument();
+    expect(within(rows()[1]).getByText("Not set")).toBeInTheDocument();
   });
 });

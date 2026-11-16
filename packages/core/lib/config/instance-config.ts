@@ -156,6 +156,8 @@ interface InstanceConfigBase {
   feedbackFormUrl?: string;
   /** Choices for a required Region question on the user's profile, stored on the profile row. Unset or empty, no question. */
   regions?: string[];
+  /** A structured profile step (applicant type, organization, role, locations) in place of Department / Organization / Role. Not with regions. */
+  profileForm?: ProfileForm;
   /** Multi-state only: states that have their own GrantWell site. Sign-up for them goes there; their existing users see a notice. */
   stateSites?: StateSite[];
   /** Abuse and cost limits; every key is optional, `limits(config)` fills in the defaults. */
@@ -165,6 +167,27 @@ interface InstanceConfigBase {
   /** Extra tags for every resource except the vector collection. Project, Instance and Stage come from core. */
   tags: Record<string, string>;
   branding: Branding;
+}
+
+export interface ProfileForm {
+  /** The profile step's heading, e.g. "Tell us who you represent". */
+  title: string;
+  /** The line under the heading. */
+  lead: string;
+  applicantTypes: ApplicantType[];
+  /** Choices for applicant types whose organization is "entity", e.g. a state's agencies. */
+  entities?: { label: string; choices: string[] };
+  /** A required multi-select for applicant types with `location: true`. Picking `all` clears the others. */
+  locations?: { label: string; all: string; choices: string[] };
+}
+
+export interface ApplicantType {
+  name: string;
+  /** "entity" picks from `entities`, "name" types an organization name, "none" asks nothing. */
+  organization: "entity" | "name" | "none";
+  location: boolean;
+  /** Fills an empty role when this type is picked; the user can change it. */
+  defaultRole?: string;
 }
 
 export interface SesEmail {
@@ -323,6 +346,7 @@ export function validateInstanceConfig(config: InstanceConfig): void {
       problems.push("regions has duplicates");
     }
   }
+  if (config.profileForm !== undefined) problems.push(...profileFormProblems(config));
   if (config.stateSites !== undefined) {
     const sites = Array.isArray(config.stateSites) ? config.stateSites : [];
     const codes = new Set(config.states.map((s) => s.code));
@@ -357,6 +381,44 @@ export function validateInstanceConfig(config: InstanceConfig): void {
   if (problems.length) {
     throw new Error(`Invalid instance config "${config.id}": ${problems.join("; ")}`);
   }
+}
+
+function profileFormProblems(config: InstanceConfig): string[] {
+  const form = config.profileForm;
+  if (typeof form !== "object" || form === null) return ["profileForm must be an object"];
+  const problems: string[] = [];
+  const isName = (v: unknown) => typeof v === "string" && v.trim() !== "" && v === v.trim() && v.length <= 200;
+  const listProblem = (key: string, list: unknown) => {
+    if (!Array.isArray(list) || list.length === 0 || !list.every(isName)) {
+      return `${key} must be a non-empty list of trimmed names of at most 200 characters`;
+    }
+    if (new Set(list.map((v: string) => v.toLowerCase())).size !== list.length) return `${key} has duplicates`;
+    return null;
+  };
+  if (regions(config).length) problems.push("profileForm replaces the Region question; remove regions");
+  if (!isName(form.title) || !isName(form.lead)) problems.push("profileForm.title and profileForm.lead must be trimmed, non-empty text of at most 200 characters");
+  const types = Array.isArray(form.applicantTypes) ? form.applicantTypes : [];
+  const typeNames = listProblem("profileForm.applicantTypes names", types.map((t) => t?.name));
+  if (!Array.isArray(form.applicantTypes) || typeNames) problems.push(typeNames ?? "profileForm.applicantTypes must be a list");
+  for (const t of types) {
+    if (!["entity", "name", "none"].includes(t?.organization)) problems.push(`profileForm applicant type "${t?.name}": organization must be "entity", "name" or "none"`);
+    if (typeof t?.location !== "boolean") problems.push(`profileForm applicant type "${t?.name}": location must be true or false`);
+    if (t?.defaultRole !== undefined && !isName(t.defaultRole)) problems.push(`profileForm applicant type "${t?.name}": defaultRole must be trimmed text of at most 200 characters`);
+  }
+  if (types.some((t) => t?.organization === "entity")) {
+    if (!form.entities || !isName(form.entities.label)) problems.push("profileForm.entities needs a label when an applicant type uses entity");
+    const p = listProblem("profileForm.entities.choices", form.entities?.choices);
+    if (p) problems.push(p);
+  } else if (form.entities !== undefined) problems.push("profileForm.entities is set but no applicant type uses entity");
+  if (types.some((t) => t?.location === true)) {
+    const loc = form.locations;
+    if (!loc || !isName(loc.label) || !isName(loc.all)) problems.push("profileForm.locations needs a label and an all option when an applicant type asks location");
+    const p = listProblem("profileForm.locations.choices", loc?.choices);
+    if (p) problems.push(p);
+    else if (loc && loc.choices.some((c) => c.toLowerCase() === String(loc.all).toLowerCase())) problems.push("profileForm.locations.choices must not repeat the all option");
+  } else if (form.locations !== undefined) problems.push("profileForm.locations is set but no applicant type asks location");
+  if (!problems.length && profileFormEnv(config).length > 3000) problems.push("profileForm is too large for a Lambda environment variable (keep it under 3000 characters)");
+  return problems;
 }
 
 function limitProblems(given: Partial<Limits> | undefined): string[] {
@@ -411,6 +473,23 @@ export function monitoringPrefix(config: InstanceConfig): string {
 /** The Region question's choices; empty when the deployment asks none. */
 export function regions(config: InstanceConfig): string[] {
   return config.regions ?? [];
+}
+
+/** The structured profile step, or null when the deployment asks Department / Organization / Role. */
+export function profileForm(config: InstanceConfig): ProfileForm | null {
+  return config.profileForm ?? null;
+}
+
+/** What the profile Lambda checks answers against; the copy stays in the UI. */
+export function profileFormEnv(config: InstanceConfig): string {
+  const form = config.profileForm;
+  if (!form) return "";
+  return JSON.stringify({
+    types: form.applicantTypes.map((t) => [t.name, t.organization, t.location]),
+    entities: form.entities?.choices ?? [],
+    all: form.locations?.all ?? "",
+    locations: form.locations?.choices ?? [],
+  });
 }
 
 export function stateSites(config: InstanceConfig): StateSite[] {

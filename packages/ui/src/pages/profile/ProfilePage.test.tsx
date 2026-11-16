@@ -268,3 +268,38 @@ describe("ProfilePage unsaved changes", () => {
     expect(onLeave).toHaveBeenCalledTimes(2);
   });
 });
+
+describe("ProfilePage with the structured profile step", () => {
+  const SAVE_PROFILE = "PUT /user-profile";
+  const saved = { applicantType: "501(c)(3) Nonprofit", organization: "Mile High Youth", jobTitle: "Lead", locations: ["Adams"], state: "CO", profileComplete: true };
+
+  it("edits the answers under Organization & preferences and saves them", async () => {
+    instance.PROFILE_FORM = {
+      title: "Tell us who you represent",
+      lead: "We use this information to tell us who is using GrantWell.",
+      applicantTypes: [{ name: "501(c)(3) Nonprofit", organization: "name", location: true }],
+      locations: { label: "County", all: "Statewide / Multi-County", choices: ["Adams", "Denver"] },
+    };
+    const net = stubFetch({
+      [PROFILE]: json(saved),
+      [PREFS]: json(savedPrefs),
+      [SAVE_PROFILE]: (req) => json({ ...saved, ...(req.body as object) }),
+      "GET /s3-nofo-bucket-data": json({ nofoData: [] }),
+    });
+    const { user } = renderApp(<ProfilePage />, { route: "/profile" });
+    expect(await screen.findByRole("heading", { name: "Organization & preferences" })).toBeInTheDocument();
+    expect(screen.queryByRole("textbox", { name: "Department" })).toBeNull();
+    await screen.findByDisplayValue("Mile High Youth");
+    await user.click(screen.getByRole("button", { name: "Remove Adams" }));
+    await user.type(screen.getByRole("combobox", { name: /County/ }), "Statewide");
+    await user.keyboard("{ArrowDown}{Enter}");
+    await user.click(screen.getByRole("button", { name: "Save changes" }));
+    expect(await screen.findByText("Organization details saved.")).toBeInTheDocument();
+    expect(net.to(SAVE_PROFILE)[0].body).toEqual({
+      applicantType: "501(c)(3) Nonprofit",
+      organization: "Mile High Youth",
+      jobTitle: "Lead",
+      locations: ["Statewide / Multi-County"],
+    });
+  });
+});

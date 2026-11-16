@@ -1,0 +1,138 @@
+/* The structured profile step's fields and its search lists, on the shared .gw-field / .gw-input. */
+
+.gw-profile-form {
+  display: grid;
+  gap: var(--gw-spacing-lg, 16px);
+}
+
+.gw-combobox {
+  display: grid;
+  gap: var(--gw-spacing-sm, 8px);
+}
+
+.gw-combobox__control {
+  position: relative;
+}
+
+.gw-combobox__input.gw-combobox__input {
+  padding-right: 44px;
+}
+
+/* Out of the tab order, as in the APG pattern: the text box already opens the list from the keyboard. */
+.gw-combobox__toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0 var(--gw-radius-control) var(--gw-radius-control) 0;
+  background: transparent;
+  color: var(--gw-color-text-secondary);
+  cursor: pointer;
+}
+
+.gw-combobox__list {
+  display: block;
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  max-height: 240px;
+  overflow-y: auto;
+  border: 1px solid var(--gw-color-border-input);
+  border-radius: var(--gw-radius-control);
+  background: var(--gw-color-surface);
+}
+
+.gw-combobox__option {
+  display: flex;
+  align-items: center;
+  gap: var(--gw-spacing-sm, 8px);
+  min-height: 40px;
+  padding: 8px 12px 8px 8px;
+  color: var(--gw-color-text);
+  font-size: var(--gw-font-size-base);
+  line-height: 1.35;
+  cursor: pointer;
+}
+
+.gw-combobox__option:hover {
+  background: var(--gw-color-surface-subtle);
+}
+
+/* The keyboard position: a ring as well as a tint, so it never rests on colour alone (WCAG 1.4.1). */
+.gw-combobox__option--active,
+.gw-combobox__option--active:hover {
+  background: var(--gw-color-primary-light);
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: calc(-1 * var(--gw-focus-width));
+}
+
+.gw-combobox__option--selected {
+  font-weight: var(--gw-font-weight-semibold);
+}
+
+.gw-combobox__check {
+  display: inline-flex;
+  width: 16px;
+  flex-shrink: 0;
+  color: var(--gw-color-primary);
+}
+
+.gw-combobox__empty {
+  margin: 0;
+  padding: 8px 12px;
+  color: var(--gw-color-text-secondary);
+  font-size: var(--gw-font-size-sm);
+}
+
+.gw-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gw-spacing-sm, 8px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gw-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 2px 2px 12px;
+  border: 1px solid var(--gw-color-primary-border);
+  border-radius: 999px;
+  background: var(--gw-color-primary-light);
+  /* Body text, not the primary colour: some palettes' primary is under 4.5:1 on primary-light. */
+  color: var(--gw-color-text-strong);
+  font-size: var(--gw-font-size-sm);
+  font-weight: var(--gw-font-weight-semibold);
+}
+
+/* 28px, over the 24px minimum target (WCAG 2.5.8). */
+.gw-chip__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--gw-color-text-strong);
+  cursor: pointer;
+}
+
+.gw-chip__remove:hover {
+  background: var(--gw-color-primary-border);
+}
+
+.gw-chip__remove:focus-visible,
+.gw-combobox__toggle:focus-visible {
+  outline: var(--gw-focus-width) solid var(--gw-color-focus);
+  outline-offset: var(--gw-focus-offset);
+}

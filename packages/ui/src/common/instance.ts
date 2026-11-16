@@ -20,6 +20,22 @@ export interface StateSite {
   url: string;
 }
 
+/** Core's ProfileForm, staged as is. */
+export interface ApplicantType {
+  name: string;
+  organization: "entity" | "name" | "none";
+  location: boolean;
+  defaultRole?: string;
+}
+
+export interface ProfileForm {
+  title: string;
+  lead: string;
+  applicantTypes: ApplicantType[];
+  entities?: { label: string; choices: string[] };
+  locations?: { label: string; all: string; choices: string[] };
+}
+
 interface StagedInstance {
   stage: "prod" | "dev";
   siteUrl: string;
@@ -33,6 +49,7 @@ interface StagedInstance {
   tenancy?: "single";
   mfa?: "off";
   regions?: string[];
+  profileForm?: ProfileForm;
   stateSites?: StateSite[];
 }
 
@@ -65,6 +82,8 @@ export const HOME: ResolvedHome = resolveHome(activeBranding, SINGLE_STATE?.name
 export const MFA_ENABLED: boolean = staged?.mfa !== "off";
 /** The Region question's choices; empty when the deployment asks none. */
 export const REGIONS: readonly string[] = staged?.regions ?? [];
+/** The structured profile step; null when the deployment asks Department / Organization / Role. */
+export const PROFILE_FORM: ProfileForm | null = staged?.profileForm ?? null;
 /** States whose sign-up happens on their own site; empty unless the deployment lists some. */
 export const STATE_SITES: readonly StateSite[] = staged?.stateSites ?? [];
 export const MFA_DEADLINE: number | null = MFA_DEADLINE_ISO ? Date.parse(MFA_DEADLINE_ISO) : null;
