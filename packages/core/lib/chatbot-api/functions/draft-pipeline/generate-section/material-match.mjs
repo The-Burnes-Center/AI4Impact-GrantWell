@@ -34,6 +34,7 @@ const PROJECT_BASICS_LABELS = {
 };
 
 const esc = (value) => String(value ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const attr = (value) => esc(value).replace(/"/g, '&quot;');
 const clip = (value, max) => {
   const text = String(value ?? '').trim();
   return text.length > max ? `${text.slice(0, max)}…` : text;
@@ -103,7 +104,7 @@ export function numberedQuestions({ questions, questionnaireAnswers, questionnai
 
 export function matchRequest({ sections, questions, projectBasics, additionalInfo, documents }) {
   const sectionLines = sections.map((s) =>
-    `<section id="${esc(s.id)}">\n<title>${esc(s.item)}</title>\n<description>${esc(clip(s.description, MAX_DESCRIPTION_CHARS))}</description>\n</section>`
+    `<section id="${attr(s.id)}">\n<title>${esc(s.item)}</title>\n<description>${esc(clip(s.description, MAX_DESCRIPTION_CHARS))}</description>\n</section>`
   );
   const questionLines = questions.map((q) => {
     const number = q.number === null ? '' : ` number="${q.number}"`;
@@ -122,13 +123,13 @@ export function matchRequest({ sections, questions, projectBasics, additionalInf
     if (attachedPages + (pdf.pages || 1) <= MAX_ATTACHED_PDF_PAGES) {
       attachedPages += pdf.pages || 1;
       attached.push(pdf);
-      documentLines.push(`<document name="${esc(pdf.fileName)}">Attached above as a PDF.</document>`);
+      documentLines.push(`<document name="${attr(pdf.fileName)}">Attached above as a PDF.</document>`);
     } else {
-      documentLines.push(`<document name="${esc(pdf.fileName)}">A PDF too long to show here; judge it by its name.</document>`);
+      documentLines.push(`<document name="${attr(pdf.fileName)}">A PDF too long to show here; judge it by its name.</document>`);
     }
   }
   for (const text of documents.texts) {
-    documentLines.push(`<document name="${esc(text.fileName)}">\n${esc(clip(text.content, MAX_TEXT_EXCERPT_CHARS))}\n</document>`);
+    documentLines.push(`<document name="${attr(text.fileName)}">\n${esc(clip(text.content, MAX_TEXT_EXCERPT_CHARS))}\n</document>`);
   }
 
   const facts = [

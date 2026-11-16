@@ -134,6 +134,15 @@ function zipEntry(buffer, name, maxInflatedBytes) {
 
 const XML_ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
 
+function stripTags(text) {
+  let previous;
+  do {
+    previous = text;
+    text = text.replace(/<[^>]*>/g, '');
+  } while (text !== previous);
+  return text;
+}
+
 /**
  * Paragraph text of a .docx (word/document.xml), or null when it isn't one. Throws
  * ERR_BUFFER_TOO_LARGE when the body inflates past maxInflatedBytes.
@@ -141,12 +150,13 @@ const XML_ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
 export function extractDocxText(buffer, maxInflatedBytes = DEFAULT_LIMITS.maxInflatedBytes) {
   const xml = zipEntry(buffer, 'word/document.xml', maxInflatedBytes);
   if (!xml) return null;
-  return xml
-    .toString('utf8')
-    .replace(/<w:tab\/>/g, '\t')
-    .replace(/<w:(?:br|cr)\/>/g, '\n')
-    .replace(/<\/w:p>/g, '\n')
-    .replace(/<[^>]+>/g, '')
+  return stripTags(
+    xml
+      .toString('utf8')
+      .replace(/<w:tab\/>/g, '\t')
+      .replace(/<w:(?:br|cr)\/>/g, '\n')
+      .replace(/<\/w:p>/g, '\n')
+  )
     .replace(/&(amp|lt|gt|quot|apos);/g, (_, e) => XML_ENTITIES[e])
     .replace(/&#(x?)([0-9a-fA-F]+);/g, (_, hex, n) => String.fromCodePoint(parseInt(n, hex ? 16 : 10)))
     .replace(/\n{3,}/g, '\n\n')

@@ -31,10 +31,13 @@ function detectRedirectStub(html) {
   const match = html.match(META_REFRESH_RE);
   if (!match) return null;
   if (Number(match[1]) > 2) return null;
-  const bodyText = (html.match(/<body[^>]*>([\s\S]*?)<\/body>/i)?.[1] || '')
-    .replace(/<[^>]*>/g, '')
-    .replace(/[<>]/g, '')
-    .trim();
+  let bodyText = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i)?.[1] || '';
+  let previous;
+  do {
+    previous = bodyText;
+    bodyText = bodyText.replace(/<[^>]*>/g, '');
+  } while (bodyText !== previous);
+  bodyText = bodyText.replace(/[<>]/g, '').trim();
   if (bodyText.length > 0) return null;
   return { redirectTarget: match[2] };
 }

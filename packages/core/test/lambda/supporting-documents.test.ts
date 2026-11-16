@@ -200,6 +200,11 @@ describe("loading supporting documents", () => {
     expect(docs.texts.map((t) => t.content)).toEqual(["Fine."]);
   });
 
+  it("strips every tag and keeps escaped angle brackets as text", () => {
+    const xml = "<w:p><w:r><w:t>a &lt;b&gt; c</w:t></w:r></w:p><<w:t>x</w:t>script>";
+    expect(extractDocxText(zip("word/document.xml", xml))).toBe("a <b> c\nxscript>");
+  });
+
   it("returns null for a zip without a Word body", () => {
     expect(extractDocxText(zip("other.xml", "<x/>"))).toBeNull();
   });
