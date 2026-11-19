@@ -127,3 +127,18 @@ def test_the_last_sync_is_the_newest_completed_job_across_both_sources(kb):
     res = kb.lambda_handler(http("/kb-sync/get-last-sync", ["Developer"]), None)
 
     assert json.loads(res["body"]) == "October 08, 2026, 02:30PM UTC"
+
+
+@pytest.mark.parametrize("roles", [["Admin"], ["PlatformAdmin"], ["Developer"]])
+def test_every_admin_role_sees_the_last_sync_time(kb, roles):
+    for source in ("ds-nofo", "ds-user"):
+        kb.stub.add_response(
+            "list_ingestion_jobs",
+            {"ingestionJobSummaries": []},
+            {"dataSourceId": source, "knowledgeBaseId": "kb-1",
+             "filters": [{"attribute": "STATUS", "operator": "EQ", "values": ["COMPLETE"]}]},
+        )
+
+    res = kb.lambda_handler(http("/kb-sync/get-last-sync", roles), None)
+
+    assert res["statusCode"] == 200
