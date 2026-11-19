@@ -58,7 +58,8 @@ describe("email.cognitoDefault", () => {
 
   it("only removes resources: every other logical ID matches the SES synth", () => {
     const variant = resourcesIn(variantOut);
-    const added = Object.keys(variant).filter((id) => !(id in resourcesIn(outDir("dev"))));
+    const dev = resourcesIn(outDir("dev"));
+    const added = Object.keys(variant).filter((id) => !(id in dev));
     expect(added).toEqual([]);
   });
 
